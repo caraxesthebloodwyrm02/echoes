@@ -112,7 +112,7 @@ def test_config_reload():
         # Update with empty content
         with open(config_path, "w") as f:
             f.write("")
-        
+
         # Reload and verify empty config
         config.reload()
         assert config.to_dict() == {}
@@ -124,20 +124,22 @@ def test_config_reload():
         """
         with open(config_path, "w") as f:
             f.write(new_content)
-        
+
         # Reload and verify new version
         config.reload()
         assert config.get("framework.version") == "2.0.0"
 
         # Test with invalid YAML
         with open(config_path, "w") as f:
-            f.write("""
+            f.write(
+                """
             invalid: yaml:
               - item1
               - item2: value
                 - nested: value
-            """)
-        
+            """
+            )
+
         # Reload and verify empty config for invalid YAML
         config.reload()
         assert config.to_dict() == {}
