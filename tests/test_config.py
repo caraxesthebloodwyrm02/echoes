@@ -1,5 +1,6 @@
 """Tests for the Config class."""
 
+import os
 import tempfile
 
 from automation.core.config import Config

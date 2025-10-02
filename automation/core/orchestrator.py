@@ -115,7 +115,7 @@ class Orchestrator:
 
         return results
 
-    def run_all(self, dry_run: bool = False) -> Dict[str, Dict[str, bool]]:
+    def run_all(self, dry_run: bool = False) -> Dict[str, Dict[str, Dict[str, bool]]]:
         """Run all tasks for all categories and frequencies.
 
         Args:
