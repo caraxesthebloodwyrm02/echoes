@@ -33,7 +33,7 @@ repos:
     rev: v1.9.0
     hooks:
     -   id: mypy
-        additional_dependencies: [types-PyYAML==6.0.12.20]
+        additional_dependencies: [types-PyYAML==6.0.12.12]
         args: [--ignore-missing-imports, --show-error-codes]
         language_version: python3.11
 
