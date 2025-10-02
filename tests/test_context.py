@@ -1,8 +1,10 @@
 """Tests for the Context class."""
 
 import os
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
+
 from automation.core.context import Context
 
 

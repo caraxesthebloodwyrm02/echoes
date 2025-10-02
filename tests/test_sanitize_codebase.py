@@ -1,8 +1,9 @@
 import os
 import shutil
 import tempfile
-from automation.tasks import sanitize_codebase
+
 from automation.core.context import Context
+from automation.tasks import sanitize_codebase
 
 
 def test_sanitize_codebase_removes_cache(tmp_path, caplog):

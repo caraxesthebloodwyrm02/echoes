@@ -1,10 +1,12 @@
 """Tests for the Logger class."""
 
 import logging
-import pytest
-from unittest.mock import patch, MagicMock
+from unittest.mock import MagicMock, patch
 
-from automation.core.logger import AutomationLogger, SUCCESS_LEVEL_NUM, ColorFormatter
+import pytest
+
+from automation.core.logger import (SUCCESS_LEVEL_NUM, AutomationLogger,
+                                    ColorFormatter)
 
 
 def test_automation_logger_initialization():

@@ -1,12 +1,13 @@
 """Tests for the Orchestrator class."""
 
-import pytest
-from unittest.mock import MagicMock, patch, ANY
 from pathlib import Path
+from unittest.mock import ANY, MagicMock, patch
 
-from automation.core.orchestrator import Orchestrator
+import pytest
+
 from automation.core.context import Context
 from automation.core.logger import log
+from automation.core.orchestrator import Orchestrator
 
 
 def test_orchestrator_initialization():

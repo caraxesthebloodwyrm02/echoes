@@ -4,9 +4,9 @@ import importlib
 from pathlib import Path
 from typing import Any, Dict, List, Optional, Type, Union
 
+from automation.core.config import Config
 from automation.core.context import Context
 from automation.core.logger import log
-from automation.core.config import Config
 
 
 class Orchestrator:

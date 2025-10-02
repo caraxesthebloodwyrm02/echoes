@@ -2,9 +2,10 @@
 
 import os
 import tempfile
-import pytest
 from pathlib import Path
-from unittest.mock import patch, mock_open
+from unittest.mock import mock_open, patch
+
+import pytest
 
 from automation.core.config import Config
 

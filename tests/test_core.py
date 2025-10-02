@@ -1,10 +1,12 @@
 import os
 import sys
-import pytest
 from pathlib import Path
+
+import pytest
+
+from automation.core.config import Config
 from automation.core.context import Context
 from automation.core.logger import AutomationLogger
-from automation.core.config import Config
 from automation.core.orchestrator import Orchestrator
 
 

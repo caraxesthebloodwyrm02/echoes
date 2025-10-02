@@ -3,7 +3,7 @@
 import os
 import shutil
 from pathlib import Path
-from typing import List, Set, Optional
+from typing import List, Optional, Set
 
 from automation.core.context import Context
 from automation.core.logger import log
