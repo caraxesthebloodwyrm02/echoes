@@ -1,0 +1,23 @@
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements-dev.txt
+      - name: Run code formatting check (Black)
+        run: black --check automation tests
+      - name: Run import sorting check (isort)
+        run: isort --check-only automation tests
+      - name: Run type checking (mypy)
+        run: mypy automation tests
+      - name: Run tests with coverage
+        run: pytest -v --cov=automation --cov-report=xml
