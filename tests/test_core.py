@@ -1,4 +1,3 @@
-
 from automation.core.config import Config
 from automation.core.context import Context
 from automation.core.logger import AutomationLogger

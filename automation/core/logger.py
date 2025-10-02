@@ -21,7 +21,7 @@ setattr(logging.Logger, "success", _success)
 class ColorFormatter(logging.Formatter):
     """Custom formatter for colored console output."""
 
-{{ ... }}
+    # ANSI color codes
     GREY = "\x1b[38;21m"
     BLUE = "\x1b[38;5;39m"
     YELLOW = "\x1b[38;5;226m"

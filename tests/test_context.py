@@ -1,6 +1,5 @@
 """Tests for the Context class."""
 
-
 from unittest.mock import patch
 from automation.core.context import Context
 

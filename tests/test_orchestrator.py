@@ -57,7 +57,11 @@ def test_get_task_categories():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks: Dict[str, Dict[str, Any]] = {"security": {}, "cleanup": {}, "maintenance": {}}
+    test_tasks: Dict[str, Dict[str, Any]] = {
+        "security": {},
+        "cleanup": {},
+        "maintenance": {},
+    }
     orchestrator._tasks = test_tasks
 
     # Test getting categories
@@ -73,7 +77,9 @@ def test_get_task_frequencies():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks: Dict[str, Dict[str, List[str]]] = {"security": {"daily": [], "weekly": [], "monthly": []}}
+    test_tasks: Dict[str, Dict[str, List[str]]] = {
+        "security": {"daily": [], "weekly": [], "monthly": []}
+    }
     orchestrator._tasks = test_tasks
 
     # Test getting frequencies
@@ -89,7 +95,9 @@ def test_get_tasks():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks: Dict[str, Dict[str, List[str]]] = {"security": {"daily": ["task1", "task2"], "weekly": ["task3"]}}
+    test_tasks: Dict[str, Dict[str, List[str]]] = {
+        "security": {"daily": ["task1", "task2"], "weekly": ["task3"]}
+    }
     orchestrator._tasks = test_tasks
 
     # Test daily tasks
