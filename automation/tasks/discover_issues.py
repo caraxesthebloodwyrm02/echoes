@@ -164,7 +164,7 @@ def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
             coverage_result["report_stderr"] = report_result.stderr
 
             # Parse coverage for modules below threshold
-            coverage_result["low_coverage_modules"] = []
+            low_coverage = []
             for line in report_result.stdout.splitlines():
                 if "%" in line:
                     parts = line.split()
@@ -172,11 +172,14 @@ def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
                         try:
                             coverage = float(parts[-1].rstrip("%"))
                             if coverage < 80:  # Configurable threshold
-                                coverage_result["low_coverage_modules"].append(
-                                    {"module": parts[0], "coverage": coverage}
-                                )
+                                low_coverage.append({
+                                    "module": parts[0],
+                                    "coverage": coverage
+                                })
                         except (ValueError, IndexError):
                             continue
+                            
+            coverage_result["low_coverage_modules"] = low_coverage
 
         results["coverage"] = coverage_result
 
