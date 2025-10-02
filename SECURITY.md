@@ -9,7 +9,7 @@
 
 ## Reporting a Vulnerability
 
-If you discover a security vulnerability, please report it by emailing security@example.com. 
+If you discover a security vulnerability, please report it by emailing security@example.com.
 
 - **DO NOT** create a public GitHub issue for security vulnerabilities
 - You should receive a response within 48 hours

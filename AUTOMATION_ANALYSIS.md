@@ -93,7 +93,7 @@ After implementing and testing the comprehensive security automation system, her
 
 ### **Automation Coverage**
 - **Security Tasks**: 4 different security operations automated
-- **Cleanup Tasks**: 6 different cleanup categories automated  
+- **Cleanup Tasks**: 6 different cleanup categories automated
 - **Scheduling**: 4 different frequency patterns (daily/weekly/monthly/on-demand)
 - **Reporting**: HTML reports with charts and metrics
 
@@ -182,7 +182,7 @@ try {
 # Run all daily security tasks
 .\scripts\automation_framework.ps1 -TaskType security -Frequency daily
 
-# Run weekly recovery testing  
+# Run weekly recovery testing
 .\scripts\automation_framework.ps1 -TaskType security -Frequency weekly
 
 # Run monthly SSL management
