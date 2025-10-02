@@ -5,8 +5,7 @@ from unittest.mock import MagicMock, patch
 
 import pytest
 
-from automation.core.logger import (SUCCESS_LEVEL_NUM, AutomationLogger,
-                                    ColorFormatter)
+from automation.core.logger import SUCCESS_LEVEL_NUM, AutomationLogger, ColorFormatter
 
 
 def test_automation_logger_initialization():
