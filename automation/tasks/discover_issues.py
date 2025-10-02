@@ -2,13 +2,12 @@
 
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
-from automation.core.context import Context
 from automation.core.logger import log
 
 
-def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
+def find_code_patterns(directory: Path) -> dict[str, list[dict[str, Any]]]:
     """Search for common code patterns indicating issues.
 
     Args:
@@ -20,9 +19,13 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     patterns = {
         "todo": r"TODO[ :].*",
         "fixme": r"FIXME[ :].*",
-        "technical_debt": r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*",
-        "interim_solution": r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*",  # Enhanced from "temporary"
-        "unused_import": r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$",
+        "technical_debt": (
+            r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*"
+        ),
+        "interim_solution": (
+            r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*"
+        ),  # Enhanced from "temporary"
+        "unused_import": (r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$"),
         "bare_except": r"except\s*:",
         "broad_except": r"except\s+Exception\s*:",
         "mutable_default": r"=\s*(\[|\{|\(|dict\(|list\(|set\()",
@@ -67,7 +70,7 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     return results
 
 
-def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
+def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
     """Run various code quality tools and collect results.
 
     Args:
@@ -165,19 +168,23 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
             coverage_result["report_stderr"] = report_result.stderr
 
             # Parse coverage for modules below threshold
-            coverage_result["low_coverage_modules"] = []
+            low_coverage = []
             for line in report_result.stdout.splitlines():
-                if "%" in line:
-                    parts = line.split()
+                if "%" in line and "TOTAL" not in line and "-" not in line:
+                    parts = line.strip().split()
                     if len(parts) >= 4:
                         try:
-                            coverage = float(parts[-1].rstrip("%"))
+                            module = parts[0]
+                            coverage_str = [p for p in parts if "%" in p][0]
+                            coverage = float(coverage_str.rstrip("%"))
                             if coverage < 80:  # Configurable threshold
-                                coverage_result["low_coverage_modules"].append(
-                                    {"module": parts[0], "coverage": coverage}
+                                low_coverage.append(
+                                    {"module": module, "coverage": coverage}
                                 )
                         except (ValueError, IndexError):
                             continue
+
+            coverage_result["low_coverage_modules"] = low_coverage
 
         results["coverage"] = coverage_result
 

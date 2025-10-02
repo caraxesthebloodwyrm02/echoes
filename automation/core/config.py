@@ -1,7 +1,7 @@
 """Configuration management for the automation framework."""
 
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import yaml
 
@@ -9,7 +9,7 @@ import yaml
 class Config:
     """Configuration manager for the automation framework."""
 
-    def __init__(self, config_path: Union[str, Path]):
+    def __init__(self, config_path: str | Path):
         """Initialize with path to configuration file.
 
         Args:
@@ -20,7 +20,7 @@ class Config:
             yaml.YAMLError: If config file is not valid YAML
         """
         self.config_path = Path(config_path).resolve()
-        self._config: Dict[str, Any] = {}
+        self._config: dict[str, Any] = {}
         self._load_config()
 
     def _load_config(self) -> None:
@@ -31,7 +31,7 @@ class Config:
             return
 
         try:
-            with open(self.config_path, "r", encoding="utf-8") as f:
+            with open(self.config_path, encoding="utf-8") as f:
                 self._config = yaml.safe_load(f) or {}
         except yaml.YAMLError:
             # If there's an error parsing the YAML, use an empty config
@@ -58,8 +58,8 @@ class Config:
             return default
 
     def get_section(
-        self, section: str, default: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, Any]:
+        self, section: str, default: dict[str, Any] | None = None
+    ) -> dict[str, Any]:
         """Get a configuration section.
 
         Args:
@@ -100,6 +100,6 @@ class Config:
         except (KeyError, TypeError):
             return False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Get the entire configuration as a dictionary."""
         return self._config.copy()

@@ -2,7 +2,6 @@
 
 import shutil
 from pathlib import Path
-from typing import Set
 
 from automation.core.context import Context
 from automation.core.logger import log
@@ -37,7 +36,7 @@ def _get_project_root(context: Context) -> Path:
     return Path.cwd()
 
 
-def _get_directories_to_clean() -> Set[str]:
+def _get_directories_to_clean() -> set[str]:
     """Get a set of directory names to clean."""
     return {
         "__pycache__",

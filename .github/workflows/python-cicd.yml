@@ -1,0 +1,92 @@
+name: Python CI/CD
+
+on:
+    push:
+        branches: [main, "automation/**"]
+    pull_request:
+        branches: [main]
+
+jobs:
+    quality:
+        name: Code Quality
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ["3.11"]
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  cache: "pip"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip wheel setuptools
+                  pip install -e ".[dev]"
+
+            - name: Run linting
+              run: |
+                  ruff check automation/
+                  ruff format --check automation/
+
+            - name: Run type checks
+              run: |
+                  mypy automation/
+
+            - name: Check dependencies
+              run: |
+                  pip check
+                  safety check
+
+    test:
+        name: Tests
+        runs-on: ubuntu-latest
+        strategy:
+            matrix:
+                python-version: ["3.11"]
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Set up Python ${{ matrix.python-version }}
+              uses: actions/setup-python@v4
+              with:
+                  python-version: ${{ matrix.python-version }}
+                  cache: "pip"
+
+            - name: Install dependencies
+              run: |
+                  python -m pip install --upgrade pip wheel setuptools
+                  pip install -e ".[dev]"
+
+            - name: Run tests with coverage
+              run: |
+                  pytest tests/ -v --cov=automation --cov-report=xml
+
+            - name: Upload coverage reports to Codecov
+              uses: codecov/codecov-action@v3
+              env:
+                  CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+
+    security:
+        name: Security Scan
+        runs-on: ubuntu-latest
+        permissions:
+            security-events: write
+
+        steps:
+            - uses: actions/checkout@v3
+
+            - name: Initialize CodeQL
+              uses: github/codeql-action/init@v2
+              with:
+                  languages: python
+
+            - name: Perform CodeQL Analysis
+              uses: github/codeql-action/analyze@v2
+              with:
+                  category: "/language:python"
