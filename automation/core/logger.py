@@ -9,19 +9,19 @@ logging.addLevelName(SUCCESS_LEVEL_NUM, "SUCCESS")
 
 
 def _success(self, message: str, *args, **kwargs) -> None:
-    """Log 'message % args' with severity 'SUCCESS'."""
     if self.isEnabledFor(SUCCESS_LEVEL_NUM):
         self._log(SUCCESS_LEVEL_NUM, message, args, **kwargs)
 
 
 # Add success method to Logger class
-setattr(logging.Logger, 'success', _success)
+# flake8: noqa: B010
+setattr(logging.Logger, "success", _success)
 
 
 class ColorFormatter(logging.Formatter):
     """Custom formatter for colored console output."""
 
-    # ANSI color codes
+{{ ... }}
     GREY = "\x1b[38;21m"
     BLUE = "\x1b[38;5;39m"
     YELLOW = "\x1b[38;5;226m"
