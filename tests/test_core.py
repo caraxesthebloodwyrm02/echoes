@@ -28,7 +28,8 @@ def test_logger_levels(caplog):
 
     # Check that log messages were captured
     assert any(
-        record.levelname == "INFO" and "info message" in record.message for record in caplog.records
+        record.levelname == "INFO" and "info message" in record.message
+        for record in caplog.records
     )
     assert any(
         record.levelname == "ERROR" and "error message" in record.message

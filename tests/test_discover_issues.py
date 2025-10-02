@@ -79,7 +79,7 @@ def test_find_code_patterns_successful(test_files):
         assert len(results["mutable_default"]) == 1
 
         # Verify the structure of matches
-        for name, matches in results.items():
+        for _, matches in results.items():
             for match in matches:
                 assert "file" in match
                 assert "line" in match

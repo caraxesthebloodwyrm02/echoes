@@ -59,7 +59,10 @@ class ColorFormatter(logging.Formatter):
         """
         if level in self._colors:
             color = self._colors[level]
-            return f"{color}%(asctime)s - %(name)s - %(levelname)s - " f"%(message)s{self.RESET}"
+            return (
+                f"{color}%(asctime)s - %(name)s - %(levelname)s - "
+                f"%(message)s{self.RESET}"
+            )
         # Return plain format for unknown levels
         return "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 
