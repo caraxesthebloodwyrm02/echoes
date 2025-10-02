@@ -33,9 +33,7 @@ def run(context: Context) -> None:
     # Example of a simple operation
     try:
         file_path = Path(target_dir) / "sample.txt"
-        file_path.write_text(
-            "This is a sample file created by the automation framework."
-        )
+        file_path.write_text("This is a sample file created by the automation framework.")
         log.success(f"Created sample file: {file_path}")
     except Exception as e:
         log.error(f"Error in sample task: {e}")

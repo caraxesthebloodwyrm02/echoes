@@ -57,9 +57,7 @@ class Config:
         except (KeyError, TypeError):
             return default
 
-    def get_section(
-        self, section: str, default: dict[str, Any] | None = None
-    ) -> dict[str, Any]:
+    def get_section(self, section: str, default: dict[str, Any] | None = None) -> dict[str, Any]:
         """Get a configuration section.
 
         Args:

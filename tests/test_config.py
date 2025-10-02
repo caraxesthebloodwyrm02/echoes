@@ -1,10 +1,8 @@
 """Tests for the Config class."""
 
-import os
-import pytest
-from pathlib import Path
 from contextlib import contextmanager
-from typing import Iterator, Optional
+from pathlib import Path
+from typing import Iterator
 
 from automation.core.config import Config
 

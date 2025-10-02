@@ -84,9 +84,7 @@ class Orchestrator:
             log.error(f"Error in task '{task_name}': {e}")
             return False
 
-    def run_tasks(
-        self, category: str, frequency: str, dry_run: bool = False
-    ) -> dict[str, bool]:
+    def run_tasks(self, category: str, frequency: str, dry_run: bool = False) -> dict[str, bool]:
         """Run all tasks for a category and frequency.
 
         Args:
