@@ -1,0 +1,66 @@
+{
+  "framework": {
+    "tasks": {
+      "maintenance": {
+        "weekly": [
+          "dependency_update_check"
+        ],
+        "daily": [
+          "health_check"
+        ],
+        "monthly": [
+          "system_optimization"
+        ]
+      },
+      "security": {
+        "weekly": [
+          "test_recovery"
+        ],
+        "daily": [
+          "security_checklist_verify",
+          "analyze_logs"
+        ],
+        "monthly": [
+          "ssl_cert_manager"
+        ]
+      },
+      "cleanup": {
+        "weekly": [
+          "cache_cleanup"
+        ],
+        "daily": [
+          "temp_file_cleanup"
+        ],
+        "monthly": [
+          "full_sanitization"
+        ]
+      },
+      "monitoring": {
+        "weekly": [
+          "security_scan"
+        ],
+        "daily": [
+          "log_analysis",
+          "performance_check"
+        ],
+        "monthly": [
+          "comprehensive_audit"
+        ]
+      }
+    },
+    "version": "1.0.0",
+    "reporting": {
+      "email_notifications": false,
+      "enabled": true,
+      "retention_days": 30,
+      "format": "html"
+    },
+    "scheduling": {
+      "monthly_time": "03:00",
+      "monthly_day": 1,
+      "weekly_time": "02:00",
+      "weekly_day": "Sunday",
+      "daily_time": "06:00"
+    }
+  }
+}

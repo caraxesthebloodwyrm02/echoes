@@ -1,0 +1,22 @@
+framework:
+  version: 1.0.0
+  tasks:
+    security:
+      daily: [security_checklist, analyze_logs]
+      weekly: [test_recovery]
+      monthly: [ssl_cert_manager]
+    cleanup:
+      daily: []
+      weekly: []
+      monthly: [sanitize_codebase]
+  scheduling:
+    daily_time: '06:00'
+    weekly_day: 'Sunday'
+    weekly_time: '02:00'
+    monthly_day: 1
+    monthly_time: '03:00'
+  reporting:
+    enabled: true
+    format: html
+    retention_days: 30
+    email_notifications: false
