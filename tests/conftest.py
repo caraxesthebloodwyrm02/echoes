@@ -1,6 +1,8 @@
 """Pytest configuration and fixtures."""
+
 import pytest
 from automation.core.context import Context
+
 
 @pytest.fixture
 def context():
