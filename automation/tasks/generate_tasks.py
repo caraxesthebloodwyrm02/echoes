@@ -154,5 +154,7 @@ class TaskDefinition:
 
         return (
             descriptions.get(pattern_name, f"Fix {pattern_name} issues"),
-            fixes.get(pattern_name, f"Address {pattern_name} according to best practices"),
+            fixes.get(
+                pattern_name, f"Address {pattern_name} according to best practices"
+            ),
         )

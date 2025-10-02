@@ -8,7 +8,9 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 log = logging.getLogger(__name__)
 
 
@@ -175,7 +177,9 @@ def main():
     import argparse
 
     parser = argparse.ArgumentParser(description="Automate high-risk task PR creation")
-    parser.add_argument("--dry-run", action="store_true", help="Print commands without executing")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Print commands without executing"
+    )
     args = parser.parse_args()
 
     task_file = Path("automation/reports/highrisk_review.json")

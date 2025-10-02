@@ -43,7 +43,8 @@ def test_sample_task_confirmation_accepted(mock_context):
         sample_file = Path(mock_context.extra["target_dir"]) / "sample.txt"
         assert sample_file.exists()
         assert (
-            sample_file.read_text() == "This is a sample file created by the automation framework."
+            sample_file.read_text()
+            == "This is a sample file created by the automation framework."
         )
 
 
@@ -54,7 +55,10 @@ def test_sample_task_no_confirmation_needed(mock_context):
     # Check that file was created without asking for confirmation
     sample_file = Path(mock_context.extra["target_dir"]) / "sample.txt"
     assert sample_file.exists()
-    assert sample_file.read_text() == "This is a sample file created by the automation framework."
+    assert (
+        sample_file.read_text()
+        == "This is a sample file created by the automation framework."
+    )
 
 
 def test_sample_task_default_directory(tmp_path):

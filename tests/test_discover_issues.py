@@ -43,9 +43,13 @@ def test_find_code_patterns_successful(test_files):
             r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*": (
                 "temp.py:1:# Temporary: Quick fix"
             ),
-            r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$": ("unused.py:1:import os"),
+            r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$": (
+                "unused.py:1:import os"
+            ),
             r"except\s*:": ("except.py:3:except:"),
-            r"=\s*(\[|\{|\(|dict\(|list\(|set\()": ("mutable.py:1:def func(x=[]): pass"),
+            r"=\s*(\[|\{|\(|dict\(|list\(|set\()": (
+                "mutable.py:1:def func(x=[]): pass"
+            ),
         }
 
         if pattern in matches:
@@ -119,7 +123,9 @@ def test_run_code_quality_tools_failure(tmp_path):
 
     def mock_tool_failure(*args, **kwargs):
         tool = args[0][1]
-        return Mock(returncode=1, stdout=f"Error in {tool}", stderr=f"Failed to run {tool}")
+        return Mock(
+            returncode=1, stdout=f"Error in {tool}", stderr=f"Failed to run {tool}"
+        )
 
     with patch("subprocess.run", side_effect=mock_tool_failure):
         results = run_code_quality_tools(tmp_path)
@@ -139,7 +145,9 @@ def test_run_code_quality_tools_timeout(tmp_path):
         # Verify that all tools are marked as failed
         assert all(not result["success"] for result in results.values())
         # Verify that timeout errors are reported correctly
-        assert all("timed out" in result.get("error", "") for result in results.values())
+        assert all(
+            "timed out" in result.get("error", "") for result in results.values()
+        )
 
 
 def test_run_code_quality_tools_file_not_found(tmp_path):
@@ -150,9 +158,9 @@ def test_run_code_quality_tools_file_not_found(tmp_path):
         assert all(not result["success"] for result in results.values())
         # Verify that tool not found errors are reported correctly
         for result in results.values():
-            assert "Tool not installed" in result.get("error", "") or "No such file" in result.get(
+            assert "Tool not installed" in result.get(
                 "error", ""
-            )
+            ) or "No such file" in result.get("error", "")
 
 
 def test_run_code_quality_tools_generic_error(tmp_path):
@@ -162,7 +170,9 @@ def test_run_code_quality_tools_generic_error(tmp_path):
         # Verify that all tools are marked as failed
         assert all(not result["success"] for result in results.values())
         # Verify that error messages are captured
-        assert all("Unexpected error" in result.get("error", "") for result in results.values())
+        assert all(
+            "Unexpected error" in result.get("error", "") for result in results.values()
+        )
 
 
 def test_run_code_quality_tools_coverage_parsing(tmp_path):
@@ -211,7 +221,9 @@ except Exception:
     def mock_grep(args, **kwargs):
         pattern = args[4]  # The pattern is the 5th argument
         if pattern == r"except\s+Exception\s*:":
-            return Mock(returncode=0, stdout="broad_except.py:2:except Exception:", stderr="")
+            return Mock(
+                returncode=0, stdout="broad_except.py:2:except Exception:", stderr=""
+            )
         return Mock(returncode=1, stdout="", stderr="")
 
     with patch("subprocess.run", side_effect=mock_grep):

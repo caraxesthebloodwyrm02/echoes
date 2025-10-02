@@ -19,7 +19,9 @@ def find_code_patterns(directory: Path) -> dict[str, list[dict[str, Any]]]:
     patterns = {
         "todo": r"TODO[ :].*",
         "fixme": r"FIXME[ :].*",
-        "technical_debt": (r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*"),
+        "technical_debt": (
+            r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*"
+        ),
         "interim_solution": (
             r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*"
         ),  # Enhanced from "temporary"
@@ -108,7 +110,9 @@ def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
             if result.returncode == 0:
                 log.success(f"{tool_name} completed successfully")
             else:
-                log.warning(f"{tool_name} found issues (exit code: {result.returncode})")
+                log.warning(
+                    f"{tool_name} found issues (exit code: {result.returncode})"
+                )
 
         except subprocess.TimeoutExpired:
             log.error(f"{tool_name} timed out")
@@ -174,7 +178,9 @@ def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
                             coverage_str = [p for p in parts if "%" in p][0]
                             coverage = float(coverage_str.rstrip("%"))
                             if coverage < 80:  # Configurable threshold
-                                low_coverage.append({"module": module, "coverage": coverage})
+                                low_coverage.append(
+                                    {"module": module, "coverage": coverage}
+                                )
                         except (ValueError, IndexError):
                             continue
 
