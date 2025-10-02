@@ -1,8 +1,7 @@
 """Configuration management for the automation framework."""
 
-import os
 from pathlib import Path
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, Union
 
 import yaml
 
@@ -34,7 +33,7 @@ class Config:
         try:
             with open(self.config_path, "r", encoding="utf-8") as f:
                 self._config = yaml.safe_load(f) or {}
-        except yaml.YAMLError as e:
+        except yaml.YAMLError:
             # If there's an error parsing the YAML, use an empty config
             self._config = {}
 

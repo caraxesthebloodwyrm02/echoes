@@ -1,9 +1,8 @@
 """Task to clean up and sanitize the codebase."""
 
-import os
 import shutil
 from pathlib import Path
-from typing import List, Optional, Set
+from typing import Set
 
 from automation.core.context import Context
 from automation.core.logger import log
@@ -59,8 +58,6 @@ def _get_directories_to_clean() -> Set[str]:
         "coverage",
         ".coverage",
         "htmlcov",
-        ".mypy_cache",
-        ".ruff_cache",
         ".hypothesis",
         ".ipynb_checkpoints",
     }

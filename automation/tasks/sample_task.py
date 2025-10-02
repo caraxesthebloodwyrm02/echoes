@@ -2,7 +2,6 @@
 
 import os
 from pathlib import Path
-from typing import Optional
 
 from automation.core.context import Context
 from automation.core.logger import log

@@ -1,11 +1,6 @@
 """Tests for the Config class."""
 
-import os
 import tempfile
-from pathlib import Path
-from unittest.mock import mock_open, patch
-
-import pytest
 
 from automation.core.config import Config
 

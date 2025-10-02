@@ -2,7 +2,6 @@
 
 import logging
 import sys
-from typing import Optional
 
 # Add SUCCESS level (between WARNING and INFO)
 SUCCESS_LEVEL_NUM = 25
@@ -15,7 +14,8 @@ def _success(self, message: str, *args, **kwargs) -> None:
         self._log(SUCCESS_LEVEL_NUM, message, args, **kwargs)
 
 
-logging.Logger.success = _success
+# Add success method to Logger class
+setattr(logging.Logger, 'success', _success)
 
 
 class ColorFormatter(logging.Formatter):
@@ -59,7 +59,10 @@ class ColorFormatter(logging.Formatter):
         """
         if level in self._colors:
             color = self._colors[level]
-            return f"{color}%(asctime)s - %(name)s - %(levelname)s - %(message)s{self.RESET}"
+            return (
+                f"{color}%(asctime)s - %(name)s - %(levelname)s - "
+                f"%(message)s{self.RESET}"
+            )
         # Return plain format for unknown levels
         return "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 

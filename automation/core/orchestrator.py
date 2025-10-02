@@ -2,7 +2,7 @@
 
 import importlib
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Type, Union
+from typing import Dict, List, Union
 
 from automation.core.config import Config
 from automation.core.context import Context
@@ -82,7 +82,7 @@ class Orchestrator:
             log.error(f"Failed to import task '{task_name}': {e}")
             return False
         except Exception as e:
-            log.error(f"Error in task '{task_name}': {e}", exc_info=True)
+            log.error(f"Error in task '{task_name}': {e}")
             return False
 
     def run_tasks(
@@ -125,7 +125,7 @@ class Orchestrator:
             Nested dict with results: {category: {frequency: {task: status}}}
         """
         self.context.dry_run = dry_run
-        all_results = {}
+        all_results: Dict[str, Dict[str, Dict[str, bool]]] = {}
 
         for category in self.get_task_categories():
             all_results[category] = {}

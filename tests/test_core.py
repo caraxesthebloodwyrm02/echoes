@@ -1,8 +1,3 @@
-import os
-import sys
-from pathlib import Path
-
-import pytest
 
 from automation.core.config import Config
 from automation.core.context import Context

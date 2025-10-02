@@ -1,12 +1,9 @@
 """Tests for the Orchestrator class."""
 
-from pathlib import Path
-from unittest.mock import ANY, MagicMock, patch
-
-import pytest
+from typing import Any, Dict, List
+from unittest.mock import patch
 
 from automation.core.context import Context
-from automation.core.logger import log
 from automation.core.orchestrator import Orchestrator
 
 
@@ -60,7 +57,7 @@ def test_get_task_categories():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks = {"security": {}, "cleanup": {}, "maintenance": {}}
+    test_tasks: Dict[str, Dict[str, Any]] = {"security": {}, "cleanup": {}, "maintenance": {}}
     orchestrator._tasks = test_tasks
 
     # Test getting categories
@@ -76,7 +73,7 @@ def test_get_task_frequencies():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks = {"security": {"daily": [], "weekly": [], "monthly": []}}
+    test_tasks: Dict[str, Dict[str, List[str]]] = {"security": {"daily": [], "weekly": [], "monthly": []}}
     orchestrator._tasks = test_tasks
 
     # Test getting frequencies
@@ -92,7 +89,7 @@ def test_get_tasks():
     orchestrator = Orchestrator("dummy_config.yaml")
 
     # Manually set the _tasks dictionary
-    test_tasks = {"security": {"daily": ["task1", "task2"], "weekly": ["task3"]}}
+    test_tasks: Dict[str, Dict[str, List[str]]] = {"security": {"daily": ["task1", "task2"], "weekly": ["task3"]}}
     orchestrator._tasks = test_tasks
 
     # Test daily tasks

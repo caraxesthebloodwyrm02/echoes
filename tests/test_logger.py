@@ -1,9 +1,7 @@
 """Tests for the Logger class."""
 
 import logging
-from unittest.mock import MagicMock, patch
-
-import pytest
+from unittest.mock import patch
 
 from automation.core.logger import SUCCESS_LEVEL_NUM, AutomationLogger, ColorFormatter
 
