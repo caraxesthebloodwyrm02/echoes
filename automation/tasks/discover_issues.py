@@ -2,9 +2,8 @@
 
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
-from automation.core.context import Context
 from automation.core.logger import log
 
 
@@ -20,8 +19,12 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     patterns = {
         "todo": r"TODO[ :].*",
         "fixme": r"FIXME[ :].*",
-        "technical_debt": r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*",
-        "interim_solution": r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*",  # Enhanced from "temporary"
+        "technical_debt": (
+            r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*"
+        ),
+        "interim_solution": (
+            r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*"
+        ),  # Enhanced from "temporary"
         "unused_import": r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$",
         "bare_except": r"except\s*:",
         "broad_except": r"except\s+Exception\s*:",
@@ -173,9 +176,13 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
                         try:
                             coverage = float(parts[-1].rstrip("%"))
                             if coverage < 80:  # Configurable threshold
-                                coverage_result["low_coverage_modules"].append(
-                                    {"module": parts[0], "coverage": coverage}
-                                )
+                                (
+                                    coverage_result["low_coverage_modules"]
+                                    if isinstance(
+                                        coverage_result["low_coverage_modules"], list
+                                    )
+                                    else []
+                                ).append({"module": parts[0], "coverage": coverage})
                         except (ValueError, IndexError):
                             continue
 

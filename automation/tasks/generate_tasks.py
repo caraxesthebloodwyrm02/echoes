@@ -1,9 +1,7 @@
 """Task generation and management."""
 
 from dataclasses import dataclass
-from typing import Dict, List, Any, Optional
-
-from automation.core.logger import log
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -56,8 +54,6 @@ class TaskDefinition:
         }
         # Medium severity patterns
         medium_patterns = {"mutable_default", "unused_import", "todo", "fixme"}
-        # Low severity patterns
-        low_patterns = {"technical_debt", "temporary"}  # Updated from "hack"
 
         if pattern_name in high_patterns:
             return "high"
@@ -107,15 +103,12 @@ class TaskDefinition:
             A unique task ID string
         """
         import hashlib
-        import os
 
         # Create a unique hash based on pattern and file path
         content = f"{pattern_name}:{file_path}"
         hash_object = hashlib.md5(content.encode())
         hash_value = hash_object.hexdigest()[:3]
 
-        # Get a numerical identifier
-        basename = os.path.splitext(os.path.basename(file_path))[0]
         return f"{pattern_name}_{hash_value}"
 
     def generate_task_description(self, pattern_name: str) -> tuple[str, str]:
@@ -132,23 +125,38 @@ class TaskDefinition:
             "todo": "Remove or implement TODO comments",
             "fixme": "Address FIXME comments in the code",
             "technical_debt": "Review and improve technical debt items",
-            "interim_solution": "Convert interim solutions to permanent implementations",  # Updated from "temporary"
+            "interim_solution": (
+                "Convert interim solutions to permanent implementations"
+            ),
             "unused_import": "Remove unused import statements",
-            "bare_except": "Replace bare except clauses with specific exception handling",
-            "broad_except": "Replace broad exception handling with specific exceptions",
-            "mutable_default": "Fix mutable default arguments in function definitions",
+            "bare_except": (
+                "Replace bare except clauses with specific exception handling"
+            ),
+            "broad_except": (
+                "Replace broad exception handling with specific exceptions"
+            ),
+            "mutable_default": (
+                "Fix mutable default arguments in function definitions"
+            ),
             "password": "Review and secure password/secret handling",
         }
 
         fixes = {
             "todo": "Implement the TODO item or remove if no longer needed",
             "fixme": "Fix the identified issue and remove the FIXME comment",
-            "technical_debt": "Refactor the code following best practices and design patterns",
-            "interim_solution": "Replace interim/temporary solutions with proper, production-ready implementations",  # Enhanced fix description
+            "technical_debt": (
+                "Refactor the code following best practices and design patterns"
+            ),
+            "interim_solution": (
+                "Replace interim/temporary solutions with proper, production-ready "
+                "implementations"
+            ),
             "unused_import": "Remove unused import statements",
             "bare_except": "Specify the exact exception type being caught",
-            "broad_except": "Handle specific exceptions instead of catching all",
-            "mutable_default": "Use None as default and initialize mutable object inside function",
+            "broad_except": ("Handle specific exceptions instead of catching all"),
+            "mutable_default": (
+                "Use None as default and initialize mutable object inside function"
+            ),
             "password": "Move secrets to environment variables or secure storage",
         }
 

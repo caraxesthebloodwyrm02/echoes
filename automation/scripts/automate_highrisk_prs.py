@@ -1,13 +1,12 @@
 """Automation script for creating PRs from high-risk tasks."""
 
 import json
-from pathlib import Path
+import logging
 import subprocess
 import sys
-import logging
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
-from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -38,7 +37,7 @@ class TaskDefinition:
 
         pr_body = f"""## Task: {data['task_name']} ({data['task_id']})
 
-**Category:** {data['category']}  
+**Category:** {data['category']}
 **Severity:** {data['severity']}
 
 ### Description
