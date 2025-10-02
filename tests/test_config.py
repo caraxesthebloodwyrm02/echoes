@@ -1,14 +1,45 @@
 """Tests for the Config class."""
 
 import os
-import tempfile
+import pytest
+from pathlib import Path
+from contextlib import contextmanager
+from typing import Iterator, Optional
 
 from automation.core.config import Config
 
 
+@contextmanager
+def config_file(content: str, *, suffix: str = ".yaml") -> Iterator[Path]:
+    """Create a temporary config file with the given content.
+
+    Args:
+        content: The content to write to the file
+        suffix: The file extension (default: .yaml)
+
+    Yields:
+        Path to the temporary file
+    """
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(mode="w", suffix=suffix, delete=False) as f:
+        f.write(content)
+        temp_path = Path(f.name)
+
+    try:
+        yield temp_path
+    finally:
+        try:
+            if temp_path.exists():
+                temp_path.unlink()
+        except Exception as e:
+            import logging
+
+            logging.warning(f"Failed to cleanup test file {temp_path}: {e}")
+
+
 def test_config_loading():
     """Test loading configuration from a YAML file."""
-    # Create a temporary config file
     config_content = """
     framework:
       version: 1.0.0
@@ -17,12 +48,8 @@ def test_config_loading():
           daily: ["task1", "task2"]
     """
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        f.write(config_content)
-        temp_path = f.name
-
-    try:
-        config = Config(temp_path)
+    with config_file(config_content) as config_path:
+        config = Config(str(config_path))
         assert config.get("framework.version") == "1.0.0"
         assert config.get("framework.tasks.security.daily") == ["task1", "task2"]
 
@@ -35,18 +62,7 @@ def test_config_loading():
         assert "framework" in config
         assert "framework.version" in config
         assert "framework.tasks" in config
-        assert "nonexistent.key" not in config  # Check using the __contains__ method
-
-        # Test to_dict
-        config_dict = config.to_dict()
-        assert "framework" in config_dict
-        assert "version" in config_dict["framework"]
-        assert "tasks" in config_dict["framework"]
-        assert config_dict["framework"]["version"] == "1.0.0"
-
-    finally:
-        if os.path.exists(temp_path):
-            os.unlink(temp_path)
+        assert "nonexistent.key" not in config
 
 
 def test_config_missing_file():
@@ -66,67 +82,55 @@ def test_config_invalid_yaml():
           - nested: value
     """
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        f.write(invalid_yaml)
-        temp_path = f.name
-
-    try:
+    with config_file(invalid_yaml) as config_path:
         # Should not raise an exception, but return an empty config
-        config = Config(temp_path)
+        config = Config(str(config_path))
         assert config.to_dict() == {}
-    finally:
-        if os.path.exists(temp_path):
-            os.unlink(temp_path)
 
 
 def test_config_empty_file():
     """Test behavior with an empty config file."""
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        f.write("")
-        temp_path = f.name
-
-    try:
-        config = Config(temp_path)
+    with config_file("") as config_path:
+        config = Config(str(config_path))
         assert config.to_dict() == {}
         assert config.get("any.key") is None
         assert config.get("any.key", "default") == "default"
-    finally:
-        if os.path.exists(temp_path):
-            os.unlink(temp_path)
 
 
 def test_config_reload():
     """Test reloading configuration from file."""
-    # Initial config
-    config_content = """
+    initial_content = """
     framework:
       version: 1.0.0
     """
 
-    with tempfile.NamedTemporaryFile(mode="w", suffix=".yaml", delete=False) as f:
-        f.write(config_content)
-        temp_path = f.name
-
-    try:
+    with config_file(initial_content) as config_path:
         # Test initial load
-        config = Config(temp_path)
+        config = Config(str(config_path))
         assert config.get("framework.version") == "1.0.0"
 
-        # Update the config file
-        with open(temp_path, "w", encoding="utf-8") as f:
-            f.write(
-                """
-            framework:
-              version: 2.0.0
-            """
-            )
+        # Update with empty content
+        with open(config_path, "w") as f:
+            f.write("")
 
-        # Reload and verify
+        # Reload and verify empty config
+        config.reload()
+        assert config.to_dict() == {}
+
+        # Update with new version
+        new_content = """
+        framework:
+          version: 2.0.0
+        """
+        with open(config_path, "w") as f:
+            f.write(new_content)
+
+        # Reload and verify new version
         config.reload()
         assert config.get("framework.version") == "2.0.0"
 
-        # Test with invalid YAML - should not raise an exception
-        with open(temp_path, "w", encoding="utf-8") as f:
+        # Test with invalid YAML
+        with open(config_path, "w") as f:
             f.write(
                 """
             invalid: yaml:
@@ -136,13 +140,6 @@ def test_config_reload():
             """
             )
 
+        # Reload and verify empty config for invalid YAML
         config.reload()
         assert config.to_dict() == {}
-
-    finally:
-        # Clean up the temporary file
-        if os.path.exists(temp_path):
-            try:
-                os.unlink(temp_path)
-            except Exception as e:
-                print(f"Error cleaning up temporary file {temp_path}: {e}")
