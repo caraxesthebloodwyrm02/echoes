@@ -1,17 +1,17 @@
 {
-  "timestamp": "2025-10-02T20:32:10.464129",
-  "tasks": [
-    {
-      "task_id": "hack_433",
-      "task_name": "Fix hack issues",
-      "category": "refactor",
-      "severity": "low",
-      "files": [
-        "automation\\tasks\\discover_issues.py",
-        "automation\\tasks\\generate_tasks.py"
-      ],
-      "description": "Review and improve hack implementations",
-      "suggested_fix": "Refactor the hack into a proper implementation"
-    }
-  ]
+    "timestamp": "2025-10-02T20:32:10.464129",
+    "tasks": [
+        {
+            "task_id": "hack_433",
+            "task_name": "Fix hack issues",
+            "category": "refactor",
+            "severity": "low",
+            "files": [
+                "automation\\tasks\\discover_issues.py",
+                "automation\\tasks\\generate_tasks.py"
+            ],
+            "description": "Review and improve hack implementations",
+            "suggested_fix": "Refactor the hack into a proper implementation"
+        }
+    ]
 }

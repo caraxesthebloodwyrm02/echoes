@@ -9,10 +9,11 @@ from automation.core.logger import log
 @dataclass
 class TaskDefinition:
     """Structured task definition."""
+
     task_id: str
     task_name: str
     severity: str  # low|medium|high
-    category: str   # lint|refactor|security|testing
+    category: str  # lint|refactor|security|testing
     files: List[str]
     lines: Optional[List[int]] = None
     description: str = ""
@@ -32,7 +33,7 @@ class TaskDefinition:
             "description": self.description,
             "suggested_fix": self.suggested_fix,
             "automated": self.automated,
-            "status": self.status
+            "status": self.status,
         }
 
     def determine_severity(self, pattern_name: str) -> str:
@@ -45,7 +46,14 @@ class TaskDefinition:
             Severity level: low|medium|high
         """
         # High severity patterns
-        high_patterns = {"password", "token", "secret", "key", "bare_except", "broad_except"}
+        high_patterns = {
+            "password",
+            "token",
+            "secret",
+            "key",
+            "bare_except",
+            "broad_except",
+        }
         # Medium severity patterns
         medium_patterns = {"mutable_default", "unused_import", "todo", "fixme"}
         # Low severity patterns
@@ -70,7 +78,12 @@ class TaskDefinition:
         security_patterns = {"password", "token", "secret", "key"}
         testing_patterns = {"todo", "fixme"}
         lint_patterns = {"unused_import", "mutable_default"}
-        refactor_patterns = {"technical_debt", "temporary", "bare_except", "broad_except"}  # Updated from "hack"
+        refactor_patterns = {
+            "technical_debt",
+            "temporary",
+            "bare_except",
+            "broad_except",
+        }  # Updated from "hack"
 
         if pattern_name in security_patterns:
             return "security"
@@ -118,8 +131,8 @@ class TaskDefinition:
         descriptions = {
             "todo": "Remove or implement TODO comments",
             "fixme": "Address FIXME comments in the code",
-            "technical_debt": "Review and improve technical debt items",  # Updated from "hack"
-            "temporary": "Remove temporary code and implement proper solutions",
+            "technical_debt": "Review and improve technical debt items",
+            "interim_solution": "Convert interim solutions to permanent implementations",  # Updated from "temporary"
             "unused_import": "Remove unused import statements",
             "bare_except": "Replace bare except clauses with specific exception handling",
             "broad_except": "Replace broad exception handling with specific exceptions",
@@ -130,8 +143,8 @@ class TaskDefinition:
         fixes = {
             "todo": "Implement the TODO item or remove if no longer needed",
             "fixme": "Fix the identified issue and remove the FIXME comment",
-            "technical_debt": "Refactor the code following best practices and design patterns",  # Updated from "hack"
-            "temporary": "Replace temporary solution with permanent code",
+            "technical_debt": "Refactor the code following best practices and design patterns",
+            "interim_solution": "Replace interim/temporary solutions with proper, production-ready implementations",  # Enhanced fix description
             "unused_import": "Remove unused import statements",
             "bare_except": "Specify the exact exception type being caught",
             "broad_except": "Handle specific exceptions instead of catching all",
@@ -141,5 +154,7 @@ class TaskDefinition:
 
         return (
             descriptions.get(pattern_name, f"Fix {pattern_name} issues"),
-            fixes.get(pattern_name, f"Address {pattern_name} according to best practices")
+            fixes.get(
+                pattern_name, f"Address {pattern_name} according to best practices"
+            ),
         )

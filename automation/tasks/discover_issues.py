@@ -20,8 +20,8 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     patterns = {
         "todo": r"TODO[ :].*",
         "fixme": r"FIXME[ :].*",
-        "technical_debt": r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*",  # Improved from "hack"
-        "temporary": r"temporary[:]?.*",
+        "technical_debt": r"(?i)(technical[ -]debt|refactor[ -]needed|needs[ -]improvement).*",
+        "interim_solution": r"(?i)(temporary|interim|provisional|workaround|stopgap)[ :].*",  # Enhanced from "temporary"
         "unused_import": r"^import \w+(?:\s*,\s*\w+)*(?:\s+as\s+\w+)?\s*(?:#.*)?$",
         "bare_except": r"except\s*:",
         "broad_except": r"except\s+Exception\s*:",
@@ -32,41 +32,44 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     for pattern_name, pattern in patterns.items():
         log.info(f"Searching for {pattern_name} pattern")
         matches = []
-        
+
         try:
             # Use grep for efficient pattern matching
             grep_result = subprocess.run(
                 ["grep", "-r", "-n", "-P", pattern, str(directory)],
                 capture_output=True,
                 text=True,
-                check=False
+                check=False,
             )
-            
+
             if grep_result.returncode not in (0, 1):  # 1 means no matches
                 log.error(f"Error searching for {pattern_name}: {grep_result.stderr}")
                 continue
-                
+
             for line in grep_result.stdout.splitlines():
                 if line.strip():
                     file_path, line_num, content = line.split(":", 2)
-                    matches.append({
-                        "file": file_path,
-                        "line": int(line_num),
-                        "content": content.strip()
-                    })
-                    
+                    matches.append(
+                        {
+                            "file": file_path,
+                            "line": int(line_num),
+                            "content": content.strip(),
+                        }
+                    )
+
         except subprocess.CalledProcessError as e:
             log.error(f"Error running grep for {pattern_name}: {e}")
             continue
-            
+
         if matches:
             results[pattern_name] = matches
-            
+
     return results
+
 
 def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
     """Run various code quality tools and collect results.
-    
+
     Args:
         project_root: Root directory of the project
 
@@ -74,7 +77,7 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
         Dictionary containing results from each tool
     """
     results = {}
-    
+
     # Define tools and their commands
     tools = {
         "ruff": ["python", "-m", "ruff", "check", "."],
@@ -90,7 +93,7 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
                 cwd=project_root,
                 capture_output=True,
                 text=True,
-                timeout=300  # 5 minute timeout
+                timeout=300,  # 5 minute timeout
             )
 
             results[tool_name] = {
@@ -98,34 +101,36 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
                 "exit_code": result.returncode,
                 "stdout": result.stdout,
                 "stderr": result.stderr,
-                "command": " ".join(command)
+                "command": " ".join(command),
             }
 
             if result.returncode == 0:
                 log.success(f"{tool_name} completed successfully")
             else:
-                log.warning(f"{tool_name} found issues (exit code: {result.returncode})")
+                log.warning(
+                    f"{tool_name} found issues (exit code: {result.returncode})"
+                )
 
         except subprocess.TimeoutExpired:
             log.error(f"{tool_name} timed out")
             results[tool_name] = {
                 "success": False,
                 "error": "Tool timed out",
-                "command": " ".join(command)
+                "command": " ".join(command),
             }
         except FileNotFoundError:
             log.warning(f"{tool_name} not found, skipping")
             results[tool_name] = {
                 "success": False,
                 "error": "Tool not installed",
-                "command": " ".join(command)
+                "command": " ".join(command),
             }
         except Exception as e:
             log.error(f"Error running {tool_name}: {e}")
             results[tool_name] = {
                 "success": False,
                 "error": str(e),
-                "command": " ".join(command)
+                "command": " ".join(command),
             }
 
     # Run coverage separately
@@ -136,14 +141,14 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
             cwd=project_root,
             capture_output=True,
             text=True,
-            timeout=300
+            timeout=300,
         )
 
         coverage_result = {
             "success": result.returncode == 0,
             "exit_code": result.returncode,
             "stdout": result.stdout,
-            "stderr": result.stderr
+            "stderr": result.stderr,
         }
 
         if result.returncode == 0:
@@ -153,7 +158,7 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
                 cwd=project_root,
                 capture_output=True,
                 text=True,
-                check=False
+                check=False,
             )
 
             coverage_result["report"] = report_result.stdout
@@ -168,10 +173,9 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
                         try:
                             coverage = float(parts[-1].rstrip("%"))
                             if coverage < 80:  # Configurable threshold
-                                coverage_result["low_coverage_modules"].append({
-                                    "module": parts[0],
-                                    "coverage": coverage
-                                })
+                                coverage_result["low_coverage_modules"].append(
+                                    {"module": parts[0], "coverage": coverage}
+                                )
                         except (ValueError, IndexError):
                             continue
 
@@ -179,9 +183,6 @@ def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
 
     except Exception as e:
         log.error(f"Error running coverage: {e}")
-        results["coverage"] = {
-            "success": False,
-            "error": str(e)
-        }
+        results["coverage"] = {"success": False, "error": str(e)}
 
     return results
