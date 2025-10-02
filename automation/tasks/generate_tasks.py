@@ -1,9 +1,7 @@
 """Task generation and management."""
 
 from dataclasses import dataclass
-from typing import Dict, List, Any, Optional
-
-from automation.core.logger import log
+from typing import Any
 
 
 @dataclass
@@ -14,14 +12,14 @@ class TaskDefinition:
     task_name: str
     severity: str  # low|medium|high
     category: str  # lint|refactor|security|testing
-    files: List[str]
-    lines: Optional[List[int]] = None
+    files: list[str]
+    lines: list[int] | None = None
     description: str = ""
     suggested_fix: str = ""
     automated: bool = True
     status: str = "pending"
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Convert to dictionary for JSON serialization."""
         return {
             "task_id": self.task_id,

@@ -1,13 +1,12 @@
 """Automation script for creating PRs from high-risk tasks."""
 
 import json
-from pathlib import Path
+import logging
 import subprocess
 import sys
-import logging
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
-from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 logging.basicConfig(
     level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
@@ -25,13 +24,13 @@ class TaskDefinition:
     severity: str
     description: str
     suggested_fix: str
-    files: List[str]
+    files: list[str]
     branch_name: str
     pr_title: str
     pr_body: str
 
     @classmethod
-    def from_dict(cls, data: Dict[str, Any]) -> "TaskDefinition":
+    def from_dict(cls, data: dict[str, Any]) -> "TaskDefinition":
         """Create TaskDefinition from JSON data."""
         branch_name = f"automation/highrisk/{data['task_id']}"
         pr_title = f"[HIGH-RISK] {data['task_name']} — {data['task_id']}"
@@ -79,7 +78,7 @@ class TaskDefinition:
         )
 
 
-def run_git_command(cmd: List[str], check: bool = True) -> subprocess.CompletedProcess:
+def run_git_command(cmd: list[str], check: bool = True) -> subprocess.CompletedProcess:
     """Run a git command and return the result.
 
     Args:
@@ -99,7 +98,7 @@ def run_git_command(cmd: List[str], check: bool = True) -> subprocess.CompletedP
         raise
 
 
-def load_tasks(task_file: Path) -> List[TaskDefinition]:
+def load_tasks(task_file: Path) -> list[TaskDefinition]:
     """Load and filter high-risk tasks from JSON.
 
     Args:
@@ -109,7 +108,7 @@ def load_tasks(task_file: Path) -> List[TaskDefinition]:
         List of TaskDefinition objects
     """
     try:
-        with open(task_file, "r", encoding="utf-8") as f:
+        with open(task_file, encoding="utf-8") as f:
             data = json.load(f)
 
         tasks = []

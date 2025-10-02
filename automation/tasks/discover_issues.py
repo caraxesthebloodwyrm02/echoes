@@ -2,13 +2,12 @@
 
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any
 
-from automation.core.context import Context
 from automation.core.logger import log
 
 
-def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
+def find_code_patterns(directory: Path) -> dict[str, list[dict[str, Any]]]:
     """Search for common code patterns indicating issues.
 
     Args:
@@ -67,7 +66,7 @@ def find_code_patterns(directory: Path) -> Dict[str, List[Dict[str, Any]]]:
     return results
 
 
-def run_code_quality_tools(project_root: Path) -> Dict[str, Any]:
+def run_code_quality_tools(project_root: Path) -> dict[str, Any]:
     """Run various code quality tools and collect results.
 
     Args:

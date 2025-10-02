@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass, field
-from typing import Any, Dict
+from typing import Any
 
 
 @dataclass
@@ -23,7 +23,7 @@ class Context:
     )
     env: str = field(default_factory=lambda: os.getenv("ENVIRONMENT", "dev"))
     confirmed: bool = False
-    extra: Dict[str, Any] = field(default_factory=dict)
+    extra: dict[str, Any] = field(default_factory=dict)
 
     def require_confirmation(self, message: str) -> bool:
         """Prompt the user for confirmation.

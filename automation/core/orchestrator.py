@@ -2,7 +2,6 @@
 
 import importlib
 from pathlib import Path
-from typing import Dict, List, Union
 
 from automation.core.config import Config
 from automation.core.context import Context
@@ -12,7 +11,7 @@ from automation.core.logger import log
 class Orchestrator:
     """Orchestrates the execution of automation tasks."""
 
-    def __init__(self, config_path: Union[str, Path]):
+    def __init__(self, config_path: str | Path):
         """Initialize the orchestrator with a configuration file.
 
         Args:
@@ -20,14 +19,14 @@ class Orchestrator:
         """
         self.config = Config(config_path)
         self.context = Context()
-        self._tasks: Dict[str, Dict[str, List[str]]] = {}
+        self._tasks: dict[str, dict[str, list[str]]] = {}
         self._load_tasks()
 
     def _load_tasks(self) -> None:
         """Load task definitions from configuration."""
         self._tasks = self.config.get("framework.tasks", {})
 
-    def get_task_categories(self) -> List[str]:
+    def get_task_categories(self) -> list[str]:
         """Get available task categories.
 
         Returns:
@@ -35,7 +34,7 @@ class Orchestrator:
         """
         return list(self._tasks.keys())
 
-    def get_task_frequencies(self, category: str) -> List[str]:
+    def get_task_frequencies(self, category: str) -> list[str]:
         """Get available frequencies for a task category.
 
         Args:
@@ -46,7 +45,7 @@ class Orchestrator:
         """
         return list(self._tasks.get(category, {}).keys())
 
-    def get_tasks(self, category: str, frequency: str) -> List[str]:
+    def get_tasks(self, category: str, frequency: str) -> list[str]:
         """Get tasks for a category and frequency.
 
         Args:
@@ -87,7 +86,7 @@ class Orchestrator:
 
     def run_tasks(
         self, category: str, frequency: str, dry_run: bool = False
-    ) -> Dict[str, bool]:
+    ) -> dict[str, bool]:
         """Run all tasks for a category and frequency.
 
         Args:
@@ -115,7 +114,7 @@ class Orchestrator:
 
         return results
 
-    def run_all(self, dry_run: bool = False) -> Dict[str, Dict[str, Dict[str, bool]]]:
+    def run_all(self, dry_run: bool = False) -> dict[str, dict[str, dict[str, bool]]]:
         """Run all tasks for all categories and frequencies.
 
         Args:
@@ -125,7 +124,7 @@ class Orchestrator:
             Nested dict with results: {category: {frequency: {task: status}}}
         """
         self.context.dry_run = dry_run
-        all_results: Dict[str, Dict[str, Dict[str, bool]]] = {}
+        all_results: dict[str, dict[str, dict[str, bool]]] = {}
 
         for category in self.get_task_categories():
             all_results[category] = {}
