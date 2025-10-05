@@ -142,6 +142,7 @@ class TestRunner:
 
     def generate_test_report(self, results: Dict) -> str:
         """Generate comprehensive test report."""
+        report = []
         report.append("🧪 COMPREHENSIVE TEST REPORT")
         report.append("=" * 50)
         report.append(f"Total Tests: {results['passed'] + results['failed']}")

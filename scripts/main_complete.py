@@ -9,7 +9,7 @@ from datetime import datetime
 
 from arts_module import arts_router
 from commerce_module import commerce_router
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
