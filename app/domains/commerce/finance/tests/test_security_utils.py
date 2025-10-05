@@ -857,7 +857,6 @@ Tests encryption, PII detection, hashing, and audit logging.
 import pytest
 
 
-
 class TestFinanceSecurity:
     """Test suite for FinanceSecurity class"""
 

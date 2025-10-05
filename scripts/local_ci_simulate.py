@@ -143,9 +143,7 @@ def main():
         if data.get("echoed") == expected:
             print("✅ MCP echo tool test passed.")
         else:
-            print(
-                f"❌ MCP echo tool test failed. Expected '{expected}', got '{data.get('echoed')}'"
-            )
+            print(f"❌ MCP echo tool test failed. Expected '{expected}', got '{data.get('echoed')}'")
             server_process.terminate()
             sys.exit(1)
 

@@ -10,7 +10,6 @@ Pytest configuration and shared fixtures for FinanceAdvisor tests
 """
 
 
-
 # Add parent directory to path for imports
 parent_dir = Path(__file__).parent.parent.parent.parent.parent
 sys.path.insert(0, str(parent_dir))
