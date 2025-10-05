@@ -43,7 +43,7 @@ jobs:
       - name: Lint with ruff
         run: |
           # Stop build if there are Python syntax errors
-          ruff check app packages automation --select=E9,F63,F7,F82 --show-source --statistics
+          ruff check app packages automation --select=E9,F63,F7,F82 --show-files --statistics
           # Additional linting
           ruff check app packages automation --exit-zero --statistics
 
