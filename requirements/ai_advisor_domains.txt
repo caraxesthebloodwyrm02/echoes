@@ -1,0 +1,36 @@
+# AI Advisor - Domain-Specific Requirements
+# Dependencies for Science, Commerce, and Arts domains
+
+-r ai_advisor_base.txt
+
+# Science Domain
+# Biomedical research
+biopython>=1.81  # PubMed API, bioinformatics
+# Chemistry
+# rdkit>=2023.9.1  # Chemistry toolkit (requires conda)
+# Physics/Math
+numpy>=1.26.0
+scipy>=1.11.0
+sympy>=1.12  # Symbolic mathematics
+
+# Commerce Domain
+# Economics and finance
+pandas>=2.1.0
+scikit-learn>=1.3.0  # ML for matching and predictions
+statsmodels>=0.14.0  # Statistical modeling
+
+# Arts Domain
+# Natural language processing
+transformers>=4.35.0  # Hugging Face transformers
+nltk>=3.8.1  # Natural Language Toolkit
+# Creative generation
+pillow>=10.1.0  # Image processing
+
+# Data storage and queuing
+redis>=5.0.0  # For HIL feedback queue
+sqlalchemy>=2.0.0  # Database ORM
+alembic>=1.12.0  # Database migrations
+
+# External API clients
+requests>=2.31.0
+aiohttp>=3.9.0  # Async HTTP client

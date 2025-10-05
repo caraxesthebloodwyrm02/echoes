@@ -1,0 +1,130 @@
+# Docker Security Automation Makefile
+# This Makefile provides easy commands to run the security automation
+
+.PHONY: help all secrets daemon trust scan cleanup update check-limits readonly monitor backup check-secrets network logging test compose services completion-status
+
+# Default target
+help:
+	@echo "Docker Security Automation Commands:"
+	@echo ""
+	@echo "Setup Commands:"
+	@echo "  make secrets          - Create secrets directory and generate passwords"
+	@echo "  make daemon           - Update Docker daemon configuration"
+	@echo "  make trust            - Enable Docker Content Trust"
+	@echo ""
+	@echo "Security Commands:"
+	@echo "  make scan             - Scan images for vulnerabilities"
+	@echo "  make cleanup          - Clean up unused Docker resources"
+	@echo "  make update           - Update all Docker images"
+	@echo "  make check-security   - Check container security settings"
+	@echo "  make set-limits       - Set resource limits (configure in docker-compose.yml)"
+	@echo "  make readonly         - Enable read-only mode for containers"
+	@echo ""
+	@echo "Monitoring Commands:"
+	@echo "  make monitor          - Monitor container resource usage"
+	@echo "  make backup           - Backup important data"
+	@echo "  make check-secrets    - Check for secrets in images"
+	@echo "  make verify-network   - Verify network security"
+	@echo "  make setup-logging    - Set up container logging"
+	@echo ""
+	@echo "Testing and Maintenance:"
+	@echo "  make test             - Run Docker security tests"
+	@echo "  make update-compose   - Update Docker Compose"
+	@echo "  make review-services  - Review running services"
+	@echo ""
+	@echo "Full Automation:"
+	@echo "  make all              - Run all security steps"
+	@echo "  make completion       - Show completion status"
+	@echo ""
+
+# Run all security steps
+all: secrets daemon trust scan cleanup update check-security set-limits readonly monitor backup check-secrets verify-network setup-logging test update-compose review-services
+	@echo "All security steps completed!"
+
+# Create secrets
+secrets:
+	@./docker-security-automation.sh 1
+
+# Update Docker daemon
+daemon:
+	@./docker-security-automation.sh 2
+
+# Enable Docker Content Trust
+trust:
+	@./docker-security-automation.sh 3
+
+# Scan images
+scan:
+	@./docker-security-automation.sh 4
+
+# Cleanup resources
+cleanup:
+	@./docker-security-automation.sh 5
+
+# Update images
+update:
+	@./docker-security-automation.sh 6
+
+# Check security
+check-security:
+	@./docker-security-automation.sh 7
+
+# Set resource limits
+set-limits:
+	@./docker-security-automation.sh 8
+
+# Enable read-only mode
+readonly:
+	@./docker-security-automation.sh 9
+
+# Monitor containers
+monitor:
+	@./docker-security-automation.sh 10
+
+# Backup data
+backup:
+	@./docker-security-automation.sh 11
+
+# Check for secrets
+check-secrets:
+	@./docker-security-automation.sh 12
+
+# Verify network
+verify-network:
+	@./docker-security-automation.sh 13
+
+# Setup logging
+setup-logging:
+	@./docker-security-automation.sh 14
+
+# Run security test
+test:
+	@./docker-security-automation.sh 15
+
+# Update Docker Compose
+update-compose:
+	@./docker-security-automation.sh 16
+
+# Review services
+review-services:
+	@./docker-security-automation.sh 17
+
+# Show completion status
+completion-status:
+	@echo "Docker Security Completion Status:"
+	@echo "=================================="
+	@cat docker-security-completion.txt | grep -E "^[0-9]+:" | while read line; do \
+		step=$$(echo $$line | cut -d: -f1); \
+		status=$$(echo $$line | cut -d: -f2); \
+		notes=$$(echo $$line | cut -d: -f4); \
+		if [ "$$status" = "completed" ]; then \
+			echo "✅ Step $$step: $$notes"; \
+		else \
+			echo "⏳ Step $$step: $$notes"; \
+		fi; \
+	done
+	@echo ""
+	@echo "Summary:"
+	@completed=$$(grep ":completed:" docker-security-completion.txt | wc -l); \
+	total=$$(grep "^[0-9]\\+:" docker-security-completion.txt | wc -l); \
+	echo "Completed: $$completed/$$total steps"

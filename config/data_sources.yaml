@@ -1,0 +1,120 @@
+# Verified Data Sources Configuration
+# Trusted sources for provenance validation
+
+version: "1.0"
+updated: "2025-10-05"
+
+# Science domain sources
+science:
+  biomedical:
+    - name: PubMed
+      api_url: https://eutils.ncbi.nlm.nih.gov/entrez/eutils/
+      requires_key: false
+      rate_limit: 3_per_second
+      license: public_domain
+      peer_reviewed: true
+      trust_score: 0.95
+
+    - name: ClinicalTrials.gov
+      api_url: https://clinicaltrials.gov/api/
+      requires_key: false
+      rate_limit: 10_per_second
+      license: public_domain
+      peer_reviewed: true
+      trust_score: 0.98
+
+    - name: BioRxiv
+      api_url: https://api.biorxiv.org/
+      requires_key: false
+      rate_limit: 100_per_minute
+      license: CC-BY-NC
+      peer_reviewed: false # Preprints
+      trust_score: 0.80
+
+  general:
+    - name: arXiv
+      api_url: http://export.arxiv.org/api/
+      requires_key: false
+      rate_limit: 1_per_3_seconds
+      license: varies
+      peer_reviewed: false # Preprints
+      trust_score: 0.85
+
+    - name: CrossRef
+      api_url: https://api.crossref.org/
+      requires_key: false
+      rate_limit: 50_per_second
+      license: varies
+      peer_reviewed: varies
+      trust_score: 0.90
+
+# Commerce domain sources
+commerce:
+  economic_data:
+    - name: World Bank
+      api_url: https://api.worldbank.org/v2/
+      requires_key: false
+      rate_limit: unlimited
+      license: CC-BY-4.0
+      trust_score: 0.95
+
+    - name: BLS (Bureau of Labor Statistics)
+      api_url: https://api.bls.gov/publicAPI/v2/
+      requires_key: true
+      rate_limit: 25_per_day
+      license: public_domain
+      trust_score: 0.98
+
+    - name: OECD
+      api_url: https://stats.oecd.org/SDMX-JSON/
+      requires_key: false
+      rate_limit: reasonable_use
+      license: varies
+      trust_score: 0.93
+
+  employment:
+    - name: O*NET
+      api_url: https://services.onetcenter.org/ws/
+      requires_key: true
+      rate_limit: varies
+      license: public_domain
+      trust_score: 0.92
+
+# Arts domain sources
+arts:
+  cultural:
+    - name: Europeana
+      api_url: https://api.europeana.eu/
+      requires_key: true
+      rate_limit: 10000_per_day
+      license: varies
+      trust_score: 0.88
+
+    - name: Library of Congress
+      api_url: https://www.loc.gov/apis/
+      requires_key: false
+      rate_limit: reasonable_use
+      license: public_domain
+      trust_score: 0.95
+
+  linguistic:
+    - name: Ethnologue
+      api_url: https://www.ethnologue.com/
+      requires_key: true
+      rate_limit: varies
+      license: proprietary
+      trust_score: 0.90
+
+# Source validation rules
+validation:
+  minimum_trust_score: 0.70
+  require_peer_review_for_medical: true
+  require_license_info: true
+  max_source_age_days: 1825 # 5 years for most sources
+  max_source_age_days_medical: 730 # 2 years for medical
+
+# Cache settings
+cache:
+  enabled: true
+  ttl_seconds: 86400 # 24 hours
+  max_size_mb: 500

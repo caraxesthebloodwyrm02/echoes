@@ -1,0 +1,2 @@
+version: 
+\3.8\'\nservices:\n  coffee-house:\n    build:\n      context: .\n      target: development\n    container_name: coffee-house-debug\n    volumes:\n      - .:/app\n    environment:\n      - DEBUG=true\n    stdin_open: true\n    tty: true\n    command: python -m debugpy --listen 0.0.0.0:5678 --wait-for-client -m coffee_house\n

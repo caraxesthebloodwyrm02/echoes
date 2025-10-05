@@ -1,0 +1,18 @@
+{
+  "tasks": [
+    {
+      "task_id": "hr-001",
+      "name": "Security Vulnerability Fix",
+      "description": "Fix critical security vulnerability in authentication module",
+      "priority": "high",
+      "status": "pending"
+    },
+    {
+      "task_id": "hr-002",
+      "name": "Data Migration",
+      "description": "Migrate legacy data to new schema",
+      "priority": "high",
+      "status": "pending"
+    }
+  ]
+}

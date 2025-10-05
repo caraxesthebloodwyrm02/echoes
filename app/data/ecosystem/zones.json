@@ -1,0 +1,169 @@
+{
+  "zone_chill": {
+    "zone_id": "zone_chill",
+    "name": "Chill Zone",
+    "type": "chill",
+    "capacity": 30,
+    "features": [
+      "water_view",
+      "meditation_area",
+      "stress_relief"
+    ],
+    "furniture": [
+      {
+        "type": "bench",
+        "material": "sustainable_wood",
+        "movable": true,
+        "quantity": 10,
+        "added_at": "2025-09-30T03:57:47.906758"
+      },
+      {
+        "type": "cushion",
+        "material": "weather_resistant",
+        "movable": true,
+        "quantity": 20,
+        "added_at": "2025-09-30T03:57:47.906758"
+      }
+    ],
+    "expansion_points": [],
+    "status": "active",
+    "created_at": "2025-09-30T03:57:47.906758",
+    "last_modified": "2025-09-30T03:57:47.906758"
+  },
+  "zone_nature": {
+    "zone_id": "zone_nature",
+    "name": "Nature Spot",
+    "type": "nature",
+    "capacity": 25,
+    "features": [
+      "native_plants",
+      "observation_area",
+      "wildlife_friendly"
+    ],
+    "furniture": [
+      {
+        "type": "observation_deck",
+        "material": "recycled_composite",
+        "movable": false,
+        "quantity": 1,
+        "added_at": "2025-09-30T03:57:47.907757"
+      },
+      {
+        "type": "portable_seating",
+        "material": "bamboo",
+        "movable": true,
+        "quantity": 15,
+        "added_at": "2025-09-30T03:57:47.907757"
+      }
+    ],
+    "expansion_points": [],
+    "status": "active",
+    "created_at": "2025-09-30T03:57:47.907757",
+    "last_modified": "2025-09-30T03:57:47.907757"
+  },
+  "zone_study": {
+    "zone_id": "zone_study",
+    "name": "Study Hall",
+    "type": "study",
+    "capacity": 50,
+    "features": [
+      "flexible_classrooms",
+      "library",
+      "collaboration_spaces"
+    ],
+    "furniture": [
+      {
+        "type": "modular_desk",
+        "material": "sustainable_wood",
+        "movable": true,
+        "quantity": 50,
+        "added_at": "2025-09-30T03:57:47.908756"
+      },
+      {
+        "type": "mobile_whiteboard",
+        "material": "recycled_plastic",
+        "movable": true,
+        "quantity": 10,
+        "added_at": "2025-09-30T03:57:47.908756"
+      }
+    ],
+    "expansion_points": [
+      {
+        "location": "adjacent_courtyard",
+        "capacity_increase": 15,
+        "marked_at": "2025-09-30T03:57:47.909970"
+      }
+    ],
+    "status": "active",
+    "created_at": "2025-09-30T03:57:47.907757",
+    "last_modified": "2025-09-30T03:57:47.908756"
+  },
+  "zone_exercise": {
+    "zone_id": "zone_exercise",
+    "name": "Exercise Area",
+    "type": "exercise",
+    "capacity": 40,
+    "features": [
+      "multi_sport_field",
+      "fitness_stations",
+      "weather_adaptive"
+    ],
+    "furniture": [
+      {
+        "type": "portable_goals",
+        "material": "aluminum",
+        "movable": true,
+        "quantity": 4,
+        "added_at": "2025-09-30T03:57:47.908756"
+      },
+      {
+        "type": "exercise_mats",
+        "material": "recycled_rubber",
+        "movable": true,
+        "quantity": 30,
+        "added_at": "2025-09-30T03:57:47.908756"
+      }
+    ],
+    "expansion_points": [],
+    "status": "active",
+    "created_at": "2025-09-30T03:57:47.908756",
+    "last_modified": "2025-09-30T03:57:47.908756"
+  },
+  "zone_creative": {
+    "zone_id": "zone_creative",
+    "name": "Creative Corner",
+    "type": "creative",
+    "capacity": 35,
+    "features": [
+      "art_studio",
+      "music_space",
+      "maker_area"
+    ],
+    "furniture": [
+      {
+        "type": "adjustable_table",
+        "material": "sustainable_wood",
+        "movable": true,
+        "quantity": 15,
+        "added_at": "2025-09-30T03:57:47.909970"
+      },
+      {
+        "type": "storage_unit",
+        "material": "recycled_metal",
+        "movable": true,
+        "quantity": 10,
+        "added_at": "2025-09-30T03:57:47.909970"
+      }
+    ],
+    "expansion_points": [
+      {
+        "location": "adjacent_courtyard",
+        "capacity_increase": 15,
+        "marked_at": "2025-09-30T03:57:47.911715"
+      }
+    ],
+    "status": "active",
+    "created_at": "2025-09-30T03:57:47.909970",
+    "last_modified": "2025-09-30T03:57:47.909970"
+  }
+}

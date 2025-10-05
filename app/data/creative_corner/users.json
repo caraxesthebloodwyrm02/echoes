@@ -1,0 +1,52 @@
+{
+  "admin001": {
+    "user_id": "admin001",
+    "name": "Art Teacher",
+    "role": "instructor",
+    "access_level": "admin",
+    "contact": "art.teacher@school.edu",
+    "access_token": "11de21643c318fecf2c27d1e901a9d27f9eb64de0e1e1b6cf1a0273e99eb3a3c",
+    "registered_at": "2025-10-01T11:03:50.454989",
+    "last_access": null,
+    "total_sessions": 0,
+    "certifications": [],
+    "restrictions": []
+  },
+  "student001": {
+    "user_id": "student001",
+    "name": "Alice Johnson",
+    "role": "student",
+    "access_level": "student",
+    "contact": "alice@school.edu",
+    "access_token": "e1726af24b2f1a099c652d72593a6f4441da31298bdcd51d2a44917119b625e9",
+    "registered_at": "2025-10-01T11:03:50.454989",
+    "last_access": null,
+    "total_sessions": 0,
+    "certifications": [
+      {
+        "equipment_type": "3d_printing",
+        "certified_by": "admin001",
+        "certified_at": "2025-10-01T11:03:50.459538"
+      },
+      {
+        "equipment_type": "laser_cutting",
+        "certified_by": "admin001",
+        "certified_at": "2025-10-01T11:03:50.459538"
+      }
+    ],
+    "restrictions": []
+  },
+  "student002": {
+    "user_id": "student002",
+    "name": "Bob Smith",
+    "role": "student",
+    "access_level": "student",
+    "contact": "bob@school.edu",
+    "access_token": "914edceaccde4b6c0b49080fb2af03d2c01e35fe99c226521d7aaf838d079124",
+    "registered_at": "2025-10-01T11:03:50.456025",
+    "last_access": null,
+    "total_sessions": 0,
+    "certifications": [],
+    "restrictions": []
+  }
+}

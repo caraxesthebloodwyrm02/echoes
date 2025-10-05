@@ -1,0 +1,8 @@
+tasks:
+  - task_id: "task-123"
+    name: "Sanitize Codebase"
+    module: "automation.tasks.sanitize_codebase"
+    params:
+      target_directory: "src"
+      rules: ["remove_temp_files", "format_code"]
+    priority: "high"

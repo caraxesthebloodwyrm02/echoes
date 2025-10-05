@@ -1,0 +1,28 @@
+FROM python:3.11-slim
+
+# Install system dependencies for load testing
+RUN apt-get update && apt-get install -y \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
+
+# Set work directory
+WORKDIR /app
+
+# Copy requirements and install dependencies
+COPY requirements.txt .
+COPY requirements-dev.txt .
+RUN pip install --upgrade pip \
+    && pip install -r requirements.txt \
+    && pip install -r requirements-dev.txt \
+    && pip install locust k6
+
+# Copy load test files
+COPY loadtest/ /app/loadtest/
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash loadtest \
+    && chown -R loadtest:loadtest /app
+USER loadtest
+
+# Default command
+CMD ["locust", "-f", "/app/loadtest/locustfile.py", "--host", "http://app:8000"]

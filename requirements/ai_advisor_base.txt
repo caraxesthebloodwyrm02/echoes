@@ -1,0 +1,27 @@
+# AI Advisor - Base Requirements
+# Core dependencies for API, provenance, and safety features
+
+# FastAPI and dependencies
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.4.0
+pydantic-settings>=2.0.0
+python-multipart>=0.0.6
+
+# HTTP client for async requests
+httpx>=0.25.0
+
+# Security and authentication
+python-jose[cryptography]>=3.3.0
+passlib[bcrypt]>=1.7.4
+python-dotenv>=1.0.0
+
+# Data validation and processing
+email-validator>=2.1.0
+
+# Logging and monitoring
+structlog>=23.2.0
+python-json-logger>=2.0.0
+
+# Date/time handling
+python-dateutil>=2.8.2

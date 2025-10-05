@@ -1,0 +1,38 @@
+FROM python:3.12-slim
+
+# Install security updates and required packages
+RUN apt-get update && apt-get upgrade -y \
+    && apt-get install -y --no-install-recommends \
+        curl \
+        apt-transport-https \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user with specific UID for security
+RUN groupadd -r -g 1001 loadtest && \
+    useradd -r -u 1001 -g loadtest -m -d /home/loadtest -s /bin/bash loadtest && \
+    mkdir -p /app && \
+    chown -R loadtest:loadtest /app
+
+# Set work directory
+WORKDIR /app
+
+# Copy and install dependencies with security best practices
+COPY --chown=loadtest:loadtest requirements.txt requirements-dev.txt ./
+USER loadtest
+
+# Install Python dependencies with security checks
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir -r requirements.txt \
+    && pip install --no-cache-dir -r requirements-dev.txt \
+    && pip install --no-cache-dir locust k6
+
+# Copy application files with proper ownership
+COPY --chown=loadtest:loadtest loadtest/ /app/loadtest/
+
+# Health check for container security monitoring
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# Security: Drop all capabilities and run as non-root
+USER loadtest
+CMD ["locust", "-f", "/app/loadtest/locustfile.py", "--host", "http://app:8000"]

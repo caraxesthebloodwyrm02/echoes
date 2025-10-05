@@ -1,0 +1,149 @@
+version: "3.8"
+
+services:
+  # Main application service
+  app:
+    build:
+      context: .
+      target: development
+      args:
+        - USER_ID=${USER_ID:-1000}
+        - GROUP_ID=${GROUP_ID:-1000}
+    container_name: semantic-resonance-app
+    volumes:
+      # Mount source code for live reloading
+      - ./6/coffee_house/coffee_house:/app/coffee_house:cached
+      - ./6/maps:/app/maps:cached
+      # Mount requirements for easy updates
+      - ./requirements.txt:/app/requirements.txt:ro
+      - ./requirements-dev.txt:/app/requirements-dev.txt:ro
+      - ./requirements-ci.txt:/app/requirements-ci.txt:ro
+      # Persistent data
+      - app_data:/app/data
+      - app_logs:/app/logs
+    ports:
+      - "8000:8000"
+      - "5678:5678" # Debug port
+    environment:
+      - PYTHONPATH=/app/coffee_house:/app/maps:/app
+      - ENVIRONMENT=development
+      - DEBUG=true
+      - LOG_LEVEL=DEBUG
+    env_file:
+      - .env
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import sys; sys.exit(0)"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Redis for caching (if needed)
+  redis:
+    image: redis:7-alpine
+    container_name: semantic-resonance-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - app-network
+    restart: unless-stopped
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+
+  # PostgreSQL database (if needed)
+  postgres:
+    image: postgres:15-alpine
+    container_name: semantic-resonance-postgres
+    environment:
+      POSTGRES_DB: semantic_resonance
+      POSTGRES_USER: app_user
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-change_me_in_production}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
+    networks:
+      - app-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app_user -d semantic_resonance"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Nginx reverse proxy
+  nginx:
+    image: nginx:alpine
+    container_name: semantic-resonance-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./docker/nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./docker/ssl:/etc/nginx/ssl:ro
+      - nginx_logs:/var/log/nginx
+    depends_on:
+      - app
+    networks:
+      - app-network
+    restart: unless-stopped
+
+  # Monitoring with Prometheus and Grafana (optional)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: semantic-resonance-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./docker/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - prometheus_data:/prometheus
+    networks:
+      - app-network
+    restart: unless-stopped
+    command:
+      - "--config.file=/etc/prometheus/prometheus.yml"
+      - "--storage.tsdb.path=/prometheus"
+      - "--web.console.libraries=/etc/prometheus/console_libraries"
+      - "--web.console.templates=/etc/prometheus/consoles"
+      - "--storage.tsdb.retention.time=200h"
+      - "--web.enable-lifecycle"
+
+  grafana:
+    image: grafana/grafana:latest
+    container_name: semantic-resonance-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+    volumes:
+      - grafana_data:/var/lib/grafana
+      - ./docker/grafana/datasources:/etc/grafana/provisioning/datasources:ro
+      - ./docker/grafana/dashboards:/etc/grafana/provisioning/dashboards:ro
+    depends_on:
+      - prometheus
+    networks:
+      - app-network
+    restart: unless-stopped
+
+networks:
+  app-network:
+    driver: bridge
+
+volumes:
+  app_data:
+  app_logs:
+  redis_data:
+  postgres_data:
+  prometheus_data:
+  grafana_data:
+  nginx_logs:

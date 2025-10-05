@@ -1,0 +1,132 @@
+{
+  "s001": {
+    "stakeholder_id": "s001",
+    "name": "Alice Johnson",
+    "role": "student",
+    "contact": "alice@school.edu",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 1,
+    "joined_at": "2025-09-30T03:57:47.912231"
+  },
+  "s002": {
+    "stakeholder_id": "s002",
+    "name": "Bob Smith",
+    "role": "teacher",
+    "contact": "bob@school.edu",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T03:57:47.913234"
+  },
+  "s003": {
+    "stakeholder_id": "s003",
+    "name": "Carol Davis",
+    "role": "parent",
+    "contact": "carol@email.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T03:57:47.920833"
+  },
+  "t20250930065254": {
+    "stakeholder_id": "t20250930065254",
+    "name": "Erfan",
+    "role": "teacher",
+    "contact": "kabirerfan21@gmail.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T06:52:54.023516"
+  },
+  "t20250930070144": {
+    "stakeholder_id": "t20250930070144",
+    "name": "ted",
+    "role": "teacher",
+    "contact": "princedaemontargaryen02@gmail.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T07:01:44.997094"
+  },
+  "test_20250930070329": {
+    "stakeholder_id": "test_20250930070329",
+    "name": "Test User",
+    "role": "student",
+    "contact": "test@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T07:03:29.618199"
+  },
+  "test_20250930072546": {
+    "stakeholder_id": "test_20250930072546",
+    "name": "Test User",
+    "role": "student",
+    "contact": "test@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T07:25:46.757881"
+  },
+  "test_20250930072953": {
+    "stakeholder_id": "test_20250930072953",
+    "name": "Test User",
+    "role": "student",
+    "contact": "test@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T07:29:53.815616"
+  },
+  "test_20250930080359": {
+    "stakeholder_id": "test_20250930080359",
+    "name": "Test User",
+    "role": "student",
+    "contact": "test@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-09-30T08:03:59.314884"
+  },
+  "test123": {
+    "stakeholder_id": "test123",
+    "name": "Test User",
+    "role": "student",
+    "contact": "test@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-10-01T11:24:49.252925"
+  },
+  "test456": {
+    "stakeholder_id": "test456",
+    "name": "Test User 2",
+    "role": "teacher",
+    "contact": "teacher@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-10-01T11:24:49.260466"
+  },
+  "test789": {
+    "stakeholder_id": "test789",
+    "name": "Returning User",
+    "role": "student",
+    "contact": "returning@example.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-10-01T11:24:49.279398"
+  },
+  "test_integration": {
+    "stakeholder_id": "test_integration",
+    "name": "Integration Test User",
+    "role": "student",
+    "contact": "integration@test.com",
+    "preferences": {},
+    "feedback_count": 0,
+    "participation_score": 0,
+    "joined_at": "2025-10-01T12:24:52.446660"
+  }
+}

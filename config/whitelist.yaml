@@ -1,0 +1,104 @@
+# Agent Action Whitelist
+# Only actions listed here can be executed (when dry_run=False)
+
+version: "1.0"
+updated: "2025-10-05"
+
+# Whitelisted actions by category
+actions:
+  # Science domain
+  science:
+    - action: search_biomedical
+      description: "Search PubMed for biomedical research"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: analyze_chemistry
+      description: "Analyze chemical compounds and reactions"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: simulate_physics
+      description: "Run physics simulations"
+      risk_level: medium
+      requires_approval: true
+      side_effects: ["high_compute_usage"]
+
+  # Commerce domain
+  commerce:
+    - action: simulate_economy
+      description: "Simulate economic scenarios (UBI, etc.)"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: match_employment
+      description: "Match skills to job opportunities"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: connect_artisan
+      description: "Connect artisans to marketplace"
+      risk_level: medium
+      requires_approval: true
+      side_effects: ["external_api_call"]
+
+  # Arts domain
+  arts:
+    - action: generate_art
+      description: "Generate creative content (music, art, stories)"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: analyze_history
+      description: "Analyze historical trends"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+    - action: preserve_language
+      description: "Work with language preservation"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+  # System actions
+  system:
+    - action: no_op
+      description: "No operation (testing only)"
+      risk_level: none
+      requires_approval: false
+      side_effects: []
+
+    - action: analyze_sentiment
+      description: "Analyze sentiment in text"
+      risk_level: low
+      requires_approval: false
+      side_effects: []
+
+# Blocked actions (explicitly forbidden)
+blocked_actions:
+  - delete_database
+  - modify_user_data
+  - send_email
+  - make_payment
+  - access_credentials
+  - execute_shell_command
+  - modify_system_files
+
+# Safety thresholds
+thresholds:
+  max_execution_time_seconds: 300
+  max_concurrent_agents: 10
+  max_retries: 3
+  timeout_seconds: 30
+
+# Approval requirements
+approval:
+  high_risk_actions_require_human: true
+  external_api_calls_require_approval: true
+  financial_actions_require_approval: true

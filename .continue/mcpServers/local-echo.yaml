@@ -1,0 +1,12 @@
+name: local-echo
+version: "0.1.0"
+schema: v1
+mcpServers:
+  - name: echo
+    description: "Simple local echo MCP server for testing Continue"
+    listen:
+      host: "127.0.0.1"
+      port: 8081
+    healthcheck:
+      url: "http://127.0.0.1:8081/health"
+      timeout_seconds: 3
