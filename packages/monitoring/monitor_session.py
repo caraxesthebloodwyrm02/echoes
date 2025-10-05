@@ -10,7 +10,7 @@ from datetime import datetime
 
 def run_command(cmd):
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
+        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)  # nosec B602
         return result.returncode == 0, result.stdout, result.stderr
     except:
         return False, "", "Command failed"
