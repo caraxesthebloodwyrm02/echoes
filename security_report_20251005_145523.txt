@@ -1,0 +1,27 @@
+Starting Security Monitoring
+==================================================
+Report Time: 2025-10-05 14:55:23
+
+Generating security report...
+Running Bandit security scan...
+Bandit found at: E:\Projects\Development\.venv\Lib\site-packages\bandit\__init__.py
+Bandit scan failed: [main]	INFO	profile include tests: None
+[main]	INFO	profile exclude tests: None
+[main]	INFO	cli include tests: None
+[main]	INFO	cli exclude tests: None
+[json]	INFO	JSON output written to file: security_monitoring_report.json
+
+Checking dependency vulnerabilities...
+Dependency vulnerability check completed
+Checking environment configuration...
+Environment configuration looks secure
+Checking file permissions...
+  .env exists
+  .env.production exists
+  requirements.txt exists
+  pyproject.toml exists
+File permissions check completed
+Security Score: 75.0% (3/4 checks passed)
+
+==================================================
+SECURITY MONITORING COMPLETE - Issues found, review report

@@ -10,7 +10,9 @@ Endpoints for user authentication:
 
 from datetime import timedelta
 
-from core.auth import (
+from fastapi import APIRouter, Depends, HTTPException, status
+
+from app.core.auth import (
     ACCESS_TOKEN_EXPIRE_MINUTES,
     LoginRequest,
     TokenResponse,
@@ -19,7 +21,6 @@ from core.auth import (
     create_access_token,
     get_current_active_user,
 )
-from fastapi import APIRouter, Depends, HTTPException, status
 
 router = APIRouter()
 

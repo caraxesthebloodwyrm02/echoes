@@ -9,13 +9,17 @@ FastAPI application with:
 """
 
 import logging
+import os
 from datetime import datetime
 
-from api.routes import system_router
-from core.validation.provenance_enforcer import ProvenanceEnforcerMiddleware
+from dotenv import load_dotenv
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+
+from app.core.validation.provenance_enforcer import ProvenanceEnforcerMiddleware
+
+from .api.routes import system_router
 
 # Configure logging
 logging.basicConfig(
@@ -28,34 +32,34 @@ app = FastAPI(
     title="AI Advisor API",
     description="""
     **AI Advisor** - Domain-aligned AI with safety controls
-    
+
     ## Features
-    
+
     - 🔒 **Provenance Enforcement**: All assertions must cite sources
     - 🤝 **Human-in-the-Loop**: Continuous improvement through feedback
     - 🛡️ **Agent Safety**: Dry-run mode, kill-switch, action whitelist
     - 🔬 **Science Domain**: Biomedical research, chemistry, physics
     - 💼 **Commerce Domain**: FinanceAdvisor, UBI simulation, employment matching
     - 🎨 **Arts Domain**: Creative intelligence, cultural preservation
-    
+
     ## FinanceAdvisor Module
-    
+
     - 📊 **7-Phase Financial Intelligence**: Complete lifecycle from analysis to success
     - 🎯 **Goal Analysis**: Natural language to structured objectives
     - 📈 **Smart Predictions**: ML-powered income, retirement, and market forecasting
     - 💡 **Portfolio Optimization**: Risk-based asset allocation
     - 🗺️ **Success Roadmaps**: Clear paths with milestones and contingencies
     - ✅ **Ethical AI**: Bias-free, fair, and transparent recommendations
-    
+
     ## Safety First
-    
+
     - All agent actions default to dry-run mode
     - Provenance required on all assertions
     - Feedback queue for human review
     - Emergency kill-switch for runaway agents
-    
+
     ## Domains
-    
+
     - **Science**: Health, Physics, Chemistry, Biology
     - **Commerce**: Finance, Universal Income, Employment
     - **Arts**: Creativity, History, Language, Culture
@@ -88,9 +92,10 @@ app.add_middleware(
     enforce_strict=True,  # Set to False for development
 )
 
+
+
 # Include routers
-from api.routes import auth_router
-from domains.commerce.finance import finance_router
+
 
 app.include_router(system_router, prefix="/api", tags=["System"])
 app.include_router(auth_router, prefix="/api", tags=["Authentication"])
@@ -164,14 +169,28 @@ async def shutdown_event():
     logger.info("👋 AI Advisor API shutting down...")
 
 
+# Load environment variables from .env file if it exists
+load_dotenv()
+
 # Main entry point
 if __name__ == "__main__":
     import uvicorn
 
+    # Get host and port from environment variables with secure defaults
+    host = os.getenv("HOST", "127.0.0.1")  # Default to localhost for security
+    port = int(os.getenv("PORT", "8000"))
+    reload_enabled = os.getenv("RELOAD", "true").lower() == "true"
+    log_level = os.getenv("LOG_LEVEL", "info").lower()
+
+    # Log startup configuration
+    logger.info(f"🚀 Starting AI Advisor API on {host}:{port}")
+    logger.info(f"🔧 Reload: {reload_enabled}, Log Level: {log_level}")
+
+    # Start the server with secure configuration
     uvicorn.run(
         "main:app",
-        host="0.0.0.0",
-        port=8000,
-        reload=True,
-        log_level="info",
+        host=host,
+        port=port,
+        reload=reload_enabled,
+        log_level=log_level,
     )

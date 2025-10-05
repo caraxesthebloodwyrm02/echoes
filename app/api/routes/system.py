@@ -17,7 +17,7 @@ from fastapi import APIRouter, BackgroundTasks, HTTPException
 from pydantic import BaseModel, Field
 
 try:
-    from core.auth import User, get_current_active_user, require_role
+    from app.core.auth import User, get_current_active_user, require_role
 except ImportError:
     # Stub implementations if auth module not available
     User = dict

@@ -1,0 +1,21 @@
+{
+  "timestamp": "2025-10-05T16:13:33.784361",
+  "overall_status": "FAIL",
+  "checks": {
+    "code_scan": {
+      "status": "PASS",
+      "message": "\u2705 Bandit found 0 HIGH and 0 MEDIUM severity issues. See bandit-report.json for details."
+    },
+    "dependencies": {
+      "status": "PASS",
+      "message": "\u2705 No known vulnerabilities found in dependencies"
+    },
+    "environment": {
+      "status": "WARNING",
+      "message": "\u274c Environment issues found:\n  \u26a0\ufe0f  .env.production contains potential sensitive data: SECRET_KEY\n  \u26a0\ufe0f  .env.production contains potential sensitive data: API_KEY"
+    }
+  },
+  "recommendations": [
+    "Review environment configuration and file permissions"
+  ]
+}

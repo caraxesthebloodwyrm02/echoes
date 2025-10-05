@@ -1,0 +1,725 @@
+2025-10-05T21:28:45.7957223Z Current runner version: '2.328.0'
+2025-10-05T21:28:45.7984512Z ##[group]Runner Image Provisioner
+2025-10-05T21:28:45.7985574Z Hosted Compute Agent
+2025-10-05T21:28:45.7986278Z Version: 20250912.392
+2025-10-05T21:28:45.7986890Z Commit: d921fda672a98b64f4f82364647e2f10b2267d0b
+2025-10-05T21:28:45.7987566Z Build Date: 2025-09-12T15:23:14Z
+2025-10-05T21:28:45.7988234Z ##[endgroup]
+2025-10-05T21:28:45.7988798Z ##[group]Operating System
+2025-10-05T21:28:45.7989329Z Ubuntu
+2025-10-05T21:28:45.7989855Z 24.04.3
+2025-10-05T21:28:45.7990282Z LTS
+2025-10-05T21:28:45.7990739Z ##[endgroup]
+2025-10-05T21:28:45.7991231Z ##[group]Runner Image
+2025-10-05T21:28:45.7991834Z Image: ubuntu-24.04
+2025-10-05T21:28:45.7992314Z Version: 20250929.60.1
+2025-10-05T21:28:45.7993664Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20250929.60/images/ubuntu/Ubuntu2404-Readme.md
+2025-10-05T21:28:45.7995300Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20250929.60
+2025-10-05T21:28:45.7996461Z ##[endgroup]
+2025-10-05T21:28:45.7997596Z ##[group]GITHUB_TOKEN Permissions
+2025-10-05T21:28:45.7999915Z Contents: read
+2025-10-05T21:28:45.8000460Z Metadata: read
+2025-10-05T21:28:45.8000963Z Packages: read
+2025-10-05T21:28:45.8001414Z ##[endgroup]
+2025-10-05T21:28:45.8003704Z Secret source: Actions
+2025-10-05T21:28:45.8004383Z Prepare workflow directory
+2025-10-05T21:28:45.8338666Z Prepare all required actions
+2025-10-05T21:28:45.8378896Z Getting action download info
+2025-10-05T21:28:46.2187754Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-10-05T21:28:46.3806238Z Download action repository 'actions/setup-python@v4' (SHA:7f4fc3e22c37d6ff65e88745f38bd3157c663f7c)
+2025-10-05T21:28:46.5096073Z Download action repository 'actions/cache@v3' (SHA:6f8efc29b200d32929f49075959781ed54ec270c)
+2025-10-05T21:28:46.8097027Z Download action repository 'codecov/codecov-action@v3' (SHA:ab904c41d6ece82784817410c45d8b8c02684457)
+2025-10-05T21:28:47.2777847Z Complete job name: Test Python 3.11
+2025-10-05T21:28:47.3555344Z ##[group]Run actions/checkout@v4
+2025-10-05T21:28:47.3556637Z with:
+2025-10-05T21:28:47.3557430Z   repository: caraxesthebloodwyrm02/echoes
+2025-10-05T21:28:47.3558783Z   token: ***
+2025-10-05T21:28:47.3559502Z   ssh-strict: true
+2025-10-05T21:28:47.3560252Z   ssh-user: git
+2025-10-05T21:28:47.3561026Z   persist-credentials: true
+2025-10-05T21:28:47.3561901Z   clean: true
+2025-10-05T21:28:47.3562833Z   sparse-checkout-cone-mode: true
+2025-10-05T21:28:47.3563779Z   fetch-depth: 1
+2025-10-05T21:28:47.3564547Z   fetch-tags: false
+2025-10-05T21:28:47.3565308Z   show-progress: true
+2025-10-05T21:28:47.3566080Z   lfs: false
+2025-10-05T21:28:47.3566777Z   submodules: false
+2025-10-05T21:28:47.3567552Z   set-safe-directory: true
+2025-10-05T21:28:47.3568629Z ##[endgroup]
+2025-10-05T21:28:47.4664813Z Syncing repository: caraxesthebloodwyrm02/echoes
+2025-10-05T21:28:47.4667607Z ##[group]Getting Git version info
+2025-10-05T21:28:47.4668934Z Working directory is '/home/runner/work/echoes/echoes'
+2025-10-05T21:28:47.4670857Z [command]/usr/bin/git version
+2025-10-05T21:28:47.4737694Z git version 2.51.0
+2025-10-05T21:28:47.4765393Z ##[endgroup]
+2025-10-05T21:28:47.4787806Z Temporarily overriding HOME='/home/runner/work/_temp/bbd5df4b-5657-4bb3-93c3-e0fc909eb646' before making global git config changes
+2025-10-05T21:28:47.4790949Z Adding repository directory to the temporary git global config as a safe directory
+2025-10-05T21:28:47.4794562Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/echoes/echoes
+2025-10-05T21:28:47.4830517Z Deleting the contents of '/home/runner/work/echoes/echoes'
+2025-10-05T21:28:47.4834779Z ##[group]Initializing the repository
+2025-10-05T21:28:47.4838401Z [command]/usr/bin/git init /home/runner/work/echoes/echoes
+2025-10-05T21:28:47.4947580Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-10-05T21:28:47.4949733Z hint: is subject to change. To configure the initial branch name to use in all
+2025-10-05T21:28:47.4952998Z hint: of your new repositories, which will suppress this warning, call:
+2025-10-05T21:28:47.4954362Z hint:
+2025-10-05T21:28:47.4955592Z hint: 	git config --global init.defaultBranch <name>
+2025-10-05T21:28:47.4956919Z hint:
+2025-10-05T21:28:47.4958562Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-10-05T21:28:47.4960314Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-10-05T21:28:47.4961681Z hint:
+2025-10-05T21:28:47.4962668Z hint: 	git branch -m <name>
+2025-10-05T21:28:47.4963820Z hint:
+2025-10-05T21:28:47.4964976Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-10-05T21:28:47.4966783Z Initialized empty Git repository in /home/runner/work/echoes/echoes/.git/
+2025-10-05T21:28:47.4969838Z [command]/usr/bin/git remote add origin https://github.com/caraxesthebloodwyrm02/echoes
+2025-10-05T21:28:47.5005022Z ##[endgroup]
+2025-10-05T21:28:47.5006342Z ##[group]Disabling automatic garbage collection
+2025-10-05T21:28:47.5008954Z [command]/usr/bin/git config --local gc.auto 0
+2025-10-05T21:28:47.5039223Z ##[endgroup]
+2025-10-05T21:28:47.5040455Z ##[group]Setting up auth
+2025-10-05T21:28:47.5046083Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-10-05T21:28:47.5077264Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-10-05T21:28:47.5408971Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-10-05T21:28:47.5442913Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-10-05T21:28:47.5665373Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-10-05T21:28:47.5708893Z ##[endgroup]
+2025-10-05T21:28:47.5711270Z ##[group]Fetching the repository
+2025-10-05T21:28:47.5720105Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +70877795a61749b7929a65a9cf0416fec6c3c0e5:refs/remotes/origin/main
+2025-10-05T21:28:47.9230206Z From https://github.com/caraxesthebloodwyrm02/echoes
+2025-10-05T21:28:47.9233091Z  * [new ref]         70877795a61749b7929a65a9cf0416fec6c3c0e5 -> origin/main
+2025-10-05T21:28:47.9264963Z ##[endgroup]
+2025-10-05T21:28:47.9266703Z ##[group]Determining the checkout info
+2025-10-05T21:28:47.9268165Z ##[endgroup]
+2025-10-05T21:28:47.9271770Z [command]/usr/bin/git sparse-checkout disable
+2025-10-05T21:28:47.9313544Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-10-05T21:28:47.9342288Z ##[group]Checking out the ref
+2025-10-05T21:28:47.9345961Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+2025-10-05T21:28:47.9616697Z Switched to a new branch 'main'
+2025-10-05T21:28:47.9618560Z branch 'main' set up to track 'origin/main'.
+2025-10-05T21:28:47.9627043Z ##[endgroup]
+2025-10-05T21:28:47.9666063Z [command]/usr/bin/git log -1 --format=%H
+2025-10-05T21:28:47.9689520Z 70877795a61749b7929a65a9cf0416fec6c3c0e5
+2025-10-05T21:28:47.9975806Z ##[group]Run actions/setup-python@v4
+2025-10-05T21:28:47.9976764Z with:
+2025-10-05T21:28:47.9977428Z   python-version: 3.11
+2025-10-05T21:28:47.9978205Z   check-latest: false
+2025-10-05T21:28:47.9979213Z   token: ***
+2025-10-05T21:28:47.9979936Z   update-environment: true
+2025-10-05T21:28:47.9980782Z   allow-prereleases: false
+2025-10-05T21:28:47.9981598Z ##[endgroup]
+2025-10-05T21:28:48.1748073Z ##[group]Installed versions
+2025-10-05T21:28:48.1900723Z Successfully set up CPython (3.11.13)
+2025-10-05T21:28:48.1903342Z ##[endgroup]
+2025-10-05T21:28:48.3098387Z ##[group]Run actions/cache@v3
+2025-10-05T21:28:48.3099263Z with:
+2025-10-05T21:28:48.3099897Z   path: ~/.cache/pip
+2025-10-05T21:28:48.3101375Z   key: Linux-pip-710d2b36d6aee8e44dbf05e53b4ca400e4c35674ba42ab39ca1e7ee8dc830851
+2025-10-05T21:28:48.3103092Z   restore-keys: Linux-pip-
+2025-10-05T21:28:48.3103959Z   enableCrossOsArchive: false
+2025-10-05T21:28:48.3104836Z   fail-on-cache-miss: false
+2025-10-05T21:28:48.3105644Z   lookup-only: false
+2025-10-05T21:28:48.3106348Z env:
+2025-10-05T21:28:48.3107175Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.3108643Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib/pkgconfig
+2025-10-05T21:28:48.3110070Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.3111379Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.3112944Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.3114445Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib
+2025-10-05T21:28:48.3115555Z ##[endgroup]
+2025-10-05T21:28:48.5724105Z Cache not found for input keys: Linux-pip-710d2b36d6aee8e44dbf05e53b4ca400e4c35674ba42ab39ca1e7ee8dc830851, Linux-pip-
+2025-10-05T21:28:48.5834230Z ##[group]Run python -m pip install --upgrade pip
+2025-10-05T21:28:48.5835538Z python -m pip install --upgrade pip
+2025-10-05T21:28:48.5836656Z pip install -r requirements.txt
+2025-10-05T21:28:48.5837744Z pip install -r mcp_requirements.txt
+2025-10-05T21:28:48.5839112Z pip install pytest pytest-asyncio pytest-cov httpx fastapi[all]
+2025-10-05T21:28:48.5840560Z pip install ruff black mypy bandit safety
+2025-10-05T21:28:48.5841686Z npm install -g markdownlint-cli2
+2025-10-05T21:28:48.5887279Z shell: /usr/bin/bash -e {0}
+2025-10-05T21:28:48.5888148Z env:
+2025-10-05T21:28:48.5889056Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.5890528Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib/pkgconfig
+2025-10-05T21:28:48.5892008Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.5893697Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.5895088Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:28:48.5896443Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib
+2025-10-05T21:28:48.5897579Z ##[endgroup]
+2025-10-05T21:28:49.7563748Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (25.2)
+2025-10-05T21:28:50.3253978Z Obtaining file:///home/runner/work/echoes/echoes/packages/core (from -r requirements.txt (line 56))
+2025-10-05T21:28:50.3272331Z   Installing build dependencies: started
+2025-10-05T21:28:51.1237325Z   Installing build dependencies: finished with status 'done'
+2025-10-05T21:28:51.1241943Z   Checking if build backend supports build_editable: started
+2025-10-05T21:28:51.4612846Z   Checking if build backend supports build_editable: finished with status 'done'
+2025-10-05T21:28:51.4620978Z   Getting requirements to build editable: started
+2025-10-05T21:28:51.7779620Z   Getting requirements to build editable: finished with status 'done'
+2025-10-05T21:28:51.7791654Z   Preparing editable metadata (pyproject.toml): started
+2025-10-05T21:28:51.9545521Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2025-10-05T21:28:51.9573609Z Obtaining file:///home/runner/work/echoes/echoes/packages/monitoring (from -r requirements.txt (line 57))
+2025-10-05T21:28:51.9588228Z   Installing build dependencies: started
+2025-10-05T21:28:52.6491718Z   Installing build dependencies: finished with status 'done'
+2025-10-05T21:28:52.6497098Z   Checking if build backend supports build_editable: started
+2025-10-05T21:28:52.9045795Z   Checking if build backend supports build_editable: finished with status 'done'
+2025-10-05T21:28:52.9053063Z   Getting requirements to build editable: started
+2025-10-05T21:28:53.1989555Z   Getting requirements to build editable: finished with status 'done'
+2025-10-05T21:28:53.1998533Z   Preparing editable metadata (pyproject.toml): started
+2025-10-05T21:28:53.3778647Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2025-10-05T21:28:53.3804252Z Obtaining file:///home/runner/work/echoes/echoes/packages/security (from -r requirements.txt (line 58))
+2025-10-05T21:28:53.3817080Z   Installing build dependencies: started
+2025-10-05T21:28:54.0774509Z   Installing build dependencies: finished with status 'done'
+2025-10-05T21:28:54.0779688Z   Checking if build backend supports build_editable: started
+2025-10-05T21:28:54.3339497Z   Checking if build backend supports build_editable: finished with status 'done'
+2025-10-05T21:28:54.3346938Z   Getting requirements to build editable: started
+2025-10-05T21:28:54.6366883Z   Getting requirements to build editable: finished with status 'done'
+2025-10-05T21:28:54.6375353Z   Preparing editable metadata (pyproject.toml): started
+2025-10-05T21:28:54.8092695Z   Preparing editable metadata (pyproject.toml): finished with status 'done'
+2025-10-05T21:28:54.8968634Z Collecting fastapi>=0.104.0 (from -r requirements.txt (line 6))
+2025-10-05T21:28:54.9302775Z   Downloading fastapi-0.118.0-py3-none-any.whl.metadata (28 kB)
+2025-10-05T21:28:54.9839505Z Collecting uvicorn>=0.24.0 (from uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:28:54.9882372Z   Downloading uvicorn-0.37.0-py3-none-any.whl.metadata (6.6 kB)
+2025-10-05T21:28:55.1097034Z Collecting pydantic>=2.4.0 (from -r requirements.txt (line 8))
+2025-10-05T21:28:55.1138446Z   Downloading pydantic-2.11.10-py3-none-any.whl.metadata (68 kB)
+2025-10-05T21:28:55.1454950Z Collecting pydantic-settings>=2.0.0 (from -r requirements.txt (line 9))
+2025-10-05T21:28:55.1507523Z   Downloading pydantic_settings-2.11.0-py3-none-any.whl.metadata (3.4 kB)
+2025-10-05T21:28:55.1710764Z Collecting httpx>=0.25.0 (from -r requirements.txt (line 12))
+2025-10-05T21:28:55.1757496Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2025-10-05T21:28:55.1912242Z Collecting python-jose>=3.3.0 (from python-jose[cryptography]>=3.3.0->-r requirements.txt (line 15))
+2025-10-05T21:28:55.1949468Z   Downloading python_jose-3.5.0-py2.py3-none-any.whl.metadata (5.5 kB)
+2025-10-05T21:28:55.2075918Z Collecting passlib>=1.7.4 (from passlib[bcrypt]>=1.7.4->-r requirements.txt (line 16))
+2025-10-05T21:28:55.2112932Z   Downloading passlib-1.7.4-py2.py3-none-any.whl.metadata (1.7 kB)
+2025-10-05T21:28:55.2285664Z Collecting python-dotenv>=1.0.0 (from -r requirements.txt (line 17))
+2025-10-05T21:28:55.2322208Z   Downloading python_dotenv-1.1.1-py3-none-any.whl.metadata (24 kB)
+2025-10-05T21:28:55.2490539Z Collecting email-validator>=2.1.0 (from -r requirements.txt (line 20))
+2025-10-05T21:28:55.2527562Z   Downloading email_validator-2.3.0-py3-none-any.whl.metadata (26 kB)
+2025-10-05T21:28:55.2727402Z Collecting structlog>=23.2.0 (from -r requirements.txt (line 23))
+2025-10-05T21:28:55.2764564Z   Downloading structlog-25.4.0-py3-none-any.whl.metadata (7.6 kB)
+2025-10-05T21:28:55.2935333Z Collecting python-json-logger>=2.0.0 (from -r requirements.txt (line 24))
+2025-10-05T21:28:55.2982026Z   Downloading python_json_logger-3.3.0-py3-none-any.whl.metadata (4.0 kB)
+2025-10-05T21:28:55.3278320Z Collecting python-dateutil>=2.8.2 (from -r requirements.txt (line 27))
+2025-10-05T21:28:55.3318965Z   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+2025-10-05T21:28:55.3703883Z Collecting pytest>=7.4.0 (from -r requirements.txt (line 30))
+2025-10-05T21:28:55.3750302Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+2025-10-05T21:28:55.3975733Z Collecting pytest-asyncio>=0.21.0 (from -r requirements.txt (line 31))
+2025-10-05T21:28:55.4028898Z   Downloading pytest_asyncio-1.2.0-py3-none-any.whl.metadata (4.1 kB)
+2025-10-05T21:28:55.4197148Z Collecting pytest-cov>=4.1.0 (from -r requirements.txt (line 32))
+2025-10-05T21:28:55.4236784Z   Downloading pytest_cov-7.0.0-py3-none-any.whl.metadata (31 kB)
+2025-10-05T21:28:55.4440962Z Collecting pytest-mock>=3.12.0 (from -r requirements.txt (line 33))
+2025-10-05T21:28:55.4477293Z   Downloading pytest_mock-3.15.1-py3-none-any.whl.metadata (3.9 kB)
+2025-10-05T21:28:55.4989132Z Collecting black>=23.11.0 (from -r requirements.txt (line 36))
+2025-10-05T21:28:55.5062302Z   Downloading black-25.9.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl.metadata (83 kB)
+2025-10-05T21:28:55.5415937Z Collecting isort>=5.12.0 (from -r requirements.txt (line 37))
+2025-10-05T21:28:55.5459747Z   Downloading isort-6.1.0-py3-none-any.whl.metadata (12 kB)
+2025-10-05T21:28:55.5695436Z Collecting flake8>=6.1.0 (from -r requirements.txt (line 38))
+2025-10-05T21:28:55.5737019Z   Downloading flake8-7.3.0-py2.py3-none-any.whl.metadata (3.8 kB)
+2025-10-05T21:28:55.6750338Z Collecting mypy>=1.7.0 (from -r requirements.txt (line 39))
+2025-10-05T21:28:55.6797438Z   Downloading mypy-1.18.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.2 kB)
+2025-10-05T21:28:55.7081566Z Collecting bandit>=1.7.5 (from -r requirements.txt (line 40))
+2025-10-05T21:28:55.7118626Z   Downloading bandit-1.8.6-py3-none-any.whl.metadata (6.9 kB)
+2025-10-05T21:28:55.7410970Z Collecting safety>=2.3.0 (from -r requirements.txt (line 43))
+2025-10-05T21:28:55.7458790Z   Downloading safety-3.6.2-py3-none-any.whl.metadata (11 kB)
+2025-10-05T21:28:55.7827916Z Collecting pre-commit>=3.5.0 (from -r requirements.txt (line 46))
+2025-10-05T21:28:55.7869917Z   Downloading pre_commit-4.3.0-py2.py3-none-any.whl.metadata (1.2 kB)
+2025-10-05T21:28:55.8096220Z Collecting mkdocs>=1.5.0 (from -r requirements.txt (line 49))
+2025-10-05T21:28:55.8134226Z   Downloading mkdocs-1.6.1-py3-none-any.whl.metadata (6.0 kB)
+2025-10-05T21:28:55.9138298Z Collecting mkdocs-material>=9.4.0 (from -r requirements.txt (line 50))
+2025-10-05T21:28:55.9179129Z   Downloading mkdocs_material-9.6.21-py3-none-any.whl.metadata (19 kB)
+2025-10-05T21:28:55.9339541Z Collecting python-multipart>=0.0.6 (from -r requirements.txt (line 53))
+2025-10-05T21:28:55.9376453Z   Downloading python_multipart-0.0.20-py3-none-any.whl.metadata (1.8 kB)
+2025-10-05T21:28:55.9762837Z Collecting pyyaml>=6.0 (from echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:28:55.9802243Z   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2025-10-05T21:28:56.0173483Z Collecting rich>=13.0.0 (from echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:28:56.0212868Z   Downloading rich-14.1.0-py3-none-any.whl.metadata (18 kB)
+2025-10-05T21:28:56.0475751Z Collecting requests>=2.31.0 (from echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:28:56.0521891Z   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+2025-10-05T21:28:56.0718683Z Collecting prometheus-client>=0.17.0 (from echoe-monitoring==0.1.0->-r requirements.txt (line 57))
+2025-10-05T21:28:56.0756445Z   Downloading prometheus_client-0.23.1-py3-none-any.whl.metadata (1.9 kB)
+2025-10-05T21:28:56.1407550Z Collecting psutil>=5.9.0 (from echoe-monitoring==0.1.0->-r requirements.txt (line 57))
+2025-10-05T21:28:56.1456539Z   Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (23 kB)
+2025-10-05T21:28:56.3250600Z Collecting cryptography>=41.0.0 (from echoe-security==0.1.0->-r requirements.txt (line 58))
+2025-10-05T21:28:56.3293062Z   Downloading cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl.metadata (5.7 kB)
+2025-10-05T21:28:56.3532185Z Collecting pyjwt>=2.8.0 (from echoe-security==0.1.0->-r requirements.txt (line 58))
+2025-10-05T21:28:56.3571160Z   Downloading PyJWT-2.10.1-py3-none-any.whl.metadata (4.0 kB)
+2025-10-05T21:28:56.3883066Z Collecting starlette<0.49.0,>=0.40.0 (from fastapi>=0.104.0->-r requirements.txt (line 6))
+2025-10-05T21:28:56.3920273Z   Downloading starlette-0.48.0-py3-none-any.whl.metadata (6.3 kB)
+2025-10-05T21:28:56.4415577Z Collecting typing-extensions>=4.8.0 (from fastapi>=0.104.0->-r requirements.txt (line 6))
+2025-10-05T21:28:56.4457551Z   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+2025-10-05T21:28:56.4640538Z Collecting annotated-types>=0.6.0 (from pydantic>=2.4.0->-r requirements.txt (line 8))
+2025-10-05T21:28:56.4678301Z   Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2025-10-05T21:28:57.1527927Z Collecting pydantic-core==2.33.2 (from pydantic>=2.4.0->-r requirements.txt (line 8))
+2025-10-05T21:28:57.1578090Z   Downloading pydantic_core-2.33.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+2025-10-05T21:28:57.1729429Z Collecting typing-inspection>=0.4.0 (from pydantic>=2.4.0->-r requirements.txt (line 8))
+2025-10-05T21:28:57.1767709Z   Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2025-10-05T21:28:57.2083797Z Collecting anyio<5,>=3.6.2 (from starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r requirements.txt (line 6))
+2025-10-05T21:28:57.2121119Z   Downloading anyio-4.11.0-py3-none-any.whl.metadata (4.1 kB)
+2025-10-05T21:28:57.2344493Z Collecting idna>=2.8 (from anyio<5,>=3.6.2->starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r requirements.txt (line 6))
+2025-10-05T21:28:57.2383660Z   Downloading idna-3.10-py3-none-any.whl.metadata (10 kB)
+2025-10-05T21:28:57.2502934Z Collecting sniffio>=1.1 (from anyio<5,>=3.6.2->starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r requirements.txt (line 6))
+2025-10-05T21:28:57.2540344Z   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+2025-10-05T21:28:57.2786192Z Collecting click>=7.0 (from uvicorn>=0.24.0->uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:28:57.2860514Z   Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+2025-10-05T21:28:57.2980503Z Collecting h11>=0.8 (from uvicorn>=0.24.0->uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:28:57.3020220Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2025-10-05T21:28:57.3538571Z Collecting certifi (from httpx>=0.25.0->-r requirements.txt (line 12))
+2025-10-05T21:28:57.3588081Z   Downloading certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
+2025-10-05T21:28:57.3791734Z Collecting httpcore==1.* (from httpx>=0.25.0->-r requirements.txt (line 12))
+2025-10-05T21:28:57.3827277Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2025-10-05T21:28:57.4019608Z Collecting ecdsa!=0.15 (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->-r requirements.txt (line 15))
+2025-10-05T21:28:57.4058833Z   Downloading ecdsa-0.19.1-py2.py3-none-any.whl.metadata (29 kB)
+2025-10-05T21:28:57.4240114Z Collecting rsa!=4.1.1,!=4.4,<5.0,>=4.0 (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->-r requirements.txt (line 15))
+2025-10-05T21:28:57.4301828Z   Downloading rsa-4.9.1-py3-none-any.whl.metadata (5.6 kB)
+2025-10-05T21:28:57.4506544Z Collecting pyasn1>=0.5.0 (from python-jose>=3.3.0->python-jose[cryptography]>=3.3.0->-r requirements.txt (line 15))
+2025-10-05T21:28:57.4559256Z   Downloading pyasn1-0.6.1-py3-none-any.whl.metadata (8.4 kB)
+2025-10-05T21:28:57.4813626Z Collecting dnspython>=2.0.0 (from email-validator>=2.1.0->-r requirements.txt (line 20))
+2025-10-05T21:28:57.4853285Z   Downloading dnspython-2.8.0-py3-none-any.whl.metadata (5.7 kB)
+2025-10-05T21:28:57.5085106Z Collecting six>=1.5 (from python-dateutil>=2.8.2->-r requirements.txt (line 27))
+2025-10-05T21:28:57.5120381Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2025-10-05T21:28:57.5244260Z Collecting iniconfig>=1 (from pytest>=7.4.0->-r requirements.txt (line 30))
+2025-10-05T21:28:57.5282705Z   Downloading iniconfig-2.1.0-py3-none-any.whl.metadata (2.7 kB)
+2025-10-05T21:28:57.5448814Z Collecting packaging>=20 (from pytest>=7.4.0->-r requirements.txt (line 30))
+2025-10-05T21:28:57.5498384Z   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+2025-10-05T21:28:57.5640421Z Collecting pluggy<2,>=1.5 (from pytest>=7.4.0->-r requirements.txt (line 30))
+2025-10-05T21:28:57.5681877Z   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+2025-10-05T21:28:57.5909669Z Collecting pygments>=2.7.2 (from pytest>=7.4.0->-r requirements.txt (line 30))
+2025-10-05T21:28:57.5945715Z   Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+2025-10-05T21:28:57.9809151Z Collecting coverage>=7.10.6 (from coverage[toml]>=7.10.6->pytest-cov>=4.1.0->-r requirements.txt (line 32))
+2025-10-05T21:28:57.9853443Z   Downloading coverage-7.10.7-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (8.9 kB)
+2025-10-05T21:28:58.0310863Z Collecting mypy-extensions>=0.4.3 (from black>=23.11.0->-r requirements.txt (line 36))
+2025-10-05T21:28:58.0351840Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+2025-10-05T21:28:58.0516183Z Collecting pathspec>=0.9.0 (from black>=23.11.0->-r requirements.txt (line 36))
+2025-10-05T21:28:58.0569697Z   Downloading pathspec-0.12.1-py3-none-any.whl.metadata (21 kB)
+2025-10-05T21:28:58.0803222Z Collecting platformdirs>=2 (from black>=23.11.0->-r requirements.txt (line 36))
+2025-10-05T21:28:58.0840501Z   Downloading platformdirs-4.4.0-py3-none-any.whl.metadata (12 kB)
+2025-10-05T21:28:58.1036747Z Collecting pytokens>=0.1.10 (from black>=23.11.0->-r requirements.txt (line 36))
+2025-10-05T21:28:58.1075492Z   Downloading pytokens-0.1.10-py3-none-any.whl.metadata (2.0 kB)
+2025-10-05T21:28:58.1219771Z Collecting mccabe<0.8.0,>=0.7.0 (from flake8>=6.1.0->-r requirements.txt (line 38))
+2025-10-05T21:28:58.1261453Z   Downloading mccabe-0.7.0-py2.py3-none-any.whl.metadata (5.0 kB)
+2025-10-05T21:28:58.1396626Z Collecting pycodestyle<2.15.0,>=2.14.0 (from flake8>=6.1.0->-r requirements.txt (line 38))
+2025-10-05T21:28:58.1453447Z   Downloading pycodestyle-2.14.0-py2.py3-none-any.whl.metadata (4.5 kB)
+2025-10-05T21:28:58.1648620Z Collecting pyflakes<3.5.0,>=3.4.0 (from flake8>=6.1.0->-r requirements.txt (line 38))
+2025-10-05T21:28:58.1685927Z   Downloading pyflakes-3.4.0-py2.py3-none-any.whl.metadata (3.5 kB)
+2025-10-05T21:28:58.2329127Z Collecting stevedore>=1.20.0 (from bandit>=1.7.5->-r requirements.txt (line 40))
+2025-10-05T21:28:58.2368007Z   Downloading stevedore-5.5.0-py3-none-any.whl.metadata (2.2 kB)
+2025-10-05T21:28:58.2589881Z Collecting authlib>=1.2.0 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.2628349Z   Downloading authlib-1.6.5-py2.py3-none-any.whl.metadata (9.8 kB)
+2025-10-05T21:28:58.2816653Z Collecting dparse>=0.6.4 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.2858129Z   Downloading dparse-0.6.4-py3-none-any.whl.metadata (5.5 kB)
+2025-10-05T21:28:58.3058943Z Collecting filelock<4.0,>=3.16.1 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.3107230Z   Downloading filelock-3.19.1-py3-none-any.whl.metadata (2.1 kB)
+2025-10-05T21:28:58.3262890Z Collecting jinja2>=3.1.0 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.3298891Z   Downloading jinja2-3.1.6-py3-none-any.whl.metadata (2.9 kB)
+2025-10-05T21:28:58.3661234Z Collecting marshmallow>=3.15.0 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.3708741Z   Downloading marshmallow-4.0.1-py3-none-any.whl.metadata (7.4 kB)
+2025-10-05T21:28:58.3957138Z Collecting nltk>=3.9 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.3996934Z   Downloading nltk-3.9.2-py3-none-any.whl.metadata (3.2 kB)
+2025-10-05T21:28:58.5703571Z Collecting ruamel-yaml>=0.17.21 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.5744170Z   Downloading ruamel.yaml-0.18.15-py3-none-any.whl.metadata (25 kB)
+2025-10-05T21:28:58.5907968Z Collecting safety-schemas==0.0.16 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.5953823Z   Downloading safety_schemas-0.0.16-py3-none-any.whl.metadata (1.1 kB)
+2025-10-05T21:28:58.7697397Z Collecting setuptools>=65.5.1 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.7712394Z   Using cached setuptools-80.9.0-py3-none-any.whl.metadata (6.6 kB)
+2025-10-05T21:28:58.7947348Z Collecting tenacity (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.7984915Z   Downloading tenacity-9.1.2-py3-none-any.whl.metadata (1.2 kB)
+2025-10-05T21:28:58.8188903Z Collecting tomlkit (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.8230106Z   Downloading tomlkit-0.13.3-py3-none-any.whl.metadata (2.8 kB)
+2025-10-05T21:28:58.8417346Z Collecting typer>=0.16.0 (from safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:58.8455303Z   Downloading typer-0.19.2-py3-none-any.whl.metadata (16 kB)
+2025-10-05T21:28:58.8727696Z Collecting cfgv>=2.0.0 (from pre-commit>=3.5.0->-r requirements.txt (line 46))
+2025-10-05T21:28:58.8763998Z   Downloading cfgv-3.4.0-py2.py3-none-any.whl.metadata (8.5 kB)
+2025-10-05T21:28:58.9214511Z Collecting identify>=1.0.0 (from pre-commit>=3.5.0->-r requirements.txt (line 46))
+2025-10-05T21:28:58.9259149Z   Downloading identify-2.6.15-py2.py3-none-any.whl.metadata (4.4 kB)
+2025-10-05T21:28:58.9434841Z Collecting nodeenv>=0.11.1 (from pre-commit>=3.5.0->-r requirements.txt (line 46))
+2025-10-05T21:28:58.9488043Z   Downloading nodeenv-1.9.1-py2.py3-none-any.whl.metadata (21 kB)
+2025-10-05T21:28:58.9940084Z Collecting virtualenv>=20.10.0 (from pre-commit>=3.5.0->-r requirements.txt (line 46))
+2025-10-05T21:28:58.9977982Z   Downloading virtualenv-20.34.0-py3-none-any.whl.metadata (4.6 kB)
+2025-10-05T21:28:59.0180765Z Collecting ghp-import>=1.0 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.0219315Z   Downloading ghp_import-2.1.0-py3-none-any.whl.metadata (7.2 kB)
+2025-10-05T21:28:59.0422219Z Collecting markdown>=3.3.6 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.0458351Z   Downloading markdown-3.9-py3-none-any.whl.metadata (5.1 kB)
+2025-10-05T21:28:59.1000293Z Collecting markupsafe>=2.0.1 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.1040743Z   Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.7 kB)
+2025-10-05T21:28:59.1159074Z Collecting mergedeep>=1.3.4 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.1195421Z   Downloading mergedeep-1.3.4-py3-none-any.whl.metadata (4.3 kB)
+2025-10-05T21:28:59.1312809Z Collecting mkdocs-get-deps>=0.2.0 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.1346978Z   Downloading mkdocs_get_deps-0.2.0-py3-none-any.whl.metadata (4.0 kB)
+2025-10-05T21:28:59.1538281Z Collecting pyyaml-env-tag>=0.1 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.1573630Z   Downloading pyyaml_env_tag-1.1-py3-none-any.whl.metadata (5.5 kB)
+2025-10-05T21:28:59.2098744Z Collecting watchdog>=2.0 (from mkdocs>=1.5.0->-r requirements.txt (line 49))
+2025-10-05T21:28:59.2148366Z   Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl.metadata (44 kB)
+2025-10-05T21:28:59.2353233Z Collecting babel~=2.10 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.2387595Z   Downloading babel-2.17.0-py3-none-any.whl.metadata (2.0 kB)
+2025-10-05T21:28:59.2621728Z Collecting backrefs~=5.7.post1 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.2658614Z   Downloading backrefs-5.9-py311-none-any.whl.metadata (3.2 kB)
+2025-10-05T21:28:59.2847312Z Collecting colorama~=0.4 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.2884269Z   Downloading colorama-0.4.6-py2.py3-none-any.whl.metadata (17 kB)
+2025-10-05T21:28:59.3118152Z Collecting mkdocs-material-extensions~=1.3 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.3156228Z   Downloading mkdocs_material_extensions-1.3.1-py3-none-any.whl.metadata (6.9 kB)
+2025-10-05T21:28:59.3315318Z Collecting paginate~=0.5 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.3353257Z   Downloading paginate-0.5.7-py2.py3-none-any.whl.metadata (11 kB)
+2025-10-05T21:28:59.3701502Z Collecting pymdown-extensions~=10.2 (from mkdocs-material>=9.4.0->-r requirements.txt (line 50))
+2025-10-05T21:28:59.3740037Z   Downloading pymdown_extensions-10.16.1-py3-none-any.whl.metadata (3.1 kB)
+2025-10-05T21:28:59.4863861Z Collecting charset_normalizer<4,>=2 (from requests>=2.31.0->echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:28:59.4904979Z   Downloading charset_normalizer-3.4.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (36 kB)
+2025-10-05T21:28:59.5247295Z Collecting urllib3<3,>=1.21.1 (from requests>=2.31.0->echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:28:59.5291918Z   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+2025-10-05T21:28:59.6669408Z Collecting cffi>=2.0.0 (from cryptography>=41.0.0->echoe-security==0.1.0->-r requirements.txt (line 58))
+2025-10-05T21:28:59.6714718Z   Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl.metadata (2.6 kB)
+2025-10-05T21:28:59.6879190Z Collecting pycparser (from cffi>=2.0.0->cryptography>=41.0.0->echoe-security==0.1.0->-r requirements.txt (line 58))
+2025-10-05T21:28:59.6925483Z   Downloading pycparser-2.23-py3-none-any.whl.metadata (993 bytes)
+2025-10-05T21:28:59.7542407Z Collecting joblib (from nltk>=3.9->safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:28:59.7585181Z   Downloading joblib-1.5.2-py3-none-any.whl.metadata (5.6 kB)
+2025-10-05T21:29:00.1569447Z Collecting regex>=2021.8.3 (from nltk>=3.9->safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:29:00.1621849Z   Downloading regex-2025.9.18-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (40 kB)
+2025-10-05T21:29:00.2020096Z Collecting tqdm (from nltk>=3.9->safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:29:00.2062958Z   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+2025-10-05T21:29:00.2621997Z Collecting bcrypt>=3.1.0 (from passlib[bcrypt]>=1.7.4->-r requirements.txt (line 16))
+2025-10-05T21:29:00.2665953Z   Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl.metadata (10 kB)
+2025-10-05T21:29:00.3404799Z Collecting markdown-it-py>=2.2.0 (from rich>=13.0.0->echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:29:00.3443402Z   Downloading markdown_it_py-4.0.0-py3-none-any.whl.metadata (7.3 kB)
+2025-10-05T21:29:00.3685433Z Collecting mdurl~=0.1 (from markdown-it-py>=2.2.0->rich>=13.0.0->echoe-core==0.1.0->-r requirements.txt (line 56))
+2025-10-05T21:29:00.3732417Z   Downloading mdurl-0.1.2-py3-none-any.whl.metadata (1.6 kB)
+2025-10-05T21:29:00.4149323Z Collecting ruamel.yaml.clib>=0.2.7 (from ruamel-yaml>=0.17.21->safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:29:00.4218982Z   Downloading ruamel.yaml.clib-0.2.14-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.0 kB)
+2025-10-05T21:29:00.4611337Z Collecting shellingham>=1.3.0 (from typer>=0.16.0->safety>=2.3.0->-r requirements.txt (line 43))
+2025-10-05T21:29:00.4669910Z   Downloading shellingham-1.5.4-py2.py3-none-any.whl.metadata (3.5 kB)
+2025-10-05T21:29:00.5206079Z Collecting httptools>=0.6.3 (from uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:29:00.5248150Z   Downloading httptools-0.6.4-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.6 kB)
+2025-10-05T21:29:00.5650641Z Collecting uvloop>=0.15.1 (from uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:29:00.5697352Z   Downloading uvloop-0.21.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2025-10-05T21:29:00.6408706Z Collecting watchfiles>=0.13 (from uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:29:00.6450403Z   Downloading watchfiles-1.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (4.9 kB)
+2025-10-05T21:29:00.7321912Z Collecting websockets>=10.4 (from uvicorn[standard]>=0.24.0->-r requirements.txt (line 7))
+2025-10-05T21:29:00.7365996Z   Downloading websockets-15.0.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (6.8 kB)
+2025-10-05T21:29:00.7610454Z Collecting distlib<1,>=0.3.7 (from virtualenv>=20.10.0->pre-commit>=3.5.0->-r requirements.txt (line 46))
+2025-10-05T21:29:00.7651488Z   Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+2025-10-05T21:29:00.8192364Z Downloading fastapi-0.118.0-py3-none-any.whl (97 kB)
+2025-10-05T21:29:00.8261946Z Downloading pydantic-2.11.10-py3-none-any.whl (444 kB)
+2025-10-05T21:29:00.8383129Z Downloading pydantic_core-2.33.2-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.0 MB)
+2025-10-05T21:29:00.8642700Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.0/2.0 MB 81.8 MB/s  0:00:00
+2025-10-05T21:29:00.8681315Z Downloading starlette-0.48.0-py3-none-any.whl (73 kB)
+2025-10-05T21:29:00.8752370Z Downloading anyio-4.11.0-py3-none-any.whl (109 kB)
+2025-10-05T21:29:00.8826466Z Downloading uvicorn-0.37.0-py3-none-any.whl (67 kB)
+2025-10-05T21:29:00.8888595Z Downloading pydantic_settings-2.11.0-py3-none-any.whl (48 kB)
+2025-10-05T21:29:00.8950034Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2025-10-05T21:29:00.9009358Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2025-10-05T21:29:00.9067317Z Downloading python_jose-3.5.0-py2.py3-none-any.whl (34 kB)
+2025-10-05T21:29:00.9126857Z Downloading rsa-4.9.1-py3-none-any.whl (34 kB)
+2025-10-05T21:29:00.9181799Z Downloading passlib-1.7.4-py2.py3-none-any.whl (525 kB)
+2025-10-05T21:29:00.9263135Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 525.6/525.6 kB 65.2 MB/s  0:00:00
+2025-10-05T21:29:00.9301357Z Downloading python_dotenv-1.1.1-py3-none-any.whl (20 kB)
+2025-10-05T21:29:00.9359977Z Downloading email_validator-2.3.0-py3-none-any.whl (35 kB)
+2025-10-05T21:29:00.9415616Z Downloading structlog-25.4.0-py3-none-any.whl (68 kB)
+2025-10-05T21:29:00.9472135Z Downloading python_json_logger-3.3.0-py3-none-any.whl (15 kB)
+2025-10-05T21:29:00.9530590Z Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2025-10-05T21:29:00.9598768Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2025-10-05T21:29:00.9686508Z Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2025-10-05T21:29:00.9747178Z Downloading pytest_asyncio-1.2.0-py3-none-any.whl (15 kB)
+2025-10-05T21:29:00.9799479Z Downloading pytest_cov-7.0.0-py3-none-any.whl (22 kB)
+2025-10-05T21:29:00.9862192Z Downloading pytest_mock-3.15.1-py3-none-any.whl (10 kB)
+2025-10-05T21:29:00.9918633Z Downloading black-25.9.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.manylinux_2_28_x86_64.whl (1.6 MB)
+2025-10-05T21:29:01.0072754Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 105.9 MB/s  0:00:00
+2025-10-05T21:29:01.0110298Z Downloading isort-6.1.0-py3-none-any.whl (94 kB)
+2025-10-05T21:29:01.0168827Z Downloading flake8-7.3.0-py2.py3-none-any.whl (57 kB)
+2025-10-05T21:29:01.0229008Z Downloading mccabe-0.7.0-py2.py3-none-any.whl (7.3 kB)
+2025-10-05T21:29:01.0287283Z Downloading pycodestyle-2.14.0-py2.py3-none-any.whl (31 kB)
+2025-10-05T21:29:01.0367815Z Downloading pyflakes-3.4.0-py2.py3-none-any.whl (63 kB)
+2025-10-05T21:29:01.0429014Z Downloading mypy-1.18.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (13.2 MB)
+2025-10-05T21:29:01.1237623Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 166.1 MB/s  0:00:00
+2025-10-05T21:29:01.1278414Z Downloading bandit-1.8.6-py3-none-any.whl (133 kB)
+2025-10-05T21:29:01.1366271Z Downloading safety-3.6.2-py3-none-any.whl (285 kB)
+2025-10-05T21:29:01.1456055Z Downloading safety_schemas-0.0.16-py3-none-any.whl (39 kB)
+2025-10-05T21:29:01.1520524Z Downloading filelock-3.19.1-py3-none-any.whl (15 kB)
+2025-10-05T21:29:01.1591627Z Downloading psutil-7.1.0-cp36-abi3-manylinux_2_12_x86_64.manylinux2010_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (291 kB)
+2025-10-05T21:29:01.1660590Z Downloading pre_commit-4.3.0-py2.py3-none-any.whl (220 kB)
+2025-10-05T21:29:01.1725696Z Downloading mkdocs-1.6.1-py3-none-any.whl (3.9 MB)
+2025-10-05T21:29:01.2029691Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 3.9/3.9 MB 130.2 MB/s  0:00:00
+2025-10-05T21:29:01.2097638Z Downloading mkdocs_material-9.6.21-py3-none-any.whl (9.2 MB)
+2025-10-05T21:29:01.2793691Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 9.2/9.2 MB 133.7 MB/s  0:00:00
+2025-10-05T21:29:01.2835860Z Downloading babel-2.17.0-py3-none-any.whl (10.2 MB)
+2025-10-05T21:29:01.3301140Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 10.2/10.2 MB 226.5 MB/s  0:00:00
+2025-10-05T21:29:01.3343403Z Downloading backrefs-5.9-py311-none-any.whl (392 kB)
+2025-10-05T21:29:01.3429368Z Downloading colorama-0.4.6-py2.py3-none-any.whl (25 kB)
+2025-10-05T21:29:01.3485698Z Downloading jinja2-3.1.6-py3-none-any.whl (134 kB)
+2025-10-05T21:29:01.3584559Z Downloading markdown-3.9-py3-none-any.whl (107 kB)
+2025-10-05T21:29:01.3646311Z Downloading mkdocs_material_extensions-1.3.1-py3-none-any.whl (8.7 kB)
+2025-10-05T21:29:01.3705307Z Downloading paginate-0.5.7-py2.py3-none-any.whl (13 kB)
+2025-10-05T21:29:01.3760931Z Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+2025-10-05T21:29:01.3850315Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 151.3 MB/s  0:00:00
+2025-10-05T21:29:01.3888414Z Downloading pymdown_extensions-10.16.1-py3-none-any.whl (266 kB)
+2025-10-05T21:29:01.3953300Z Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+2025-10-05T21:29:01.4011386Z Downloading charset_normalizer-3.4.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (150 kB)
+2025-10-05T21:29:01.4072810Z Downloading idna-3.10-py3-none-any.whl (70 kB)
+2025-10-05T21:29:01.4141365Z Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+2025-10-05T21:29:01.4210350Z Downloading python_multipart-0.0.20-py3-none-any.whl (24 kB)
+2025-10-05T21:29:01.4267468Z Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2025-10-05T21:29:01.4334390Z Downloading authlib-1.6.5-py2.py3-none-any.whl (243 kB)
+2025-10-05T21:29:01.4412760Z Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+2025-10-05T21:29:01.4483312Z Downloading cfgv-3.4.0-py2.py3-none-any.whl (7.2 kB)
+2025-10-05T21:29:01.4539730Z Downloading click-8.3.0-py3-none-any.whl (107 kB)
+2025-10-05T21:29:01.4603269Z Downloading coverage-7.10.7-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (250 kB)
+2025-10-05T21:29:01.4670811Z Downloading cryptography-46.0.2-cp311-abi3-manylinux_2_34_x86_64.whl (4.5 MB)
+2025-10-05T21:29:01.4914954Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.5/4.5 MB 196.5 MB/s  0:00:00
+2025-10-05T21:29:01.4956147Z Downloading cffi-2.0.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.whl (215 kB)
+2025-10-05T21:29:01.5025688Z Downloading dnspython-2.8.0-py3-none-any.whl (331 kB)
+2025-10-05T21:29:01.5096194Z Downloading dparse-0.6.4-py3-none-any.whl (11 kB)
+2025-10-05T21:29:01.5157610Z Downloading ecdsa-0.19.1-py2.py3-none-any.whl (150 kB)
+2025-10-05T21:29:01.5219111Z Downloading ghp_import-2.1.0-py3-none-any.whl (11 kB)
+2025-10-05T21:29:01.5313226Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2025-10-05T21:29:01.5372730Z Downloading identify-2.6.15-py2.py3-none-any.whl (99 kB)
+2025-10-05T21:29:01.5429998Z Downloading iniconfig-2.1.0-py3-none-any.whl (6.0 kB)
+2025-10-05T21:29:01.5487009Z Downloading markupsafe-3.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (22 kB)
+2025-10-05T21:29:01.5544676Z Downloading marshmallow-4.0.1-py3-none-any.whl (48 kB)
+2025-10-05T21:29:01.5606982Z Downloading mergedeep-1.3.4-py3-none-any.whl (6.4 kB)
+2025-10-05T21:29:01.5661671Z Downloading mkdocs_get_deps-0.2.0-py3-none-any.whl (9.5 kB)
+2025-10-05T21:29:01.5716563Z Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+2025-10-05T21:29:01.5804310Z Downloading nltk-3.9.2-py3-none-any.whl (1.5 MB)
+2025-10-05T21:29:01.5906465Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.5/1.5 MB 171.2 MB/s  0:00:00
+2025-10-05T21:29:01.5947764Z Downloading nodeenv-1.9.1-py2.py3-none-any.whl (22 kB)
+2025-10-05T21:29:01.6002980Z Downloading packaging-25.0-py3-none-any.whl (66 kB)
+2025-10-05T21:29:01.6067300Z Downloading bcrypt-5.0.0-cp39-abi3-manylinux_2_34_x86_64.whl (278 kB)
+2025-10-05T21:29:01.6134569Z Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+2025-10-05T21:29:01.6190428Z Downloading platformdirs-4.4.0-py3-none-any.whl (18 kB)
+2025-10-05T21:29:01.6244049Z Downloading prometheus_client-0.23.1-py3-none-any.whl (61 kB)
+2025-10-05T21:29:01.6305907Z Downloading pyasn1-0.6.1-py3-none-any.whl (83 kB)
+2025-10-05T21:29:01.6365719Z Downloading PyJWT-2.10.1-py3-none-any.whl (22 kB)
+2025-10-05T21:29:01.6439242Z Downloading pytokens-0.1.10-py3-none-any.whl (12 kB)
+2025-10-05T21:29:01.6495924Z Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2025-10-05T21:29:01.6560875Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 129.6 MB/s  0:00:00
+2025-10-05T21:29:01.6596158Z Downloading pyyaml_env_tag-1.1-py3-none-any.whl (4.7 kB)
+2025-10-05T21:29:01.6650193Z Downloading regex-2025.9.18-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (798 kB)
+2025-10-05T21:29:01.6714872Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 799.0/799.0 kB 125.9 MB/s  0:00:00
+2025-10-05T21:29:01.6751325Z Downloading rich-14.1.0-py3-none-any.whl (243 kB)
+2025-10-05T21:29:01.6816464Z Downloading markdown_it_py-4.0.0-py3-none-any.whl (87 kB)
+2025-10-05T21:29:01.6877127Z Downloading mdurl-0.1.2-py3-none-any.whl (10.0 kB)
+2025-10-05T21:29:01.6940408Z Downloading ruamel.yaml-0.18.15-py3-none-any.whl (119 kB)
+2025-10-05T21:29:01.7000214Z Downloading ruamel.yaml.clib-0.2.14-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (738 kB)
+2025-10-05T21:29:01.7064617Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 738.1/738.1 kB 114.9 MB/s  0:00:00
+2025-10-05T21:29:01.7078431Z Using cached setuptools-80.9.0-py3-none-any.whl (1.2 MB)
+2025-10-05T21:29:01.7127703Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2025-10-05T21:29:01.7196269Z Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+2025-10-05T21:29:01.7255219Z Downloading stevedore-5.5.0-py3-none-any.whl (49 kB)
+2025-10-05T21:29:01.7317905Z Downloading typer-0.19.2-py3-none-any.whl (46 kB)
+2025-10-05T21:29:01.7371155Z Downloading shellingham-1.5.4-py2.py3-none-any.whl (9.8 kB)
+2025-10-05T21:29:01.7425365Z Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2025-10-05T21:29:01.7483353Z Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2025-10-05T21:29:01.7545454Z Downloading httptools-0.6.4-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (459 kB)
+2025-10-05T21:29:01.7633147Z Downloading uvloop-0.21.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (4.0 MB)
+2025-10-05T21:29:01.7829579Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 4.0/4.0 MB 216.1 MB/s  0:00:00
+2025-10-05T21:29:01.7871034Z Downloading virtualenv-20.34.0-py3-none-any.whl (6.0 MB)
+2025-10-05T21:29:01.8165651Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 215.3 MB/s  0:00:00
+2025-10-05T21:29:01.8205637Z Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+2025-10-05T21:29:01.8279660Z Downloading watchdog-6.0.0-py3-none-manylinux2014_x86_64.whl (79 kB)
+2025-10-05T21:29:01.8337701Z Downloading watchfiles-1.1.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (453 kB)
+2025-10-05T21:29:01.8418443Z Downloading websockets-15.0.1-cp311-cp311-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl (182 kB)
+2025-10-05T21:29:01.8479556Z Downloading joblib-1.5.2-py3-none-any.whl (308 kB)
+2025-10-05T21:29:01.8549079Z Downloading pycparser-2.23-py3-none-any.whl (118 kB)
+2025-10-05T21:29:01.8609533Z Downloading tenacity-9.1.2-py3-none-any.whl (28 kB)
+2025-10-05T21:29:01.8665263Z Downloading tomlkit-0.13.3-py3-none-any.whl (38 kB)
+2025-10-05T21:29:01.8728031Z Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+2025-10-05T21:29:02.0680038Z Building wheels for collected packages: echoe-core, echoe-monitoring, echoe-security
+2025-10-05T21:29:02.0688596Z   Building editable for echoe-core (pyproject.toml): started
+2025-10-05T21:29:02.2610529Z   Building editable for echoe-core (pyproject.toml): finished with status 'done'
+2025-10-05T21:29:02.2616172Z   Created wheel for echoe-core: filename=echoe_core-0.1.0-0.editable-py3-none-any.whl size=2947 sha256=e79e12f5d7e8b669b5edc68856ad433f210f44170aab1782c94335d8f7abcbd5
+2025-10-05T21:29:02.2617798Z   Stored in directory: /tmp/pip-ephem-wheel-cache-vqa0hzun/wheels/a8/b4/2d/90ab61187fb167bd2eb554d269bf36af54cc253a30ac93c073
+2025-10-05T21:29:02.2636855Z   Building editable for echoe-monitoring (pyproject.toml): started
+2025-10-05T21:29:02.4573754Z   Building editable for echoe-monitoring (pyproject.toml): finished with status 'done'
+2025-10-05T21:29:02.4579567Z   Created wheel for echoe-monitoring: filename=echoe_monitoring-0.1.0-0.editable-py3-none-any.whl size=3005 sha256=eece4e577ba7f1228d087142496c82db75565ad40e707646a691256a6b133cb2
+2025-10-05T21:29:02.4580815Z   Stored in directory: /tmp/pip-ephem-wheel-cache-vqa0hzun/wheels/60/36/28/9a1bef2fb2be29859cde369bcd17737bd9165ca9a788e4d16f
+2025-10-05T21:29:02.4599568Z   Building editable for echoe-security (pyproject.toml): started
+2025-10-05T21:29:02.6569901Z   Building editable for echoe-security (pyproject.toml): finished with status 'done'
+2025-10-05T21:29:02.6575369Z   Created wheel for echoe-security: filename=echoe_security-0.1.0-0.editable-py3-none-any.whl size=2902 sha256=90ae84dffbc4378355f44b978c6205e4bec3f7abfb9c3834d57eb39765a20696
+2025-10-05T21:29:02.6576938Z   Stored in directory: /tmp/pip-ephem-wheel-cache-vqa0hzun/wheels/d8/06/a3/839bf30043818a0e68968c1d2de9c5fe21c78e447f7382a747
+2025-10-05T21:29:02.6589872Z Successfully built echoe-core echoe-monitoring echoe-security
+2025-10-05T21:29:02.9775360Z Installing collected packages: passlib, paginate, distlib, websockets, watchdog, uvloop, urllib3, typing-extensions, tqdm, tomlkit, tenacity, structlog, stevedore, sniffio, six, shellingham, setuptools, ruamel.yaml.clib, regex, pyyaml, pytokens, python-multipart, python-json-logger, python-dotenv, pyjwt, pygments, pyflakes, pycparser, pycodestyle, pyasn1, psutil, prometheus-client, pluggy, platformdirs, pathspec, packaging, nodeenv, mypy-extensions, mkdocs-material-extensions, mergedeep, mdurl, mccabe, marshmallow, markupsafe, markdown, joblib, isort, iniconfig, idna, identify, httptools, h11, filelock, dnspython, coverage, colorama, click, charset_normalizer, cfgv, certifi, bcrypt, backrefs, babel, annotated-types, virtualenv, uvicorn, typing-inspection, ruamel-yaml, rsa, requests, pyyaml-env-tag, python-dateutil, pytest, pymdown-extensions, pydantic-core, nltk, mypy, mkdocs-get-deps, markdown-it-py, jinja2, httpcore, flake8, email-validator, ecdsa, dparse, cffi, black, anyio, watchfiles, starlette, rich, python-jose, pytest-mock, pytest-cov, pytest-asyncio, pydantic, pre-commit, httpx, ghp-import, cryptography, typer, safety-schemas, pydantic-settings, mkdocs, fastapi, echoe-core, bandit, authlib, safety, mkdocs-material, echoe-security, echoe-monitoring
+2025-10-05T21:29:03.8432750Z   Attempting uninstall: setuptools
+2025-10-05T21:29:03.8459450Z     Found existing installation: setuptools 65.5.0
+2025-10-05T21:29:04.1312891Z     Uninstalling setuptools-65.5.0:
+2025-10-05T21:29:04.3106456Z       Successfully uninstalled setuptools-65.5.0
+2025-10-05T21:29:14.9500275Z
+2025-10-05T21:29:14.9556528Z Successfully installed annotated-types-0.7.0 anyio-4.11.0 authlib-1.6.5 babel-2.17.0 backrefs-5.9 bandit-1.8.6 bcrypt-5.0.0 black-25.9.0 certifi-2025.10.5 cffi-2.0.0 cfgv-3.4.0 charset_normalizer-3.4.3 click-8.3.0 colorama-0.4.6 coverage-7.10.7 cryptography-46.0.2 distlib-0.4.0 dnspython-2.8.0 dparse-0.6.4 ecdsa-0.19.1 echoe-core-0.1.0 echoe-monitoring-0.1.0 echoe-security-0.1.0 email-validator-2.3.0 fastapi-0.118.0 filelock-3.19.1 flake8-7.3.0 ghp-import-2.1.0 h11-0.16.0 httpcore-1.0.9 httptools-0.6.4 httpx-0.28.1 identify-2.6.15 idna-3.10 iniconfig-2.1.0 isort-6.1.0 jinja2-3.1.6 joblib-1.5.2 markdown-3.9 markdown-it-py-4.0.0 markupsafe-3.0.3 marshmallow-4.0.1 mccabe-0.7.0 mdurl-0.1.2 mergedeep-1.3.4 mkdocs-1.6.1 mkdocs-get-deps-0.2.0 mkdocs-material-9.6.21 mkdocs-material-extensions-1.3.1 mypy-1.18.2 mypy-extensions-1.1.0 nltk-3.9.2 nodeenv-1.9.1 packaging-25.0 paginate-0.5.7 passlib-1.7.4 pathspec-0.12.1 platformdirs-4.4.0 pluggy-1.6.0 pre-commit-4.3.0 prometheus-client-0.23.1 psutil-7.1.0 pyasn1-0.6.1 pycodestyle-2.14.0 pycparser-2.23 pydantic-2.11.10 pydantic-core-2.33.2 pydantic-settings-2.11.0 pyflakes-3.4.0 pygments-2.19.2 pyjwt-2.10.1 pymdown-extensions-10.16.1 pytest-8.4.2 pytest-asyncio-1.2.0 pytest-cov-7.0.0 pytest-mock-3.15.1 python-dateutil-2.9.0.post0 python-dotenv-1.1.1 python-jose-3.5.0 python-json-logger-3.3.0 python-multipart-0.0.20 pytokens-0.1.10 pyyaml-6.0.3 pyyaml-env-tag-1.1 regex-2025.9.18 requests-2.32.5 rich-14.1.0 rsa-4.9.1 ruamel-yaml-0.18.15 ruamel.yaml.clib-0.2.14 safety-3.6.2 safety-schemas-0.0.16 setuptools-80.9.0 shellingham-1.5.4 six-1.17.0 sniffio-1.3.1 starlette-0.48.0 stevedore-5.5.0 structlog-25.4.0 tenacity-9.1.2 tomlkit-0.13.3 tqdm-4.67.1 typer-0.19.2 typing-extensions-4.15.0 typing-inspection-0.4.2 urllib3-2.5.0 uvicorn-0.37.0 uvloop-0.21.0 virtualenv-20.34.0 watchdog-6.0.0 watchfiles-1.1.0 websockets-15.0.1
+2025-10-05T21:29:16.0615369Z Requirement already satisfied: fastapi>=0.104.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from -r mcp_requirements.txt (line 1)) (0.118.0)
+2025-10-05T21:29:16.0621501Z Requirement already satisfied: uvicorn>=0.24.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (0.37.0)
+2025-10-05T21:29:16.0627315Z Requirement already satisfied: pydantic>=2.4.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from -r mcp_requirements.txt (line 3)) (2.11.10)
+2025-10-05T21:29:16.0645824Z Requirement already satisfied: starlette<0.49.0,>=0.40.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi>=0.104.0->-r mcp_requirements.txt (line 1)) (0.48.0)
+2025-10-05T21:29:16.0656920Z Requirement already satisfied: typing-extensions>=4.8.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi>=0.104.0->-r mcp_requirements.txt (line 1)) (4.15.0)
+2025-10-05T21:29:16.0702268Z Requirement already satisfied: annotated-types>=0.6.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.4.0->-r mcp_requirements.txt (line 3)) (0.7.0)
+2025-10-05T21:29:16.0708261Z Requirement already satisfied: pydantic-core==2.33.2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.4.0->-r mcp_requirements.txt (line 3)) (2.33.2)
+2025-10-05T21:29:16.0715169Z Requirement already satisfied: typing-inspection>=0.4.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.4.0->-r mcp_requirements.txt (line 3)) (0.4.2)
+2025-10-05T21:29:16.0738419Z Requirement already satisfied: anyio<5,>=3.6.2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r mcp_requirements.txt (line 1)) (4.11.0)
+2025-10-05T21:29:16.0757927Z Requirement already satisfied: idna>=2.8 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from anyio<5,>=3.6.2->starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r mcp_requirements.txt (line 1)) (3.10)
+2025-10-05T21:29:16.0763066Z Requirement already satisfied: sniffio>=1.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from anyio<5,>=3.6.2->starlette<0.49.0,>=0.40.0->fastapi>=0.104.0->-r mcp_requirements.txt (line 1)) (1.3.1)
+2025-10-05T21:29:16.0778065Z Requirement already satisfied: click>=7.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn>=0.24.0->uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (8.3.0)
+2025-10-05T21:29:16.0783071Z Requirement already satisfied: h11>=0.8 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn>=0.24.0->uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (0.16.0)
+2025-10-05T21:29:16.0853043Z Requirement already satisfied: httptools>=0.6.3 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (0.6.4)
+2025-10-05T21:29:16.0860063Z Requirement already satisfied: python-dotenv>=0.13 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (1.1.1)
+2025-10-05T21:29:16.0866123Z Requirement already satisfied: pyyaml>=5.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (6.0.3)
+2025-10-05T21:29:16.0874456Z Requirement already satisfied: uvloop>=0.15.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (0.21.0)
+2025-10-05T21:29:16.0881589Z Requirement already satisfied: watchfiles>=0.13 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (1.1.0)
+2025-10-05T21:29:16.0888135Z Requirement already satisfied: websockets>=10.4 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.24.0->-r mcp_requirements.txt (line 2)) (15.0.1)
+2025-10-05T21:29:16.5859848Z Requirement already satisfied: pytest in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (8.4.2)
+2025-10-05T21:29:16.5863378Z Requirement already satisfied: pytest-asyncio in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (1.2.0)
+2025-10-05T21:29:16.5867310Z Requirement already satisfied: pytest-cov in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (7.0.0)
+2025-10-05T21:29:16.5870808Z Requirement already satisfied: httpx in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (0.28.1)
+2025-10-05T21:29:16.5874506Z Requirement already satisfied: fastapi[all] in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (0.118.0)
+2025-10-05T21:29:16.5889620Z Requirement already satisfied: iniconfig>=1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pytest) (2.1.0)
+2025-10-05T21:29:16.5894901Z Requirement already satisfied: packaging>=20 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pytest) (25.0)
+2025-10-05T21:29:16.5900595Z Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pytest) (1.6.0)
+2025-10-05T21:29:16.5905443Z Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pytest) (2.19.2)
+2025-10-05T21:29:16.5936709Z Requirement already satisfied: typing-extensions>=4.12 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pytest-asyncio) (4.15.0)
+2025-10-05T21:29:16.5957772Z Requirement already satisfied: coverage>=7.10.6 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from coverage[toml]>=7.10.6->pytest-cov) (7.10.7)
+2025-10-05T21:29:16.5974671Z Requirement already satisfied: anyio in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx) (4.11.0)
+2025-10-05T21:29:16.5978161Z Requirement already satisfied: certifi in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx) (2025.10.5)
+2025-10-05T21:29:16.5983466Z Requirement already satisfied: httpcore==1.* in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx) (1.0.9)
+2025-10-05T21:29:16.5987150Z Requirement already satisfied: idna in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx) (3.10)
+2025-10-05T21:29:16.6007734Z Requirement already satisfied: h11>=0.16 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpcore==1.*->httpx) (0.16.0)
+2025-10-05T21:29:16.6026666Z Requirement already satisfied: starlette<0.49.0,>=0.40.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (0.48.0)
+2025-10-05T21:29:16.6034410Z Requirement already satisfied: pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (2.11.10)
+2025-10-05T21:29:16.6524843Z Collecting fastapi-cli>=0.0.8 (from fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all])
+2025-10-05T21:29:16.6884379Z   Downloading fastapi_cli-0.0.13-py3-none-any.whl.metadata (6.3 kB)
+2025-10-05T21:29:16.6941322Z Requirement already satisfied: jinja2>=3.1.5 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (3.1.6)
+2025-10-05T21:29:16.6949875Z Requirement already satisfied: python-multipart>=0.0.18 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (0.0.20)
+2025-10-05T21:29:16.7051544Z Collecting itsdangerous>=1.1.0 (from fastapi[all])
+2025-10-05T21:29:16.7134235Z   Downloading itsdangerous-2.2.0-py3-none-any.whl.metadata (1.9 kB)
+2025-10-05T21:29:16.7168100Z Requirement already satisfied: pyyaml>=5.3.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (6.0.3)
+2025-10-05T21:29:16.7995387Z Collecting ujson!=4.0.2,!=4.1.0,!=4.2.0,!=4.3.0,!=5.0.0,!=5.1.0,>=4.0.1 (from fastapi[all])
+2025-10-05T21:29:16.8038814Z   Downloading ujson-5.11.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (9.4 kB)
+2025-10-05T21:29:17.0412177Z Collecting orjson>=3.2.1 (from fastapi[all])
+2025-10-05T21:29:17.0457858Z   Downloading orjson-3.11.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (41 kB)
+2025-10-05T21:29:17.0576792Z Requirement already satisfied: email-validator>=2.0.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (2.3.0)
+2025-10-05T21:29:17.0585291Z Requirement already satisfied: uvicorn>=0.12.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.12.0; extra == "all"->fastapi[all]) (0.37.0)
+2025-10-05T21:29:17.0594539Z Requirement already satisfied: pydantic-settings>=2.0.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi[all]) (2.11.0)
+2025-10-05T21:29:17.0724508Z Collecting pydantic-extra-types>=2.0.0 (from fastapi[all])
+2025-10-05T21:29:17.0763987Z   Downloading pydantic_extra_types-2.10.5-py3-none-any.whl.metadata (3.9 kB)
+2025-10-05T21:29:17.0848392Z Requirement already satisfied: annotated-types>=0.6.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi[all]) (0.7.0)
+2025-10-05T21:29:17.0853367Z Requirement already satisfied: pydantic-core==2.33.2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi[all]) (2.33.2)
+2025-10-05T21:29:17.0860014Z Requirement already satisfied: typing-inspection>=0.4.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic!=1.8,!=1.8.1,!=2.0.0,!=2.0.1,!=2.1.0,<3.0.0,>=1.7.4->fastapi[all]) (0.4.2)
+2025-10-05T21:29:17.0913485Z Requirement already satisfied: sniffio>=1.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from anyio->httpx) (1.3.1)
+2025-10-05T21:29:17.0957157Z Requirement already satisfied: dnspython>=2.0.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from email-validator>=2.0.0->fastapi[all]) (2.8.0)
+2025-10-05T21:29:17.0999771Z Requirement already satisfied: typer>=0.15.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (0.19.2)
+2025-10-05T21:29:17.1129030Z Collecting rich-toolkit>=0.14.8 (from fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all])
+2025-10-05T21:29:17.1182875Z   Downloading rich_toolkit-0.15.1-py3-none-any.whl.metadata (1.0 kB)
+2025-10-05T21:29:17.1425942Z Collecting fastapi-cloud-cli>=0.1.1 (from fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all])
+2025-10-05T21:29:17.1497701Z   Downloading fastapi_cloud_cli-0.3.0-py3-none-any.whl.metadata (3.2 kB)
+2025-10-05T21:29:17.2277470Z Collecting rignore>=0.5.1 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all])
+2025-10-05T21:29:17.2336486Z   Downloading rignore-0.7.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (3.8 kB)
+2025-10-05T21:29:17.2883708Z Collecting sentry-sdk>=2.20.0 (from fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all])
+2025-10-05T21:29:17.2930946Z   Downloading sentry_sdk-2.39.0-py2.py3-none-any.whl.metadata (10 kB)
+2025-10-05T21:29:17.3145160Z Requirement already satisfied: MarkupSafe>=2.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from jinja2>=3.1.5->fastapi[all]) (3.0.3)
+2025-10-05T21:29:17.3204869Z Requirement already satisfied: python-dotenv>=0.21.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic-settings>=2.0.0->fastapi[all]) (1.1.1)
+2025-10-05T21:29:17.3287749Z Requirement already satisfied: click>=8.1.7 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (8.3.0)
+2025-10-05T21:29:17.3292278Z Requirement already satisfied: rich>=13.7.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from rich-toolkit>=0.14.8->fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (14.1.0)
+2025-10-05T21:29:17.3323550Z Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (4.0.0)
+2025-10-05T21:29:17.3343055Z Requirement already satisfied: mdurl~=0.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from markdown-it-py>=2.2.0->rich>=13.7.1->rich-toolkit>=0.14.8->fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (0.1.2)
+2025-10-05T21:29:17.3397123Z Requirement already satisfied: urllib3>=1.26.11 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from sentry-sdk>=2.20.0->fastapi-cloud-cli>=0.1.1->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (2.5.0)
+2025-10-05T21:29:17.3432872Z Requirement already satisfied: shellingham>=1.3.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from typer>=0.15.1->fastapi-cli>=0.0.8->fastapi-cli[standard]>=0.0.8; extra == "all"->fastapi[all]) (1.5.4)
+2025-10-05T21:29:17.3552768Z Requirement already satisfied: httptools>=0.6.3 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.12.0; extra == "all"->fastapi[all]) (0.6.4)
+2025-10-05T21:29:17.3565465Z Requirement already satisfied: uvloop>=0.15.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.12.0; extra == "all"->fastapi[all]) (0.21.0)
+2025-10-05T21:29:17.3572301Z Requirement already satisfied: watchfiles>=0.13 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.12.0; extra == "all"->fastapi[all]) (1.1.0)
+2025-10-05T21:29:17.3579037Z Requirement already satisfied: websockets>=10.4 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from uvicorn[standard]>=0.12.0; extra == "all"->fastapi[all]) (15.0.1)
+2025-10-05T21:29:17.3725166Z Downloading fastapi_cli-0.0.13-py3-none-any.whl (11 kB)
+2025-10-05T21:29:17.3820957Z Downloading fastapi_cloud_cli-0.3.0-py3-none-any.whl (19 kB)
+2025-10-05T21:29:17.3894257Z Downloading itsdangerous-2.2.0-py3-none-any.whl (16 kB)
+2025-10-05T21:29:17.3946155Z Downloading orjson-3.11.3-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (132 kB)
+2025-10-05T21:29:17.4024487Z Downloading pydantic_extra_types-2.10.5-py3-none-any.whl (38 kB)
+2025-10-05T21:29:17.4084098Z Downloading rich_toolkit-0.15.1-py3-none-any.whl (29 kB)
+2025-10-05T21:29:17.4202263Z Downloading rignore-0.7.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (951 kB)
+2025-10-05T21:29:17.4296101Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 951.4/951.4 kB 115.5 MB/s  0:00:00
+2025-10-05T21:29:17.4339818Z Downloading sentry_sdk-2.39.0-py2.py3-none-any.whl (370 kB)
+2025-10-05T21:29:17.4421026Z Downloading ujson-5.11.0-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (57 kB)
+2025-10-05T21:29:17.5638959Z Installing collected packages: ujson, sentry-sdk, rignore, orjson, itsdangerous, rich-toolkit, pydantic-extra-types, fastapi-cloud-cli, fastapi-cli
+2025-10-05T21:29:17.9082234Z
+2025-10-05T21:29:17.9131695Z Successfully installed fastapi-cli-0.0.13 fastapi-cloud-cli-0.3.0 itsdangerous-2.2.0 orjson-3.11.3 pydantic-extra-types-2.10.5 rich-toolkit-0.15.1 rignore-0.7.0 sentry-sdk-2.39.0 ujson-5.11.0
+2025-10-05T21:29:18.7841938Z Collecting ruff
+2025-10-05T21:29:18.8196143Z   Downloading ruff-0.13.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (25 kB)
+2025-10-05T21:29:18.8278622Z Requirement already satisfied: black in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (25.9.0)
+2025-10-05T21:29:18.8282351Z Requirement already satisfied: mypy in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (1.18.2)
+2025-10-05T21:29:18.8286127Z Requirement already satisfied: bandit in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (1.8.6)
+2025-10-05T21:29:18.8289307Z Requirement already satisfied: safety in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (3.6.2)
+2025-10-05T21:29:18.8315146Z Requirement already satisfied: click>=8.0.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (8.3.0)
+2025-10-05T21:29:18.8321154Z Requirement already satisfied: mypy-extensions>=0.4.3 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (1.1.0)
+2025-10-05T21:29:18.8326104Z Requirement already satisfied: packaging>=22.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (25.0)
+2025-10-05T21:29:18.8330700Z Requirement already satisfied: pathspec>=0.9.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (0.12.1)
+2025-10-05T21:29:18.8335618Z Requirement already satisfied: platformdirs>=2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (4.4.0)
+2025-10-05T21:29:18.8339919Z Requirement already satisfied: pytokens>=0.1.10 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from black) (0.1.10)
+2025-10-05T21:29:18.8357982Z Requirement already satisfied: typing_extensions>=4.6.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from mypy) (4.15.0)
+2025-10-05T21:29:18.8376235Z Requirement already satisfied: PyYAML>=5.3.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from bandit) (6.0.3)
+2025-10-05T21:29:18.8380766Z Requirement already satisfied: stevedore>=1.20.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from bandit) (5.5.0)
+2025-10-05T21:29:18.8384271Z Requirement already satisfied: rich in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from bandit) (14.1.0)
+2025-10-05T21:29:18.8410466Z Requirement already satisfied: authlib>=1.2.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (1.6.5)
+2025-10-05T21:29:18.8416410Z Requirement already satisfied: dparse>=0.6.4 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.6.4)
+2025-10-05T21:29:18.8421135Z Requirement already satisfied: filelock<4.0,>=3.16.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (3.19.1)
+2025-10-05T21:29:18.8424836Z Requirement already satisfied: httpx in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.28.1)
+2025-10-05T21:29:18.8429834Z Requirement already satisfied: jinja2>=3.1.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (3.1.6)
+2025-10-05T21:29:18.8434278Z Requirement already satisfied: marshmallow>=3.15.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (4.0.1)
+2025-10-05T21:29:18.8438553Z Requirement already satisfied: nltk>=3.9 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (3.9.2)
+2025-10-05T21:29:18.8444643Z Requirement already satisfied: psutil<8.0,>=6.1.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (7.1.0)
+2025-10-05T21:29:18.8449047Z Requirement already satisfied: pydantic>=2.6.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (2.11.10)
+2025-10-05T21:29:18.8452283Z Requirement already satisfied: requests in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (2.32.5)
+2025-10-05T21:29:18.8456804Z Requirement already satisfied: ruamel-yaml>=0.17.21 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.18.15)
+2025-10-05T21:29:18.8460978Z Requirement already satisfied: safety-schemas==0.0.16 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.0.16)
+2025-10-05T21:29:18.8465406Z Requirement already satisfied: setuptools>=65.5.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (80.9.0)
+2025-10-05T21:29:18.8468527Z Requirement already satisfied: tenacity in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (9.1.2)
+2025-10-05T21:29:18.8473132Z Requirement already satisfied: tomlkit in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.13.3)
+2025-10-05T21:29:18.8477372Z Requirement already satisfied: typer>=0.16.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from safety) (0.19.2)
+2025-10-05T21:29:18.8540533Z Requirement already satisfied: cryptography in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from authlib>=1.2.0->safety) (46.0.2)
+2025-10-05T21:29:18.8568893Z Requirement already satisfied: MarkupSafe>=2.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from jinja2>=3.1.0->safety) (3.0.3)
+2025-10-05T21:29:18.8610603Z Requirement already satisfied: joblib in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from nltk>=3.9->safety) (1.5.2)
+2025-10-05T21:29:18.8615364Z Requirement already satisfied: regex>=2021.8.3 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from nltk>=3.9->safety) (2025.9.18)
+2025-10-05T21:29:18.8618563Z Requirement already satisfied: tqdm in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from nltk>=3.9->safety) (4.67.1)
+2025-10-05T21:29:18.8678501Z Requirement already satisfied: annotated-types>=0.6.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.6.0->safety) (0.7.0)
+2025-10-05T21:29:18.8698654Z Requirement already satisfied: pydantic-core==2.33.2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.6.0->safety) (2.33.2)
+2025-10-05T21:29:18.8700269Z Requirement already satisfied: typing-inspection>=0.4.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from pydantic>=2.6.0->safety) (0.4.2)
+2025-10-05T21:29:18.8768790Z Requirement already satisfied: ruamel.yaml.clib>=0.2.7 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from ruamel-yaml>=0.17.21->safety) (0.2.14)
+2025-10-05T21:29:18.8861567Z Requirement already satisfied: shellingham>=1.3.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from typer>=0.16.0->safety) (1.5.4)
+2025-10-05T21:29:18.8879760Z Requirement already satisfied: markdown-it-py>=2.2.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from rich->bandit) (4.0.0)
+2025-10-05T21:29:18.8885667Z Requirement already satisfied: pygments<3.0.0,>=2.13.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from rich->bandit) (2.19.2)
+2025-10-05T21:29:18.8909450Z Requirement already satisfied: mdurl~=0.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from markdown-it-py>=2.2.0->rich->bandit) (0.1.2)
+2025-10-05T21:29:18.8985745Z Requirement already satisfied: cffi>=2.0.0 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from cryptography->authlib>=1.2.0->safety) (2.0.0)
+2025-10-05T21:29:18.9020031Z Requirement already satisfied: pycparser in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from cffi>=2.0.0->cryptography->authlib>=1.2.0->safety) (2.23)
+2025-10-05T21:29:18.9032627Z Requirement already satisfied: anyio in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx->safety) (4.11.0)
+2025-10-05T21:29:18.9036168Z Requirement already satisfied: certifi in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx->safety) (2025.10.5)
+2025-10-05T21:29:18.9040454Z Requirement already satisfied: httpcore==1.* in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx->safety) (1.0.9)
+2025-10-05T21:29:18.9043908Z Requirement already satisfied: idna in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpx->safety) (3.10)
+2025-10-05T21:29:18.9068842Z Requirement already satisfied: h11>=0.16 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from httpcore==1.*->httpx->safety) (0.16.0)
+2025-10-05T21:29:18.9097995Z Requirement already satisfied: sniffio>=1.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from anyio->httpx->safety) (1.3.1)
+2025-10-05T21:29:18.9170287Z Requirement already satisfied: charset_normalizer<4,>=2 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from requests->safety) (3.4.3)
+2025-10-05T21:29:18.9177420Z Requirement already satisfied: urllib3<3,>=1.21.1 in /opt/hostedtoolcache/Python/3.11.13/x64/lib/python3.11/site-packages (from requests->safety) (2.5.0)
+2025-10-05T21:29:18.9321026Z Downloading ruff-0.13.3-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.4 MB)
+2025-10-05T21:29:19.0489343Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.4/13.4 MB 128.3 MB/s  0:00:00
+2025-10-05T21:29:19.1445145Z Installing collected packages: ruff
+2025-10-05T21:29:19.3090225Z Successfully installed ruff-0.13.3
+2025-10-05T21:29:30.9019009Z
+2025-10-05T21:29:30.9019518Z added 80 packages in 8s
+2025-10-05T21:29:30.9019882Z
+2025-10-05T21:29:30.9020076Z 48 packages are looking for funding
+2025-10-05T21:29:30.9020623Z   run `npm fund` for details
+2025-10-05T21:29:30.9201047Z ##[group]Run # Stop build if there are Python syntax errors
+2025-10-05T21:29:30.9201498Z # Stop build if there are Python syntax errors
+2025-10-05T21:29:30.9201962Z ruff check app packages automation --select=E9,F63,F7,F82 --show-files --statistics
+2025-10-05T21:29:30.9202388Z # Additional linting
+2025-10-05T21:29:30.9203009Z ruff check app packages automation --exit-zero --statistics
+2025-10-05T21:29:30.9237347Z shell: /usr/bin/bash -e {0}
+2025-10-05T21:29:30.9237585Z env:
+2025-10-05T21:29:30.9237842Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:29:30.9238422Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib/pkgconfig
+2025-10-05T21:29:30.9238836Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:29:30.9239195Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:29:30.9239543Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.13/x64
+2025-10-05T21:29:30.9239924Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.13/x64/lib
+2025-10-05T21:29:30.9240225Z ##[endgroup]
+2025-10-05T21:29:30.9324426Z error: the argument '--show-files' cannot be used with '--statistics'
+2025-10-05T21:29:30.9324905Z
+2025-10-05T21:29:30.9325172Z Usage: ruff check --select <RULE_CODE> --show-files <FILES>...
+2025-10-05T21:29:30.9325551Z
+2025-10-05T21:29:30.9325707Z For more information, try '--help'.
+2025-10-05T21:29:30.9341670Z ##[error]Process completed with exit code 2.
+2025-10-05T21:29:30.9463111Z Post job cleanup.
+2025-10-05T21:29:31.0422982Z [command]/usr/bin/git version
+2025-10-05T21:29:31.0459741Z git version 2.51.0
+2025-10-05T21:29:31.0505611Z Temporarily overriding HOME='/home/runner/work/_temp/0655825c-e648-4552-b862-c5d2cda4bf6c' before making global git config changes
+2025-10-05T21:29:31.0506836Z Adding repository directory to the temporary git global config as a safe directory
+2025-10-05T21:29:31.0520539Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/echoes/echoes
+2025-10-05T21:29:31.0557752Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-10-05T21:29:31.0591709Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-10-05T21:29:31.0827005Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-10-05T21:29:31.0849967Z http.https://github.com/.extraheader
+2025-10-05T21:29:31.0866093Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-10-05T21:29:31.0897673Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-10-05T21:29:31.1231802Z Cleaning up orphan processes

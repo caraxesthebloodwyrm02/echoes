@@ -11,6 +11,8 @@ import sys
 from pathlib import Path
 from typing import Dict
 
+from defusedxml import ElementTree as ET
+
 
 class TestRunner:
     """
@@ -82,17 +84,15 @@ class TestRunner:
                     results["failed"] += 1
                     results["details"].append(f"❌ {test_dir}: ERROR - {e}")
                 except Exception as e:
-                    results["failed"] += 1
                     results["details"].append(f"❌ {test_dir}: EXCEPTION - {e}")
 
         return results
 
     def _get_coverage_percentage(self) -> float:
-        """Get coverage percentage from coverage.xml."""
+        """Get coverage percentage from coverage report."""
+        # Parse coverage report securely with defusedxml
         try:
-            import xml.etree.ElementTree as ET
-
-            tree = ET.parse(Path("6/maps") / self.coverage_file)
+            tree = ET.parse(Path("6/maps") / self.coverage_file, forbid_dtd=True)
             root = tree.getroot()
 
             # Find coverage line

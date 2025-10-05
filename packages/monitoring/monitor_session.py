@@ -9,11 +9,30 @@ from datetime import datetime
 
 
 def run_command(cmd):
+    """Run a command safely without shell=True.
+
+    Args:
+        cmd: Either a string (will be split using shlex) or a list of command arguments
+
+    Returns:
+        tuple: (success, stdout, stderr)
+    """
+    import shlex
+
     try:
-        result = subprocess.run(cmd, shell=True, capture_output=True, text=True)  # nosec B602
+        # Convert string command to list if needed
+        if isinstance(cmd, str):
+            cmd = shlex.split(cmd)
+
+        result = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            check=False,  # Don't raise exception on non-zero exit
+        )
         return result.returncode == 0, result.stdout, result.stderr
-    except:
-        return False, "", "Command failed"
+    except Exception as e:
+        return False, "", f"Command failed: {str(e)}"
 
 
 def monitor_session():

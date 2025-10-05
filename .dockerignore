@@ -1,33 +1,12 @@
-# Version control
+# Git
 .git
 .gitignore
 
-# CI/CD
-.github
-.gitlab-ci.yml
-Jenkinsfile
-
-# Docker
-Dockerfile*
-docker-compose*
-.dockerignore
-
-# IDE
-.vscode
-.idea
-*.swp
-*.swo
-*~
-
-# OS
-.DS_Store
-Thumbs.db
-
 # Python
 __pycache__
-*.py[cod]
-*$py.class
-*.so
+*.pyc
+*.pyo
+*.pyd
 .Python
 env
 pip-log.txt
@@ -43,86 +22,30 @@ coverage.xml
 .venv
 venv/
 
-# Virtual environments
-.env
-.venv
-env/
-venv/
-ENV/
-env.bak/
-venv.bak/
+# IDE
+.vscode
+.idea
+
+# OS
+.DS_Store
+Thumbs.db
 
 # Documentation
-docs/
+docs/build
 *.md
 !README.md
 
-# Tests
-.pytest_cache/
-.coverage
-htmlcov/
-.tox/
-.nox/
+# Docker
+Dockerfile*
+docker-compose*
 
-# Distribution / packaging
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+# Security reports
+*.json
+security-*.txt
 
 # Logs
-logs/
 *.log
 
 # Temporary files
-tmp/
-temp/
-
-# Data and models
-data/
-models/
-*.pkl
-*.h5
-*.model
-
-# Reports and outputs
-reports/
-output/
-results/
-*.json
-!requirements*.txt
-
-# Node modules (if any)
-node_modules/
-
-# Cache directories
-.cache/
-.mypy_cache/
-
-# Local development
-.env.local
-.env.development
-.env.test
-
-# Deployment artifacts
-deploy/
-dist/
-
-# Monitoring
-prometheus/
-grafana/
-
-# SSL certificates (will be mounted)
-ssl/
+*.tmp
+*.temp

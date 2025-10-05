@@ -1,0 +1,22 @@
+Starting Security Monitoring
+==================================================
+Report Time: 2025-10-05 14:53:51
+
+Generating security report...
+Running Bandit security scan...
+Bandit scan failed: C:\Users\irfan\AppData\Local\Programs\Python\Python311\python.exe: No module named bandit
+
+Checking dependency vulnerabilities...
+Dependency vulnerability check completed
+Checking environment configuration...
+Environment configuration looks secure
+Checking file permissions...
+  .env exists
+  .env.production exists
+  requirements.txt exists
+  pyproject.toml exists
+File permissions check completed
+Security Score: 75.0% (3/4 checks passed)
+
+==================================================
+SECURITY MONITORING COMPLETE - Issues found, review report
