@@ -6,11 +6,10 @@ Version 1.0.0
 Automated testing system with coverage enforcement and security checks.
 """
 
-import json
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, List, Tuple
+from typing import Dict
 
 
 class TestRunner:

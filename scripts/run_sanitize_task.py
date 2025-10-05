@@ -5,11 +5,11 @@ This script imports the task module and executes the `sanitize_codebase` functio
 with the parameters specified in the user request.
 """
 
-from pathlib import Path
+import os
 
 # Ensure the current directory is on sys.path so that the 'automation' package can be imported
 import sys
-import os
+from pathlib import Path
 
 sys.path.append(os.path.abspath(os.path.dirname(__file__)))
 

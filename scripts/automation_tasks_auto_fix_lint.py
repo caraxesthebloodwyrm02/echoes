@@ -12,10 +12,11 @@ This module expects the repo to expose:
 Add to your orchestrator task list as a safe automated job. It respects
 Config.dry_run and Context.require_confirmation where appropriate.
 """
+
 from __future__ import annotations
 
-import subprocess
 import shutil
+import subprocess
 from pathlib import Path
 from typing import Iterable
 

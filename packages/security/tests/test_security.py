@@ -3,7 +3,6 @@
 import tempfile
 from pathlib import Path
 
-import pytest
 
 from packages.security import AuthManager, QuantumShield, VulnerabilityScanner
 

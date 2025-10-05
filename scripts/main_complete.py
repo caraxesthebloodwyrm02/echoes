@@ -7,13 +7,12 @@ FastAPI application with core endpoints and domain-specific modules.
 import logging
 from datetime import datetime
 
+from arts_module import arts_router
+from commerce_module import commerce_router
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
-
-from arts_module import arts_router
-from commerce_module import commerce_router
 
 # Import domain modules
 from science_module import science_router

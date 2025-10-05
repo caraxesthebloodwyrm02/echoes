@@ -6,12 +6,13 @@ Run this script to simulate the GitHub Actions CI pipeline locally before commit
 Usage: python scripts/local_ci_simulate.py
 """
 
-import os
-import sys
-import subprocess
-import time
-import requests
 import json
+import os
+import subprocess
+import sys
+import time
+
+import requests
 
 
 def run_command(cmd, cwd=None, check=True, capture_output=False):
@@ -142,7 +143,9 @@ def main():
         if data.get("echoed") == expected:
             print("✅ MCP echo tool test passed.")
         else:
-            print(f"❌ MCP echo tool test failed. Expected '{expected}', got '{data.get('echoed')}'")
+            print(
+                f"❌ MCP echo tool test failed. Expected '{expected}', got '{data.get('echoed')}'"
+            )
             server_process.terminate()
             sys.exit(1)
 

@@ -7,7 +7,7 @@ Components for continuous optimization of financial allocations.
 import logging
 from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from pydantic import BaseModel, Field
 

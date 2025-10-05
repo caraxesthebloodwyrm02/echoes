@@ -6,7 +6,7 @@ A simplified version to analyze tasks from discover_tasks.json
 
 import json
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 def main():

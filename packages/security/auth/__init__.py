@@ -1,10 +1,12 @@
 """Authentication and authorization utilities."""
 
-from typing import Optional, Dict, Any, List
 from datetime import datetime, timedelta
+from typing import Any, Dict, List, Optional
+
 import jwt
 from cryptography.fernet import Fernet
-from packages.core import get_logger, Config
+
+from packages.core import Config, get_logger
 
 logger = get_logger("security.auth")
 

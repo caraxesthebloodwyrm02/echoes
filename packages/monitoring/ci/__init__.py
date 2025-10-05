@@ -1,8 +1,9 @@
 """CI/CD monitoring utilities."""
 
-from typing import List, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import List, Optional
+
 from packages.core import get_logger
 
 logger = get_logger("monitoring.ci")

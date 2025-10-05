@@ -1,20 +1,19 @@
 """Comprehensive tests for echoe-monitoring package."""
 
-import pytest
-import time
-import tempfile
-from pathlib import Path
-from datetime import datetime, timedelta
-
 import sys
+import tempfile
+import time
+from datetime import datetime, timedelta
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+from monitoring.alerts import Alert, AlertManager
+from monitoring.ci import CIBuild, CIMonitor
+from monitoring.health import HealthCheck, HealthChecker
 from monitoring.metrics import MetricsCollector, SystemMetrics
-from monitoring.health import HealthChecker, HealthCheck
-from monitoring.alerts import AlertManager, Alert
-from monitoring.ci import CIMonitor, CIBuild
 
 
 class TestMetricsCollector:

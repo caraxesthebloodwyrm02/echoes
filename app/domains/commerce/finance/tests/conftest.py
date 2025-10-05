@@ -1,16 +1,15 @@
 import sys
 from pathlib import Path
+
 import pytest
+
 from app.domains.commerce.finance.api import rate_limit_storage
 
 """
 Pytest configuration and shared fixtures for FinanceAdvisor tests
 """
 
-import sys
-from pathlib import Path
 
-import pytest
 
 # Add parent directory to path for imports
 parent_dir = Path(__file__).parent.parent.parent.parent.parent
@@ -141,13 +140,13 @@ Comprehensive test suite for FinanceAdvisor API endpoints
 Tests security, rate limiting, input validation, and audit logging.
 """
 
-from unittest.mock import MagicMock, Mock, patch
+from unittest.mock import MagicMock, patch
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
-from app.domains.commerce.finance.api import rate_limit_storage, router
+from app.domains.commerce.finance.api import router
 
 # Create test app
 app = FastAPI()

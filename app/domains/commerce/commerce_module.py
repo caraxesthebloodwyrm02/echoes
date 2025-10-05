@@ -7,9 +7,9 @@ with fairness controls and ethical AI governance.
 
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter
 from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
@@ -121,7 +121,7 @@ async def match_employment_opportunities(request: EmploymentMatchRequest):
 
     Includes fairness controls and bias mitigation.
     """
-    logger.info(f"Employment match request for user profile")
+    logger.info("Employment match request for user profile")
 
     # Simulate matching algorithm (replace with actual ML model)
     compatibility_factors = {

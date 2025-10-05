@@ -9,10 +9,9 @@ Addresses the critical vulnerability of coordinate data exposure in the codebase
 
 import hashlib
 import logging
-from typing import Dict, List, Optional, Tuple, Union
+from typing import List, Tuple
 
 from data_sanitizer import data_sanitizer
-
 from utils.coordinates import Coordinates
 
 

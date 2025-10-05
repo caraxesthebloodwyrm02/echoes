@@ -5,10 +5,9 @@ Advanced ML models for financial predictions and scenario simulation.
 """
 
 import logging
-import random
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Tuple
 
 from pydantic import BaseModel, Field
 

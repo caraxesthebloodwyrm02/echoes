@@ -8,13 +8,15 @@ review steps, and safety checks.
 Usage:
     python -m automation.scripts.review_high_risk_tasks [--dry-run] [--task TASK_ID]
 """
-import json
+
 import argparse
+import json
 from pathlib import Path
-from typing import Dict, Any, List
-from automation.core.orchestrator import Orchestrator
-from automation.core.logger import log
+from typing import Any, Dict, List
+
 from automation.core.context import Context
+from automation.core.logger import log
+from automation.core.orchestrator import Orchestrator
 
 
 class HighRiskTaskHandler:

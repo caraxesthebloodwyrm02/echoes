@@ -4,6 +4,7 @@ Tests for MCP server endpoints.
 
 import pytest
 from fastapi.testclient import TestClient
+
 from mcp_server import app
 
 

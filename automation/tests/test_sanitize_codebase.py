@@ -1,6 +1,3 @@
-import os
-import shutil
-import tempfile
 
 from automation.core.context import Context
 from automation.tasks import sanitize_codebase

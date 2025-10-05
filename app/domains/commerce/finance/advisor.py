@@ -7,11 +7,11 @@ financial intelligence from analysis to actionable recommendations.
 
 import logging
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import Dict, List
 
 from .allocation import DynamicRebalancer, PortfolioOptimizer, TaxEfficiencyAdvisor
 from .analysis import GoalSettingAnalyzer, RiskAssessmentEngine, SectorContextualizer
-from .data_ingestion import FinancialDataIngestor, FinancialDataInput, UserType
+from .data_ingestion import FinancialDataIngestor
 from .prediction import PredictiveModelingEngine, ScenarioSimulator
 from .recommendations import (
     EthicalAIReviewer,

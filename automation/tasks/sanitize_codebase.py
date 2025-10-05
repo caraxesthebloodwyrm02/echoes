@@ -59,7 +59,7 @@ def _format_code(target: Path) -> None:
     try:
         subprocess.run(["black", str(target)], check=True)
         print("Formatted code with black.")
-    except Exception as exc:  # pragma: no cover - defensive
+    except Exception:  # pragma: no cover - defensive
         print("Black formatter not available. Skipping formatting.", file=sys.stderr)
 
 
@@ -72,7 +72,7 @@ def _sort_imports(target: Path) -> None:
     try:
         subprocess.run(["isort", str(target)], check=True)
         print("Sorted imports with isort.")
-    except Exception as exc:  # pragma: no cover - defensive
+    except Exception:  # pragma: no cover - defensive
         print("Isort not available. Skipping import sorting.", file=sys.stderr)
 
 

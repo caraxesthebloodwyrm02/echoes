@@ -4,6 +4,7 @@ Tests for configuration modules.
 
 import json
 import os
+
 import pytest
 
 

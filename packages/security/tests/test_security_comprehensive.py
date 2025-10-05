@@ -1,19 +1,17 @@
 """Comprehensive tests for echoe-security package."""
 
-import pytest
-import tempfile
-import jwt
-from pathlib import Path
-from datetime import datetime, timedelta
-
 import sys
+import tempfile
+from datetime import datetime
 from pathlib import Path
+
+import pytest
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
-from security.scanning import VulnerabilityScanner, Vulnerability
 from security.auth import AuthManager
 from security.encryption import QuantumShield
+from security.scanning import Vulnerability, VulnerabilityScanner
 
 
 class TestVulnerabilityScanner:
