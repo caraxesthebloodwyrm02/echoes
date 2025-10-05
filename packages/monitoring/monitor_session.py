@@ -4,7 +4,6 @@ Real-time CI/CD Monitor for 15-minute session
 """
 
 import subprocess
-import sys
 import time
 from datetime import datetime
 
@@ -15,6 +14,7 @@ def run_command(cmd):
         return result.returncode == 0, result.stdout, result.stderr
     except:
         return False, "", "Command failed"
+
 
 def monitor_session():
     start_time = time.time()
@@ -33,9 +33,9 @@ def monitor_session():
         print(f"\r⏳ Time remaining: {minutes:02d}:{seconds:02d}", end="", flush=True)
         time.sleep(1)
 
-    print("
-✅ 15-minute session completed!"
+    print("✅ 15-minute session completed!")
     return True
+
 
 if __name__ == "__main__":
     monitor_session()

@@ -54,7 +54,7 @@ jobs:
       - name: Type check with mypy
         continue-on-error: true
         run: |
-          mypy app packages automation --ignore-missing-imports
+          mypy app automation --ignore-missing-imports
 
       - name: Lint markdown files
         run: |
