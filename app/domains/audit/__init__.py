@@ -17,10 +17,10 @@ from .data_prep import DataPrep
 from .evaluation import EvaluationMetrics
 
 __all__ = [
-    'AuditEngine',
-    'ModelTrainer',
-    'BlindAuditGame',
-    'InterpretabilityTools',
-    'DataPrep',
-    'EvaluationMetrics'
+    "AuditEngine",
+    "ModelTrainer",
+    "BlindAuditGame",
+    "InterpretabilityTools",
+    "DataPrep",
+    "EvaluationMetrics",
 ]

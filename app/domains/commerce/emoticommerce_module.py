@@ -30,12 +30,14 @@ router = APIRouter()
 _harmony_engine = None
 _resonance_engine = None
 
+
 def get_harmony_engine():
     """Lazy load HarmonyHub Harmony Engine"""
     global _harmony_engine
     if _harmony_engine is None:
         try:
             from harmony import get_harmony_engine
+
             _harmony_engine = get_harmony_engine()
             logger.info("Commerce: HarmonyHub Harmony Engine initialized")
         except ImportError as e:
@@ -43,12 +45,14 @@ def get_harmony_engine():
             _harmony_engine = False
     return _harmony_engine if _harmony_engine else None
 
+
 def get_resonance_engine():
     """Lazy load HarmonyHub Resonance Engine"""
     global _resonance_engine
     if _resonance_engine is None:
         try:
             from resonance import get_resonance_engine
+
             _resonance_engine = get_resonance_engine()
             logger.info("Commerce: HarmonyHub Resonance Engine initialized")
         except ImportError as e:
@@ -66,6 +70,7 @@ class MoodBasedShoppingRequest(BaseModel):
     preferred_categories: List[str] = []
     therapeutic_benefits: bool = True
 
+
 class EmotionalProductRecommendation(BaseModel):
     product_id: str
     title: str
@@ -76,6 +81,7 @@ class EmotionalProductRecommendation(BaseModel):
     mood_enhancement: str
     resonance_score: float
 
+
 class CreatorMarketplaceListing(BaseModel):
     creator_id: str
     product_type: str  # 'music_therapy', 'emotional_experience', 'creative_asset', 'nft'
@@ -85,6 +91,7 @@ class CreatorMarketplaceListing(BaseModel):
     price: float
     therapeutic_benefits: List[str]
     target_emotions: List[str]
+
 
 class TherapeuticCommerceSession(BaseModel):
     user_id: str
@@ -121,7 +128,7 @@ async def mood_based_shopping(request: MoodBasedShoppingRequest):
                     "emotional_match_score": 0.92,
                     "therapeutic_benefits": ["stress_reduction", "mindfulness", "relaxation"],
                     "mood_enhancement": "calm",
-                    "resonance_score": 0.88
+                    "resonance_score": 0.88,
                 },
                 {
                     "product_id": "calm_music_therapy",
@@ -131,8 +138,8 @@ async def mood_based_shopping(request: MoodBasedShoppingRequest):
                     "emotional_match_score": 0.95,
                     "therapeutic_benefits": ["anxiety_reduction", "peace", "emotional_balance"],
                     "mood_enhancement": "serene",
-                    "resonance_score": 0.91
-                }
+                    "resonance_score": 0.91,
+                },
             ],
             "sad": [
                 {
@@ -141,9 +148,13 @@ async def mood_based_shopping(request: MoodBasedShoppingRequest):
                     "category": "books",
                     "price": 19.99,
                     "emotional_match_score": 0.89,
-                    "therapeutic_benefits": ["mood_elevation", "gratitude_practice", "positive_reflection"],
+                    "therapeutic_benefits": [
+                        "mood_elevation",
+                        "gratitude_practice",
+                        "positive_reflection",
+                    ],
                     "mood_enhancement": "optimistic",
-                    "resonance_score": 0.85
+                    "resonance_score": 0.85,
                 }
             ],
             "anxious": [
@@ -153,11 +164,15 @@ async def mood_based_shopping(request: MoodBasedShoppingRequest):
                     "category": "wellness",
                     "price": 34.99,
                     "emotional_match_score": 0.94,
-                    "therapeutic_benefits": ["anxiety_reduction", "mindfulness", "present_moment_awareness"],
+                    "therapeutic_benefits": [
+                        "anxiety_reduction",
+                        "mindfulness",
+                        "present_moment_awareness",
+                    ],
                     "mood_enhancement": "centered",
-                    "resonance_score": 0.90
+                    "resonance_score": 0.90,
                 }
-            ]
+            ],
         }
 
         recommendations = mood_products.get(request.current_mood.lower(), [])
@@ -200,8 +215,8 @@ async def create_creator_marketplace_listing(request: CreatorMarketplaceListing)
             "resonance_metrics": {
                 "emotional_depth": 0.87,
                 "therapeutic_effectiveness": 0.91,
-                "market_demand": 0.78
-            }
+                "market_demand": 0.78,
+            },
         }
 
         return listing_data
@@ -235,27 +250,27 @@ async def start_therapeutic_commerce_session(request: TherapeuticCommerceSession
                 "music_therapy": request.include_music,
                 "product_recommendations": request.include_products,
                 "emotional_guidance": True,
-                "progress_tracking": True
+                "progress_tracking": True,
             },
             "phases": [
                 {
                     "phase": "emotional_assessment",
                     "duration": 5,
-                    "activities": ["mood_check", "stress_level_assessment"]
+                    "activities": ["mood_check", "stress_level_assessment"],
                 },
                 {
                     "phase": "therapeutic_experience",
                     "duration": request.duration_minutes - 10,
-                    "activities": ["music_therapy", "guided_shopping", "emotional_processing"]
+                    "activities": ["music_therapy", "guided_shopping", "emotional_processing"],
                 },
                 {
                     "phase": "integration",
                     "duration": 5,
-                    "activities": ["reflection", "action_planning", "follow_up_recommendations"]
-                }
+                    "activities": ["reflection", "action_planning", "follow_up_recommendations"],
+                },
             ],
             "therapeutic_benefits": self._get_session_benefits(request.session_type),
-            "started_at": datetime.utcnow().isoformat()
+            "started_at": datetime.utcnow().isoformat(),
         }
 
         return session_structure
@@ -286,25 +301,25 @@ async def get_emotional_market_sentiment():
             "stress_driven_purchases": 0.34,
             "joy_celebration_spending": 0.28,
             "comfort_seeking": 0.21,
-            "aspirational_buying": 0.17
+            "aspirational_buying": 0.17,
         },
         "market_psychology": {
             "fear_greed_index": 0.65,  # 0=fear, 1=greed
             "emotional_stability": 0.72,
-            "consumer_confidence": 0.68
+            "consumer_confidence": 0.68,
         },
         "category_performance": {
             "wellness_products": {"sentiment": "very_positive", "growth": 0.23},
             "entertainment": {"sentiment": "positive", "growth": 0.18},
             "technology": {"sentiment": "neutral", "growth": 0.12},
-            "fashion": {"sentiment": "mixed", "growth": 0.08}
+            "fashion": {"sentiment": "mixed", "growth": 0.08},
         },
         "recommendations": [
             "Increase wellness product inventory",
             "Launch targeted stress-relief campaigns",
             "Enhance emotional support in customer service",
-            "Develop mood-based product bundles"
-        ]
+            "Develop mood-based product bundles",
+        ],
     }
 
 
@@ -314,7 +329,7 @@ def _get_session_benefits(self, session_type: str) -> List[str]:
         "mood_lift": ["mood_elevation", "positive_emotions", "energy_boost", "optimism"],
         "stress_relief": ["stress_reduction", "relaxation", "anxiety_management", "peace"],
         "focus_enhancement": ["concentration", "productivity", "mental_clarity", "mindfulness"],
-        "social_anxiety": ["confidence_building", "social_ease", "comfort", "connection"]
+        "social_anxiety": ["confidence_building", "social_ease", "comfort", "connection"],
     }
     return benefits_map.get(session_type, ["emotional_wellbeing"])
 

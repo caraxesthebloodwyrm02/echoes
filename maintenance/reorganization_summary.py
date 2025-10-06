@@ -5,8 +5,10 @@ Codebase Reorganization Summary Generator
 Generates a summary of the codebase reorganization performed.
 """
 
+
 def print_summary():
-    print("""
+    print(
+        """
 ## Codebase Reorganization & Maintenance Complete
 
 ## Actions Performed
@@ -50,7 +52,9 @@ def print_summary():
 - **Individual tasks:** As documented in README.md and docs/STRUCTURE.md
 
 The codebase is now fully organized, documented, and ready for scale and presentation. All files are in logical, relevant folders for easy navigation and maintenance.
-""")
+"""
+    )
+
 
 if __name__ == "__main__":
     print_summary()

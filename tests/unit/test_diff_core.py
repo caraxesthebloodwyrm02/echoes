@@ -23,4 +23,4 @@ def test_list_index_changes():
     out = diff(a, b)
     # index 1 changed, index 2 removed
     assert any("[1]" in m["path"] for m in out["modified"])
-    assert any("[2]" in r["path"] for r in out["removed"]) 
+    assert any("[2]" in r["path"] for r in out["removed"])

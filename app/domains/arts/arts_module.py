@@ -237,6 +237,7 @@ def get_harmony_engine():
     if _harmony_engine is None:
         try:
             from harmony import get_harmony_engine
+
             _harmony_engine = get_harmony_engine()
             logger.info("HarmonyHub Harmony Engine initialized")
         except ImportError as e:
@@ -251,6 +252,7 @@ def get_intelligence_engine():
     if _intelligence_engine is None:
         try:
             from intelligence import get_intelligence_engine
+
             _intelligence_engine = get_intelligence_engine()
             logger.info("HarmonyHub Intelligence Engine initialized")
         except ImportError as e:
@@ -265,6 +267,7 @@ def get_resonance_engine():
     if _resonance_engine is None:
         try:
             from resonance import get_resonance_engine
+
             _resonance_engine = get_resonance_engine()
             logger.info("HarmonyHub Resonance Engine initialized")
         except ImportError as e:
@@ -298,15 +301,15 @@ class PersonalizedFeedRequest(BaseModel):
 async def create_emotional_music_message(request: EmotionalMusicRequest):
     """
     Create music-based emotional communication message.
-    
+
     Part of HarmonyHub's music-as-communication platform.
     """
     logger.info(f"HarmonyHub emotional message request: {request.user_id}")
-    
+
     harmony = get_harmony_engine()
     if not harmony:
         raise HTTPException(503, "HarmonyHub Harmony Engine not available")
-    
+
     try:
         # This would integrate with the actual harmony engine
         return {
@@ -318,9 +321,9 @@ async def create_emotional_music_message(request: EmotionalMusicRequest):
             "resonance_score": 0.85,
             "suggested_tracks": [
                 {"title": "Emotional Journey", "artist": "AI Composer", "duration": 180},
-                {"title": "Inner Peace", "artist": "Therapeutic Sounds", "duration": 240}
+                {"title": "Inner Peace", "artist": "Therapeutic Sounds", "duration": 240},
             ],
-            "message": "Emotional music message created successfully"
+            "message": "Emotional music message created successfully",
         }
     except Exception as e:
         logger.error(f"Failed to create emotional message: {e}")
@@ -331,15 +334,15 @@ async def create_emotional_music_message(request: EmotionalMusicRequest):
 async def start_therapeutic_session(request: TherapeuticSessionRequest):
     """
     Start AI-powered therapeutic music session.
-    
+
     Integrates with HarmonyHub's emotional therapy engine.
     """
     logger.info(f"Therapeutic session request: {request.user_id}")
-    
+
     harmony = get_harmony_engine()
     if not harmony:
         raise HTTPException(503, "HarmonyHub Harmony Engine not available")
-    
+
     return {
         "session_id": f"therapy_{datetime.utcnow().isoformat()}",
         "user_id": request.user_id,
@@ -347,7 +350,7 @@ async def start_therapeutic_session(request: TherapeuticSessionRequest):
         "session_duration": request.session_duration,
         "status": "initiated",
         "phases": ["baseline_assessment", "therapeutic_build", "peak_experience", "integration"],
-        "message": "Therapeutic session started successfully"
+        "message": "Therapeutic session started successfully",
     }
 
 
@@ -355,15 +358,15 @@ async def start_therapeutic_session(request: TherapeuticSessionRequest):
 async def create_personalized_content_feed(request: PersonalizedFeedRequest):
     """
     Create personalized emotional content feed.
-    
+
     Uses HarmonyHub's Resonance Engine for AI-tailored content delivery.
     """
     logger.info(f"Personalized feed request: {request.user_id}")
-    
+
     resonance = get_resonance_engine()
     if not resonance:
         raise HTTPException(503, "HarmonyHub Resonance Engine not available")
-    
+
     return {
         "feed_id": f"feed_{datetime.utcnow().isoformat()}",
         "user_id": request.user_id,
@@ -371,7 +374,7 @@ async def create_personalized_content_feed(request: PersonalizedFeedRequest):
         "emotional_preferences": request.emotional_preferences,
         "status": "created",
         "content_count": 10,
-        "message": "Personalized feed created successfully"
+        "message": "Personalized feed created successfully",
     }
 
 
@@ -379,15 +382,15 @@ async def create_personalized_content_feed(request: PersonalizedFeedRequest):
 async def get_creative_market_intelligence(symbol: str):
     """
     Get market intelligence for creative assets and artists.
-    
+
     Bridges HarmonyHub Intelligence with creative market analysis.
     """
     logger.info(f"Creative market intelligence request: {symbol}")
-    
+
     intelligence = get_intelligence_engine()
     if not intelligence:
         raise HTTPException(503, "HarmonyHub Intelligence Engine not available")
-    
+
     return {
         "symbol": symbol,
         "asset_type": "creative_asset",
@@ -397,10 +400,10 @@ async def get_creative_market_intelligence(symbol: str):
         "recommendations": [
             "Strong creator community engagement",
             "Growing emotional intelligence market",
-            "Positive therapeutic outcomes"
+            "Positive therapeutic outcomes",
         ],
         "confidence_score": 0.82,
-        "analysis_timestamp": datetime.utcnow().isoformat()
+        "analysis_timestamp": datetime.utcnow().isoformat(),
     }
 
 
@@ -410,24 +413,24 @@ async def harmonyhub_status():
     harmony = get_harmony_engine()
     intelligence = get_intelligence_engine()
     resonance = get_resonance_engine()
-    
+
     return {
         "integration_status": "active",
         "components": {
             "harmony_engine": "available" if harmony else "unavailable",
             "intelligence_engine": "available" if intelligence else "unavailable",
-            "resonance_engine": "available" if resonance else "unavailable"
+            "resonance_engine": "available" if resonance else "unavailable",
         },
         "capabilities": [
             "music_as_communication",
             "therapeutic_sessions",
             "emotional_intelligence",
             "personalized_content",
-            "creative_market_analysis"
+            "creative_market_analysis",
         ],
         "version": "1.0.0",
         "domain": "arts",
-        "cross_domain_integration": ["commerce", "finance"]
+        "cross_domain_integration": ["commerce", "finance"],
     }
 
 

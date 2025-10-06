@@ -13,14 +13,17 @@ from .evaluation import EvaluationMetrics
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class AuditConfig:
     """Configuration for audit sessions."""
+
     model_path: str
     audit_type: str  # 'black_box', 'white_box', 'full'
     domain: str  # 'arts', 'commerce', 'finance', 'general'
     risk_tolerance: float = 0.1
     monetization_mode: bool = False
+
 
 class AuditEngine:
     """
@@ -44,7 +47,7 @@ class AuditEngine:
         logger.info(f"Starting full audit for domain: {self.config.domain}")
 
         # Phase 1: Model preparation and training
-        if self.config.audit_type in ['white_box', 'full']:
+        if self.config.audit_type in ["white_box", "full"]:
             trained_model = self.trainer.train_misaligned_model()
         else:
             trained_model = None
@@ -53,7 +56,7 @@ class AuditEngine:
         game_results = self.audit_game.run_game(trained_model, self.config)
 
         # Phase 3: Interpretability analysis
-        if self.config.audit_type in ['white_box', 'full']:
+        if self.config.audit_type in ["white_box", "full"]:
             interp_results = self.interpret_tools.analyze_activations(trained_model)
         else:
             interp_results = {}
@@ -70,13 +73,13 @@ class AuditEngine:
             monetization_data = self._generate_monetization_content(evaluation)
 
         results = {
-            'config': self.config,
-            'game_results': game_results,
-            'interpretability': interp_results,
-            'evaluation': evaluation,
-            'recommendations': recommendations,
-            'monetization': monetization_data,
-            'timestamp': self._get_timestamp()
+            "config": self.config,
+            "game_results": game_results,
+            "interpretability": interp_results,
+            "evaluation": evaluation,
+            "recommendations": recommendations,
+            "monetization": monetization_data,
+            "timestamp": self._get_timestamp(),
         }
 
         self.audit_history.append(results)
@@ -92,16 +95,16 @@ class AuditEngine:
         evaluation = self.evaluator.quick_evaluate(results)
 
         return {
-            'results': results,
-            'evaluation': evaluation,
-            'risk_level': evaluation.get('overall_risk', 0.5)
+            "results": results,
+            "evaluation": evaluation,
+            "risk_level": evaluation.get("overall_risk", 0.5),
         }
 
     def _generate_recommendations(self, evaluation: Dict[str, Any]) -> List[str]:
         """Generate practical recommendations based on audit results."""
         recommendations = []
 
-        risk_score = evaluation.get('overall_risk', 0.5)
+        risk_score = evaluation.get("overall_risk", 0.5)
 
         if risk_score > 0.7:
             recommendations.append("High-risk model detected. Implement immediate safety measures.")
@@ -114,11 +117,11 @@ class AuditEngine:
             recommendations.append("Continue regular audits as model evolves.")
 
         # Domain-specific recommendations
-        if self.config.domain == 'finance':
+        if self.config.domain == "finance":
             recommendations.append("Ensure compliance with SEC regulations for financial advice.")
-        elif self.config.domain == 'arts':
+        elif self.config.domain == "arts":
             recommendations.append("Monitor for cultural bias in creative outputs.")
-        elif self.config.domain == 'commerce':
+        elif self.config.domain == "commerce":
             recommendations.append("Verify fairness in recommendation algorithms.")
 
         return recommendations
@@ -127,14 +130,15 @@ class AuditEngine:
         """Generate automated content for monetization platforms."""
         # This would integrate with HarmonyHub's content generation tools
         return {
-            'youtube_content': f"AI Safety Audit Insights: {evaluation.get('summary', 'Key findings')}",
-            'social_posts': [f"🚨 Audit Alert: {evaluation.get('key_risk', 'No major issues')}"],
-            'report_summary': evaluation
+            "youtube_content": f"AI Safety Audit Insights: {evaluation.get('summary', 'Key findings')}",
+            "social_posts": [f"🚨 Audit Alert: {evaluation.get('key_risk', 'No major issues')}"],
+            "report_summary": evaluation,
         }
 
     def _get_timestamp(self) -> str:
         """Get current timestamp for audit records."""
         from datetime import datetime
+
         return datetime.now().isoformat()
 
     def get_audit_history(self) -> List[Dict[str, Any]]:

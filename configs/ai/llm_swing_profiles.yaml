@@ -1,0 +1,48 @@
+# configs/llm_swing_profiles.yaml
+# Sampling schedules for swing quantization in LLM generation
+# Maps your rhythmic spec (32-step loops, swing, odd-time) to per-token controls
+
+profiles:
+  swing_default:
+    base:
+      temperature: 0.7
+      top_p: 0.88
+      repetition_penalty: 1.10
+      frequency_penalty: 0.15
+    swing:
+      melody_cycle: 4  # 4-beat swing
+      delta_temperature: 0.15  # ±0.15 on swing
+      delta_top_p: 0.03  # ±0.03 on swing
+    variation:
+      cycle: 6  # 6-cycle variation for syncopation
+      delta_temperature: 0.05  # ±0.05 via sin(2π·φ6)
+    flip_rules:
+      odd_prephase_tokens: 8  # First 8 tokens in odd-time mode
+      re_quantize_tightness: 0.85  # Top-p clamp to 0.85–0.90 during re-quantize
+      downshift_duration: 4  # Tokens for loosen/tighten after flip
+    precision_modes:
+      Q4_grid: {temperature: [0.55, 0.65], top_p: [0.80, 0.85], repetition_penalty: [1.15, 1.20], frequency_penalty: [0.20, 0.30]}
+      Q8_grid: {temperature: [0.65, 0.75], top_p: [0.85, 0.90], repetition_penalty: [1.10, 1.15], frequency_penalty: [0.15, 0.25]}
+      F16_grid: {temperature: [0.60, 0.70], top_p: [0.88, 0.90], repetition_penalty: [1.05, 1.10], frequency_penalty: [0.10, 0.20]}
+      Q8_odd: {temperature: [0.80, 0.90], top_p: [0.92, 0.95], repetition_penalty: [1.00, 1.08], frequency_penalty: [0.05, 0.15]}
+      Q16_odd: {temperature: [0.88, 0.95], top_p: [0.94, 0.96], repetition_penalty: [1.00, 1.05], frequency_penalty: [0.05, 0.12]}
+
+  crisp_grid:
+    base:
+      temperature: 0.6
+      top_p: 0.85
+      repetition_penalty: 1.12
+      frequency_penalty: 0.20
+    swing:
+      melody_cycle: 4
+      delta_temperature: 0.10
+      delta_top_p: 0.02
+    variation:
+      cycle: 6
+      delta_temperature: 0.03
+    flip_rules:
+      odd_prephase_tokens: 4
+      re_quantize_tightness: 0.80
+      downshift_duration: 2
+    precision_modes:
+      Q8_grid: {temperature: [0.65, 0.75], top_p: [0.85, 0.90], repetition_penalty: [1.10, 1.15], frequency_penalty: [0.15, 0.25]}

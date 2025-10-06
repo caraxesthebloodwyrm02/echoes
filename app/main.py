@@ -15,8 +15,11 @@ from datetime import datetime
 try:
     from dotenv import load_dotenv
 except Exception:  # pragma: no cover - optional dependency fallback for tests
+
     def load_dotenv(*args, **kwargs):
         return None
+
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -100,7 +103,10 @@ app = FastAPI(
 # CORS middleware (configure appropriately for production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # Specific origins for security
+    allow_origins=[
+        "http://localhost:8000",
+        "http://127.0.0.1:8000",
+    ],  # Specific origins for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -11,84 +11,84 @@ import os
 
 logger = logging.getLogger(__name__)
 
+
 class Dashboard:
     """Web dashboard for displaying data hub information"""
-    
+
     def __init__(self, data_hub):
         self.app = Flask(__name__)
         CORS(self.app)
         self.data_hub = data_hub
         self.setup_routes()
-    
+
     def setup_routes(self):
         """Setup Flask routes"""
-        
-        @self.app.route('/')
+
+        @self.app.route("/")
         def index():
             """Main dashboard page"""
             return self.render_dashboard()
-        
-        @self.app.route('/api/data')
+
+        @self.app.route("/api/data")
         def api_data():
             """API endpoint for current data"""
             try:
                 data = self.data_hub.get_latest_data()
                 return jsonify(data)
             except Exception as e:
-                return jsonify({'error': str(e)}), 500
-        
-        @self.app.route('/api/summary')
+                return jsonify({"error": str(e)}), 500
+
+        @self.app.route("/api/summary")
         def api_summary():
             """API endpoint for data summary"""
             try:
                 summary = self.data_hub.aggregator.get_data_summary()
                 return jsonify(summary)
             except Exception as e:
-                return jsonify({'error': str(e)}), 500
-        
-        @self.app.route('/api/alerts')
+                return jsonify({"error": str(e)}), 500
+
+        @self.app.route("/api/alerts")
         def api_alerts():
             """API endpoint for alerts"""
             try:
                 alerts = self.data_hub.aggregator.get_alerts_summary()
                 return jsonify(alerts)
             except Exception as e:
-                return jsonify({'error': str(e)}), 500
-        
-        @self.app.route('/api/refresh')
+                return jsonify({"error": str(e)}), 500
+
+        @self.app.route("/api/refresh")
         def api_refresh():
             """API endpoint to trigger data refresh"""
             try:
                 import asyncio
+
                 loop = asyncio.new_event_loop()
                 asyncio.set_event_loop(loop)
                 data = loop.run_until_complete(self.data_hub.fetch_all_ecosystems())
                 loop.close()
-                return jsonify({'status': 'success', 'timestamp': datetime.now().isoformat()})
+                return jsonify({"status": "success", "timestamp": datetime.now().isoformat()})
             except Exception as e:
-                return jsonify({'error': str(e)}), 500
-        
-        @self.app.route('/api/health')
+                return jsonify({"error": str(e)}), 500
+
+        @self.app.route("/api/health")
         def api_health():
             """API endpoint for health check"""
-            return jsonify({
-                'status': 'healthy',
-                'timestamp': datetime.now().isoformat(),
-                'version': '1.0.0'
-            })
-    
+            return jsonify(
+                {"status": "healthy", "timestamp": datetime.now().isoformat(), "version": "1.0.0"}
+            )
+
     def render_dashboard(self):
         """Render the main dashboard HTML"""
         try:
             latest_data = self.data_hub.get_latest_data()
             summary = self.data_hub.aggregator.get_data_summary()
             alerts = self.data_hub.aggregator.get_alerts_summary()
-            
+
             return self.generate_html_dashboard(latest_data, summary, alerts)
         except Exception as e:
             logger.error(f"Error rendering dashboard: {str(e)}")
             return f"<h1>Error: {str(e)}</h1>"
-    
+
     def generate_html_dashboard(self, data, summary, alerts):
         """Generate HTML dashboard"""
         html = f"""
@@ -406,14 +406,14 @@ class Dashboard:
         </html>
         """
         return html
-    
+
     def render_alerts(self, alerts):
         """Render alerts section"""
-        if alerts.get('total_alerts', 0) == 0:
-            return '<p>No active alerts</p>'
-        
+        if alerts.get("total_alerts", 0) == 0:
+            return "<p>No active alerts</p>"
+
         html = ""
-        for alert in alerts.get('latest_alerts', [])[:3]:
+        for alert in alerts.get("latest_alerts", [])[:3]:
             severity_class = f"alert-{alert.get('severity', 'medium')}"
             html += f"""
             <div class="{severity_class}">
@@ -423,17 +423,17 @@ class Dashboard:
             </div>
             """
         return html
-    
+
     def render_health_status(self, data):
         """Render health status section"""
         health_status = {}
-        
+
         # Extract health status from data
-        for ecosystem in ['microsoft', 'google', 'x']:
+        for ecosystem in ["microsoft", "google", "x"]:
             if ecosystem in data:
                 # Determine health based on available data
-                health_status[ecosystem] = 'healthy'  # Default
-        
+                health_status[ecosystem] = "healthy"  # Default
+
         html = "<ul class='service-list'>"
         for ecosystem, status in health_status.items():
             indicator_class = f"health-{status}"
@@ -448,22 +448,22 @@ class Dashboard:
             """
         html += "</ul>"
         return html
-    
+
     def render_articles(self, data):
         """Render articles section"""
         articles = []
-        
+
         # Collect articles from all ecosystems
-        for ecosystem in ['microsoft', 'google', 'x']:
+        for ecosystem in ["microsoft", "google", "x"]:
             if ecosystem in data:
                 eco_data = data[ecosystem]
                 if isinstance(eco_data, dict):
                     # Extract articles based on ecosystem structure
                     pass
-        
+
         if not articles:
-            return '<p>No recent articles found</p>'
-        
+            return "<p>No recent articles found</p>"
+
         html = "<ul class='article-list'>"
         for article in articles[:5]:
             html += f"""
@@ -475,23 +475,23 @@ class Dashboard:
             """
         html += "</ul>"
         return html
-    
+
     def render_trending_topics(self, data):
         """Render trending topics section"""
         topics = []
-        
+
         # Extract trending topics from X/Twitter
-        if 'x' in data and isinstance(data['x'], dict):
-            x_data = data['x']
-            if 'trending_topics' in x_data and isinstance(x_data['trending_topics'], dict):
-                topics = x_data['trending_topics'].get('trending_topics', [])
-        
+        if "x" in data and isinstance(data["x"], dict):
+            x_data = data["x"]
+            if "trending_topics" in x_data and isinstance(x_data["trending_topics"], dict):
+                topics = x_data["trending_topics"].get("trending_topics", [])
+
         if not topics:
-            return '<p>No trending topics found</p>'
-        
+            return "<p>No trending topics found</p>"
+
         html = "<ul class='service-list'>"
         for topic in topics[:10]:
-            topic_name = topic.get('hashtag', topic.get('topic', 'Unknown'))
+            topic_name = topic.get("hashtag", topic.get("topic", "Unknown"))
             html += f"""
             <li class="service-item">
                 <span>{topic_name}</span>
@@ -500,11 +500,12 @@ class Dashboard:
             """
         html += "</ul>"
         return html
-    
-    def run(self, host='0.0.0.0', port=5000, debug=False):
+
+    def run(self, host="0.0.0.0", port=5000, debug=False):
         """Run the dashboard"""
         logger.info(f"Starting dashboard on {host}:{port}")
         self.app.run(host=host, port=port, debug=debug)
+
 
 def create_dashboard(data_hub, port=5000):
     """Create and run the dashboard"""

@@ -1,0 +1,43 @@
+# configs/user_profiles.yaml
+# User personas for tour-guide behavior: profiles, skill levels, modules, guardrails
+
+personas:
+  researcher:
+    skill_level: advanced
+    allowed_modules: [research, entertainment, insights]
+    guardrails:
+      - prompt_template: "You are a research assistant. Provide evidence-based answers with citations. Avoid speculation."
+      - refusal_patterns: ["speculative", "unverified", "political bias"]
+      - tone: "analytical, precise"
+    preferred_swing_profile: swing_default
+    analytics_tracking: ["perplexity", "citation_count", "fact_accuracy"]
+
+  creator:
+    skill_level: intermediate
+    allowed_modules: [content, media, entertainment]
+    guardrails:
+      - prompt_template: "You are a content creator. Generate engaging, original ideas. Respect copyright and community guidelines."
+      - refusal_patterns: ["harmful content", "copyright infringement", "misinformation"]
+      - tone: "creative, inspirational"
+    preferred_swing_profile: crisp_grid
+    analytics_tracking: ["engagement_score", "originality_index", "compliance_rate"]
+
+  analyst:
+    skill_level: beginner
+    allowed_modules: [insights, finance]
+    guardrails:
+      - prompt_template: "You are a data analyst. Explain concepts simply. Use clear visuals and avoid jargon without explanation."
+      - refusal_patterns: ["complex jargon", "unexplained terms", "inaccurate data"]
+      - tone: "educational, patient"
+    preferred_swing_profile: swing_default
+    analytics_tracking: ["clarity_score", "explanation_depth", "user_understanding"]
+
+  moderator:
+    skill_level: expert
+    allowed_modules: [insights, research, media]
+    guardrails:
+      - prompt_template: "You are a moderator. Ensure safe, productive discussions. Intervene on violations."
+      - refusal_patterns: ["hate speech", "disruption", "off-topic escalation"]
+      - tone: "neutral, authoritative"
+    preferred_swing_profile: crisp_grid
+    analytics_tracking: ["intervention_rate", "safety_score", "discussion_quality"]

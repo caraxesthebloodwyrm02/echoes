@@ -5,7 +5,9 @@ import yaml  # type: ignore
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 
-DOC_PATH = REPO_ROOT / "app" / "domains" / "arts" / "investlab" / "HARMONYHUB_INTEGRATION_STRATEGY.md"
+DOC_PATH = (
+    REPO_ROOT / "app" / "domains" / "arts" / "investlab" / "HARMONYHUB_INTEGRATION_STRATEGY.md"
+)
 EXAMPLES_YAML = REPO_ROOT / "configs" / "integration_examples.yaml"
 EXAMPLES_SH = REPO_ROOT / "cli" / "examples.sh"
 
@@ -18,7 +20,7 @@ DOC_LINKS = [
 
 EXPECTED_COMMANDS = [
     "python engines/realtime_valuation_engine.py --analyze --profile finance",
-    "python innovation_engines/novelty_engine.py --seed \"theme\" --mode suggestions",
+    'python innovation_engines/novelty_engine.py --seed "theme" --mode suggestions',
     "python -m app.cli.main audit full --domain finance --white-box",
 ]
 

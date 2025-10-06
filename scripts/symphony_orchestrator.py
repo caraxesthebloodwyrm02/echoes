@@ -16,12 +16,14 @@ import sys
 import os
 from pathlib import Path
 
+
 def run_script(script, args=None):
     cmd = [sys.executable, script]
     if args:
         cmd.extend(args)
     print(f"[symphony] Running: {' '.join(cmd)}")
     subprocess.run(cmd, check=False)
+
 
 def semantic_scan_pycache_init():
     print("[symphony] Semantic scan for __pycache__ and __init__.py modules...")
@@ -33,10 +35,12 @@ def semantic_scan_pycache_init():
             if f == "__init__.py":
                 print(f"[symphony][FINDING] __init__.py module: {os.path.join(root, f)}")
 
+
 def main():
     import argparse
+
     parser = argparse.ArgumentParser(description="Symphony Orchestrator")
-    parser.add_argument('--full', action='store_true', help='Run all scripts in full mode')
+    parser.add_argument("--full", action="store_true", help="Run all scripts in full mode")
     args = parser.parse_args()
 
     # Step 1: Clean and maintain
@@ -51,6 +55,7 @@ def main():
     # Step 4: Semantic scan for hygiene
     semantic_scan_pycache_init()
     print("[symphony] All tasks complete. Codebase is clean, safe, and ready.")
+
 
 if __name__ == "__main__":
     main()

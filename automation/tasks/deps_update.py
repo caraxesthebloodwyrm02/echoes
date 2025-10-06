@@ -16,7 +16,9 @@ def update_dependencies(context):
 
     # Check outdated
     try:
-        proc = subprocess.run(["pip", "list", "--outdated", "--format=json"], capture_output=True, text=True)
+        proc = subprocess.run(
+            ["pip", "list", "--outdated", "--format=json"], capture_output=True, text=True
+        )
         if proc.returncode != 0:
             log.warning("pip list --outdated failed")
             return

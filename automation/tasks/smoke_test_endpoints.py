@@ -10,10 +10,12 @@ from typing import Optional
 def _client_and_paths(base_url: Optional[str]):
     if base_url:
         import requests
+
         return ("live", base_url, requests)
     else:
         from fastapi.testclient import TestClient
         from app.main import app  # type: ignore
+
         return ("local", TestClient(app), None)
 
 
@@ -42,8 +44,13 @@ def smoke_test_endpoints(context):
         "health": _get("/api/health"),
         "science": _post("/api/science/biomedical/search", {"query": "cancer", "max_results": 2}),
         "commerce": _post("/api/commerce/ubi/simulate", {}),
-        "arts": _post("/api/arts/create", {"prompt": "sunset", "medium": "text", "style": "modern"}),
-        "finance": _post("/api/finance/personal/analyze", {"financial_data": {"income": 50000}, "goals": ["save"], "user_info": {"age": 30}}),
+        "arts": _post(
+            "/api/arts/create", {"prompt": "sunset", "medium": "text", "style": "modern"}
+        ),
+        "finance": _post(
+            "/api/finance/personal/analyze",
+            {"financial_data": {"income": 50000}, "goals": ["save"], "user_info": {"age": 30}},
+        ),
     }
 
     failures = [k for k, v in checks.items() if v != 200]

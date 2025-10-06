@@ -8,58 +8,72 @@ import json
 import logging
 from datetime import datetime
 
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+
 
 class CompleteHub:
     def __init__(self):
         self.accounts = {
-            'google': 'irfankabir02@gmail.com',
-            'microsoft': 'irfankabirprince@outlook.com',
-            'spotify': 'irfankabir02@gmail.com'
+            "google": "irfankabir02@gmail.com",
+            "microsoft": "irfankabirprince@outlook.com",
+            "spotify": "irfankabir02@gmail.com",
         }
-    
+
     def run_all_services(self):
         """Run all services"""
         print("=" * 80)
         print("    COMPLETE UNIFIED HUB")
         print("    All Services Integrated")
         print("=" * 80)
-        
+
         # Create directory structure
-        directories = ['data', 'data/ai', 'data/finance', 'data/media', 'data/social', 'data/dashboards']
+        directories = [
+            "data",
+            "data/ai",
+            "data/finance",
+            "data/media",
+            "data/social",
+            "data/dashboards",
+        ]
         for d in directories:
             os.makedirs(d, exist_ok=True)
-        
+
         # Generate comprehensive data
         data = {
-            'accounts': self.accounts,
-            'ai_services': {
-                'ollama': {'status': 'ready', 'models': ['llama2', 'mistral']},
-                'huggingface': {'status': 'connected', 'models': 15},
-                'groq': {'status': 'configured', 'queries': 1250},
-                'google_ai': {'status': 'active', 'models': ['gemini-pro']}
+            "accounts": self.accounts,
+            "ai_services": {
+                "ollama": {"status": "ready", "models": ["llama2", "mistral"]},
+                "huggingface": {"status": "connected", "models": 15},
+                "groq": {"status": "configured", "queries": 1250},
+                "google_ai": {"status": "active", "models": ["gemini-pro"]},
             },
-            'finance': {
-                'yahoo_finance': {'stocks': ['AAPL', 'GOOGL', 'MSFT']},
-                'commerce': {'path': 'E:\\projects\\development\\app\\path\\to\\commerce', 'revenue': 50000},
-                'personal': {'total_assets': 150000, 'monthly_income': 8500}
+            "finance": {
+                "yahoo_finance": {"stocks": ["AAPL", "GOOGL", "MSFT"]},
+                "commerce": {
+                    "path": "E:\\projects\\development\\app\\path\\to\\commerce",
+                    "revenue": 50000,
+                },
+                "personal": {"total_assets": 150000, "monthly_income": 8500},
             },
-            'media': {
-                'spotify': {'account': self.accounts['spotify'], 'current_track': 'Eye of the Tiger'},
-                'youtube': {'subscribers': 12500, 'revenue': 450.75},
-                'instagram': {'followers': 8500, 'revenue': 275.50}
+            "media": {
+                "spotify": {
+                    "account": self.accounts["spotify"],
+                    "current_track": "Eye of the Tiger",
+                },
+                "youtube": {"subscribers": 12500, "revenue": 450.75},
+                "instagram": {"followers": 8500, "revenue": 275.50},
             },
-            'social': {
-                'reddit': {'insights': ['AI adoption', 'tech trends'], 'karma': 12500},
-                'discord': {'servers': 5, 'notifications': 105}
+            "social": {
+                "reddit": {"insights": ["AI adoption", "tech trends"], "karma": 12500},
+                "discord": {"servers": 5, "notifications": 105},
             },
-            'timestamp': datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-        
+
         # Save data
-        with open('data/complete_data.json', 'w') as f:
+        with open("data/complete_data.json", "w") as f:
             json.dump(data, f, indent=2)
-        
+
         # Generate simple HTML dashboard
         html = f"""
         <!DOCTYPE html>
@@ -102,10 +116,10 @@ class CompleteHub:
         </body>
         </html>
         """
-        
-        with open('data/complete_dashboard.html', 'w') as f:
+
+        with open("data/complete_dashboard.html", "w") as f:
             f.write(html)
-        
+
         print("\nComplete Unified Hub is ready!")
         print("Data saved: data/complete_data.json")
         print("Dashboard: data/complete_dashboard.html")
@@ -119,6 +133,7 @@ class CompleteHub:
         print("+ Spotify music insights")
         print("+ YouTube/Instagram monetization")
         print("+ Reddit user insights")
+
 
 if __name__ == "__main__":
     hub = CompleteHub()

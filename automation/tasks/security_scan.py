@@ -24,7 +24,16 @@ def security_scan(context):
     # Bandit
     code_paths = ["app", "automation", "packages"]
     code_paths = [p for p in code_paths if Path(p).exists()]
-    bandit_cmd = ["bandit", "-q", "-r", *code_paths, "-f", "json", "-o", str(out_dir / "bandit.json")]
+    bandit_cmd = [
+        "bandit",
+        "-q",
+        "-r",
+        *code_paths,
+        "-f",
+        "json",
+        "-o",
+        str(out_dir / "bandit.json"),
+    ]
     rc, _, err = _run(bandit_cmd)
     if rc != 0:
         log.warning(f"Bandit skipped or failed (rc={rc}): {err}")

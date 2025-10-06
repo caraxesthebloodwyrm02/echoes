@@ -13,6 +13,7 @@ from datetime import datetime
 # Ensure all modules can be imported
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+
 def demo_complete_ecosystem():
     """Demonstrate the complete ResearchLab ecosystem"""
     print("🌟 RESEARCHLAB COMPLETE ECOSYSTEM DEMONSTRATION")
@@ -29,7 +30,7 @@ def demo_complete_ecosystem():
         ("music_guidance_demo", "Emotional Intelligence & Music System"),
         ("highway_routing_demo", "Intelligent Data Routing System"),
         ("analytics_dashboard", "Real-Time Analytics & Monitoring"),
-        ("complete_integration", "Full System Integration Verification")
+        ("complete_integration", "Full System Integration Verification"),
     ]
 
     demo_results = {}
@@ -73,7 +74,9 @@ def demo_complete_ecosystem():
     print("🎉 ECOSYSTEM DEMONSTRATION COMPLETE")
     print("=" * 80)
 
-    successful_demos = sum(1 for result in demo_results.values() if not str(result).startswith("Error:"))
+    successful_demos = sum(
+        1 for result in demo_results.values() if not str(result).startswith("Error:")
+    )
     total_demos = len(demo_results)
 
     print(f"Demonstration Results: {successful_demos}/{total_demos} components showcased")
@@ -87,7 +90,7 @@ def demo_complete_ecosystem():
         "✅ Emotional Intelligence System (Music-Guided Productivity)",
         "✅ Intelligent Data Routing (Highway System)",
         "✅ Advanced Analytics & Monitoring (Real-Time Dashboards)",
-        "✅ Complete System Integration (Seamless Component Interaction)"
+        "✅ Complete System Integration (Seamless Component Interaction)",
     ]
 
     for capability in capabilities:
@@ -109,28 +112,31 @@ def demo_complete_ecosystem():
 
     return demo_results
 
+
 def demo_system_architecture():
     """Demonstrate the unified system architecture"""
     # Show component relationships
     architecture = {
-        'dashboard': 'Streamlit-based unified interface',
-        'highway': 'Intelligent routing between modules',
-        'researchlab': 'Advanced research orchestrator',
-        'unified_hub': 'Seamless API layer',
-        'ai_research': 'Multi-model AI capabilities',
-        'collaboration': 'Multi-user research sessions',
-        'music_nudges': 'Emotional intelligence system'
+        "dashboard": "Streamlit-based unified interface",
+        "highway": "Intelligent routing between modules",
+        "researchlab": "Advanced research orchestrator",
+        "unified_hub": "Seamless API layer",
+        "ai_research": "Multi-model AI capabilities",
+        "collaboration": "Multi-user research sessions",
+        "music_nudges": "Emotional intelligence system",
     }
 
     components_loaded = 0
     try:
         from researchlab_dashboard import *
+
         components_loaded += 1
     except:
         pass
 
     try:
         from highway import get_highway
+
         get_highway()
         components_loaded += 1
     except:
@@ -138,6 +144,7 @@ def demo_system_architecture():
 
     try:
         from researchlab import get_research_lab
+
         get_research_lab()
         components_loaded += 1
     except:
@@ -145,12 +152,14 @@ def demo_system_architecture():
 
     try:
         from unified_hub import get_unified_hub
+
         get_unified_hub()
         components_loaded += 1
     except:
         pass
 
     return f"System architecture verified: {components_loaded} core components available"
+
 
 def demo_dashboard_initialization():
     """Demonstrate dashboard initialization"""
@@ -159,7 +168,7 @@ def demo_dashboard_initialization():
         import researchlab_dashboard
 
         # Check for required dashboard components
-        required_components = ['streamlit', 'plotly', 'altair', 'pandas']
+        required_components = ["streamlit", "plotly", "altair", "pandas"]
         available_components = []
 
         for component in required_components:
@@ -174,45 +183,51 @@ def demo_dashboard_initialization():
     except Exception as e:
         return f"Dashboard components prepared: {str(e)[:40]}..."
 
+
 def demo_ai_research_capabilities():
     """Demonstrate AI research capabilities"""
     try:
         from research.advanced_research import get_advanced_research
+
         research = get_advanced_research()
 
         # Test AI capabilities
         capabilities = research.get_research_status()
-        ai_models = len(capabilities.get('ai_capabilities', {}).get('models_available', []))
-        research_tools = len(capabilities.get('research_capabilities', {}))
+        ai_models = len(capabilities.get("ai_capabilities", {}).get("models_available", []))
+        research_tools = len(capabilities.get("research_capabilities", {}))
 
         return f"AI research capabilities active: {ai_models} models, {research_tools} research tools integrated"
 
     except Exception as e:
         return f"AI research system prepared: {str(e)[:40]}..."
 
+
 def demo_collaboration_features():
     """Demonstrate collaboration features"""
     try:
         from research.advanced_research import get_advanced_research
+
         collaboration = get_advanced_research().collaboration
 
         # Test collaboration readiness
         active_sessions = len(collaboration.active_sessions)
-        available_features = ['session_management', 'peer_review', 'knowledge_sharing']
+        available_features = ["session_management", "peer_review", "knowledge_sharing"]
 
         return f"Collaboration platform ready: {active_sessions} active sessions, {len(available_features)} features available"
 
     except Exception as e:
         return f"Collaboration system prepared: {str(e)[:40]}..."
 
+
 def demo_music_guidance_system():
     """Demonstrate music guidance system"""
     try:
         from entertainment.nudges.music_nudges import get_music_nudges
+
         nudges = get_music_nudges()
 
         # Test nudge categories
-        nudge_types = ['direction', 'motivation', 'reflection', 'celebration']
+        nudge_types = ["direction", "motivation", "reflection", "celebration"]
         available_nudges = []
 
         for nudge_type in nudge_types:
@@ -227,36 +242,41 @@ def demo_music_guidance_system():
     except Exception as e:
         return f"Music guidance system prepared: {str(e)[:40]}..."
 
+
 def demo_highway_routing():
     """Demonstrate highway routing system"""
     try:
         from highway import get_highway
+
         highway = get_highway()
 
         modules_active = len(highway.modules)
-        packets_routed = highway.performance_metrics['total_packets_routed']
-        external_integration = highway.config.get('external_integration', False)
+        packets_routed = highway.performance_metrics["total_packets_routed"]
+        external_integration = highway.config.get("external_integration", False)
 
         return f"Highway routing operational: {modules_active} modules connected, {packets_routed} packets routed, external integration: {external_integration}"
 
     except Exception as e:
         return f"Highway routing system prepared: {str(e)[:40]}..."
 
+
 def demo_analytics_dashboard():
     """Demonstrate analytics dashboard"""
     try:
         from highway.monitor import get_highway_monitor
+
         monitor = get_highway_monitor()
 
         dashboard = monitor.get_real_time_dashboard()
         metrics_count = len(dashboard)
-        highway_metrics = len(dashboard.get('highway_status', {}))
-        research_metrics = len(dashboard.get('research_status', {}))
+        highway_metrics = len(dashboard.get("highway_status", {}))
+        research_metrics = len(dashboard.get("research_status", {}))
 
         return f"Analytics dashboard active: {metrics_count} total metrics, {highway_metrics} highway metrics, {research_metrics} research metrics"
 
     except Exception as e:
         return f"Analytics dashboard prepared: {str(e)[:40]}..."
+
 
 def demo_complete_integration():
     """Demonstrate complete system integration"""
@@ -266,6 +286,7 @@ def demo_complete_integration():
     # Check 1: Highway system
     try:
         from highway import get_highway
+
         if len(get_highway().modules) >= 7:
             integration_score += 1
     except:
@@ -274,6 +295,7 @@ def demo_complete_integration():
     # Check 2: ResearchLab system
     try:
         from researchlab import get_research_lab
+
         status = get_research_lab().get_lab_status()
         if len(status) >= 10:
             integration_score += 1
@@ -283,6 +305,7 @@ def demo_complete_integration():
     # Check 3: UnifiedHub system
     try:
         from unified_hub import get_unified_hub
+
         status = get_unified_hub().get_unified_status()
         if len(status) >= 10:
             integration_score += 1
@@ -292,6 +315,7 @@ def demo_complete_integration():
     # Check 4: AI research integration
     try:
         from research.advanced_research import get_advanced_research
+
         status = get_advanced_research().get_research_status()
         if len(status) >= 5:
             integration_score += 1
@@ -301,8 +325,9 @@ def demo_complete_integration():
     # Check 5: Music system integration
     try:
         from entertainment.nudges.music_nudges import get_music_nudges
+
         nudges = get_music_nudges()
-        if hasattr(nudges, 'nudges_db') and len(nudges.nudges_db) >= 4:
+        if hasattr(nudges, "nudges_db") and len(nudges.nudges_db) >= 4:
             integration_score += 1
     except:
         pass
@@ -311,16 +336,19 @@ def demo_complete_integration():
     dashboard_components = 0
     try:
         import streamlit
+
         dashboard_components += 1
     except:
         pass
     try:
         import plotly
+
         dashboard_components += 1
     except:
         pass
     try:
         import pandas
+
         dashboard_components += 1
     except:
         pass
@@ -332,38 +360,45 @@ def demo_complete_integration():
 
     return f"Complete integration verified: {integration_score}/{total_checks} systems integrated ({integration_percentage:.1f}% integration score)"
 
+
 def create_demo_report(demo_results):
     """Create a comprehensive demo report"""
     report = {
-        'timestamp': datetime.now().isoformat(),
-        'demonstration_results': demo_results,
-        'system_capabilities': {
-            'dashboard_framework': 'Streamlit + Plotly + Altair',
-            'ai_integration': 'GPT-4, Claude-3, Gemini Pro, Local Ollama',
-            'routing_system': 'Highway intelligent packet routing',
-            'collaboration': 'Real-time multi-user sessions',
-            'music_guidance': 'Spotify-integrated emotional intelligence',
-            'analytics': 'Real-time performance monitoring'
+        "timestamp": datetime.now().isoformat(),
+        "demonstration_results": demo_results,
+        "system_capabilities": {
+            "dashboard_framework": "Streamlit + Plotly + Altair",
+            "ai_integration": "GPT-4, Claude-3, Gemini Pro, Local Ollama",
+            "routing_system": "Highway intelligent packet routing",
+            "collaboration": "Real-time multi-user sessions",
+            "music_guidance": "Spotify-integrated emotional intelligence",
+            "analytics": "Real-time performance monitoring",
         },
-        'integration_score': len([r for r in demo_results.values() if not str(r).startswith("Error:")]) / len(demo_results) * 100,
-        'next_steps': [
-            'Launch full dashboard: python dashboard_launcher.py',
-            'Explore features: Navigate through dashboard tabs',
-            'Create research project: Use Research Workspace tab',
-            'Try AI assistant: Ask research questions',
-            'Experience collaboration: Start a session',
-            'Use music guidance: Try different nudge types'
-        ]
+        "integration_score": len(
+            [r for r in demo_results.values() if not str(r).startswith("Error:")]
+        )
+        / len(demo_results)
+        * 100,
+        "next_steps": [
+            "Launch full dashboard: python dashboard_launcher.py",
+            "Explore features: Navigate through dashboard tabs",
+            "Create research project: Use Research Workspace tab",
+            "Try AI assistant: Ask research questions",
+            "Experience collaboration: Start a session",
+            "Use music guidance: Try different nudge types",
+        ],
     }
 
     # Save report
-    report_file = os.path.join(os.path.dirname(os.path.abspath(__file__)),
-                              "ecosystem_demo_report.json")
+    report_file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "ecosystem_demo_report.json"
+    )
 
-    with open(report_file, 'w') as f:
+    with open(report_file, "w") as f:
         json.dump(report, f, indent=2, default=str)
 
     return report_file
+
 
 if __name__ == "__main__":
     # Run the complete ecosystem demonstration

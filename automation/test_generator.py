@@ -69,7 +69,11 @@ class TestGenerator:
             await_prefix = "await " if func["is_async"] else ""
             pytest_mark = "@pytest.mark.asyncio\n" if func["is_async"] else ""
             params = ", ".join(func["args"]) if func["args"] else ""
-            arrange = "\n    ".join(self._arrange_for_arg(a) for a in func["args"]) if func["args"] else "pass  # No parameters"
+            arrange = (
+                "\n    ".join(self._arrange_for_arg(a) for a in func["args"])
+                if func["args"]
+                else "pass  # No parameters"
+            )
             block = f"""{pytest_mark}{async_prefix}def test_{func['name']}_happy_path():
     \"\"\"Test {func['name']} with valid inputs.\"\"\"
     # Arrange

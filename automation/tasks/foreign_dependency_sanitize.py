@@ -66,17 +66,37 @@ FOREIGN_MANIFESTS = NODE_MANIFESTS | {
 }
 
 FOREIGN_SOURCE_EXTS = {
-    ".js", ".jsx", ".ts", ".tsx", ".mjs", ".cjs",
-    ".rb", ".go", ".rs",
-    ".java", ".kt", ".scala",
+    ".js",
+    ".jsx",
+    ".ts",
+    ".tsx",
+    ".mjs",
+    ".cjs",
+    ".rb",
+    ".go",
+    ".rs",
+    ".java",
+    ".kt",
+    ".scala",
     ".php",
-    ".c", ".cpp", ".h", ".hpp",
-    ".swift", ".m",
-    ".sh", ".ps1",
+    ".c",
+    ".cpp",
+    ".h",
+    ".hpp",
+    ".swift",
+    ".m",
+    ".sh",
+    ".ps1",
 }
 
 WORKFLOW_FOREIGN_KEYS = [
-    "node", "npm", "npx", "yarn", "pnpm", "deno", "bun",
+    "node",
+    "npm",
+    "npx",
+    "yarn",
+    "pnpm",
+    "deno",
+    "bun",
 ]
 
 PRECOMMIT_NODE_HINTS = [
@@ -131,10 +151,12 @@ def _scan_workflows(root: Path) -> Dict[str, Any]:
                 if re.search(rf"\b{re.escape(key)}\b", text):
                     hits.append(key)
             if hits:
-                results.append({
-                    "path": str(wf.resolve()),
-                    "keys": sorted(set(hits)),
-                })
+                results.append(
+                    {
+                        "path": str(wf.resolve()),
+                        "keys": sorted(set(hits)),
+                    }
+                )
     return {"workflows_with_foreign_keys": results}
 
 
@@ -157,12 +179,22 @@ def _scan_precommit(root: Path) -> Dict[str, Any]:
 
 def _scan_node_configs(root: Path) -> Dict[str, Any]:
     hits: List[str] = []
-    for name in [".markdownlint.json", ".pnp.cjs", ".pnp.js", ".yarnrc", ".npmrc", ".nvmrc", ".node-version"]:
+    for name in [
+        ".markdownlint.json",
+        ".pnp.cjs",
+        ".pnp.js",
+        ".yarnrc",
+        ".npmrc",
+        ".nvmrc",
+        ".node-version",
+    ]:
         p = root / name
         if p.exists():
             hits.append(str(p.resolve()))
     # node_modules directories
-    node_modules_dirs = [str(p.resolve()) for p in root.rglob("node_modules") if p.is_dir() and not _is_ignored(p)]
+    node_modules_dirs = [
+        str(p.resolve()) for p in root.rglob("node_modules") if p.is_dir() and not _is_ignored(p)
+    ]
     return {"node_configs": sorted(hits), "node_modules": sorted(node_modules_dirs)}
 
 
@@ -172,7 +204,9 @@ def _write_report(report: Dict[str, Any], out_path: Path, log: AutomationLogger)
     log.info(f"Wrote foreign dependency report: {out_path}")
 
 
-def _replace_in_file(path: Path, replacements: List[tuple[str, str]], log: AutomationLogger) -> bool:
+def _replace_in_file(
+    path: Path, replacements: List[tuple[str, str]], log: AutomationLogger
+) -> bool:
     try:
         text = path.read_text(encoding="utf-8")
     except Exception as e:
@@ -243,7 +277,7 @@ def _add_precommit_guard_hook(root: Path, log: AutomationLogger) -> bool:
     guard_snippet = (
         "    - id: foreign-deps-guard\n"
         "      name: Foreign dependency guard (scan only)\n"
-        "      entry: python -m automation.scripts.run_automation --task \"Foreign Dependency Sanitize\" --dry-run\n"
+        '      entry: python -m automation.scripts.run_automation --task "Foreign Dependency Sanitize" --dry-run\n'
         "      language: system\n"
         "      pass_filenames: false\n"
     )
@@ -265,7 +299,9 @@ def _add_precommit_guard_hook(root: Path, log: AutomationLogger) -> bool:
     return False
 
 
-def _delete_node_configs(paths: List[str], ctx, log: AutomationLogger, assume_yes: bool = False) -> List[str]:
+def _delete_node_configs(
+    paths: List[str], ctx, log: AutomationLogger, assume_yes: bool = False
+) -> List[str]:
     removed: List[str] = []
     for p_str in paths:
         p = Path(p_str)
@@ -275,7 +311,9 @@ def _delete_node_configs(paths: List[str], ctx, log: AutomationLogger, assume_ye
             log.info(f"[DRY-RUN] Would delete {p}")
             removed.append(str(p))
             continue
-        if assume_yes or ctx.require_confirmation(f"Delete Node-specific config '{p.name}' at {p}?"):
+        if assume_yes or ctx.require_confirmation(
+            f"Delete Node-specific config '{p.name}' at {p}?"
+        ):
             try:
                 p.unlink()
                 removed.append(str(p))
@@ -355,8 +393,14 @@ def foreign_dependency_sanitize(context) -> None:
             ai_ci,
             [
                 ("npm install -g markdownlint-cli2", "pip install pymarkdownlnt"),
-                ("markdownlint-cli2\"\*\*/\*.md\" --config .markdownlint.json", "pymarkdown scan \"**/*.md\""),
-                ("markdownlint-cli2 \"**/*.md\" --config .markdownlint.json", "pymarkdown scan \"**/*.md\""),
+                (
+                    'markdownlint-cli2"\*\*/\*.md" --config .markdownlint.json',
+                    'pymarkdown scan "**/*.md"',
+                ),
+                (
+                    'markdownlint-cli2 "**/*.md" --config .markdownlint.json',
+                    'pymarkdown scan "**/*.md"',
+                ),
             ],
             log,
         )

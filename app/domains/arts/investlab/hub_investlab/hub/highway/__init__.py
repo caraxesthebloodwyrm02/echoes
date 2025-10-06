@@ -18,11 +18,13 @@ import time
 
 logger = logging.getLogger(__name__)
 
+
 class RoutePriority(Enum):
     CRITICAL = 1
     HIGH = 2
     NORMAL = 3
     LOW = 4
+
 
 class DataType(Enum):
     RESEARCH = "research"
@@ -34,9 +36,11 @@ class DataType(Enum):
     BRAINSTORMING = "brainstorming"
     EXTERNAL = "external"
 
+
 @dataclass
 class HighwayPacket:
     """Data packet traveling through the highway"""
+
     data_type: DataType
     source: str
     destination: str
@@ -48,9 +52,11 @@ class HighwayPacket:
     metadata: Dict[str, Any] = field(default_factory=dict)
     routing_history: List[str] = field(default_factory=list)
 
+
 @dataclass
 class ModuleEndpoint:
     """Represents a module that can send/receive data"""
+
     name: str
     data_types: List[DataType]
     capabilities: List[str]
@@ -58,6 +64,7 @@ class ModuleEndpoint:
     last_activity: datetime = field(default_factory=datetime.now)
     performance_metrics: Dict[str, Any] = field(default_factory=dict)
     learning_data: Dict[str, Any] = field(default_factory=dict)
+
 
 class Highway:
     """Intelligent routing system for the Unified Hub"""
@@ -73,20 +80,20 @@ class Highway:
 
         # Highway configuration
         self.config = {
-            'max_packet_age': 3600,
-            'learning_enabled': True,
-            'adaptive_routing': True,
-            'cross_pollination': True,
-            'external_integration': True
+            "max_packet_age": 3600,
+            "learning_enabled": True,
+            "adaptive_routing": True,
+            "cross_pollination": True,
+            "external_integration": True,
         }
 
         # Performance tracking
         self.performance_metrics = {
-            'total_packets_routed': 0,
-            'successful_routes': 0,
-            'failed_routes': 0,
-            'average_route_time': 0,
-            'learning_improvements': 0
+            "total_packets_routed": 0,
+            "successful_routes": 0,
+            "failed_routes": 0,
+            "average_route_time": 0,
+            "learning_improvements": 0,
         }
 
         # Initialize modules
@@ -98,41 +105,76 @@ class Highway:
     def _initialize_modules(self):
         """Initialize all module endpoints"""
         modules_config = {
-            'research': ModuleEndpoint(
-                name='research',
+            "research": ModuleEndpoint(
+                name="research",
                 data_types=[DataType.RESEARCH, DataType.BRAINSTORMING],
-                capabilities=['ai_inference', 'data_analysis', 'pattern_recognition', 'research_insights']
+                capabilities=[
+                    "ai_inference",
+                    "data_analysis",
+                    "pattern_recognition",
+                    "research_insights",
+                ],
             ),
-            'entertainment': ModuleEndpoint(
-                name='entertainment',
+            "entertainment": ModuleEndpoint(
+                name="entertainment",
                 data_types=[DataType.ENTERTAINMENT, DataType.CONTENT],
-                capabilities=['music_analysis', 'content_creation', 'mood_detection', 'creative_insights']
+                capabilities=[
+                    "music_analysis",
+                    "content_creation",
+                    "mood_detection",
+                    "creative_insights",
+                ],
             ),
-            'insights': ModuleEndpoint(
-                name='insights',
+            "insights": ModuleEndpoint(
+                name="insights",
                 data_types=[DataType.INSIGHTS, DataType.CONTENT],
-                capabilities=['data_visualization', 'trend_analysis', 'social_insights', 'dashboard_creation']
+                capabilities=[
+                    "data_visualization",
+                    "trend_analysis",
+                    "social_insights",
+                    "dashboard_creation",
+                ],
             ),
-            'finance': ModuleEndpoint(
-                name='finance',
+            "finance": ModuleEndpoint(
+                name="finance",
                 data_types=[DataType.FINANCE, DataType.CONTENT],
-                capabilities=['financial_analysis', 'market_insights', 'budget_tracking', 'investment_advice']
+                capabilities=[
+                    "financial_analysis",
+                    "market_insights",
+                    "budget_tracking",
+                    "investment_advice",
+                ],
             ),
-            'media': ModuleEndpoint(
-                name='media',
+            "media": ModuleEndpoint(
+                name="media",
                 data_types=[DataType.MEDIA, DataType.CONTENT],
-                capabilities=['content_publishing', 'audience_analysis', 'monetization_strategies', 'platform_optimization']
+                capabilities=[
+                    "content_publishing",
+                    "audience_analysis",
+                    "monetization_strategies",
+                    "platform_optimization",
+                ],
             ),
-            'brainstorming': ModuleEndpoint(
-                name='brainstorming',
+            "brainstorming": ModuleEndpoint(
+                name="brainstorming",
                 data_types=[DataType.BRAINSTORMING, DataType.CONTENT],
-                capabilities=['idea_generation', 'creative_discussion', 'collaboration_tools', 'innovation_tracking']
+                capabilities=[
+                    "idea_generation",
+                    "creative_discussion",
+                    "collaboration_tools",
+                    "innovation_tracking",
+                ],
             ),
-            'external': ModuleEndpoint(
-                name='external',
+            "external": ModuleEndpoint(
+                name="external",
                 data_types=[DataType.EXTERNAL],
-                capabilities=['project_integration', 'development_sync', 'code_analysis', 'deployment_automation']
-            )
+                capabilities=[
+                    "project_integration",
+                    "development_sync",
+                    "code_analysis",
+                    "deployment_automation",
+                ],
+            ),
         }
 
         self.modules = modules_config
@@ -152,13 +194,13 @@ class Highway:
         learning_thread.start()
 
         # Skip external integration thread (disabled for optimization)
-        if self.config['external_integration']:
+        if self.config["external_integration"]:
             external_thread = threading.Thread(target=self._external_integration_loop, daemon=True)
             external_thread.start()
 
     def route_packet(self, packet: HighwayPacket) -> Dict[str, Any]:
         """Route a packet through the highway system"""
-        self.performance_metrics['total_packets_routed'] += 1
+        self.performance_metrics["total_packets_routed"] += 1
         start_time = time.time()
 
         try:
@@ -174,30 +216,26 @@ class Highway:
             # Update metrics
             route_time = time.time() - start_time
             if success:
-                self.performance_metrics['successful_routes'] += 1
+                self.performance_metrics["successful_routes"] += 1
                 self._update_average_route_time(route_time)
             else:
-                self.performance_metrics['failed_routes'] += 1
+                self.performance_metrics["failed_routes"] += 1
 
             # Learning and adaptation
-            if self.config['learning_enabled']:
+            if self.config["learning_enabled"]:
                 self._learn_from_routing(packet, route, success, route_time)
 
             return {
-                'success': success,
-                'route': route,
-                'packet_id': packet.id,
-                'route_time': route_time,
-                'destination_reached': success
+                "success": success,
+                "route": route,
+                "packet_id": packet.id,
+                "route_time": route_time,
+                "destination_reached": success,
             }
 
         except Exception as e:
             logger.error(f"Highway routing failed for packet {packet.id}: {str(e)}")
-            return {
-                'success': False,
-                'error': str(e),
-                'packet_id': packet.id
-            }
+            return {"success": False, "error": str(e), "packet_id": packet.id}
 
     def _calculate_optimal_route(self, packet: HighwayPacket) -> List[str]:
         """Calculate the optimal route for a packet using intelligent routing"""
@@ -213,14 +251,16 @@ class Highway:
             # Route through relevant modules for processing
             relevant_modules = []
             for module_name, module in self.modules.items():
-                if (packet.data_type in module.data_types and
-                    module_name != source and
-                    module.status == "active"):
+                if (
+                    packet.data_type in module.data_types
+                    and module_name != source
+                    and module.status == "active"
+                ):
                     relevant_modules.append(module_name)
 
             # Add media as final destination for content
-            if packet.data_type == DataType.CONTENT and 'media' not in relevant_modules:
-                relevant_modules.append('media')
+            if packet.data_type == DataType.CONTENT and "media" not in relevant_modules:
+                relevant_modules.append("media")
 
             return relevant_modules[:3]  # Limit to 3 hops for efficiency
 
@@ -270,19 +310,19 @@ class Highway:
             module.last_activity = datetime.now()
 
             # Route to appropriate handler based on module type
-            if module_name == 'research':
+            if module_name == "research":
                 return self._handle_research_delivery(packet)
-            elif module_name == 'entertainment':
+            elif module_name == "entertainment":
                 return self._handle_entertainment_delivery(packet)
-            elif module_name == 'insights':
+            elif module_name == "insights":
                 return self._handle_insights_delivery(packet)
-            elif module_name == 'finance':
+            elif module_name == "finance":
                 return self._handle_finance_delivery(packet)
-            elif module_name == 'media':
+            elif module_name == "media":
                 return self._handle_media_delivery(packet)
-            elif module_name == 'brainstorming':
+            elif module_name == "brainstorming":
                 return self._handle_brainstorming_delivery(packet)
-            elif module_name == 'external':
+            elif module_name == "external":
                 return self._handle_external_delivery(packet)
 
         except Exception as e:
@@ -347,9 +387,9 @@ class Highway:
         """Generate research insights from brainstorming data"""
         # This would integrate with the research module's AI capabilities
         return {
-            'insight_type': 'brainstorming_analysis',
-            'generated_at': datetime.now().isoformat(),
-            'key_themes': ['innovation', 'collaboration', 'ai_integration']
+            "insight_type": "brainstorming_analysis",
+            "generated_at": datetime.now().isoformat(),
+            "key_themes": ["innovation", "collaboration", "ai_integration"],
         }
 
     def _generate_insights(self, packet: HighwayPacket):
@@ -403,7 +443,7 @@ class Highway:
         """Background process for adaptive learning"""
         while True:
             try:
-                if self.config['learning_enabled']:
+                if self.config["learning_enabled"]:
                     self._adaptive_learning()
                 time.sleep(300)  # Learn every 5 minutes
             except Exception as e:
@@ -420,7 +460,7 @@ class Highway:
         """Background process for external project integration"""
         while True:
             try:
-                if self.config['external_integration']:
+                if self.config["external_integration"]:
                     self._check_external_updates()
                 time.sleep(600)  # Check every 10 minutes
             except Exception as e:
@@ -432,7 +472,9 @@ class Highway:
         # Monitor E:\projects\development for changes
         pass
 
-    def _learn_from_routing(self, packet: HighwayPacket, route: List[str], success: bool, route_time: float):
+    def _learn_from_routing(
+        self, packet: HighwayPacket, route: List[str], success: bool, route_time: float
+    ):
         """Learn from routing performance"""
         # Update routing table based on success/failure
         # Adapt priorities and routes based on performance
@@ -440,25 +482,31 @@ class Highway:
 
     def _update_average_route_time(self, route_time: float):
         """Update average route time metric"""
-        current_avg = self.performance_metrics['average_route_time']
-        total_routes = self.performance_metrics['successful_routes']
+        current_avg = self.performance_metrics["average_route_time"]
+        total_routes = self.performance_metrics["successful_routes"]
 
         if total_routes == 1:
-            self.performance_metrics['average_route_time'] = route_time
+            self.performance_metrics["average_route_time"] = route_time
         else:
-            self.performance_metrics['average_route_time'] = (
-                (current_avg * (total_routes - 1) + route_time) / total_routes
-            )
+            self.performance_metrics["average_route_time"] = (
+                current_avg * (total_routes - 1) + route_time
+            ) / total_routes
 
-    def send_data(self, source: str, destination: str, data_type: DataType,
-                  payload: Dict[str, Any], priority: RoutePriority = RoutePriority.NORMAL) -> str:
+    def send_data(
+        self,
+        source: str,
+        destination: str,
+        data_type: DataType,
+        payload: Dict[str, Any],
+        priority: RoutePriority = RoutePriority.NORMAL,
+    ) -> str:
         """Send data through the highway"""
         packet = HighwayPacket(
             data_type=data_type,
             source=source,
             destination=destination,
             payload=payload,
-            priority=priority
+            priority=priority,
         )
 
         # Cache the packet
@@ -472,73 +520,83 @@ class Highway:
     def get_module_status(self, module_name: str) -> Dict[str, Any]:
         """Get status of a specific module"""
         if module_name not in self.modules:
-            return {'error': 'Module not found'}
+            return {"error": "Module not found"}
 
         module = self.modules[module_name]
         return {
-            'name': module.name,
-            'status': module.status,
-            'data_types': [dt.value for dt in module.data_types],
-            'capabilities': module.capabilities,
-            'last_activity': module.last_activity.isoformat(),
-            'performance_metrics': module.performance_metrics
+            "name": module.name,
+            "status": module.status,
+            "data_types": [dt.value for dt in module.data_types],
+            "capabilities": module.capabilities,
+            "last_activity": module.last_activity.isoformat(),
+            "performance_metrics": module.performance_metrics,
         }
 
     def get_highway_status(self) -> Dict[str, Any]:
         """Get overall highway status"""
         return {
-            'modules': {name: self.get_module_status(name) for name in self.modules},
-            'performance_metrics': self.performance_metrics,
-            'routing_table': self.routing_table,
-            'cached_packets': len(self.data_cache),
-            'timestamp': datetime.now().isoformat()
+            "modules": {name: self.get_module_status(name) for name in self.modules},
+            "performance_metrics": self.performance_metrics,
+            "routing_table": self.routing_table,
+            "cached_packets": len(self.data_cache),
+            "timestamp": datetime.now().isoformat(),
         }
 
     def enable_learning(self, enabled: bool = True):
         """Enable or disable adaptive learning"""
-        self.config['learning_enabled'] = enabled
+        self.config["learning_enabled"] = enabled
         logger.info(f"Highway learning {'enabled' if enabled else 'disabled'}")
 
     def enable_external_integration(self, enabled: bool = True):
         """Enable or disable external project integration"""
-        self.config['external_integration'] = enabled
+        self.config["external_integration"] = enabled
         logger.info(f"External integration {'enabled' if enabled else 'disabled'}")
+
 
 # Global highway instance
 highway = Highway()
 
+
 def get_highway() -> Highway:
     """Get the global highway instance"""
     return highway
+
 
 # Convenience functions for easy access
 def send_to_research(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to research module"""
     return highway.send_data(source, "research", DataType.RESEARCH, data)
 
+
 def send_to_entertainment(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to entertainment module"""
     return highway.send_data(source, "entertainment", DataType.ENTERTAINMENT, data)
+
 
 def send_to_intelligence(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to intelligence module"""
     return highway.send_data(source, "intelligence", DataType.RESEARCH, data)
 
+
 def send_to_insights(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to insights module"""
     return highway.send_data(source, "insights", DataType.INSIGHTS, data)
+
 
 def send_to_finance(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to finance module"""
     return highway.send_data(source, "finance", DataType.FINANCE, data)
 
+
 def send_to_media(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to media module"""
     return highway.send_data(source, "media", DataType.MEDIA, data)
 
+
 def send_to_brainstorming(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to brainstorming module"""
     return highway.send_data(source, "brainstorming", DataType.BRAINSTORMING, data)
+
 
 def send_to_external(data: Dict[str, Any], source: str = "highway") -> str:
     """Send data to external projects"""

@@ -12,8 +12,10 @@ import json
 from pathlib import Path
 from typing import Dict, List, Any
 import sys
+
 sys.path.append(str(Path(__file__).parent.parent))
 from modules.knowledge_graph_memory import MemoryMCPServer
+
 
 class SemanticOrganizer:
     def __init__(self, root_path: str = "."):
@@ -34,7 +36,7 @@ class SemanticOrganizer:
     def analyze_file(self, file_path: Path):
         """Analyze a single file for semantic content."""
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 content = f.read()
             tree = ast.parse(content)
             imports = self.extract_imports(tree)
@@ -47,8 +49,8 @@ class SemanticOrganizer:
                 "observations": [
                     f"Contains {len(classes)} classes: {', '.join(classes)}",
                     f"Contains {len(functions)} functions: {', '.join(functions)}",
-                    f"Imports: {', '.join(imports)}"
-                ]
+                    f"Imports: {', '.join(imports)}",
+                ],
             }
             self.memory.create_entities_tool([entity])
             # Create relations for imports
@@ -56,7 +58,7 @@ class SemanticOrganizer:
                 relation = {
                     "from": str(file_path.relative_to(self.root_path)),
                     "to": imp,
-                    "relationType": "imports"
+                    "relationType": "imports",
                 }
                 self.memory.create_relations_tool([relation])
         except Exception as e:
@@ -87,7 +89,7 @@ class SemanticOrganizer:
                 entity = {
                     "name": str(dir_path.relative_to(self.root_path)),
                     "entityType": "folder",
-                    "observations": [f"Contains {len(list(dir_path.iterdir()))} items"]
+                    "observations": [f"Contains {len(list(dir_path.iterdir()))} items"],
                 }
                 self.memory.create_entities_tool([entity])
 
@@ -115,7 +117,9 @@ class SemanticOrganizer:
             src.rename(dst)
             # Learn from action
             observation = f"Moved to {action['to']} based on semantic analysis"
-            self.memory.add_observations_tool([{"entityName": action["file"], "contents": [observation]}])
+            self.memory.add_observations_tool(
+                [{"entityName": action["file"], "contents": [observation]}]
+            )
 
     def run(self):
         """Main run method."""
@@ -131,6 +135,7 @@ class SemanticOrganizer:
         """Update semantic knowledge."""
         # For now, just save
         pass
+
 
 if __name__ == "__main__":
     organizer = SemanticOrganizer()

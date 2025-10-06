@@ -10,17 +10,16 @@ import subprocess
 import argparse
 from pathlib import Path
 
+
 def check_dependencies():
     """Check if required dependencies are installed"""
-    required_packages = [
-        'streamlit', 'plotly', 'altair', 'pandas', 'numpy'
-    ]
+    required_packages = ["streamlit", "plotly", "altair", "pandas", "numpy"]
 
     missing_packages = []
 
     for package in required_packages:
         try:
-            __import__(package.replace('-', '_'))
+            __import__(package.replace("-", "_"))
         except ImportError:
             missing_packages.append(package)
 
@@ -31,9 +30,7 @@ def check_dependencies():
         print("\n📦 Installing missing packages...")
 
         try:
-            subprocess.check_call([
-                sys.executable, '-m', 'pip', 'install', *missing_packages
-            ])
+            subprocess.check_call([sys.executable, "-m", "pip", "install", *missing_packages])
             print("✅ Dependencies installed successfully!")
         except subprocess.CalledProcessError:
             print("❌ Failed to install dependencies. Please install manually:")
@@ -41,6 +38,7 @@ def check_dependencies():
             return False
 
     return True
+
 
 def setup_environment():
     """Setup environment variables and paths"""
@@ -50,13 +48,14 @@ def setup_environment():
         sys.path.insert(0, current_dir)
 
     # Set environment variables
-    os.environ['PYTHONPATH'] = f"{current_dir};{os.environ.get('PYTHONPATH', '')}"
+    os.environ["PYTHONPATH"] = f"{current_dir};{os.environ.get('PYTHONPATH', '')}"
 
     # Create data directory if it doesn't exist
-    data_dir = os.path.join(current_dir, 'data')
+    data_dir = os.path.join(current_dir, "data")
     os.makedirs(data_dir, exist_ok=True)
 
     return True
+
 
 def start_dashboard(port: int = 8501, headless: bool = False):
     """Start the ResearchLab dashboard"""
@@ -73,20 +72,28 @@ def start_dashboard(port: int = 8501, headless: bool = False):
         return False
 
     # Dashboard command
-    dashboard_file = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'researchlab_dashboard.py')
+    dashboard_file = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), "researchlab_dashboard.py"
+    )
 
     if not os.path.exists(dashboard_file):
         print(f"❌ Dashboard file not found: {dashboard_file}")
         return False
 
     cmd = [
-        sys.executable, '-m', 'streamlit', 'run', dashboard_file,
-        '--server.port', str(port),
-        '--server.address', 'localhost'
+        sys.executable,
+        "-m",
+        "streamlit",
+        "run",
+        dashboard_file,
+        "--server.port",
+        str(port),
+        "--server.address",
+        "localhost",
     ]
 
     if headless:
-        cmd.extend(['--server.headless', 'true'])
+        cmd.extend(["--server.headless", "true"])
 
     print(f"📊 Starting dashboard on http://localhost:{port}")
     print("🌟 Opening ResearchLab Unified Dashboard...")
@@ -102,6 +109,7 @@ def start_dashboard(port: int = 8501, headless: bool = False):
         return False
 
     return True
+
 
 def show_quick_guide():
     """Show quick usage guide"""
@@ -147,10 +155,11 @@ For more information, visit the ResearchLab documentation or contact support.
     """
     print(guide)
 
+
 def main():
     """Main launcher function"""
     parser = argparse.ArgumentParser(
-        description='ResearchLab Unified Dashboard Launcher',
+        description="ResearchLab Unified Dashboard Launcher",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -158,20 +167,20 @@ Examples:
   python dashboard_launcher.py --port 8080  # Start on custom port
   python dashboard_launcher.py --headless   # Run without browser
   python dashboard_launcher.py --guide      # Show usage guide
-        """
+        """,
     )
 
-    parser.add_argument('--port', type=int, default=8501,
-                       help='Port to run the dashboard on (default: 8501)')
+    parser.add_argument(
+        "--port", type=int, default=8501, help="Port to run the dashboard on (default: 8501)"
+    )
 
-    parser.add_argument('--headless', action='store_true',
-                       help='Run in headless mode (no browser auto-open)')
+    parser.add_argument(
+        "--headless", action="store_true", help="Run in headless mode (no browser auto-open)"
+    )
 
-    parser.add_argument('--guide', action='store_true',
-                       help='Show quick usage guide and exit')
+    parser.add_argument("--guide", action="store_true", help="Show quick usage guide and exit")
 
-    parser.add_argument('--check-deps', action='store_true',
-                       help='Check dependencies and exit')
+    parser.add_argument("--check-deps", action="store_true", help="Check dependencies and exit")
 
     args = parser.parse_args()
 
@@ -195,6 +204,7 @@ Examples:
         print("💡 Try running with --check-deps to verify dependencies")
         print("💡 Or use --guide for usage instructions")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

@@ -10,6 +10,7 @@ from highway.router import get_highway_router
 from highway.development_bridge import get_development_bridge
 from highway.monitor import get_highway_monitor
 
+
 def quick_start():
     """Quick start guide for the Highway system"""
     print("🛣️  Highway Intelligent Routing System")
@@ -41,11 +42,9 @@ def quick_start():
     # Example 2: Route data
     print("🔄 Example 2: Route research insights to development")
     router = get_highway_router()
-    packet_id = router.route_research_to_development({
-        'ai_model': 'new_transformer',
-        'performance': 0.95,
-        'use_case': 'financial_prediction'
-    })
+    packet_id = router.route_research_to_development(
+        {"ai_model": "new_transformer", "performance": 0.95, "use_case": "financial_prediction"}
+    )
     print(f"   Routed with packet ID: {packet_id}")
     print()
 
@@ -59,8 +58,7 @@ def quick_start():
     # Example 4: Development bridge
     print("🏗️  Example 4: Create development bridge")
     bridge_id = dev_bridge.create_development_bridge(
-        'research', 'external', 
-        {'project': 'ai_finance_integration', 'status': 'in_progress'}
+        "research", "external", {"project": "ai_finance_integration", "status": "in_progress"}
     )
     print(f"   Bridge created: {bridge_id}")
     print()
@@ -84,6 +82,7 @@ def quick_start():
     print("   from highway.monitor import get_highway_monitor")
     print("   monitor = get_highway_monitor()")
     print("   monitor.start_monitoring()")
+
 
 if __name__ == "__main__":
     quick_start()

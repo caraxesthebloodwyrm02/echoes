@@ -29,7 +29,7 @@ def generate_release_notes(context):
     def clean_subject(s: str) -> str:
         for p in ["feat:", "fix:", "docs:", "test:", "refactor:", "perf:", "chore:"]:
             if s.lower().startswith(p):
-                return s[len(p):].strip()
+                return s[len(p) :].strip()
         return s
 
     ts = datetime.now().strftime("%Y-%m-%d %H:%M:%S")

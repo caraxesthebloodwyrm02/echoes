@@ -8,135 +8,137 @@ from datetime import datetime
 from flask import Flask, render_template, request, redirect, url_for, session, jsonify
 from auth.oauth_manager import OAuthManager
 
+
 class AuthWebApp:
     """Web application for OAuth2 authentication"""
-    
+
     def __init__(self):
         self.app = Flask(__name__)
-        self.app.secret_key = os.getenv('SECRET_KEY', 'your-secret-key-change-this')
+        self.app.secret_key = os.getenv("SECRET_KEY", "your-secret-key-change-this")
         self.oauth_manager = OAuthManager()
         self.setup_routes()
-    
+
     def setup_routes(self):
         """Setup Flask routes"""
-        
-        @self.app.route('/')
+
+        @self.app.route("/")
         def index():
             """Main page with login options"""
             return self.render_login_page()
-        
-        @self.app.route('/login/<provider>')
+
+        @self.app.route("/login/<provider>")
         def login(provider):
             """Initiate OAuth2 login for specific provider"""
             if not self.oauth_manager.is_configured(provider):
                 return f"{provider.title()} OAuth not configured. Please check your .env file."
-            
-            redirect_uri = url_for('callback', provider=provider, _external=True)
+
+            redirect_uri = url_for("callback", provider=provider, _external=True)
             auth_url, state = self.oauth_manager.generate_auth_url(provider, redirect_uri)
-            session['oauth_state'] = state
+            session["oauth_state"] = state
             return redirect(auth_url)
-        
-        @self.app.route('/callback/<provider>')
+
+        @self.app.route("/callback/<provider>")
         def callback(provider):
             """Handle OAuth2 callback"""
-            code = request.args.get('code')
-            state = request.args.get('state')
-            
+            code = request.args.get("code")
+            state = request.args.get("state")
+
             if not code or not state:
                 return "Authorization failed. Missing code or state."
-            
+
             try:
                 # Exchange code for token
-                redirect_uri = url_for('callback', provider=provider, _external=True)
+                redirect_uri = url_for("callback", provider=provider, _external=True)
                 token_data = self.oauth_manager.exchange_code_for_token(
                     provider, code, state, redirect_uri
                 )
-                
+
                 # Get user info
-                access_token = token_data.get('access_token')
+                access_token = token_data.get("access_token")
                 user_info = self.oauth_manager.get_user_info(provider, access_token)
-                
+
                 # Store user session
-                session['user'] = user_info
-                session['access_token'] = access_token
-                session['refresh_token'] = token_data.get('refresh_token')
-                session['provider'] = provider
-                session['login_time'] = datetime.now().isoformat()
-                
+                session["user"] = user_info
+                session["access_token"] = access_token
+                session["refresh_token"] = token_data.get("refresh_token")
+                session["provider"] = provider
+                session["login_time"] = datetime.now().isoformat()
+
                 # Save user profile
                 self.save_user_profile(user_info, provider, token_data)
-                
-                return redirect(url_for('dashboard'))
-                
+
+                return redirect(url_for("dashboard"))
+
             except Exception as e:
                 return f"Authentication failed: {str(e)}"
-        
-        @self.app.route('/dashboard')
+
+        @self.app.route("/dashboard")
         def dashboard():
             """User dashboard after login"""
-            if 'user' not in session:
-                return redirect(url_for('index'))
-            
+            if "user" not in session:
+                return redirect(url_for("index"))
+
             return self.render_dashboard()
-        
-        @self.app.route('/logout')
+
+        @self.app.route("/logout")
         def logout():
             """Logout user"""
             session.clear()
-            return redirect(url_for('index'))
-        
-        @self.app.route('/api/user')
+            return redirect(url_for("index"))
+
+        @self.app.route("/api/user")
         def api_user():
             """API endpoint for current user info"""
-            if 'user' not in session:
-                return jsonify({'error': 'Not authenticated'}), 401
-            
-            return jsonify({
-                'user': session['user'],
-                'provider': session.get('provider'),
-                'login_time': session.get('login_time')
-            })
-        
-        @self.app.route('/api/personalized-data')
+            if "user" not in session:
+                return jsonify({"error": "Not authenticated"}), 401
+
+            return jsonify(
+                {
+                    "user": session["user"],
+                    "provider": session.get("provider"),
+                    "login_time": session.get("login_time"),
+                }
+            )
+
+        @self.app.route("/api/personalized-data")
         def api_personalized_data():
             """API endpoint for personalized data based on user"""
-            if 'user' not in session:
-                return jsonify({'error': 'Not authenticated'}), 401
-            
-            provider = session.get('provider')
-            user_data = self.get_personalized_data(provider, session['user'])
-            
+            if "user" not in session:
+                return jsonify({"error": "Not authenticated"}), 401
+
+            provider = session.get("provider")
+            user_data = self.get_personalized_data(provider, session["user"])
+
             return jsonify(user_data)
-    
+
     def render_login_page(self):
         """Render the login page"""
         providers = {
-            'google': {
-                'name': 'Google',
-                'color': '#4285F4',
-                'icon': '🔍',
-                'description': 'Sign in with your Google account'
+            "google": {
+                "name": "Google",
+                "color": "#4285F4",
+                "icon": "🔍",
+                "description": "Sign in with your Google account",
             },
-            'microsoft': {
-                'name': 'Microsoft',
-                'color': '#0078D4',
-                'icon': '🪟',
-                'description': 'Sign in with your Microsoft account'
+            "microsoft": {
+                "name": "Microsoft",
+                "color": "#0078D4",
+                "icon": "🪟",
+                "description": "Sign in with your Microsoft account",
             },
-            'twitter': {
-                'name': 'X (Twitter)',
-                'color': '#1DA1F2',
-                'icon': '🐦',
-                'description': 'Sign in with your X/Twitter account'
-            }
+            "twitter": {
+                "name": "X (Twitter)",
+                "color": "#1DA1F2",
+                "icon": "🐦",
+                "description": "Sign in with your X/Twitter account",
+            },
         }
-        
+
         # Check which providers are configured
         configured_providers = {
-            key: value for key, value in providers.items()
-            if self.oauth_manager.is_configured(key)
+            key: value for key, value in providers.items() if self.oauth_manager.is_configured(key)
         }
-        
+
         html = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -274,12 +276,12 @@ class AuthWebApp:
         </html>
         """
         return html
-    
+
     def render_dashboard(self):
         """Render the user dashboard"""
-        user = session['user']
-        provider = session['provider']
-        
+        user = session["user"]
+        provider = session["provider"]
+
         html = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -413,66 +415,63 @@ class AuthWebApp:
         </html>
         """
         return html
-    
+
     def save_user_profile(self, user_info: dict, provider: str, token_data: dict):
         """Save user profile to file"""
-        os.makedirs('data/users', exist_ok=True)
-        
+        os.makedirs("data/users", exist_ok=True)
+
         user_profile = {
-            'user_info': user_info,
-            'provider': provider,
-            'tokens': {
-                'access_token': token_data.get('access_token'),
-                'refresh_token': token_data.get('refresh_token'),
-                'expires_in': token_data.get('expires_in'),
-                'token_type': token_data.get('token_type')
+            "user_info": user_info,
+            "provider": provider,
+            "tokens": {
+                "access_token": token_data.get("access_token"),
+                "refresh_token": token_data.get("refresh_token"),
+                "expires_in": token_data.get("expires_in"),
+                "token_type": token_data.get("token_type"),
             },
-            'created_at': datetime.now().isoformat(),
-            'last_login': datetime.now().isoformat()
+            "created_at": datetime.now().isoformat(),
+            "last_login": datetime.now().isoformat(),
         }
-        
-        user_id = user_info.get('id', 'unknown')
-        filename = f'data/users/{provider}_{user_id}.json'
-        
-        with open(filename, 'w') as f:
+
+        user_id = user_info.get("id", "unknown")
+        filename = f"data/users/{provider}_{user_id}.json"
+
+        with open(filename, "w") as f:
             json.dump(user_profile, f, indent=2)
-    
+
     def get_personalized_data(self, provider: str, user_info: dict) -> dict:
         """Get personalized data based on user profile"""
         # This would integrate with actual APIs using user tokens
         # For now, return sample personalized data
-        
-        user_id = user_info.get('id', 'unknown')
-        user_name = user_info.get('name', 'User')
-        
+
+        user_id = user_info.get("id", "unknown")
+        user_name = user_info.get("name", "User")
+
         return {
-            'user_id': user_id,
-            'user_name': user_name,
-            'provider': provider,
-            'personalized_feeds': {
-                'microsoft': {
-                    'azure_alerts': [],
-                    'microsoft_teams_updates': [],
-                    'outlook_integrations': []
+            "user_id": user_id,
+            "user_name": user_name,
+            "provider": provider,
+            "personalized_feeds": {
+                "microsoft": {
+                    "azure_alerts": [],
+                    "microsoft_teams_updates": [],
+                    "outlook_integrations": [],
                 },
-                'google': {
-                    'gmail_alerts': [],
-                    'google_workspace_updates': [],
-                    'calendar_integrations': []
+                "google": {
+                    "gmail_alerts": [],
+                    "google_workspace_updates": [],
+                    "calendar_integrations": [],
                 },
-                'twitter': {
-                    'timeline_updates': [],
-                    'mentions': [],
-                    'trending_in_network': []
-                }
+                "twitter": {"timeline_updates": [], "mentions": [], "trending_in_network": []},
             },
-            'generated_at': datetime.now().isoformat()
+            "generated_at": datetime.now().isoformat(),
         }
-    
-    def run(self, host='0.0.0.0', port=5001, debug=False):
+
+    def run(self, host="0.0.0.0", port=5001, debug=False):
         """Run the authentication web app"""
         print(f"Starting authentication web app on http://localhost:{port}")
         self.app.run(host=host, port=port, debug=debug)
+
 
 def create_auth_app():
     """Create and return the authentication app"""

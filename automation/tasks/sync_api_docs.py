@@ -11,10 +11,12 @@ from automation.core.logger import AutomationLogger
 def _load_app():
     try:
         from app.main import app  # type: ignore
+
         return app
     except Exception:
         # Fallback if tests/sys.path place `app/` at top level
         import importlib
+
         mod = importlib.import_module("main")
         return getattr(mod, "app")
 

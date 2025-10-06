@@ -10,6 +10,7 @@ from app.domains.arts.investlab.hub_investlab.hub.highway import (
 
 CONTENT_DIR = Path("content")
 
+
 def main():
     if not CONTENT_DIR.exists():
         print("No content/ directory found.")
@@ -38,13 +39,16 @@ def main():
         # Inspect routing history from highway cache
         packet = highway.data_cache.get(packet_id)
         history = packet.routing_history if packet else []
-        results.append({
-            "file": f.name,
-            "packet_id": packet_id,
-            "routing_history": history,
-        })
+        results.append(
+            {
+                "file": f.name,
+                "packet_id": packet_id,
+                "routing_history": history,
+            }
+        )
 
     print(json.dumps(results, indent=2))
+
 
 if __name__ == "__main__":
     main()

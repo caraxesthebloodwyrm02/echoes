@@ -175,7 +175,11 @@ async def validate_assertion(assertion: Assertion):
 
 
 @router.post("/hil/feedback", status_code=202, tags=["Human-in-the-Loop"])
-async def capture_feedback(feedback: HILFeedback, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_active_user)):
+async def capture_feedback(
+    feedback: HILFeedback,
+    background_tasks: BackgroundTasks,
+    current_user: User = Depends(get_current_active_user),
+):
     """
     Capture human-in-the-loop feedback for model improvement.
 
@@ -236,7 +240,9 @@ async def get_feedback(limit: int = 10, status_filter: str = None, label_filter:
 
 
 @router.post("/agent/execute", response_model=AgentExecutionResponse, tags=["Agent Safety"])
-async def execute_agent(req: AgentExecutionRequest, current_user: User = Depends(get_current_active_user)):
+async def execute_agent(
+    req: AgentExecutionRequest, current_user: User = Depends(get_current_active_user)
+):
     """
     Execute agent action with safety controls.
 
@@ -307,7 +313,7 @@ async def execute_agent(req: AgentExecutionRequest, current_user: User = Depends
 
     # Real execution (requires whitelist approval and admin role)
     if not req.dry_run:
-        if current_user.role != 'admin':
+        if current_user.role != "admin":
             raise HTTPException(
                 status_code=403, detail="Admin role required for real agent execution"
             )

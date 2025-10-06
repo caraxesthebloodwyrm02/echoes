@@ -27,7 +27,9 @@ def full(
 ):
     """Run a full audit workflow (blind game + interpretability + scoring)."""
     audit_type = "full" if white_box else "black_box"
-    config = AuditConfig(model_path="", audit_type=audit_type, domain=domain, monetization_mode=monetize)
+    config = AuditConfig(
+        model_path="", audit_type=audit_type, domain=domain, monetization_mode=monetize
+    )
     engine = AuditEngine(config)
     result = engine.run_full_audit()
     console.print(result)

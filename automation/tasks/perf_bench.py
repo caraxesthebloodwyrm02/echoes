@@ -8,12 +8,15 @@ from statistics import mean
 from automation.core.logger import AutomationLogger
 from fastapi.testclient import TestClient
 
+
 def _load_app():
     try:
         from app.main import app
+
         return app
     except Exception:
         import importlib
+
         mod = importlib.import_module("main")
         return getattr(mod, "app")
 
@@ -36,8 +39,16 @@ def performance_benchmark(context):
     n = int(context.extra_data.get("iterations", 10))
     results = {}
     results["health_get"] = _bench(client, "GET", "/api/health", n=n)
-    results["science_search"] = _bench(client, "POST", "/api/science/biomedical/search", {"query": "test"}, n)
-    results["finance_personal"] = _bench(client, "POST", "/api/finance/personal/analyze", {"financial_data": {"income": 1}, "goals": ["g"], "user_info": {"age": 1}}, n)
+    results["science_search"] = _bench(
+        client, "POST", "/api/science/biomedical/search", {"query": "test"}, n
+    )
+    results["finance_personal"] = _bench(
+        client,
+        "POST",
+        "/api/finance/personal/analyze",
+        {"financial_data": {"income": 1}, "goals": ["g"], "user_info": {"age": 1}},
+        n,
+    )
 
     for k, v in results.items():
         log.info(f"{k}: {v*1000:.2f} ms (avg over {n})")

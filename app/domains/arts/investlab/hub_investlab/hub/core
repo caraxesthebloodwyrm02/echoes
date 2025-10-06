@@ -12,281 +12,257 @@ import urllib.request
 import urllib.parse
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
+
 
 class UnifiedHub:
     """Comprehensive hub for all services"""
-    
+
     def __init__(self):
         self.config = self.load_config()
         self.secrets = self.load_secrets()
         self.accounts = {
-            'google': 'irfankabir02@gmail.com',
-            'microsoft': 'irfankabirprince@outlook.com',
-            'spotify': 'irfankabir02@gmail.com'
+            "google": "irfankabir02@gmail.com",
+            "microsoft": "irfankabirprince@outlook.com",
+            "spotify": "irfankabir02@gmail.com",
         }
-    
+
     def load_config(self) -> Dict[str, Any]:
         """Load configuration from C drive"""
         config_paths = [
-            'C:\\Users\\irfan\\AppData\\Local\\config.json',
-            'C:\\config\\secrets.json',
-            'C:\\secrets\\api_keys.json'
+            "C:\\Users\\irfan\\AppData\\Local\\config.json",
+            "C:\\config\\secrets.json",
+            "C:\\secrets\\api_keys.json",
         ]
-        
+
         for path in config_paths:
             if os.path.exists(path):
                 try:
-                    with open(path, 'r') as f:
+                    with open(path, "r") as f:
                         return json.load(f)
                 except Exception as e:
                     logger.warning(f"Could not load config from {path}: {e}")
-        
+
         return {}
-    
+
     def load_secrets(self) -> Dict[str, str]:
         """Load secrets from various sources"""
         secrets = {}
-        
+
         # Load from environment
         env_vars = [
-            'GROQ_API_KEY', 'GOOGLE_AI_API_KEY', 'YAHOO_FINANCE_KEY',
-            'SPOTIFY_CLIENT_ID', 'SPOTIFY_CLIENT_SECRET',
-            'YOUTUBE_API_KEY', 'INSTAGRAM_ACCESS_TOKEN',
-            'REDDIT_CLIENT_ID', 'REDDIT_CLIENT_SECRET'
+            "GROQ_API_KEY",
+            "GOOGLE_AI_API_KEY",
+            "YAHOO_FINANCE_KEY",
+            "SPOTIFY_CLIENT_ID",
+            "SPOTIFY_CLIENT_SECRET",
+            "YOUTUBE_API_KEY",
+            "INSTAGRAM_ACCESS_TOKEN",
+            "REDDIT_CLIENT_ID",
+            "REDDIT_CLIENT_SECRET",
         ]
-        
+
         for var in env_vars:
             secrets[var] = os.getenv(var, f"placeholder_{var.lower()}")
-        
+
         # Load from .env file
-        env_file = '.env'
+        env_file = ".env"
         if os.path.exists(env_file):
-            with open(env_file, 'r') as f:
+            with open(env_file, "r") as f:
                 for line in f:
-                    if '=' in line and not line.startswith('#'):
-                        key, value = line.strip().split('=', 1)
+                    if "=" in line and not line.startswith("#"):
+                        key, value = line.strip().split("=", 1)
                         secrets[key] = value
-        
+
         return secrets
-    
+
     def fetch_yahoo_finance_data(self, symbols: List[str]) -> Dict[str, Any]:
         """Fetch Yahoo Finance data"""
         logger.info("Fetching Yahoo Finance data...")
-        
+
         # Sample data structure
         return {
-            'portfolio': {
-                'total_value': 125000.50,
-                'daily_change': 1250.75,
-                'daily_change_percent': 1.01
+            "portfolio": {
+                "total_value": 125000.50,
+                "daily_change": 1250.75,
+                "daily_change_percent": 1.01,
             },
-            'stocks': [
+            "stocks": [
                 {
-                    'symbol': 'AAPL',
-                    'price': 175.25,
-                    'change': 2.15,
-                    'change_percent': 1.24,
-                    'volume': 45000000
+                    "symbol": "AAPL",
+                    "price": 175.25,
+                    "change": 2.15,
+                    "change_percent": 1.24,
+                    "volume": 45000000,
                 },
                 {
-                    'symbol': 'GOOGL',
-                    'price': 2750.80,
-                    'change': -15.20,
-                    'change_percent': -0.55,
-                    'volume': 1200000
-                }
+                    "symbol": "GOOGL",
+                    "price": 2750.80,
+                    "change": -15.20,
+                    "change_percent": -0.55,
+                    "volume": 1200000,
+                },
             ],
-            'timestamp': datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
-    
+
     def fetch_commerce_data(self) -> Dict[str, Any]:
         """Fetch commerce data from specified path"""
         commerce_path = "E:\\projects\\development\\app\\path\\to\\commerce"
-        
+
         if os.path.exists(commerce_path):
             try:
                 # This would load actual commerce data
                 return {
-                    'commerce_data': {
-                        'revenue': 50000,
-                        'orders': 1250,
-                        'customers': 450,
-                        'products': 85
+                    "commerce_data": {
+                        "revenue": 50000,
+                        "orders": 1250,
+                        "customers": 450,
+                        "products": 85,
                     },
-                    'path': commerce_path,
-                    'status': 'loaded'
+                    "path": commerce_path,
+                    "status": "loaded",
                 }
             except Exception as e:
                 logger.warning(f"Could not load commerce data: {e}")
-        
+
         return {
-            'commerce_data': {
-                'revenue': 0,
-                'orders': 0,
-                'customers': 0,
-                'products': 0
-            },
-            'path': commerce_path,
-            'status': 'not_found'
+            "commerce_data": {"revenue": 0, "orders": 0, "customers": 0, "products": 0},
+            "path": commerce_path,
+            "status": "not_found",
         }
-    
+
     def fetch_spotify_data(self) -> Dict[str, Any]:
         """Fetch Spotify data for music and insights"""
         logger.info("Fetching Spotify data...")
-        
+
         return {
-            'current_track': {
-                'name': 'Bohemian Rhapsody',
-                'artist': 'Queen',
-                'album': 'A Night at the Opera',
-                'duration': 354
+            "current_track": {
+                "name": "Bohemian Rhapsody",
+                "artist": "Queen",
+                "album": "A Night at the Opera",
+                "duration": 354,
             },
-            'recent_plays': [
-                {'name': 'Imagine', 'artist': 'John Lennon'},
-                {'name': 'Hotel California', 'artist': 'Eagles'}
+            "recent_plays": [
+                {"name": "Imagine", "artist": "John Lennon"},
+                {"name": "Hotel California", "artist": "Eagles"},
             ],
-            'role_model_insights': [
+            "role_model_insights": [
                 {
-                    'song': 'Eye of the Tiger',
-                    'insight': 'Persistence leads to success',
-                    'timestamp': datetime.now().isoformat()
+                    "song": "Eye of the Tiger",
+                    "insight": "Persistence leads to success",
+                    "timestamp": datetime.now().isoformat(),
                 }
             ],
-            'account': self.accounts['spotify']
+            "account": self.accounts["spotify"],
         }
-    
+
     def fetch_youtube_data(self) -> Dict[str, Any]:
         """Fetch YouTube data for monetization insights"""
         logger.info("Fetching YouTube data...")
-        
+
         return {
-            'channel_stats': {
-                'subscribers': 1250,
-                'views': 50000,
-                'videos': 45,
-                'revenue': 125.50
-            },
-            'monetization': {
-                'ad_revenue': 85.25,
-                'sponsorships': 40.25,
-                'total': 125.50
-            },
-            'top_videos': [
-                {'title': 'Python Tutorial', 'views': 15000, 'revenue': 25.50},
-                {'title': 'AI Explained', 'views': 12000, 'revenue': 20.25}
-            ]
+            "channel_stats": {"subscribers": 1250, "views": 50000, "videos": 45, "revenue": 125.50},
+            "monetization": {"ad_revenue": 85.25, "sponsorships": 40.25, "total": 125.50},
+            "top_videos": [
+                {"title": "Python Tutorial", "views": 15000, "revenue": 25.50},
+                {"title": "AI Explained", "views": 12000, "revenue": 20.25},
+            ],
         }
-    
+
     def fetch_instagram_data(self) -> Dict[str, Any]:
         """Fetch Instagram data for monetization insights"""
         logger.info("Fetching Instagram data...")
-        
+
         return {
-            'profile_stats': {
-                'followers': 2500,
-                'posts': 150,
-                'engagement_rate': 4.5
+            "profile_stats": {"followers": 2500, "posts": 150, "engagement_rate": 4.5},
+            "monetization": {
+                "sponsored_posts": 5,
+                "estimated_earnings": 250.00,
+                "brand_collaborations": 3,
             },
-            'monetization': {
-                'sponsored_posts': 5,
-                'estimated_earnings': 250.00,
-                'brand_collaborations': 3
-            },
-            'top_posts': [
-                {'likes': 500, 'comments': 25, 'sponsored': True},
-                {'likes': 400, 'comments': 20, 'sponsored': False}
-            ]
+            "top_posts": [
+                {"likes": 500, "comments": 25, "sponsored": True},
+                {"likes": 400, "comments": 20, "sponsored": False},
+            ],
         }
-    
+
     def fetch_reddit_data(self) -> Dict[str, Any]:
         """Fetch Reddit data for user-driven insights"""
         logger.info("Fetching Reddit data...")
-        
+
         return {
-            'user_insights': {
-                'subscribed_subreddits': ['r/technology', 'r/finance', 'r/artificial'],
-                'top_posts': [
-                    {'title': 'AI in Finance', 'upvotes': 2500, 'subreddit': 'r/finance'},
-                    {'title': 'Tech Trends 2024', 'upvotes': 1800, 'subreddit': 'r/technology'}
+            "user_insights": {
+                "subscribed_subreddits": ["r/technology", "r/finance", "r/artificial"],
+                "top_posts": [
+                    {"title": "AI in Finance", "upvotes": 2500, "subreddit": "r/finance"},
+                    {"title": "Tech Trends 2024", "upvotes": 1800, "subreddit": "r/technology"},
                 ],
-                'insights': [
-                    {'topic': 'AI adoption', 'sentiment': 'positive', 'confidence': 0.85},
-                    {'topic': 'market trends', 'sentiment': 'neutral', 'confidence': 0.72}
-                ]
+                "insights": [
+                    {"topic": "AI adoption", "sentiment": "positive", "confidence": 0.85},
+                    {"topic": "market trends", "sentiment": "neutral", "confidence": 0.72},
+                ],
             },
-            'trending_topics': [
-                {'topic': 'AI regulation', 'mentions': 150},
-                {'topic': 'crypto market', 'mentions': 120}
-            ]
+            "trending_topics": [
+                {"topic": "AI regulation", "mentions": 150},
+                {"topic": "crypto market", "mentions": 120},
+            ],
         }
-    
+
     def fetch_ai_services_data(self) -> Dict[str, Any]:
         """Fetch AI services data"""
         logger.info("Fetching AI services data...")
-        
+
         return {
-            'ollama': {
-                'status': 'running',
-                'models': ['llama2', 'mistral', 'codellama'],
-                'local_inference': True
+            "ollama": {
+                "status": "running",
+                "models": ["llama2", "mistral", "codellama"],
+                "local_inference": True,
             },
-            'huggingface': {
-                'status': 'connected',
-                'models_downloaded': 15,
-                'cache_size': '2.5GB'
+            "huggingface": {"status": "connected", "models_downloaded": 15, "cache_size": "2.5GB"},
+            "groq": {"status": "active", "api_calls": 1250, "credits_remaining": 500},
+            "google_ai": {
+                "status": "active",
+                "api_calls": 850,
+                "models": ["gemini-pro", "text-bison", "chat-bison"],
             },
-            'groq': {
-                'status': 'active',
-                'api_calls': 1250,
-                'credits_remaining': 500
-            },
-            'google_ai': {
-                'status': 'active',
-                'api_calls': 850,
-                'models': ['gemini-pro', 'text-bison', 'chat-bison']
-            }
         }
-    
+
     def fetch_all_services(self) -> Dict[str, Any]:
         """Fetch all services data"""
         logger.info("Fetching all services data...")
-        
+
         return {
-            'accounts': self.accounts,
-            'finance': {
-                'yahoo_finance': self.fetch_yahoo_finance_data(['AAPL', 'GOOGL', 'MSFT']),
-                'commerce': self.fetch_commerce_data(),
-                'personal_finance': {
-                    'total_assets': 150000,
-                    'monthly_income': 8500,
-                    'monthly_expenses': 3500,
-                    'savings_rate': 58.8
-                }
+            "accounts": self.accounts,
+            "finance": {
+                "yahoo_finance": self.fetch_yahoo_finance_data(["AAPL", "GOOGL", "MSFT"]),
+                "commerce": self.fetch_commerce_data(),
+                "personal_finance": {
+                    "total_assets": 150000,
+                    "monthly_income": 8500,
+                    "monthly_expenses": 3500,
+                    "savings_rate": 58.8,
+                },
             },
-            'media': {
-                'spotify': self.fetch_spotify_data(),
-                'youtube': self.fetch_youtube_data(),
-                'instagram': self.fetch_instagram_data()
+            "media": {
+                "spotify": self.fetch_spotify_data(),
+                "youtube": self.fetch_youtube_data(),
+                "instagram": self.fetch_instagram_data(),
             },
-            'social': {
-                'reddit': self.fetch_reddit_data(),
-                'discord': {
-                    'servers': 5,
-                    'notifications': 12,
-                    'active_channels': 8
-                }
+            "social": {
+                "reddit": self.fetch_reddit_data(),
+                "discord": {"servers": 5, "notifications": 12, "active_channels": 8},
             },
-            'ai_services': self.fetch_ai_services_data(),
-            'secrets_loaded': len(self.secrets),
-            'timestamp': datetime.now().isoformat()
+            "ai_services": self.fetch_ai_services_data(),
+            "secrets_loaded": len(self.secrets),
+            "timestamp": datetime.now().isoformat(),
         }
-    
+
     def generate_dashboard(self) -> str:
         """Generate HTML dashboard"""
         data = self.fetch_all_services()
-        
+
         html = f"""
         <!DOCTYPE html>
         <html lang="en">
@@ -362,12 +338,13 @@ class UnifiedHub:
         </body>
         </html>
         """
-        
-        os.makedirs('data/dashboards', exist_ok=True)
-        with open('data/dashboards/unified_dashboard.html', 'w') as f:
+
+        os.makedirs("data/dashboards", exist_ok=True)
+        with open("data/dashboards/unified_dashboard.html", "w") as f:
             f.write(html)
-        
+
         return html
+
 
 def main():
     """Main function"""
@@ -375,10 +352,10 @@ def main():
     print("    UNIFIED HUB v2.0")
     print("    AI + Finance + Media + Social Services")
     print("=" * 70)
-    
+
     hub = UnifiedHub()
     data = hub.fetch_all_services()
-    
+
     print("\nServices Summary:")
     print(f"  Finance Services: Yahoo Finance + Commerce")
     print(f"  AI Services: Ollama + HuggingFace + Groq + Google AI")
@@ -386,17 +363,18 @@ def main():
     print(f"  Social: Reddit + Discord")
     print(f"  Accounts: {len(hub.accounts)} configured")
     print(f"  Secrets: {len(hub.secrets)} loaded")
-    
+
     # Generate dashboard
     dashboard = hub.generate_dashboard()
     print(f"\nDashboard generated: data/dashboards/unified_dashboard.html")
-    
+
     # Save data
-    os.makedirs('data', exist_ok=True)
-    with open('data/unified_data.json', 'w') as f:
+    os.makedirs("data", exist_ok=True)
+    with open("data/unified_data.json", "w") as f:
         json.dump(data, f, indent=2)
-    
+
     print("\nUnified Hub is ready!")
+
 
 if __name__ == "__main__":
     main()

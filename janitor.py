@@ -32,16 +32,25 @@ except Exception:  # pragma: no cover - optional dependency
 
 # --- Configurable targets ---
 CLEAN_DIRS = [
-    "__pycache__", ".pytest_cache", ".mypy_cache", ".ruff_cache", "htmlcov", "logs",
-    "app/__pycache__", "automation/__pycache__", "tests/__pycache__",
+    "__pycache__",
+    ".pytest_cache",
+    ".mypy_cache",
+    ".ruff_cache",
+    "htmlcov",
+    "logs",
+    "app/__pycache__",
+    "automation/__pycache__",
+    "tests/__pycache__",
 ]
 CLEAN_FILES = ["*.pyc", "*.pyo", "*.tmp", "*.temp", "*.log", "*.bak"]
 REPORT_DIRS = ["automation/reports", "logs"]
+
 
 # --- Bio-inspired feedback loop (simplified) ---
 def feedback_log(msg):
     now = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     print(f"[janitor][{now}] {msg}")
+
 
 # --- Garbage/Cache Cleanup ---
 def clean_garbage(dry_run=False):
@@ -63,16 +72,20 @@ def clean_garbage(dry_run=False):
                     f.unlink()
                     feedback_log(f"Removed file: {f}")
 
+
 # --- Dependency Optimization ---
 def optimize_dependencies(dry_run=False):
     feedback_log("Optimizing Python dependencies (pip)...")
     if dry_run:
-        feedback_log("[DRY-RUN] Would run: pip cache purge && pip check && pip install -U -r requirements.txt")
+        feedback_log(
+            "[DRY-RUN] Would run: pip cache purge && pip check && pip install -U -r requirements.txt"
+        )
         return
     subprocess.run([sys.executable, "-m", "pip", "cache", "purge"])
     subprocess.run([sys.executable, "-m", "pip", "check"])
     subprocess.run([sys.executable, "-m", "pip", "install", "-U", "-r", "requirements.txt"])
     feedback_log("Dependencies checked and updated.")
+
 
 # --- Security & Maintenance Automation ---
 def run_automation_tasks(dry_run=False):
@@ -89,18 +102,31 @@ def run_automation_tasks(dry_run=False):
         feedback_log(f"Running: {' '.join(cmd)}")
         subprocess.run(cmd)
 
+
 # --- Consolidation Support ---
 def _load_manifest(path: Path | str) -> dict:
     """Load consolidation manifest YAML if available, else return {}."""
     p = Path(path)
-    if not p.exists():
-        feedback_log(f"Consolidation manifest not found: {p}")
-        return {}
-    if yaml is None:
-        feedback_log("PyYAML not installed; cannot load consolidation manifest.")
-        return {}
-    with open(p, "r", encoding="utf-8") as f:
-        return yaml.safe_load(f) or {}
+
+    def add_contextual_cleanup(self):
+        """Add contextual garbage collection based on project structure."""
+        # Remove old logs older than 30 days
+        log_dir = Path("automation/reports")
+        if log_dir.exists():
+            for log_file in log_dir.glob("*.log"):
+                if log_file.stat().st_mtime < time.time() - 30 * 24 * 3600:
+                    self.remove_item(log_file)
+                    self.logger.info(f"Removed old log: {log_file}")
+
+        # Remove large files in content/ if >10MB (archive instead)
+        content_dir = Path("content")
+        if content_dir.exists():
+            for file in content_dir.rglob("*"):
+                if file.is_file() and file.stat().st_size > 10 * 1024 * 1024:
+                    archive_path = Path("archive/large_files") / file.name
+                    archive_path.parent.mkdir(exist_ok=True)
+                    file.rename(archive_path)
+                    self.logger.info(f"Archived large file: {file} -> {archive_path}")
 
 
 def _ensure_dir(path: Path, dry_run: bool) -> None:
@@ -175,9 +201,9 @@ def cleanup_from_manifest(manifest: dict, dry_run: bool, deleted: list[str]) -> 
     patterns = cleanup.get("delete_patterns", [])
     preserve = cleanup.get("preserve_paths", [])
     # Add conservative defaults
-    preserve = list(set(preserve + [
-        "venv/**", ".git/**", "automation/reports/**", "docs/**", "configs/**"
-    ]))
+    preserve = list(
+        set(preserve + ["venv/**", ".git/**", "automation/reports/**", "docs/**", "configs/**"])
+    )
     for pat in patterns:
         matches = glob.glob(pat, recursive=True)
         for m in matches:
@@ -201,13 +227,22 @@ def cleanup_from_manifest(manifest: dict, dry_run: bool, deleted: list[str]) -> 
                 except Exception as e:
                     feedback_log(f"Failed to remove {p}: {e}")
 
+
 # --- Main Janitor Routine ---
 def main():
     parser = argparse.ArgumentParser(description="Janitor: Codebase Hygiene & Maintenance")
-    parser.add_argument("--dry-run", action="store_true", help="Print actions, don't delete or change anything")
+    parser.add_argument(
+        "--dry-run", action="store_true", help="Print actions, don't delete or change anything"
+    )
     parser.add_argument("--optimize-deps", action="store_true", help="Optimize dependencies")
-    parser.add_argument("--full", action="store_true", help="Run all maintenance, security, and reporting tasks")
-    parser.add_argument("--consolidate", action="store_true", help="Consolidate scripts/reports and clean transient files per manifest")
+    parser.add_argument(
+        "--full", action="store_true", help="Run all maintenance, security, and reporting tasks"
+    )
+    parser.add_argument(
+        "--consolidate",
+        action="store_true",
+        help="Consolidate scripts/reports and clean transient files per manifest",
+    )
     args = parser.parse_args()
 
     clean_garbage(dry_run=args.dry_run)
@@ -242,6 +277,7 @@ def main():
             except Exception as e:
                 feedback_log(f"Failed to write consolidation report: {e}")
     feedback_log("Janitor run complete.")
+
 
 if __name__ == "__main__":
     main()
