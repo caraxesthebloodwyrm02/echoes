@@ -13,20 +13,13 @@ import time
 from datetime import datetime
 from typing import Dict, List, Optional
 
-from fastapi import APIRouter, BackgroundTasks, HTTPException
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Depends
 from pydantic import BaseModel, Field
 
 try:
     from app.core.auth import User, get_current_active_user, require_role
-except ImportError:
-    # Stub implementations if auth module not available
-    User = dict
-
-    def get_current_active_user():
-        pass
-
-    def require_role(role):
-        pass
+except ImportError:  # pragma: no cover
+    from core.auth import User, get_current_active_user, require_role  # type: ignore
 
 
 logger = logging.getLogger(__name__)
@@ -182,7 +175,7 @@ async def validate_assertion(assertion: Assertion):
 
 
 @router.post("/hil/feedback", status_code=202, tags=["Human-in-the-Loop"])
-async def capture_feedback(feedback: HILFeedback, background_tasks: BackgroundTasks):
+async def capture_feedback(feedback: HILFeedback, background_tasks: BackgroundTasks, current_user: User = Depends(get_current_active_user)):
     """
     Capture human-in-the-loop feedback for model improvement.
 
@@ -243,7 +236,7 @@ async def get_feedback(limit: int = 10, status_filter: str = None, label_filter:
 
 
 @router.post("/agent/execute", response_model=AgentExecutionResponse, tags=["Agent Safety"])
-async def execute_agent(req: AgentExecutionRequest):
+async def execute_agent(req: AgentExecutionRequest, current_user: User = Depends(get_current_active_user)):
     """
     Execute agent action with safety controls.
 
@@ -312,11 +305,16 @@ async def execute_agent(req: AgentExecutionRequest):
             duration_ms=duration_ms,
         )
 
-    # Real execution (requires whitelist approval)
-    if not safety_checks.whitelist_ok:
-        raise HTTPException(
-            status_code=403, detail=f"Action '{req.action}' not whitelisted for execution"
-        )
+    # Real execution (requires whitelist approval and admin role)
+    if not req.dry_run:
+        if current_user.role != 'admin':
+            raise HTTPException(
+                status_code=403, detail="Admin role required for real agent execution"
+            )
+        if not safety_checks.whitelist_ok:
+            raise HTTPException(
+                status_code=403, detail=f"Action '{req.action}' not whitelisted for execution"
+            )
 
     logs.append("⚡ REAL EXECUTION MODE")
     logs.append(f"Agent: {req.agent_id}")

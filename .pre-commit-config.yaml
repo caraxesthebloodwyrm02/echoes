@@ -13,17 +13,8 @@ repos:
         args:
           - --max-line-length=100
           - --max-complexity=10
-          - --extend-ignore=E203
-          - W503
+          - --extend-ignore=E203,W503
         exclude: ^(venv|__pycache__|build|dist)/
-#  - repo: https://github.com/igorshubovych/markdownlint-cli
-#    rev: v0.37.0
-#    hooks:
-#      - id: markdownlint
-#        args:
-#          - --config=.markdownlint.json
-#        files: \.(md|mdown|markdown)$
-#        exclude: ^(venv|__pycache__|build|dist|docs)/.*\.md$
   - repo: https://github.com/PyCQA/bandit
     rev: 1.7.5
     hooks:
@@ -50,10 +41,21 @@ repos:
           - --ignore-missing-imports
           - --no-strict-optional
         exclude: ^(tests|venv|__pycache__)/
-#  - repo: https://github.com/pre-commit/mirrors-prettier
-#    rev: v3.1.0
-#    hooks:
-#      - id: prettier
-#        types:
-#          - yaml
-#        exclude: ^(venv|__pycache__)/
+
+  - repo: local
+    hooks:
+      - id: foreign-deps-guard
+        name: Foreign dependency guard (scan only)
+        entry: python -m automation.scripts.run_automation --task "Foreign Dependency Sanitize" --dry-run
+        language: system
+        pass_filenames: false
+      - id: ensure-tests-exist
+        name: Ensure tests exist for new modules
+        entry: python automation/check_test_coverage.py
+        language: system
+        pass_filenames: false
+      - id: sync-api-docs
+        name: Sync API Docs from FastAPI
+        entry: python -m automation.scripts.run_automation --task "Sync API Docs"
+        language: system
+        pass_filenames: false

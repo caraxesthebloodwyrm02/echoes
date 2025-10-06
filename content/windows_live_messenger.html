@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Windows Live Messenger 2009</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Segoe+UI:wght@400;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11px;
+            background: #e8f0fe;
+            overflow: hidden;
+        }
+        
+        .messenger-window {
+            width: 280px;
+            height: 600px;
+            background: linear-gradient(to bottom, #f0f4ff 0%, #dae6ff 100%);
+            border: 1px solid #8bb8ff;
+            border-radius: 8px 8px 0 0;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            position: relative;
+            margin: 20px auto;
+        }
+        
+        .title-bar {
+            background: linear-gradient(to bottom, #4d90fe 0%, #2e5fcc 100%);
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            border-radius: 8px 8px 0 0;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .window-controls {
+            display: flex;
+            gap: 2px;
+        }
+        
+        .control-btn {
+            width: 16px;
+            height: 14px;
+            background: #c4d7ff;
+            border: 1px solid #8bb8ff;
+            font-size: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #333;
+        }
+        
+        .control-btn:hover {
+            background: #ffffff;
+        }
+        
+        .profile-section {
+            padding: 12px;
+            background: linear-gradient(to bottom, #ffffff 0%, #f0f4ff 100%);
+            border-bottom: 1px solid #d0d8f0;
+        }
+        
+        .profile-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        
+        .avatar {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(45deg, #4d90fe, #7bb3ff);
+            border-radius: 3px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        
+        .profile-details {
+            flex: 1;
+        }
+        
+        .display-name {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 2px;
+        }
+        
+        .email {
+            color: #666;
+            font-size: 10px;
+        }
+        
+        .status-dropdown {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 6px;
+            background: #ffffff;
+            border: 1px solid #c0c8d0;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 10px;
+        }
+        
+        .status-icon {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #4caf50;
+        }
+        
+        .music-status {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 4px;
+            padding: 6px 8px;
+            margin-top: 8px;
+            font-size: 10px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .music-icon {
+            width: 16px;
+            height: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="%234d90fe"><path d="M12 3v10.55c-.59-.34-1.27-.55-2-.55-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4V7h4V3h-6z"/></svg>') no-repeat center;
+            background-size: contain;
+        }
+        
+        .music-text {
+            flex: 1;
+            color: #8b6914;
+        }
+        
+        .contact-list {
+            flex: 1;
+            overflow-y: auto;
+            background: #ffffff;
+        }
+        
+        .contact-group {
+            border-bottom: 1px solid #e8f0ff;
+        }
+        
+        .group-header {
+            background: linear-gradient(to bottom, #f8f9ff 0%, #e8f0ff 100%);
+            padding: 6px 12px;
+            font-weight: 600;
+            color: #4d5a6b;
+            font-size: 10px;
+            display: flex;
+            justify-content: space-between;
+            cursor: pointer;
+            border-bottom: 1px solid #d8e4ff;
+        }
+        
+        .contact-item {
+            padding: 6px 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            border-bottom: 1px solid #f0f4ff;
+        }
+        
+        .contact-item:hover {
+            background: #f0f8ff;
+        }
+        
+        .contact-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 2px;
+            background: linear-gradient(45deg, #ff6b6b, #ffa726);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: bold;
+        }
+        
+        .contact-status {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        
+        .online { background: #4caf50; }
+        .away { background: #ff9800; }
+        .busy { background: #f44336; }
+        .offline { background: #999; }
+        
+        .contact-name {
+            flex: 1;
+            font-size: 11px;
+            color: #333;
+        }
+        
+        .contact-music {
+            font-size: 9px;
+            color: #666;
+            font-style: italic;
+            margin-top: 1px;
+        }
+        
+        .bottom-bar {
+            background: linear-gradient(to bottom, #f8f9ff 0%, #e8f0ff 100%);
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            border-top: 1px solid #d8e4ff;
+        }
+        
+        .search-box {
+            flex: 1;
+            height: 20px;
+            border: 1px solid #c0c8d0;
+            border-radius: 3px;
+            padding: 0 6px;
+            font-size: 10px;
+            background: white;
+        }
+        
+        .menu-btn {
+            width: 20px;
+            height: 20px;
+            background: #e8f0ff;
+            border: 1px solid #c0c8d0;
+            border-radius: 3px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+        }
+        
+        .chat-window {
+            position: absolute;
+            top: 50px;
+            right: -320px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border: 1px solid #8bb8ff;
+            border-radius: 6px;
+            box-shadow: 2px 2px 10px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+        
+        .chat-header {
+            background: linear-gradient(to bottom, #4d90fe 0%, #2e5fcc 100%);
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 8px;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+        }
+        
+        .chat-content {
+            height: 300px;
+            padding: 8px;
+            overflow-y: auto;
+            font-size: 11px;
+        }
+        
+        .message {
+            margin-bottom: 8px;
+        }
+        
+        .message-sender {
+            font-weight: 600;
+            color: #2e5fcc;
+            font-size: 10px;
+        }
+        
+        .message-text {
+            color: #333;
+            margin-left: 4px;
+        }
+        
+        .message-time {
+            font-size: 9px;
+            color: #999;
+            margin-left: 4px;
+        }
+        
+        .chat-input {
+            height: 70px;
+            border-top: 1px solid #e0e0e0;
+            padding: 8px;
+        }
+        
+        .input-box {
+            width: 100%;
+            height: 40px;
+            border: 1px solid #c0c8d0;
+            border-radius: 3px;
+            padding: 8px;
+            font-size: 11px;
+            resize: none;
+        }
+        
+        .wink {
+            animation: wink 2s infinite;
+        }
+        
+        @keyframes wink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0.3; }
+        }
+        
+        .music-visualizer {
+            display: inline-block;
+            width: 12px;
+            height: 12px;
+            position: relative;
+        }
+        
+        .bar {
+            position: absolute;
+            bottom: 0;
+            width: 2px;
+            background: #4d90fe;
+            animation: music-bars 1.2s infinite;
+        }
+        
+        .bar:nth-child(1) { left: 0; animation-delay: 0s; }
+        .bar:nth-child(2) { left: 3px; animation-delay: 0.2s; }
+        .bar:nth-child(3) { left: 6px; animation-delay: 0.4s; }
+        .bar:nth-child(4) { left: 9px; animation-delay: 0.6s; }
+        
+        @keyframes music-bars {
+            0%, 50%, 100% { height: 3px; }
+            25% { height: 8px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="messenger-window">
+        <div class="title-bar">
+            <span>Windows Live Messenger</span>
+            <div class="window-controls">
+                <div class="control-btn">−</div>
+                <div class="control-btn">□</div>
+                <div class="control-btn">×</div>
+            </div>
+        </div>
+        
+        <div class="profile-section">
+            <div class="profile-info">
+                <div class="avatar">JD</div>
+                <div class="profile-details">
+                    <div class="display-name">immabeflynshit</div>
+                    <div class="email">flyinguser@hotmail.com</div>
+                </div>
+            </div>
+            <div class="status-dropdown">
+                <div class="status-icon online"></div>
+                <span>Online</span>
+                <span>▼</span>
+            </div>
+            <div class="music-status">
+                <div class="music-visualizer">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </div>
+                <div class="music-text">♫ Listening to: "Digital Dreams" - Virtual Band</div>
+            </div>
+        </div>
+        
+        <div class="contact-list">
+            <div class="contact-group">
+                <div class="group-header">
+                    <span>Online (7/23)</span>
+                    <span>−</span>
+                </div>
+                <div class="contact-item" onclick="openChat('Terminal Master')">
+                    <div class="contact-avatar online">TM</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">Terminal Master</div>
+                        <div class="contact-music">♫ "Command Line Blues"</div>
+                    </div>
+                    <div class="contact-status online"></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar online">CG</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">Code Goddess <span class="wink">;)</span></div>
+                        <div class="contact-music">♫ "Binary Beats"</div>
+                    </div>
+                    <div class="contact-status online"></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar away">NJ</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">Night Jammer</div>
+                        <div class="contact-music">♫ "Synthwave Sunrise"</div>
+                    </div>
+                    <div class="contact-status away"></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar online">PX</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">PixelExplorer</div>
+                        <div class="contact-music">♫ "8-bit Adventures"</div>
+                    </div>
+                    <div class="contact-status online"></div>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar busy">DH</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">Digital Hacker</div>
+                        <div class="contact-music">♫ "Matrix Melodies"</div>
+                    </div>
+                    <div class="contact-status busy"></div>
+                </div>
+            </div>
+            
+            <div class="contact-group">
+                <div class="group-header">
+                    <span>Away (3/23)</span>
+                    <span>−</span>
+                </div>
+                <div class="contact-item">
+                    <div class="contact-avatar away">RR</div>
+                    <div style="flex: 1;">
+                        <div class="contact-name">Retro Runner</div>
+                        <div class="contact-music">♫ "Nostalgic Nights"</div>
+                    </div>
+                    <div class="contact-status away"></div>
+                </div>
+            </div>
+            
+            <div class="contact-group">
+                <div class="group-header">
+                    <span>Offline (13/23)</span>
+                    <span>+</span>
+                </div>
+            </div>
+        </div>
+        
+        <div class="bottom-bar">
+            <input type="text" class="search-box" placeholder="Search contacts...">
+            <div class="menu-btn">≡</div>
+        </div>
+    </div>
+    
+    <div class="chat-window" id="chatWindow" style="display: none;">
+        <div class="chat-header">
+            <span>Terminal Master - Conversation</span>
+            <div class="window-controls">
+                <div class="control-btn" onclick="closeChat()">×</div>
+            </div>
+        </div>
+        <div class="chat-content" id="chatContent">
+            <div class="message">
+                <span class="message-sender">Terminal Master says:</span>
+                <span class="message-time">(3:47 PM)</span>
+                <br>
+                <span class="message-text">yo! nice song choice 🎵</span>
+            </div>
+            <div class="message">
+                <span class="message-sender">immabeflynshit says:</span>
+                <span class="message-time">(3:48 PM)</span>
+                <br>
+                <span class="message-text">haha thanks! loving these music status updates</span>
+            </div>
+            <div class="message">
+                <span class="message-sender">Terminal Master says:</span>
+                <span class="message-time">(3:48 PM)</span>
+                <br>
+                <span class="message-text">btw, check out my custom emoticons 😎</span>
+            </div>
+        </div>
+        <div class="chat-input">
+            <textarea class="input-box" placeholder="Type a message and press Enter to send"></textarea>
+        </div>
+    </div>
+    
+    <script>
+        const songs = [
+            "♫ Digital Dreams - Virtual Band",
+            "♫ Terminal Symphony - Code Warriors",
+            "♫ Binary Heartbeat - Pixel Poets",
+            "♫ Ctrl+Alt+Dance - System Sounds",
+            "♫ WiFi Waves - Network Ninjas",
+            "♫ Firewall Fantasy - Security Squad"
+        ];
+        
+        let currentSong = 0;
+        
+        function updateMusicStatus() {
+            const musicText = document.querySelector('.music-text');
+            musicText.textContent = songs[currentSong];
+            currentSong = (currentSong + 1) % songs.length;
+        }
+        
+        function openChat(contactName) {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = 'block';
+        }
+        
+        function closeChat() {
+            const chatWindow = document.getElementById('chatWindow');
+            chatWindow.style.display = 'none';
+        }
+        
+        // Simulate music changes every 15 seconds
+        setInterval(updateMusicStatus, 15000);
+        
+        // Add some interactive features
+        document.querySelector('.input-box').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter' && !e.shiftKey) {
+                e.preventDefault();
+                const message = this.value.trim();
+                if (message) {
+                    addMessage('immabeflynshit', message);
+                    this.value = '';
+                    // Simulate response after a delay
+                    setTimeout(() => {
+                        addMessage('Terminal Master', getRandomResponse());
+                    }, 1000 + Math.random() * 2000);
+                }
+            }
+        });
+        
+        function addMessage(sender, text) {
+            const chatContent = document.getElementById('chatContent');
+            const time = new Date().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message';
+            messageDiv.innerHTML = `
+                <span class="message-sender">${sender} says:</span>
+                <span class="message-time">(${time})</span>
+                <br>
+                <span class="message-text">${text}</span>
+            `;
+            chatContent.appendChild(messageDiv);
+            chatContent.scrollTop = chatContent.scrollHeight;
+        }
+        
+        function getRandomResponse() {
+            const responses = [
+                "lol nice!",
+                "totally agree 👍",
+                "haha exactly!",
+                "btw did you see that new plugin?",
+                "this song is fire 🔥",
+                "omg yes!",
+                "same here dude",
+                "check your email later"
+            ];
+            return responses[Math.floor(Math.random() * responses.length)];
+        }
+        
+        // Simulate status changes
+        function simulateStatusChanges() {
+            const contacts = document.querySelectorAll('.contact-item');
+            contacts.forEach(contact => {
+                if (Math.random() < 0.1) { // 10% chance
+                    const statusIcon = contact.querySelector('.contact-status');
+                    const statuses = ['online', 'away', 'busy'];
+                    const newStatus = statuses[Math.floor(Math.random() * statuses.length)];
+                    statusIcon.className = `contact-status ${newStatus}`;
+                }
+            });
+        }
+        
+        setInterval(simulateStatusChanges, 30000); // Every 30 seconds
+    </script>
+</body>
+</html>

@@ -9,16 +9,18 @@ Implements JWT-based authentication with:
 """
 
 import hashlib
+import os
 import secrets
 from datetime import datetime, timedelta
-from typing import Optional
+from typing import Optional, Dict, Any
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
 from pydantic import BaseModel
 
 # Security configuration
-SECRET_KEY = secrets.token_urlsafe(32)  # In production, load from environment
+# Prefer environment variable for stable tokens across processes
+SECRET_KEY = os.getenv("SECRET_KEY") or secrets.token_urlsafe(32)
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
@@ -49,7 +51,7 @@ class TokenResponse(BaseModel):
 
 
 # In-memory user store (replace with database in production)
-users_db = {
+users_db: Dict[str, Dict[str, Any]] = {
     "admin": {
         "username": "admin",
         "email": "admin@ai-advisor.com",
@@ -78,36 +80,39 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
 
 
 def create_access_token(data: dict, expires_delta: Optional[timedelta] = None) -> str:
-    """Create JWT access token"""
+    """Create access token (simple demo, not real JWT).
+
+    Uses '|' as delimiter and epoch seconds for expiration to avoid parsing issues.
+    """
     to_encode = data.copy()
     if expires_delta:
         expire = datetime.utcnow() + expires_delta
     else:
         expire = datetime.utcnow() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
 
-    to_encode.update({"exp": expire.isoformat()})
+    exp_epoch = int(expire.timestamp())
 
     # Simple token generation (use PyJWT in production)
-    token = f"{to_encode['sub']}:{to_encode['role']}:{to_encode['exp']}:{SECRET_KEY[:16]}"
+    token = f"{to_encode['sub']}|{to_encode['role']}|{exp_epoch}|{SECRET_KEY[:16]}"
     return token
 
 
 def decode_token(token: str) -> TokenData:
-    """Decode and validate JWT token"""
+    """Decode and validate demo token"""
     try:
-        parts = token.split(":")
+        parts = token.split("|")
         if len(parts) != 4:
             raise ValueError("Invalid token format")
 
-        username, role, exp_str, key_part = parts
+        username, role, exp_epoch_str, key_part = parts
 
         # Validate key part
         if key_part != SECRET_KEY[:16]:
             raise ValueError("Invalid token signature")
 
         # Check expiration
-        exp = datetime.fromisoformat(exp_str)
-        if exp < datetime.utcnow():
+        exp_epoch = int(exp_epoch_str)
+        if exp_epoch < int(datetime.utcnow().timestamp()):
             raise ValueError("Token expired")
 
         return TokenData(username=username, role=role)

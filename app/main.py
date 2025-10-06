@@ -12,14 +12,34 @@ import logging
 import os
 from datetime import datetime
 
-from dotenv import load_dotenv
+try:
+    from dotenv import load_dotenv
+except Exception:  # pragma: no cover - optional dependency fallback for tests
+    def load_dotenv(*args, **kwargs):
+        return None
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.core.validation.provenance_enforcer import ProvenanceEnforcerMiddleware
+# Import provenance middleware with fallback for tests that add `app/` to sys.path
+try:
+    from app.core.validation.provenance_enforcer import ProvenanceEnforcerMiddleware
+except ImportError:  # pragma: no cover
+    from core.validation.provenance_enforcer import ProvenanceEnforcerMiddleware  # type: ignore
 
-from .api.routes import system_router
+# Support running as package (app.main) and as module with app/ on sys.path (tests)
+try:
+    from app.api.routes import system_router, auth_router
+    from app.domains.science.science_module import science_router
+    from app.domains.commerce.commerce_module import commerce_router
+    from app.domains.arts.arts_module import arts_router
+    from app.domains.commerce.finance import finance_router
+except ImportError:  # pragma: no cover - fallback for alternate sys.path in tests
+    from api.routes import system_router, auth_router  # type: ignore
+    from domains.science.science_module import science_router  # type: ignore
+    from domains.commerce.commerce_module import commerce_router  # type: ignore
+    from domains.arts.arts_module import arts_router  # type: ignore
+    from domains.commerce.finance import finance_router  # type: ignore
 
 # Configure logging
 logging.basicConfig(
@@ -80,7 +100,7 @@ app = FastAPI(
 # CORS middleware (configure appropriately for production)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Configure specific origins for production
+    allow_origins=["http://localhost:8000", "http://127.0.0.1:8000"],  # Specific origins for security
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
@@ -93,12 +113,14 @@ app.add_middleware(
 )
 
 
-
 # Include routers
 
 
 app.include_router(system_router, prefix="/api", tags=["System"])
 app.include_router(auth_router, prefix="/api", tags=["Authentication"])
+app.include_router(science_router, prefix="/api/science", tags=["Science"])
+app.include_router(commerce_router, prefix="/api/commerce", tags=["Commerce"])
+app.include_router(arts_router, prefix="/api/arts", tags=["Arts"])
 app.include_router(finance_router, prefix="/api/finance", tags=["Finance Advisor"])
 
 

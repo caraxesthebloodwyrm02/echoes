@@ -1,0 +1,42 @@
+# ResearchLab Dashboard Requirements
+# State-of-the-art AI/ML dashboard dependencies
+
+# Core Dashboard Framework
+streamlit>=1.28.0
+
+# Data Visualization & Analytics
+plotly>=5.17.0
+altair>=5.2.0
+pandas>=2.1.0
+numpy>=1.24.0
+
+# AI/ML Model Integrations
+openai>=1.0.0
+anthropic>=0.7.0
+google-generativeai>=0.3.0
+groq>=0.4.0
+
+# Data Processing & Utils
+python-dotenv>=1.0.0
+requests>=2.31.0
+aiohttp>=3.9.0
+beautifulsoup4>=4.12.0
+feedparser>=6.0.0
+
+# Web Framework (for API components)
+flask>=3.0.0
+flask-cors>=4.0.0
+
+# Development & Testing
+pytest>=7.4.0
+pytest-mock>=3.12.0
+
+# Optional: Advanced Features
+# websocket-client>=1.6.0  # For real-time features
+# scikit-learn>=1.3.0      # For ML analytics
+# matplotlib>=3.8.0        # Alternative plotting
+# seaborn>=0.13.0          # Statistical visualization
+
+# ResearchLab Core Dependencies
+# (These are already included in the main requirements.txt)
+# ollama, huggingface-hub, yahoo-finance, spotipy, etc.

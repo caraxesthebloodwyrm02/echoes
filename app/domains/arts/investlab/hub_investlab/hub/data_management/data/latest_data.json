@@ -1,0 +1,139 @@
+{
+  "summary": {
+    "total_services": 8,
+    "healthy_services": 8,
+    "total_articles": 5,
+    "total_trending_topics": 5,
+    "last_updated": "2025-10-06T04:47:32.589069"
+  },
+  "ecosystems": {
+    "microsoft": {
+      "azure_status": {
+        "overall_status": "healthy",
+        "services": [
+          {
+            "name": "Azure Compute",
+            "status": "healthy",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "Azure Storage",
+            "status": "healthy",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "Azure SQL",
+            "status": "healthy",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "Azure Functions",
+            "status": "healthy",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          }
+        ]
+      },
+      "microsoft_news": [
+        {
+          "title": "Microsoft Azure AI Services Expansion",
+          "link": "https://azure.microsoft.com/blog",
+          "published": "2025-10-06T04:47:32.589069",
+          "summary": "New AI capabilities added to Azure services"
+        },
+        {
+          "title": "Windows 11 Latest Updates",
+          "link": "https://blogs.windows.com",
+          "published": "2025-10-06T04:47:32.589069",
+          "summary": "Latest Windows 11 features and security updates"
+        }
+      ]
+    },
+    "google": {
+      "google_cloud_status": {
+        "overall_status": "healthy",
+        "services": [
+          {
+            "name": "Compute Engine",
+            "status": "available",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "Cloud Storage",
+            "status": "available",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "BigQuery",
+            "status": "available",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          },
+          {
+            "name": "Cloud Functions",
+            "status": "available",
+            "last_updated": "2025-10-06T04:47:32.589069"
+          }
+        ]
+      },
+      "google_news": [
+        {
+          "title": "Google Cloud Next 2024 Highlights",
+          "link": "https://cloud.google.com/blog",
+          "published": "2025-10-06T04:47:32.589069",
+          "summary": "Key announcements from Google Cloud Next conference"
+        },
+        {
+          "title": "Android 15 Developer Preview",
+          "link": "https://android-developers.googleblog.com",
+          "published": "2025-10-06T04:47:32.589069",
+          "summary": "Latest Android 15 features for developers"
+        }
+      ]
+    },
+    "x": {
+      "trending_topics": {
+        "total_trends": 10,
+        "trending_topics": [
+          {
+            "hashtag": "#TechNews",
+            "rank": 1,
+            "mentions": 12500
+          },
+          {
+            "hashtag": "#AI",
+            "rank": 2,
+            "mentions": 8900
+          },
+          {
+            "hashtag": "#CloudComputing",
+            "rank": 3,
+            "mentions": 6700
+          },
+          {
+            "hashtag": "#CyberSecurity",
+            "rank": 4,
+            "mentions": 5400
+          },
+          {
+            "hashtag": "#Web3",
+            "rank": 5,
+            "mentions": 3200
+          }
+        ]
+      },
+      "x_news": [
+        {
+          "title": "X Platform New Features",
+          "link": "https://x.com/en/what-is-happening",
+          "published": "2025-10-06T04:47:32.589069",
+          "summary": "Latest features and updates on X platform"
+        }
+      ]
+    }
+  },
+  "alerts": [],
+  "health_status": {
+    "microsoft": "healthy",
+    "google": "healthy",
+    "x": "healthy"
+  }
+}

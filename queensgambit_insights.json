@@ -1,0 +1,13 @@
+{
+  "timestamp": "2025-10-06T02:31:22.785176",
+  "insights": [
+    {
+      "type": "security_risk",
+      "file": "automation\\reports\\security_monitoring_report.json",
+      "score": 75.0,
+      "timestamp": "2025-10-06T02:31:22.785176"
+    }
+  ],
+  "findings_count": 4,
+  "insights_count": 1
+}

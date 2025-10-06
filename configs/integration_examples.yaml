@@ -1,0 +1,5 @@
+# configs/integration_examples.yaml
+profiles:
+  finance: "python -m app.harmony.cli --harmony tests/fixtures/harmony_finance.json --melody tests/fixtures/melody_finance.json --format json --epsilon 0.01"
+  arts: "python -m app.harmony.cli --harmony tests/fixtures/harmony_arts.json --melody tests/fixtures/melody_arts.json --format json"
+  audit: "python -m app.harmony.cli --harmony tests/fixtures/harmony_finance.json --melody tests/fixtures/melody_finance.json --format yaml --epsilon 0.0"

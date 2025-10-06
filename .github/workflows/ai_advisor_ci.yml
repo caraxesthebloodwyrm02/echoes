@@ -38,7 +38,7 @@ jobs:
           pip install -r mcp_requirements.txt
           pip install pytest pytest-asyncio pytest-cov httpx fastapi[all]
           pip install ruff black mypy bandit safety
-          npm install -g markdownlint-cli2
+          pip install pymarkdownlnt
 
       - name: Lint with ruff
         run: |
@@ -58,7 +58,7 @@ jobs:
 
       - name: Lint markdown files
         run: |
-          markdownlint-cli2 "**/*.md" --config .markdownlint.json
+          pymarkdown scan "**/*.md"
 
       - name: Security scan with bandit
         run: |

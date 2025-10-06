@@ -1,0 +1,18 @@
+# Default audit configuration
+profile: default
+domains:
+  - arts
+  - commerce
+  - finance
+  - general
+pipeline:
+  type: full
+  include_white_box: true
+  monetization: false
+thresholds:
+  risk:
+    low_max: 0.3
+    medium_max: 0.7
+reporting:
+  format: markdown
+  out_dir: reports/audit

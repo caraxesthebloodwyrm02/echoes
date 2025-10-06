@@ -81,7 +81,6 @@ async def search_biomedical_literature(
                 "source": "PubMed",
                 "retrieved_at": datetime.utcnow().isoformat(),
                 "search_terms": request.query,
-                "result_count": len(results),
             },
         ),
         BiomedicalSearchResult(

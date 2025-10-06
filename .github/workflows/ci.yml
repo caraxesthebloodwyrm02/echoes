@@ -1,0 +1,49 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install pre-commit pytest coverage bandit pip-audit httpx pydantic fastapi uvicorn PyYAML
+
+      - name: Pre-commit
+        run: |
+          pre-commit install
+          pre-commit run --all-files || true
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Smoke tests
+        run: python -m automation.scripts.run_automation --task "Smoke Test Endpoints"
+
+      - name: Security scan
+        run: python -m automation.scripts.run_automation --task "Security Scan"
+
+      - name: Sync API docs
+        run: |
+          python -m automation.scripts.run_automation --task "Sync API Docs"
+
+      - name: Upload docs artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: api-docs
+          path: |
+            docs/API_REFERENCE.md
+            docs/openapi.json

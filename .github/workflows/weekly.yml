@@ -1,0 +1,59 @@
+name: Weekly Automations
+
+on:
+  schedule:
+    - cron: '0 0 * * 1'  # Every Monday at 00:00 UTC
+  workflow_dispatch:
+
+jobs:
+  weekly:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
+          pip install bandit pip-audit PyYAML fastapi uvicorn httpx pytest
+
+      - name: Dependency updates (dry-run)
+        run: |
+          python -m automation.scripts.run_automation --task "Update Dependencies" --dry-run
+
+      - name: Security scan
+        run: |
+          python -m automation.scripts.run_automation --task "Security Scan"
+
+      - name: Performance benchmark
+        run: |
+          python -m automation.scripts.run_automation --task "Performance Benchmark"
+
+      - name: Foreign dependency scan (dry-run)
+        run: |
+          python -m automation.scripts.run_automation --task "Foreign Dependency Sanitize" --dry-run
+
+      - name: Fail on critical foreign deps
+        run: |
+          python - <<'PY'
+          import json, sys
+          p = 'automation/reports/foreign_dependency_report.json'
+          with open(p, 'r') as f:
+              data = json.load(f)
+          crit = data.get('classification', {}).get('critical', [])
+          print(f"Foreign deps critical count: {len(crit)}")
+          for c in crit:
+              print(' -', c.get('path'), c.get('keys'))
+          sys.exit(1 if crit else 0)
+          PY
+
+      - name: Upload automation reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: automation-reports
+          path: |
+            automation/reports/**

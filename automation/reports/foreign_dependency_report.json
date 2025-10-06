@@ -1,0 +1,175 @@
+{
+  "classification": {
+    "critical": [],
+    "informational": [],
+    "moderate": [
+      {
+        "path": "E:\\Projects\\Development\\42crunch-setup.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\automation\\scripts\\create_highrisk_prs.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\fix-openapi-security.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\fix-openapi-simple.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\integration-executor.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\make.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\quick-launch.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\automation_framework.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\cleanup-vulnerable-images.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\cleanup_backups.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\create-security-scripts.sh",
+        "type": "bash_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\create_high_risk_prs.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\docker-dev.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\docker-dev.sh",
+        "type": "bash_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\docker-security-automation.sh",
+        "type": "bash_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\emergency-lockdown.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\framework_installer.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\full_sanitization.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\install-secure-storage-provisioner.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\local_ci_simulate.sh",
+        "type": "bash_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\monthly-security-audit.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\quick_framework_setup.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\rl.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\run_tests.sh",
+        "type": "bash_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\security-scan-python-dependencies.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\setup_dev_env.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\setup_dev_env_corrected.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\setup_environment.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\validate_environment.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\scripts\\weekly-security-check.ps1",
+        "type": "powershell_script"
+      },
+      {
+        "path": "E:\\Projects\\Development\\test_api.sh",
+        "type": "bash_script"
+      }
+    ]
+  },
+  "foreign_sources": [
+    "E:\\Projects\\Development\\42crunch-setup.ps1",
+    "E:\\Projects\\Development\\automation\\scripts\\create_highrisk_prs.ps1",
+    "E:\\Projects\\Development\\fix-openapi-security.ps1",
+    "E:\\Projects\\Development\\fix-openapi-simple.ps1",
+    "E:\\Projects\\Development\\integration-executor.ps1",
+    "E:\\Projects\\Development\\make.ps1",
+    "E:\\Projects\\Development\\quick-launch.ps1",
+    "E:\\Projects\\Development\\scripts\\automation_framework.ps1",
+    "E:\\Projects\\Development\\scripts\\cleanup-vulnerable-images.ps1",
+    "E:\\Projects\\Development\\scripts\\cleanup_backups.ps1",
+    "E:\\Projects\\Development\\scripts\\create-security-scripts.sh",
+    "E:\\Projects\\Development\\scripts\\create_high_risk_prs.ps1",
+    "E:\\Projects\\Development\\scripts\\docker-dev.ps1",
+    "E:\\Projects\\Development\\scripts\\docker-dev.sh",
+    "E:\\Projects\\Development\\scripts\\docker-security-automation.sh",
+    "E:\\Projects\\Development\\scripts\\emergency-lockdown.ps1",
+    "E:\\Projects\\Development\\scripts\\framework_installer.ps1",
+    "E:\\Projects\\Development\\scripts\\full_sanitization.ps1",
+    "E:\\Projects\\Development\\scripts\\install-secure-storage-provisioner.ps1",
+    "E:\\Projects\\Development\\scripts\\local_ci_simulate.sh",
+    "E:\\Projects\\Development\\scripts\\monthly-security-audit.ps1",
+    "E:\\Projects\\Development\\scripts\\quick_framework_setup.ps1",
+    "E:\\Projects\\Development\\scripts\\rl.ps1",
+    "E:\\Projects\\Development\\scripts\\run_tests.sh",
+    "E:\\Projects\\Development\\scripts\\security-scan-python-dependencies.ps1",
+    "E:\\Projects\\Development\\scripts\\setup_dev_env.ps1",
+    "E:\\Projects\\Development\\scripts\\setup_dev_env_corrected.ps1",
+    "E:\\Projects\\Development\\scripts\\setup_environment.ps1",
+    "E:\\Projects\\Development\\scripts\\validate_environment.ps1",
+    "E:\\Projects\\Development\\scripts\\weekly-security-check.ps1",
+    "E:\\Projects\\Development\\test_api.sh"
+  ],
+  "manifests": [],
+  "node_configs": [],
+  "node_modules": [],
+  "precommit": {
+    "has_file": true,
+    "node_hints": [],
+    "path": "E:\\Projects\\Development\\.pre-commit-config.yaml"
+  },
+  "root": "E:\\Projects\\Development",
+  "workflows_with_foreign_keys": []
+}

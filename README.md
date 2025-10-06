@@ -2,7 +2,7 @@
 
 Unified codebase for the AI Advisor project.
 
-## Setup
+## Setup & Usage
 
 1. Create and activate a virtual environment:
 
@@ -14,7 +14,8 @@ Unified codebase for the AI Advisor project.
 2. Install dependencies:
 
    ```bash
-   pip install -e .[dev]
+   pip install -r requirements.txt
+   pip install pre-commit && pre-commit install
    ```
 
 3. Run tests:
@@ -23,13 +24,26 @@ Unified codebase for the AI Advisor project.
    pytest
    ```
 
+4. Run automation tasks (examples):
+
+   ```bash
+   # Dry-run: scan for foreign dependencies (no changes)
+   python -m automation.scripts.run_automation --task "Foreign Dependency Sanitize" --dry-run
+
+   # Apply: remove Node/foreign artifacts, add guardrails
+   python -c "from automation.tasks.foreign_dependency_sanitize import foreign_dependency_sanitize; from automation.core.context import Context; foreign_dependency_sanitize(Context(dry_run=False, extra_data={'apply_changes': True, 'delete_node_configs': True, 'assume_yes': True}))"
+
+   # Run security monitoring
+   python -m automation.scripts.run_automation --task "Security Monitoring"
+   ```
+
 ## Project Structure
 
-- `automation/` - Automation framework
+- `app/` - Main application code
+- `automation/` - Automation framework (security, cleanup, guardrails)
 - `packages/` - Shared libraries
-- `src/` - Main application code
 - `tests/` - Integration/end-to-end tests
-- `legacy/` - Legacy code from previous versions
+- `docs/` - Documentation
 
 ## What Can My Agent Do?
 
@@ -78,18 +92,25 @@ cd src && python main.py
 | **[docs/SAFETY_GUIDE.md](docs/SAFETY_GUIDE.md)** | Safety controls & procedures | Complete |
 | **[docs/DOMAIN_EXPANSION_PLAN.md](docs/DOMAIN_EXPANSION_PLAN.md)** | Development roadmap | Complete |
 
-## Development
+## Development & Automation
 
 ### Pre-commit Hooks
 ```bash
 pip install pre-commit
 pre-commit install
-pre-commit run --all-files  # Run on all files
+pre-commit run --all-files
 ```
+
+### Automation Tasks
+- Run any task via:
+  ```bash
+  python -m automation.scripts.run_automation --task "Task Name"
+  ```
+- See `automation/config/automation_config.yaml` for available tasks.
 
 ### Testing
 ```bash
-pytest tests/ -v --cov=src --cov-report=term
+pytest tests/ -v --cov=app --cov-report=term
 ```
 
 ### Code Quality
@@ -98,15 +119,12 @@ pytest tests/ -v --cov=src --cov-report=term
 - **MyPy** - Type checking
 - **Bandit** - Security scanning
 
-## Safety & Security
+## Safety, Security & Automation Guardrails
 
-The AI Advisor implements multiple safety layers:
-
-- **Provenance enforcement** - All claims require sources
-- **Action whitelisting** - Only approved agent actions
-- **Dry-run mode** - Safe testing without side effects
-- **Kill switches** - Emergency agent termination
-- **Human oversight** - Feedback and review loops
+- **Foreign Dependency Guardrails**: Node.js/JS and other non-Python artifacts are automatically detected and blocked in CI, pre-commit, and weekly automation.
+- **Security Automation**: Bandit, Safety, and environment checks are run via `Security Monitoring` automation task.
+- **Dry-run mode**: All automation tasks support dry-run for safe preview.
+- **Pre-commit & CI**: Automated guardrails prevent reintroduction of foreign dependencies.
 
 **[Safety Guide →](docs/SAFETY_GUIDE.md)**
 

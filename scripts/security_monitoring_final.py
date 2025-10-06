@@ -112,7 +112,9 @@ def check_environment() -> Tuple[bool, str]:
                 content = f.read()
                 for pattern in sensitive_patterns:
                     if pattern in content:
-                        issues.append(f"⚠️  {env_file} contains potential sensitive data: {pattern}")
+                        issues.append(
+                            f"⚠️  {env_file} contains potential sensitive data: {pattern}"
+                        )
 
     # Check file permissions
     sensitive_files = [".env", ".env.production", "app/main.py"]

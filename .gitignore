@@ -51,3 +51,6 @@ logs/
 # Security related files that may contain sensitive data
 secrets.json
 config.local.json
+
+# Node
+node_modules/
