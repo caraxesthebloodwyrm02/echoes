@@ -1,0 +1,20 @@
+{
+  "templates": [
+    {
+      "id": "pause_detection_v1",
+      "name": "Pause Detection",
+      "template": "Given context: {context}\nAt timestamps {timestamps}, analyze pauses, intent, and turn-taking. Explain whether the pause is cognitive load, rhetorical effect, or handoff.",
+      "tags": ["pause", "semantics", "turn-taking"],
+      "quality_score": 8.5
+    },
+    {
+      "id": "semantic_pivot_v1",
+      "name": "Semantic Pivot",
+      "template": "Context: {context}\nSpeaker A says: {utterance}. Identify subtext and recommend interviewer pivot or follow-up.",
+      "tags": ["semantics", "interview", "pivot"],
+      "quality_score": 8.0
+    }
+  ]
+}
+
+

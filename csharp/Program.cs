@@ -10,7 +10,7 @@ class Program
     {
         // Java probe: search upward for bin/java.exe
         var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
-        FileInfo javaExe = null;
+        FileInfo? javaExe = null;
         while (dir != null)
         {
             var candidate = Path.Combine(dir.FullName, "bin", "java.exe");
@@ -31,7 +31,7 @@ class Program
             try
             {
                 var p = new Process();
-                p.StartInfo.FileName = javaExe.FullName;
+                p.StartInfo.FileName = javaExe!.FullName;
                 p.StartInfo.Arguments = "-version";
                 p.StartInfo.RedirectStandardOutput = true;
                 p.StartInfo.RedirectStandardError = true;
