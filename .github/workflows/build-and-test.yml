@@ -1,0 +1,38 @@
+name: build-and-test
+
+on:
+  push:
+    branches: [ "**" ]
+  pull_request:
+    branches: [ "**" ]
+
+jobs:
+  windows-csharp:
+    runs-on: windows-latest
+    env:
+      SKIP_HTTP_PROBE: 1
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Build C# project
+        run: dotnet build csharp/language-bundle.csproj --configuration Release
+
+      - name: Validate runner exit codes with/without Java
+        shell: pwsh
+        run: |
+          mkdir -p fake/bin | Out-Null
+          $exe = 'fake\bin\java.exe'
+          "@echo off`necho fake java" | Out-File -FilePath $exe -Encoding ascii -Force
+          icacls $exe /grant Everyone:F | Out-Null
+          dotnet run --project csharp/language-bundle.csproj --configuration Release
+          if ($LASTEXITCODE -ne 2) { Write-Host "Expected exit code 2 when no java present"; exit 1 }
+          Move-Item fake bin -Force
+          dotnet run --project csharp/language-bundle.csproj --configuration Release
+          if ($LASTEXITCODE -eq 2) { Write-Host "Expected java present -> not exit 2"; exit 1 }
+
