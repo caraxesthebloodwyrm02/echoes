@@ -232,5 +232,5 @@ pytest tests/test_creative_corner.py --cov=src.modules.creative_corner --cov-rep
 
 ---
 
-**Version**: 3.1.0  
+**Version**: 3.1.0
 **Last Updated**: October 2025

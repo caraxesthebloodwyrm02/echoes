@@ -1,8 +1,8 @@
 # Ollama Security Monitoring Guide
 
-**Image:** ollama/ollama:latest  
-**Size:** 4.93 GB  
-**Last Updated:** 2025-09-25 (4 days ago)  
+**Image:** ollama/ollama:latest
+**Size:** 4.93 GB
+**Last Updated:** 2025-09-25 (4 days ago)
 **Current Status:** ⚠️ 1 Critical, 1 High, 7 Medium, 6 Low
 
 ---
@@ -26,9 +26,9 @@
 
 ### Assessment
 
-✅ **Safe to use** - These are recent CVEs (2025), image is only 4 days old  
-✅ **Low risk** - Requires local access to exploit  
-⚠️ **Monitor weekly** - Ollama team likely preparing updates  
+✅ **Safe to use** - These are recent CVEs (2025), image is only 4 days old
+✅ **Low risk** - Requires local access to exploit
+⚠️ **Monitor weekly** - Ollama team likely preparing updates
 ✅ **Already latest** - You have the most recent version
 
 ---
@@ -219,7 +219,7 @@ Vulnerabilities:
   High: 1 (CVE-2025-22874)
   Medium: 7
   Low: 6
-  
+
 Risk Assessment: LOW-MEDIUM
 Recommendation: KEEP & MONITOR
 Monitoring: ENABLED (automated weekly)
@@ -242,6 +242,6 @@ Next Audit: 2025-10-29 (monthly)
 
 ---
 
-**Last Updated:** 2025-09-29  
-**Next Review:** 2025-10-06 (automated)  
+**Last Updated:** 2025-09-29
+**Next Review:** 2025-10-06 (automated)
 **Status:** Secure with monitoring

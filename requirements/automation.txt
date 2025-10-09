@@ -1,0 +1,11 @@
+
+# Automation Framework Dependencies
+prometheus-client>=0.16.0
+psutil>=5.9.0
+redis>=4.5.0
+aioredis>=2.0.0
+pyyaml>=6.0
+click>=8.0.0
+tenacity>=8.0.0
+structlog>=23.0.0
+croniter>=1.0.0

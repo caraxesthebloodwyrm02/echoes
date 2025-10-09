@@ -72,7 +72,7 @@ scores = {
 }
 
 # Question 1 (Purpose): +3 points
-# Question 2 (Activity): +2 points  
+# Question 2 (Activity): +2 points
 # Question 3 (Interest): +1 point
 
 # Maximum score per role: 6 points
@@ -386,6 +386,6 @@ from sklearn.naive_bayes import MultinomialNB
 
 ---
 
-**Version**: 2.0.0 (Natural Inference)  
-**Date**: 2025-09-30  
+**Version**: 2.0.0 (Natural Inference)
+**Date**: 2025-09-30
 **Philosophy**: Infer, don't ask. Understand, don't categorize.

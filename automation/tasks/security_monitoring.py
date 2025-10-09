@@ -14,15 +14,15 @@ Parameters (context.extra_data):
 - severity_threshold: str (default "HIGH") -> minimum severity to fail on
 - output_file: str (default "automation/reports/security_monitoring_report.json")
 """
+
 from __future__ import annotations
 
 import json
 import os
 import subprocess
-import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Tuple, Dict, Any
+from typing import Any, Dict, Tuple
 
 from automation.core.logger import AutomationLogger
 
@@ -68,14 +68,16 @@ def check_bandit_scan(log: AutomationLogger) -> bool:
 
     # Check for security issues
     try:
-        with open("automation/reports/bandit_scan.json", "r") as f:
+        with open("automation/reports/bandit_scan.json") as f:
             results = json.load(f)
 
         issues = results.get("results", [])
         high_severity = [i for i in issues if i.get("issue_severity") == "HIGH"]
         medium_severity = [i for i in issues if i.get("issue_severity") == "MEDIUM"]
 
-        log.info(f"Bandit Results: {len(high_severity)} HIGH, {len(medium_severity)} MEDIUM issues")
+        log.info(
+            f"Bandit Results: {len(high_severity)} HIGH, {len(medium_severity)} MEDIUM issues"
+        )
 
         if high_severity:
             log.warning("HIGH SEVERITY ISSUES FOUND:")
@@ -100,7 +102,9 @@ def check_dependency_vulnerabilities(log: AutomationLogger) -> bool:
     success, stdout, stderr = run_command(["python", "-m", "pip", "show", "safety"])
     if not success:
         log.info("Safety not installed, installing...")
-        success, stdout, stderr = run_command(["python", "-m", "pip", "install", "safety"])
+        success, stdout, stderr = run_command(
+            ["python", "-m", "pip", "install", "safety"]
+        )
         if not success:
             log.error(f"Failed to install safety: {stderr}")
             return False

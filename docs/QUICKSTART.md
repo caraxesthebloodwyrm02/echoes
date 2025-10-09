@@ -116,7 +116,7 @@ How are you feeling today?
   4. Relaxed 😌
   5. Need Support 🤝
 
-👉 Your choice (number): 
+👉 Your choice (number):
 ```
 
 ### **3. Instant Feedback**

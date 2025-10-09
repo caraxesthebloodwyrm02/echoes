@@ -1,7 +1,7 @@
 # Docker Images Security Audit
 
-**Date:** 2025-09-29  
-**Total Images Analyzed:** 10  
+**Date:** 2025-09-29
+**Total Images Analyzed:** 10
 **Critical Issues:** 2 old Docker Desktop images
 
 ---
@@ -21,8 +21,8 @@
 
 ### 1. docker/desktop-storage-provisioner:v2.0 (4 years old)
 
-**Status:** 🚨 **CRITICAL** - 97 CVEs  
-**Created:** 2021-04-26 (4 years ago)  
+**Status:** 🚨 **CRITICAL** - 97 CVEs
+**Created:** 2021-04-26 (4 years ago)
 **Size:** 59.16 MB
 
 #### Vulnerable Dependencies (from SBOM)
@@ -48,9 +48,9 @@ docker rmi docker/desktop-storage-provisioner:v2.0
 
 ### 2. docker/desktop-vpnkit-controller (2 years old)
 
-**Status:** ⚠️ **OLD** - Unknown CVEs  
-**Created:** 2023-xx-xx (2 years ago)  
-**Size:** 46.99 MB  
+**Status:** ⚠️ **OLD** - Unknown CVEs
+**Created:** 2023-xx-xx (2 years ago)
+**Size:** 46.99 MB
 **SHA:** dc331cb22850be0cdd97c84a9cfecaf44a1afb6e
 
 #### Analysis
@@ -91,8 +91,8 @@ These are current and maintained by the Kubernetes project:
 
 ### mcp/node-code-sandbox (23 days ago)
 
-**Status:** ℹ️ **UNKNOWN**  
-**Size:** 825.73 MB (largest image)  
+**Status:** ℹ️ **UNKNOWN**
+**Size:** 825.73 MB (largest image)
 **Tag:** `<none>`
 
 #### Notes
@@ -116,8 +116,8 @@ docker rmi 6b7180ab719d
 
 ### Critical Findings
 
-**Built with:** Go 1.14.15 (released 2020, EOL)  
-**Architecture:** ARM64  
+**Built with:** Go 1.14.15 (released 2020, EOL)
+**Architecture:** ARM64
 **Created:** 2021-04-26
 
 ### Dependency Tree (38 packages)
@@ -304,7 +304,7 @@ docker rmi <image-id>
 
 ### Issue: Storage Provisioner Not Working
 
-**Good News:** Docker Desktop v4.47.0 uses a newer internal provisioner.  
+**Good News:** Docker Desktop v4.47.0 uses a newer internal provisioner.
 The old v2.0 image is just cached and not in use.
 
 ```powershell

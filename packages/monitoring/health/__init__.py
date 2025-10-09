@@ -99,7 +99,10 @@ class HealthChecker:
         try:
             # Try Windows service check first
             result = subprocess.run(
-                ["sc", "query", service_name], capture_output=True, text=True, timeout=10
+                ["sc", "query", service_name],
+                capture_output=True,
+                text=True,
+                timeout=10,
             )
 
             if result.returncode == 0 and "RUNNING" in result.stdout:
@@ -150,7 +153,9 @@ class HealthChecker:
                     timestamp=datetime.now(),
                 )
 
-    def check_disk_space(self, path: str, threshold_percent: float = 90.0) -> HealthCheck:
+    def check_disk_space(
+        self, path: str, threshold_percent: float = 90.0
+    ) -> HealthCheck:
         """
         Check disk space usage.
 
@@ -169,17 +174,16 @@ class HealthChecker:
 
             if usage_percent < threshold_percent:
                 status = "healthy"
-                message = (
-                    f"Disk usage at {usage_percent:.1f}% (below {threshold_percent}% threshold)"
-                )
+                message = f"Disk usage at {usage_percent:.1f}% (below {threshold_percent}% threshold)"
             else:
                 status = "warning" if usage_percent < 95.0 else "unhealthy"
-                message = (
-                    f"Disk usage at {usage_percent:.1f}% (above {threshold_percent}% threshold)"
-                )
+                message = f"Disk usage at {usage_percent:.1f}% (above {threshold_percent}% threshold)"
 
             return HealthCheck(
-                name=f"disk_space_{path}", status=status, message=message, timestamp=datetime.now()
+                name=f"disk_space_{path}",
+                status=status,
+                message=message,
+                timestamp=datetime.now(),
             )
 
         except Exception as e:

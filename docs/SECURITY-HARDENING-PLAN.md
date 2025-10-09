@@ -1,8 +1,8 @@
 # 🛡️ Complete Security Hardening Plan
 
-**Date:** 2025-09-29  
-**Environment:** Fresh PC (2 months old)  
-**Status:** Post-cleanup, ready for hardening  
+**Date:** 2025-09-29
+**Environment:** Fresh PC (2 months old)
+**Status:** Post-cleanup, ready for hardening
 **Goal:** Enterprise-grade security for development environment
 
 ---
@@ -31,7 +31,7 @@
 | **coredns:v1.12.1** | 101 MB | 6 months | ✅ Safe | Keep, monitor |
 | **pause:3.10** | 1.06 MB | 1 year | ✅ Safe | Keep (rarely updated) |
 
-**Total Size:** 5.7 GB  
+**Total Size:** 5.7 GB
 **Critical Issues:** 1 (ollama needs assessment)
 
 ---
@@ -77,7 +77,7 @@ If you actively use Ollama:
 If you don't use Ollama:
   - Remove it (saves 4.93 GB)
   - docker rmi ollama/ollama:latest
-  
+
 If you're testing/evaluating:
   - Scan for CVEs
   - Set 30-day review reminder
@@ -282,12 +282,12 @@ Before Pulling New Images:
   1. Check official source
   2. Review image tags (avoid :latest in production)
   3. Check age and update frequency
-  
+
 After Pulling:
   1. docker scout cves <image>
   2. Review SBOM if available
   3. Set calendar reminder for re-scan (30 days)
-  
+
 Before Running:
   1. docker history <image>
   2. docker inspect <image>
@@ -355,12 +355,12 @@ Security Measures:
      - Use Docker networks
      - Don't expose unnecessary ports
      - Use reverse proxy (nginx/traefik)
-  
+
   2. Container security:
      - Run as non-root user
      - Read-only filesystems where possible
      - Drop unnecessary capabilities
-  
+
   3. Secret management:
      - Use Docker secrets or env files
      - Never commit secrets to git
@@ -375,12 +375,12 @@ Security Measures:
      - Set memory limits
      - Set CPU limits
      - Monitor GPU usage (if applicable)
-  
+
   2. Model security:
      - Verify model sources
      - Check model licenses
      - Scan for embedded malware
-  
+
   3. Network isolation:
      - Run on isolated network
      - No internet access if not needed
@@ -395,12 +395,12 @@ Security Measures:
      - Principle of least privilege
      - Service account tokens
      - Namespace isolation
-  
+
   2. Network policies:
      - Default deny
      - Explicit allow rules
      - Pod-to-pod security
-  
+
   3. Pod security:
      - Security contexts
      - AppArmor/SELinux profiles
@@ -655,8 +655,8 @@ Quarterly:
 
 ---
 
-**Created:** 2025-09-29  
-**Review Date:** 2025-10-29  
-**Next Audit:** 2025-10-29  
+**Created:** 2025-09-29
+**Review Date:** 2025-10-29
+**Next Audit:** 2025-10-29
 
 **Your environment can now be secure. Follow this plan to maintain it.** 🛡️

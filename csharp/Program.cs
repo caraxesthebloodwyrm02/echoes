@@ -1,0 +1,67 @@
+using System;
+using System.IO;
+using System.Net.Http;
+using System.Diagnostics;
+
+class Program
+{
+    // Exit codes: 0 = success, 1 = java failed, 2 = java not found, 3 = http probe failed
+    static int Main(string[] args)
+    {
+        var url = "http://127.0.0.1:8000/transform";
+        try
+        {
+            using (var client = new HttpClient())
+            {
+                var resp = client.GetAsync("http://127.0.0.1:8000/").Result;
+                if (!resp.IsSuccessStatusCode)
+                {
+                    Console.Error.WriteLine("HTTP probe failed: " + resp.StatusCode);
+                    return 3;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("HTTP probe exception: " + ex.Message);
+            return 3;
+        }
+
+        // Java probe: search upward for bin/java.exe
+        var dir = new DirectoryInfo(Directory.GetCurrentDirectory());
+        FileInfo javaExe = null;
+        while (dir != null)
+        {
+            var candidate = Path.Combine(dir.FullName, "bin", "java.exe");
+            if (File.Exists(candidate)) { javaExe = new FileInfo(candidate); break; }
+            dir = dir.Parent;
+        }
+
+        if (javaExe == null)
+        {
+            Console.Error.WriteLine("Java not found");
+            return 2;
+        }
+
+        try
+        {
+            var p = new Process();
+            p.StartInfo.FileName = javaExe.FullName;
+            p.StartInfo.Arguments = "-version";
+            p.StartInfo.RedirectStandardOutput = true;
+            p.StartInfo.RedirectStandardError = true;
+            p.StartInfo.UseShellExecute = false;
+            p.Start();
+            p.WaitForExit(5000);
+            if (p.ExitCode != 0) { return 1; }
+        }
+        catch (Exception ex)
+        {
+            Console.Error.WriteLine("Java execution failed: " + ex.Message);
+            return 1;
+        }
+
+        Console.WriteLine("Runner completed successfully");
+        return 0;
+    }
+}

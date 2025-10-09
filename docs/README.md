@@ -27,8 +27,8 @@ python scripts/generate_sample_data.py
 pytest tests/ -v
 ```
 
-**📚 Documentation**: See `docs/QUICKSTART.md` for detailed instructions  \n**🔒 Security**: See `SECURITY.md` for comprehensive security policy  
-**📁 Structure**: See `STRUCTURE.md` for complete folder organization  
+**📚 Documentation**: See `docs/QUICKSTART.md` for detailed instructions  \n**🔒 Security**: See `SECURITY.md` for comprehensive security policy
+**📁 Structure**: See `STRUCTURE.md` for complete folder organization
 **🎨 Creative Corner**: See `docs/CREATIVE_CORNER.md` for security features
 
 ---
