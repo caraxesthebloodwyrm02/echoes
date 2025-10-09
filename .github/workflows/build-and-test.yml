@@ -25,14 +25,15 @@ jobs:
 
       - name: Validate runner exit codes with/without Java
         shell: pwsh
+        working-directory: csharp
         run: |
-          mkdir -p fake/bin | Out-Null
-          $exe = 'fake\bin\java.exe'
+          if (Test-Path bin) { Remove-Item -Recurse -Force bin }
+          dotnet run --project language-bundle.csproj --configuration Release
+          if ($LASTEXITCODE -ne 2) { Write-Host "Expected exit code 2 when no java present"; exit 1 }
+          New-Item -ItemType Directory -Force -Path bin | Out-Null
+          $exe = 'bin\java.exe'
           "@echo off`necho fake java" | Out-File -FilePath $exe -Encoding ascii -Force
           icacls $exe /grant Everyone:F | Out-Null
-          dotnet run --project csharp/language-bundle.csproj --configuration Release
-          if ($LASTEXITCODE -ne 2) { Write-Host "Expected exit code 2 when no java present"; exit 1 }
-          Move-Item fake bin -Force
-          dotnet run --project csharp/language-bundle.csproj --configuration Release
+          dotnet run --project language-bundle.csproj --configuration Release
           if ($LASTEXITCODE -eq 2) { Write-Host "Expected java present -> not exit 2"; exit 1 }
 
