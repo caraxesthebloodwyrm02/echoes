@@ -16,9 +16,8 @@ def _client_and_paths(base_url: Optional[str]):
 
         return ("live", base_url, requests)
     else:
-        from fastapi.testclient import TestClient
-
         from app.main import app  # type: ignore
+        from fastapi.testclient import TestClient
 
         return ("local", TestClient(app), None)
 

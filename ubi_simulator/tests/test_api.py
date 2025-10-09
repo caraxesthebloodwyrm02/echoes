@@ -2,8 +2,8 @@
 Tests for UBI Simulator API
 """
 
-import pytest
 from fastapi.testclient import TestClient
+
 from ubi_simulator.api.main import app
 
 client = TestClient(app)
@@ -23,7 +23,7 @@ def test_simulate_basic():
         "eligibility_threshold": 50000,
         "phase_out_rate": 0.5,
         "funding_mechanism": "tax",
-        "tax_rate": 0.1
+        "tax_rate": 0.1,
     }
     response = client.post("/simulate", json=payload)
     assert response.status_code == 200

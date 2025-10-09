@@ -7,6 +7,7 @@ Comprehensive solution for secure coordinate data handling and privacy protectio
 Addresses the critical vulnerability of coordinate data exposure in the codebase.
 """
 
+import builtins
 import hashlib
 import logging
 from typing import List, Tuple
@@ -196,6 +197,4 @@ def secure_print(*args, **kwargs):
 
 
 # Replace built-in print with secure version in this module
-import builtins
-
 builtins.print = secure_print

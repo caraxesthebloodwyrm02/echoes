@@ -50,7 +50,7 @@ Write-Host "Using TEMP/TMP = $pipTempDir for pip operations"
 # If we're using the virtualenv python, don't use --user (not supported)
 $pipUserArg = "--user"
 if ($pythonExe -like "*\python\.venv*" -or $pythonExe -like "*\\python\\.venv*" -or (Test-Path (Join-Path $venv 'Scripts\python.exe'))) {
-    $pipUserArg = ""  
+    $pipUserArg = ""
 }
 if (Test-Path $req) {
     # Try a small pip operation to detect whether pip/tempfile is functional in this environment.

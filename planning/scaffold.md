@@ -19,5 +19,3 @@ Constraints
 - Public/transcribed materials only; respect licensing.
 - Fixed seeds; cross-platform execution (Windows-friendly).
 - Modular: does not alter existing steam-engine dynamics behavior.
-
-

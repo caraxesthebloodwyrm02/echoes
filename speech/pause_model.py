@@ -1,6 +1,6 @@
 import random
 from dataclasses import dataclass
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 
 @dataclass
@@ -31,5 +31,3 @@ def predict_pause_type(priors: Dict[str, float], features: Dict[str, float]) -> 
     if not priors:
         return "other"
     return max(priors.items(), key=lambda kv: kv[1])[0]
-
-

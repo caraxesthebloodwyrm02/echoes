@@ -8,18 +8,17 @@ inspired by Ableton grid quantization and manual transmission.
 import sys
 from pathlib import Path
 
-# Add project root to path
-project_root = Path(__file__).parent.parent
-sys.path.insert(0, str(project_root))
-
-from dotenv import load_dotenv
-
 from app.core.stick_shift_controller import (
     Gear,
     StickShiftController,
     calculate_task_complexity,
     create_stick_shift,
 )
+from dotenv import load_dotenv
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
 
 load_dotenv()
 

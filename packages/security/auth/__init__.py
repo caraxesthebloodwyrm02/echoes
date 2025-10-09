@@ -6,7 +6,7 @@ from typing import Any, Dict, List, Optional
 import jwt
 from cryptography.fernet import Fernet
 
-from packages.core import Config, get_logger
+from packages.core import get_logger
 
 logger = get_logger("security.auth")
 

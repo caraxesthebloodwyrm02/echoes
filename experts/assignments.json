@@ -15,5 +15,3 @@
     "artifacts": ["templates/prompts.json", "caching/prompt_engine.py"]
   }
 }
-
-

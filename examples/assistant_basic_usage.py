@@ -16,9 +16,8 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from dotenv import load_dotenv
-
 from app.core.assistant import Assistant, create_assistant
+from dotenv import load_dotenv
 
 # Load environment variables
 load_dotenv()

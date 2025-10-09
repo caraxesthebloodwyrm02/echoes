@@ -4,18 +4,15 @@
 """
 
 import os
+
 from azure.ai.inference import ChatCompletionsClient
-from azure.ai.inference.models import (
-    AssistantMessage,
-    SystemMessage,
-    UserMessage,
-    ToolMessage,
-)
-from azure.ai.inference.models import ImageContentItem, ImageUrl, TextContentItem
+from azure.ai.inference.models import ToolMessage
 from azure.core.credentials import AzureKeyCredential
 
-# To authenticate with the model you will need to generate a personal access token (PAT) in your GitHub settings.
-# Create your PAT token by following instructions here: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+# To authenticate with the model you will need to generate a personal access token (PAT)
+# in your GitHub settings.
+# Create your PAT token by following instructions here:
+# https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
 client = ChatCompletionsClient(
     endpoint="https://models.github.ai/inference",
     credential=AzureKeyCredential(os.environ["GITHUB_TOKEN"]),
@@ -28,7 +25,9 @@ tools = []
 
 response_format = "text"
 
-while True:
+MAX_ROUNDS = 20  # Safety guard to prevent infinite loops
+
+for round_idx in range(MAX_ROUNDS):
     response = client.complete(
         messages=messages,
         model="openai/gpt-4.1",
@@ -51,3 +50,5 @@ while True:
     else:
         print(f"[Model Response] {response.choices[0].message.content}")
         break
+else:
+    print("[WARN] Maximum iterations reached without terminating. Check tool behavior.")

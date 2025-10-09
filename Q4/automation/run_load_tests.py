@@ -105,29 +105,29 @@ class LoadTestingSuite:
                     if len(parts) >= 4:
                         metrics["total_requests"] = int(parts[1])
                         metrics["total_failures"] = int(parts[3])
-                except:
-                    pass
+                except (ValueError, IndexError) as error:
+                    print(f"⚠ Failed to parse total requests line '{line}': {error}")
             elif "Average" in line and "response" in line:
                 try:
                     parts = line.split()
                     if len(parts) >= 3:
                         metrics["avg_response_time"] = float(parts[2])
-                except:
-                    pass
+                except (ValueError, IndexError) as error:
+                    print(f"⚠ Failed to parse average response line '{line}': {error}")
             elif "Maximum" in line and "response" in line:
                 try:
                     parts = line.split()
                     if len(parts) >= 3:
                         metrics["max_response_time"] = float(parts[2])
-                except:
-                    pass
+                except (ValueError, IndexError) as error:
+                    print(f"⚠ Failed to parse max response line '{line}': {error}")
             elif "RPS" in line:
                 try:
                     parts = line.split()
                     if len(parts) >= 2:
                         metrics["requests_per_second"] = float(parts[1])
-                except:
-                    pass
+                except (ValueError, IndexError) as error:
+                    print(f"⚠ Failed to parse RPS line '{line}': {error}")
 
         return metrics
 

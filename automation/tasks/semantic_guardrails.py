@@ -99,9 +99,9 @@ def _summarize_context(p: Path, text: str = None) -> str:
         # Extract first comment/docstring or first 10 lines
         lines = text.splitlines()
         comments = [
-            l
-            for l in lines[:20]
-            if l.strip().startswith(("#", "//", "/*", '"""', "'''", "--"))
+            line
+            for line in lines[:20]
+            if line.strip().startswith(("#", "//", "/*", '"""', "'''", "--"))
         ]
         if comments:
             context += "\nComment: " + comments[0]

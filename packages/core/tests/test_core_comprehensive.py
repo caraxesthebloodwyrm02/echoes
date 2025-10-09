@@ -6,16 +6,11 @@ import tempfile
 from pathlib import Path
 
 import pytest
+from core.config import Config, load_config
+from core.exceptions import ConfigurationError, EchoeBaseException, ValidationError
+from core.logging import configure_logging, get_logger
 
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
-from core.config import Config, load_config
-from core.exceptions import (
-    ConfigurationError,
-    EchoeBaseException,
-    ValidationError,
-)
-from core.logging import configure_logging, get_logger
 
 
 class TestLogging:
@@ -274,7 +269,6 @@ class TestEdgeCases:
         """Test logging to a read-only location (should handle gracefully)."""
         # This should not crash the application
         # In a real scenario, you'd test with actual permissions
-        pass
 
     def test_config_invalid_log_level(self, monkeypatch):
         """Test config with invalid log level."""
