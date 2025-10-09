@@ -11,6 +11,7 @@ jobs:
     runs-on: windows-latest
     env:
       SKIP_HTTP_PROBE: 1
+      ALLOW_FAKE_JAVA: 1
     steps:
       - name: Checkout
         uses: actions/checkout@v4

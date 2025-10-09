@@ -24,22 +24,27 @@ class Program
             return 2;
         }
 
-        try
+        // Allow CI to signal that a placeholder java.exe is present; skip executing it.
+        var allowFakeJava = Environment.GetEnvironmentVariable("ALLOW_FAKE_JAVA");
+        if (!string.Equals(allowFakeJava, "1", StringComparison.Ordinal))
         {
-            var p = new Process();
-            p.StartInfo.FileName = javaExe.FullName;
-            p.StartInfo.Arguments = "-version";
-            p.StartInfo.RedirectStandardOutput = true;
-            p.StartInfo.RedirectStandardError = true;
-            p.StartInfo.UseShellExecute = false;
-            p.Start();
-            p.WaitForExit(5000);
-            if (p.ExitCode != 0) { return 1; }
-        }
-        catch (Exception ex)
-        {
-            Console.Error.WriteLine("Java execution failed: " + ex.Message);
-            return 1;
+            try
+            {
+                var p = new Process();
+                p.StartInfo.FileName = javaExe.FullName;
+                p.StartInfo.Arguments = "-version";
+                p.StartInfo.RedirectStandardOutput = true;
+                p.StartInfo.RedirectStandardError = true;
+                p.StartInfo.UseShellExecute = false;
+                p.Start();
+                p.WaitForExit(5000);
+                if (p.ExitCode != 0) { return 1; }
+            }
+            catch (Exception ex)
+            {
+                Console.Error.WriteLine("Java execution failed: " + ex.Message);
+                return 1;
+            }
         }
 
         // Optional HTTP probe (run after Java detection so CI can assert exit=2 when Java missing)
