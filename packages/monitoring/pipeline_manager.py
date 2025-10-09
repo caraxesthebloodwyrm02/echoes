@@ -80,7 +80,9 @@ class PipelineManager:
                     "dependencies": ["security_scan"],
                     "commands": [
                         "python test_runner.py",
-                        "python -m pytest 6/maps/tests/ -v --cov=utils --cov=idea_system --cov=delivery_management --cov=smart_search",
+                        "python -m pytest 6/maps/tests/ -v --cov=utils "
+                        "--cov=idea_system --cov=delivery_management "
+                        "--cov=smart_search",
                     ],
                     "on_failure": "stop",
                 },
@@ -99,7 +101,8 @@ class PipelineManager:
                     "timeout_seconds": 600,
                     "dependencies": ["container_build"],
                     "commands": [
-                        "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock aquasecurity/trivy:latest image idea-system:latest",
+                        "docker run --rm -v /var/run/docker.sock:/var/run/docker.sock "
+                        "aquasecurity/trivy:latest image idea-system:latest",
                         "docker scan idea-system:latest || true",
                     ],
                     "on_failure": "continue",
@@ -306,7 +309,8 @@ class PipelineManager:
                 ]
                 if pending_stages:
                     self.logger.error(
-                        f"Cannot execute stages due to unmet dependencies: {pending_stages}"
+                        f"Cannot execute stages due to unmet dependencies: "
+                        f"{pending_stages}"
                     )
                     return False
                 break

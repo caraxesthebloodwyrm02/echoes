@@ -1,0 +1,233 @@
+{
+  "timestamp": 1760036399.0831928,
+  "phase": "Phase 1 Baseline",
+  "modes": {
+    "concise": {
+      "mode": "concise",
+      "iterations": 5,
+      "execution_times": [
+        0.0021157999981369358,
+        0.0002870999996957835,
+        0.001553299996885471,
+        0.0002413000001979526,
+        0.0003001000004587695
+      ],
+      "statistics": {
+        "average_ms": 0.8995199990749825,
+        "min_ms": 0.2413000001979526,
+        "max_ms": 2.1157999981369358,
+        "std_dev_ms": 0.7841404821787463
+      },
+      "hotspots": [
+        "         13127 function calls (12677 primitive calls) in 0.005 seconds",
+        "",
+        "   Ordered by: cumulative time",
+        "   List reduced from 140 to 20 due to restriction <20>",
+        "",
+        "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
+        "        5    0.000    0.000    0.004    0.001 E:\\Projects\\Development\\prompting\\system.py:63(process_prompt)",
+        "        5    0.000    0.000    0.003    0.001 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:54(process_prompt)",
+        "        5    0.000    0.000    0.003    0.001 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:90(_build_reasoning_chain)",
+        "        5    0.000    0.000    0.003    0.001 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:119(_analyze_prompt)",
+        "       67    0.000    0.000    0.003    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:288(_compile)",
+        "       17    0.000    0.000    0.003    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_compile.py:783(compile)",
+        "       42    0.000    0.000    0.002    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:197(search)",
+        "       17    0.000    0.000    0.002    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_parse.py:944(parse)",
+        "    34/17    0.000    0.000    0.002    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_parse.py:436(_parse_sub)",
+        "   106/17    0.001    0.000    0.002    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_parse.py:494(_parse)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:188(_identify_domain)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:135(_extract_intent)",
+        "       25    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:232(findall)",
+        "       17    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_compile.py:622(_code)",
+        "       10    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:12(log)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1467(info)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1600(_log)",
+        "   126/17    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_compile.py:87(_compile)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:153(_extract_entities)"
+      ]
+    },
+    "ide": {
+      "mode": "ide",
+      "iterations": 5,
+      "execution_times": [
+        0.0004821999973501079,
+        0.0002759000017249491,
+        0.0002365000000281725,
+        0.00028699999893433414,
+        0.00027150000096298754
+      ],
+      "statistics": {
+        "average_ms": 0.31061999980011024,
+        "min_ms": 0.2365000000281725,
+        "max_ms": 0.4821999973501079,
+        "std_dev_ms": 0.08743823756424209
+      },
+      "hotspots": [
+        "         2398 function calls (2373 primitive calls) in 0.002 seconds",
+        "",
+        "   Ordered by: cumulative time",
+        "   List reduced from 140 to 20 due to restriction <20>",
+        "",
+        "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
+        "        5    0.000    0.000    0.002    0.000 E:\\Projects\\Development\\prompting\\system.py:63(process_prompt)",
+        "       10    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:12(log)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1467(info)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1600(_log)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:54(process_prompt)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1626(handle)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1680(callHandlers)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:955(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1088(emit)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:90(_build_reasoning_chain)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:119(_analyze_prompt)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:22(info)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:31(success)",
+        "       10    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}",
+        "       20    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:232(findall)",
+        "       62    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:288(_compile)",
+        "       15    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:206(_check_focus_alignment)",
+        "        1    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_compile.py:783(compile)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1585(makeRecord)"
+      ]
+    },
+    "conversational": {
+      "mode": "conversational",
+      "iterations": 5,
+      "execution_times": [
+        0.00041740000233403407,
+        0.0002473999993526377,
+        0.00025180000011459924,
+        0.00019560000146157108,
+        0.000194500000361586
+      ],
+      "statistics": {
+        "average_ms": 0.2613400007248856,
+        "min_ms": 0.194500000361586,
+        "max_ms": 0.41740000233403407,
+        "std_dev_ms": 0.08176722143237648
+      },
+      "hotspots": [
+        "         2377 function calls (2352 primitive calls) in 0.001 seconds",
+        "",
+        "   Ordered by: cumulative time",
+        "   List reduced from 139 to 20 due to restriction <20>",
+        "",
+        "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\system.py:63(process_prompt)",
+        "       10    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:12(log)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1467(info)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1600(_log)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:54(process_prompt)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1626(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1680(callHandlers)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:955(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1088(emit)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:90(_build_reasoning_chain)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:119(_analyze_prompt)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:22(info)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:31(success)",
+        "       10    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}",
+        "       20    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:232(findall)",
+        "       62    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:288(_compile)",
+        "       15    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:206(_check_focus_alignment)",
+        "        1    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\sre_compile.py:783(compile)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1585(makeRecord)"
+      ]
+    },
+    "star_stuff": {
+      "mode": "star_stuff",
+      "iterations": 5,
+      "execution_times": [
+        0.0003906999991158955,
+        0.00022979999994277023,
+        0.00023719999808236025,
+        0.0002869000018108636,
+        0.0002673999988473952
+      ],
+      "statistics": {
+        "average_ms": 0.28239999955985695,
+        "min_ms": 0.22979999994277023,
+        "max_ms": 0.3906999991158955,
+        "std_dev_ms": 0.05793779429483676
+      },
+      "hotspots": [
+        "         2394 function calls (2369 primitive calls) in 0.002 seconds",
+        "",
+        "   Ordered by: cumulative time",
+        "   List reduced from 138 to 20 due to restriction <20>",
+        "",
+        "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\system.py:63(process_prompt)",
+        "       10    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:12(log)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1467(info)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1600(_log)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1626(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1680(callHandlers)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:54(process_prompt)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:955(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1088(emit)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:90(_build_reasoning_chain)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:119(_analyze_prompt)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:22(info)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:31(success)",
+        "       10    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}",
+        "       62    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:288(_compile)",
+        "       20    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:232(findall)",
+        "       15    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:206(_check_focus_alignment)",
+        "        5    0.000    0.000    0.000    0.000 {built-in method builtins.print}",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1585(makeRecord)"
+      ]
+    },
+    "business": {
+      "mode": "business",
+      "iterations": 5,
+      "execution_times": [
+        0.0004578000007313676,
+        0.00022539999918080866,
+        0.0002137000010407064,
+        0.00022309999985736795,
+        0.00031060000037541613
+      ],
+      "statistics": {
+        "average_ms": 0.28612000023713335,
+        "min_ms": 0.2137000010407064,
+        "max_ms": 0.4578000007313676,
+        "std_dev_ms": 0.09271072023906059
+      },
+      "hotspots": [
+        "         2427 function calls (2402 primitive calls) in 0.002 seconds",
+        "",
+        "   Ordered by: cumulative time",
+        "   List reduced from 139 to 20 due to restriction <20>",
+        "",
+        "   ncalls  tottime  percall  cumtime  percall filename:lineno(function)",
+        "        5    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\prompting\\system.py:63(process_prompt)",
+        "       10    0.000    0.000    0.001    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:12(log)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1467(info)",
+        "       10    0.000    0.000    0.001    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1600(_log)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1626(handle)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1680(callHandlers)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:955(handle)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:54(process_prompt)",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1088(emit)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:22(info)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:90(_build_reasoning_chain)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:119(_analyze_prompt)",
+        "        5    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\automation\\core\\logger.py:31(success)",
+        "       10    0.000    0.000    0.000    0.000 {method 'write' of '_io.TextIOWrapper' objects}",
+        "       20    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:232(findall)",
+        "       62    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\re.py:288(_compile)",
+        "       15    0.000    0.000    0.000    0.000 E:\\Projects\\Development\\prompting\\core\\inference_engine.py:206(_check_focus_alignment)",
+        "        5    0.000    0.000    0.000    0.000 {built-in method builtins.print}",
+        "       10    0.000    0.000    0.000    0.000 C:\\Users\\irfan\\AppData\\Local\\Programs\\Python\\Python310\\lib\\logging\\__init__.py:1585(makeRecord)"
+      ]
+    }
+  },
+  "summary": {
+    "total_modes": 5,
+    "average_execution_time_ms": 0.4079999998793937,
+    "fastest_mode": "conversational",
+    "slowest_mode": "concise"
+  },
+  "optimization_targets": []
+}

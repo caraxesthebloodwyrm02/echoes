@@ -4,8 +4,9 @@
 import json
 import math
 import random
-from dataclasses import dataclass, field, asdict
-from typing import List, Dict, Any
+from dataclasses import dataclass
+from typing import Any, Dict, List
+
 
 @dataclass
 class MacroConfig:
@@ -28,6 +29,7 @@ class MacroConfig:
             errors.append(f"invalid feedback_sensitivity {self.feedback_sensitivity}")
         return errors
 
+
 @dataclass
 class GovernorState:
     raw_input: float = 50.0
@@ -35,25 +37,33 @@ class GovernorState:
     governor_angle: float = 0.0
     damping_force: float = 0.0
 
+
 def cadence_to_rate_limit(cadence: float) -> float:
     cadence = max(1e-6, cadence)
     return 1.0 / (cadence / 100.0)
+
 
 def variance_to_filter_strength(variance: float) -> float:
     s = 1.0 - (variance / 100.0)
     return max(0.1, min(0.9, s))
 
+
 def apply_ema(new_value: float, old_value: float, alpha: float) -> float:
     return alpha * new_value + (1.0 - alpha) * old_value
 
-def generate_noisy_input(base: float, variance: float, timestep: int, rng: random.Random) -> float:
+
+def generate_noisy_input(
+    base: float, variance: float, timestep: int, rng: random.Random
+) -> float:
     noise = (rng.random() - 0.5) * variance * 2.0
     sine = math.sin(timestep * 0.1) * 15.0
     raw = base + noise + sine
     return max(0.0, min(100.0, raw))
 
+
 def calculate_feedback(error: float, macro: MacroConfig) -> float:
     return error * macro.feedback_sensitivity * 0.01
+
 
 class ResonanceGovernor:
     def __init__(self, macro: MacroConfig, seed: int = 0):
@@ -68,8 +78,13 @@ class ResonanceGovernor:
 
     def step(self):
         self.t += 1
-        raw = generate_noisy_input(self.macro.cadence, self.macro.variance, self.t, self.rng)
-        alpha = variance_to_filter_strength(self.macro.variance) * self.macro.smoothing_strength
+        raw = generate_noisy_input(
+            self.macro.cadence, self.macro.variance, self.t, self.rng
+        )
+        alpha = (
+            variance_to_filter_strength(self.macro.variance)
+            * self.macro.smoothing_strength
+        )
         alpha = max(1e-6, min(0.999999, alpha))
         smoothed = apply_ema(raw, self.state.smoothed_output, alpha)
         error = raw - self.macro.cadence
@@ -78,13 +93,21 @@ class ResonanceGovernor:
         if abs(error) > self.macro.variance * 0.7:
             adj = calculate_feedback(error, self.macro)
             new_strength = self.macro.smoothing_strength + adj
-            self.macro.smoothing_strength = max(self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength))
+            self.macro.smoothing_strength = max(
+                self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength)
+            )
         self.state.raw_input = raw
         self.state.smoothed_output = smoothed
         self.state.governor_angle = angle
         self.state.damping_force = damping
-        rec = {"t": self.t, "raw": round(raw, 4), "smooth": round(smoothed, 4), "alpha": round(alpha, 5),
-               "err": round(error, 4), "strength": round(self.macro.smoothing_strength, 4)}
+        rec = {
+            "t": self.t,
+            "raw": round(raw, 4),
+            "smooth": round(smoothed, 4),
+            "alpha": round(alpha, 5),
+            "err": round(error, 4),
+            "strength": round(self.macro.smoothing_strength, 4),
+        }
         self.history.append(rec)
         if len(self.history) > 100:
             self.history = self.history[-100:]
@@ -103,7 +126,7 @@ class ResonanceGovernor:
         # error should count as proportionally larger (harder to stabilize).
         # Using a quadratic cadence factor creates separation between moderate and high cadence.
         cadence_factor = max(1e-6, (self.macro.cadence / 50.0))
-        scale = max(1.0, self.macro.variance / (cadence_factor ** 2))
+        scale = max(1.0, self.macro.variance / (cadence_factor**2))
         norm_err = avg_err / scale
         stability_index = 1.0 / (1.0 + norm_err)
         return {"avg_error": avg_err, "stability_index": round(stability_index, 4)}
@@ -112,8 +135,11 @@ class ResonanceGovernor:
         with open(path, "w") as f:
             json.dump(self.history, f, indent=2)
 
+
 if __name__ == "__main__":
-    macro = MacroConfig(cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6)
+    macro = MacroConfig(
+        cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6
+    )
     gov = ResonanceGovernor(macro, seed=42)
     gov.run(250)
     m = gov.metrics()

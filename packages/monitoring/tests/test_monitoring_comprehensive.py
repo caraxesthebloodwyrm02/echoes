@@ -7,13 +7,12 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from monitoring.alerts import Alert, AlertManager
 from monitoring.ci import CIBuild, CIMonitor
 from monitoring.health import HealthCheck, HealthChecker
 from monitoring.metrics import MetricsCollector, SystemMetrics
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestMetricsCollector:
@@ -310,7 +309,7 @@ class TestAlertManager:
 
         manager.register_handler("test_handler", handler)
 
-        alert = manager.create_alert("test", "info", "Test")
+        manager.create_alert("test", "info", "Test")
 
         assert len(handled_alerts) == 1
         assert handled_alerts[0].name == "test"

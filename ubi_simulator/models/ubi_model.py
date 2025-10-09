@@ -141,14 +141,13 @@ class UBISimulator:
         self, params: UBIParameters, ubi_payments: pd.Series
     ) -> float:
         """
-        Estimate employment effects using labor supply elasticity.
+        Calculate employment impact of UBI policy.
         Core insight: UBI may reduce work incentives, but effects vary by income level.
         """
 
         # Simplified model: Higher UBI amounts and lower phase-out rates reduce work more
-        base_employment = len(
-            self.census_data[self.census_data["employment_status"] == "Employed"]
-        )
+        employed_filter = self.employment_data["employment_status"] == "Employed"
+        base_employment = len(self.employment_data[employed_filter])
 
         # Calculate average UBI as % of median income
         avg_ubi_annual = ubi_payments.mean() * 12

@@ -107,7 +107,8 @@ with st.sidebar:
         scenario_params = scenarios[selected_scenario]["parameters"]
         if selected_scenario != "Custom":
             st.info(
-                f"📋 **{scenarios[selected_scenario]['name']}**\n\n{scenarios[selected_scenario]['description']}"
+                f"📋 **{scenarios[selected_scenario]['name']}**\n\n"
+                f"{scenarios[selected_scenario]['description']}"
             )
     else:
         scenario_params = {
@@ -503,12 +504,13 @@ with st.sidebar:
         for region, count in data_summary["census"]["regional_distribution"].items():
             st.write(f"- {region}: {count:,}")
 
-    except:
+    except Exception:
         st.warning("Unable to load dataset info")
 
     st.markdown("---")
     st.info(
-        "🛡️ **Disclaimer:** This simulator uses synthetic data and simplified models. "
-        "Results are illustrative and should not be used for actual policy decisions without "
-        "further validation and expert review."
+        "🛡️ **Disclaimer:** This simulator uses synthetic data and "
+        "simplified models. Results are illustrative and should not be "
+        "used for actual policy decisions without further validation and "
+        "expert review."
     )

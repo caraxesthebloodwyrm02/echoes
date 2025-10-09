@@ -9,15 +9,15 @@ import os
 import sys
 from pathlib import Path
 
+from app.core.assistant import create_assistant
+from dotenv import load_dotenv
+
+from automation.core.context import Context
+from automation.core.logger import AutomationLogger
+
 # Add project root to path
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
-
-from dotenv import load_dotenv
-
-from app.core.assistant import create_assistant
-from automation.core.context import Context
-from automation.core.logger import AutomationLogger
 
 # Load environment variables
 load_dotenv()
@@ -127,7 +127,6 @@ def example_interactive_assistant():
     print("=" * 60 + "\n")
 
     logger = AutomationLogger()
-    context = Context(dry_run=False)
 
     # Create assistant
     assistant = create_assistant(

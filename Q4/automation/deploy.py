@@ -150,8 +150,8 @@ class DeploymentManager:
             )
             if result.returncode == 0:
                 return result.stdout.strip()
-        except:
-            pass
+        except Exception as error:
+            self.log(f"⚠ Failed to derive version from git: {error}", "WARN")
 
         # Fallback to timestamp-based version
         return f"v1.0.0-{datetime.now().strftime('%Y%m%d%H%M%S')}"

@@ -30,7 +30,7 @@ def generate_release_notes(context):
         if proc.returncode != 0:
             log.warning("git log failed; are you in a git repo?")
             return
-        lines = [l for l in proc.stdout.splitlines() if l]
+        lines = [line for line in proc.stdout.splitlines() if line]
     except Exception as e:
         log.error(f"Unable to read git log: {e}")
         return

@@ -8,19 +8,20 @@ import json
 import sys
 from pathlib import Path
 
-# Check if privacy_filter exists, if not, provide helpful error message
-privacy_filter_path = Path(__file__).parent.parent / "privacy_filter.py"
-if not privacy_filter_path.exists():
-    print("Error: privacy_filter.py not found.")
-    print(
-        "Please run 'python privacy_filters.py' first to create the privacy filter module."
-    )
-    sys.exit(1)
+try:
+    from privacy_filter import PrivacyFilter
+except ImportError:
+    privacy_filter_path = Path(__file__).parent.parent / "privacy_filter.py"
+    if not privacy_filter_path.exists():
+        print("Error: privacy_filter.py not found.")
+        print(
+            "Please run 'python privacy_filters.py' first to create the privacy filter module."
+        )
+        sys.exit(1)
 
-# Add parent directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent.parent))
-
-from privacy_filter import PrivacyFilter
+    # Add parent directory to path for imports and retry
+    sys.path.insert(0, str(Path(__file__).parent.parent))
+    from privacy_filter import PrivacyFilter
 
 
 class PrivacyScanner:

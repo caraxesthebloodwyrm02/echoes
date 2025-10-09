@@ -6,12 +6,11 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
-
-sys.path.insert(0, str(Path(__file__).parent.parent.parent))
-
 from security.auth import AuthManager
 from security.encryption import QuantumShield
 from security.scanning import Vulnerability, VulnerabilityScanner
+
+sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
 
 class TestVulnerabilityScanner:
@@ -398,7 +397,7 @@ class TestSecurityIntegration:
         assert "scan:vulnerabilities" in payload["permissions"]
 
         # Perform scan
-        scanner = VulnerabilityScanner()
+        VulnerabilityScanner()
         # In real scenario, would scan actual dependencies
 
 

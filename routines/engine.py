@@ -1,4 +1,4 @@
-from typing import List, Dict, Any, Callable
+from typing import Any, Callable, Dict, List
 
 
 class RoutineEngine:
@@ -22,5 +22,3 @@ class RoutineEngine:
             if step in handlers:
                 results.append(handlers[step]())
         return results
-
-

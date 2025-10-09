@@ -14,7 +14,8 @@ def print_summary():
 ## Actions Performed
 
 1. **Moved files to relevant folders:**
-   - **logs/**: All security reports, bandit outputs, logs, test reports, workflow reports
+   - **logs/**: All security reports, bandit outputs, logs, test reports,
+                 workflow reports
    - **maintenance/**: janitor.py, queensgambit.py, queensgambit_insights.json, symphony_orchestrator.py
    - **guides/**: 42CRUNCH guides, QUICK_START.md, TESTING_GUIDE.md, DOCKER_README.md
    - **automation/scripts/**: All PowerShell automation scripts (emergency-lockdown, framework_installer, etc.)

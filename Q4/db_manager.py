@@ -4,11 +4,13 @@ Provides high-level database operations
 """
 
 import os
-from typing import List, Optional, Dict, Any
+from datetime import date
+from typing import Any, Dict, List, Optional
+
+from models import Base, RoadmapItem, RoadmapMetrics
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
-from models import Base, RoadmapItem, RoadmapAudit, RoadmapMetrics
-from datetime import date, datetime
+from sqlalchemy.orm import Session, sessionmaker
+
 
 class DatabaseManager:
     """Manages database connections and operations"""
@@ -16,7 +18,7 @@ class DatabaseManager:
     def __init__(self, database_url: Optional[str] = None):
         self.database_url = database_url or os.getenv(
             "DATABASE_URL",
-            "postgresql://q4_user:q4_secure_pass@localhost:5432/q4_roadmap"
+            "postgresql://q4_user:q4_secure_pass@localhost:5432/q4_roadmap",
         )
         self.engine = create_engine(self.database_url)
         self.SessionLocal = sessionmaker(bind=self.engine)
@@ -57,7 +59,9 @@ class DatabaseManager:
         finally:
             session.close()
 
-    def update_item(self, item_id: int, updates: Dict[str, Any]) -> Optional[RoadmapItem]:
+    def update_item(
+        self, item_id: int, updates: Dict[str, Any]
+    ) -> Optional[RoadmapItem]:
         """Update a roadmap item"""
         session = self.get_session()
         try:
@@ -90,16 +94,18 @@ class DatabaseManager:
         try:
             items = session.query(RoadmapItem).all()
             total = len(items)
-            completed = sum(1 for item in items if item.status == 'Completed')
-            in_progress = sum(1 for item in items if item.status == 'In Progress')
-            not_started = sum(1 for item in items if item.status == 'Not Started')
+            completed = sum(1 for item in items if item.status == "Completed")
+            in_progress = sum(1 for item in items if item.status == "In Progress")
+            not_started = sum(1 for item in items if item.status == "Not Started")
 
             return {
-                'total_items': total,
-                'completed': completed,
-                'in_progress': in_progress,
-                'not_started': not_started,
-                'completion_rate': round(100 * completed / total, 2) if total > 0 else 0
+                "total_items": total,
+                "completed": completed,
+                "in_progress": in_progress,
+                "not_started": not_started,
+                "completion_rate": (
+                    round(100 * completed / total, 2) if total > 0 else 0
+                ),
             }
         finally:
             session.close()
@@ -111,11 +117,11 @@ class DatabaseManager:
             metrics = self.get_metrics()
             snapshot = RoadmapMetrics(
                 metric_date=date.today(),
-                total_items=metrics['total_items'],
-                completed_items=metrics['completed'],
-                in_progress_items=metrics['in_progress'],
-                not_started_items=metrics['not_started'],
-                completion_rate=metrics['completion_rate']
+                total_items=metrics["total_items"],
+                completed_items=metrics["completed"],
+                in_progress_items=metrics["in_progress"],
+                not_started_items=metrics["not_started"],
+                completion_rate=metrics["completion_rate"],
             )
             session.add(snapshot)
             session.commit()

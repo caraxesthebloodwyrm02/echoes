@@ -19,5 +19,3 @@ Artifacts
 Next
 - Add tests in tests/test_pause.py for key semantic pause scenarios.
 - Evaluate with synthetic and real timestamped segments.
-
-

@@ -1,4 +1,4 @@
-PS E:\Projects\Development> pwsh -NoProfile -Command "[System.Management.Automation.Language.Parser]::ParseFile('e:/Projects/Development/integration_test.ps1',[ref]$null,[ref]$null); Write-Host 'integration_test.ps1 Parse OK'"                                                                             
+PS E:\Projects\Development> pwsh -NoProfile -Command "[System.Management.Automation.Language.Parser]::ParseFile('e:/Projects/Development/integration_test.ps1',[ref]$null,[ref]$null); Write-Host 'integration_test.ps1 Parse OK'"
 MethodException: Argument: '2' should be a System.Management.Automation.PSReference. Use [ref].
 integration_test.ps1 Parse OK
 PS E:\Projects\Development> pwsh -NoProfile -Command "[System.Management.Automation.Language.Parser]::ParseFile('e:/Projects/Development/tools/collect_copilot_logs.ps1',[ref]$null,[ref]$null); Write-Host 'collect_copilot_logs.ps1 Parse OK'"
@@ -10,7 +10,7 @@ check_copilot_and_inline.ps1 Parse OK
 PS E:\Projects\Development> pwsh -NoProfile -Command "[System.Management.Automation.Language.Parser]::ParseFile('e:/Projects/Development/tools/purge_env_history.ps1',[ref]$null,[ref]$null); Write-Host 'purge_env_history.ps1 Parse OK'"
 MethodException: Argument: '2' should be a System.Management.Automation.PSReference. Use [ref].
 purge_env_history.ps1 Parse OK
-PS E:\Projects\Development> pwsh -NoProfile -ExecutionPolicy Bypass -Command "Set-Location 'e:/Projects/Development'; .\integration_test.ps1 -Port 8000"                                                  
+PS E:\Projects\Development> pwsh -NoProfile -ExecutionPolicy Bypass -Command "Set-Location 'e:/Projects/Development'; .\integration_test.ps1 -Port 8000"
 === integration_test.ps1 starting ===
 Creating venv at E:\Projects\Development\python\.venv
 Error: [WinError 2] The system cannot find the file specified: 'E:\\Projects\\Development\\python\\.venv'
@@ -173,8 +173,8 @@ PS E:\Projects\Development\python> .\.venv\Scripts\python.exe -m uvicorn service
  --port 8000
 .\.venv\Scripts\python.exe: The term '.\.venv\Scripts\python.exe' is not recognized as a name of a cmdlet, function, script file, or executable program.
 Check the spelling of the name, or if a path was included, verify that the path is correct and try again.
-PS E:\Projects\Development\python> Set-Location e:\Projects\Development                              
-PS E:\Projects\Development> .\integration_test.ps1 -Port 8000                                        
+PS E:\Projects\Development\python> Set-Location e:\Projects\Development
+PS E:\Projects\Development> .\integration_test.ps1 -Port 8000
 === integration_test.ps1 starting ===
 Creating venv at E:\Projects\Development\python\.venv using C:\Users\irfan\AppData\Local\Programs\Python\Python310\python.exe
 Error: [WinError 2] The system cannot find the file specified: 'E:\\Projects\\Development\\python\\.venv'
@@ -728,7 +728,7 @@ RD automation/security_monitor.py -> scripts/archive/security_monitor.py
 MD scripts/archive/security_monitoring_report.json
 RD security_report_.txt -> scripts/archive/security_report_.txt
 RD security_report_20251005.txt -> scripts/archive/security_report_20251005.txt
-RD security_report_20251005_145523.txt -> scripts/archive/security_report_20251005_145523.txt        
+RD security_report_20251005_145523.txt -> scripts/archive/security_report_20251005_145523.txt
 RD security_validation.json -> scripts/archive/security_validation.json
 AD scripts/archive/temp_tour.py
  D scripts/archive/test_api.sh

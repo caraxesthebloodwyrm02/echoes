@@ -1,12 +1,10 @@
-﻿"""Encryption utilities including quantum-resistant approaches."""
+"""Encryption utilities including quantum-resistant approaches."""
 
 import hashlib
 import secrets
 from typing import Optional, Tuple
 
 from cryptography.fernet import Fernet
-from cryptography.hazmat.primitives import hashes
-from cryptography.hazmat.primitives.kdf.pbkdf2 import PBKDF2HMAC
 
 from packages.core import get_logger
 
@@ -39,12 +37,6 @@ class QuantumShield:
         if salt is None:
             salt = secrets.token_bytes(16)
 
-        kdf = PBKDF2HMAC(
-            algorithm=hashes.SHA256(),
-            length=32,
-            salt=salt,
-            iterations=100000,
-        )
         key = Fernet.generate_key()  # For now, use standard Fernet
 
         return key, salt

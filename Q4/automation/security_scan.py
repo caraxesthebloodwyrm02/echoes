@@ -28,7 +28,7 @@ class SecurityScanner:
         print("=" * 60)
 
         try:
-            result = subprocess.run(
+            subprocess.run(
                 [
                     sys.executable,
                     "-m",
