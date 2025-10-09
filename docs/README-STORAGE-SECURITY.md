@@ -131,6 +131,6 @@ kubectl delete -f kubernetes/examples/test-pvc.yaml
 
 ---
 
-**Created:** 2025-09-29  
-**Review Date:** Next Docker Desktop update  
+**Created:** 2025-09-29
+**Review Date:** Next Docker Desktop update
 **Exit Criteria:** Old image removed + No critical CVEs in active containers

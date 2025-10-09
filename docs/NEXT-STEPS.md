@@ -1,7 +1,7 @@
 # 🎯 Next Steps - Storage Provisioner Security
 
-**Date:** 2025-09-29  
-**Time to Complete:** 5-10 minutes  
+**Date:** 2025-09-29
+**Time to Complete:** 5-10 minutes
 **Difficulty:** Easy ⭐
 
 ---
@@ -40,7 +40,7 @@ cd e:\Projects\Development
 ## 🔧 Optional Actions (Choose Based on Your Needs)
 
 ### Option A: You DON'T Use Kubernetes PVCs
-**Action:** None required  
+**Action:** None required
 **Reason:** Docker Desktop's built-in storage is sufficient
 
 ### Option B: You DO Use Kubernetes PVCs
@@ -194,8 +194,8 @@ cd e:\Projects\Development
 .\scripts\cleanup-vulnerable-images.ps1
 ```
 
-**Takes:** 30 seconds  
-**Risk:** None  
+**Takes:** 30 seconds
+**Risk:** None
 **Benefit:** Remove 97 CVEs from your system
 
 ---
@@ -209,8 +209,8 @@ cd e:\Projects\Development
 
 ---
 
-**Start here:** `.\scripts\cleanup-vulnerable-images.ps1`  
-**Questions?** Read: `docs\storage-provisioner-security-guide.md`  
+**Start here:** `.\scripts\cleanup-vulnerable-images.ps1`
+**Questions?** Read: `docs\storage-provisioner-security-guide.md`
 **Done?** Mark this file as complete and archive it
 
 ---

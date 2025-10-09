@@ -23,7 +23,9 @@ class QuantumShield:
         """Generate cryptographically secure random key."""
         return secrets.token_hex(length)
 
-    def create_fernet_key(self, password: str, salt: Optional[bytes] = None) -> Tuple[bytes, bytes]:
+    def create_fernet_key(
+        self, password: str, salt: Optional[bytes] = None
+    ) -> Tuple[bytes, bytes]:
         """
         Create Fernet encryption key from password.
 
@@ -66,7 +68,9 @@ class QuantumShield:
         self.logger.debug("Coordinates encrypted")
         return encrypted.decode()
 
-    def decrypt_coordinates(self, encrypted_data: str, key: bytes) -> Tuple[float, float]:
+    def decrypt_coordinates(
+        self, encrypted_data: str, key: bytes
+    ) -> Tuple[float, float]:
         """
         Decrypt coordinate data.
 

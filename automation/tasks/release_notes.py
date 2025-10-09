@@ -2,10 +2,13 @@
 Release notes generation from git log.
 Task name: "Generate Release Notes" -> function: generate_release_notes(context)
 """
+
 from __future__ import annotations
-from pathlib import Path
+
 import subprocess
 from datetime import datetime
+from pathlib import Path
+
 from automation.core.logger import AutomationLogger
 
 
@@ -14,7 +17,13 @@ def generate_release_notes(context):
     since = context.extra_data.get("since_tag")
     args = ["git", "log", "--pretty=format:%H|%s|%an|%ad", "--date=short"]
     if since:
-        args = ["git", "log", f"{since}..HEAD", "--pretty=format:%H|%s|%an|%ad", "--date=short"]
+        args = [
+            "git",
+            "log",
+            f"{since}..HEAD",
+            "--pretty=format:%H|%s|%an|%ad",
+            "--date=short",
+        ]
 
     try:
         proc = subprocess.run(args, capture_output=True, text=True)

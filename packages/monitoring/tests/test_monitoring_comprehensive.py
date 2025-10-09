@@ -278,7 +278,10 @@ class TestAlertManager:
         manager = AlertManager()
 
         alert = manager.create_alert(
-            name="test", severity="info", message="Test alert", metadata={"source": "test"}
+            name="test",
+            severity="info",
+            message="Test alert",
+            metadata={"source": "test"},
         )
 
         assert alert.name == "test"
@@ -290,7 +293,9 @@ class TestAlertManager:
         manager = AlertManager()
 
         for i in range(5):
-            manager.create_alert(name=f"alert_{i}", severity="info", message=f"Message {i}")
+            manager.create_alert(
+                name=f"alert_{i}", severity="info", message=f"Message {i}"
+            )
 
         assert len(manager.alerts) == 5
 
@@ -383,7 +388,9 @@ class TestAlertManager:
             "tags": ["production", "critical"],
         }
 
-        alert = manager.create_alert("high_load", "critical", "High system load", metadata=metadata)
+        alert = manager.create_alert(
+            "high_load", "critical", "High system load", metadata=metadata
+        )
 
         assert alert.metadata["server"] == "web-01"
         assert alert.metadata["metrics"]["cpu"] == 95.5
@@ -473,7 +480,10 @@ class TestMonitoringIntegration:
                     datetime.now(),
                 )
             return HealthCheck(
-                "cpu_health", "healthy", f"CPU usage normal: {metrics.cpu_percent}%", datetime.now()
+                "cpu_health",
+                "healthy",
+                f"CPU usage normal: {metrics.cpu_percent}%",
+                datetime.now(),
             )
 
         health.register_check("cpu", cpu_check)
@@ -489,7 +499,9 @@ class TestMonitoringIntegration:
 
         # Register a health check
         def failing_check():
-            return HealthCheck("service", "unhealthy", "Service is down", datetime.now())
+            return HealthCheck(
+                "service", "unhealthy", "Service is down", datetime.now()
+            )
 
         health.register_check("service", failing_check)
 
@@ -521,7 +533,9 @@ class TestMonitoringIntegration:
         assert metrics.cpu_percent >= 0
 
         # Run health checks
-        health.register_check("disk", lambda: health.check_disk_space("/", threshold_percent=90))
+        health.register_check(
+            "disk", lambda: health.check_disk_space("/", threshold_percent=90)
+        )
         health_results = health.run_all_checks()
         assert len(health_results) > 0
 
@@ -601,7 +615,8 @@ class TestMonitoringPerformance:
         # Register many checks
         for i in range(50):
             health.register_check(
-                f"check_{i}", lambda i=i: HealthCheck(f"check_{i}", "healthy", "OK", datetime.now())
+                f"check_{i}",
+                lambda i=i: HealthCheck(f"check_{i}", "healthy", "OK", datetime.now()),
             )
 
         start = time.time()

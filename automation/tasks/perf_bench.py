@@ -2,11 +2,15 @@
 Simple performance benchmark for key endpoints.
 Task name: "Performance Benchmark" -> function: performance_benchmark(context)
 """
+
 from __future__ import annotations
+
 import time
 from statistics import mean
-from automation.core.logger import AutomationLogger
+
 from fastapi.testclient import TestClient
+
+from automation.core.logger import AutomationLogger
 
 
 def _load_app():

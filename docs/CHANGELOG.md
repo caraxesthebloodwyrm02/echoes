@@ -224,7 +224,7 @@ System: "What interests you most about this space?"
 
 ---
 
-**Current Version**: 2.0.0  
-**Last Updated**: 2025-09-30  
-**Status**: Production Ready  
+**Current Version**: 2.0.0
+**Last Updated**: 2025-09-30
+**Status**: Production Ready
 **Philosophy**: Infer, don't ask. Understand, don't categorize.

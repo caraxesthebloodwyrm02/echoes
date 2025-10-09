@@ -75,7 +75,11 @@ class VulnerabilityScanner:
                         )
                     )
 
-        except (subprocess.TimeoutExpired, json.JSONDecodeError, FileNotFoundError) as e:
+        except (
+            subprocess.TimeoutExpired,
+            json.JSONDecodeError,
+            FileNotFoundError,
+        ) as e:
             self.logger.warning(f"Safety scan failed: {e}")
 
         return vulnerabilities
@@ -106,7 +110,11 @@ class VulnerabilityScanner:
                 bandit_data = json.loads(result.stdout)
                 issues = bandit_data.get("results", [])
 
-        except (subprocess.TimeoutExpired, json.JSONDecodeError, FileNotFoundError) as e:
+        except (
+            subprocess.TimeoutExpired,
+            json.JSONDecodeError,
+            FileNotFoundError,
+        ) as e:
             self.logger.warning(f"Bandit scan failed: {e}")
 
         return issues

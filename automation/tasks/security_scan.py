@@ -2,9 +2,12 @@
 Security scanning wrapper.
 Task name: "Security Scan" -> function: security_scan(context)
 """
+
 from __future__ import annotations
-from pathlib import Path
+
 import subprocess
+from pathlib import Path
+
 from automation.core.logger import AutomationLogger
 
 

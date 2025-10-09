@@ -12,6 +12,7 @@ Thank you for your interest in contributing! This document provides guidelines a
 - [Testing](#testing)
 - [Pull Request Process](#pull-request-process)
 - [Security](#security)
+ - [Maintainers](#maintainers)
 
 ## Code of Conduct
 
@@ -235,11 +236,11 @@ def test_stakeholder_registration():
    # Format code
    black .
    isort .
-   
+
    # Run linters
    flake8 .
    bandit -r .
-   
+
    # Run tests
    pytest --cov=.
    ```
@@ -288,6 +289,17 @@ def test_stakeholder_registration():
 - Keep dependencies up-to-date
 - Run `bandit` security scans regularly
 - Use `safety check` for dependency vulnerabilities
+
+## Maintainers
+
+If you need help, reach out to the maintainers:
+
+- Name: Maintainer Name
+  - Email: maintainer@example.com
+  - Role: Core Maintainer
+  - Areas: Research Lab / steam-engine-dynamics
+
+For security matters, please use the contact in the Security section.
 
 ## Additional Resources
 

@@ -1,56 +1,15 @@
-# Environment variables with sensitive data
-.env
-.env.local
-.env.*.local
+# General
+/.vscode/
+/.idea/
+/.DS_Store
 
 # Python
 __pycache__/
 *.py[cod]
-*$py.class
-*.so
-.Python
-build/
-develop-eggs/
-dist/
-downloads/
-eggs/
-.eggs/
-lib/
-lib64/
-parts/
-sdist/
-var/
-wheels/
-*.egg-info/
-.installed.cfg
-*.egg
+*.pyo
 
-# Virtual environments
-venv/
-env/
-ENV/
+# Virtualenv
+python/.venv/
 
-# IDE
-.vscode/
-.idea/
-*.swp
-*.swo
-
-# OS
-.DS_Store
-Thumbs.db
-
-# Logs
-*.log
-logs/
-
-# Temporary files
-*.tmp
-*.temp
-
-# Security related files that may contain sensitive data
-secrets.json
-config.local.json
-
-# Node
-node_modules/
+# dotenv
+.env

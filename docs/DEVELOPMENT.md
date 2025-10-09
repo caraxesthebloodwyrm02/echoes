@@ -117,21 +117,21 @@ def register_stakeholder(
     contact: Optional[str] = None
 ) -> Dict[str, str]:
     """Register a new stakeholder in the system.
-    
+
     Args:
         name: Full name of the stakeholder.
         role: Role type (student, teacher, parent).
         contact: Optional contact information.
-        
+
     Returns:
         Dictionary containing stakeholder information.
-        
+
     Raises:
         ValueError: If role is not valid.
     """
     if role not in ["student", "teacher", "parent"]:
         raise ValueError(f"Invalid role: {role}")
-    
+
     return {
         "name": name,
         "role": role,
@@ -148,10 +148,10 @@ def test_feature_description():
     """Test that feature works as expected."""
     # Arrange
     input_data = setup_test_data()
-    
+
     # Act
     result = function_under_test(input_data)
-    
+
     # Assert
     assert result == expected_output
 ```

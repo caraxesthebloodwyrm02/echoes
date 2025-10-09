@@ -1,0 +1,243 @@
+{
+  "overview": {
+    "project_name": "Development",
+    "total_files": 50,
+    "file_types": {
+      ".yaml": 2,
+      ".csv": 1,
+      ".py": 1,
+      "": 1,
+      ".md": 2,
+      ".txt": 1,
+      ".ps1": 1
+    },
+    "directory_structure": [
+      {
+        "name": ".continue",
+        "type": "directory",
+        "size": 5
+      },
+      {
+        "name": ".github",
+        "type": "directory",
+        "size": 14
+      },
+      {
+        "name": ".ruff_cache",
+        "type": "directory",
+        "size": 209
+      },
+      {
+        "name": ".sessions",
+        "type": "directory",
+        "size": 3
+      },
+      {
+        "name": ".venv_py38_backup",
+        "type": "directory",
+        "size": 819
+      },
+      {
+        "name": ".vscode",
+        "type": "directory",
+        "size": 3
+      },
+      {
+        "name": "app",
+        "type": "directory",
+        "size": 9631
+      },
+      {
+        "name": "archive",
+        "type": "directory",
+        "size": 0
+      },
+      {
+        "name": "automation",
+        "type": "directory",
+        "size": 49
+      },
+      {
+        "name": "backup_2025-10-07",
+        "type": "directory",
+        "size": 0
+      },
+      {
+        "name": "build",
+        "type": "directory",
+        "size": 2
+      },
+      {
+        "name": "certs",
+        "type": "directory",
+        "size": 1
+      },
+      {
+        "name": "claude",
+        "type": "directory",
+        "size": 9
+      },
+      {
+        "name": "cli",
+        "type": "directory",
+        "size": 2
+      },
+      {
+        "name": "config",
+        "type": "directory",
+        "size": 23
+      },
+      {
+        "name": "configs",
+        "type": "directory",
+        "size": 8
+      },
+      {
+        "name": "content",
+        "type": "directory",
+        "size": 2
+      },
+      {
+        "name": "data",
+        "type": "directory",
+        "size": 3
+      },
+      {
+        "name": "deploy",
+        "type": "directory",
+        "size": 3
+      },
+      {
+        "name": "docker",
+        "type": "directory",
+        "size": 0
+      },
+      {
+        "name": "docs",
+        "type": "directory",
+        "size": 98
+      },
+      {
+        "name": "employment_matcher",
+        "type": "directory",
+        "size": 9
+      },
+      {
+        "name": "engines",
+        "type": "directory",
+        "size": 1
+      },
+      {
+        "name": "examples",
+        "type": "directory",
+        "size": 12
+      },
+      {
+        "name": "innovation_engines",
+        "type": "directory",
+        "size": 2
+      },
+      {
+        "name": "logs",
+        "type": "directory",
+        "size": 1
+      },
+      {
+        "name": "maintenance",
+        "type": "directory",
+        "size": 1
+      },
+      {
+        "name": "modules",
+        "type": "directory",
+        "size": 2
+      },
+      {
+        "name": "organizing",
+        "type": "directory",
+        "size": 1
+      },
+      {
+        "name": "packages",
+        "type": "directory",
+        "size": 74
+      },
+      {
+        "name": "Q4",
+        "type": "directory",
+        "size": 48897
+      },
+      {
+        "name": "requirements",
+        "type": "directory",
+        "size": 4
+      },
+      {
+        "name": "scripts",
+        "type": "directory",
+        "size": 84
+      },
+      {
+        "name": "src",
+        "type": "directory",
+        "size": 5
+      },
+      {
+        "name": "temp",
+        "type": "directory",
+        "size": 0
+      },
+      {
+        "name": "tests",
+        "type": "directory",
+        "size": 49
+      },
+      {
+        "name": "tools",
+        "type": "directory",
+        "size": 10
+      },
+      {
+        "name": "ubi_simulator",
+        "type": "directory",
+        "size": 11
+      }
+    ]
+  },
+  "architecture": {
+    "main_components": [
+      {
+        "name": "app",
+        "type": "application",
+        "description": "Main application directory",
+        "entry_points": [
+          "app\\main.py"
+        ]
+      },
+      {
+        "name": "src",
+        "type": "application",
+        "description": "Main application directory",
+        "entry_points": []
+      }
+    ],
+    "design_patterns": [],
+    "entry_points": []
+  },
+  "dependencies": {
+    "python": [
+      "requirements.txt"
+    ],
+    "javascript": [],
+    "system": []
+  },
+  "findings": {
+    "strengths": [
+      "Well-defined Python project structure with dependency management",
+      "Clear application structure with separate app directory"
+    ],
+    "areas_for_improvement": [
+      "Consider adding frontend dependency management (e.g., package.json)"
+    ]
+  }
+}

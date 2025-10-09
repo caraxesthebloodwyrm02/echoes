@@ -20,16 +20,15 @@ Parameters (context.extra_data):
 
 All destructive changes require confirmation unless dry_run=True.
 """
+
 from __future__ import annotations
 
 import json
-import os
 import re
 from pathlib import Path
-from typing import Dict, List, Any
+from typing import Any, Dict, List
 
 from automation.core.logger import AutomationLogger
-
 
 IGNORED_DIRS = {
     ".git",
@@ -140,7 +139,9 @@ def _scan_workflows(root: Path) -> Dict[str, Any]:
     workflows_dir = root / ".github" / "workflows"
     results: List[Dict[str, Any]] = []
     if workflows_dir.is_dir():
-        workflow_files = list(workflows_dir.glob("*.yml")) + list(workflows_dir.glob("*.yaml"))
+        workflow_files = list(workflows_dir.glob("*.yml")) + list(
+            workflows_dir.glob("*.yaml")
+        )
         for wf in workflow_files:
             try:
                 text = wf.read_text(encoding="utf-8")
@@ -193,12 +194,16 @@ def _scan_node_configs(root: Path) -> Dict[str, Any]:
             hits.append(str(p.resolve()))
     # node_modules directories
     node_modules_dirs = [
-        str(p.resolve()) for p in root.rglob("node_modules") if p.is_dir() and not _is_ignored(p)
+        str(p.resolve())
+        for p in root.rglob("node_modules")
+        if p.is_dir() and not _is_ignored(p)
     ]
     return {"node_configs": sorted(hits), "node_modules": sorted(node_modules_dirs)}
 
 
-def _write_report(report: Dict[str, Any], out_path: Path, log: AutomationLogger) -> None:
+def _write_report(
+    report: Dict[str, Any], out_path: Path, log: AutomationLogger
+) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     log.info(f"Wrote foreign dependency report: {out_path}")
@@ -245,7 +250,9 @@ def _prune_precommit_node_blocks(root: Path, log: AutomationLogger) -> bool:
     removed = False
     for line in lines:
         # Remove commented markdownlint-cli block
-        if line.startswith("#  - repo: https://github.com/igorshubovych/markdownlint-cli"):
+        if line.startswith(
+            "#  - repo: https://github.com/igorshubovych/markdownlint-cli"
+        ):
             skip = True
             removed = True
             continue
@@ -394,7 +401,7 @@ def foreign_dependency_sanitize(context) -> None:
             [
                 ("npm install -g markdownlint-cli2", "pip install pymarkdownlnt"),
                 (
-                    'markdownlint-cli2"\*\*/\*.md" --config .markdownlint.json',
+                    r'markdownlint-cli2"\*\*/\*.md" --config .markdownlint.json',
                     'pymarkdown scan "**/*.md"',
                 ),
                 (
@@ -414,6 +421,8 @@ def foreign_dependency_sanitize(context) -> None:
 
     # 4) Optionally remove Node-specific config files
     if delete_node_configs and node_cfg_info.get("node_configs"):
-        _delete_node_configs(node_cfg_info["node_configs"], context, log, assume_yes=assume_yes)
+        _delete_node_configs(
+            node_cfg_info["node_configs"], context, log, assume_yes=assume_yes
+        )
 
     log.info("Foreign dependency sanitation completed.")

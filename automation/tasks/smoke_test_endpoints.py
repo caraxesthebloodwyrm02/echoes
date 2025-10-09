@@ -2,9 +2,12 @@
 Endpoint smoke tests using FastAPI TestClient or live base_url.
 Task name: "Smoke Test Endpoints" -> function: smoke_test_endpoints(context)
 """
+
 from __future__ import annotations
-from automation.core.logger import AutomationLogger
+
 from typing import Optional
+
+from automation.core.logger import AutomationLogger
 
 
 def _client_and_paths(base_url: Optional[str]):
@@ -14,6 +17,7 @@ def _client_and_paths(base_url: Optional[str]):
         return ("live", base_url, requests)
     else:
         from fastapi.testclient import TestClient
+
         from app.main import app  # type: ignore
 
         return ("local", TestClient(app), None)
@@ -42,14 +46,21 @@ def smoke_test_endpoints(context):
 
     checks = {
         "health": _get("/api/health"),
-        "science": _post("/api/science/biomedical/search", {"query": "cancer", "max_results": 2}),
+        "science": _post(
+            "/api/science/biomedical/search", {"query": "cancer", "max_results": 2}
+        ),
         "commerce": _post("/api/commerce/ubi/simulate", {}),
         "arts": _post(
-            "/api/arts/create", {"prompt": "sunset", "medium": "text", "style": "modern"}
+            "/api/arts/create",
+            {"prompt": "sunset", "medium": "text", "style": "modern"},
         ),
         "finance": _post(
             "/api/finance/personal/analyze",
-            {"financial_data": {"income": 50000}, "goals": ["save"], "user_info": {"age": 30}},
+            {
+                "financial_data": {"income": 50000},
+                "goals": ["save"],
+                "user_info": {"age": 30},
+            },
         ),
     }
 

@@ -1,0 +1,27 @@
+{
+  "session_id": "42a58799-d009-47aa-b56d-55fc5f9ea6b8",
+  "interactions": [
+    {
+      "id": "3e66d799-9506-4b2a-aee8-9099dca3dd68",
+      "timestamp": "2025-10-07T13:57:22.473022",
+      "prompt": "# Context-Aware Code Task\n\n## Project Context\n- **Project**: Development\n- **Task Type**: Code Understanding\n- **Session ID**: 42a58799-d009-47aa-b56d-55fc5f9ea6b8\n- **Timestamp**: 2025-10-07T13:57:22.473022\n\n## Previous Context\nNo relevant context found.\n\n## Task Instructions\n# Code Understanding Prompt\n\n## Project Overview\n- **Project Name**: Development\n- **Technology Stack**: Python, JavaScript/TypeScript\n- **Key Components**:\n  - .continue (directory)\n  - .github (directory)\n  - .ruff_cache (directory)\n  - .sessions (directory)\n  - .venv (directory)\n  - .venv_py38_backup (directory)\n  - .vscode (directory)\n  - app (directory)\n  - archive (directory)\n  - automation (directory)\n  - backup_2025-10-07 (directory)\n  - build (directory)\n  - certs (directory)\n  - claude (directory)\n  - cli (directory)\n  - config (directory)\n  - configs (directory)\n  - content (directory)\n  - data (directory)\n  - deploy (directory)\n  - docker (directory)\n  - employment_matcher (directory)\n  - engines (directory)\n  - examples (directory)\n  - innovation_engines (directory)\n  - logs (directory)\n  - maintenance (directory)\n  - modules (directory)\n  - organizing (directory)\n  - packages (directory)\n  - Q4 (directory)\n  - requirements (directory)\n  - scripts (directory)\n  - src (directory)\n  - temp (directory)\n  - tools (directory)\n  - ubi_simulator (directory)\n\n## Task\nProvide a comprehensive analysis of this codebase, including:\n1. Overall architecture and design patterns\n2. Key components and their responsibilities\n3. Data flow and component interactions\n4. Dependencies and their purposes\n5. Potential areas for improvement\n\n## Guidelines\n- Be thorough but concise\n- Focus on the big picture first, then drill down into details\n- Highlight any potential issues or anti-patterns\n- Suggest improvements where applicable\n\n",
+      "response": "",
+      "feedback": [],
+      "context": {
+        "last_accessed": "2025-10-07T13:57:19.369658",
+        "task_type": "code_understanding"
+      },
+      "metadata": {
+        "task_type": "code_understanding",
+        "custom_instructions": "",
+        "generated_at": "2025-10-07T13:57:22.473022"
+      }
+    }
+  ],
+  "preferences": {},
+  "context": {
+    "last_accessed": "2025-10-07T13:57:19.369658",
+    "task_type": "code_understanding"
+  },
+  "last_updated": "2025-10-07T13:57:22.473022"
+}
