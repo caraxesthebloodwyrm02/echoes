@@ -27,3 +27,7 @@ class AutomationLogger:
 
     def warning(self, msg):
         self.log(msg, "warning")
+
+    def success(self, msg):
+        """Convenience success-level log (maps to INFO)."""
+        self.log(msg, "info")

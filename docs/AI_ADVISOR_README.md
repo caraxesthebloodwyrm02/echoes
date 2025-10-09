@@ -1,6 +1,6 @@
 # AI Advisor - Domain-Aligned AI with Safety Controls
 
-**Version:** 0.1.0  
+**Version:** 0.1.0
 **Status:** 🟢 Sprint 0-1 Complete | Active Development
 
 [![CI](https://github.com/yourusername/ai-advisor/workflows/CI/badge.svg)](https://github.com/yourusername/ai-advisor/actions)

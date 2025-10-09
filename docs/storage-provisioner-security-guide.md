@@ -1,7 +1,7 @@
 # Storage Provisioner Security Guide
 
-**Date:** 2025-09-29  
-**Issue:** `docker/desktop-storage-provisioner:v2.0` contains 97 CVEs (10 critical)  
+**Date:** 2025-09-29
+**Issue:** `docker/desktop-storage-provisioner:v2.0` contains 97 CVEs (10 critical)
 **Your Docker Desktop:** v4.47.0 (Current - Already up-to-date ✅)
 
 ---

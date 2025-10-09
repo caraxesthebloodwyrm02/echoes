@@ -1,7 +1,7 @@
 # AI Advisor Safety Guide
 
-**Version:** 1.0  
-**Date:** 2025-10-05  
+**Version:** 1.0
+**Date:** 2025-10-05
 **Audience:** Developers, Operators, Security Teams
 
 ---
@@ -183,7 +183,7 @@ curl -X POST http://localhost:8000/api/agent/kill \
   }'
 ```
 
-**Force kill:** Immediate termination without cleanup  
+**Force kill:** Immediate termination without cleanup
 **Graceful kill:** Allows cleanup operations
 
 #### 4. Timeouts
@@ -508,7 +508,7 @@ from pydantic import validator
 
 class UserInput(BaseModel):
     query: str
-    
+
     @validator('query')
     def sanitize_query(cls, v):
         # Remove SQL injection attempts, XSS
@@ -609,6 +609,6 @@ class UserInput(BaseModel):
 
 ---
 
-**Document Status:** Active  
-**Last Updated:** 2025-10-05  
+**Document Status:** Active
+**Last Updated:** 2025-10-05
 **Next Review:** Monthly during active development

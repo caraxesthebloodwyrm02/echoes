@@ -1,7 +1,7 @@
 # AI Advisor — Domain-Aligned Interview Cards
 
-**Version:** 1.0  
-**Date:** 2025-10-05  
+**Version:** 1.0
+**Date:** 2025-10-05
 **Purpose:** Structured framework to guide interdisciplinary expansion
 
 ---
@@ -11,7 +11,7 @@
 The AI Advisor Domain-Aligned Interview Deck is a structured framework designed to guide interdisciplinary expansion of the AI Advisor codebase. It bridges **science**, **commerce**, and **arts** to establish a unified AI ecosystem capable of:
 
 - 🔬 Scientific innovation
-- 💼 Socioeconomic empowerment  
+- 💼 Socioeconomic empowerment
 - 🎨 Creative evolution
 
 All under **safe, ethical, and transparent AI governance**.
@@ -670,6 +670,6 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 ---
 
-**Document Status:** Living Document  
-**Last Updated:** 2025-10-05  
+**Document Status:** Living Document
+**Last Updated:** 2025-10-05
 **Next Review:** Weekly during active development

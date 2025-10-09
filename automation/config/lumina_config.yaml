@@ -1,0 +1,198 @@
+# Lumina Configuration
+# Advanced Agentic Assistant Configuration
+
+lumina:
+  # Identity
+  name: "Lumina"
+  version: "1.0.0"
+  description: "Advanced Agentic AI Assistant"
+
+  # User Configuration
+  user:
+    name: "${USER}"
+    role: "Developer"
+    preferences:
+      verbose_logging: true
+      proactive_suggestions: true
+      auto_organize: false
+
+  # Model Configuration
+  models:
+    default: "mistral-large"  # Reliable HF-backed default
+    fallback: "mistral-small"  # Fast reliable fallback
+    routing: true  # Enable intelligent routing
+
+    specialized:
+      organizer: "llama-3.3"         # Strong reasoning for agentic flows
+      coder: "qwen-coder"            # Coding specialist (Qwen 2.5 Coder)
+      reasoner: "mistral-large"      # Reasoning/general
+      local: "mistral-small"         # Local-ish fallback (still HF-backed id)
+
+    # Ollama configuration
+    ollama:
+      enabled: false
+      base_url: "http://127.0.0.1:11434/v1"
+      api_key: "unused"
+      models_path: "C:\\Users\\irfan\\.ollama\\models"
+      available_models: []
+
+  # MCP Integration
+  mcp:
+    enabled: true
+    config_paths:
+      - "~/.aitk/mcp.json"
+      - "~/AppData/Roaming/Code/User/mcp.json"
+
+    servers:
+      filesystem: true
+      shell: true
+      github: true
+      ollama: true
+
+  # Tasks Configuration
+  tasks:
+    # Codebase Organization
+    - name: "Lumina Organize Codebase"
+      module: "automation.tasks.lumina_organize_codebase"
+      description: "Intelligently organize project structure"
+      params:
+        dry_run: true
+        create_backups: true
+
+    # Workflow Analysis
+    - name: "Lumina Analyze Workflows"
+      description: "Analyze and improve automation workflows"
+      enabled: true
+
+    # Code Upgrade
+    - name: "Lumina Upgrade Codebase"
+      description: "Plan and execute codebase upgrades"
+      params:
+        upgrade_type: "dependencies"
+        dry_run: true
+
+    # Smart Refactoring
+    - name: "Lumina Smart Refactor"
+      description: "Intelligently refactor code"
+      params:
+        targets: ["tests", "app"]
+        dry_run: true
+
+  # Automation Integration
+  automation:
+    enabled: true
+    respect_dry_run: true
+    use_context: true
+    use_logger: true
+
+    # Existing automation tasks to enhance
+    enhance_tasks:
+      - "sanitize_codebase"
+      - "check_test_coverage"
+      - "deps_update"
+      - "release_notes"
+
+  # Codebase Organization Rules
+  organization:
+    ideal_structure:
+      app: "Main application code"
+      automation: "Automation framework"
+      tests: "Test files"
+      docs: "Documentation"
+      examples: "Example scripts"
+      config: "Configuration files"
+      scripts: "Utility scripts"
+      packages: "Internal packages"
+
+    file_placement:
+      python_modules: "app/"
+      test_files: "tests/"
+      docs: "docs/"
+      configs: "config/"
+      scripts: "scripts/"
+      examples: "examples/"
+
+    cleanup:
+      remove_empty_dirs: true
+      merge_duplicates: true
+      organize_root_files: true
+
+  # Upgrade Strategies
+  upgrades:
+    dependencies:
+      check_outdated: true
+      security_updates: true
+      breaking_changes_analysis: true
+      test_before_apply: true
+
+    python_version:
+      target: "3.12"
+      migration_plan: true
+      compatibility_check: true
+
+    best_practices:
+      type_hints: true
+      docstrings: true
+      error_handling: true
+      logging: true
+
+  # Workflow Improvements
+  workflows:
+    analyze:
+      - "pre-commit hooks"
+      - "CI/CD pipelines"
+      - "automation tasks"
+      - "testing workflows"
+
+    suggest:
+      - "parallelization"
+      - "caching strategies"
+      - "error recovery"
+      - "monitoring"
+
+  # Proactive Assistance
+  proactive:
+    enabled: false  # Enable when ready
+    monitors:
+      - code_smells
+      - security_issues
+      - performance_bottlenecks
+      - best_practices
+
+    auto_fix:
+      enabled: false
+      safe_fixes_only: true
+      require_confirmation: true
+
+  # Learning & Feedback
+  learning:
+    collect_feedback: true
+    feedback_file: "data/lumina_feedback.jsonl"
+    continuous_learning: false  # Future feature
+
+  # Performance
+  performance:
+    cache_enabled: true
+    cache_ttl: 3600
+    max_concurrent_tasks: 3
+    timeout: 300
+
+  # Security
+  security:
+    sandbox_mode: true
+    allowed_directories:
+      - "${PROJECT_ROOT}"
+      - "${PROJECT_ROOT}/../"
+
+    restricted_operations:
+      - "system commands"
+      - "network access"
+      - "file deletion outside project"
+
+  # Logging
+  logging:
+    level: "INFO"
+    format: "colored"
+    file: "logs/lumina.log"
+    rotation: "1 day"
+    retention: "7 days"

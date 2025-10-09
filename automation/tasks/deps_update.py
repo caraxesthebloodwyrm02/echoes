@@ -2,10 +2,13 @@
 Dependency update + audit.
 Task name: "Update Dependencies" -> function: update_dependencies(context)
 """
+
 from __future__ import annotations
-from pathlib import Path
-import subprocess
+
 import json
+import subprocess
+from pathlib import Path
+
 from automation.core.logger import AutomationLogger
 
 
@@ -17,7 +20,9 @@ def update_dependencies(context):
     # Check outdated
     try:
         proc = subprocess.run(
-            ["pip", "list", "--outdated", "--format=json"], capture_output=True, text=True
+            ["pip", "list", "--outdated", "--format=json"],
+            capture_output=True,
+            text=True,
         )
         if proc.returncode != 0:
             log.warning("pip list --outdated failed")
@@ -32,7 +37,9 @@ def update_dependencies(context):
     log.info(f"📦 Outdated packages: {len(outdated)} (saved to reports)")
 
     if context.dry_run or not context.extra_data.get("apply", False):
-        log.info("[DRY-RUN] Skipping requirements update. Run with apply=true to modify.")
+        log.info(
+            "[DRY-RUN] Skipping requirements update. Run with apply=true to modify."
+        )
         return
 
     # Update requirements.txt in-place for pinned lines
@@ -45,7 +52,9 @@ def update_dependencies(context):
     new_lines = []
     for line in lines:
         stripped = line.strip()
-        lower = stripped.split("==")[0].lower() if "==" in stripped else stripped.lower()
+        lower = (
+            stripped.split("==")[0].lower() if "==" in stripped else stripped.lower()
+        )
         if lower in name_to_latest and "==" in stripped:
             new = f"{lower}=={name_to_latest[lower]}"
             new_lines.append(new)

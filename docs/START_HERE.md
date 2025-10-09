@@ -205,13 +205,13 @@ curl http://localhost:8000/api/metrics
 
 ## 📊 Current Status
 
-**Sprint 0-1:** ✅ Complete  
+**Sprint 0-1:** ✅ Complete
 **Sprint 2:** ⏳ Starting Soon
 
-**Safety:** 🟢 All Controls Operational  
-**Tests:** 🟢 21/21 Passing  
-**Coverage:** 🟢 85%  
-**Documentation:** 🟢 Complete  
+**Safety:** 🟢 All Controls Operational
+**Tests:** 🟢 21/21 Passing
+**Coverage:** 🟢 85%
+**Documentation:** 🟢 Complete
 **CI/CD:** 🟢 Automated
 
 ---

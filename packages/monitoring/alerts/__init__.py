@@ -45,7 +45,11 @@ class AlertManager:
                 self.logger.error(f"Alert handler '{handler_name}' failed: {e}")
 
     def create_alert(
-        self, name: str, severity: str, message: str, metadata: Optional[Dict[str, Any]] = None
+        self,
+        name: str,
+        severity: str,
+        message: str,
+        metadata: Optional[Dict[str, Any]] = None,
     ) -> Alert:
         """Create and send an alert."""
         alert = Alert(

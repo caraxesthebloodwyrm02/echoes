@@ -58,7 +58,10 @@ class SecurityFixManager:
         logging.basicConfig(
             level=logging.INFO,
             format="%(asctime)s [%(levelname)s] %(message)s",
-            handlers=[logging.FileHandler("security_fixes.log"), logging.StreamHandler()],
+            handlers=[
+                logging.FileHandler("security_fixes.log"),
+                logging.StreamHandler(),
+            ],
         )
 
     def run_comprehensive_security_scan(self) -> Tuple[bool, List[str]]:
@@ -100,7 +103,9 @@ class SecurityFixManager:
             )
 
             # Test payload decryption
-            decrypted = self.security_components["payload_handler"].decrypt_payload(encrypted)
+            decrypted = self.security_components["payload_handler"].decrypt_payload(
+                encrypted
+            )
 
             if decrypted == test_payload:
                 self.security_status["payload_security"] = True
@@ -140,7 +145,9 @@ class SecurityFixManager:
                 "signature": "a" * 64,
             }
 
-            is_valid, _ = self.security_components["data_validator"].validate_payload(test_payload)
+            is_valid, _ = self.security_components["data_validator"].validate_payload(
+                test_payload
+            )
 
             if is_valid:
                 self.security_status["data_validation"] = True
@@ -156,7 +163,9 @@ class SecurityFixManager:
         """Verify security middleware configuration"""
         try:
             # Verify middleware configuration
-            if hasattr(self.security_components["security_middleware"], "secure_endpoint"):
+            if hasattr(
+                self.security_components["security_middleware"], "secure_endpoint"
+            ):
                 self.security_status["middleware_active"] = True
                 return True
 

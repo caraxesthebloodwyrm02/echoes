@@ -127,7 +127,10 @@ class SecureCoordinateHandler:
             issues.append("Full precision coordinates detected")
 
         # Check for coordinate patterns in logs
-        if any(pattern in text.lower() for pattern in ["lat:", "lng:", "latitude:", "longitude:"]):
+        if any(
+            pattern in text.lower()
+            for pattern in ["lat:", "lng:", "latitude:", "longitude:"]
+        ):
             issues.append("Coordinate labels detected in output")
 
         return len(issues) == 0, issues
@@ -160,7 +163,9 @@ class SecureCoordinateHandler:
         # Safe print
         print(*sanitized_args, **kwargs)
 
-    def secure_coordinate_display(self, coord: Coordinates, context: str = "general") -> str:
+    def secure_coordinate_display(
+        self, coord: Coordinates, context: str = "general"
+    ) -> str:
         """
         Get a context-appropriate display of coordinates.
 

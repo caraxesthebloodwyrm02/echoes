@@ -102,7 +102,7 @@ from ecosystem_framework.modules.adaptive_infrastructure import AdaptiveInfrastr
 
 infra = AdaptiveInfrastructure()
 zone = infra.create_zone('zone_new', 'Innovation Lab', 'creative', 25)
-infra.configure_zone('zone_new', 
+infra.configure_zone('zone_new',
     features=['3d_printing', 'robotics', 'coding_stations'],
     furniture=[{'type': 'workbench', 'movable': True, 'quantity': 10}])
 ```

@@ -46,7 +46,9 @@ def configure_logging(
         handlers.append(file_handler)
 
     # Configure root logger
-    logging.basicConfig(level=getattr(logging, level.upper()), handlers=handlers, force=True)
+    logging.basicConfig(
+        level=getattr(logging, level.upper()), handlers=handlers, force=True
+    )
 
 
 __all__ = ["get_logger", "configure_logging"]

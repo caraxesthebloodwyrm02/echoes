@@ -1,0 +1,29 @@
+# Render blueprint for Roadmapify MVP
+# https://render.com/docs/blueprint-spec
+services:
+  - type: web
+    name: roadmapify
+    env: python
+    buildCommand: |
+      pip install --upgrade pip
+      pip install -r python/requirements.txt
+    startCommand: uvicorn python.service:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PADDLE_API_KEY
+        sync: false
+      - key: PADDLE_PUBLIC_KEY
+        sync: false
+      - key: PADDLE_PRO_PLAN_ID
+        sync: false
+      - key: SLACK_WEBHOOK_URL
+        sync: false
+    free: true
+    # Optional Postgres add-on when you out-grow SQLite
+    # databases:
+    #   - name: roadmapify_db
+    #     plan: starter
+    # envVars:
+    #   - key: DATABASE_URL
+    #     fromDatabase:
+    #       name: roadmapify_db
+    #       property: connectionString

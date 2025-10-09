@@ -1,9 +1,0 @@
-{
-  "id": "invoice-001",
-  "amount": 1000.005,
-  "items": [
-    {"sku": "A1", "qty": 2, "price": 200.0},
-    {"sku": "B2", "qty": 2, "price": 600.0}
-  ],
-  "meta": {"region": "us-east"}
-}
