@@ -114,8 +114,15 @@ def _write_report(
     report: Dict[str, Any], out_path: Path, log: AutomationLogger
 ) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
-    out_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
+    report_json = json.dumps(report, indent=2, sort_keys=True)
+    out_path.write_text(report_json, encoding="utf-8")
     log.info(f"Wrote semantic guardrails report: {out_path}")
+
+    additional_dir = Path(r"E:\Projects\Development\text_reports")
+    additional_dir.mkdir(parents=True, exist_ok=True)
+    secondary_path = additional_dir / out_path.name
+    secondary_path.write_text(report_json, encoding="utf-8")
+    log.info(f"Mirrored semantic guardrails report: {secondary_path}")
 
 
 def semantic_guardrails(context) -> None:

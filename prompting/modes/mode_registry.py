@@ -17,12 +17,10 @@ class ModeHandler(ABC):
     @abstractmethod
     def format_response(self, response: Dict[str, Any], context: Dict[str, Any]) -> str:
         """Format response according to mode specifications"""
-        pass
 
     @abstractmethod
     def get_mode_config(self) -> Dict[str, Any]:
         """Get mode-specific configuration"""
-        pass
 
     def preprocess_prompt(self, prompt: str, context: Dict[str, Any]) -> str:
         """Preprocess prompt before routing (optional override)"""
