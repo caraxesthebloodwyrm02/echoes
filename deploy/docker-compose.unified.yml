@@ -1,0 +1,91 @@
+version: "3.9"
+
+services:
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - unified_net
+
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_DB: unified
+      POSTGRES_USER: automation
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    restart: unless-stopped
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    networks:
+      - unified_net
+
+  orchestrator:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.base
+    working_dir: /app
+    command: bash -lc "pip install -e .[transcribe,prompt,automation] && python -u automation/main_orchestrator.py"
+    env_file:
+      - ../.env.unified
+    volumes:
+      - ..:/app:rw
+    depends_on:
+      - redis
+      - postgres
+    networks:
+      - unified_net
+
+  whisper-worker:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.base
+    working_dir: /app
+    command: bash -lc "pip install -e .[transcribe] && python -u tools/whisper_worker.py"
+    env_file:
+      - ../.env.unified
+    volumes:
+      - ..:/app:rw
+    depends_on:
+      - orchestrator
+    networks:
+      - unified_net
+
+  prompt-engine:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.base
+    working_dir: /app
+    command: bash -lc "pip install -e .[prompt] && python -u prompting/main_prompt_engine.py"
+    env_file:
+      - ../.env.unified
+    volumes:
+      - ..:/app:rw
+    depends_on:
+      - redis
+    networks:
+      - unified_net
+
+  ide-runner:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile.base
+    working_dir: /app
+    command: bash -lc "pip install -e .[automation] && python -u automation/ide_runner.py"
+    env_file:
+      - ../.env.unified
+    volumes:
+      - ..:/app:rw
+    depends_on:
+      - prompt-engine
+    networks:
+      - unified_net
+
+volumes:
+  redis-data:
+  pgdata:
+
+networks:
+  unified_net:
+    driver: bridge
