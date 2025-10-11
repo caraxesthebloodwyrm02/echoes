@@ -11,5 +11,9 @@ __pycache__/
 # Virtualenv
 python/.venv/
 
+# Context and cache data
+data/context/
+data/cache/
+
 # dotenv
 .env

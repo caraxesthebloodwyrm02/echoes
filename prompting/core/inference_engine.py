@@ -2,10 +2,26 @@
 InferenceEngine - Executes reasoning process depending on mode
 """
 
+import logging
 import re
 from enum import Enum
 from functools import lru_cache
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
+
+from .llm_client import LLMClient
+
+log = logging.getLogger(__name__)
+
+
+def _call_llm(prompt: str) -> Optional[Dict[str, Any]]:
+    client = LLMClient()
+    try:
+        raw = client.complete(prompt)
+        parsed = client.parse_json_response(raw)
+        return parsed
+    except Exception as exc:
+        log.error("LLM call failed: %s", exc, exc_info=True)
+        return None
 
 
 class ReasoningStyle(Enum):
@@ -13,6 +29,7 @@ class ReasoningStyle(Enum):
     STEP_BY_STEP = "step_by_step"
     NARRATIVE = "narrative"
     ANALYTICAL = "analytical"
+    EXPANDED = "expanded"
 
 
 class InferenceEngine:
@@ -66,6 +83,15 @@ class InferenceEngine:
                     "metrics",
                 ],
             },
+        }
+        # Cache LLM results for IDE mode to avoid duplicate calls per response
+        self._ide_response_cache: Dict[str, Dict[str, str]] = {}
+        self._ide_static_defaults = {
+            "analysis": "Analysis complete: Repository structure indexed, dependencies mapped, potential integration points identified.",
+            "approach": "Recommended approach: Implement modular data loop with configurable validation thresholds and iterative refinement cycles.",
+            "implementation": "Implementation requires: codebase scanner, web crawler, data cleaner, feedback controller, and metrics aggregator.",
+            "testing": "Testing strategy: Unit tests for components, integration tests for data flow, performance tests for iteration speed.",
+            "documentation": "Document all APIs, include usage examples, maintain changelog for iterative improvements.",
         }
 
     def process_prompt(
@@ -523,19 +549,78 @@ class InferenceEngine:
     def _generate_ide_content(
         self, element: str, reasoning_chain: List[Dict[str, Any]]
     ) -> str:
-        """Generate technical, step-by-step content"""
-        if element == "analysis":
-            return "Analysis complete: Repository structure indexed, dependencies mapped, potential integration points identified."
-        elif element == "approach":
-            return "Recommended approach: Implement modular data loop with configurable validation thresholds and iterative refinement cycles."
-        elif element == "implementation":
-            return "Implementation requires: codebase scanner, web crawler, data cleaner, feedback controller, and metrics aggregator."
-        elif element == "testing":
-            return "Testing strategy: Unit tests for components, integration tests for data flow, performance tests for iteration speed."
-        elif element == "documentation":
-            return "Document all APIs, include usage examples, maintain changelog for iterative improvements."
-        else:
-            return self._fallback_content(element, "ide")
+        """Generate technical, step-by-step content via LLM with graceful fallback."""
+
+        cache_key = self._build_ide_cache_key(reasoning_chain)
+        cached = self._ide_response_cache.get(cache_key)
+
+        if cached is None:
+            prompt = self._build_ide_llm_prompt(reasoning_chain)
+            llm_result = _call_llm(prompt) if prompt else None
+
+            if llm_result:
+                normalized = {
+                    key: str(value).strip()
+                    for key, value in llm_result.items()
+                    if isinstance(key, str) and isinstance(value, str)
+                }
+                self._ide_response_cache[cache_key] = normalized
+                cached = normalized
+            else:
+                self._ide_response_cache[cache_key] = {}
+                cached = {}
+
+        if cached:
+            value = cached.get(element)
+            if value:
+                return value
+
+        if element in self._ide_static_defaults:
+            return self._ide_static_defaults[element]
+
+        return self._fallback_content(element, "ide")
+
+    def _build_ide_cache_key(self, reasoning_chain: List[Dict[str, Any]]) -> str:
+        parts = []
+        for step in reasoning_chain:
+            step_name = step.get("step", "")
+            content = self._format_reasoning_content(step.get("content"))
+            parts.append(f"{step_name}:{content}")
+        return " | ".join(parts)
+
+    def _build_ide_llm_prompt(
+        self, reasoning_chain: List[Dict[str, Any]]
+    ) -> Optional[str]:
+        if not reasoning_chain:
+            return None
+
+        lines = [
+            "You are an IDE planning assistant. Given the reasoning chain below, produce a practical development task plan.",
+            "Return ONLY valid JSON with these keys: analysis, approach, implementation, testing, documentation.",
+            "Each value should be a concise paragraph (1-2 sentences) tailored to the observed context.",
+            "If information is missing, make a sensible assumption and state it explicitly.",
+            "Reasoning chain:",
+        ]
+
+        for idx, step in enumerate(reasoning_chain, start=1):
+            step_name = step.get("step", f"step_{idx}")
+            content = self._format_reasoning_content(step.get("content"))
+            reasoning = step.get("reasoning", "")
+            snippet = f"{idx}. {step_name}: {content}"
+            if reasoning:
+                snippet += f" | rationale: {reasoning}"
+            lines.append(snippet)
+
+        lines.append("Remember: respond with JSON only, no code fences, no commentary.")
+        return "\n".join(lines)
+
+    def _format_reasoning_content(self, value: Any) -> str:
+        if isinstance(value, dict):
+            parts = [f"{k}={v}" for k, v in value.items()]
+            return "; ".join(parts)
+        if isinstance(value, list):
+            return "; ".join(str(item) for item in value)
+        return str(value)
 
     def _generate_conversational_content(
         self, element: str, reasoning_chain: List[Dict[str, Any]]
