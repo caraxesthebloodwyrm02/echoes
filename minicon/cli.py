@@ -10,6 +10,25 @@ from .pipeline import MiniConPipeline
 
 app = typer.Typer(help="MiniCon CLI: download → transcribe → write reports")
 
+# Option definitions to avoid function calls in defaults
+URL_ARG = typer.Argument(..., help="YouTube URL to process")
+FILE_ARG = typer.Argument(..., help="Text file, one URL per line")
+DRY_RUN_OPTION = typer.Option(False, "--dry-run", help="Print actions without writing files")
+PRIMARY_DIR_OPTION = typer.Option(None, "--primary-dir", help="Primary report directory")
+SECONDARY_DIR_OPTION = typer.Option(None, "--secondary-dir", help="Secondary mirror directory")
+TEMP_DIR_OPTION = typer.Option(None, "--temp-dir", help="Temporary working directory for downloads")
+MODEL_OPTION = typer.Option(None, "--model", help="Whisper model (tiny/base/small/medium/large)")
+DIARIZATION_MODEL_OPTION = typer.Option(None, "--diarization-model", help="pyannote pipeline identifier to use")
+DIARIZATION_MIN_OPTION = typer.Option(None, "--diarization-min", help="Minimum expected speakers")
+DIARIZATION_MAX_OPTION = typer.Option(None, "--diarization-max", help="Maximum expected speakers")
+DIARIZE_OPTION = typer.Option(
+    False, "--diarize/--no-diarize", help="Enable speaker diarization (if supported by the model)"
+)
+FORCE_REDOWNLOAD_OPTION = typer.Option(False, "--force-redownload", help="Force re-download even if video is in cache")
+FORCE_RETRANSCRIBE_OPTION = typer.Option(
+    False, "--force-retranscribe", help="Force re-transcription even if transcription is in cache"
+)
+
 
 def _build_config(
     primary_report_dir: Path | None,
@@ -46,44 +65,18 @@ def _make_logger(level: int = logging.INFO) -> logging.Logger:
 
 @app.command()
 def transcribe(
-    url: str = typer.Argument(..., help="YouTube URL to process"),
-    dry_run: bool = typer.Option(
-        False, "--dry-run", help="Print actions without writing files"
-    ),
-    primary_report_dir: Path = typer.Option(
-        None, "--primary-dir", help="Primary report directory"
-    ),
-    secondary_report_dir: Path = typer.Option(
-        None, "--secondary-dir", help="Secondary mirror directory"
-    ),
-    temp_dir: Path = typer.Option(
-        None, "--temp-dir", help="Temporary working directory for downloads"
-    ),
-    model: str = typer.Option(
-        None, "--model", help="Whisper model (tiny/base/small/medium/large)"
-    ),
-    diarization_model: str = typer.Option(
-        None, "--diarization-model", help="pyannote pipeline identifier to use"
-    ),
-    diarization_min_speakers: int = typer.Option(
-        None, "--diarization-min", help="Minimum expected speakers"
-    ),
-    diarization_max_speakers: int = typer.Option(
-        None, "--diarization-max", help="Maximum expected speakers"
-    ),
-    diarize: bool = typer.Option(
-        False,
-        "--diarize/--no-diarize",
-        help="Enable speaker diarization (if supported by the model)",
-    ),
-    force_redownload: bool = typer.Option(
-        False, "--force-redownload", help="Force re-download even if video is in cache"
-    ),
-    force_retranscribe: bool = typer.Option(
-        False,
-        "--force-retranscribe",
-        help="Force re-transcription even if transcription is in cache",
-    ),
+    url: str = URL_ARG,
+    dry_run: bool = DRY_RUN_OPTION,
+    primary_report_dir: Path = PRIMARY_DIR_OPTION,
+    secondary_report_dir: Path = SECONDARY_DIR_OPTION,
+    temp_dir: Path = TEMP_DIR_OPTION,
+    model: str = MODEL_OPTION,
+    diarization_model: str = DIARIZATION_MODEL_OPTION,
+    diarization_min_speakers: int = DIARIZATION_MIN_OPTION,
+    diarization_max_speakers: int = DIARIZATION_MAX_OPTION,
+    diarize: bool = DIARIZE_OPTION,
+    force_redownload: bool = FORCE_REDOWNLOAD_OPTION,
+    force_retranscribe: bool = FORCE_RETRANSCRIBE_OPTION,
 ):
     """Transcribe a single YouTube URL and write a report."""
     cfg = _build_config(
@@ -118,46 +111,18 @@ def transcribe(
 
 @app.command("batch-transcribe")
 def batch_transcribe(
-    file_with_urls: Path = typer.Argument(..., help="Text file, one URL per line"),
-    dry_run: bool = typer.Option(
-        False, "--dry-run", help="Print actions without writing files"
-    ),
-    primary_report_dir: Path = typer.Option(
-        None, "--primary-dir", help="Primary report directory"
-    ),
-    secondary_report_dir: Path = typer.Option(
-        None, "--secondary-dir", help="Secondary mirror directory"
-    ),
-    temp_dir: Path = typer.Option(
-        None, "--temp-dir", help="Temporary working directory for downloads"
-    ),
-    model: str = typer.Option(
-        None, "--model", help="Whisper model (tiny/base/small/medium/large)"
-    ),
-    diarization_model: str = typer.Option(
-        None, "--diarization-model", help="pyannote pipeline identifier to use"
-    ),
-    diarization_min_speakers: int = typer.Option(
-        None, "--diarization-min", help="Minimum expected speakers"
-    ),
-    diarization_max_speakers: int = typer.Option(
-        None, "--diarization-max", help="Maximum expected speakers"
-    ),
-    diarize: bool = typer.Option(
-        False,
-        "--diarize/--no-diarize",
-        help="Enable speaker diarization (if supported by the model)",
-    ),
-    force_redownload: bool = typer.Option(
-        False,
-        "--force-redownload",
-        help="Force re-download even if videos are in cache",
-    ),
-    force_retranscribe: bool = typer.Option(
-        False,
-        "--force-retranscribe",
-        help="Force re-transcription even if transcriptions are in cache",
-    ),
+    file_with_urls: Path = FILE_ARG,
+    dry_run: bool = DRY_RUN_OPTION,
+    primary_report_dir: Path = PRIMARY_DIR_OPTION,
+    secondary_report_dir: Path = SECONDARY_DIR_OPTION,
+    temp_dir: Path = TEMP_DIR_OPTION,
+    model: str = MODEL_OPTION,
+    diarization_model: str = DIARIZATION_MODEL_OPTION,
+    diarization_min_speakers: int = DIARIZATION_MIN_OPTION,
+    diarization_max_speakers: int = DIARIZATION_MAX_OPTION,
+    diarize: bool = DIARIZE_OPTION,
+    force_redownload: bool = FORCE_REDOWNLOAD_OPTION,
+    force_retranscribe: bool = FORCE_RETRANSCRIBE_OPTION,
 ):
     """Process a file of URLs sequentially and write reports."""
     cfg = _build_config(
