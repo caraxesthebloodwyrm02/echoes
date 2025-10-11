@@ -17,3 +17,4 @@ data/cache/
 
 # dotenv
 .env
+.env.unified
