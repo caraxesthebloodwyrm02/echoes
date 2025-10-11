@@ -41,9 +41,10 @@ test = [
 [project.scripts]
 framework-cli = "minicon.cli:app"
 
-[tool.setuptools.packages.find]
-where = ["."]
-include = ["minicon"]
+[tool.pytest.ini_options]
+markers = [
+  "unit: unit-level tests"
+]
 
 [tool.black]
 line-length = 120
