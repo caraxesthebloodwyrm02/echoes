@@ -85,7 +85,7 @@ jobs:
         run: pytest -q tests/test_diarisation.py -m unit
 
       - name: Run diarisation integration test (optional)
-        if: ${{ env.RUN_DIARISATION_INTEGRATION == '1' && secrets.HUGGINGFACE_TOKEN != '' }}
+        if: ${{ env.RUN_DIARISATION_INTEGRATION == '1' }}
         env:
           RUN_DIARISATION_INTEGRATION: ${{ env.RUN_DIARISATION_INTEGRATION }}
           HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
