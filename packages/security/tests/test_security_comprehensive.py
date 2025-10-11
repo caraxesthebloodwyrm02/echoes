@@ -426,7 +426,7 @@ class TestSecurityEdgeCases:
         encrypted = shield.encrypt_coordinates(40.0, -74.0, key1)
 
         # Should fail to decrypt with wrong key
-        with pytest.raises(Exception):
+        with pytest.raises(ValueError):
             shield.decrypt_coordinates(encrypted, key2)
 
     def test_sql_injection_in_user_id(self):
