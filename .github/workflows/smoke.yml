@@ -11,9 +11,6 @@ env:
   ENABLE_TRANSCRIBE_ADAPTER: '1'
   ENABLE_LLM_ADAPTER: '1'
   ENABLE_VCS_ADAPTER: '1'
-  VAULT_ADDR: ${{ secrets.VAULT_ADDR }}
-  VAULT_ROLE_ID: ${{ secrets.VAULT_ROLE_ID }}
-  VAULT_SECRET_ID: ${{ secrets.VAULT_SECRET_ID }}
 
 jobs:
   smoke:
@@ -29,8 +26,8 @@ jobs:
 
       - name: Install system tools
         run: |
-          sudo apt-get update
-          sudo apt-get install -y redis-tools docker-compose jq
+          # Assume Docker Compose, Redis CLI, jq are pre-installed on self-hosted runner
+          echo "Tools assumed available on runner"
 
       - name: Start Docker Compose services
         run: docker compose up -d --build
