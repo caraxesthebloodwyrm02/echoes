@@ -8,7 +8,7 @@ downloaded and transcribed, preventing redundant processing.
 import hashlib
 import json
 import logging
-from datetime import UTC, datetime
+from datetime import datetime, timezone
 from pathlib import Path
 from typing import Dict, List, Optional
 
@@ -39,8 +39,8 @@ class DownloadCache:
             "downloaded": {},
             "transcribed": {},
             "file_paths": {},
-            "created_at": datetime.now(UTC).isoformat(),
-            "updated_at": datetime.now(UTC).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
         self._load_cache()
 
@@ -63,14 +63,14 @@ class DownloadCache:
                 "downloaded": {},
                 "transcribed": {},
                 "file_paths": {},
-                "created_at": datetime.now(UTC).isoformat(),
-                "updated_at": datetime.now(UTC).isoformat(),
+                "created_at": datetime.now(timezone.utc).isoformat(),
+                "updated_at": datetime.now(timezone.utc).isoformat(),
             }
 
     def _save_cache(self) -> None:
         """Save the cache to the JSON file."""
         try:
-            self._cache["updated_at"] = datetime.now(UTC).isoformat()
+            self._cache["updated_at"] = datetime.now(timezone.utc).isoformat()
             with open(self.cache_file, "w", encoding="utf-8") as f:
                 json.dump(self._cache, f, indent=2, ensure_ascii=False)
         except IOError as e:
@@ -113,7 +113,7 @@ class DownloadCache:
         video_id = self._get_video_id(url)
         self._cache["downloaded"][video_id] = {
             "url": url,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "file_path": file_path,
         }
         self._cache["file_paths"][video_id] = file_path
@@ -125,7 +125,7 @@ class DownloadCache:
         video_id = self._get_video_id(url)
         self._cache["transcribed"][video_id] = {
             "url": url,
-            "timestamp": datetime.now(UTC).isoformat(),
+            "timestamp": datetime.now(timezone.utc).isoformat(),
             "transcript_path": transcript_path,
         }
         self._save_cache()
@@ -146,8 +146,8 @@ class DownloadCache:
             "downloaded": {},
             "transcribed": {},
             "file_paths": {},
-            "created_at": datetime.now(UTC).isoformat(),
-            "updated_at": datetime.now(UTC).isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat(),
+            "updated_at": datetime.now(timezone.utc).isoformat(),
         }
         self._save_cache()
         logger.info("Download cache cleared")
