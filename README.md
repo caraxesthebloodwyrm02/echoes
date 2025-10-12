@@ -118,3 +118,5 @@ Generate documentation with:
 pip install -r requirements/docs.txt
 cd docs && make html
 ```
+
+For details on data persistence and large file management, see [DATA_PERSISTENCE.md](docs/DATA_PERSISTENCE.md).
