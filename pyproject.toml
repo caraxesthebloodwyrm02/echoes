@@ -50,6 +50,33 @@ markers = [
 line-length = 120
 extend-exclude = "\\.venv|yt-transcribe-env"
 
+[tool.setuptools.packages.find]
+include = ["minicon*"]
+exclude = [
+    "Q4*",
+    "cli*",
+    "data*",
+    "speech*",
+    "docker*",
+    "deploy*",
+    "csharp*",
+    "metrics*",
+    "experts*",
+    "caching*",
+    "configs*",
+    "routines*",
+    "packages*",
+    "planning*",
+    "workflows*",
+    "prompting*",
+    "templates*",
+    "automation*",
+    "maintenance*",
+    "session_logs*",
+    "ubi_simulator*",
+    "employment_matcher*",
+]
+
 [tool.flake8]
 max-line-length = 120
 extend-ignore = "E203, W503"
