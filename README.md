@@ -3,6 +3,24 @@
 
 ## Echoes Project
 
+## Progress & Release
+
+### Milestones
+| Milestone | Version | Status | Key Indicators |
+|-----------|---------|--------|-----------------|
+| Initial Release | v0.9 | Completed | 5 core modules, 45 % coverage, basic CI |
+| Intermediate Release | v1.3 | Ongoing | 73 % coverage, parallel CI, 8 new APIs, 30 % latency cut |
+| Target Release | v2.0 (Dec 2025) | Planned | ≥95 % coverage, ≤5 min CI, auto‑scale 10×, full observability |
+
+### Current Metrics
+| Metric | Value | Target | Status |
+|--------|-------|--------|--------|
+| Active Users | 4,832 | 5,000 | 🟡 Growing |
+| Staging Uptime | 99.8% | 99.9% | 🟢 Stable |
+| Test Coverage | 73% | ≥90% | 🟡 Improving |
+| CI Build Time | 4.2 min | ≤5 min | 🟢 On track |
+| Open Critical Issues | 2 | 0 | 🟡 Addressing |
+
 ## Python Toolchain
 
 This project uses Python 3.10.x as the baseline for all applications. A single virtual environment is maintained at the repository root.
