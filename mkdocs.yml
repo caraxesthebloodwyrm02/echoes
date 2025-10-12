@@ -1,0 +1,134 @@
+site_name: TrajectoX Documentation
+site_description: Comprehensive documentation for the TrajectoX platform
+site_author: TrajectoX Team
+site_url: https://caraxesthebloodwyrm02.github.io/echoes/
+
+# Repository
+repo_name: caraxesthebloodwyrm02/echoes
+repo_url: https://github.com/caraxesthebloodwyrm02/echoes
+edit_uri: edit/main/docs/
+
+# Configuration
+theme:
+  name: material
+  features:
+    - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - navigation.expand
+    - navigation.path
+    - navigation.indexes
+    - search.suggest
+    - search.highlight
+    - content.tabs.link
+    - content.code.annotation
+    - content.code.copy
+    - content.tooltips
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: indigo
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+  font:
+    text: Roboto
+    code: Roboto Mono
+
+# Extensions
+markdown_extensions:
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
+  - pymdownx.tabbed:
+      alternate_style: true
+      combine_header_slug: true
+      slugify: !!python/object/apply:pymdownx.slugs.slugify
+        kwds:
+          case: lower
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.details
+  - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - meta
+  - tables
+  - toc:
+      permalink: true
+
+# Plugins
+plugins:
+  - search:
+      separator: '[\s\u200b\-_,:!=\[\]()"`/]+|\.(?!\d)|&[lg]t;|(?!\b)(?=[A-Z][a-z])'
+  - minify:
+      minify_html: true
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: timeago
+  - git-committers:
+      repository: caraxesthebloodwyrm02/echoes
+      branch: main
+
+# Navigation
+nav:
+  - Home: index.md
+  - Getting Started:
+      - Setup: setup.md
+      - Quick Start: quickstart.md
+      - Configuration: configuration.md
+  - User Guide:
+      - API Reference: api.md
+      - CLI Tools: cli.md
+      - Troubleshooting: troubleshooting.md
+  - Development:
+      - Contributing: ../CONTRIBUTING.md
+      - Evolution Guide: EVOLUTION_GUIDE.md
+      - Testing: testing.md
+      - Code Quality: quality.md
+  - Release Notes:
+      - v1.3.2: RELEASE_NOTES_v1.3.2.md
+  - Roadmap:
+      - Q4 2025: ROADMAP_2025_Q4.md
+  - About:
+      - Changelog: changelog.md
+      - License: license.md
+
+# Additional files to include
+extra:
+  version:
+    provider: mike
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/caraxesthebloodwyrm02/echoes
+    - icon: fontawesome/brands/docker
+      link: https://hub.docker.com/r/trajectox/platform
+
+# Custom CSS/JS (if needed)
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/extra.js
