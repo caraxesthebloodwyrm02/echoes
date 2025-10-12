@@ -13,9 +13,7 @@ class IDEMode(ModeHandler):
     def __init__(self):
         super().__init__()
         self.mode_name = "ide"
-        self.description = (
-            "Full technical precision - step-by-step, exhaustive, code-ready"
-        )
+        self.description = "Full technical precision - step-by-step, exhaustive, code-ready"
         self.config = {
             "precision": "maximum",
             "structure": "step_by_step",

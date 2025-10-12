@@ -153,9 +153,7 @@ class TestHealthChecker:
         health = HealthChecker()
 
         def custom_check():
-            return HealthCheck(
-                name="custom", status="healthy", message="OK", timestamp=datetime.now()
-            )
+            return HealthCheck(name="custom", status="healthy", message="OK", timestamp=datetime.now())
 
         health.register_check("custom", custom_check)
         assert "custom" in health.checks
@@ -292,9 +290,7 @@ class TestAlertManager:
         manager = AlertManager()
 
         for i in range(5):
-            manager.create_alert(
-                name=f"alert_{i}", severity="info", message=f"Message {i}"
-            )
+            manager.create_alert(name=f"alert_{i}", severity="info", message=f"Message {i}")
 
         assert len(manager.alerts) == 5
 
@@ -387,9 +383,7 @@ class TestAlertManager:
             "tags": ["production", "critical"],
         }
 
-        alert = manager.create_alert(
-            "high_load", "critical", "High system load", metadata=metadata
-        )
+        alert = manager.create_alert("high_load", "critical", "High system load", metadata=metadata)
 
         assert alert.metadata["server"] == "web-01"
         assert alert.metadata["metrics"]["cpu"] == 95.5
@@ -498,9 +492,7 @@ class TestMonitoringIntegration:
 
         # Register a health check
         def failing_check():
-            return HealthCheck(
-                "service", "unhealthy", "Service is down", datetime.now()
-            )
+            return HealthCheck("service", "unhealthy", "Service is down", datetime.now())
 
         health.register_check("service", failing_check)
 
@@ -532,9 +524,7 @@ class TestMonitoringIntegration:
         assert metrics.cpu_percent >= 0
 
         # Run health checks
-        health.register_check(
-            "disk", lambda: health.check_disk_space("/", threshold_percent=90)
-        )
+        health.register_check("disk", lambda: health.check_disk_space("/", threshold_percent=90))
         health_results = health.run_all_checks()
         assert len(health_results) > 0
 

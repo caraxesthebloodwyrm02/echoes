@@ -40,9 +40,7 @@ DEFAULT_FILES = [
 ]
 
 TRIPLE_QUOTE_PATTERN = re.compile(r"'''|\"\"\"")
-SIMPLE_STRING_LINE = re.compile(
-    r"^\s*(?P<prefix>[rubfRUBF]{0,2})?(?P<quote>['\"])\s*.*\s*(?P=quote)\s*(#.*)?$"
-)
+SIMPLE_STRING_LINE = re.compile(r"^\s*(?P<prefix>[rubfRUBF]{0,2})?(?P<quote>['\"])\s*.*\s*(?P=quote)\s*(#.*)?$")
 
 
 def run(cmd: List[str]) -> int:
@@ -166,9 +164,7 @@ def main() -> int:
     )
     args = ap.parse_args()
 
-    targets = (
-        files_from_args(args.files) if args.files else files_from_args(DEFAULT_FILES)
-    )
+    targets = files_from_args(args.files) if args.files else files_from_args(DEFAULT_FILES)
     if not targets:
         print("[INFO] No targets found. Nothing to do.")
         return 0

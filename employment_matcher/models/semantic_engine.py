@@ -69,9 +69,7 @@ class SemanticEmbeddingEngine:
 
         # Step 2: Contextual weighting
         context_weights = self.domain_contexts.get_weights(context)
-        weighted_embedding = self._apply_context_weights(
-            base_embedding, context_weights
-        )
+        weighted_embedding = self._apply_context_weights(base_embedding, context_weights)
 
         # Step 3: Ontology enhancement
         ontology_enhanced = self._enhance_with_ontology(weighted_embedding, skill_text)
@@ -95,9 +93,7 @@ class SemanticEmbeddingEngine:
 
         if related_skills:
             # Average embeddings of related skills to capture semantic neighborhood
-            related_embeddings = [
-                self.base_model.encode(skill) for skill in related_skills
-            ]
+            related_embeddings = [self.base_model.encode(skill) for skill in related_skills]
             neighborhood_vector = np.mean(related_embeddings, axis=0)
 
             # Blend with original embedding (60% original, 40% neighborhood)
@@ -106,9 +102,7 @@ class SemanticEmbeddingEngine:
 
         return embedding
 
-    def _apply_context_weights(
-        self, embedding: np.array, context_weights: Dict
-    ) -> np.array:
+    def _apply_context_weights(self, embedding: np.array, context_weights: Dict) -> np.array:
         """Apply contextual weighting to embedding"""
         # Simplified context weighting - in practice, this would be more sophisticated
         if not context_weights:
@@ -125,9 +119,7 @@ class SemanticEmbeddingEngine:
     def _calculate_confidence(self, skill_text: str, context: str) -> float:
         """Calculate confidence in the semantic embedding"""
         # Simple confidence based on skill specificity and context match
-        base_confidence = min(
-            len(skill_text.split()) / 3, 1.0
-        )  # Longer skills are more specific
+        base_confidence = min(len(skill_text.split()) / 3, 1.0)  # Longer skills are more specific
 
         # Boost confidence if skill exists in ontology
         if self.skill_ontology.skill_exists(skill_text):

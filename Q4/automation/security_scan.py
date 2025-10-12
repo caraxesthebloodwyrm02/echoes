@@ -51,19 +51,9 @@ class SecurityScanner:
                 with open(report_file) as f:
                     bandit_results = json.load(f)
 
-                high_severity = len(
-                    [
-                        r
-                        for r in bandit_results.get("results", [])
-                        if r.get("issue_severity") == "HIGH"
-                    ]
-                )
+                high_severity = len([r for r in bandit_results.get("results", []) if r.get("issue_severity") == "HIGH"])
                 medium_severity = len(
-                    [
-                        r
-                        for r in bandit_results.get("results", [])
-                        if r.get("issue_severity") == "MEDIUM"
-                    ]
+                    [r for r in bandit_results.get("results", []) if r.get("issue_severity") == "MEDIUM"]
                 )
 
                 print("✓ Bandit scan complete")
@@ -110,9 +100,7 @@ class SecurityScanner:
                     if vuln_count > 0:
                         print("\n  Vulnerable packages:")
                         for vuln in safety_results[:5]:  # Show first 5
-                            print(
-                                f"    - {vuln.get('package', 'unknown')}: {vuln.get('vulnerability', 'N/A')}"
-                            )
+                            print(f"    - {vuln.get('package', 'unknown')}: {vuln.get('vulnerability', 'N/A')}")
 
                     return {
                         "tool": "safety",

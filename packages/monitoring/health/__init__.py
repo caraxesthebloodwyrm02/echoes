@@ -149,14 +149,11 @@ class HealthChecker:
                 return HealthCheck(
                     name=name,
                     status="warning",
-                    message=f"Unable to check service {service_name} "
-                    f"(no service manager found)",
+                    message=f"Unable to check service {service_name} " f"(no service manager found)",
                     timestamp=datetime.now(),
                 )
 
-    def check_disk_space(
-        self, path: str, threshold_percent: float = 90.0
-    ) -> HealthCheck:
+    def check_disk_space(self, path: str, threshold_percent: float = 90.0) -> HealthCheck:
         """
         Check disk space usage.
 
@@ -175,16 +172,10 @@ class HealthChecker:
 
             if usage_percent < threshold_percent:
                 status = "healthy"
-                message = (
-                    f"Disk usage at {usage_percent:.1f}% "
-                    f"(below {threshold_percent}% threshold)"
-                )
+                message = f"Disk usage at {usage_percent:.1f}% " f"(below {threshold_percent}% threshold)"
             else:
                 status = "warning" if usage_percent < 95.0 else "unhealthy"
-                message = (
-                    f"Disk usage at {usage_percent:.1f}% "
-                    f"(above {threshold_percent}% threshold)"
-                )
+                message = f"Disk usage at {usage_percent:.1f}% " f"(above {threshold_percent}% threshold)"
 
             return HealthCheck(
                 name=f"disk_space_{path}",

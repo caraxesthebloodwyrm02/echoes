@@ -64,9 +64,7 @@ class Config:
     @classmethod
     def from_env(cls) -> "Config":
         primary = Path(os.getenv("REPORT_DIR", str(DEFAULT_PRIMARY_REPORT_DIR)))
-        secondary_env = os.getenv(
-            "SECONDARY_REPORT_DIR", str(DEFAULT_SECONDARY_REPORT_DIR)
-        )
+        secondary_env = os.getenv("SECONDARY_REPORT_DIR", str(DEFAULT_SECONDARY_REPORT_DIR))
         secondary: Optional[Path] = Path(secondary_env) if secondary_env else None
         temp = Path(os.getenv("TEMP_DIR", str(DEFAULT_TEMP_DIR)))
         model = os.getenv("WHISPER_MODEL", "medium")
@@ -75,9 +73,7 @@ class Config:
         secondary_key = os.getenv("OPENAI_API_KEY_SECONDARY")
         active_key = os.getenv("ACTIVE_OPENAI_KEY", "PRIMARY")
         diarization_model = os.getenv("DIARIZATION_MODEL")
-        diarization_auth = os.getenv("DIARIZATION_AUTH_TOKEN") or os.getenv(
-            "HUGGINGFACE_TOKEN"
-        )
+        diarization_auth = os.getenv("DIARIZATION_AUTH_TOKEN") or os.getenv("HUGGINGFACE_TOKEN")
         diarization_min = os.getenv("DIARIZATION_MIN_SPEAKERS")
         diarization_max = os.getenv("DIARIZATION_MAX_SPEAKERS")
         diarization_flag = os.getenv("MINICON_ENABLE_DIARISATION", "false").lower() in {
@@ -93,9 +89,7 @@ class Config:
         transcript_suffix = os.getenv("TRANSCRIPT_SUFFIX", ".txt")
         report_suffix = os.getenv("REPORT_SUFFIX", ".txt")
         timeout_env = os.getenv("TRANSCRIBE_TIMEOUT_SECONDS")
-        timeout_value = (
-            int(timeout_env) if timeout_env and timeout_env.isdigit() else None
-        )
+        timeout_value = int(timeout_env) if timeout_env and timeout_env.isdigit() else None
 
         min_speakers = int(diarization_min) if diarization_min else None
         max_speakers = int(diarization_max) if diarization_max else None

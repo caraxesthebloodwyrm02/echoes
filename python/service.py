@@ -28,9 +28,7 @@ async def transform(req: TransformRequest):
     """
     # Basic input validation
     if not req or not isinstance(req.text, str):
-        raise HTTPException(
-            status_code=400, detail="Invalid request: 'text' is required"
-        )
+        raise HTTPException(status_code=400, detail="Invalid request: 'text' is required")
 
     key = os.environ.get("OPENAI_API_KEY", "")
     if key:

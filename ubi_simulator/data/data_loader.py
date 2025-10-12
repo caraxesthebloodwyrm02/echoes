@@ -38,9 +38,7 @@ class DataLoader:
         incomes = np.random.lognormal(mean=10.5, sigma=0.8, size=n_households)
 
         # Household sizes (Poisson distribution)
-        household_sizes = (
-            np.random.poisson(lam=2.3, size=n_households) + 1
-        )  # Add 1 for realism
+        household_sizes = np.random.poisson(lam=2.3, size=n_households) + 1  # Add 1 for realism
 
         # Age distribution (skewed toward working age)
         ages = np.random.normal(loc=45, scale=18, size=n_households)
@@ -49,9 +47,7 @@ class DataLoader:
         # Education levels
         education_levels = ["High School", "Some College", "Bachelor", "Master", "PhD"]
         education_weights = [0.3, 0.25, 0.25, 0.15, 0.05]
-        education = np.random.choice(
-            education_levels, size=n_households, p=education_weights
-        )
+        education = np.random.choice(education_levels, size=n_households, p=education_weights)
 
         # Regional distribution (US regions)
         regions = ["Northeast", "Midwest", "South", "West"]
@@ -61,9 +57,7 @@ class DataLoader:
             0.37,
             0.24,
         ]  # Approximate US population distribution
-        region_assignments = np.random.choice(
-            regions, size=n_households, p=region_weights
-        )
+        region_assignments = np.random.choice(regions, size=n_households, p=region_weights)
 
         # Employment status with realistic correlations
         employment_status = []
@@ -208,24 +202,17 @@ class DataLoader:
         # Check census data
         census_data = self.load_census_data()
         validations["census_income_positive"] = (census_data["income"] > 0).all()
-        validations["census_household_size_valid"] = (
-            census_data["household_size"] >= 1
-        ).all()
-        validations["census_age_range"] = (
-            (census_data["age"] >= 18) & (census_data["age"] <= 85)
-        ).all()
+        validations["census_household_size_valid"] = (census_data["household_size"] >= 1).all()
+        validations["census_age_range"] = ((census_data["age"] >= 18) & (census_data["age"] <= 85)).all()
 
         # Check cost of living data
         cost_data = self.load_cost_of_living_data()
-        validations["cost_index_positive"] = (
-            cost_data["cost_of_living_index"] > 0
-        ).all()
+        validations["cost_index_positive"] = (cost_data["cost_of_living_index"] > 0).all()
 
         # Check employment data
         employment_data = self.load_employment_data()
         validations["unemployment_rate_valid"] = (
-            (employment_data["unemployment_rate"] >= 0)
-            & (employment_data["unemployment_rate"] <= 1)
+            (employment_data["unemployment_rate"] >= 0) & (employment_data["unemployment_rate"] <= 1)
         ).all()
 
         return validations
@@ -247,9 +234,7 @@ class DataLoader:
                 "median_income": census_data["income"].median(),
                 "income_std": census_data["income"].std(),
                 "regional_distribution": census_data["region"].value_counts().to_dict(),
-                "employment_rate": (
-                    census_data["employment_status"] == "Employed"
-                ).mean(),
+                "employment_rate": (census_data["employment_status"] == "Employed").mean(),
             },
             "cost_of_living": {
                 "regions_covered": len(cost_data),

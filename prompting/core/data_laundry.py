@@ -20,9 +20,7 @@ class DataLaundry:
             "normalized": 0,
         }
 
-    def clean_and_filter(
-        self, raw_data: Dict[str, Any], quality_threshold: float = 0.6
-    ) -> Dict[str, Any]:
+    def clean_and_filter(self, raw_data: Dict[str, Any], quality_threshold: float = 0.6) -> Dict[str, Any]:
         """
         Clean and filter data from DataIntegrationUnit
 
@@ -209,9 +207,7 @@ class DataLaundry:
 
         return text
 
-    def align_vocabulary(
-        self, data: Dict[str, Any], domain_vocabulary: Dict[str, List[str]]
-    ) -> Dict[str, Any]:
+    def align_vocabulary(self, data: Dict[str, Any], domain_vocabulary: Dict[str, List[str]]) -> Dict[str, Any]:
         """
         Align data vocabulary with codebase domain
 
@@ -225,7 +221,7 @@ class DataLaundry:
         aligned_data = data.copy()
 
         # Process each source
-        for source_name, source_data in aligned_data.get("sources", {}).items():
+        for _source_name, source_data in aligned_data.get("sources", {}).items():
             for item in source_data.get("data", []):
                 # Align title
                 if "title" in item:
@@ -233,9 +229,7 @@ class DataLaundry:
 
                 # Align description
                 if "description" in item:
-                    item["description"] = self._align_text(
-                        item["description"], domain_vocabulary
-                    )
+                    item["description"] = self._align_text(item["description"], domain_vocabulary)
 
                 # Add domain tags
                 item["domain_tags"] = self._extract_domain_tags(item, domain_vocabulary)
@@ -255,9 +249,7 @@ class DataLaundry:
 
         return aligned_text
 
-    def _extract_domain_tags(
-        self, item: Dict[str, Any], vocabulary: Dict[str, List[str]]
-    ) -> List[str]:
+    def _extract_domain_tags(self, item: Dict[str, Any], vocabulary: Dict[str, List[str]]) -> List[str]:
         """Extract domain tags from item"""
         tags = set()
 
@@ -282,12 +274,8 @@ class DataLaundry:
         stats = self.cleaning_stats.copy()
 
         if stats["total_processed"] > 0:
-            stats["duplicate_rate"] = (
-                stats["duplicates_removed"] / stats["total_processed"]
-            )
-            stats["quality_filter_rate"] = (
-                stats["low_quality_filtered"] / stats["total_processed"]
-            )
+            stats["duplicate_rate"] = stats["duplicates_removed"] / stats["total_processed"]
+            stats["quality_filter_rate"] = stats["low_quality_filtered"] / stats["total_processed"]
             stats["success_rate"] = stats["normalized"] / stats["total_processed"]
         else:
             stats["duplicate_rate"] = 0.0

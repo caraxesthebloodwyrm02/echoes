@@ -24,11 +24,7 @@ def analyze_codebase_structure(context: Context):
     prompt = "Analyze the current codebase structure, identify patterns, and suggest organizational improvements"
 
     # Run synchronously for automation framework compatibility
-    result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=prompt, mode="ide", enable_data_loop=True
-        )
-    )
+    result = asyncio.run(prompting_system.process_prompt(prompt=prompt, mode="ide", enable_data_loop=True))
 
     logger.success("Codebase analysis completed")
     print(f"\n{result['response']}\n")
@@ -48,11 +44,7 @@ def generate_documentation(context: Context):
 
     prompt = f"Generate comprehensive documentation for the current project, focusing on {target_file}"
 
-    result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=prompt, mode="ide", enable_data_loop=False
-        )
-    )
+    result = asyncio.run(prompting_system.process_prompt(prompt=prompt, mode="ide", enable_data_loop=False))
 
     logger.success(f"Documentation generated for {target_file}")
     print(f"\n{result['response']}\n")
@@ -67,18 +59,12 @@ def business_analysis(context: Context):
     focus_area = context.extra_data.get("focus_area", "general")
 
     if context.dry_run:
-        logger.info(
-            f"[DRY-RUN] Would perform business analysis focusing on {focus_area}"
-        )
+        logger.info(f"[DRY-RUN] Would perform business analysis focusing on {focus_area}")
         return
 
     prompt = f"Analyze the business value and ROI potential of this project, focusing on {focus_area}"
 
-    result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=prompt, mode="business", enable_data_loop=True
-        )
-    )
+    result = asyncio.run(prompting_system.process_prompt(prompt=prompt, mode="business", enable_data_loop=True))
 
     logger.success("Business analysis completed")
     print(f"\n{result['response']}\n")
@@ -98,11 +84,7 @@ def creative_brainstorm(context: Context):
 
     prompt = f"Explore creative possibilities and innovative approaches for {topic} in this project"
 
-    result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=prompt, mode="star_stuff", enable_data_loop=False
-        )
-    )
+    result = asyncio.run(prompting_system.process_prompt(prompt=prompt, mode="star_stuff", enable_data_loop=False))
 
     logger.success("Creative brainstorming completed")
     print(f"\n{result['response']}\n")
@@ -122,11 +104,7 @@ def quick_summary(context: Context):
 
     prompt = f"Provide a concise summary of {topic} for this project"
 
-    result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=prompt, mode="concise", enable_data_loop=False
-        )
-    )
+    result = asyncio.run(prompting_system.process_prompt(prompt=prompt, mode="concise", enable_data_loop=False))
 
     logger.success("Quick summary generated")
     print(f"\n{result['response']}\n")
@@ -145,9 +123,7 @@ def interactive_help(context: Context):
         return
 
     result = asyncio.run(
-        prompting_system.process_prompt(
-            prompt=question, mode="conversational", enable_data_loop=False
-        )
+        prompting_system.process_prompt(prompt=question, mode="conversational", enable_data_loop=False)
     )
 
     logger.success("Interactive help provided")

@@ -148,10 +148,7 @@ class CodeReviewer:
                 line_lower = line.lower().strip()
 
                 # Check for hardcoded secrets
-                if any(
-                    keyword in line_lower
-                    for keyword in ["password =", "secret =", "api_key =", "token ="]
-                ):
+                if any(keyword in line_lower for keyword in ["password =", "secret =", "api_key =", "token ="]):
                     if not line_lower.startswith("#"):  # Ignore comments
                         issues.append(
                             {

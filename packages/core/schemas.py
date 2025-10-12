@@ -12,12 +12,8 @@ class PodcastEvent(BaseModel):
     timestamp_end_s: float = Field(..., ge=0, description="End time in seconds")
     speaker: Optional[str] = Field(None, description="Speaker name")
     utterance: str = Field(..., description="Spoken text")
-    pause_after_s: float = Field(
-        ..., ge=0, description="Pause duration after utterance"
-    )
-    label: str = Field(
-        ..., description="Event label (cognitive_load, rhetorical, handoff, other)"
-    )
+    pause_after_s: float = Field(..., ge=0, description="Pause duration after utterance")
+    label: str = Field(..., description="Event label (cognitive_load, rhetorical, handoff, other)")
 
     @field_validator("label")
     @classmethod
@@ -30,11 +26,7 @@ class PodcastEvent(BaseModel):
     @field_validator("timestamp_end_s")
     @classmethod
     def validate_timestamps(cls, v, info):
-        if (
-            info.data
-            and "timestamp_start_s" in info.data
-            and v < info.data["timestamp_start_s"]
-        ):
+        if info.data and "timestamp_start_s" in info.data and v < info.data["timestamp_start_s"]:
             raise ValueError("timestamp_end_s must be >= timestamp_start_s")
         return v
 

@@ -108,9 +108,7 @@ async def get_scenarios():
 async def get_scenario(scenario_id: str):
     """Get a specific predefined scenario"""
     if scenario_id not in PREDEFINED_SCENARIOS:
-        raise HTTPException(
-            status_code=404, detail=f"Scenario '{scenario_id}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Scenario '{scenario_id}' not found")
 
     return PREDEFINED_SCENARIOS[scenario_id]
 
@@ -141,9 +139,7 @@ async def run_simulation(parameters: Dict):
 
         for param in required_params:
             if param not in parameters:
-                raise HTTPException(
-                    status_code=400, detail=f"Missing required parameter: {param}"
-                )
+                raise HTTPException(status_code=400, detail=f"Missing required parameter: {param}")
 
         # Create UBIParameters object
         ubi_params = UBIParameters(
@@ -158,13 +154,9 @@ async def run_simulation(parameters: Dict):
         if ubi_params.ubi_amount <= 0:
             raise HTTPException(status_code=400, detail="UBI amount must be positive")
         if ubi_params.eligibility_threshold < 0:
-            raise HTTPException(
-                status_code=400, detail="Eligibility threshold cannot be negative"
-            )
+            raise HTTPException(status_code=400, detail="Eligibility threshold cannot be negative")
         if not (0 <= ubi_params.phase_out_rate <= 1):
-            raise HTTPException(
-                status_code=400, detail="Phase-out rate must be between 0 and 1"
-            )
+            raise HTTPException(status_code=400, detail="Phase-out rate must be between 0 and 1")
         if ubi_params.funding_mechanism not in ["tax", "deficit", "reallocation"]:
             raise HTTPException(status_code=400, detail="Invalid funding mechanism")
 
@@ -202,9 +194,7 @@ async def run_simulation(parameters: Dict):
         return response
 
     except ValueError as e:
-        raise HTTPException(
-            status_code=400, detail=f"Invalid parameter value: {str(e)}"
-        )
+        raise HTTPException(status_code=400, detail=f"Invalid parameter value: {str(e)}")
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Simulation error: {str(e)}")
 
@@ -227,28 +217,22 @@ async def compare_scenarios(scenario1: Dict, scenario2: Dict):
 
         # Calculate comparison metrics
         comparison = {
-            "cost_difference": result2["results"]["total_cost"]
-            - result1["results"]["total_cost"],
+            "cost_difference": result2["results"]["total_cost"] - result1["results"]["total_cost"],
             "efficiency_ratio": (
                 result2["results"]["total_cost"] / result1["results"]["total_cost"]
                 if result1["results"]["total_cost"] > 0
                 else 0
             ),
             "poverty_reduction_diff": (
-                result2["results"]["poverty_reduction"]
-                - result1["results"]["poverty_reduction"]
+                result2["results"]["poverty_reduction"] - result1["results"]["poverty_reduction"]
             ),
             "gini_improvement": (
-                result1["results"]["gini_coefficient"]
-                - result2["results"]["gini_coefficient"]
+                result1["results"]["gini_coefficient"] - result2["results"]["gini_coefficient"]
             ),  # Lower is better
             "employment_impact_diff": (
-                result2["results"]["employment_change"]
-                - result1["results"]["employment_change"]
+                result2["results"]["employment_change"] - result1["results"]["employment_change"]
             ),
-            "gdp_impact_diff": (
-                result2["results"]["gdp_impact"] - result1["results"]["gdp_impact"]
-            ),
+            "gdp_impact_diff": (result2["results"]["gdp_impact"] - result1["results"]["gdp_impact"]),
         }
 
         return {"scenario1": result1, "scenario2": result2, "comparison": comparison}
@@ -290,9 +274,7 @@ async def health_check():
 async def run_predefined_scenario(scenario_name: str):
     """Run a predefined scenario by name"""
     if scenario_name not in PREDEFINED_SCENARIOS:
-        raise HTTPException(
-            status_code=404, detail=f"Scenario '{scenario_name}' not found"
-        )
+        raise HTTPException(status_code=404, detail=f"Scenario '{scenario_name}' not found")
 
     scenario = PREDEFINED_SCENARIOS[scenario_name]
     return await run_simulation(scenario["parameters"])

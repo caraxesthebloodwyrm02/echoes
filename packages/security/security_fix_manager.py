@@ -98,14 +98,10 @@ class SecurityFixManager:
         try:
             # Test payload encryption
             test_payload = {"test": "data"}
-            encrypted = self.security_components["payload_handler"].encrypt_payload(
-                test_payload, "test_client"
-            )
+            encrypted = self.security_components["payload_handler"].encrypt_payload(test_payload, "test_client")
 
             # Test payload decryption
-            decrypted = self.security_components["payload_handler"].decrypt_payload(
-                encrypted
-            )
+            decrypted = self.security_components["payload_handler"].decrypt_payload(encrypted)
 
             if decrypted == test_payload:
                 self.security_status["payload_security"] = True
@@ -145,9 +141,7 @@ class SecurityFixManager:
                 "signature": "a" * 64,
             }
 
-            is_valid, _ = self.security_components["data_validator"].validate_payload(
-                test_payload
-            )
+            is_valid, _ = self.security_components["data_validator"].validate_payload(test_payload)
 
             if is_valid:
                 self.security_status["data_validation"] = True
@@ -163,9 +157,7 @@ class SecurityFixManager:
         """Verify security middleware configuration"""
         try:
             # Verify middleware configuration
-            if hasattr(
-                self.security_components["security_middleware"], "secure_endpoint"
-            ):
+            if hasattr(self.security_components["security_middleware"], "secure_endpoint"):
                 self.security_status["middleware_active"] = True
                 return True
 

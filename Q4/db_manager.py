@@ -59,9 +59,7 @@ class DatabaseManager:
         finally:
             session.close()
 
-    def update_item(
-        self, item_id: int, updates: Dict[str, Any]
-    ) -> Optional[RoadmapItem]:
+    def update_item(self, item_id: int, updates: Dict[str, Any]) -> Optional[RoadmapItem]:
         """Update a roadmap item"""
         session = self.get_session()
         try:
@@ -103,9 +101,7 @@ class DatabaseManager:
                 "completed": completed,
                 "in_progress": in_progress,
                 "not_started": not_started,
-                "completion_rate": (
-                    round(100 * completed / total, 2) if total > 0 else 0
-                ),
+                "completion_rate": (round(100 * completed / total, 2) if total > 0 else 0),
             }
         finally:
             session.close()

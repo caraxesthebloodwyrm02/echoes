@@ -57,9 +57,7 @@ class MetricsCollector:
                 process_count=process_count,
             )
 
-            self.logger.debug(
-                f"Collected metrics: CPU {cpu_percent}%, Memory {memory.percent}%"
-            )
+            self.logger.debug(f"Collected metrics: CPU {cpu_percent}%, Memory {memory.percent}%")
             return metrics
 
         except Exception as e:
@@ -93,9 +91,7 @@ class MetricsCollector:
         try:
             # Find processes matching app name
             matching_processes = []
-            for proc in psutil.process_iter(
-                ["pid", "name", "cpu_percent", "memory_percent"]
-            ):
+            for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
                 try:
                     if app_name.lower() in proc.info["name"].lower():
                         matching_processes.append(proc.info)

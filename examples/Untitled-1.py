@@ -27,7 +27,7 @@ response_format = "text"
 
 MAX_ROUNDS = 20  # Safety guard to prevent infinite loops
 
-for round_idx in range(MAX_ROUNDS):
+for _round_idx in range(MAX_ROUNDS):
     response = client.complete(
         messages=messages,
         model="openai/gpt-4.1",

@@ -47,7 +47,7 @@ echo "📈 Fetching test coverage..."
 if [[ -f "$COVERAGE_FILE" ]] && command -v xmllint &> /dev/null; then
     COVERAGE_RAW=$(xmllint --xpath "string(/coverage/@line-rate)" "$COVERAGE_FILE" 2>/dev/null || echo "XML_ERROR")
     if [[ "$COVERAGE_RAW" != "XML_ERROR" ]] && [[ -n "$COVERAGE_RAW" ]]; then
-        COVERAGE=$(printf "%.0f" $(echo "$COVERAGE_RAW * 100" | bc -l 2>/dev/null || echo "73"))
+        COVERAGE=$(python3 -c "print(int(float('$COVERAGE_RAW') * 100))" 2>/dev/null || echo "73")
         COVERAGE="${COVERAGE}%"
     else
         echo "⚠️  Coverage XML parsing failed, using cached value"

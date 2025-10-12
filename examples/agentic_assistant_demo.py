@@ -50,18 +50,14 @@ def demo_model_selection():
         use_case="reasoning",
     )
 
-    response = assistant.chat(
-        "Explain the time complexity of binary search and why it's O(log n)."
-    )
+    response = assistant.chat("Explain the time complexity of binary search and why it's O(log n).")
     print(f"🤖 QwQ Response:\n{response}\n")
 
     # Switch to DeepSeek for coding
     logger.info("Switching to DeepSeek-Coder for coding task")
     assistant.switch_model("deepseek-coder")
 
-    response = assistant.chat(
-        "Write a Python function to find the longest palindrome in a string."
-    )
+    response = assistant.chat("Write a Python function to find the longest palindrome in a string.")
     print(f"\n💻 DeepSeek Response:\n{response}\n")
 
 
@@ -81,16 +77,11 @@ def demo_tool_calling():
     print(f"✅ {len(assistant.assistant.tools)} tools registered automatically\n")
 
     # Ask a question that requires tool usage
-    response = assistant.chat(
-        "What time is it right now? Also, calculate 157 * 234 for me."
-    )
+    response = assistant.chat("What time is it right now? Also, calculate 157 * 234 for me.")
     print(f"🤖 Response (with tool usage):\n{response}\n")
 
     # File operations
-    response = assistant.chat(
-        "List the Python files in the current directory "
-        "and tell me about the largest one."
-    )
+    response = assistant.chat("List the Python files in the current directory " "and tell me about the largest one.")
     print(f"\n📁 File operations response:\n{response}\n")
 
 
@@ -108,10 +99,7 @@ def demo_agentic_behavior():
     )
 
     # Give a complex task
-    response = assistant.chat(
-        "I need to prepare my Python project for production deployment. "
-        "What should I do?"
-    )
+    response = assistant.chat("I need to prepare my Python project for production deployment. " "What should I do?")
     print(f"🤖 Agentic Response:\n{response}\n")
 
     # Follow-up - assistant should maintain context
@@ -145,9 +133,7 @@ def demo_automation_integration():
     logger.info("Assistant integrated with automation framework")
 
     # Ask about context
-    response = assistant.chat(
-        "What's my current automation context? What environment am I in?"
-    )
+    response = assistant.chat("What's my current automation context? What environment am I in?")
     print(f"🤖 Response:\n{response}\n")
 
     # Get stats

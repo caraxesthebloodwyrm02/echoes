@@ -94,17 +94,13 @@ class UBISimulator:
         median_income = self.census_data["income"].median()
         return {
             "baseline_gini": self._gini(self.census_data["income"].values),
-            "baseline_poverty_rate": self._calculate_poverty_rate_static(
-                self.census_data["income"], median_income
-            ),
+            "baseline_poverty_rate": self._calculate_poverty_rate_static(self.census_data["income"], median_income),
             "total_population": len(self.census_data),
             "median_income": median_income,
             "mean_income": self.census_data["income"].mean(),
         }
 
-    def _calculate_poverty_rate_static(
-        self, income_series: pd.Series, median_income: float
-    ) -> float:
+    def _calculate_poverty_rate_static(self, income_series: pd.Series, median_income: float) -> float:
         """Helper: Calculate poverty rate with explicit median income"""
         poverty_line = median_income * 0.6
         poverty_count = (income_series < poverty_line).sum()
@@ -131,15 +127,11 @@ class UBISimulator:
                 return payment * household_size
 
         # Calculate payments for each household
-        payments = self.census_data.apply(
-            lambda row: calculate_payment(row["income"], row["household_size"]), axis=1
-        )
+        payments = self.census_data.apply(lambda row: calculate_payment(row["income"], row["household_size"]), axis=1)
 
         return payments
 
-    def _calculate_employment_effects(
-        self, params: UBIParameters, ubi_payments: pd.Series
-    ) -> float:
+    def _calculate_employment_effects(self, params: UBIParameters, ubi_payments: pd.Series) -> float:
         """
         Calculate employment impact of UBI policy.
         Core insight: UBI may reduce work incentives, but effects vary by income level.
@@ -168,9 +160,7 @@ class UBISimulator:
 
         return employment_change  # Negative = reduction in employment
 
-    def _calculate_gdp_impact(
-        self, ubi_payments: pd.Series, employment_change: float
-    ) -> float:
+    def _calculate_gdp_impact(self, ubi_payments: pd.Series, employment_change: float) -> float:
         """
         Calculate GDP impact through spending multiplier and employment effects.
         Core equation: Direct spending + employment effect on productivity.
@@ -184,9 +174,7 @@ class UBISimulator:
         direct_gdp_impact = annual_ubi_spending * (spending_multiplier - 1)
 
         # Employment effect: Lost productivity from reduced work
-        avg_productivity_per_worker = (
-            self.baseline_metrics["mean_income"] * 0.8
-        )  # 80% of income is productivity
+        avg_productivity_per_worker = self.baseline_metrics["mean_income"] * 0.8  # 80% of income is productivity
         employment_gdp_loss = abs(employment_change) * avg_productivity_per_worker
 
         total_gdp_impact = direct_gdp_impact - employment_gdp_loss
@@ -235,9 +223,7 @@ class UBISimulator:
         sorted_income = np.sort(income)
         n = len(sorted_income)
         index = np.arange(1, n + 1)
-        return (np.sum((2 * index - n - 1) * sorted_income)) / (
-            n * np.sum(sorted_income)
-        )
+        return (np.sum((2 * index - n - 1) * sorted_income)) / (n * np.sum(sorted_income))
 
     def _calculate_poverty_rate(self, income_series: pd.Series) -> float:
         """Helper: Calculate poverty rate"""
@@ -245,9 +231,7 @@ class UBISimulator:
         poverty_count = (income_series < poverty_line).sum()
         return poverty_count / len(income_series)
 
-    def _calculate_regional_breakdown(
-        self, ubi_payments: pd.Series
-    ) -> Dict[str, Dict[str, float]]:
+    def _calculate_regional_breakdown(self, ubi_payments: pd.Series) -> Dict[str, Dict[str, float]]:
         """Calculate regional effects of UBI policy"""
 
         regional_breakdown = {}
@@ -257,9 +241,7 @@ class UBISimulator:
             region_payments = ubi_payments[region_data.index]
 
             # Adjust for regional cost of living
-            col_index = self.cost_data[self.cost_data["region"] == region][
-                "cost_of_living_index"
-            ].iloc[0]
+            col_index = self.cost_data[self.cost_data["region"] == region]["cost_of_living_index"].iloc[0]
             adjusted_payments = region_payments / (col_index / 100)  # Normalize to 100
 
             regional_breakdown[region] = {
@@ -272,9 +254,7 @@ class UBISimulator:
 
         return regional_breakdown
 
-    def compare_scenarios(
-        self, scenario1: UBIParameters, scenario2: UBIParameters
-    ) -> Dict:
+    def compare_scenarios(self, scenario1: UBIParameters, scenario2: UBIParameters) -> Dict:
         """
         Compare two UBI scenarios side-by-side.
         Useful for policy analysis and decision-making.
@@ -285,17 +265,10 @@ class UBISimulator:
 
         comparison = {
             "cost_difference": results2.total_cost - results1.total_cost,
-            "efficiency_ratio": (
-                results2.total_cost / results1.total_cost
-                if results1.total_cost > 0
-                else 0
-            ),
-            "poverty_reduction_diff": results2.poverty_reduction
-            - results1.poverty_reduction,
-            "gini_improvement": results1.gini_coefficient
-            - results2.gini_coefficient,  # Lower is better
-            "employment_impact_diff": results2.employment_change
-            - results1.employment_change,
+            "efficiency_ratio": (results2.total_cost / results1.total_cost if results1.total_cost > 0 else 0),
+            "poverty_reduction_diff": results2.poverty_reduction - results1.poverty_reduction,
+            "gini_improvement": results1.gini_coefficient - results2.gini_coefficient,  # Lower is better
+            "employment_impact_diff": results2.employment_change - results1.employment_change,
             "gdp_impact_diff": results2.gdp_impact - results1.gdp_impact,
         }
 

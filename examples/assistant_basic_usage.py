@@ -78,11 +78,7 @@ def example_conversation_history():
     print("Conversation History:")
     for i, msg in enumerate(history, 1):
         role = msg["role"].capitalize()
-        content = (
-            msg["content"][:100] + "..."
-            if len(msg["content"]) > 100
-            else msg["content"]
-        )
+        content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
         print(f"{i}. [{role}] {content}")
     print()
 

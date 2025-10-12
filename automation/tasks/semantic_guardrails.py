@@ -33,9 +33,7 @@ def _load_yaml(path: Path) -> Dict[str, Any]:
         return yaml.safe_load(f)
 
 
-def _scan_codebase(
-    root: Path, allow: Dict[str, Any], deny: Dict[str, Any]
-) -> Dict[str, Any]:
+def _scan_codebase(root: Path, allow: Dict[str, Any], deny: Dict[str, Any]) -> Dict[str, Any]:
     violations: List[Dict[str, Any]] = []
     context_hits: List[Dict[str, Any]] = []
     for p in root.rglob("*"):
@@ -98,11 +96,7 @@ def _summarize_context(p: Path, text: str = None) -> str:
     if text:
         # Extract first comment/docstring or first 10 lines
         lines = text.splitlines()
-        comments = [
-            line
-            for line in lines[:20]
-            if line.strip().startswith(("#", "//", "/*", '"""', "'''", "--"))
-        ]
+        comments = [line for line in lines[:20] if line.strip().startswith(("#", "//", "/*", '"""', "'''", "--"))]
         if comments:
             context += "\nComment: " + comments[0]
         else:
@@ -110,9 +104,7 @@ def _summarize_context(p: Path, text: str = None) -> str:
     return context
 
 
-def _write_report(
-    report: Dict[str, Any], out_path: Path, log: AutomationLogger
-) -> None:
+def _write_report(report: Dict[str, Any], out_path: Path, log: AutomationLogger) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     report_json = json.dumps(report, indent=2, sort_keys=True)
     out_path.write_text(report_json, encoding="utf-8")
@@ -129,24 +121,12 @@ def semantic_guardrails(context) -> None:
     log = AutomationLogger()
     root = Path(".")
     dry_run = bool(context.extra_data.get("dry_run", True))
-    allowlist_path = Path(
-        context.extra_data.get(
-            "allowlist_path", "automation/config/guardrails_whitelist.yaml"
-        )
-    )
-    blacklist_path = Path(
-        context.extra_data.get(
-            "blacklist_path", "automation/config/guardrails_blacklist.yaml"
-        )
-    )
+    allowlist_path = Path(context.extra_data.get("allowlist_path", "automation/config/guardrails_whitelist.yaml"))
+    blacklist_path = Path(context.extra_data.get("blacklist_path", "automation/config/guardrails_blacklist.yaml"))
     fail_on_violation = bool(context.extra_data.get("fail_on_violation", False))
-    report_file = context.extra_data.get(
-        "report_file", "automation/reports/semantic_guardrails_report.json"
-    )
+    report_file = context.extra_data.get("report_file", "automation/reports/semantic_guardrails_report.json")
 
-    log.info(
-        f"Semantic Guardrails: Scanning with allowlist={allowlist_path} blacklist={blacklist_path}"
-    )
+    log.info(f"Semantic Guardrails: Scanning with allowlist={allowlist_path} blacklist={blacklist_path}")
     allow = _load_yaml(allowlist_path)
     deny = _load_yaml(blacklist_path)
     scan_result = _scan_codebase(root, allow, deny)
@@ -156,17 +136,11 @@ def semantic_guardrails(context) -> None:
     if num_viol:
         log.warning(f"❌ {num_viol} semantic guardrail violations found!")
         for v in scan_result["violations"][:5]:
-            log.warning(
-                f"- {v['file']} [{v['type']}] {v.get('pattern', v.get('tool', v.get('ext', '')))}"
-            )
+            log.warning(f"- {v['file']} [{v['type']}] {v.get('pattern', v.get('tool', v.get('ext', '')))}")
         if not dry_run and fail_on_violation:
-            raise RuntimeError(
-                f"Semantic guardrails: {num_viol} violations detected. Failing as requested."
-            )
+            raise RuntimeError(f"Semantic guardrails: {num_viol} violations detected. Failing as requested.")
     else:
         log.info("✅ No semantic guardrail violations detected.")
 
     if scan_result["context_hits"]:
-        log.info(
-            f"ℹ️  {len(scan_result['context_hits'])} context hits (non-blocking, for review)"
-        )
+        log.info(f"ℹ️  {len(scan_result['context_hits'])} context hits (non-blocking, for review)")

@@ -45,9 +45,7 @@ class ModeProfiler:
             start = time.perf_counter()
 
             try:
-                await self.system.process_prompt(
-                    prompt=prompt, mode=mode, enable_data_loop=False
-                )
+                await self.system.process_prompt(prompt=prompt, mode=mode, enable_data_loop=False)
                 duration = time.perf_counter() - start
                 execution_times.append(duration)
 
@@ -71,9 +69,7 @@ class ModeProfiler:
             avg_time = sum(valid_times) / len(valid_times)
             min_time = min(valid_times)
             max_time = max(valid_times)
-            std_dev = (
-                sum((t - avg_time) ** 2 for t in valid_times) / len(valid_times)
-            ) ** 0.5
+            std_dev = (sum((t - avg_time) ** 2 for t in valid_times) / len(valid_times)) ** 0.5
         else:
             avg_time = min_time = max_time = std_dev = 0
 
@@ -90,9 +86,7 @@ class ModeProfiler:
             "hotspots": s.getvalue().split("\n")[:25],  # Top 25 lines
         }
 
-        print(
-            f"  ✅ Average: {avg_time*1000:.2f}ms (min: {min_time*1000:.2f}ms, max: {max_time*1000:.2f}ms)"
-        )
+        print(f"  ✅ Average: {avg_time*1000:.2f}ms (min: {min_time*1000:.2f}ms, max: {max_time*1000:.2f}ms)")
         return profile_data
 
     async def profile_all_modes(self) -> Dict[str, Any]:
@@ -125,21 +119,12 @@ class ModeProfiler:
         }
 
         # Calculate summary statistics
-        mode_averages = {
-            mode: data["statistics"]["average_ms"]
-            for mode, data in self.results.items()
-        }
+        mode_averages = {mode: data["statistics"]["average_ms"] for mode, data in self.results.items()}
 
         if mode_averages:
-            report["summary"]["average_execution_time_ms"] = sum(
-                mode_averages.values()
-            ) / len(mode_averages)
-            report["summary"]["fastest_mode"] = min(
-                mode_averages, key=mode_averages.get
-            )
-            report["summary"]["slowest_mode"] = max(
-                mode_averages, key=mode_averages.get
-            )
+            report["summary"]["average_execution_time_ms"] = sum(mode_averages.values()) / len(mode_averages)
+            report["summary"]["fastest_mode"] = min(mode_averages, key=mode_averages.get)
+            report["summary"]["slowest_mode"] = max(mode_averages, key=mode_averages.get)
 
         # Identify optimization targets (modes >1000ms average)
         for mode, avg_time in mode_averages.items():
@@ -164,13 +149,9 @@ class ModeProfiler:
 
         return report
 
-    def save_report(
-        self, report: Dict[str, Any], filename: str = "mode_profile_baseline.json"
-    ):
+    def save_report(self, report: Dict[str, Any], filename: str = "mode_profile_baseline.json"):
         """Save profiling report to file"""
-        report_path = os.path.join(
-            os.path.dirname(__file__), "..", "automation", "reports", filename
-        )
+        report_path = os.path.join(os.path.dirname(__file__), "..", "automation", "reports", filename)
 
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2, default=str)
@@ -191,9 +172,7 @@ async def main():
     print("=" * 70)
     print("PROFILING SUMMARY")
     print("=" * 70)
-    print(
-        f"Average Execution Time: {report['summary']['average_execution_time_ms']:.2f}ms"
-    )
+    print(f"Average Execution Time: {report['summary']['average_execution_time_ms']:.2f}ms")
     print(f"Fastest Mode: {report['summary']['fastest_mode']}")
     print(f"Slowest Mode: {report['summary']['slowest_mode']}")
 

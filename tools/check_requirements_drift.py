@@ -95,9 +95,7 @@ def main():
                 print(f"  {version_str}: {', '.join(file_list)}")
             print()
 
-        print(
-            "💡 Consider consolidating these versions in the unified requirements files."
-        )
+        print("💡 Consider consolidating these versions in the unified requirements files.")
         return 1
     else:
         print("✅ No version drift detected. All packages have consistent versions!")

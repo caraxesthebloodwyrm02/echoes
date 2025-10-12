@@ -60,14 +60,10 @@ class RelationshipAwareMatcher:
         )
 
         # Context alignment multiplier
-        context_alignment = self._calculate_context_alignment(
-            candidate_embedding.context, job_embedding.context
-        )
+        context_alignment = self._calculate_context_alignment(candidate_embedding.context, job_embedding.context)
 
         # Final score combines all components
-        final_score = (
-            base_similarity * 0.6 + relationship_bonus * 0.3 + context_alignment * 0.1
-        )
+        final_score = base_similarity * 0.6 + relationship_bonus * 0.3 + context_alignment * 0.1
 
         # Ensure score is between 0 and 1
         final_score = max(0, min(1, final_score))
@@ -78,17 +74,11 @@ class RelationshipAwareMatcher:
             "context_alignment": context_alignment,
         }
 
-        explanation = self._generate_explanation(
-            base_similarity, relationship_bonus, context_alignment
-        )
+        explanation = self._generate_explanation(base_similarity, relationship_bonus, context_alignment)
 
-        return MatchScore(
-            score=final_score, components=components, explanation=explanation
-        )
+        return MatchScore(score=final_score, components=components, explanation=explanation)
 
-    def _calculate_relationship_bonus(
-        self, candidate_tags: set, job_tags: set
-    ) -> float:
+    def _calculate_relationship_bonus(self, candidate_tags: set, job_tags: set) -> float:
         """
         Reward complementary skill combinations.
         Returns a bonus between 0 and 0.3
@@ -114,9 +104,7 @@ class RelationshipAwareMatcher:
 
         return min(bonus, 0.3)  # Cap the bonus
 
-    def _calculate_context_alignment(
-        self, candidate_context: str, job_context: str
-    ) -> float:
+    def _calculate_context_alignment(self, candidate_context: str, job_context: str) -> float:
         """
         Calculate alignment between candidate and job contexts.
         Returns multiplier between 0.8 and 1.2

@@ -61,10 +61,7 @@ def stub_download_cache(monkeypatch: pytest.MonkeyPatch):
             return url in self.transcripts
 
         def get_transcribed_videos(self) -> list[dict[str, str]]:
-            return [
-                {"url": url, "transcript_path": path}
-                for url, path in self.transcripts.items()
-            ]
+            return [{"url": url, "transcript_path": path} for url, path in self.transcripts.items()]
 
         def mark_transcribed(self, url: str, transcript_path: str) -> None:
             self.transcripts[url] = transcript_path
@@ -91,17 +88,13 @@ def test_download_retries_then_succeeds(
 
     attempts: list[int] = []
 
-    def fake_download_once(
-        self: MiniConPipeline, url: str, force: bool = False
-    ) -> Path:
+    def fake_download_once(self: MiniConPipeline, url: str, force: bool = False) -> Path:
         attempts.append(1)
         if len(attempts) < 3:
             raise DownloadError("temporary failure")
         return target
 
-    monkeypatch.setattr(
-        MiniConPipeline, "_download_once", fake_download_once, raising=False
-    )
+    monkeypatch.setattr(MiniConPipeline, "_download_once", fake_download_once, raising=False)
     monkeypatch.setattr(utils_module.time, "sleep", lambda *_: None)
     monkeypatch.setattr(utils_module.random, "uniform", lambda *_: 0.0)
 
@@ -112,9 +105,7 @@ def test_download_retries_then_succeeds(
 
 
 @pytest.mark.unit
-def test_download_retries_and_raises(
-    pipeline_config: Config, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_download_retries_and_raises(pipeline_config: Config, monkeypatch: pytest.MonkeyPatch) -> None:
     pipe = MiniConPipeline(pipeline_config)
 
     def always_fail(self: MiniConPipeline, url: str, force: bool = False) -> Path:

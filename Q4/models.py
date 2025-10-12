@@ -44,11 +44,7 @@ class RoadmapItem(Base):
     # Relationships
     audit_logs = relationship("RoadmapAudit", back_populates="roadmap_item")
 
-    __table_args__ = (
-        CheckConstraint(
-            "progress >= 0 AND progress <= 100", name="check_progress_range"
-        ),
-    )
+    __table_args__ = (CheckConstraint("progress >= 0 AND progress <= 100", name="check_progress_range"),)
 
     def to_dict(self):
         """Convert to dictionary"""

@@ -329,12 +329,8 @@ app.layout = dbc.Container(
                     [
                         dbc.Row(
                             [
-                                dbc.Col(
-                                    [dcc.Graph(id="status-distribution-chart")], md=6
-                                ),
-                                dbc.Col(
-                                    [dcc.Graph(id="phase-distribution-chart")], md=6
-                                ),
+                                dbc.Col([dcc.Graph(id="status-distribution-chart")], md=6),
+                                dbc.Col([dcc.Graph(id="phase-distribution-chart")], md=6),
                             ]
                         ),
                         dbc.Row([dbc.Col([dcc.Graph(id="timeline-chart")])]),
@@ -345,9 +341,7 @@ app.layout = dbc.Container(
             ]
         ),
         # Last updated info
-        dbc.Row(
-            [dbc.Col([html.Div(id="last-updated", className="text-muted small mb-3")])]
-        ),
+        dbc.Row([dbc.Col([html.Div(id="last-updated", className="text-muted small mb-3")])]),
         # Hidden div for storing data
         dcc.Store(id="roadmap-data-store", data=management_model.to_records()),
         dcc.Download(id="download-dataframe-csv"),
@@ -438,9 +432,7 @@ def refresh_dashboard(
         search_mask = pd.Series(False, index=filtered_df.index)
         for field in search_fields:
             if field in filtered_df.columns:
-                search_mask = search_mask | filtered_df[field].fillna(
-                    ""
-                ).str.lower().str.contains(lowered)
+                search_mask = search_mask | filtered_df[field].fillna("").str.lower().str.contains(lowered)
         filtered_df = filtered_df[search_mask]
 
     if status_filter:
@@ -648,9 +640,7 @@ def toggle_privacy_modal(privacy_clicks, close_clicks, is_open):
             # Format scan results for display
             results_display = html.Div(
                 [
-                    html.H5(
-                        f"Privacy Scan Results - {scan_results.get('total_pii_found', 0)} PII findings"
-                    ),
+                    html.H5(f"Privacy Scan Results - {scan_results.get('total_pii_found', 0)} PII findings"),
                     html.P(
                         f"Scanned {scan_results.get('files_scanned', 0)} files at {scan_results.get('scan_timestamp', 'Unknown time')}"
                     ),

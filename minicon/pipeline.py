@@ -220,9 +220,7 @@ class MiniConPipeline:
                     str(audio_path), **opts
                 )  # type: ignore[arg-type]
         except TimeoutError as exc:
-            raise TranscriptionError(
-                f"Transcription timed out for {audio_path}"
-            ) from exc
+            raise TranscriptionError(f"Transcription timed out for {audio_path}") from exc
         except Exception as exc:  # pragma: no cover
             raise TranscriptionError(f"Whisper failed for {audio_path}") from exc
 
@@ -232,9 +230,7 @@ class MiniConPipeline:
                 "Running diarisation on %d segments",
                 len(result["segments"]),
             )
-            result["segments"] = self._perform_diarization(
-                audio_path, result["segments"]
-            )
+            result["segments"] = self._perform_diarization(audio_path, result["segments"])
             result["diarization"] = result["segments"]
 
         # ---- Cache the plain‑text transcript ---------------------------
@@ -260,8 +256,7 @@ class MiniConPipeline:
             from pyannote.audio import Pipeline as PyannotePipeline  # type: ignore
         except ImportError:
             self.log.warning(
-                "pyannote.audio is not installed. Speaker diarisation will "
-                "fallback to a single-speaker transcript."
+                "pyannote.audio is not installed. Speaker diarisation will " "fallback to a single-speaker transcript."
             )
             self._diarization_failed = True
             return False
@@ -271,9 +266,7 @@ class MiniConPipeline:
             pipeline_kwargs["use_auth_token"] = self.config.diarization_auth_token
 
         try:
-            self._diarization_pipeline = PyannotePipeline.from_pretrained(
-                model_id, **pipeline_kwargs
-            )
+            self._diarization_pipeline = PyannotePipeline.from_pretrained(model_id, **pipeline_kwargs)
         except Exception as exc:  # pragma: no cover - library/runtime specific
             self.log.error("Failed to load diarization model %s: %s", model_id, exc)
             self._diarization_failed = True
@@ -302,9 +295,7 @@ class MiniConPipeline:
     ) -> str:
         """Select the speaker label with the greatest overlap."""
 
-        def _overlap(
-            a_start: float, a_end: float, b_start: float, b_end: float
-        ) -> float:
+        def _overlap(a_start: float, a_end: float, b_start: float, b_end: float) -> float:
             return max(0.0, min(a_end, b_end) - max(a_start, b_start))
 
         best_label = "SPEAKER_00"
@@ -316,9 +307,7 @@ class MiniConPipeline:
                 best_score = score
         return best_label
 
-    def _perform_diarization(
-        self, audio_path: Path, segments: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _perform_diarization(self, audio_path: Path, segments: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         """Run diarisation via pyannote.audio with graceful fallback."""
         if not segments:
             return []
@@ -344,8 +333,7 @@ class MiniConPipeline:
             return self._assign_default_speakers(segments)
 
         diarization_tracks: List[Tuple[float, float, str]] = [
-            (turn.start, turn.end, speaker)
-            for turn, _, speaker in diarization.itertracks(yield_label=True)
+            (turn.start, turn.end, speaker) for turn, _, speaker in diarization.itertracks(yield_label=True)
         ]
 
         if not diarization_tracks:
@@ -439,15 +427,9 @@ class MiniConPipeline:
             if stream is None:
                 raise DownloadError(f"No audio stream found for {url}")
 
-            safe_title = "".join(
-                c if c.isalnum() or c in " -_" else "_" for c in yt.title
-            )
-            output_path = (
-                self.config.temp_dir / f"{safe_title}{self.config.audio_suffix}"
-            )
-            self._debug.debug(
-                "Downloading audio to %s (mime=%s)", output_path, stream.mime_type
-            )
+            safe_title = "".join(c if c.isalnum() or c in " -_" else "_" for c in yt.title)
+            output_path = self.config.temp_dir / f"{safe_title}{self.config.audio_suffix}"
+            self._debug.debug("Downloading audio to %s (mime=%s)", output_path, stream.mime_type)
             stream.download(
                 output_path=str(self.config.temp_dir),
                 filename=f"{safe_title}{self.config.audio_suffix}",
@@ -472,9 +454,7 @@ class MiniConPipeline:
         """
         self.config.report_dir_primary.mkdir(parents=True, exist_ok=True)
         stem = source.stem
-        primary_path = (
-            self.config.report_dir_primary / f"{stem}{self.config.report_suffix}"
-        )
+        primary_path = self.config.report_dir_primary / f"{stem}{self.config.report_suffix}"
 
         with open(primary_path, "w", encoding="utf-8") as fh:
             fh.write(text)
@@ -482,9 +462,7 @@ class MiniConPipeline:
         secondary_path: Optional[Path] = None
         if self.config.report_dir_secondary:
             self.config.report_dir_secondary.mkdir(parents=True, exist_ok=True)
-            secondary_path = (
-                self.config.report_dir_secondary / f"{stem}{self.config.report_suffix}"
-            )
+            secondary_path = self.config.report_dir_secondary / f"{stem}{self.config.report_suffix}"
             with open(secondary_path, "w", encoding="utf-8") as fh:
                 fh.write(text)
 
@@ -637,11 +615,7 @@ class MiniConPipeline:
                     if skip_processed and download_cache.is_transcribed(u):
                         cached = download_cache.get_transcribed_videos()
                         entry = next(
-                            (
-                                e
-                                for e in cached
-                                if e.get("url") == u and "transcript_path" in e
-                            ),
+                            (e for e in cached if e.get("url") == u and "transcript_path" in e),
                             None,
                         )
                         if entry and Path(entry["transcript_path"]).exists():

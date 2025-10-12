@@ -57,9 +57,7 @@ class TestSystemTiming:
         """Verify timing uses high-precision counter"""
         system = PromptingSystem()
 
-        result = await system.process_prompt(
-            "test", mode="concise", enable_data_loop=False
-        )
+        result = await system.process_prompt("test", mode="concise", enable_data_loop=False)
 
         # Check that timing is recorded
         assert "metadata" in result
@@ -74,9 +72,7 @@ class TestSystemTiming:
         """Ensure timing reflects actual processing, not mock values"""
         system = PromptingSystem()
 
-        result = await system.process_prompt(
-            "test timing", mode="concise", enable_data_loop=False
-        )
+        result = await system.process_prompt("test timing", mode="concise", enable_data_loop=False)
 
         # Should not be exactly 0.00 (which would indicate mock timing)
         processing_time = result["metadata"]["processing_time"]
@@ -94,9 +90,7 @@ class TestModeHandlers:
         modes = ["concise", "ide", "conversational", "star_stuff", "business"]
 
         for mode in modes:
-            result = await system.process_prompt(
-                "test mode output", mode=mode, enable_data_loop=False
-            )
+            result = await system.process_prompt("test mode output", mode=mode, enable_data_loop=False)
 
             # Check response exists and is non-empty
             assert "response" in result
@@ -116,15 +110,11 @@ class TestModeHandlers:
         system = PromptingSystem()
 
         # Test concise mode (should be shorter)
-        concise_result = await system.process_prompt(
-            "test", mode="concise", enable_data_loop=False
-        )
+        concise_result = await system.process_prompt("test", mode="concise", enable_data_loop=False)
         concise_length = len(concise_result["response"])
 
         # Test IDE mode (should be longer with structure)
-        ide_result = await system.process_prompt(
-            "test", mode="ide", enable_data_loop=False
-        )
+        ide_result = await system.process_prompt("test", mode="ide", enable_data_loop=False)
         ide_length = len(ide_result["response"])
 
         # Concise should be reasonably short, IDE should have structure
@@ -137,18 +127,11 @@ class TestModeHandlers:
         system = PromptingSystem()
 
         # Test concise mode has compression markers
-        concise_result = await system.process_prompt(
-            "test", mode="concise", enable_data_loop=False
-        )
-        assert (
-            "compressed" in concise_result["response"].lower()
-            or "synthesis" in concise_result["response"].lower()
-        )
+        concise_result = await system.process_prompt("test", mode="concise", enable_data_loop=False)
+        assert "compressed" in concise_result["response"].lower() or "synthesis" in concise_result["response"].lower()
 
         # Test IDE mode has structure markers
-        ide_result = await system.process_prompt(
-            "test", mode="ide", enable_data_loop=False
-        )
+        ide_result = await system.process_prompt("test", mode="ide", enable_data_loop=False)
         ide_content = ide_result["response"].lower()
         assert "##" in ide_content or "step" in ide_content
 
@@ -162,9 +145,7 @@ class TestErrorHandling:
         system = PromptingSystem()
 
         # Test with invalid mode (should fallback gracefully)
-        result = await system.process_prompt(
-            "test", mode="invalid_mode", enable_data_loop=False
-        )
+        result = await system.process_prompt("test", mode="invalid_mode", enable_data_loop=False)
 
         # Should still produce a response
         assert "response" in result
@@ -217,9 +198,7 @@ class TestAutomationIntegration:
         """Test automation task creation"""
         system = PromptingSystem()
 
-        task_config = system.create_automation_task(
-            task_name="test_task", prompt="test prompt", mode="concise"
-        )
+        task_config = system.create_automation_task(task_name="test_task", prompt="test prompt", mode="concise")
 
         assert task_config["name"] == "test_task"
         assert task_config["module"] == "prompting.system"
@@ -237,9 +216,7 @@ if __name__ == "__main__":
 
         # Test basic functionality
         system = PromptingSystem()
-        result = await system.process_prompt(
-            "smoke test", mode="concise", enable_data_loop=False
-        )
+        result = await system.process_prompt("smoke test", mode="concise", enable_data_loop=False)
 
         assert result["response"].strip() != ""
         assert result["mode"] == "concise"

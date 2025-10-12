@@ -57,13 +57,9 @@ def example_assistant_with_context():
     logger.info("AI Assistant initialized with automation context")
 
     # Use assistant
-    response = assistant.chat(
-        "What automation tasks should I prioritize for a development environment?"
-    )
+    response = assistant.chat("What automation tasks should I prioritize for a development environment?")
 
-    print(
-        "User: What automation tasks should I prioritize for a development environment?"
-    )
+    print("User: What automation tasks should I prioritize for a development environment?")
     print(f"Assistant: {response}\n")
 
     logger.success("Assistant query completed successfully")
@@ -131,8 +127,7 @@ def example_interactive_assistant():
     # Create assistant
     assistant = create_assistant(
         system_prompt=(
-            "You are a helpful automation assistant. "
-            "Provide concise, practical advice for automation tasks."
+            "You are a helpful automation assistant. " "Provide concise, practical advice for automation tasks."
         )
     )
 

@@ -91,9 +91,7 @@ for i, prompt in enumerate(prompts, 1):
     # Simulate adaptive iterations
     for iteration in range(min(max_iters, 3)):  # Limit for demo
         # In real implementation, this would refine based on quality scores
-        print(
-            f"    Iteration {iteration+1}: Processing with {complexity} complexity logic..."
-        )
+        print(f"    Iteration {iteration+1}: Processing with {complexity} complexity logic...")
 
     # M3: Hybrid Mode Fusion
     print("\n🔗 M3: Hybrid Mode Synthesis")

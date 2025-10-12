@@ -22,7 +22,7 @@ def _load_app():
         import importlib
 
         mod = importlib.import_module("main")
-        return getattr(mod, "app")
+        return getattr(mod, "app")  # noqa: B009
 
 
 def _bench(client, method: str, path: str, payload=None, n=10):
@@ -43,9 +43,7 @@ def performance_benchmark(context):
     n = int(context.extra_data.get("iterations", 10))
     results = {}
     results["health_get"] = _bench(client, "GET", "/api/health", n=n)
-    results["science_search"] = _bench(
-        client, "POST", "/api/science/biomedical/search", {"query": "test"}, n
-    )
+    results["science_search"] = _bench(client, "POST", "/api/science/biomedical/search", {"query": "test"}, n)
     results["finance_personal"] = _bench(
         client,
         "POST",

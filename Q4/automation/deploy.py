@@ -186,9 +186,7 @@ class DeploymentManager:
 
         # Run database migrations
         self.log("Running database setup...", "INFO")
-        subprocess.run(
-            [sys.executable, "automation/setup_database.py"], cwd=self.q4_root
-        )
+        subprocess.run([sys.executable, "automation/setup_database.py"], cwd=self.q4_root)
 
         self.log("✓ Development deployment complete", "SUCCESS")
         return True
@@ -255,9 +253,7 @@ class DeploymentManager:
             "deployment_log": self.deployment_log,
         }
 
-        report_file = (
-            self.q4_root / "automation" / f"deployment_report_{self.environment}.json"
-        )
+        report_file = self.q4_root / "automation" / f"deployment_report_{self.environment}.json"
         with open(report_file, "w") as f:
             json.dump(report, f, indent=2)
 

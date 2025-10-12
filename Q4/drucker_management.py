@@ -104,9 +104,7 @@ class DruckerFoundationModel:
     def ingest_roadmap(self, items: Iterable[Dict[str, Any]]) -> int:
         """Replace the current roadmap with structured items."""
 
-        self.roadmap = [
-            self._coerce_item(index, raw) for index, raw in enumerate(items, start=1)
-        ]
+        self.roadmap = [self._coerce_item(index, raw) for index, raw in enumerate(items, start=1)]
         return len(self.roadmap)
 
     def add_roadmap_item(self, item: Dict[str, Any]) -> RoadmapItem:
@@ -117,9 +115,7 @@ class DruckerFoundationModel:
         self.roadmap.append(roadmap_item)
         return roadmap_item
 
-    def _coerce_item(
-        self, index: int, raw: Dict[str, Any], override_id: bool = False
-    ) -> RoadmapItem:
+    def _coerce_item(self, index: int, raw: Dict[str, Any], override_id: bool = False) -> RoadmapItem:
         """Convert arbitrary dictionaries into `RoadmapItem` instances."""
 
         def _parse_date(value: Any) -> date:

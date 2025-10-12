@@ -26,9 +26,7 @@ async def demo_basic_execution():
     print("DEMO 1: Basic Natural Language Execution")
     print("=" * 70 + "\n")
 
-    request = (
-        "Use assistant to organize the codebase with goal to improve maintainability"
-    )
+    request = "Use assistant to organize the codebase with goal to improve maintainability"
 
     print(f"Request: {request}\n")
 

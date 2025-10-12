@@ -22,7 +22,8 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Build C# project
-        run: dotnet build csharp/language-bundle.csproj --configuration Release
+        working-directory: csharp
+        run: dotnet build language-bundle.csproj --configuration Release
 
       - name: Validate runner exit codes with/without Java
         shell: pwsh
@@ -56,7 +57,7 @@ jobs:
 
       - name: Run format_all and fail on diff
         run: |
-          python tools/format_all.py --max-len 88
+          python tools/format_all.py --max-len 120
           if ! git diff --quiet; then
             echo "::error::Formatting changes required. Run tools/format_all.py locally."
             git --no-pager diff --minimal --stat

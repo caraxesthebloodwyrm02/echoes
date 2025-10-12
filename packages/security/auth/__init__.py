@@ -17,9 +17,7 @@ class AuthManager:
         self.secret_key = secret_key or "dev-secret-key-change-in-production"
         self.cipher_suite = Fernet(Fernet.generate_key())
 
-    def generate_token(
-        self, user_id: str, permissions: List[str], expires_in: int = 3600
-    ) -> str:
+    def generate_token(self, user_id: str, permissions: List[str], expires_in: int = 3600) -> str:
         """
         Generate JWT token for user.
 

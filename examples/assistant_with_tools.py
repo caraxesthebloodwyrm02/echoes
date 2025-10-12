@@ -88,9 +88,7 @@ def example_with_time_tool():
     print("=" * 60 + "\n")
 
     # Create assistant
-    assistant = create_assistant(
-        system_prompt="You are a helpful assistant with access to tools."
-    )
+    assistant = create_assistant(system_prompt="You are a helpful assistant with access to tools.")
 
     # Register the time tool
     assistant.register_tool(
@@ -116,9 +114,7 @@ def example_with_calculator_tool():
     print("Example 2: Calculator Tool")
     print("=" * 60 + "\n")
 
-    assistant = create_assistant(
-        system_prompt="You are a helpful math assistant with access to a calculator."
-    )
+    assistant = create_assistant(system_prompt="You are a helpful math assistant with access to a calculator.")
 
     # Register calculator tool
     assistant.register_tool(
@@ -162,9 +158,7 @@ def example_with_file_tool():
     print("Example 3: File Information Tool")
     print("=" * 60 + "\n")
 
-    assistant = create_assistant(
-        system_prompt="You are a helpful assistant that can check file information."
-    )
+    assistant = create_assistant(system_prompt="You are a helpful assistant that can check file information.")
 
     # Register file info tool
     assistant.register_tool(

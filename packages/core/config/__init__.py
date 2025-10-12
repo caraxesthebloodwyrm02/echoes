@@ -14,15 +14,11 @@ class Config:
     """Base configuration class."""
 
     env: str = field(default_factory=lambda: os.getenv("ENV", "development"))
-    debug: bool = field(
-        default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true"
-    )
+    debug: bool = field(default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true")
     log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
 
     # Paths
-    workspace_root: Path = field(
-        default_factory=lambda: Path(__file__).parent.parent.parent.parent
-    )
+    workspace_root: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent.parent)
     data_dir: Path = field(init=False)
     logs_dir: Path = field(init=False)
 
@@ -35,9 +31,7 @@ class Config:
         self.logs_dir.mkdir(exist_ok=True)
 
 
-def load_config(
-    config_file: Optional[Path] = None, env_file: Optional[Path] = None
-) -> Config:
+def load_config(config_file: Optional[Path] = None, env_file: Optional[Path] = None) -> Config:
     """
     Load configuration from environment and optional files.
 
