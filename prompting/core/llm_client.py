@@ -59,9 +59,7 @@ def _gemini_chat(prompt: str, model: str = "gemini-1.5-flash") -> str:
     data = r.json()
     # Extract first text candidate
     try:
-        return data["candidates"][0]["content"]["parts"][0][
-            "text"
-        ].strip()  # type: ignore[index]
+        return data["candidates"][0]["content"]["parts"][0]["text"].strip()  # type: ignore[index]
     except Exception:
         log.warning("Unexpected Gemini response: %s", str(data)[:200])
         return ""
@@ -96,9 +94,7 @@ class LLMClient:
 
         # Handle Markdown code fences like ```json ... ```
         if cleaned.startswith("```"):
-            match = re.match(
-                r"```(?:json)?\s*(.*?)\s*```$", cleaned, re.DOTALL | re.IGNORECASE
-            )
+            match = re.match(r"```(?:json)?\s*(.*?)\s*```$", cleaned, re.DOTALL | re.IGNORECASE)
             if match:
                 cleaned = match.group(1).strip()
 
