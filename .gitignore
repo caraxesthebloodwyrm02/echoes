@@ -18,3 +18,7 @@ data/cache/
 # dotenv
 .env
 .env.unified
+
+# Local runners and large binaries (keep out of repo)
+actions-runner/
+OPENAI scaffolds/ffmpeg-*/
