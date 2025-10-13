@@ -12,9 +12,9 @@ import os
 import sys
 from pathlib import Path
 
-from app.core import AssistantConfig, ModelRegistry, create_agentic_assistant
 from dotenv import load_dotenv
 
+from app.core import AssistantConfig, ModelRegistry, create_agentic_assistant
 from automation.core.context import Context
 from automation.core.logger import AutomationLogger
 

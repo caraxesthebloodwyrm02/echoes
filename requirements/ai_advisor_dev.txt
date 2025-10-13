@@ -1,7 +1,10 @@
-# AI Advisor - Development Requirements
-# Testing, linting, and code quality tools
+# DEPRECATED: This file is no longer maintained.
+# Use requirements/dev.txt instead for unified development tooling.
+#
+# To migrate:
+# pip install -r requirements/dev.txt
 
--r ai_advisor_base.txt
+# Original content preserved for reference only
 
 # Testing framework
 pytest>=7.4.0

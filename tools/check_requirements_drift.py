@@ -95,7 +95,13 @@ def main():
                 print(f"  {version_str}: {', '.join(file_list)}")
             print()
 
+<<<<<<< Updated upstream
         print("💡 Consider consolidating these versions in the unified requirements files.")
+=======
+        print(
+            "💡 Consider consolidating these versions in the unified requirements files."
+        )
+>>>>>>> Stashed changes
         return 1
     else:
         print("✅ No version drift detected. All packages have consistent versions!")

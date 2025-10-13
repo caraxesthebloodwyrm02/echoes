@@ -14,5 +14,26 @@
       "tags": ["semantics", "interview", "pivot"],
       "quality_score": 8.0
     }
+    ,
+    {
+      "id": "pause_threshold_analysis_v1",
+      "name": "Pause Threshold Analysis",
+      "template": "Given pause durations {durations_s}, infer likely labels (handoff/rhetorical/cognitive_load) based on learned thresholds. Explain borderline cases.",
+      "tags": ["pause", "analysis", "thresholds"],
+      "quality_score": 8.2
+    },
+    {
+      "id": "interviewer_followup_v1",
+      "name": "Interviewer Follow-up from Pause",
+      "template": "Context: {context}. Pause observed at {timestamp_s}s. Recommend interviewer follow-up or allow silence; justify using discourse cues.",
+      "tags": ["interview", "pause", "follow-up"],
+      "quality_score": 8.1
+    }
   ]
 }
+<<<<<<< Updated upstream
+=======
+
+
+
+>>>>>>> Stashed changes

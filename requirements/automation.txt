@@ -1,6 +1,10 @@
+# DEPRECATED: This file is no longer maintained.
+# Use requirements/base.txt instead for unified runtime dependencies.
+#
+# To migrate:
+# pip install -r requirements/base.txt
 
-# Automation Framework Dependencies
-prometheus-client>=0.16.0
+# Original content preserved for reference only
 psutil>=5.9.0
 redis>=4.5.0
 aioredis>=2.0.0

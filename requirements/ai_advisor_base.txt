@@ -1,6 +1,10 @@
-# AI Advisor - Base Requirements
-# Core dependencies for API, provenance, and safety features
+# DEPRECATED: This file is no longer maintained.
+# Use requirements/base.txt instead for unified runtime dependencies.
+#
+# To migrate:
+# pip install -r requirements/base.txt
 
+# Original content preserved for reference only
 # FastAPI and dependencies
 fastapi>=0.104.0
 uvicorn[standard]>=0.24.0

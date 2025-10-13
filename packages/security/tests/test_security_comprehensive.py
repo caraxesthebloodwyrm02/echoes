@@ -6,6 +6,7 @@ from datetime import datetime
 from pathlib import Path
 
 import pytest
+
 from security.auth import AuthManager
 from security.encryption import QuantumShield
 from security.scanning import Vulnerability, VulnerabilityScanner

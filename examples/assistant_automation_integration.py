@@ -9,9 +9,9 @@ import os
 import sys
 from pathlib import Path
 
-from app.core.assistant import create_assistant
 from dotenv import load_dotenv
 
+from app.core.assistant import create_assistant
 from automation.core.context import Context
 from automation.core.logger import AutomationLogger
 

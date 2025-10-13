@@ -25,6 +25,7 @@ def merge_outputs(outputs: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     return merged
 
 
+<<<<<<< Updated upstream
 def phase_a_baseline() -> Dict[str, Any]:
     """
     Phase A: foundational runs (e.g., Kalman baseline, pause baseline).
@@ -82,3 +83,6 @@ def run_macro(phases: str = "ABCD") -> Dict[str, Any]:
         if p in runners:
             executed[p] = runners[p]()
     return deterministic_merge(executed)
+=======
+
+>>>>>>> Stashed changes

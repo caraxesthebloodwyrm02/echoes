@@ -1,7 +1,10 @@
-# AI Advisor - Domain-Specific Requirements
-# Dependencies for Science, Commerce, and Arts domains
+# DEPRECATED: This file is no longer maintained.
+# Use requirements/base.txt instead for unified runtime dependencies.
+#
+# To migrate:
+# pip install -r requirements/base.txt
 
--r ai_advisor_base.txt
+# Original content preserved for reference only
 
 # Science Domain
 # Biomedical research

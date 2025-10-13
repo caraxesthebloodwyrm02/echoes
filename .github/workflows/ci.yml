@@ -33,14 +33,17 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .[test]
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Configure Poetry
+        run: poetry config virtualenvs.create true
+      - name: Install dependencies
+        run: poetry install --with dev
       - name: Run pytest with coverage
         run: |
-          pip install coverage pytest-cov
-          pytest --cov=. --cov-report=xml --cov-report=term
+          poetry run pytest --cov=. --cov-report=xml --cov-report=term
       - name: Upload coverage reports
         uses: codecov/codecov-action@v3
         with:
@@ -48,8 +51,7 @@ jobs:
           fail_ci_if_error: false
       - name: Enforce coverage ≥90%
         run: |
-          pip install coverage
-          COVERAGE=$(coverage report | grep TOTAL | awk '{print int($4)}')
+          COVERAGE=$(poetry run coverage report | grep TOTAL | awk '{print int($4)}')
           if (( COVERAGE < 90 )); then
             echo "❌ Coverage ${COVERAGE}% is below required 90%."
             exit 1
@@ -66,12 +68,16 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-      - name: Install dependencies
+      - name: Install Poetry
         run: |
-          python -m pip install --upgrade pip
-          pip install -e .
+          curl -sSL https://install.python-poetry.org | python3 -
+          echo "$HOME/.local/bin" >> $GITHUB_PATH
+      - name: Configure Poetry
+        run: poetry config virtualenvs.create true
+      - name: Install dependencies
+        run: poetry install
       - name: Build package
-        run: python -m build
+        run: poetry build
       - name: Install package
         run: pip install dist/*.whl --force-reinstall
 

@@ -13,8 +13,9 @@ import os
 import sys
 from pathlib import Path
 
-from app.core.lumina import get_lumina
 from dotenv import load_dotenv
+
+from app.core.lumina import get_lumina
 
 # Add project root to path
 project_root = Path(__file__).parent.parent

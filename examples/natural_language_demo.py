@@ -9,8 +9,9 @@ import os
 import sys
 from pathlib import Path
 
-from app.core import execute_task
 from dotenv import load_dotenv
+
+from app.core import execute_task
 
 # Add project root to path
 project_root = Path(__file__).parent.parent

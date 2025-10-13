@@ -12,6 +12,7 @@ Author : ChatGPT
 Date   : 2025‑10‑09
 """
 
+import os
 import sys
 from pathlib import Path
 from typing import Optional
@@ -24,7 +25,7 @@ from pytube import YouTube
 # --------------------------------------------------------------------------- #
 
 # Where the reports will be written. Change this if you want a different folder.
-REPORT_DIR = Path(r"D:\reports")
+REPORT_DIR = Path(os.getenv("REPORT_DIR", r"D:\reports"))
 
 # --------------------------------------------------------------------------- #
 # HELPER FUNCTIONS

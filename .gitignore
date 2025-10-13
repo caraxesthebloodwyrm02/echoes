@@ -22,3 +22,6 @@ data/cache/
 # Local runners and large binaries (keep out of repo)
 actions-runner/
 OPENAI scaffolds/ffmpeg-*/
+yt-transcribe-env/
+ffmpeg-*.7z
+*.7z

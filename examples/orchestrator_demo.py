@@ -9,6 +9,8 @@ import os
 import sys
 from pathlib import Path
 
+from dotenv import load_dotenv
+
 from app.core import (
     AssistantConfig,
     TaskType,
@@ -18,8 +20,6 @@ from app.core import (
     plan,
     reason,
 )
-from dotenv import load_dotenv
-
 from automation.core.context import Context
 from automation.core.logger import AutomationLogger
 

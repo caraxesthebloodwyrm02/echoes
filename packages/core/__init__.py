@@ -14,6 +14,7 @@ __version__ = "0.1.0"
 from .config import Config, load_config
 from .exceptions import ConfigurationError, EchoeBaseException, ValidationError
 from .logging import configure_logging, get_logger
+from .schemas import CacheEntry, PodcastData, PodcastEvent, PromptTemplate
 
 __all__ = [
     "get_logger",
@@ -23,4 +24,8 @@ __all__ = [
     "EchoeBaseException",
     "ConfigurationError",
     "ValidationError",
+    "PodcastEvent",
+    "PodcastData",
+    "PromptTemplate",
+    "CacheEntry",
 ]

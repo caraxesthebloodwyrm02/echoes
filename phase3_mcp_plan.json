@@ -1,0 +1,96 @@
+{
+  "phase": "PHASE 3: MCP Integration",
+  "duration": "4-6 weeks",
+  "priority": "HIGH",
+  "status": "IN_PROGRESS",
+  "objectives": [
+    "Enable standardized tool calling and resource access via Model Context Protocol (MCP)",
+    "Integrate MCP clients and servers into Lumina agent",
+    "Support external tools like GitHub, Jira for enhanced automation"
+  ],
+  "components": [
+    {
+      "name": "MCP Client",
+      "file": "app/core/mcp_client.py",
+      "description": "Client for MCP communication",
+      "methods": [
+        "call_tool(tool_name, args)",
+        "list_resources(server)",
+        "read_resource(uri)"
+      ]
+    },
+    {
+      "name": "Tool Registry",
+      "file": "app/core/tool_registry.py",
+      "description": "Registry of available MCP tools",
+      "methods": [
+        "register_tool(tool)",
+        "get_tool(name)"
+      ]
+    },
+    {
+      "name": "Resource Manager",
+      "file": "app/core/resource_manager.py",
+      "description": "Manages MCP resources",
+      "methods": [
+        "discover_resources()",
+        "access_resource(uri)"
+      ]
+    },
+    {
+      "name": "MCP Server Adapter",
+      "file": "app/adapters/mcp_server_adapter.py",
+      "description": "Adapter for connecting to MCP servers",
+      "integrations": ["GitHub", "Jira", "Custom APIs"]
+    }
+  ],
+  "deliverables": [
+    "MCP-enabled Lumina agent with tool calling",
+    "Example MCP server integrations",
+    "Updated automation framework with MCP support",
+    "Documentation for MCP setup and usage"
+  ],
+  "dependencies": [
+    "Existing Lumina agent",
+    "FastAPI backend",
+    "MCP protocol library (to be added)"
+  ],
+  "testing": [
+    "Unit tests for MCP client/registry",
+    "Integration tests with sample MCP servers",
+    "End-to-end automation workflows using MCP tools"
+  ],
+  "milestones": [
+    {
+      "week": 1,
+      "tasks": ["Scaffold MCP client and registry", "Define MCP schemas"]
+    },
+    {
+      "week": 2,
+      "tasks": ["Implement tool calling", "Add resource management"]
+    },
+    {
+      "week": 3,
+      "tasks": ["Integrate with Lumina agent", "Test basic MCP flows"]
+    },
+    {
+      "week": 4,
+      "tasks": ["Add external integrations (GitHub, Jira)", "Update docs"]
+    },
+    {
+      "week": 5-6,
+      "tasks": ["Full integration testing", "Performance optimization"]
+    }
+  ],
+  "risks": [
+    "MCP protocol complexity",
+    "External service dependencies",
+    "Security considerations for tool access"
+  ],
+  "success_criteria": [
+    "Lumina can call external MCP tools",
+    "Resource discovery and access works",
+    "Integration with at least 2 external services",
+    "No breaking changes to existing automation"
+  ]
+}
