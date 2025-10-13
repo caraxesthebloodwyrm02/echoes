@@ -1,0 +1,100 @@
+{
+  "source": "Telephone Booth Communication - Validated Structure",
+  "metadata": {
+    "title": "A Call from the Red Box - London Nostalgia",
+    "description": "Simulated telephone conversation (circa 1960s London)",
+    "duration_seconds": 91.7,
+    "participants": 3,
+    "exchanges": 14
+  },
+  "participants": [
+    {
+      "id": "operator-1",
+      "role": "Operator",
+      "lines": [
+        {
+          "time_s": 0.0,
+          "timestamp": "0.0s",
+          "text": "Number please?"
+        },
+        {
+          "time_s": 7.6,
+          "timestamp": "7.6s",
+          "text": "Connecting you now. Mind the weather, sir."
+        },
+        {
+          "time_s": 85.2,
+          "timestamp": "85.2s",
+          "text": "Call completed. Please hang up and retrieve your change."
+        }
+      ]
+    },
+    {
+      "id": "caller-1",
+      "role": "Caller",
+      "lines": [
+        {
+          "time_s": 3.4,
+          "timestamp": "3.4s",
+          "text": "Paddington 8-7-4-2, please."
+        },
+        {
+          "time_s": 15.8,
+          "timestamp": "15.8s",
+          "text": "He estado bien. Algunos días están bien, otros son difíciles y algunos son absolutamente fantásticos. Espero que estés bien."
+        },
+        {
+          "time_s": 35.1,
+          "timestamp": "35.1s",
+          "text": "Ah, my dear friend! It's been ages since we spoke from these iconic booths."
+        },
+        {
+          "time_s": 42.9,
+          "timestamp": "42.9s",
+          "text": "Remember when we'd queue for hours just to make a call home?"
+        },
+        {
+          "time_s": 66.9,
+          "timestamp": "66.9s",
+          "text": "They may be fewer now, but their spirit lives on in London."
+        },
+        {
+          "time_s": 73.4,
+          "timestamp": "73.4s",
+          "text": "Thank you for preserving this piece of our history."
+        }
+      ]
+    },
+    {
+      "id": "recipient-1",
+      "role": "Recipient",
+      "lines": [
+        {
+          "time_s": 13.2,
+          "timestamp": "13.2s",
+          "text": "¿Qué tal?"
+        },
+        {
+          "time_s": 27.5,
+          "timestamp": "27.5s",
+          "text": "¡Qué maravilla escucharte! Me alegra que las cosas vayan bien en general."
+        },
+        {
+          "time_s": 49.5,
+          "timestamp": "49.5s",
+          "text": "Indeed! These red sentinels have witnessed countless stories - proposals, emergencies, farewells."
+        },
+        {
+          "time_s": 59.1,
+          "timestamp": "59.1s",
+          "text": "Each coin dropped, each dial turned, each voice carried across the wires..."
+        },
+        {
+          "time_s": 79.5,
+          "timestamp": "79.5s",
+          "text": "And thank you for remembering. Goodbye for now."
+        }
+      ]
+    }
+  ]
+}

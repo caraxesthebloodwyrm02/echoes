@@ -10,21 +10,12 @@ from pydantic_settings import BaseSettings, SettingsConfigDict
 class Config(BaseSettings):
     """Unified configuration using pydantic-settings."""
 
-<<<<<<< Updated upstream
-    env: str = field(default_factory=lambda: os.getenv("ENV", "development"))
-    debug: bool = field(default_factory=lambda: os.getenv("DEBUG", "false").lower() == "true")
-    log_level: str = field(default_factory=lambda: os.getenv("LOG_LEVEL", "INFO"))
-
-    # Paths
-    workspace_root: Path = field(default_factory=lambda: Path(__file__).parent.parent.parent.parent)
-    data_dir: Path = field(init=False)
-    logs_dir: Path = field(init=False)
-=======
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
         env_prefix="ECHO_",
         case_sensitive=False,
+        extra="allow"  # Allow extra fields from .env
     )
 
     # Environment and paths
@@ -35,7 +26,12 @@ class Config(BaseSettings):
         default_factory=lambda: Path(__file__).parent.parent.parent.parent,
         description="Workspace root directory",
     )
->>>>>>> Stashed changes
+
+    # Detector configuration
+    min_support: float = Field(default=0.1, description="Minimum support threshold for detectors")
+    confidence_threshold: float = Field(default=0.5, description="Confidence threshold for detector decisions")
+    min_votes: int = Field(default=1, description="Minimum votes required for detector consensus")
+    debounce_window: int = Field(default=300, description="Debounce window in seconds for detector firings")
 
     # Derived paths (computed after loading)
     data_dir: Optional[Path] = Field(default=None, exclude=True)
@@ -51,13 +47,9 @@ class Config(BaseSettings):
         self.logs_dir.mkdir(exist_ok=True)
 
 
-<<<<<<< Updated upstream
-def load_config(config_file: Optional[Path] = None, env_file: Optional[Path] = None) -> Config:
-=======
 def load_config(
     env_file: Optional[Path] = None, override_env: Optional[dict] = None
 ) -> Config:
->>>>>>> Stashed changes
     """
     Load configuration from environment and optional overrides.
 

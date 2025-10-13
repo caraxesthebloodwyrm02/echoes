@@ -1,6 +1,6 @@
-# Contributing to TrajectoX
+# Contributing to Echoes
 
-Thank you for your interest in contributing to TrajectoX! This document provides guidelines and processes for contributing to the project.
+Thank you for your interest in contributing to Echoes! This document provides guidelines and processes for contributing to the project.
 
 ## Contribution Checklist (IDE Hint)
 
@@ -51,13 +51,39 @@ Before submitting a pull request, ensure your contribution meets these requireme
 git clone https://github.com/caraxesthebloodwyrm02/echoes.git
 cd echoes
 
-# Set up Python environment
-python3.10 -m venv .venv
-source .venv/bin/activate  # On Windows: .venv\Scripts\activate
-pip install -r requirements/dev.txt
+# Set up Python environment with Poetry
+curl -sSL https://install.python-poetry.org | python3 -
+poetry install --with dev
+
+# Activate virtual environment
+poetry shell
 
 # Install pre-commit hooks
-pre-commit install
+poetry run pre-commit install
+```
+
+### VS Code Setup (Recommended)
+
+For the best development experience:
+
+1. Install recommended extensions (see `.vscode/extensions.json`)
+2. Configure Python interpreter to use Poetry:
+   - Open Command Palette (`Ctrl+Shift+P`)
+   - Select "Python: Select Interpreter"
+   - Choose the Poetry environment (usually shows as `Python 3.12.x ('echoes': poetry)`)
+3. The workspace includes debug configurations and tasks for common operations
+
+### Testing
+
+```bash
+# Run the full test suite
+poetry run pytest --cov=. --cov-report=html
+
+# Run specific tests
+poetry run pytest tests/test_specific_module.py
+
+# Check code quality
+poetry run pre-commit run --all-files
 ```
 
 ### 3. Create a Feature Branch
@@ -71,18 +97,18 @@ git checkout -b fix/issue-number-description
 - Follow the existing code style and patterns
 - Write tests for new functionality
 - Update documentation as needed
-- Run pre-commit hooks regularly: `pre-commit run --all-files`
+- Run pre-commit hooks regularly: `poetry run pre-commit run --all-files`
 
 ### 5. Test Your Changes
 ```bash
 # Run the full test suite
-pytest --cov=. --cov-report=html
+poetry run pytest --cov=. --cov-report=html
 
 # Run specific tests
-pytest tests/test_specific_module.py
+poetry run pytest tests/test_specific_module.py
 
 # Check code quality
-pre-commit run --all-files
+poetry run pre-commit run --all-files
 ```
 
 ### 6. Commit and Push

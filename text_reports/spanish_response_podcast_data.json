@@ -1,0 +1,31 @@
+{
+  "podcast": "Text Response Simulation",
+  "episode_title": "Response to ¿Qué tal?",
+  "source": "Spanish text input",
+  "events": [
+    {
+      "timestamp_start_s": 0.0,
+      "timestamp_end_s": 3.25,
+      "speaker": "Responder",
+      "utterance": "He estado bien.",
+      "pause_after_s": 0.8,
+      "label": "rhetorical"
+    },
+    {
+      "timestamp_start_s": 3.75,
+      "timestamp_end_s": 10.5,
+      "speaker": "Responder",
+      "utterance": "Algunos días están bien, otros son difíciles y algunos son absolutamente fantásticos.",
+      "pause_after_s": 0.8,
+      "label": "rhetorical"
+    },
+    {
+      "timestamp_start_s": 11.0,
+      "timestamp_end_s": 14.6,
+      "speaker": "Responder",
+      "utterance": "Espero que estés bien.",
+      "pause_after_s": 0.0,
+      "label": "rhetorical"
+    }
+  ]
+}

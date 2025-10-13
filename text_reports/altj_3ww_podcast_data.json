@@ -1,0 +1,263 @@
+{
+  "podcast": "YouTube Music Video",
+  "episode_title": "alt-J - 3WW (Official Video)",
+  "source": "https://www.youtube.com/watch?v=ZwBkXgWNs_M",
+  "events": [
+    {
+      "timestamp_start_s": 0.0,
+      "timestamp_end_s": 3.6,
+      "speaker": null,
+      "utterance": "Tienes que sacarlo desde la raíz.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 3.6,
+      "timestamp_end_s": 6.6000000000000005,
+      "speaker": null,
+      "utterance": "Fíjima.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 6.6000000000000005,
+      "timestamp_end_s": 9.0,
+      "speaker": null,
+      "utterance": "Y tienes que decir...",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 9.0,
+      "timestamp_end_s": 11.0,
+      "speaker": null,
+      "utterance": "Sofrimos.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 11.0,
+      "timestamp_end_s": 16.0,
+      "speaker": null,
+      "utterance": "Sofrimos.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 30.0,
+      "timestamp_end_s": 53.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 53.0,
+      "timestamp_end_s": 59.0,
+      "speaker": null,
+      "utterance": "¿Sabes de dónde vienes?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 59.0,
+      "timestamp_end_s": 73.0,
+      "speaker": null,
+      "utterance": "Una cíla va viajar de los labios de tu madre a los de tu padre.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 73.0,
+      "timestamp_end_s": 82.0,
+      "speaker": null,
+      "utterance": "Así llegaste a este mundo.",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 112.0,
+      "timestamp_end_s": 122.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 123.0,
+      "timestamp_end_s": 132.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 132.0,
+      "timestamp_end_s": 139.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 139.0,
+      "timestamp_end_s": 149.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 149.0,
+      "timestamp_end_s": 159.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 159.0,
+      "timestamp_end_s": 169.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 169.0,
+      "timestamp_end_s": 179.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 179.0,
+      "timestamp_end_s": 189.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 189.0,
+      "timestamp_end_s": 197.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 197.0,
+      "timestamp_end_s": 201.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 201.0,
+      "timestamp_end_s": 205.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 205.0,
+      "timestamp_end_s": 215.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 215.0,
+      "timestamp_end_s": 225.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 225.0,
+      "timestamp_end_s": 235.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 235.0,
+      "timestamp_end_s": 245.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 245.0,
+      "timestamp_end_s": 267.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 275.0,
+      "timestamp_end_s": 285.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 285.0,
+      "timestamp_end_s": 293.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 305.0,
+      "timestamp_end_s": 325.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 325.0,
+      "timestamp_end_s": 347.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 355.0,
+      "timestamp_end_s": 365.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 365.0,
+      "timestamp_end_s": 375.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.5,
+      "label": "cognitive_load"
+    },
+    {
+      "timestamp_start_s": 375.0,
+      "timestamp_end_s": 395.0,
+      "speaker": null,
+      "utterance": "¿Qué tal?",
+      "pause_after_s": 0.0,
+      "label": "cognitive_load"
+    }
+  ]
+}
