@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import concurrent.futures
 from typing import Any, Callable, Dict, Optional
 
@@ -13,7 +35,9 @@ def macro_parallel(
 ) -> Dict[str, Dict[str, Any]]:
     outputs: Dict[str, Dict[str, Any]] = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(layers)) as pool:
-        future_to_name = {pool.submit(run_layer, name, fn): name for name, fn in layers.items()}
+        future_to_name = {
+            pool.submit(run_layer, name, fn): name for name, fn in layers.items()
+        }
         for fut in concurrent.futures.as_completed(future_to_name):
             name = future_to_name[fut]
             outputs[name] = fut.result()
@@ -25,7 +49,6 @@ def merge_outputs(outputs: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
     return merged
 
 
-<<<<<<< Updated upstream
 def phase_a_baseline() -> Dict[str, Any]:
     """
     Phase A: foundational runs (e.g., Kalman baseline, pause baseline).
@@ -83,6 +106,3 @@ def run_macro(phases: str = "ABCD") -> Dict[str, Any]:
         if p in runners:
             executed[p] = runners[p]()
     return deterministic_merge(executed)
-=======
-
->>>>>>> Stashed changes

@@ -1,0 +1,51 @@
+name: CI Audit & Safety Check
+
+on:
+  push:
+    branches: [ main, dev ]
+  pull_request:
+    branches: [ main, dev ]
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt || true
+          pip install ruff mypy pytest
+
+      - name: Run static audit
+        run: |
+          python audit_codebase.py
+          cat audit_report.md
+
+      - name: Detect Audit Drift
+        run: |
+          python audit_codebase.py
+          git diff --exit-code audit_report.json || echo "⚠️ Audit drift detected!"
+
+      - name: Lint & Type Check
+        run: |
+          ruff check .
+          mypy src/ ai_modules/bias_detection/
+
+      - name: Run tests (dry mode)
+        run: pytest --maxfail=1 --disable-warnings -q
+
+      - name: Upload audit report
+        uses: actions/upload-artifact@v4
+        with:
+          name: audit-report
+          path: |
+            audit_report.json
+            audit_report.md

@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Assistant API Integration with Symphony Components
 Provides credit-efficient OpenAI assistance integration
@@ -6,13 +28,10 @@ Provides credit-efficient OpenAI assistance integration
 import asyncio
 import hashlib
 import json
-import os
-from functools import lru_cache
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import httpx
-from minicon.config import Config
 
 from melody_structure.master_channel import MasterChannel
 
@@ -58,10 +77,7 @@ class SymphonyAssistantClient:
             pass  # Cache write failures are non-critical
 
     async def query_with_cache(
-        self,
-        prompt: str,
-        use_cache: bool = True,
-        **kwargs
+        self, prompt: str, use_cache: bool = True, **kwargs
     ) -> Dict[str, Any]:
         """Query assistant with intelligent caching"""
         cache_key = self._cache_key(prompt, **kwargs)
@@ -81,7 +97,7 @@ class SymphonyAssistantClient:
                     "temperature": kwargs.get("temperature", 0.2),
                     "max_tokens": kwargs.get("max_tokens", 512),
                     "metadata": kwargs.get("metadata", {}),
-                }
+                },
             )
             response.raise_for_status()
             result = response.json()
@@ -97,7 +113,7 @@ class SymphonyAssistantClient:
             return {
                 "error": f"Request failed: {str(e)}",
                 "cached": False,
-                "fallback": self._generate_fallback_response(prompt)
+                "fallback": self._generate_fallback_response(prompt),
             }
 
     def _generate_fallback_response(self, prompt: str) -> str:
@@ -151,7 +167,7 @@ class CreditEfficientPatterns:
             "architecture_feedback": "Analyze this system architecture design: {design}\nProvide improvement suggestions.",
             "testing_strategy": "Recommend testing strategy for: {component}\nFocus on coverage and critical paths.",
             "performance_analysis": "Analyze performance bottlenecks in: {code}\nSuggest optimizations.",
-            "security_assessment": "Perform security assessment on: {component}\nIdentify vulnerabilities and fixes."
+            "security_assessment": "Perform security assessment on: {component}\nIdentify vulnerabilities and fixes.",
         }
 
     @staticmethod
@@ -159,8 +175,13 @@ class CreditEfficientPatterns:
         """Determine if query should be cached aggressively"""
         # Cache queries that are likely to be repeated
         cache_indicators = [
-            "review", "analyze", "assess", "evaluate",
-            "best practices", "recommendations", "guidance"
+            "review",
+            "analyze",
+            "assess",
+            "evaluate",
+            "best practices",
+            "recommendations",
+            "guidance",
         ]
 
         return any(indicator in query.lower() for indicator in cache_indicators)
@@ -188,10 +209,7 @@ class MasterChannelIntegration:
 
         try:
             insights = await self.assistant.query_with_cache(
-                optimization_prompt,
-                use_cache=True,
-                temperature=0.3,
-                max_tokens=256
+                optimization_prompt, use_cache=True, temperature=0.3, max_tokens=256
             )
 
             if "content" in insights:
@@ -219,14 +237,13 @@ class MasterChannelIntegration:
 
         try:
             summary = await self.assistant.query_with_cache(
-                summary_prompt,
-                use_cache=True,
-                temperature=0.2,
-                max_tokens=384
+                summary_prompt, use_cache=True, temperature=0.2, max_tokens=384
             )
 
             if "content" in summary:
-                enhanced_result = f"{result}\n\n--- AI-Enhanced Analysis ---\n{summary['content']}"
+                enhanced_result = (
+                    f"{result}\n\n--- AI-Enhanced Analysis ---\n{summary['content']}"
+                )
                 if summary.get("cached"):
                     enhanced_result += "\n[Analysis from cache]"
                 return enhanced_result
@@ -242,12 +259,11 @@ async def demo_credit_efficient_usage():
     """Demonstrate credit-efficient assistant integration"""
 
     async with SymphonyAssistantClient() as assistant:
-
         # 1. Batch related queries
         queries = [
             "How can I improve code quality in the knowledge graph system?",
             "What are best practices for RDF data modeling?",
-            "How should I handle ontology validation errors?"
+            "How should I handle ontology validation errors?",
         ]
 
         batched_query = CreditEfficientPatterns.batch_similar_queries(queries)
@@ -276,7 +292,7 @@ async def demo_credit_efficient_usage():
             "batched_response_length": len(response.get("content", "")),
             "review_cached": review.get("cached", False),
             "finalization_length": len(final),
-            "compression_keys": list(compressed.keys())
+            "compression_keys": list(compressed.keys()),
         }
 
 

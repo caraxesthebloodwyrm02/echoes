@@ -1,37 +1,78 @@
 repos:
-  # Python code formatting
+  # Python code formatting - Black (fastest)
   - repo: https://github.com/psf/black
-    rev: 24.8.0
+    rev: 25.9.0
     hooks:
       - id: black
         language_version: python3.12
 
   # Python import sorting
   - repo: https://github.com/pycqa/isort
-    rev: 5.13.0
+    rev: 7.0.0
     hooks:
       - id: isort
         args: ["--profile", "black"]
         language_version: python3.12
 
-  # Python linting
-  - repo: https://github.com/pycqa/flake8
-    rev: 7.1.0
+  # Fast Python linting - Ruff (replaces flake8)
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.14.0
     hooks:
-      - id: flake8
-        additional_dependencies: [flake8-bugbear]
-        args: ["--config=.flake8"]
+      - id: ruff
+        args: [--fix]
+      - id: ruff-format
+
+  # Python type checking
+  - repo: https://github.com/pre-commit/mirrors-mypy
+    rev: v1.18.2
+    hooks:
+      - id: mypy
+        additional_dependencies: [types-requests, types-PyYAML]
+        args: [--ignore-missing-imports, --exclude=src/main.py]
+
+  # Security scanning
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.8.6
+    hooks:
+      - id: bandit
+        args: ["-c", "pyproject.toml"]
+        exclude: ^tests/
+
+  # Static codebase audit
+  - repo: local
+    hooks:
+      - id: auto-audit
+        name: Run Static Audit
+        entry: python audit_codebase.py
+        language: system
+        pass_filenames: false
+        always_run: true
 
   # General hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
-    rev: v4.5.0
+    rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
+        exclude: ^archive/
       - id: trailing-whitespace
       - id: check-added-large-files
-        exclude: |
-          (?x)(
-            .*\.json$
-          )
+        args: ['--maxkb=500']
+        exclude: ^.*\.m4a$
       - id: check-yaml
+      - id: check-json
       - id: check-merge-conflict
+      - id: check-toml
+      - id: debug-statements
+      - id: check-docstring-first
+
+  # License header checks
+  - repo: https://github.com/Lucas-C/pre-commit-hooks
+    rev: v1.5.5
+    hooks:
+      - id: insert-license
+        files: \.py$
+        args:
+          - --license-filepath
+          - LICENSE
+          - --comment-style
+          - "#"

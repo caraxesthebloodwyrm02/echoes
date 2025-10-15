@@ -1,0 +1,13 @@
+{
+  "env_vars": {
+    "TEMP": "E:\\Projects\\Development\\.temp",
+    "TMP": "E:\\Projects\\Development\\.temp"
+  },
+  "shared_folder": "E:\\SharedData",
+  "vscode_settings": {
+    "files.watcherExclude": { "**/.temp/**": true },
+    "files.lockfilesPath": "E:\\Projects\\Development\\.temp\\locks"
+  },
+  "cleanup_script": "E:\\Projects\\Development\\cleanup_temp.ps1",
+  "task_scheduler": "Daily at 2 AM"
+}

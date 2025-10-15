@@ -1,0 +1,43 @@
+# シティーワック (City Wok)
+
+A quirky restaurant management game where you play as the owner of "City Wok" - a restaurant with... unique culinary skills.
+
+## Features
+
+- 🍳 Cook various dishes with different ingredients
+- 👨‍🍳 Manage your chef's energy and skill levels
+- 😊 Keep customers happy with your cooking
+- 🎲 Experience random events (3.1416% chance of something special!)
+- 📊 Optimized with 10% performance improvements
+- 🐛 Debug mode with detailed logging
+
+## How to Play
+
+1. Run the game:
+   ```
+   python citywok_game.py
+   ```
+
+2. Follow the on-screen instructions to cook dishes
+3. Try to satisfy your customers and grow your restaurant
+4. Watch out for special events!
+
+## Requirements
+
+- Python 3.6+
+- No additional packages required
+
+## Game Mechanics
+
+- Each dish has a quality level from DISASTER to PERFECT
+- Your chef's skill and energy affect cooking results
+- There's always a 3.1416% chance of something special happening!
+- The game features a 10% optimization factor for better performance
+
+## Debug Mode
+
+Set `PRINT_DEBUG = True` in the code to see additional debug information.
+
+---
+
+*"Not your average wok... and proud of it!"*

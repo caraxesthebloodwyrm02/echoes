@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Continuous monitoring system for codebase health and performance benchmarks.
 
 Implements monitoring tools that track performance against established benchmarks,
@@ -8,12 +30,12 @@ import json
 import logging
 import time
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
-from Q4.drucker_management import EcosystemManager
 from detectors import DetectorManager
+from Q4.drucker_management import EcosystemManager
 
 
 @dataclass
@@ -56,9 +78,9 @@ class ContinuousMonitor:
         self.logger.setLevel(logging.INFO)
 
         handler = logging.FileHandler(self.log_path)
-        handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        ))
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        )
         self.logger.addHandler(handler)
 
         # Benchmark thresholds (established from trajectory analysis)
@@ -94,10 +116,12 @@ class ContinuousMonitor:
             ecosystem_health=ecosystem_health,
             detector_metrics=detector_metrics,
             benchmark_results=benchmark_results,
-            recommendations=recommendations
+            recommendations=recommendations,
         )
 
-        self.logger.info(f"Monitoring cycle complete. Status: {self._overall_status(benchmark_results)}")
+        self.logger.info(
+            f"Monitoring cycle complete. Status: {self._overall_status(benchmark_results)}"
+        )
 
         return report
 
@@ -122,14 +146,14 @@ class ContinuousMonitor:
                 "branches": terraforming.branches,
                 "leaves": terraforming.leaves,
                 "complexity_score": terraforming.complexity_score,
-                "timestamp": terraforming.timestamp.isoformat()
+                "timestamp": terraforming.timestamp.isoformat(),
             },
             "communications": communications,
             "gate_status": gate_status,
             "vulnerabilities": vulnerabilities,
             "overall_health": self._calculate_ecosystem_score(
                 terraforming, communications, gate_status, vulnerabilities
-            )
+            ),
         }
 
     def _assess_detector_performance(self) -> Dict[str, Any]:
@@ -140,12 +164,18 @@ class ContinuousMonitor:
         # Aggregate metrics across all detectors
         aggregated = {
             "total_detectors": len(all_metrics),
-            "active_detectors": sum(1 for m in all_metrics.values() if m.get("total_detections", 0) > 0),
-            "total_detections": sum(m.get("total_detections", 0) for m in all_metrics.values()),
-            "shadow_mode_detectors": sum(1 for m in all_metrics.values() if m.get("shadow_mode_active", False)),
+            "active_detectors": sum(
+                1 for m in all_metrics.values() if m.get("total_detections", 0) > 0
+            ),
+            "total_detections": sum(
+                m.get("total_detections", 0) for m in all_metrics.values()
+            ),
+            "shadow_mode_detectors": sum(
+                1 for m in all_metrics.values() if m.get("shadow_mode_active", False)
+            ),
             "by_tier": {},
             "false_positive_rate": 0.0,  # Would need manual labeling
-            "average_confidence": 0.0
+            "average_confidence": 0.0,
         }
 
         # Aggregate by tier
@@ -178,44 +208,59 @@ class ContinuousMonitor:
         # Complexity benchmark
         ecosystem = self._assess_ecosystem_health()
         complexity = ecosystem["terraforming"]["complexity_score"]
-        results.append(self._check_benchmark(
-            "complexity_score", complexity, self.benchmarks["complexity_score"]
-        ))
+        results.append(
+            self._check_benchmark(
+                "complexity_score", complexity, self.benchmarks["complexity_score"]
+            )
+        )
 
         # Communication issues benchmark
         comm_issues = len(ecosystem["communications"].get("issues", []))
-        results.append(self._check_benchmark(
-            "communication_issues", comm_issues, self.benchmarks["communication_issues"]
-        ))
+        results.append(
+            self._check_benchmark(
+                "communication_issues",
+                comm_issues,
+                self.benchmarks["communication_issues"],
+            )
+        )
 
         # GATE failures benchmark
         gate_failures = 1 if ecosystem["gate_status"]["gate_status"] == "closed" else 0
-        results.append(self._check_benchmark(
-            "gate_failures", gate_failures, self.benchmarks["gate_failures"]
-        ))
+        results.append(
+            self._check_benchmark(
+                "gate_failures", gate_failures, self.benchmarks["gate_failures"]
+            )
+        )
 
         # Detector false positives (placeholder - would need real labeling)
         detector_metrics = self._assess_detector_performance()
         fp_rate = detector_metrics.get("false_positive_rate", 0.05)  # Placeholder
-        results.append(self._check_benchmark(
-            "detector_false_positives", fp_rate, self.benchmarks["detector_false_positives"]
-        ))
+        results.append(
+            self._check_benchmark(
+                "detector_false_positives",
+                fp_rate,
+                self.benchmarks["detector_false_positives"],
+            )
+        )
 
         # Test coverage (placeholder - would integrate with coverage tools)
         coverage = self._estimate_test_coverage()
-        results.append(self._check_benchmark(
-            "test_coverage", coverage, self.benchmarks["test_coverage"]
-        ))
+        results.append(
+            self._check_benchmark(
+                "test_coverage", coverage, self.benchmarks["test_coverage"]
+            )
+        )
 
         return results
 
-    def _check_benchmark(self, metric_name: str, value: float,
-                        thresholds: Dict[str, float]) -> BenchmarkResult:
+    def _check_benchmark(
+        self, metric_name: str, value: float, thresholds: Dict[str, float]
+    ) -> BenchmarkResult:
         """Check a metric against its thresholds."""
 
-        if value >= thresholds.get("critical", float('inf')):
+        if value >= thresholds.get("critical", float("inf")):
             status = "critical"
-        elif value >= thresholds.get("warning", float('inf')):
+        elif value >= thresholds.get("warning", float("inf")):
             status = "warning"
         else:
             status = "ok"
@@ -225,48 +270,67 @@ class ContinuousMonitor:
             value=value,
             timestamp=datetime.now(),
             threshold=thresholds.get("warning"),
-            status=status
+            status=status,
         )
 
-    def _generate_recommendations(self, ecosystem: Dict, detectors: Dict,
-                                benchmarks: List[BenchmarkResult]) -> List[str]:
+    def _generate_recommendations(
+        self, ecosystem: Dict, detectors: Dict, benchmarks: List[BenchmarkResult]
+    ) -> List[str]:
         """Generate recommendations based on monitoring results."""
 
         recommendations = []
 
         # Ecosystem recommendations
         if ecosystem["terraforming"]["complexity_score"] > 15:
-            recommendations.append("High code complexity detected. Consider refactoring complex modules.")
+            recommendations.append(
+                "High code complexity detected. Consider refactoring complex modules."
+            )
 
         if not ecosystem["communications"]["healthy"]:
-            recommendations.append("Communication issues found. Review import dependencies and API coherence.")
+            recommendations.append(
+                "Communication issues found. Review import dependencies and API coherence."
+            )
 
         if ecosystem["gate_status"]["gate_status"] == "closed":
-            recommendations.append("GATE validation failed. Address security, quality, or dependency issues.")
+            recommendations.append(
+                "GATE validation failed. Address security, quality, or dependency issues."
+            )
 
         # Detector recommendations
         if detectors["total_detections"] == 0:
-            recommendations.append("No detector activity detected. Verify detector configuration and inputs.")
+            recommendations.append(
+                "No detector activity detected. Verify detector configuration and inputs."
+            )
 
         shadow_count = detectors.get("shadow_mode_detectors", 0)
         if shadow_count > 0:
-            recommendations.append(f"{shadow_count} detectors in shadow mode. Monitor performance before enabling live mode.")
+            recommendations.append(
+                f"{shadow_count} detectors in shadow mode. Monitor performance before enabling live mode."
+            )
 
         # Benchmark recommendations
         critical_benchmarks = [b for b in benchmarks if b.status == "critical"]
         if critical_benchmarks:
-            recommendations.append(f"Critical benchmark failures: {', '.join(b.metric_name for b in critical_benchmarks)}")
+            recommendations.append(
+                f"Critical benchmark failures: {', '.join(b.metric_name for b in critical_benchmarks)}"
+            )
 
         warning_benchmarks = [b for b in benchmarks if b.status == "warning"]
         if warning_benchmarks:
-            recommendations.append(f"Warning benchmark thresholds exceeded: {', '.join(b.metric_name for b in warning_benchmarks)}")
+            recommendations.append(
+                f"Warning benchmark thresholds exceeded: {', '.join(b.metric_name for b in warning_benchmarks)}"
+            )
 
         if not recommendations:
-            recommendations.append("All systems operating within normal parameters. Continue monitoring.")
+            recommendations.append(
+                "All systems operating within normal parameters. Continue monitoring."
+            )
 
         return recommendations
 
-    def _calculate_ecosystem_score(self, terraforming, communications, gate_status, vulnerabilities) -> float:
+    def _calculate_ecosystem_score(
+        self, terraforming, communications, gate_status, vulnerabilities
+    ) -> float:
         """Calculate overall ecosystem health score (0-100)."""
 
         score = 100.0
@@ -295,7 +359,11 @@ class ContinuousMonitor:
         # For now, return a placeholder based on test file count
         test_files = list(self.root_path.glob("tests/test_*.py"))
         total_files = list(self.root_path.glob("**/*.py"))
-        total_files = [f for f in total_files if not str(f).startswith(str(self.root_path / "tests"))]
+        total_files = [
+            f
+            for f in total_files
+            if not str(f).startswith(str(self.root_path / "tests"))
+        ]
 
         if not total_files:
             return 0.0
@@ -317,7 +385,9 @@ class ContinuousMonitor:
     def start_continuous_monitoring(self, interval_minutes: int = 60):
         """Start continuous monitoring with specified interval."""
 
-        self.logger.info(f"Starting continuous monitoring (interval: {interval_minutes} minutes)")
+        self.logger.info(
+            f"Starting continuous monitoring (interval: {interval_minutes} minutes)"
+        )
 
         while True:
             try:
@@ -339,7 +409,10 @@ class ContinuousMonitor:
     def _save_report(self, report: MonitoringReport):
         """Save monitoring report to file."""
 
-        report_path = self.log_path.parent / f"monitoring_report_{report.timestamp.strftime('%Y%m%d_%H%M%S')}.json"
+        report_path = (
+            self.log_path.parent
+            / f"monitoring_report_{report.timestamp.strftime('%Y%m%d_%H%M%S')}.json"
+        )
 
         report_data = {
             "timestamp": report.timestamp.isoformat(),
@@ -352,14 +425,14 @@ class ContinuousMonitor:
                     "status": b.status,
                     "threshold": b.threshold,
                     "timestamp": b.timestamp.isoformat(),
-                    "details": b.details
+                    "details": b.details,
                 }
                 for b in report.benchmark_results
             ],
-            "recommendations": report.recommendations
+            "recommendations": report.recommendations,
         }
 
-        with open(report_path, 'w') as f:
+        with open(report_path, "w") as f:
             json.dump(report_data, f, indent=2)
 
         self.logger.info(f"Report saved to {report_path}")

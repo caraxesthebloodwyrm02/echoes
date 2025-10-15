@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Comprehensive tests for echoe-monitoring package."""
 
 import sys
@@ -7,6 +29,7 @@ from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
+
 from monitoring.alerts import Alert, AlertManager
 from monitoring.ci import CIBuild, CIMonitor
 from monitoring.health import HealthCheck, HealthChecker
@@ -153,7 +176,9 @@ class TestHealthChecker:
         health = HealthChecker()
 
         def custom_check():
-            return HealthCheck(name="custom", status="healthy", message="OK", timestamp=datetime.now())
+            return HealthCheck(
+                name="custom", status="healthy", message="OK", timestamp=datetime.now()
+            )
 
         health.register_check("custom", custom_check)
         assert "custom" in health.checks
@@ -290,7 +315,9 @@ class TestAlertManager:
         manager = AlertManager()
 
         for i in range(5):
-            manager.create_alert(name=f"alert_{i}", severity="info", message=f"Message {i}")
+            manager.create_alert(
+                name=f"alert_{i}", severity="info", message=f"Message {i}"
+            )
 
         assert len(manager.alerts) == 5
 
@@ -383,7 +410,9 @@ class TestAlertManager:
             "tags": ["production", "critical"],
         }
 
-        alert = manager.create_alert("high_load", "critical", "High system load", metadata=metadata)
+        alert = manager.create_alert(
+            "high_load", "critical", "High system load", metadata=metadata
+        )
 
         assert alert.metadata["server"] == "web-01"
         assert alert.metadata["metrics"]["cpu"] == 95.5
@@ -492,7 +521,9 @@ class TestMonitoringIntegration:
 
         # Register a health check
         def failing_check():
-            return HealthCheck("service", "unhealthy", "Service is down", datetime.now())
+            return HealthCheck(
+                "service", "unhealthy", "Service is down", datetime.now()
+            )
 
         health.register_check("service", failing_check)
 
@@ -524,7 +555,9 @@ class TestMonitoringIntegration:
         assert metrics.cpu_percent >= 0
 
         # Run health checks
-        health.register_check("disk", lambda: health.check_disk_space("/", threshold_percent=90))
+        health.register_check(
+            "disk", lambda: health.check_disk_space("/", threshold_percent=90)
+        )
         health_results = health.run_all_checks()
         assert len(health_results) > 0
 

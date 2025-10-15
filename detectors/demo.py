@@ -1,8 +1,29 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Demo script showing detector system functionality."""
 
 import random
-from datetime import datetime
 
 from detectors import DetectorManager
 from detectors.anomaly_detector import AnomalyDetector
@@ -22,7 +43,9 @@ def demo_basic_detection():
         value = random.gauss(100, 5)  # Normal distribution
         result = detector.process(value)
         if result:
-            print(f"  Value: {value:.1f} -> {result.tier.value} (confidence: {result.confidence:.2f})")
+            print(
+                f"  Value: {value:.1f} -> {result.tier.value} (confidence: {result.confidence:.2f})"
+            )
 
     # Test anomalous values
     print("\nTesting anomalous values:")
@@ -30,8 +53,10 @@ def demo_basic_detection():
     for value in anomalous_values:
         result = detector.process(value)
         if result:
-            print(f"  Value: {value} -> {result.tier.value} (confidence: {result.confidence:.2f})")
-            if result.tier in ['warn', 'block']:
+            print(
+                f"  Value: {value} -> {result.tier.value} (confidence: {result.confidence:.2f})"
+            )
+            if result.tier in ["warn", "block"]:
                 print("    ^^^ Would require approval in live mode ^^^")
 
 
@@ -76,11 +101,15 @@ def demo_approvals():
         print(f"  Requested: {approval.requested_at}")
 
         # Approve it
-        success = detector.approve_detection(approval.id, reviewer="demo_user", notes="Approved for demo")
+        success = detector.approve_detection(
+            approval.id, reviewer="demo_user", notes="Approved for demo"
+        )
         print(f"  Approved: {success}")
 
         if success:
-            print(f"  Action taken after approval: {approval.detection_result.action_taken}")
+            print(
+                f"  Action taken after approval: {approval.detection_result.action_taken}"
+            )
 
 
 def demo_metrics():

@@ -4,7 +4,7 @@
 
 ### User Input
 
-generate a report from codebase's youtube transcribe transcript and report module @[PodcastData] 
+generate a report from codebase's youtube transcribe transcript and report module @[PodcastData]
 
 *Listed directory [Development](file:///e:/Projects/Development) *
 
@@ -119,7 +119,7 @@ The report includes the complete lyrics with precise timestamps and is saved in 
 
 ### User Input
 
-@[PodcastData] @[e:\Projects\Development\text_reports\altj_3ww_report.md] 
+@[PodcastData] @[e:\Projects\Development\text_reports\altj_3ww_report.md]
 
 *Viewed [schemas.py](file:///e:/Projects/Development/packages/core/schemas.py) *
 
@@ -139,7 +139,7 @@ The **PodcastData** class provides the foundation:
 ```python
 class PodcastData(BaseModel):
     podcast: str           # "YouTube Music Video"
-    episode_title: str     # "alt-J - 3WW (Official Video)" 
+    episode_title: str     # "alt-J - 3WW (Official Video)"
     source: str           # YouTube URL
     events: List[PodcastEvent]  # 32 transcribed segments
 ```
@@ -148,7 +148,7 @@ Each **PodcastEvent** contains:
 ```python
 class PodcastEvent(BaseModel):
     timestamp_start_s: float  # Start time in seconds
-    timestamp_end_s: float    # End time in seconds  
+    timestamp_end_s: float    # End time in seconds
     speaker: Optional[str]    # None (no speaker diarization)
     utterance: str           # Transcribed text
     pause_after_s: float     # Pause duration (0.5s default)
@@ -160,7 +160,7 @@ class PodcastEvent(BaseModel):
 1. **Transcription**: YouTube audio downloaded via yt-dlp, transcribed with Whisper
 2. **Schema Mapping**: Each Whisper segment becomes a PodcastEvent
 3. **Data Structure**: Events collected into PodcastData object
-4. **Report Rendering**: 
+4. **Report Rendering**:
    - **JSON Output**: Structured data for programmatic access
    - **Markdown Report**: Human-readable format with timestamps
 
@@ -258,7 +258,7 @@ The JSON follows the **PodcastData** schema with this structure:
 ```json
 {
   "podcast": "Text Response Simulation",
-  "episode_title": "Response to ¿Qué tal?", 
+  "episode_title": "Response to ¿Qué tal?",
   "source": "Spanish text input",
   "events": [
     {
@@ -385,7 +385,7 @@ I've created a sentimental communication piece inspired by the iconic red teleph
 **Technical Details:**
 - **Duration**: 75.5 seconds (simulated realistic conversation pacing)
 - **Participants**: 3 (Operator + 2 conversationalists)
-- **Communication Patterns**: 
+- **Communication Patterns**:
   - 5 rhetorical exchanges (conversational flow)
   - 3 cognitive_load exchanges (information sharing)
   - 3 handoff exchanges (turn transitions)
@@ -424,7 +424,7 @@ I've updated the [create_telephone_communication.py](cci:7://file:///e:/Projects
 This translates to: **"How wonderful to hear from you! I'm glad things are going well in general."**
 
 ### Updated Conversation Flow:
-1. **Recipient:** "¿Qué tal?" 
+1. **Recipient:** "¿Qué tal?"
 2. **Caller (You):** "He estado bien. Algunos días están bien, otros son difíciles y algunos son absolutamente fantásticos. Espero que estés bien."
 3. **Recipient:** "¡Qué maravilla escucharte! Me alegra que las cosas vayan bien en general." ← **This is the response you were looking for**
 
@@ -526,7 +526,7 @@ I've successfully validated all JSON files and created an improved structure acc
 
 **Files Validated:**
 - [altj_3ww_podcast_data.json](cci:7://file:///e:/Projects/Development/text_reports/altj_3ww_podcast_data.json:0:0-0:0): 6,498 characters, valid
-- [spanish_response_podcast_data.json](cci:7://file:///e:/Projects/Development/text_reports/spanish_response_podcast_data.json:0:0-0:0): 818 characters, valid  
+- [spanish_response_podcast_data.json](cci:7://file:///e:/Projects/Development/text_reports/spanish_response_podcast_data.json:0:0-0:0): 818 characters, valid
 - [telephone_booth_podcast_data.json](cci:7://file:///e:/Projects/Development/text_reports/telephone_booth_podcast_data.json:0:0-0:0): 3,795 characters, valid
 
 ### 🏗️ **Restructured Format**

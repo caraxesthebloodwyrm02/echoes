@@ -2,64 +2,25 @@
 
 Thank you for your interest in contributing to Echoes! This document provides guidelines and processes for contributing to the project.
 
-## Contribution Checklist (IDE Hint)
+## Quick Start for Contributors
 
-Before submitting a pull request, ensure your contribution meets these requirements:
+### Development Setup
 
-### For All Contributors
-- [ ] **Code Quality**: Run pre-commit hooks and ensure no linting errors
-- [ ] **Documentation**: Update relevant documentation for any API or configuration changes
-- [ ] **Testing**: Add unit/integration tests and verify coverage doesn't decrease
-- [ ] **Commits**: Use clear, atomic commit messages following conventional format
-
-### Developers
-- [ ] Write unit/integration tests for new features and bug fixes
-- [ ] Update docstrings for any modified functions/classes
-- [ ] Ensure backward compatibility or document breaking changes
-- [ ] Test edge cases and error conditions
-
-### Product Owners
-- [ ] Tag high-impact bugs/features with the `evolution-item` label
-- [ ] Provide clear acceptance criteria for new features
-- [ ] Review impact on existing functionality and users
-
-### Data Scientists
-- [ ] Push performance benchmarks to the `metrics/` directory
-- [ ] Document model assumptions and limitations
-- [ ] Include data preprocessing and validation steps
-
-### DevOps Engineers
-- [ ] Optimize pipeline steps and verify auto-scale configurations
-- [ ] Update deployment documentation for infrastructure changes
-- [ ] Test rollback procedures for critical changes
-
-### Technical Writers
-- [ ] Sync documentation updates after each PR merge
-- [ ] Validate that code examples work with current versions
-- [ ] Update API documentation for interface changes
-
-## Development Workflow
-
-### 1. Choose an Issue
-- Check the [GitHub Issues](https://github.com/caraxesthebloodwyrm02/echoes/issues) for open tasks
-- Look for issues labeled `good-first-issue` if you're new to the project
-- Comment on the issue to indicate you're working on it
-
-### 2. Set Up Development Environment
 ```bash
 # Clone the repository
 git clone https://github.com/caraxesthebloodwyrm02/echoes.git
 cd echoes
 
-# Set up Python environment with Poetry
-curl -sSL https://install.python-poetry.org | python3 -
-poetry install --with dev
+# Set up Python environment
+pyenv-create  # Create virtual environment
+pyenv         # Activate environment
 
-# Activate virtual environment
-poetry shell
+# Install dependencies
+pip install -r requirements.txt
+pip install -e .[dev]  # Install development dependencies
 
-# Install pre-commit hooks
-poetry run pre-commit install
+# Run setup validation
+python test_venv_functionality.py
 ```
 
 ### VS Code Setup (Recommended)
@@ -67,83 +28,24 @@ poetry run pre-commit install
 For the best development experience:
 
 1. Install recommended extensions (see `.vscode/extensions.json`)
-2. Configure Python interpreter to use Poetry:
+2. Configure Python interpreter:
    - Open Command Palette (`Ctrl+Shift+P`)
    - Select "Python: Select Interpreter"
-   - Choose the Poetry environment (usually shows as `Python 3.12.x ('echoes': poetry)`)
+   - Choose the project virtual environment
 3. The workspace includes debug configurations and tasks for common operations
 
-### Testing
+## Contribution Guidelines
 
-```bash
-# Run the full test suite
-poetry run pytest --cov=. --cov-report=html
+### Code Quality Standards
 
-# Run specific tests
-poetry run pytest tests/test_specific_module.py
+- **Linting & Formatting**: Use Black, Ruff, and Flake8
+- **Type Hints**: Required for all function parameters and return values
+- **Docstrings**: Required for all public functions, classes, and modules
+- **Testing**: Minimum 80% coverage, comprehensive test suites
+- **Documentation**: Update docs for API/configuration changes
 
-# Check code quality
-poetry run pre-commit run --all-files
-```
+### Commit Message Format
 
-### 3. Create a Feature Branch
-```bash
-git checkout -b feature/your-feature-name
-# or
-git checkout -b fix/issue-number-description
-```
-
-### 4. Make Changes
-- Follow the existing code style and patterns
-- Write tests for new functionality
-- Update documentation as needed
-- Run pre-commit hooks regularly: `poetry run pre-commit run --all-files`
-
-### 5. Test Your Changes
-```bash
-# Run the full test suite
-poetry run pytest --cov=. --cov-report=html
-
-# Run specific tests
-poetry run pytest tests/test_specific_module.py
-
-# Check code quality
-poetry run pre-commit run --all-files
-```
-
-### 6. Commit and Push
-```bash
-# Stage your changes
-git add .
-
-# Commit with a clear message
-git commit -m "feat: add new feature description
-
-- What was changed
-- Why it was changed
-- Any breaking changes"
-
-# Push to your branch
-git push origin feature/your-feature-name
-```
-
-### 7. Create a Pull Request
-- Go to the [Pull Requests](https://github.com/caraxesthebloodwyrm02/echoes/pulls) page
-- Click "New Pull Request"
-- Select your feature branch as the compare branch
-- Fill out the pull request template
-- Request review from appropriate team members
-
-## Code Style Guidelines
-
-### Python
-- Follow PEP 8 style guidelines
-- Use type hints for function parameters and return values
-- Write docstrings for all public functions, classes, and modules
-- Use descriptive variable and function names
-- Keep functions focused on a single responsibility
-
-### Commit Messages
 Follow conventional commit format:
 ```
 type(scope): description
@@ -157,61 +59,109 @@ Types:
 - `feat`: New features
 - `fix`: Bug fixes
 - `docs`: Documentation changes
-- `style`: Code style changes (formatting, etc.)
+- `style`: Code style changes
 - `refactor`: Code refactoring
-- `test`: Adding or updating tests
+- `test`: Adding/updating tests
 - `chore`: Maintenance tasks
 
+### Pull Request Process
+
+1. **Fork and Branch**: Create a feature branch from `main`
+2. **Development**: Implement changes with tests
+3. **Validation**: Run full test suite and quality checks
+4. **Documentation**: Update relevant docs
+5. **PR Creation**: Use descriptive title and detailed description
+6. **Review**: Address feedback and iterate
+7. **Merge**: Squash merge after approval
+
+## Development Workflow
+
 ### Testing
-- Write unit tests for all new functions and classes
-- Include integration tests for API endpoints and workflows
-- Aim for at least 90% code coverage
-- Test both happy path and error conditions
+
+```bash
+# Run full test suite
+pytest --cov=. --cov-report=html
+
+# Run specific tests
+pytest tests/test_specific_module.py -v
+
+# Run code quality checks
+python audit_codebase.py
+
+# Check environment
+python test_venv_functionality.py
+```
+
+### Code Quality Tools
+
+- **Black**: Code formatting (line length: 88)
+- **Ruff**: Fast Python linter
+- **Flake8**: Additional style checks
+- **MyPy**: Type checking
+- **Pre-commit**: Automated quality checks
+
+### Key Scripts
+
+- `pyenv` - Activate virtual environment
+- `pyenv-create` - Create/recreate environment
+- `python test_venv_functionality.py` - Validate setup
+- `python audit_codebase.py` - Code quality analysis
+
+## Module-Specific Guidelines
+
+### AI Agents (`ai_agents/`)
+- Document agent capabilities and limitations
+- Include performance benchmarks
+- Test agent collaboration scenarios
+
+### Multimodal Processing (`multimodal/`)
+- Validate model accuracy on diverse datasets
+- Document preprocessing requirements
+- Include cross-modal evaluation metrics
+
+### Security (`security/`)
+- Follow secure coding practices
+- Document security assumptions
+- Include penetration testing results
+
+### MLOps (`mlops/`)
+- Version control for models and data
+- Document deployment procedures
+- Include monitoring and rollback plans
 
 ## Review Process
 
 ### Automated Checks
-Pull requests will automatically run:
-- Code linting and formatting checks
+- Code linting and formatting
 - Unit and integration tests
-- Coverage analysis (must be ≥90%)
+- Coverage analysis (≥80%)
 - Build verification
+- Security scanning
 
 ### Manual Review
-Your PR will be reviewed by:
-- At least one maintainer
-- Relevant domain experts
-- QA team for critical changes
-
-### Approval and Merge
-Once approved:
-- The PR will be merged using squash merge
-- The branch will be automatically deleted
-- CI/CD will deploy changes to staging
+- Code quality and architecture
+- Test coverage and scenarios
+- Documentation completeness
+- Performance implications
 
 ## Getting Help
 
-### Documentation
-- [README](README.md) - Project overview and setup
-- [Evolution Guide](docs/EVOLUTION_GUIDE.md) - Migration and upgrade instructions
-- [API Documentation](docs/) - Detailed API references
+### Resources
+- [README](README.md) - Project overview
+- [GitHub Issues](https://github.com/caraxesthebloodwyrm02/echoes/issues) - Bug reports and features
+- [Discussions](https://github.com/caraxesthebloodwyrm02/echoes/discussions) - Community support
 
 ### Communication
-- **GitHub Issues**: For bugs, features, and general questions
-- **Pull Request Comments**: For code review discussions
-- **Team Chat**: For real-time collaboration
-
-### Support
-If you need help:
-1. Check existing issues and documentation
-2. Ask in GitHub issue comments
-3. Tag relevant maintainers in your PR
+- Use clear, descriptive issue/PR titles
+- Provide context and examples
+- Tag relevant maintainers when needed
+- Be respectful and collaborative
 
 ## Recognition
 
-Contributors will be:
-- Listed in release notes for significant contributions
-- Acknowledged in the project's contributor file
-- Invited to join the maintainer team for sustained contributions
+Contributors are recognized through:
+- Release notes for significant contributions
+- Project contributor acknowledgments
+- Potential maintainer team invitations
 
-Thank you for contributing to TrajectoX! 🎉
+Thank you for contributing to Echoes! 🤖✨

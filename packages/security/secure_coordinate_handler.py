@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Secure Coordinate Handler
 Version 1.0.0
@@ -13,6 +35,7 @@ import logging
 from typing import List, Tuple
 
 from data_sanitizer import data_sanitizer
+
 from utils.coordinates import Coordinates
 
 
@@ -34,7 +57,9 @@ class SecureCoordinateHandler:
             format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         )
 
-    def create_secure_coordinate(self, lat: float, lng: float, label: str = "unknown") -> Coordinates:
+    def create_secure_coordinate(
+        self, lat: float, lng: float, label: str = "unknown"
+    ) -> Coordinates:
         """
         Create a coordinate object with security validation and audit trail.
 
@@ -126,7 +151,10 @@ class SecureCoordinateHandler:
             issues.append("Full precision coordinates detected")
 
         # Check for coordinate patterns in logs
-        if any(pattern in text.lower() for pattern in ["lat:", "lng:", "latitude:", "longitude:"]):
+        if any(
+            pattern in text.lower()
+            for pattern in ["lat:", "lng:", "latitude:", "longitude:"]
+        ):
             issues.append("Coordinate labels detected in output")
 
         return len(issues) == 0, issues
@@ -159,7 +187,9 @@ class SecureCoordinateHandler:
         # Safe print
         print(*sanitized_args, **kwargs)
 
-    def secure_coordinate_display(self, coord: Coordinates, context: str = "general") -> str:
+    def secure_coordinate_display(
+        self, coord: Coordinates, context: str = "general"
+    ) -> str:
         """
         Get a context-appropriate display of coordinates.
 

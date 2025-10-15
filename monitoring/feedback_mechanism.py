@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Feedback mechanism system for gathering insights on refactoring effectiveness.
 
 Implements feedback loops that analyze monitoring data, user input, and performance
@@ -10,7 +32,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Any, Dict, List, Optional, Set
+from typing import Any, Dict, List, Optional
 
 from monitoring.continuous_monitor import BenchmarkResult, MonitoringReport
 
@@ -50,7 +72,11 @@ class FeedbackAnalysis:
 class FeedbackMechanism:
     """Feedback system for continuous improvement based on trajectory insights."""
 
-    def __init__(self, feedback_path: str = "data/feedback.json", monitoring_path: str = "logs/monitoring.log"):
+    def __init__(
+        self,
+        feedback_path: str = "data/feedback.json",
+        monitoring_path: str = "logs/monitoring.log",
+    ):
         self.feedback_path = Path(feedback_path)
         self.monitoring_path = Path(monitoring_path)
 
@@ -67,9 +93,9 @@ class FeedbackMechanism:
         self.logger.setLevel(logging.INFO)
 
         handler = logging.FileHandler("logs/feedback.log")
-        handler.setFormatter(logging.Formatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
-        ))
+        handler.setFormatter(
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+        )
         self.logger.addHandler(handler)
 
     def collect_monitoring_feedback(self, report: MonitoringReport):
@@ -89,9 +115,9 @@ class FeedbackMechanism:
                         "metric_name": benchmark.metric_name,
                         "value": benchmark.value,
                         "threshold": benchmark.threshold,
-                        "status": benchmark.status
+                        "status": benchmark.status,
                     },
-                    recommendations=self._generate_benchmark_recommendations(benchmark)
+                    recommendations=self._generate_benchmark_recommendations(benchmark),
                 )
                 self._add_feedback_entry(entry)
 
@@ -106,7 +132,7 @@ class FeedbackMechanism:
                 title=issue["title"],
                 description=issue["description"],
                 metrics=issue.get("metrics", {}),
-                recommendations=issue.get("recommendations", [])
+                recommendations=issue.get("recommendations", []),
             )
             self._add_feedback_entry(entry)
 
@@ -121,12 +147,18 @@ class FeedbackMechanism:
                 title=issue["title"],
                 description=issue["description"],
                 metrics=issue.get("metrics", {}),
-                recommendations=issue.get("recommendations", [])
+                recommendations=issue.get("recommendations", []),
             )
             self._add_feedback_entry(entry)
 
-    def collect_user_feedback(self, title: str, description: str, category: str = "general",
-                            severity: str = "medium", user_context: Optional[Dict[str, Any]] = None):
+    def collect_user_feedback(
+        self,
+        title: str,
+        description: str,
+        category: str = "general",
+        severity: str = "medium",
+        user_context: Optional[Dict[str, Any]] = None,
+    ):
         """Collect feedback from user input."""
 
         entry = FeedbackEntry(
@@ -137,13 +169,15 @@ class FeedbackMechanism:
             title=title,
             description=description,
             metrics=user_context or {},
-            recommendations=[]
+            recommendations=[],
         )
 
         self._add_feedback_entry(entry)
         self.logger.info(f"User feedback collected: {title}")
 
-    def collect_test_failure_feedback(self, test_name: str, error_message: str, stack_trace: Optional[str] = None):
+    def collect_test_failure_feedback(
+        self, test_name: str, error_message: str, stack_trace: Optional[str] = None
+    ):
         """Collect feedback from test failures."""
 
         entry = FeedbackEntry(
@@ -156,13 +190,13 @@ class FeedbackMechanism:
             metrics={
                 "test_name": test_name,
                 "error_message": error_message,
-                "stack_trace": stack_trace
+                "stack_trace": stack_trace,
             },
             recommendations=[
                 "Review test implementation",
                 "Check for recent code changes affecting this test",
-                "Verify test environment and dependencies"
-            ]
+                "Verify test environment and dependencies",
+            ],
         )
 
         self._add_feedback_entry(entry)
@@ -176,7 +210,8 @@ class FeedbackMechanism:
 
         # Filter entries in period
         period_entries = [
-            entry for entry in self.feedback_entries
+            entry
+            for entry in self.feedback_entries
             if period_start <= entry.timestamp <= period_end
         ]
 
@@ -190,7 +225,9 @@ class FeedbackMechanism:
             entries_by_category[entry.category] += 1
             entries_by_severity[entry.severity] += 1
 
-        resolution_rate = len(resolved_entries) / total_entries if total_entries > 0 else 0
+        resolution_rate = (
+            len(resolved_entries) / total_entries if total_entries > 0 else 0
+        )
 
         # Identify top issues
         top_issues = self._identify_top_issues(period_entries)
@@ -212,7 +249,7 @@ class FeedbackMechanism:
             resolution_rate=resolution_rate,
             top_issues=top_issues,
             improvement_trends=improvement_trends,
-            recommendations=recommendations
+            recommendations=recommendations,
         )
 
     def resolve_feedback_entry(self, entry_index: int, resolution_notes: str):
@@ -228,8 +265,9 @@ class FeedbackMechanism:
         else:
             raise ValueError(f"Invalid entry index: {entry_index}")
 
-    def get_unresolved_feedback(self, category: Optional[str] = None,
-                              severity: Optional[str] = None) -> List[FeedbackEntry]:
+    def get_unresolved_feedback(
+        self, category: Optional[str] = None, severity: Optional[str] = None
+    ) -> List[FeedbackEntry]:
         """Get unresolved feedback entries, optionally filtered."""
 
         unresolved = [entry for entry in self.feedback_entries if not entry.resolved]
@@ -252,13 +290,13 @@ class FeedbackMechanism:
             "analysis_period": {
                 "start": analysis.period_start.isoformat(),
                 "end": analysis.period_end.isoformat(),
-                "days": days
+                "days": days,
             },
             "summary": {
                 "total_entries": analysis.total_entries,
                 "resolution_rate": analysis.resolution_rate,
                 "entries_by_category": analysis.entries_by_category,
-                "entries_by_severity": analysis.entries_by_severity
+                "entries_by_severity": analysis.entries_by_severity,
             },
             "top_issues": analysis.top_issues,
             "improvement_trends": analysis.improvement_trends,
@@ -270,16 +308,16 @@ class FeedbackMechanism:
                     "severity": entry.severity,
                     "title": entry.title,
                     "description": entry.description,
-                    "source": entry.source
+                    "source": entry.source,
                 }
                 for entry in self.get_unresolved_feedback()
-            ]
+            ],
         }
 
         output_path = Path(output_path)
         output_path.parent.mkdir(parents=True, exist_ok=True)
 
-        with open(output_path, 'w') as f:
+        with open(output_path, "w") as f:
             json.dump(report, f, indent=2)
 
         self.logger.info(f"Feedback report exported to {output_path}")
@@ -291,45 +329,59 @@ class FeedbackMechanism:
         self._save_feedback()
         self.logger.debug(f"Feedback entry added: {entry.title}")
 
-    def _generate_benchmark_recommendations(self, benchmark: BenchmarkResult) -> List[str]:
+    def _generate_benchmark_recommendations(
+        self, benchmark: BenchmarkResult
+    ) -> List[str]:
         """Generate recommendations for benchmark issues."""
 
         recommendations = []
 
         if benchmark.metric_name == "complexity_score":
-            recommendations.extend([
-                "Refactor complex functions into smaller, focused methods",
-                "Extract utility classes for common operations",
-                "Consider breaking down large modules into smaller packages"
-            ])
+            recommendations.extend(
+                [
+                    "Refactor complex functions into smaller, focused methods",
+                    "Extract utility classes for common operations",
+                    "Consider breaking down large modules into smaller packages",
+                ]
+            )
         elif benchmark.metric_name == "communication_issues":
-            recommendations.extend([
-                "Review import dependencies for circular references",
-                "Standardize API interfaces between modules",
-                "Implement proper abstraction layers"
-            ])
+            recommendations.extend(
+                [
+                    "Review import dependencies for circular references",
+                    "Standardize API interfaces between modules",
+                    "Implement proper abstraction layers",
+                ]
+            )
         elif benchmark.metric_name == "gate_failures":
-            recommendations.extend([
-                "Address security scan findings",
-                "Fix code quality issues flagged by linters",
-                "Update outdated dependencies"
-            ])
+            recommendations.extend(
+                [
+                    "Address security scan findings",
+                    "Fix code quality issues flagged by linters",
+                    "Update outdated dependencies",
+                ]
+            )
         elif benchmark.metric_name == "detector_false_positives":
-            recommendations.extend([
-                "Adjust detector confidence thresholds",
-                "Review and refine detection rules",
-                "Implement better feature engineering"
-            ])
+            recommendations.extend(
+                [
+                    "Adjust detector confidence thresholds",
+                    "Review and refine detection rules",
+                    "Implement better feature engineering",
+                ]
+            )
         elif benchmark.metric_name == "test_coverage":
-            recommendations.extend([
-                "Add unit tests for uncovered functions",
-                "Implement integration tests for critical paths",
-                "Review and expand test scenarios"
-            ])
+            recommendations.extend(
+                [
+                    "Add unit tests for uncovered functions",
+                    "Implement integration tests for critical paths",
+                    "Review and expand test scenarios",
+                ]
+            )
 
         return recommendations
 
-    def _analyze_ecosystem_health(self, ecosystem_health: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _analyze_ecosystem_health(
+        self, ecosystem_health: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         """Analyze ecosystem health for feedback issues."""
 
         issues = []
@@ -337,73 +389,104 @@ class FeedbackMechanism:
         # Check complexity
         complexity = ecosystem_health["terraforming"]["complexity_score"]
         if complexity > 20:
-            issues.append({
-                "severity": "critical",
-                "title": "Critical code complexity detected",
-                "description": f"Complexity score of {complexity:.1f} exceeds safe threshold",
-                "metrics": {"complexity_score": complexity},
-                "recommendations": ["Immediate refactoring required", "Break down complex modules"]
-            })
+            issues.append(
+                {
+                    "severity": "critical",
+                    "title": "Critical code complexity detected",
+                    "description": f"Complexity score of {complexity:.1f} exceeds safe threshold",
+                    "metrics": {"complexity_score": complexity},
+                    "recommendations": [
+                        "Immediate refactoring required",
+                        "Break down complex modules",
+                    ],
+                }
+            )
         elif complexity > 10:
-            issues.append({
-                "severity": "warning",
-                "title": "High code complexity",
-                "description": f"Complexity score of {complexity:.1f} is elevated",
-                "metrics": {"complexity_score": complexity},
-                "recommendations": ["Consider refactoring complex functions"]
-            })
+            issues.append(
+                {
+                    "severity": "warning",
+                    "title": "High code complexity",
+                    "description": f"Complexity score of {complexity:.1f} is elevated",
+                    "metrics": {"complexity_score": complexity},
+                    "recommendations": ["Consider refactoring complex functions"],
+                }
+            )
 
         # Check communication health
         if not ecosystem_health["communications"]["healthy"]:
-            issues.append({
-                "severity": "high",
-                "title": "Communication issues detected",
-                "description": f"Found {len(ecosystem_health['communications']['issues'])} communication problems",
-                "metrics": {"issues_count": len(ecosystem_health["communications"]["issues"])},
-                "recommendations": ecosystem_health["communications"]["issues"]
-            })
+            issues.append(
+                {
+                    "severity": "high",
+                    "title": "Communication issues detected",
+                    "description": f"Found {len(ecosystem_health['communications']['issues'])} communication problems",
+                    "metrics": {
+                        "issues_count": len(
+                            ecosystem_health["communications"]["issues"]
+                        )
+                    },
+                    "recommendations": ecosystem_health["communications"]["issues"],
+                }
+            )
 
         # Check GATE status
         if ecosystem_health["gate_status"]["gate_status"] == "closed":
-            issues.append({
-                "severity": "critical",
-                "title": "GATE validation failed",
-                "description": "Quality gate is closed due to validation failures",
-                "metrics": ecosystem_health["gate_status"]["details"],
-                "recommendations": ["Review and fix validation failures before proceeding"]
-            })
+            issues.append(
+                {
+                    "severity": "critical",
+                    "title": "GATE validation failed",
+                    "description": "Quality gate is closed due to validation failures",
+                    "metrics": ecosystem_health["gate_status"]["details"],
+                    "recommendations": [
+                        "Review and fix validation failures before proceeding"
+                    ],
+                }
+            )
 
         return issues
 
-    def _analyze_detector_metrics(self, detector_metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
+    def _analyze_detector_metrics(
+        self, detector_metrics: Dict[str, Any]
+    ) -> List[Dict[str, Any]]:
         """Analyze detector metrics for feedback issues."""
 
         issues = []
 
         # Check for inactive detectors
         if detector_metrics.get("active_detectors", 0) == 0:
-            issues.append({
-                "severity": "medium",
-                "title": "No active detectors",
-                "description": "Detector system shows no activity",
-                "metrics": detector_metrics,
-                "recommendations": ["Verify detector configuration", "Check input data sources"]
-            })
+            issues.append(
+                {
+                    "severity": "medium",
+                    "title": "No active detectors",
+                    "description": "Detector system shows no activity",
+                    "metrics": detector_metrics,
+                    "recommendations": [
+                        "Verify detector configuration",
+                        "Check input data sources",
+                    ],
+                }
+            )
 
         # Check shadow mode
         shadow_count = detector_metrics.get("shadow_mode_detectors", 0)
         if shadow_count > 0:
-            issues.append({
-                "severity": "low",
-                "title": f"{shadow_count} detectors in shadow mode",
-                "description": "Some detectors are running in evaluation mode",
-                "metrics": {"shadow_mode_count": shadow_count},
-                "recommendations": ["Monitor shadow mode performance", "Consider enabling live mode when confident"]
-            })
+            issues.append(
+                {
+                    "severity": "low",
+                    "title": f"{shadow_count} detectors in shadow mode",
+                    "description": "Some detectors are running in evaluation mode",
+                    "metrics": {"shadow_mode_count": shadow_count},
+                    "recommendations": [
+                        "Monitor shadow mode performance",
+                        "Consider enabling live mode when confident",
+                    ],
+                }
+            )
 
         return issues
 
-    def _identify_top_issues(self, entries: List[FeedbackEntry]) -> List[Dict[str, Any]]:
+    def _identify_top_issues(
+        self, entries: List[FeedbackEntry]
+    ) -> List[Dict[str, Any]]:
         """Identify the most common issues."""
 
         issue_counts = defaultdict(int)
@@ -417,13 +500,15 @@ class FeedbackMechanism:
                     "category": entry.category,
                     "title": entry.title,
                     "count": 0,
-                    "severities": set()
+                    "severities": set(),
                 }
             issue_details[key]["count"] += 1
             issue_details[key]["severities"].add(entry.severity)
 
         # Sort by frequency
-        top_issues = sorted(issue_details.values(), key=lambda x: x["count"], reverse=True)
+        top_issues = sorted(
+            issue_details.values(), key=lambda x: x["count"], reverse=True
+        )
         return top_issues[:10]  # Top 10 issues
 
     def _analyze_improvement_trends(self, entries: List[FeedbackEntry]) -> List[str]:
@@ -438,8 +523,16 @@ class FeedbackMechanism:
         sorted_entries = sorted(entries, key=lambda x: x.timestamp)
 
         # Check resolution trends
-        recent_entries = [e for e in sorted_entries if e.timestamp > datetime.now() - timedelta(days=7)]
-        older_entries = [e for e in sorted_entries if e.timestamp <= datetime.now() - timedelta(days=7)]
+        recent_entries = [
+            e
+            for e in sorted_entries
+            if e.timestamp > datetime.now() - timedelta(days=7)
+        ]
+        older_entries = [
+            e
+            for e in sorted_entries
+            if e.timestamp <= datetime.now() - timedelta(days=7)
+        ]
 
         recent_resolved = sum(1 for e in recent_entries if e.resolved)
         older_resolved = sum(1 for e in older_entries if e.resolved)
@@ -467,9 +560,9 @@ class FeedbackMechanism:
 
         return trends
 
-    def _generate_period_recommendations(self, categories: Dict[str, int],
-                                       severities: Dict[str, int],
-                                       trends: List[str]) -> List[str]:
+    def _generate_period_recommendations(
+        self, categories: Dict[str, int], severities: Dict[str, int], trends: List[str]
+    ) -> List[str]:
         """Generate recommendations based on period analysis."""
 
         recommendations = []
@@ -479,7 +572,9 @@ class FeedbackMechanism:
             recommendations.append("Focus on performance optimization initiatives")
 
         if categories.get("security", 0) > 3:
-            recommendations.append("Prioritize security improvements and detector tuning")
+            recommendations.append(
+                "Prioritize security improvements and detector tuning"
+            )
 
         # Severity-based recommendations
         if severities.get("critical", 0) > 0:
@@ -493,7 +588,9 @@ class FeedbackMechanism:
                 recommendations.append("Review and adjust current processes")
 
         if not recommendations:
-            recommendations.append("Maintain current monitoring and improvement practices")
+            recommendations.append(
+                "Maintain current monitoring and improvement practices"
+            )
 
         return recommendations
 
@@ -502,11 +599,9 @@ class FeedbackMechanism:
 
         if self.feedback_path.exists():
             try:
-                with open(self.feedback_path, 'r') as f:
+                with open(self.feedback_path, "r") as f:
                     data = json.load(f)
-                    self.feedback_entries = [
-                        FeedbackEntry(**entry) for entry in data
-                    ]
+                    self.feedback_entries = [FeedbackEntry(**entry) for entry in data]
             except (json.JSONDecodeError, KeyError) as e:
                 self.logger.warning(f"Error loading feedback: {e}")
                 self.feedback_entries = []
@@ -525,13 +620,15 @@ class FeedbackMechanism:
                 "metrics": entry.metrics,
                 "recommendations": entry.recommendations,
                 "resolved": entry.resolved,
-                "resolved_at": entry.resolved_at.isoformat() if entry.resolved_at else None,
-                "resolution_notes": entry.resolution_notes
+                "resolved_at": entry.resolved_at.isoformat()
+                if entry.resolved_at
+                else None,
+                "resolution_notes": entry.resolution_notes,
             }
             for entry in self.feedback_entries
         ]
 
-        with open(self.feedback_path, 'w') as f:
+        with open(self.feedback_path, "w") as f:
             json.dump(data, f, indent=2)
 
 
@@ -542,7 +639,9 @@ def collect_user_feedback(title: str, description: str, **kwargs):
     mechanism.collect_user_feedback(title, description, **kwargs)
 
 
-def export_feedback_report(output_path: str = "reports/feedback_analysis.json", days: int = 30):
+def export_feedback_report(
+    output_path: str = "reports/feedback_analysis.json", days: int = 30
+):
     """Convenience function for feedback report export."""
     mechanism = FeedbackMechanism()
     mechanism.export_feedback_report(output_path, days)

@@ -1,0 +1,5 @@
+{
+  "name": "Pac-Man: Let Bro Cook Edition",
+  "description": "A web-based Pac-Man style game with a 'Let Bro Cook' power-up mechanic. Guide Pac-Man through the maze, eat dots, and when you grab a power pellet, it's time to 'Let Bro Cook' and chase down the ghosts for multiplier points.",
+  "requestFramePermissions": []
+}

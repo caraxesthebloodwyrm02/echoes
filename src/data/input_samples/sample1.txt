@@ -1,0 +1,1 @@
+This is a short sample text for testing the batch processor. It contains basic information about a project and its goals. The system should be able to summarize this content effectively.

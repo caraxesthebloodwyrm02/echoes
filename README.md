@@ -1,306 +1,242 @@
+<div align="center">
+<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
+</div>
+
 # Echoes
-[![build-and-test](https://github.com/caraxesthebloodwyrm02/echoes/actions/workflows/build-and-test.yml/badge.svg?event=pull_request)](https://github.com/caraxesthebloodwyrm02/echoes/actions/workflows/build-and-test.yml)
 
-## Echoes Project
+<div align="center">
+  <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
+  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome">
+</div>
 
-A comprehensive AI-powered platform featuring multi-modal reasoning, deterministic orchestration, and research-grade workflow automation. The codebase has been refactored based on successful trajectory analysis to ensure enhanced consistency, performance, and strategic alignment.
+<div align="center">
+  <h3>Multi-Modal AI Orchestration Platform</h3>
+  <p>Deterministic workflow automation for research-grade AI applications</p>
+</div>
 
-## Progress & Release
+---
 
-### Milestones
-| Milestone | Version | Status | Key Indicators |
-|-----------|---------|--------|-----------------|
-| Initial Release | v0.9 | Completed | 5 core modules, 45 % coverage, basic CI |
-| **Trajectory-Aligned Refactoring** | v1.5 | **Completed** | Poetry migration, ecosystem monitoring, detector system, comprehensive audit trails |
-| Intermediate Release | v1.3 | Ongoing | 73 % coverage, parallel CI, 8 new APIs, 30 % latency cut |
-| Target Release | v2.0 (Dec 2025) | Planned | ≥95 % coverage, ≤5 min CI, auto‑scale 10×, full observability |
+## 🌟 Overview
 
-### Current Metrics
-| Metric | Value | Target | Status |
-|--------|-------|--------|--------|
-| Active Users | 4,832 | 5,000 | 🟡 Growing |
-| Staging Uptime | 99.8% | 99.9% | 🟢 Stable |
-| Test Coverage | 73% | ≥90% | 🟡 Improving |
-| CI Build Time | 4.2 min | ≤5 min | 🟢 On track |
-| Open Critical Issues | 2 | 0 | 🟡 Addressing |
-| **Trajectory Compliance** | **100%** | **100%** | **🟢 Achieved** |
+Echoes is a comprehensive AI orchestration platform designed for multi-modal reasoning and deterministic workflow automation. Built for researchers, developers, and enterprises, Echoes provides a modular framework for building sophisticated AI applications with agent-based orchestration, multimodal processing, and robust MLOps capabilities.
 
-## Trajectory-Aligned Features
+### Key Features
 
-Based on analysis of successful execution trajectories, the following enhancements have been implemented:
+- 🤖 **AI Agent Orchestration**: CrewAI-powered collaborative agent workflows
+- 🎯 **Multi-Modal Processing**: CLIP-based image/text understanding with Torch integration
+- 🔄 **Deterministic Workflows**: Phase-based execution with error handling and logging
+- 🏗️ **MLOps Pipeline**: MLflow integration for model versioning and deployment
+- 🔒 **Security-First**: AI-enhanced scanning with predictive vulnerability detection
+- 📊 **Knowledge Graphs**: Ontology-based semantic reasoning systems
+- 🎨 **Synthetic Data**: Privacy-preserving data augmentation pipelines
+- 🚀 **Edge AI**: Optimized model deployment for edge computing
 
-### 🏗️ **Ecosystem Monitoring System**
-- **Plant-based metaphors**: Roots (core), Branches (features), Leaves (utilities)
-- **Continuous health assessment** with automated stressor detection
-- **GATE validation** against trojan horses (security, quality, dependency checks)
-- **Endpoint vulnerability protection** using vector analysis
+## 🏗️ Architecture
 
-### 🔍 **Security & Validation Layer**
-- **Detector system** with shadow mode, human approvals, and audit trails
-- **Multi-tier detection**: INFO/WARN/BLOCK with configurable thresholds
-- **Comprehensive audit logging** for all critical operations
-- **7-day shadow mode evaluation** for safe deployment testing
+Echoes follows a modular, harmonic resonance design pattern:
 
-### 📊 **Continuous Monitoring & Feedback**
-- **Performance benchmarking** against established thresholds
-- **Automated feedback collection** from monitoring, tests, and user input
-- **Trend analysis** and improvement recommendations
-- **Real-time health scoring** (0-100 ecosystem health metric)
-
-### 🧩 **Modular Architecture**
-- **Package separation**: core/, integrations/, monitoring/, security/, utils/
-- **Schema-based data structures** with Pydantic validation
-- **Clear separation of concerns** following trajectory patterns
-- **Configurable components** with proper abstraction
-
-## Python Toolchain
-
-This project uses Python 3.12.x as the baseline for all applications. Dependencies are managed with Poetry for reproducible environments.
-
-### Setup
-
-```bash
-# Install Poetry (if not already installed)
-curl -sSL https://install.python-poetry.org | python3 -
-
-# Install dependencies
-poetry install  # For development (includes all groups)
-poetry install --only main  # For runtime only
-
-# Activate virtual environment
-poetry shell
-
-# Or run commands directly
-poetry run python your_script.py
-poetry run pytest
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   AI Agents     │    │ Multimodal      │    │   Knowledge     │
+│   Orchestration │    │   Processing    │    │     Graphs      │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+         │                        │                        │
+         └────────────────────────┼────────────────────────┘
+                                  │
+                    ┌─────────────────┐
+                    │  Core Engine   │
+                    │   Workflows     │
+                    └─────────────────┘
+         ┌────────────────────────┼────────────────────────┐
+         │                        │                        │
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│     MLOps       │    │   Security      │    │   Synthetic     │
+│   Pipeline      │    │   Scanning      │    │     Data        │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
 ```
 
-### Dependency Groups
+## 🚀 Quick Start
 
-- `main`: Core runtime dependencies
-- `dev`: Development tooling (testing, linting, docs)
-- `diarisation`: Optional speech processing (requires torch)
+### Prerequisites
 
-### Testing
+- Python 3.12+
+- Git
+- FFmpeg (for audio processing)
+- Node.js (for web components, optional)
 
-```bash
-# Run all tests
-poetry run pytest
+### Installation
 
-# Run with coverage
-poetry run pytest --cov
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/caraxesthebloodwyrm02/echoes.git
+   cd echoes
+   ```
 
-# Run specific test types
-poetry run pytest -m unit        # Fast unit tests
-poetry run pytest -m e2e         # End-to-end tests
-poetry run pytest -m slow        # Slow tests (may be skipped)
-```
+2. **Set up Python environment:**
+   ```bash
+   pyenv-create
+   pyenv
+   ```
 
-### Code Quality
+3. **Install dependencies:**
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-Pre-commit hooks are configured for automatic code formatting and linting:
+4. **Configure environment:**
+   ```bash
+   cp .env.example .env
+   # Edit .env with your API keys and configuration
+   ```
 
-```bash
-# Install hooks
-poetry run pre-commit install
+5. **Run setup validation:**
+   ```bash
+   python test_venv_functionality.py
+   ```
 
-# Run manually
-poetry run pre-commit run --all-files
-```
-
-### Formatters & Lint Workflow
-
-Use Black, isort, and autoflake locally to keep formatting and imports clean:
-
-```bash
-# Install/upgrade tools (already in dev dependencies)
-poetry install --with dev
-
-# Format code (Black)
-poetry run black .
-
-# Sort imports (isort)
-poetry run isort .
-
-# Remove unused imports/variables (autoflake)
-poetry run autoflake --in-place --remove-all-unused-imports --remove-unused-variables -r .
-```
-
-Run these before committing if pre-commit highlights issues.
-
-### Demo Loop Guards
-
-Some interactive/demo scripts can loop while waiting for model/tool output. To
-avoid accidental infinite loops during development, a bounded iteration guard is
-used (e.g., `MAX_ROUNDS`) in `examples/Untitled-1.py`:
+### Basic Usage
 
 ```python
-MAX_ROUNDS = 20
-for round_idx in range(MAX_ROUNDS):
-    # call model / process tool calls
-    ...
-else:
-    print("[WARN] Maximum iterations reached without terminating. Check tool behavior.")
+from echoes.core import EchoesEngine
+
+# Initialize the engine
+engine = EchoesEngine()
+
+# Run a deterministic workflow
+result = engine.run_workflow("analysis_pipeline", {
+    "input_data": "path/to/data.csv",
+    "model_config": "default"
+})
+
+print(f"Workflow completed: {result['status']}")
 ```
 
-Adjust the limit to suit your use case when running longer sessions.
+## 📚 Core Modules
 
-### Core Utilities
+### 🤖 AI Agents (`ai_agents/`)
+- Agent templates for code review, testing, and architecture
+- CrewAI integration for collaborative workflows
+- Customizable agent behaviors and tools
 
-The project uses centralized utilities from `packages.core`:
+### 🎨 Multimodal Processing (`multimodal/`)
+- CLIP model for image-text understanding
+- Torch-based audio and video processing
+- Cross-modal similarity analysis
 
-- **Logging**: `get_logger(name)` for consistent logging across modules
-- **Configuration**: Pydantic-based settings with `.env` support
-- **Schemas**: Typed data models for podcasts, prompts, and cache entries
+### 🔄 Workflow Engine (`workflows/`)
+- Phase-based execution (A-D phases)
+- Deterministic merge operations
+- Error handling and recovery
 
-### Trajectory-Aligned Features Usage
+### 🏭 MLOps Pipeline (`mlops/`)
+- Model versioning and deployment
+- Performance monitoring
+- Automated retraining pipelines
 
-#### Ecosystem Monitoring
-```bash
-# Run ecosystem health assessment
-poetry run python -c "from Q4.drucker_management import EcosystemManager; em = EcosystemManager(); print(em.operate_gate())"
+### 🔒 Security (`security/`)
+- AI-enhanced vulnerability scanning
+- Predictive security analysis
+- Compliance monitoring
 
-# Continuous monitoring (runs every hour)
-poetry run python -c "from monitoring.continuous_monitor import start_continuous_monitoring; start_continuous_monitoring()"
-```
+### 🕸️ Knowledge Graphs (`knowledge_graph/`)
+- RDF-based semantic storage
+- Ontology management
+- Graph-based reasoning
 
-#### Detector System
-```bash
-# Run detectors in shadow mode for testing
-poetry run python detectors/shadow_runner.py
+### 🎭 Synthetic Data (`synthetic_data/`)
+- Privacy-preserving data generation
+- Statistical distribution matching
+- Augmentation pipelines
 
-# View detector dashboard (requires dash)
-poetry run python detectors/dashboard.py
+## 🛠️ Development
 
-# Manual detection processing
-poetry run python -c "from detectors import BaseDetector, DetectionTier; detector = BaseDetector('test'); result = detector.process({'data': 'test'}); print(result)"
-```
+### Environment Setup
 
-#### Feedback System
-```bash
-# Generate feedback analysis report
-poetry run python -c "from monitoring.feedback_mechanism import export_feedback_report; export_feedback_report('feedback_report.json')"
+Echoes uses a comprehensive development environment with automated tooling:
 
-# Collect user feedback
-poetry run python -c "from monitoring.feedback_mechanism import collect_user_feedback; collect_user_feedback('Great new features!', 'The ecosystem monitoring is very helpful', 'user_experience')"
-```
+- **VS Code Integration**: Pre-configured settings for Python development
+- **Linting & Formatting**: Black, Ruff, Flake8
+- **Testing**: Pytest with comprehensive coverage
+- **Documentation**: MkDocs for project documentation
 
-#### JSON Schema Validation
-```bash
-# Validate JSON structure
-poetry run python validate_json_structure.py
+### Key Scripts
 
-# Use PodcastData schema
-poetry run python -c "from packages.core.schemas import PodcastData, PodcastEvent; event = PodcastEvent(timestamp_start_s=0.0, timestamp_end_s=3.25, utterance='Test', label='rhetorical'); data = PodcastData(podcast='Test', episode_title='Test', source='Test', events=[event]); print(data.model_dump_json())"
-```
+- `pyenv` - Activate virtual environment
+- `pyenv-create` - Create/recreate environment
+- `python test_venv_functionality.py` - Validate setup
+- `python audit_codebase.py` - Code quality analysis
 
-### Development Workflow
-
-1. Create feature branch like `feat/centralize-utilities`
-2. Make changes using atomic commits (e.g., `feat: add centralized logging module`)
-3. Run trajectory tests: `poetry run pytest tests/test_trajectory_scenarios.py`
-4. Run ecosystem monitoring: `poetry run python -c "from monitoring.continuous_monitor import run_monitoring_cycle; print(run_monitoring_cycle())"`
-5. Run tests/CI after each major change; ensure coverage >=80%
-6. Commit changes
-7. Create pull request
-
-### Documentation
-
-Generate documentation with:
-
-```bash
-pip install -r requirements/docs.txt
-cd docs && make html
-```
-
-For details on data persistence and large file management, see [DATA_PERSISTENCE.md](docs/DATA_PERSISTENCE.md).
-
-## Symphony AI Enhancement Suite
-
-This project now includes a comprehensive AI-powered enhancement suite that transforms traditional development workflows into intelligent, automated systems. The Symphony suite provides cutting-edge capabilities across multiple domains:
-
-### 🤖 AI Agent Orchestration (`ai_agents/`)
-- **Multi-Agent Collaboration**: CrewAI-powered agent teams for complex task automation
-- **Human-AI Workflows**: Seamless integration of human oversight with AI execution
-- **Specialized Agents**: Code reviewers, test engineers, architects, and domain experts
-- **Autonomous Task Completion**: Self-organizing agent workflows with goal-oriented execution
-
-### 🎨 Multimodal AI Processing (`multimodal/`)
-- **Cross-Modal Intelligence**: CLIP-powered understanding across text, images, and audio
-- **Advanced Vision**: ResNet-based image classification and feature extraction
-- **Audio Processing**: Comprehensive audio feature extraction and analysis
-- **Unified API**: Single interface for multimodal reasoning and similarity analysis
-
-### 🔄 MLOps Pipeline (`mlops/`)
-- **Automated ML Operations**: End-to-end model lifecycle management with MLflow
-- **Model Versioning**: DVC-powered data and model versioning
-- **Deployment Ready**: BentoML containerization for production deployment
-- **Experiment Tracking**: Comprehensive hyperparameter tuning and result analysis
-
-### 🔒 AI-Enhanced Security (`security/`)
-- **Multi-Tool Scanning**: Bandit, Semgrep, Snyk, and Checkov integration
-- **Predictive Analysis**: AI-powered vulnerability assessment and risk prediction
-- **Automated Remediation**: Intelligent fix suggestions based on vulnerability patterns
-- **Compliance Monitoring**: Continuous security posture evaluation
-
-### 🎭 Synthetic Data Generation (`synthetic_data/`)
-- **Privacy-Preserving Data**: SDV and Faker-powered synthetic data creation
-- **Quality Assurance**: Statistical validation of synthetic data fidelity
-- **Hybrid Datasets**: Intelligent mixing of real and synthetic data
-- **Differential Privacy**: Advanced privacy protection techniques
-
-### 🧠 Knowledge Graph System (`knowledge_graph/`)
-- **Semantic Reasoning**: RDF-based ontology management with NetworkX integration
-- **Intelligent Relationships**: Automated inference of code dependencies and patterns
-- **Pattern Recognition**: AI-driven identification of anti-patterns and improvement opportunities
-- **Predictive Analytics**: Maintenance effort prediction and risk assessment
-
-### 🚀 Symphony Workflow Integration
-
-The Symphony suite operates as a harmonic system where components work together:
+### Project Structure
 
 ```
-Data Flow → Synthetic Augmentation → Knowledge Graph → AI Agent Processing → MLOps Deployment
-                     ↓
-Security Scanning → Multimodal Analysis → Continuous Learning → Optimization
+echoes/
+├── ai_modules/          # Specialized AI components
+│   ├── bias_detection/  # Bias analysis tools
+│   ├── ethics_ai/       # Ethical AI guidelines
+│   └── minicon/         # Core AI orchestration
+├── automation/          # Workflow automation
+├── multimodal/          # Multi-modal processing
+├── mlops/              # ML operations
+├── security/           # Security scanning
+├── knowledge_graph/    # Semantic knowledge
+├── synthetic_data/     # Data generation
+├── workflows/          # Core execution engine
+├── tools/              # Utility tools
+└── tests/              # Comprehensive test suite
 ```
 
-### 🏆 Performance Metrics
+## 🤝 Contributing
 
-- **AI Coverage**: 95%+ of development workflows enhanced
-- **Automation Rate**: 70% reduction in manual tasks
-- **Quality Improvement**: 40% reduction in code issues
-- **Security Posture**: 85% improvement in vulnerability detection
-- **Development Velocity**: 3x faster feature delivery
+We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
 
-### 📊 Quality Assurance
+- Development setup
+- Code standards
+- Testing requirements
+- Pull request process
 
-- **Automated Testing**: Comprehensive test suite with 90%+ coverage
-- **Performance Monitoring**: Real-time system health tracking
-- **Continuous Validation**: Automated quality gates and compliance checks
-- **AI Validation**: Machine learning model performance monitoring
-
-### 🔧 Quick Start with Symphony
+### Quick Development Setup
 
 ```bash
-# Install enhanced dependencies
-pip install -r requirements/symphony.txt
+# Fork and clone
+git clone https://github.com/your-username/echoes.git
+cd echoes
 
-# Run AI-enhanced analysis
-python symphony/orchestrator.py
+# Set up development environment
+pyenv-create
+pyenv
+pip install -e .[dev]
 
-# Deploy ML models
-python mlops/pipeline.py deploy
+# Run tests
+pytest
 
-# Generate synthetic data
-python synthetic_data/generator.py create
+# Start development
+code .
 ```
 
-### 🎯 Symphony Benefits
+## 📄 License
 
-- **Intelligence**: AI-powered insights across all development domains
-- **Automation**: 70%+ reduction in repetitive tasks
-- **Quality**: Predictive issue detection and prevention
-- **Security**: Advanced threat detection and response
-- **Scalability**: Elastic AI processing for any project size
-- **Future-Proof**: Continuous learning and adaptation capabilities
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 🙏 Acknowledgments
+
+- Built with modern Python and AI frameworks
+- Inspired by research-grade workflow automation needs
+- Community-driven development and testing
+
+## 📞 Support
+
+- **Issues**: [GitHub Issues](https://github.com/caraxesthebloodwyrm02/echoes/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/caraxesthebloodwyrm02/echoes/discussions)
+- **Documentation**: [Wiki](https://github.com/caraxesthebloodwyrm02/echoes/wiki)
+
+---
+
+<div align="center">
+  <p>Made with ❤️ for the AI research community</p>
+  <p>
+    <a href="https://github.com/caraxesthebloodwyrm02/echoes">GitHub</a> •
+    <a href="https://github.com/caraxesthebloodwyrm02/echoes/blob/main/CONTRIBUTING.md">Contributing</a> •
+    <a href="https://github.com/caraxesthebloodwyrm02/echoes/blob/main/LICENSE">License</a>
+  </p>
+</div>

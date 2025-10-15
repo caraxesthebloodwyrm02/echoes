@@ -1,8 +1,29 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Automation Logger - Colored logging with SUCCESS level for automation framework."""
 
 import logging
 import sys
-from typing import Optional
 
 
 class ColoredFormatter(logging.Formatter):
@@ -10,23 +31,25 @@ class ColoredFormatter(logging.Formatter):
 
     # ANSI color codes
     COLORS = {
-        'DEBUG': '\033[36m',     # Cyan
-        'INFO': '\033[32m',      # Green
-        'SUCCESS': '\033[92m',   # Bright Green
-        'WARNING': '\033[33m',   # Yellow
-        'ERROR': '\033[31m',     # Red
-        'CRITICAL': '\033[91m',  # Bright Red
+        "DEBUG": "\033[36m",  # Cyan
+        "INFO": "\033[32m",  # Green
+        "SUCCESS": "\033[92m",  # Bright Green
+        "WARNING": "\033[33m",  # Yellow
+        "ERROR": "\033[31m",  # Red
+        "CRITICAL": "\033[91m",  # Bright Red
     }
-    RESET = '\033[0m'
+    RESET = "\033[0m"
 
     def format(self, record):
         # Add SUCCESS level if not already defined
-        if not hasattr(record, 'levelno') or record.levelno == 25:  # Custom SUCCESS level
+        if (
+            not hasattr(record, "levelno") or record.levelno == 25
+        ):  # Custom SUCCESS level
             record.levelno = 25
-            record.levelname = 'SUCCESS'
+            record.levelname = "SUCCESS"
 
         # Apply color
-        color = self.COLORS.get(record.levelname, '')
+        color = self.COLORS.get(record.levelname, "")
         record.levelname = f"{color}{record.levelname}{self.RESET}"
 
         return super().format(record)
@@ -45,7 +68,7 @@ class AutomationLogger:
         self.logger.setLevel(level)
 
         # Add SUCCESS level
-        logging.addLevelName(25, 'SUCCESS')
+        logging.addLevelName(25, "SUCCESS")
 
         # Create console handler
         handler = logging.StreamHandler(sys.stdout)
@@ -53,8 +76,8 @@ class AutomationLogger:
 
         # Create formatter
         formatter = ColoredFormatter(
-            '%(asctime)s - %(name)s - %(levelname)s - %(message)s',
-            datefmt='%Y-%m-%d %H:%M:%S'
+            "%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+            datefmt="%Y-%m-%d %H:%M:%S",
         )
         handler.setFormatter(formatter)
 

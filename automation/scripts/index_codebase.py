@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Codebase Indexing and Analysis Script
 
@@ -11,11 +33,10 @@ Uses UnifiedVectorModule to:
 Run: python automation/scripts/index_codebase.py
 """
 
-import sys
-import os
-from pathlib import Path
-from typing import List, Dict, Any
 import logging
+import sys
+from pathlib import Path
+from typing import Any, Dict, List
 
 # Add paths for imports
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -25,24 +46,33 @@ from automation.core.unified_vector_module import UnifiedVectorModule
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-def collect_codebase_texts(base_path: Path, extensions: List[str] = [".py", ".md", ".yml", ".json"]) -> List[Dict[str, Any]]:
+
+def collect_codebase_texts(
+    base_path: Path, extensions: List[str] = [".py", ".md", ".yml", ".json"]
+) -> List[Dict[str, Any]]:
     """Collect texts from codebase files."""
     texts = []
     for ext in extensions:
         for file_path in base_path.rglob(f"*{ext}"):
-            if not any(skip in str(file_path) for skip in ["__pycache__", ".git", ".venv", "node_modules"]):
+            if not any(
+                skip in str(file_path)
+                for skip in ["__pycache__", ".git", ".venv", "node_modules"]
+            ):
                 try:
                     with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
                         if len(content.strip()) > 50:  # Skip empty/small files
-                            texts.append({
-                                "file": str(file_path.relative_to(base_path)),
-                                "content": content[:2000],  # Limit for embedding
-                                "extension": ext
-                            })
+                            texts.append(
+                                {
+                                    "file": str(file_path.relative_to(base_path)),
+                                    "content": content[:2000],  # Limit for embedding
+                                    "extension": ext,
+                                }
+                            )
                 except Exception as e:
                     logger.warning(f"Skipping {file_path}: {e}")
     return texts
+
 
 def synthesize_summary(module: UnifiedVectorModule, texts: List[Dict[str, Any]]) -> str:
     """Synthesize a summary using vector analysis (clustering for themes)."""
@@ -58,14 +88,19 @@ def synthesize_summary(module: UnifiedVectorModule, texts: List[Dict[str, Any]])
 
     summary_parts = []
     for cluster_id in range(n_clusters):
-        cluster_texts = [texts[i]["content"][:200] for i, c in enumerate(clusters) if c == cluster_id]
+        cluster_texts = [
+            texts[i]["content"][:200] for i, c in enumerate(clusters) if c == cluster_id
+        ]
         if cluster_texts:
             # Simple theme extraction (most common words)
             words = " ".join(cluster_texts).split()
             common_words = [w for w in set(words) if words.count(w) > 1][:5]
-            summary_parts.append(f"Cluster {cluster_id}: Themes - {', '.join(common_words)}")
+            summary_parts.append(
+                f"Cluster {cluster_id}: Themes - {', '.join(common_words)}"
+            )
 
     return "\n".join(summary_parts)
+
 
 def main():
     base_path = Path(__file__).parent.parent.parent  # e:\Projects\Development
@@ -91,18 +126,22 @@ def main():
                 chunks = [content]
             for chunk_idx, chunk in enumerate(chunks):
                 chunked_texts.append(chunk)
-                chunked_metadata.append({
-                    "file": file_path,
-                    "chunk_index": chunk_idx,
-                    "content": chunk,
-                })
+                chunked_metadata.append(
+                    {
+                        "file": file_path,
+                        "chunk_index": chunk_idx,
+                        "content": chunk,
+                    }
+                )
         else:
             chunked_texts.append(content)
-            chunked_metadata.append({
-                "file": file_path,
-                "chunk_index": 0,
-                "content": content,
-            })
+            chunked_metadata.append(
+                {
+                    "file": file_path,
+                    "chunk_index": 0,
+                    "content": content,
+                }
+            )
 
     for idx, meta in enumerate(chunked_metadata):
         meta["id"] = idx
@@ -118,29 +157,30 @@ def main():
         compress_method="quantization",
         chunk_code=False,
     )
-    
+
     # Synthesize summary with clustering on compressed vectors
     logger.info("Synthesizing summary...")
     summary = synthesize_summary(module, chunked_metadata)
     print("Codebase Summary (Optimized):")
     print(summary)
-    
+
     # Save for future use
     module.save_module(str(output_path))
     logger.info(f"Optimized index saved to {output_path}")
-    
+
     # Demo: Hybrid search
     query = "assistant workflow"
     matches = module.hybrid_search(query, top_k=3)
     print(f"\nHybrid search results for '{query}':")
     for match in matches:
         print(f"- {match.get('file', 'unknown')}: {match.get('score', 0):.2f}")
-    
+
     # Evaluate quality (sample)
     sample_queries = ["health endpoint", "cache metadata"]
     sample_gt = [[0], [1]]  # Placeholder ground truth
     metrics = module.evaluate_quality(sample_queries, sample_gt)
     print(f"\nQuality Metrics: MRR={metrics['MRR']:.2f}, NDCG={metrics['NDCG']:.2f}")
+
 
 if __name__ == "__main__":
     main()

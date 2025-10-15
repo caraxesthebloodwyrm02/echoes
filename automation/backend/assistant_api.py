@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 from __future__ import annotations
 
 import asyncio
@@ -6,9 +28,8 @@ from functools import lru_cache
 from typing import Any, Dict, List, Literal, Optional
 
 from fastapi import Depends, FastAPI, HTTPException
-from pydantic import BaseModel, Field
-
 from minicon.config import Config
+from pydantic import BaseModel, Field
 
 app = FastAPI(title="Symphony Assistance API", version="1.0.0")
 
@@ -84,12 +105,18 @@ async def assistant_query(
 
     loop = asyncio.get_event_loop()
     try:
-        response = await loop.run_in_executor(None, lambda: client.responses.create(**kwargs))
+        response = await loop.run_in_executor(
+            None, lambda: client.responses.create(**kwargs)
+        )
     except Exception as exc:  # pragma: no cover - actual API errors
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     content = _extract_response_text(response)
-    return AssistResponse(model=getattr(response, "model", model), content=content, usage=getattr(response, "usage", None))
+    return AssistResponse(
+        model=getattr(response, "model", model),
+        content=content,
+        usage=getattr(response, "usage", None),
+    )
 
 
 @app.post("/assistant/switch-key", response_model=SwitchKeyResponse)

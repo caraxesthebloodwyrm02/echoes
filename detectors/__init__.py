@@ -1,20 +1,43 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Base detector framework with shadow mode and audit logging."""
 
+import json
+import logging
+import uuid
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
 from datetime import datetime, timedelta
 from enum import Enum
-from typing import Any, Dict, List, Optional
-import json
-import logging
 from pathlib import Path
-import uuid
+from typing import Any, Dict, List, Optional
 
 from packages.core.config import load_config
 
 
 class DetectionTier(Enum):
     """Detection severity tiers."""
+
     INFO = "info"
     WARN = "warn"
     BLOCK = "block"
@@ -22,6 +45,7 @@ class DetectionTier(Enum):
 
 class DetectorMode(Enum):
     """Detector operating modes."""
+
     LIVE = "live"  # Take actions
     SHADOW = "shadow"  # Log only, no actions
     DISABLED = "disabled"  # Completely disabled
@@ -30,6 +54,7 @@ class DetectorMode(Enum):
 @dataclass
 class DetectionResult:
     """Result of a detection operation."""
+
     detector_name: str
     tier: DetectionTier
     confidence: float
@@ -43,6 +68,7 @@ class DetectionResult:
 @dataclass
 class PendingApproval:
     """Pending approval for WARN/BLOCK detections."""
+
     id: str
     detection_result: DetectionResult
     requested_at: datetime
@@ -80,9 +106,7 @@ class BaseDetector(ABC):
         # Add file handler for audit log
         audit_handler = logging.FileHandler(self.audit_log_path)
         audit_handler.setFormatter(
-            logging.Formatter(
-                "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-            )
+            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
         )
         self.audit_logger.addHandler(audit_handler)
         self.audit_logger.propagate = False
@@ -137,7 +161,7 @@ class BaseDetector(ABC):
             "shadow_mode": result.shadow_mode,
             "approved": result.approved,
             "action_taken": action_taken,
-            "mode": self.mode.value
+            "mode": self.mode.value,
         }
 
         self.audit_logger.info(json.dumps(audit_entry))
@@ -152,18 +176,20 @@ class BaseDetector(ABC):
         result.shadow_mode = self.is_shadow_mode_active()
 
         # Check if approval is needed for WARN/BLOCK
-        if (result.tier in [DetectionTier.WARN, DetectionTier.BLOCK] and
-            not result.shadow_mode and
-            not result.approved):
+        if (
+            result.tier in [DetectionTier.WARN, DetectionTier.BLOCK]
+            and not result.shadow_mode
+            and not result.approved
+        ):
             # Create pending approval
             approval_id = str(uuid.uuid4())
             pending = PendingApproval(
-                id=approval_id,
-                detection_result=result,
-                requested_at=datetime.now()
+                id=approval_id, detection_result=result, requested_at=datetime.now()
             )
             self.pending_approvals[approval_id] = pending
-            self.logger.info(f"Pending approval created: {approval_id} for {result.tier.value}")
+            self.logger.info(
+                f"Pending approval created: {approval_id} for {result.tier.value}"
+            )
             return result  # Return without taking action
 
         # Determine if action should be taken
@@ -184,7 +210,9 @@ class BaseDetector(ABC):
         """Take the appropriate action based on detection result."""
         pass
 
-    def approve_detection(self, approval_id: str, reviewer: str = "system", notes: str = None) -> bool:
+    def approve_detection(
+        self, approval_id: str, reviewer: str = "system", notes: str = None
+    ) -> bool:
         """Approve a pending detection and take action."""
         if approval_id not in self.pending_approvals:
             self.logger.warning(f"Approval ID not found: {approval_id}")
@@ -212,7 +240,9 @@ class BaseDetector(ABC):
         self.logger.info(f"Detection approved and action taken: {approval_id}")
         return True
 
-    def reject_detection(self, approval_id: str, reviewer: str = "system", notes: str = None) -> bool:
+    def reject_detection(
+        self, approval_id: str, reviewer: str = "system", notes: str = None
+    ) -> bool:
         """Reject a pending detection."""
         if approval_id not in self.pending_approvals:
             self.logger.warning(f"Approval ID not found: {approval_id}")
@@ -233,7 +263,7 @@ class BaseDetector(ABC):
             "tier": pending.detection_result.tier.value,
             "confidence": pending.detection_result.confidence,
             "reviewer": reviewer,
-            "notes": notes
+            "notes": notes,
         }
         self.audit_logger.info(json.dumps(rejection_entry))
 
@@ -255,17 +285,17 @@ class BaseDetector(ABC):
             "actions_taken": 0,
             "false_positives": 0,  # Would need manual labeling
             "false_negatives": 0,  # Would need manual labeling
-            "shadow_mode_active": self.is_shadow_mode_active()
+            "shadow_mode_active": self.is_shadow_mode_active(),
         }
 
         if self.audit_log_path.exists():
             try:
-                with open(self.audit_log_path, 'r') as f:
+                with open(self.audit_log_path, "r") as f:
                     for line in f:
                         if f"audit.{self.name}" in line:
                             # Parse JSON from log line
                             try:
-                                json_start = line.find('{')
+                                json_start = line.find("{")
                                 if json_start >= 0:
                                     entry = json.loads(line[json_start:])
                                     metrics["total_detections"] += 1
@@ -297,11 +327,12 @@ class DetectorManager:
         """Enable shadow mode for all detectors."""
         for detector in self.detectors.values():
             detector.enable_shadow_mode(duration_days)
-        self.logger.info(f"Shadow mode enabled for all detectors ({duration_days} days)")
+        self.logger.info(
+            f"Shadow mode enabled for all detectors ({duration_days} days)"
+        )
 
     def get_all_metrics(self) -> Dict[str, Any]:
         """Get metrics for all detectors."""
         return {
-            name: detector.get_metrics()
-            for name, detector in self.detectors.items()
+            name: detector.get_metrics() for name, detector in self.detectors.items()
         }

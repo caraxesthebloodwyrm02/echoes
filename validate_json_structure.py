@@ -1,16 +1,36 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Validate and restructure JSON for telephone booth communication
 """
 
+import json
 import sys
 from pathlib import Path
-import json
 
 # Add the project root to path
 sys.path.insert(0, str(Path(__file__).parent))
-
-from packages.core.schemas import PodcastData
 
 
 def validate_json_formatting():
@@ -18,22 +38,22 @@ def validate_json_formatting():
     json_files = [
         "text_reports/altj_3ww_podcast_data.json",
         "text_reports/spanish_response_podcast_data.json",
-        "text_reports/telephone_booth_podcast_data.json"
+        "text_reports/telephone_booth_podcast_data.json",
     ]
 
     print("=== JSON VALIDATION REPORT ===\n")
 
     for file_path in json_files:
         try:
-            with open(file_path, 'r', encoding='utf-8') as f:
+            with open(file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
 
             # Check for backslashes in string representations
             json_str = json.dumps(data, indent=2, ensure_ascii=False)
-            backslash_count = json_str.count('\\')
+            backslash_count = json_str.count("\\")
 
             print(f"File: {file_path}")
-            print(f"  Valid JSON syntax: True")
+            print("  Valid JSON syntax: True")
             print(f"  Backslashes found: {backslash_count}")
             print(f"  Total characters: {len(json_str)}")
             print()
@@ -58,29 +78,25 @@ def create_validated_telephone_structure():
             "description": "Simulated telephone conversation (circa 1960s London)",
             "duration_seconds": 91.7,
             "participants": 3,
-            "exchanges": 14
+            "exchanges": 14,
         },
         "participants": [
             {
                 "id": "operator-1",
                 "role": "Operator",
                 "lines": [
-                    {
-                        "time_s": 0.0,
-                        "timestamp": "0.0s",
-                        "text": "Number please?"
-                    },
+                    {"time_s": 0.0, "timestamp": "0.0s", "text": "Number please?"},
                     {
                         "time_s": 7.6,
                         "timestamp": "7.6s",
-                        "text": "Connecting you now. Mind the weather, sir."
+                        "text": "Connecting you now. Mind the weather, sir.",
                     },
                     {
                         "time_s": 85.2,
                         "timestamp": "85.2s",
-                        "text": "Call completed. Please hang up and retrieve your change."
-                    }
-                ]
+                        "text": "Call completed. Please hang up and retrieve your change.",
+                    },
+                ],
             },
             {
                 "id": "caller-1",
@@ -89,67 +105,63 @@ def create_validated_telephone_structure():
                     {
                         "time_s": 3.4,
                         "timestamp": "3.4s",
-                        "text": "Paddington 8-7-4-2, please."
+                        "text": "Paddington 8-7-4-2, please.",
                     },
                     {
                         "time_s": 15.8,
                         "timestamp": "15.8s",
-                        "text": "He estado bien. Algunos días están bien, otros son difíciles y algunos son absolutamente fantásticos. Espero que estés bien."
+                        "text": "He estado bien. Algunos días están bien, otros son difíciles y algunos son absolutamente fantásticos. Espero que estés bien.",
                     },
                     {
                         "time_s": 35.1,
                         "timestamp": "35.1s",
-                        "text": "Ah, my dear friend! It's been ages since we spoke from these iconic booths."
+                        "text": "Ah, my dear friend! It's been ages since we spoke from these iconic booths.",
                     },
                     {
                         "time_s": 42.9,
                         "timestamp": "42.9s",
-                        "text": "Remember when we'd queue for hours just to make a call home?"
+                        "text": "Remember when we'd queue for hours just to make a call home?",
                     },
                     {
                         "time_s": 66.9,
                         "timestamp": "66.9s",
-                        "text": "They may be fewer now, but their spirit lives on in London."
+                        "text": "They may be fewer now, but their spirit lives on in London.",
                     },
                     {
                         "time_s": 73.4,
                         "timestamp": "73.4s",
-                        "text": "Thank you for preserving this piece of our history."
-                    }
-                ]
+                        "text": "Thank you for preserving this piece of our history.",
+                    },
+                ],
             },
             {
                 "id": "recipient-1",
                 "role": "Recipient",
                 "lines": [
-                    {
-                        "time_s": 13.2,
-                        "timestamp": "13.2s",
-                        "text": "¿Qué tal?"
-                    },
+                    {"time_s": 13.2, "timestamp": "13.2s", "text": "¿Qué tal?"},
                     {
                         "time_s": 27.5,
                         "timestamp": "27.5s",
-                        "text": "¡Qué maravilla escucharte! Me alegra que las cosas vayan bien en general."
+                        "text": "¡Qué maravilla escucharte! Me alegra que las cosas vayan bien en general.",
                     },
                     {
                         "time_s": 49.5,
                         "timestamp": "49.5s",
-                        "text": "Indeed! These red sentinels have witnessed countless stories - proposals, emergencies, farewells."
+                        "text": "Indeed! These red sentinels have witnessed countless stories - proposals, emergencies, farewells.",
                     },
                     {
                         "time_s": 59.1,
                         "timestamp": "59.1s",
-                        "text": "Each coin dropped, each dial turned, each voice carried across the wires..."
+                        "text": "Each coin dropped, each dial turned, each voice carried across the wires...",
                     },
                     {
                         "time_s": 79.5,
                         "timestamp": "79.5s",
-                        "text": "And thank you for remembering. Goodbye for now."
-                    }
-                ]
-            }
-        ]
+                        "text": "And thank you for remembering. Goodbye for now.",
+                    },
+                ],
+            },
+        ],
     }
 
     return validated_structure
@@ -222,9 +234,13 @@ def generate_validation_report():
     report.append("## 3. Recommendations")
     report.append("")
     report.append("### Structure Improvements:")
-    report.append("1. **Participant-based organization** (implemented in validated version)")
+    report.append(
+        "1. **Participant-based organization** (implemented in validated version)"
+    )
     report.append("2. **Simplified timestamp format** (time_s + timestamp fields)")
-    report.append("3. **Metadata enrichment** (duration, participant count, exchange stats)")
+    report.append(
+        "3. **Metadata enrichment** (duration, participant count, exchange stats)"
+    )
     report.append("4. **Role-based grouping** for better conversational analysis")
     report.append("")
 
