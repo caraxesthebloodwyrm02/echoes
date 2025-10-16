@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Task: automation.tasks.security_monitoring
 
@@ -75,12 +97,16 @@ def check_bandit_scan(log: AutomationLogger) -> bool:
         high_severity = [i for i in issues if i.get("issue_severity") == "HIGH"]
         medium_severity = [i for i in issues if i.get("issue_severity") == "MEDIUM"]
 
-        log.info(f"Bandit Results: {len(high_severity)} HIGH, {len(medium_severity)} MEDIUM issues")
+        log.info(
+            f"Bandit Results: {len(high_severity)} HIGH, {len(medium_severity)} MEDIUM issues"
+        )
 
         if high_severity:
             log.warning("HIGH SEVERITY ISSUES FOUND:")
             for issue in high_severity[:5]:  # Show first 5
-                log.warning(f"  - {issue.get('filename')}:{issue.get('line_number')} - {issue.get('issue_text')}")
+                log.warning(
+                    f"  - {issue.get('filename')}:{issue.get('line_number')} - {issue.get('issue_text')}"
+                )
             if len(high_severity) > 5:
                 log.warning(f"  ... and {len(high_severity) - 5} more")
 
@@ -98,7 +124,9 @@ def check_dependency_vulnerabilities(log: AutomationLogger) -> bool:
     success, stdout, stderr = run_command(["python", "-m", "pip", "show", "safety"])
     if not success:
         log.info("Safety not installed, installing...")
-        success, stdout, stderr = run_command(["python", "-m", "pip", "install", "safety"])
+        success, stdout, stderr = run_command(
+            ["python", "-m", "pip", "install", "safety"]
+        )
         if not success:
             log.error(f"Failed to install safety: {stderr}")
             return False
@@ -178,7 +206,9 @@ def security_monitoring(context) -> None:
     """Main security monitoring function."""
     log = AutomationLogger()
 
-    output_file = context.extra_data.get("output_file", "automation/reports/security_monitoring_report.json")
+    output_file = context.extra_data.get(
+        "output_file", "automation/reports/security_monitoring_report.json"
+    )
 
     log.info("🚀 Starting Security Monitoring")
     log.info(f"⏰ Report Time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
@@ -212,7 +242,9 @@ def security_monitoring(context) -> None:
         with open(output_path, "w") as f:
             json.dump(report, f, indent=2)
 
-        log.info(f"📊 Security Score: {security_score:.1f}% ({passed_checks}/{total_checks} checks passed)")
+        log.info(
+            f"📊 Security Score: {security_score:.1f}% ({passed_checks}/{total_checks} checks passed)"
+        )
         log.info(f"Report saved to: {output_path}")
 
         if security_score >= 80:

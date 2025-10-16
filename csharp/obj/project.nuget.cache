@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "zdn+rFrNFaI=",
+  "dgSpecHash": "bXs8qJivQ6c=",
   "success": true,
-  "projectFilePath": "e:\\Projects\\Development\\csharp\\language-bundle.csproj",
+  "projectFilePath": "E:\\Projects\\Development\\csharp\\language-bundle.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\irfan\\.nuget\\packages\\microsoft.netcore.app.ref\\8.0.20\\microsoft.netcore.app.ref.8.0.20.nupkg.sha512",
     "C:\\Users\\irfan\\.nuget\\packages\\microsoft.windowsdesktop.app.ref\\8.0.20\\microsoft.windowsdesktop.app.ref.8.0.20.nupkg.sha512",

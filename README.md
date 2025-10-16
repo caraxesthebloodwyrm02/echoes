@@ -6,20 +6,40 @@
 
 <div align="center">
   <img src="https://img.shields.io/badge/Python-3.12+-blue.svg" alt="Python Version">
+  <img src="https://img.shields.io/badge/Tests-69%2F69%20passing-brightgreen.svg" alt="Tests">
   <img src="https://img.shields.io/badge/License-MIT-green.svg" alt="License">
-  <img src="https://img.shields.io/badge/PRs-Welcome-brightgreen.svg" alt="PRs Welcome">
 </div>
 
 <div align="center">
-  <h3>Multi-Modal AI Orchestration Platform</h3>
-  <p>Deterministic workflow automation for research-grade AI applications</p>
+  <h3>Scientific Computing & AI Orchestration Platform</h3>
+  <p>Where deterministic analysis meets intuitive optimization</p>
 </div>
 
 ---
 
-## 🌟 Overview
+## 🎯 What Makes Echoes Different
 
-Echoes is a comprehensive AI orchestration platform designed for multi-modal reasoning and deterministic workflow automation. Built for researchers, developers, and enterprises, Echoes provides a modular framework for building sophisticated AI applications with agent-based orchestration, multimodal processing, and robust MLOps capabilities.
+Most systems optimize for either **speed** or **quality**. Echoes proves you can have both—but the path isn't linear.
+
+Our research shows that **fast compounding** (low attention, quick decisions) saves 80% time while achieving 1466% better efficiency in long trajectories. The secret? Exponential learning curves that compound experience over time.
+
+**The nuance:** Short-term critical decisions need traditional data-driven analysis. Long-term iterative processes thrive on fast compounding. Echoes gives you both.
+
+---
+
+## 🌟 Core Capabilities
+
+### Trajectory Analysis & Optimization
+- **Two-track protocol**: o3 for deterministic analysis, Sonnet for production engineering
+- **Bidirectional paths**: Regenerate prompts from results (if A→X exists, X→A exists)
+- **100% reproducibility**: SHA-256 checksums, provenance tracking, seed-based determinism
+- **Research-validated**: 69/69 tests passing, quantified efficiency gains
+
+### AI Orchestration
+- Multi-agent collaboration with knowledge graph integration
+- Hybrid model routing (OpenAI, Azure, local fallback)
+- Context-aware prompting with semantic reasoning
+- Security-first design with privacy filtering
 
 ### Key Features
 
@@ -95,59 +115,74 @@ Echoes follows a modular, harmonic resonance design pattern:
    python test_venv_functionality.py
    ```
 
-### Basic Usage
+### Trajectory Analysis
 
-```python
-from echoes.core import EchoesEngine
+```bash
+# Run deterministic experiment
+python run_experiment.py
 
-# Initialize the engine
-engine = EchoesEngine()
+# Output: Finalized analysis with SHA-256 checksums
+# results/2025-10-16T00-29-43+00-00-analysis-final.json
+# results/2025-10-16T00-29-43+00-00-checksums.txt
+```
 
-# Run a deterministic workflow
-result = engine.run_workflow("analysis_pipeline", {
-    "input_data": "path/to/data.csv",
-    "model_config": "default"
-})
+### Optimization Research
 
-print(f"Workflow completed: {result['status']}")
+```bash
+# Compare Data-Driven vs Fast Compounding
+python demo_trajectory_research.py
+
+# Key findings:
+# - FC saves 80% time, 69% cognitive load
+# - 1466% efficiency gain in long trajectories
+# - Crossover point: ~15 steps
+```
+
+### CLI Interface
+
+```bash
+# Run trajectory analysis
+python -m src.cli run --input-file data/input_vectors.json
+
+# Validate results
+python -m src.cli validate --json-path results/analysis.json
+
+# Generate interactive visualization
+python -m src.cli ingest --json-path results/analysis.json
 ```
 
 ## 📚 Core Modules
 
-### 🤖 AI Agents (`ai_agents/`)
-- Agent templates for code review, testing, and architecture
-- CrewAI integration for collaborative workflows
-- Customizable agent behaviors and tools
+### 🎯 Trajectory Analysis (`src/`)
+**The heart of Echoes' optimization research**
 
-### 🎨 Multimodal Processing (`multimodal/`)
-- CLIP model for image-text understanding
-- Torch-based audio and video processing
-- Cross-modal similarity analysis
+- `vector_ops.py` - NumPy-only deterministic math (normalize, angles, efficiency)
+- `metrics.py` - EfficiencySummary with validation and classification
+- `evaluator.py` - Aligned/Imbalanced/Fragmented classification
+- `trajectory_optimizer.py` - Data-Driven vs Fast Compounding comparison
+- `prompt_regenerator.py` - Bidirectional path discovery (Result → Prompt)
+- `finalization.py` - Provenance tracking, SHA-256 checksums, security
+- `validators.py` - Schema validation with strict type enforcement
+- `cli.py` - Typer-based CLI (run/ingest/validate commands)
+- `plotting.py` - Interactive Plotly 3D visualizations
 
-### 🔄 Workflow Engine (`workflows/`)
-- Phase-based execution (A-D phases)
-- Deterministic merge operations
-- Error handling and recovery
+**Test Coverage:** 69/69 passing (100%)
 
-### 🏭 MLOps Pipeline (`mlops/`)
-- Model versioning and deployment
-- Performance monitoring
-- Automated retraining pipelines
-
-### 🔒 Security (`security/`)
-- AI-enhanced vulnerability scanning
-- Predictive security analysis
-- Compliance monitoring
+### 🤖 AI Orchestration (`ai_agents/`, `prompting/`)
+- Multi-agent collaboration with knowledge graph integration
+- Hybrid model routing (OpenAI, Azure, local)
+- Context-aware prompting with semantic reasoning
+- Agent templates for code review, testing, architecture
 
 ### 🕸️ Knowledge Graphs (`knowledge_graph/`)
-- RDF-based semantic storage
-- Ontology management
-- Graph-based reasoning
+- RDF-based semantic storage with ontology management
+- Graph-based reasoning and inference
+- Cross-agent knowledge sharing
 
-### 🎭 Synthetic Data (`synthetic_data/`)
-- Privacy-preserving data generation
-- Statistical distribution matching
-- Augmentation pipelines
+### 🔒 Security & Privacy (`security/`, `packages/security/`)
+- AI-enhanced vulnerability scanning
+- Privacy filtering and PII detection
+- Compliance monitoring and audit trails
 
 ## 🛠️ Development
 
@@ -218,25 +253,54 @@ code .
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 📖 Documentation
+
+- **[Trajectory Analysis Guide](TRAJECTORY_ANALYSIS_README.md)** - Complete usage guide
+- **[Experiment Protocol](EXPERIMENT_PROTOCOL.md)** - Two-track scientific computing
+- **[Research Findings](TRAJECTORY_RESEARCH_FINDINGS.md)** - Fast Compounding vs Data-Driven
+- **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Quick reference
+- **[Completion Report](PROJECT_COMPLETION_REPORT.md)** - Full project details
+
+## 🎓 Research Highlights
+
+**Fast Compounding vs Data-Driven Analysis**
+
+Our research quantifies a fundamental trade-off in optimization strategies:
+
+| Metric | Data-Driven | Fast Compounding | FC Advantage |
+|--------|-------------|------------------|--------------|
+| Time per decision | 1.81s | 0.36s | **80% faster** |
+| Cognitive load | 0.84 | 0.26 | **69% lower** |
+| Efficiency ratio | 0.018 | 0.288 | **1466% better** |
+| Learning slope | -0.0016 | +0.0217 | **Exponential growth** |
+
+**When to use each:**
+- **Data-Driven**: Short trajectories (<15 steps), critical decisions, novel problems
+- **Fast Compounding**: Long trajectories (>20 steps), iterative processes, time-constrained
+- **Hybrid**: Start DDA for foundation, transition to FC at ~15 steps
+
+See [TRAJECTORY_RESEARCH_FINDINGS.md](TRAJECTORY_RESEARCH_FINDINGS.md) for full analysis.
+
 ## 🙏 Acknowledgments
 
-- Built with modern Python and AI frameworks
-- Inspired by research-grade workflow automation needs
-- Community-driven development and testing
+- Research co-authored by **o3** (deterministic analysis) and **Sonnet-4.5** (production engineering)
+- Built with NumPy, Plotly, Typer, and modern Python tooling
+- Inspired by the need for reproducible scientific computing
 
 ## 📞 Support
 
 - **Issues**: [GitHub Issues](https://github.com/caraxesthebloodwyrm02/echoes/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/caraxesthebloodwyrm02/echoes/discussions)
-- **Documentation**: [Wiki](https://github.com/caraxesthebloodwyrm02/echoes/wiki)
+- **Documentation**: See docs/ folder for comprehensive guides
+- **Tests**: Run `pytest tests/ -v` to verify installation
 
 ---
 
 <div align="center">
-  <p>Made with ❤️ for the AI research community</p>
+  <p><strong>Where deterministic analysis meets intuitive optimization</strong></p>
   <p>
     <a href="https://github.com/caraxesthebloodwyrm02/echoes">GitHub</a> •
-    <a href="https://github.com/caraxesthebloodwyrm02/echoes/blob/main/CONTRIBUTING.md">Contributing</a> •
-    <a href="https://github.com/caraxesthebloodwyrm02/echoes/blob/main/LICENSE">License</a>
+    <a href="TRAJECTORY_RESEARCH_FINDINGS.md">Research</a> •
+    <a href="PROJECT_COMPLETION_REPORT.md">Documentation</a>
   </p>
+  <p><em>Experiment Tag: exp/2025-10-16/d8bce21 • SHA-256: 99d8d882...a840b339</em></p>
 </div>

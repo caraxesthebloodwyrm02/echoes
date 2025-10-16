@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Mode Performance Profiler
 Profiles execution time for each mode to identify optimization opportunities
@@ -45,14 +67,16 @@ class ModeProfiler:
             start = time.perf_counter()
 
             try:
-                await self.system.process_prompt(prompt=prompt, mode=mode, enable_data_loop=False)
+                await self.system.process_prompt(
+                    prompt=prompt, mode=mode, enable_data_loop=False
+                )
                 duration = time.perf_counter() - start
                 execution_times.append(duration)
 
-                print(f"  Iteration {i+1}: {duration*1000:.2f}ms")
+                print(f"  Iteration {i + 1}: {duration * 1000:.2f}ms")
 
             except Exception as e:
-                print(f"  ❌ Iteration {i+1} failed: {e}")
+                print(f"  ❌ Iteration {i + 1} failed: {e}")
                 execution_times.append(-1)
 
             finally:
@@ -69,7 +93,9 @@ class ModeProfiler:
             avg_time = sum(valid_times) / len(valid_times)
             min_time = min(valid_times)
             max_time = max(valid_times)
-            std_dev = (sum((t - avg_time) ** 2 for t in valid_times) / len(valid_times)) ** 0.5
+            std_dev = (
+                sum((t - avg_time) ** 2 for t in valid_times) / len(valid_times)
+            ) ** 0.5
         else:
             avg_time = min_time = max_time = std_dev = 0
 
@@ -86,7 +112,9 @@ class ModeProfiler:
             "hotspots": s.getvalue().split("\n")[:25],  # Top 25 lines
         }
 
-        print(f"  ✅ Average: {avg_time*1000:.2f}ms (min: {min_time*1000:.2f}ms, max: {max_time*1000:.2f}ms)")
+        print(
+            f"  ✅ Average: {avg_time * 1000:.2f}ms (min: {min_time * 1000:.2f}ms, max: {max_time * 1000:.2f}ms)"
+        )
         return profile_data
 
     async def profile_all_modes(self) -> Dict[str, Any]:
@@ -119,12 +147,21 @@ class ModeProfiler:
         }
 
         # Calculate summary statistics
-        mode_averages = {mode: data["statistics"]["average_ms"] for mode, data in self.results.items()}
+        mode_averages = {
+            mode: data["statistics"]["average_ms"]
+            for mode, data in self.results.items()
+        }
 
         if mode_averages:
-            report["summary"]["average_execution_time_ms"] = sum(mode_averages.values()) / len(mode_averages)
-            report["summary"]["fastest_mode"] = min(mode_averages, key=mode_averages.get)
-            report["summary"]["slowest_mode"] = max(mode_averages, key=mode_averages.get)
+            report["summary"]["average_execution_time_ms"] = sum(
+                mode_averages.values()
+            ) / len(mode_averages)
+            report["summary"]["fastest_mode"] = min(
+                mode_averages, key=mode_averages.get
+            )
+            report["summary"]["slowest_mode"] = max(
+                mode_averages, key=mode_averages.get
+            )
 
         # Identify optimization targets (modes >1000ms average)
         for mode, avg_time in mode_averages.items():
@@ -149,9 +186,13 @@ class ModeProfiler:
 
         return report
 
-    def save_report(self, report: Dict[str, Any], filename: str = "mode_profile_baseline.json"):
+    def save_report(
+        self, report: Dict[str, Any], filename: str = "mode_profile_baseline.json"
+    ):
         """Save profiling report to file"""
-        report_path = os.path.join(os.path.dirname(__file__), "..", "automation", "reports", filename)
+        report_path = os.path.join(
+            os.path.dirname(__file__), "..", "automation", "reports", filename
+        )
 
         with open(report_path, "w") as f:
             json.dump(report, f, indent=2, default=str)
@@ -172,7 +213,9 @@ async def main():
     print("=" * 70)
     print("PROFILING SUMMARY")
     print("=" * 70)
-    print(f"Average Execution Time: {report['summary']['average_execution_time_ms']:.2f}ms")
+    print(
+        f"Average Execution Time: {report['summary']['average_execution_time_ms']:.2f}ms"
+    )
     print(f"Fastest Mode: {report['summary']['fastest_mode']}")
     print(f"Slowest Mode: {report['summary']['slowest_mode']}")
 

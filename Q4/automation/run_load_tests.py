@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Load Testing Suite
 Automates Task: "Load Testing Suite" - Comprehensive performance testing
@@ -258,22 +280,30 @@ def hook_request_failure(request_type, name, response_time, exception, **kwargs)
                 )
 
                 if result.returncode == 0:
-                    print(f"✓ {users} users: {metrics.get('requests_per_second', 0):.1f} RPS")
+                    print(
+                        f"✓ {users} users: {metrics.get('requests_per_second', 0):.1f} RPS"
+                    )
                 else:
                     print(f"✗ {users} users: Failed")
 
             except subprocess.TimeoutExpired:
                 print(f"⚠ {users} users: Timeout")
-                stress_results.append({"users": users, "success": False, "error": "timeout"})
+                stress_results.append(
+                    {"users": users, "success": False, "error": "timeout"}
+                )
             except Exception as e:
                 print(f"✗ {users} users: {e}")
-                stress_results.append({"users": users, "success": False, "error": str(e)})
+                stress_results.append(
+                    {"users": users, "success": False, "error": str(e)}
+                )
 
         return {
             "tool": "stress_test",
             "status": "completed",
             "tests": stress_results,
-            "max_successful_users": max((r["users"] for r in stress_results if r["success"]), default=0),
+            "max_successful_users": max(
+                (r["users"] for r in stress_results if r["success"]), default=0
+            ),
         }
 
     def generate_load_report(self):
@@ -290,15 +320,27 @@ def hook_request_failure(request_type, name, response_time, exception, **kwargs)
 
         # Calculate overall performance metrics
         total_requests = sum(
-            r.get("total_requests", 0) for r in self.test_results if isinstance(r, dict) and "total_requests" in r
+            r.get("total_requests", 0)
+            for r in self.test_results
+            if isinstance(r, dict) and "total_requests" in r
         )
 
-        successful_tests = sum(1 for r in self.test_results if isinstance(r, dict) and r.get("status") == "completed")
+        successful_tests = sum(
+            1
+            for r in self.test_results
+            if isinstance(r, dict) and r.get("status") == "completed"
+        )
 
         # Determine performance level
-        if locust_results.get("status") == "completed" and stress_results.get("max_successful_users", 0) >= 25:
+        if (
+            locust_results.get("status") == "completed"
+            and stress_results.get("max_successful_users", 0) >= 25
+        ):
             performance_level = "EXCELLENT"
-        elif locust_results.get("status") == "completed" and stress_results.get("max_successful_users", 0) >= 10:
+        elif (
+            locust_results.get("status") == "completed"
+            and stress_results.get("max_successful_users", 0) >= 10
+        ):
             performance_level = "GOOD"
         elif locust_results.get("status") == "completed":
             performance_level = "FAIR"
@@ -315,18 +357,30 @@ def hook_request_failure(request_type, name, response_time, exception, **kwargs)
         recommendations = []
 
         if locust_results.get("total_failures", 0) > 0:
-            failure_rate = locust_results["total_failures"] / max(locust_results["total_requests"], 1) * 100
+            failure_rate = (
+                locust_results["total_failures"]
+                / max(locust_results["total_requests"], 1)
+                * 100
+            )
             if failure_rate > 5:
-                recommendations.append("High failure rate detected - investigate error handling")
+                recommendations.append(
+                    "High failure rate detected - investigate error handling"
+                )
 
         if locust_results.get("avg_response_time", 0) > 1000:
-            recommendations.append("Slow response times detected - optimize performance")
+            recommendations.append(
+                "Slow response times detected - optimize performance"
+            )
 
         if stress_results.get("max_successful_users", 0) < 10:
-            recommendations.append("Low concurrent user capacity - scale infrastructure")
+            recommendations.append(
+                "Low concurrent user capacity - scale infrastructure"
+            )
 
         if not recommendations:
-            recommendations.append("Performance looks good - consider increasing test load")
+            recommendations.append(
+                "Performance looks good - consider increasing test load"
+            )
 
         # Save report
         report = {

@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 ConciseMode - High compression ratio, metaphorically efficient, symbolic
 """
@@ -13,7 +35,9 @@ class ConciseMode(ModeHandler):
     def __init__(self):
         super().__init__()
         self.mode_name = "concise"
-        self.description = "High compression ratio of meaning - dense, metaphorically efficient"
+        self.description = (
+            "High compression ratio of meaning - dense, metaphorically efficient"
+        )
         self.config = {
             "max_words": 150,
             "compression_ratio": "high",
@@ -52,9 +76,7 @@ class ConciseMode(ModeHandler):
         # Ensure we always return something
         result = "\n\n".join(formatted)
         if not result or result.strip() == "":
-            result = (
-                "Compressed synthesis: Data loop intelligence framework established for recursive codebase enhancement."
-            )
+            result = "Compressed synthesis: Data loop intelligence framework established for recursive codebase enhancement."
 
         return result
 

@@ -102,11 +102,43 @@ jobs:
           python -m pip install --upgrade pip
           pip install bandit safety
 
+      - name: Install privacy scanner dependencies
+        run: |
+          # Privacy scanner is part of the packages.security module
+          # Dependencies are already installed via the project setup
+
       - name: Run Bandit security scan
         run: bandit -r . -f json -o bandit-report.json || true
 
       - name: Run Safety vulnerability check
         run: safety check --output json || true
+
+      - name: Run Privacy Scanner
+        run: |
+          python packages/security/privacy_scanner.py . --extensions .py --output privacy-scan-results.json || true
+        continue-on-error: true
+
+      - name: Check privacy scan results
+        run: |
+          if [ -f privacy-scan-results.json ]; then
+            RISK_LEVEL=$(jq -r '.summary.risk_level' privacy-scan-results.json 2>/dev/null || echo "UNKNOWN")
+            PII_COUNT=$(jq -r '.summary.total_pii_entities' privacy-scan-results.json 2>/dev/null || echo "0")
+
+            echo "🔍 Privacy Scan Results:"
+            echo "   Risk Level: $RISK_LEVEL"
+            echo "   PII Entities Found: $PII_COUNT"
+
+            if [ "$RISK_LEVEL" = "HIGH" ]; then
+              echo "❌ HIGH privacy risk detected. Review privacy scan results."
+              exit 1
+            elif [ "$RISK_LEVEL" = "MEDIUM" ]; then
+              echo "⚠️  MEDIUM privacy risk detected. Consider reviewing findings."
+            else
+              echo "✅ Privacy scan completed successfully."
+            fi
+          else
+            echo "⚠️  Privacy scan did not generate results file"
+          fi
 
       - name: Upload security reports
         uses: actions/upload-artifact@v4
@@ -114,6 +146,7 @@ jobs:
           name: security-reports
           path: |
             bandit-report.json
+            privacy-scan-results.json
 
   # Build and package check
   build:
@@ -185,9 +218,6 @@ jobs:
       - name: Run metrics update
         run: chmod +x scripts/update_metrics.sh && ./scripts/update_metrics.sh
         env:
-          DB_CONN_STRING: ${{ secrets.DB_CONN_STRING }}
-          MONITOR_AUTH_TOKEN: ${{ secrets.MONITOR_AUTH_TOKEN }}
-          MONITOR_ENDPOINT_URL: ${{ secrets.MONITOR_ENDPOINT_URL }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   docs:

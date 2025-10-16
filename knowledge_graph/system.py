@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Knowledge Graph System with Semantic Reasoning
 Ontology-based knowledge management and inference
@@ -33,10 +55,14 @@ class KnowledgeGraph:
         for prefix, namespace in self.ns.items():
             self.rdf_graph.bind(prefix, namespace)
 
-    def add_code_entity(self, entity_type: str, name: str, properties: Dict[str, Any] = None):
+    def add_code_entity(
+        self, entity_type: str, name: str, properties: Dict[str, Any] = None
+    ):
         """Add a code-related entity to the knowledge graph"""
 
-        entity_uri = self.ns["code"][f"{entity_type}_{name.replace('/', '_').replace('.', '_')}"]
+        entity_uri = self.ns["code"][
+            f"{entity_type}_{name.replace('/', '_').replace('.', '_')}"
+        ]
 
         # Add type
         self.rdf_graph.add((entity_uri, RDF.type, self.ns["code"][entity_type]))
@@ -45,15 +71,31 @@ class KnowledgeGraph:
         if properties:
             for prop, value in properties.items():
                 if isinstance(value, str):
-                    self.rdf_graph.add((entity_uri, self.ns["code"][prop], Literal(value)))
+                    self.rdf_graph.add(
+                        (entity_uri, self.ns["code"][prop], Literal(value))
+                    )
                 elif isinstance(value, (int, float)):
-                    self.rdf_graph.add((entity_uri, self.ns["code"][prop], Literal(value, datatype=XSD.float)))
+                    self.rdf_graph.add(
+                        (
+                            entity_uri,
+                            self.ns["code"][prop],
+                            Literal(value, datatype=XSD.float),
+                        )
+                    )
                 elif isinstance(value, bool):
-                    self.rdf_graph.add((entity_uri, self.ns["code"][prop], Literal(value, datatype=XSD.boolean)))
+                    self.rdf_graph.add(
+                        (
+                            entity_uri,
+                            self.ns["code"][prop],
+                            Literal(value, datatype=XSD.boolean),
+                        )
+                    )
 
         return entity_uri
 
-    def add_relationship(self, subject_uri, predicate, object_uri, properties: Dict[str, Any] = None):
+    def add_relationship(
+        self, subject_uri, predicate, object_uri, properties: Dict[str, Any] = None
+    ):
         """Add relationship between entities"""
 
         # Add basic relationship
@@ -62,25 +104,41 @@ class KnowledgeGraph:
         # Add relationship properties if provided
         if properties:
             rel_node = BNode()
-            self.rdf_graph.add((subject_uri, self.ns["code"][f"{predicate}_relation"], rel_node))
+            self.rdf_graph.add(
+                (subject_uri, self.ns["code"][f"{predicate}_relation"], rel_node)
+            )
             self.rdf_graph.add((rel_node, RDF.type, self.ns["code"]["Relationship"]))
             self.rdf_graph.add((rel_node, self.ns["code"]["target"], object_uri))
 
             for prop, value in properties.items():
                 self.rdf_graph.add((rel_node, self.ns["code"][prop], Literal(value)))
 
-    def add_metric_data(self, entity_uri, metric_name: str, value: float, timestamp: str = None):
+    def add_metric_data(
+        self, entity_uri, metric_name: str, value: float, timestamp: str = None
+    ):
         """Add metric data to an entity"""
 
         if timestamp is None:
             timestamp = datetime.datetime.now().isoformat()
 
-        metric_uri = self.ns["metric"][f"{metric_name}_{timestamp.replace(':', '').replace('-', '').replace('.', '')}"]
+        metric_uri = self.ns["metric"][
+            f"{metric_name}_{timestamp.replace(':', '').replace('-', '').replace('.', '')}"
+        ]
 
         self.rdf_graph.add((metric_uri, RDF.type, self.ns["metric"]["Metric"]))
-        self.rdf_graph.add((metric_uri, self.ns["metric"]["name"], Literal(metric_name)))
-        self.rdf_graph.add((metric_uri, self.ns["metric"]["value"], Literal(value, datatype=XSD.float)))
-        self.rdf_graph.add((metric_uri, self.ns["metric"]["timestamp"], Literal(timestamp, datatype=XSD.dateTime)))
+        self.rdf_graph.add(
+            (metric_uri, self.ns["metric"]["name"], Literal(metric_name))
+        )
+        self.rdf_graph.add(
+            (metric_uri, self.ns["metric"]["value"], Literal(value, datatype=XSD.float))
+        )
+        self.rdf_graph.add(
+            (
+                metric_uri,
+                self.ns["metric"]["timestamp"],
+                Literal(timestamp, datatype=XSD.dateTime),
+            )
+        )
         self.rdf_graph.add((entity_uri, self.ns["metric"]["has_metric"], metric_uri))
 
     def add_security_vulnerability(self, entity_uri, vuln_data: Dict[str, Any]):
@@ -89,17 +147,31 @@ class KnowledgeGraph:
         vuln_uri = self.ns["security"][f"vuln_{hash(str(vuln_data)) % 10000}"]
 
         self.rdf_graph.add((vuln_uri, RDF.type, self.ns["security"]["Vulnerability"]))
-        self.rdf_graph.add((entity_uri, self.ns["security"]["has_vulnerability"], vuln_uri))
+        self.rdf_graph.add(
+            (entity_uri, self.ns["security"]["has_vulnerability"], vuln_uri)
+        )
 
         for key, value in vuln_data.items():
             if key == "severity":
-                self.rdf_graph.add((vuln_uri, self.ns["security"]["severity"], Literal(value)))
+                self.rdf_graph.add(
+                    (vuln_uri, self.ns["security"]["severity"], Literal(value))
+                )
             elif key == "title":
-                self.rdf_graph.add((vuln_uri, self.ns["security"]["title"], Literal(value)))
+                self.rdf_graph.add(
+                    (vuln_uri, self.ns["security"]["title"], Literal(value))
+                )
             elif key == "description":
-                self.rdf_graph.add((vuln_uri, self.ns["security"]["description"], Literal(value)))
+                self.rdf_graph.add(
+                    (vuln_uri, self.ns["security"]["description"], Literal(value))
+                )
             elif key == "confidence":
-                self.rdf_graph.add((vuln_uri, self.ns["security"]["confidence"], Literal(value, datatype=XSD.float)))
+                self.rdf_graph.add(
+                    (
+                        vuln_uri,
+                        self.ns["security"]["confidence"],
+                        Literal(value, datatype=XSD.float),
+                    )
+                )
 
     def infer_relationships(self):
         """Perform basic inference on relationships"""
@@ -133,11 +205,17 @@ class KnowledgeGraph:
             file_uri, vuln_count, complexity = row
             risk_score = float(vuln_count) * float(complexity)
             if risk_score > 10:  # Threshold for high risk
-                self.rdf_graph.add((file_uri, self.ns["security"]["risk_level"], Literal("high")))
+                self.rdf_graph.add(
+                    (file_uri, self.ns["security"]["risk_level"], Literal("high"))
+                )
             elif risk_score > 5:
-                self.rdf_graph.add((file_uri, self.ns["security"]["risk_level"], Literal("medium")))
+                self.rdf_graph.add(
+                    (file_uri, self.ns["security"]["risk_level"], Literal("medium"))
+                )
             else:
-                self.rdf_graph.add((file_uri, self.ns["security"]["risk_level"], Literal("low")))
+                self.rdf_graph.add(
+                    (file_uri, self.ns["security"]["risk_level"], Literal("low"))
+                )
 
     def query_knowledge(self, sparql_query: str) -> List[Dict[str, Any]]:
         """Execute SPARQL query on knowledge graph"""
@@ -151,7 +229,9 @@ class KnowledgeGraph:
 
         return results
 
-    def find_similar_entities(self, entity_uri, similarity_threshold: float = 0.7) -> List[Tuple[URIRef, float]]:
+    def find_similar_entities(
+        self, entity_uri, similarity_threshold: float = 0.7
+    ) -> List[Tuple[URIRef, float]]:
         """Find entities similar to the given entity"""
 
         # Convert to NetworkX for similarity analysis
@@ -215,24 +295,62 @@ class OntologyManager:
 
         # Code ontology
         self.kg.rdf_graph.add((self.kg.ns["code"]["CodeEntity"], RDF.type, OWL.Class))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["File"], RDFS.subClassOf, self.kg.ns["code"]["CodeEntity"]))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["Function"], RDFS.subClassOf, self.kg.ns["code"]["CodeEntity"]))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["Class"], RDFS.subClassOf, self.kg.ns["code"]["CodeEntity"]))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["Module"], RDFS.subClassOf, self.kg.ns["code"]["CodeEntity"]))
+        self.kg.rdf_graph.add(
+            (
+                self.kg.ns["code"]["File"],
+                RDFS.subClassOf,
+                self.kg.ns["code"]["CodeEntity"],
+            )
+        )
+        self.kg.rdf_graph.add(
+            (
+                self.kg.ns["code"]["Function"],
+                RDFS.subClassOf,
+                self.kg.ns["code"]["CodeEntity"],
+            )
+        )
+        self.kg.rdf_graph.add(
+            (
+                self.kg.ns["code"]["Class"],
+                RDFS.subClassOf,
+                self.kg.ns["code"]["CodeEntity"],
+            )
+        )
+        self.kg.rdf_graph.add(
+            (
+                self.kg.ns["code"]["Module"],
+                RDFS.subClassOf,
+                self.kg.ns["code"]["CodeEntity"],
+            )
+        )
 
         # Relationships
-        self.kg.rdf_graph.add((self.kg.ns["code"]["imports"], RDF.type, OWL.ObjectProperty))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["defines"], RDF.type, OWL.ObjectProperty))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["depends_on"], RDF.type, OWL.ObjectProperty))
-        self.kg.rdf_graph.add((self.kg.ns["code"]["contains"], RDF.type, OWL.ObjectProperty))
+        self.kg.rdf_graph.add(
+            (self.kg.ns["code"]["imports"], RDF.type, OWL.ObjectProperty)
+        )
+        self.kg.rdf_graph.add(
+            (self.kg.ns["code"]["defines"], RDF.type, OWL.ObjectProperty)
+        )
+        self.kg.rdf_graph.add(
+            (self.kg.ns["code"]["depends_on"], RDF.type, OWL.ObjectProperty)
+        )
+        self.kg.rdf_graph.add(
+            (self.kg.ns["code"]["contains"], RDF.type, OWL.ObjectProperty)
+        )
 
         # Metric ontology
         self.kg.rdf_graph.add((self.kg.ns["metric"]["Metric"], RDF.type, OWL.Class))
-        self.kg.rdf_graph.add((self.kg.ns["metric"]["has_metric"], RDF.type, OWL.ObjectProperty))
+        self.kg.rdf_graph.add(
+            (self.kg.ns["metric"]["has_metric"], RDF.type, OWL.ObjectProperty)
+        )
 
         # Security ontology
-        self.kg.rdf_graph.add((self.kg.ns["security"]["Vulnerability"], RDF.type, OWL.Class))
-        self.kg.rdf_graph.add((self.kg.ns["security"]["has_vulnerability"], RDF.type, OWL.ObjectProperty))
+        self.kg.rdf_graph.add(
+            (self.kg.ns["security"]["Vulnerability"], RDF.type, OWL.Class)
+        )
+        self.kg.rdf_graph.add(
+            (self.kg.ns["security"]["has_vulnerability"], RDF.type, OWL.ObjectProperty)
+        )
 
     def validate_ontology(self) -> bool:
         """Validate ontology consistency"""
@@ -269,7 +387,12 @@ class SemanticReasoner:
     def find_code_patterns(self) -> Dict[str, List[str]]:
         """Identify common code patterns and anti-patterns"""
 
-        patterns = {"high_risk_files": [], "complex_functions": [], "security_hotspots": [], "dependency_clusters": []}
+        patterns = {
+            "high_risk_files": [],
+            "complex_functions": [],
+            "security_hotspots": [],
+            "dependency_clusters": [],
+        }
 
         # Find high-risk files (high complexity + vulnerabilities)
         risk_query = """
@@ -388,8 +511,12 @@ class SemanticReasoner:
         )
 
         # Calculate maintenance score
-        complexity = next((float(m["value"]) for m in metrics if m["name"] == "complexity"), 0)
-        coverage = next((float(m["value"]) for m in metrics if m["name"] == "coverage"), 0)
+        complexity = next(
+            (float(m["value"]) for m in metrics if m["name"] == "complexity"), 0
+        )
+        coverage = next(
+            (float(m["value"]) for m in metrics if m["name"] == "coverage"), 0
+        )
 
         # Simple maintenance effort prediction
         base_effort = complexity * 0.1  # Complexity factor
@@ -404,7 +531,11 @@ class SemanticReasoner:
             "complexity_score": complexity,
             "vulnerability_count": vuln_count,
             "coverage_percentage": coverage,
-            "risk_level": "high" if total_effort > 5 else "medium" if total_effort > 2 else "low",
+            "risk_level": "high"
+            if total_effort > 5
+            else "medium"
+            if total_effort > 2
+            else "low",
         }
 
 
@@ -418,11 +549,23 @@ def demo_knowledge_graph():
 
     # Add some sample entities
     file1 = kg.add_code_entity(
-        "File", "utils.py", {"language": "python", "lines": 150, "last_modified": datetime.datetime.now().isoformat()}
+        "File",
+        "utils.py",
+        {
+            "language": "python",
+            "lines": 150,
+            "last_modified": datetime.datetime.now().isoformat(),
+        },
     )
 
     file2 = kg.add_code_entity(
-        "File", "main.py", {"language": "python", "lines": 80, "last_modified": datetime.datetime.now().isoformat()}
+        "File",
+        "main.py",
+        {
+            "language": "python",
+            "lines": 80,
+            "last_modified": datetime.datetime.now().isoformat(),
+        },
     )
 
     # Add relationships

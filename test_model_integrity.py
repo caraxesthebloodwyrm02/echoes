@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Comprehensive test for model provider integrity and configuration routing."""
 
 import os
@@ -61,9 +83,21 @@ def test_provider_routing() -> bool:
     print("=== Testing Provider Routing ===")
 
     test_configs = [
-        {"LLM_PROVIDER": "openai", "expected_provider": "openai", "expected_model": "gpt-4o-mini"},
-        {"LLM_PROVIDER": "ollama", "expected_provider": "ollama", "expected_model": "llama3.1:8b"},
-        {"LLM_PROVIDER": "gemini", "expected_provider": "gemini", "expected_model": "gemini-1.5-flash"},
+        {
+            "LLM_PROVIDER": "openai",
+            "expected_provider": "openai",
+            "expected_model": "gpt-4.1",
+        },
+        {
+            "LLM_PROVIDER": "ollama",
+            "expected_provider": "ollama",
+            "expected_model": "llama3.1:8b",
+        },
+        {
+            "LLM_PROVIDER": "gemini",
+            "expected_provider": "gemini",
+            "expected_model": "gemini-1.5-flash",
+        },
     ]
 
     all_passed = True
@@ -72,8 +106,13 @@ def test_provider_routing() -> bool:
 
         try:
             client = LLMClient()
-            if client.provider == config["expected_provider"] and client.model == config["expected_model"]:
-                print(f"✓ {config['LLM_PROVIDER']}: provider={client.provider}, model={client.model}")
+            if (
+                client.provider == config["expected_provider"]
+                and client.model == config["expected_model"]
+            ):
+                print(
+                    f"✓ {config['LLM_PROVIDER']}: provider={client.provider}, model={client.model}"
+                )
             else:
                 print(
                     f"✗ {config['LLM_PROVIDER']}: Expected provider={config['expected_provider']} model={config['expected_model']}, "
@@ -159,10 +198,10 @@ def test_api_connectivity() -> bool:
     print("\n=== Testing API Connectivity ===")
 
     original_provider = os.getenv("LLM_PROVIDER", "openai")
-    original_model = os.getenv("LLM_MODEL", "gpt-4o-mini")
+    original_model = os.getenv("LLM_MODEL", "gpt-4.1")
 
     os.environ["LLM_PROVIDER"] = "openai"
-    os.environ["LLM_MODEL"] = "gpt-4o-mini"
+    os.environ["LLM_MODEL"] = "gpt-4.1"
 
     try:
         client = LLMClient()

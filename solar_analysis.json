@@ -1,0 +1,14 @@
+{
+    "parsed_data": {
+        "location": "Staten Island",
+        "irradiance": 145
+    },
+    "inspiration_vectors": [
+        "storage integration",
+        "efficiency boost"
+    ],
+    "semantic_scores": {
+        "relevance": 0.9,
+        "impact": 0.8
+    }
+}

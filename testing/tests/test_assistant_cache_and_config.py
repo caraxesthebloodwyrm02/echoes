@@ -73,11 +73,11 @@ def test_cache_response_saved(tmp_path):
 
     # Craft a fake response that would normally be saved; include content and status
     response = {
-        "model": "gpt-4o-mini",
+        "model": "gpt-4.1",
         "content": "This is a test response",
         "usage": {"total_tokens": 10},
         "status_code": 200,
-        "_request": {"model": "gpt-4o-mini", "temperature": 0.2, "max_tokens": 128},
+        "_request": {"model": "gpt-4.1", "temperature": 0.2, "max_tokens": 128},
     }
 
     # Call the protected save method (we're testing its behavior)
@@ -91,5 +91,5 @@ def test_cache_response_saved(tmp_path):
     # Check that response is saved without metadata (simplified cache)
     assert "_cache_meta" not in data
     assert data["content"] == "This is a test response"
-    assert data["model"] == "gpt-4o-mini"
-    assert data.get("_request", {}).get("model") == "gpt-4o-mini"
+    assert data["model"] == "gpt-4.1"
+    assert data.get("_request", {}).get("model") == "gpt-4.1"

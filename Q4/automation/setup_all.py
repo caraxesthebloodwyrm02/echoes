@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Master Setup Script for Q4 Automation
 Orchestrates all setup tasks for the Q4 roadmap
@@ -57,7 +79,9 @@ class SetupOrchestrator:
         color = colors.get(level, "")
         print(f"{color}[{level}]{Color.END} {message}")
 
-    def run_command(self, cmd: List[str], description: str, timeout: int = 300) -> Tuple[bool, str]:
+    def run_command(
+        self, cmd: List[str], description: str, timeout: int = 300
+    ) -> Tuple[bool, str]:
         """Run a command and return success status with timeout"""
         self.log(f"Running: {description}", "INFO")
         try:
@@ -86,7 +110,9 @@ class SetupOrchestrator:
         self.log("Checking Python version...", "INFO")
         version = sys.version_info
         if version.major >= 3 and version.minor >= 8:
-            self.log(f"✓ Python {version.major}.{version.minor}.{version.micro}", "SUCCESS")
+            self.log(
+                f"✓ Python {version.major}.{version.minor}.{version.micro}", "SUCCESS"
+            )
             return True
         else:
             self.log(
@@ -191,7 +217,9 @@ safety>=2.3.0
         self.log("Setting up database...", "INFO")
 
         # Check if PostgreSQL is available
-        success, _ = self.run_command(["psql", "--version"], "Checking PostgreSQL installation")
+        success, _ = self.run_command(
+            ["psql", "--version"], "Checking PostgreSQL installation"
+        )
 
         if not success:
             self.log("PostgreSQL not found - skipping database setup", "WARNING")
@@ -202,7 +230,9 @@ safety>=2.3.0
         # Run database setup script
         db_script = self.q4_root / "automation" / "setup_database.py"
         if db_script.exists():
-            success, _ = self.run_command([sys.executable, str(db_script)], "Running database setup script")
+            success, _ = self.run_command(
+                [sys.executable, str(db_script)], "Running database setup script"
+            )
             self.results.append(("Database Setup", success))
             return success
         else:
@@ -250,7 +280,9 @@ safety>=2.3.0
 
         metering_script = self.q4_root / "automation" / "setup_metering.py"
         if metering_script.exists():
-            success, _ = self.run_command([sys.executable, str(metering_script)], "Running cost metering setup")
+            success, _ = self.run_command(
+                [sys.executable, str(metering_script)], "Running cost metering setup"
+            )
             self.results.append(("Metering Setup", success))
             return success
         else:
@@ -264,7 +296,9 @@ safety>=2.3.0
 
         privacy_script = self.q4_root / "automation" / "privacy_filters.py"
         if privacy_script.exists():
-            success, _ = self.run_command([sys.executable, str(privacy_script)], "Running privacy filters setup")
+            success, _ = self.run_command(
+                [sys.executable, str(privacy_script)], "Running privacy filters setup"
+            )
             self.results.append(("Privacy Filters", success))
             return success
         else:
@@ -278,7 +312,9 @@ safety>=2.3.0
 
         load_script = self.q4_root / "automation" / "run_load_tests.py"
         if load_script.exists():
-            success, _ = self.run_command([sys.executable, str(load_script)], "Running load testing suite")
+            success, _ = self.run_command(
+                [sys.executable, str(load_script)], "Running load testing suite"
+            )
             self.results.append(("Load Tests", success))
             return success
         else:
@@ -447,7 +483,9 @@ jobs:
         successful = sum(1 for _, success in self.results if success)
 
         for task, success in self.results:
-            status = f"{Color.GREEN}✓{Color.END}" if success else f"{Color.RED}✗{Color.END}"
+            status = (
+                f"{Color.GREEN}✓{Color.END}" if success else f"{Color.RED}✗{Color.END}"
+            )
             print(f"{status} {task}")
 
         print("=" * 60)
@@ -461,7 +499,9 @@ jobs:
             "duration_seconds": duration,
             "total_tasks": total,
             "successful_tasks": successful,
-            "tasks": [{"name": task, "success": success} for task, success in self.results],
+            "tasks": [
+                {"name": task, "success": success} for task, success in self.results
+            ],
         }
 
         report_file = self.q4_root / "automation" / "setup_report.json"
@@ -562,10 +602,14 @@ def main():
     orchestrator.generate_report()
 
     if success:
-        print(f"\n{Color.GREEN}{Color.BOLD}✓ Pipeline completed successfully!{Color.END}")
+        print(
+            f"\n{Color.GREEN}{Color.BOLD}✓ Pipeline completed successfully!{Color.END}"
+        )
         return 0
     else:
-        print(f"\n{Color.YELLOW}{Color.BOLD}⚠ Pipeline completed with warnings{Color.END}")
+        print(
+            f"\n{Color.YELLOW}{Color.BOLD}⚠ Pipeline completed with warnings{Color.END}"
+        )
         return 1
 
 

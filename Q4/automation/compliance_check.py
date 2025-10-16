@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Compliance Audit Framework
 Automates Task: "Compliance Audit Framework" - HIPAA/GDPR compliance verification
@@ -46,7 +68,11 @@ class ComplianceAuditor:
                 for pattern, pii_type in pii_patterns:
                     if re.search(pattern, content, re.IGNORECASE):
                         # Check if there's encryption/anonymization nearby
-                        has_protection = bool(re.search(r"encrypt|hash|anonymize|redact", content, re.IGNORECASE))
+                        has_protection = bool(
+                            re.search(
+                                r"encrypt|hash|anonymize|redact", content, re.IGNORECASE
+                            )
+                        )
                         if not has_protection:
                             issues.append(
                                 {
@@ -251,7 +277,9 @@ class ComplianceAuditor:
 
         # Calculate compliance score
         total_checks = len(checks)
-        compliant_checks = sum(1 for check in checks.values() if check.get("compliant", False))
+        compliant_checks = sum(
+            1 for check in checks.values() if check.get("compliant", False)
+        )
         compliance_score = (compliant_checks / total_checks) * 100
 
         # Determine compliance level
@@ -278,19 +306,27 @@ class ComplianceAuditor:
         recommendations = []
 
         if checks["data_privacy"]["issues"] > 0:
-            recommendations.append("Implement PII encryption/anonymization for all sensitive data")
+            recommendations.append(
+                "Implement PII encryption/anonymization for all sensitive data"
+            )
 
         if not checks["consent_management"]["compliant"]:
-            recommendations.append("Implement user consent management system (GDPR requirement)")
+            recommendations.append(
+                "Implement user consent management system (GDPR requirement)"
+            )
 
         if not checks["data_retention"]["compliant"]:
             recommendations.append("Define and implement data retention policies")
 
         if not checks["audit_logging"]["compliant"]:
-            recommendations.append("Implement comprehensive audit logging (HIPAA requirement)")
+            recommendations.append(
+                "Implement comprehensive audit logging (HIPAA requirement)"
+            )
 
         if not checks["encryption"]["compliant"]:
-            recommendations.append("Implement encryption for data at rest and in transit")
+            recommendations.append(
+                "Implement encryption for data at rest and in transit"
+            )
 
         if not checks["access_controls"]["compliant"]:
             recommendations.append("Implement role-based access controls (RBAC)")

@@ -31,3 +31,7 @@ mkdocs-material>=9.4.0
 
 # Web demos and interfaces
 streamlit>=1.28.0
+
+# Optional OpenAI Agents features
+# openai-agents[voice]>=0.0.20  # For voice-enabled agents
+# openai-agents[redis]>=0.0.20  # For Redis session storage

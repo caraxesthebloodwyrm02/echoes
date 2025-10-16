@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 A1 Implementation Verification Test
 Tests that all 5 modes produce non-empty, coherent output
@@ -84,7 +106,9 @@ def test_mode_handler_formatting():
             if formatted_output and len(formatted_output.strip()) > 50:
                 formatting_success += 1
                 print(f"    ✅ Formatted output: {len(formatted_output)} chars")
-                print(f"      Sample: {formatted_output[:100].replace(chr(10), ' ')}...")
+                print(
+                    f"      Sample: {formatted_output[:100].replace(chr(10), ' ')}..."
+                )
             else:
                 print(
                     f"    ❌ Formatted output too short or empty: {len(formatted_output) if formatted_output else 0} chars"
@@ -92,7 +116,9 @@ def test_mode_handler_formatting():
         except Exception as e:
             print(f"    ❌ Formatting error: {e}")
 
-    print(f"\n📊 Mode Handler Results: {formatting_success}/{handlers_tested} handlers formatting successfully")
+    print(
+        f"\n📊 Mode Handler Results: {formatting_success}/{handlers_tested} handlers formatting successfully"
+    )
     return formatting_success == handlers_tested
 
 

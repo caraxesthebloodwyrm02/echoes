@@ -37,7 +37,7 @@ class Config(BaseSettings):
         env_file_encoding="utf-8",
         env_prefix="ECHO_",
         case_sensitive=False,
-        extra="allow",  # Allow extra fields from .env
+        extra="ignore",  # Allow extra fields for backward compatibility, but validate known ones
     )
 
     # Environment and paths

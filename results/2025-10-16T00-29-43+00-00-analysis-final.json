@@ -1,0 +1,58 @@
+{
+  "timestamp": "2025-10-16T00:29:43+00:00",
+  "seed": 42,
+  "vectors": {
+    "influence": [
+      0.537,
+      0.716,
+      0.447
+    ],
+    "productivity": [
+      0.874,
+      0.389,
+      0.291
+    ],
+    "creativity": [
+      -0.832,
+      0.0,
+      -0.555
+    ],
+    "efficiency": [
+      0.459,
+      0.876,
+      0.146
+    ]
+  },
+  "metrics": {
+    "efficiency_vector": [
+      0.45931776340585273,
+      0.8762003061674551,
+      0.14594593413967683
+    ],
+    "efficiency_score": 0.42001662936794143,
+    "balance_angle_deg": 105.13515735313933,
+    "pairwise_angles_deg": {
+      "influence_productivity": 28.665886439615196,
+      "influence_creativity": 133.99491399474581,
+      "productivity_creativity": 152.74467162505698
+    }
+  },
+  "classification": {
+    "label": "Imbalanced",
+    "reason": "efficiency_score between 0.3 and 0.7 or balance_angle between 90\u00b0 and 120\u00b0"
+  },
+  "artifacts": {
+    "png": "results\\2025-10-16\\efficiency_plot.png"
+  },
+  "metadata": {
+    "finalization": {
+      "finalized_by": "o3",
+      "finalized_at": "2025-10-16T00:29:44.325236+00:00",
+      "git_commit": "d8bce21",
+      "experiment_tag": "exp/2025-10-16/d8bce21",
+      "environment": "secure-digest:16adbe42f93cd4f3",
+      "python_version": "3.12.9",
+      "numpy_version": "2.3.3"
+    }
+  }
+}

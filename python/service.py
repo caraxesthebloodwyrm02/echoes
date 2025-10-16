@@ -1,8 +1,39 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import logging
 import os
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
+
+# Import privacy middleware
+try:
+    from packages.security.privacy_middleware import PrivacyMiddleware
+
+    privacy_middleware = PrivacyMiddleware(filter_mode="mask")
+except ImportError:
+    # Fallback if privacy middleware not available
+    privacy_middleware = None
 
 app = FastAPI()
 
@@ -28,7 +59,9 @@ async def transform(req: TransformRequest):
     """
     # Basic input validation
     if not req or not isinstance(req.text, str):
-        raise HTTPException(status_code=400, detail="Invalid request: 'text' is required")
+        raise HTTPException(
+            status_code=400, detail="Invalid request: 'text' is required"
+        )
 
     key = os.environ.get("OPENAI_API_KEY", "")
     if key:
@@ -48,13 +81,28 @@ async def transform(req: TransformRequest):
                 message = getattr(resp.choices[0], "message", None)
                 text = getattr(message, "content", None)
                 if text:
-                    return {"result": text.strip()}
+                    result = {"result": text.strip()}
+                    # Apply privacy filtering if available
+                    if privacy_middleware:
+                        result["result"] = privacy_middleware._filter_string(
+                            result["result"]
+                        )
+                    return result
             # Fallback if OpenAI response shape unexpected
             logger.warning("OpenAI returned unexpected response shape, falling back")
-            return {"result": "[local-echo] " + req.text[::-1]}
+            fallback_result = "[local-echo] " + req.text[::-1]
+            if privacy_middleware:
+                fallback_result = privacy_middleware._filter_string(fallback_result)
+            return {"result": fallback_result}
         except Exception as e:
             logger.exception("OpenAI call failed, falling back to local echo: %s", e)
-            return {"result": "[local-echo] " + req.text[::-1]}
+            fallback_result = "[local-echo] " + req.text[::-1]
+            if privacy_middleware:
+                fallback_result = privacy_middleware._filter_string(fallback_result)
+            return {"result": fallback_result}
     else:
         # Deterministic local fallback
-        return {"result": "[local-echo] " + req.text[::-1]}
+        fallback_result = "[local-echo] " + req.text[::-1]
+        if privacy_middleware:
+            fallback_result = privacy_middleware._filter_string(fallback_result)
+        return {"result": fallback_result}

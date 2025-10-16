@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Stick Shift Controller Demo
 
@@ -64,7 +86,7 @@ def demo_processing_config():
         print(f"\n{gear.name} GEAR:")
         print(f"  Grid: {config['grid_resolution']}")
         print(f"  Time Signature: {config['time_signature']}")
-        print(f"  Quantization: {config['quantization']*100:.0f}%")
+        print(f"  Quantization: {config['quantization'] * 100:.0f}%")
         print(f"  Inference Depth: {config['inference_depth']}")
         print(f"  RPM: {config['rpm']}")
         print(f"  Style: {config['style']}")
@@ -173,7 +195,7 @@ def demo_quantization_swing():
     profile = controller.get_current_profile()
 
     print(f"Gear: {profile.gear.name}")
-    print(f"Base Quantization: {profile.quantization*100:.0f}%")
+    print(f"Base Quantization: {profile.quantization * 100:.0f}%")
     print("\nGenerating 10 behavior modifiers with swing:\n")
 
     for i in range(10):
@@ -183,7 +205,7 @@ def demo_quantization_swing():
         bar = "=" * int(abs(deviation) * 5)
         direction = "+" if deviation > 0 else "-"
 
-        print(f"  {i+1:2d}. {modifier:.3f} ({direction}{abs(deviation):5.2f}%) {bar}")
+        print(f"  {i + 1:2d}. {modifier:.3f} ({direction}{abs(deviation):5.2f}%) {bar}")
 
     print("\nThis 'swing' creates versatile, non-robotic behavior!")
 

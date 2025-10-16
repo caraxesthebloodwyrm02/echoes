@@ -1,0 +1,11 @@
+Trajectory Efficiency Analysis (2025-10-16T00:29:43+00:00)
+Seed: 42
+
+Efficiency Score: 0.420
+Balance Angle: 105.14 degrees
+Classification: Imbalanced (efficiency_score between 0.3 and 0.7 or balance_angle between 90° and 120°)
+
+Pairwise Angles (deg):
+  Influence <-> Productivity: 28.67
+  Influence <-> Creativity:   133.99
+  Productivity <-> Creativity:152.74

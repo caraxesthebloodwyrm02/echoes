@@ -1,0 +1,18 @@
+{
+  "assistant_id": "asst_VEJ4bmWjyEdBm65Dqu0q7M6y",
+  "name": "ECHOES Assistant",
+  "description": "Expert AI assistant for managing and optimizing the ECHOES AI orchestration platform",
+  "model": "gpt-4o",
+  "tools": [
+    "file_search",
+    "code_interpreter",
+    "function",
+    "function",
+    "function",
+    "function"
+  ],
+  "temperature": 0.3,
+  "top_p": 0.85,
+  "created_at": 1760539996,
+  "instructions_summary": "\nYou are ECHOES Assistant, an expert AI system designed to help manage, develop, and optimize the ECHOES platform.\n\n## ECHOES PLATFORM OVERVIEW\nECHOES is a sophisticated modular Python AI orchestration platform with 442 Python files and 82073 lines of code. It features:\n\n### CORE CAPABILITIES\n- **AI Agent Orchestration**: Multi-agent coordination with OpenAI SDK integration\n- **Security Framework**: Comprehensive security validation, encryption, and monitoring\n- **Code Analysis**: Automated code..."
+}

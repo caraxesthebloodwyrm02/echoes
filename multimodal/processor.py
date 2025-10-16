@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Multimodal AI Processing Pipeline
 Handles image, audio, and text processing with cross-modal reasoning
@@ -24,7 +46,9 @@ class MultimodalProcessor:
 
         # CLIP for image-text understanding
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        self.clip_processor = CLIPProcessor.from_pretrained(
+            "openai/clip-vit-base-patch32"
+        )
         self.clip_model.to(self.device)
 
         # ResNet for image classification
@@ -38,11 +62,15 @@ class MultimodalProcessor:
                 transforms.Resize(256),
                 transforms.CenterCrop(224),
                 transforms.ToTensor(),
-                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
+                transforms.Normalize(
+                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
+                ),
             ]
         )
 
-    def process_image(self, image_input: Union[str, bytes, Image.Image]) -> Dict[str, Any]:
+    def process_image(
+        self, image_input: Union[str, bytes, Image.Image]
+    ) -> Dict[str, Any]:
         """Process image input and extract features"""
         # Load image
         if isinstance(image_input, str):
@@ -81,15 +109,23 @@ class MultimodalProcessor:
             text_features = self.clip_model.get_text_features(**inputs)
             text_features = text_features / text_features.norm(dim=-1, keepdim=True)
 
-        return {"text_features": text_features.cpu().numpy(), "text_length": len(text), "word_count": len(text.split())}
+        return {
+            "text_features": text_features.cpu().numpy(),
+            "text_length": len(text),
+            "word_count": len(text.split()),
+        }
 
-    def cross_modal_similarity(self, image_features: np.ndarray, text_features: np.ndarray) -> float:
+    def cross_modal_similarity(
+        self, image_features: np.ndarray, text_features: np.ndarray
+    ) -> float:
         """Calculate similarity between image and text features"""
         # Cosine similarity
         similarity = np.dot(image_features.flatten(), text_features.flatten())
         return float(similarity)
 
-    def multimodal_reasoning(self, image_path: str, text_queries: List[str]) -> Dict[str, Any]:
+    def multimodal_reasoning(
+        self, image_path: str, text_queries: List[str]
+    ) -> Dict[str, Any]:
         """Perform cross-modal reasoning between image and text"""
         # Process image
         image_data = self.process_image(image_path)
@@ -100,7 +136,9 @@ class MultimodalProcessor:
 
         for query in text_queries:
             text_data = self.process_text(query)
-            similarity = self.cross_modal_similarity(image_data["clip_features"], text_data["text_features"])
+            similarity = self.cross_modal_similarity(
+                image_data["clip_features"], text_data["text_features"]
+            )
 
             text_results.append(text_data)
             similarities.append(similarity)
@@ -112,7 +150,11 @@ class MultimodalProcessor:
             "image_analysis": image_data,
             "text_analyses": text_results,
             "similarities": similarities,
-            "best_match": {"query": text_queries[best_idx], "similarity": similarities[best_idx], "index": best_idx},
+            "best_match": {
+                "query": text_queries[best_idx],
+                "similarity": similarities[best_idx],
+                "index": best_idx,
+            },
             "reasoning": f"Image most closely matches: '{text_queries[best_idx]}' "
             f"(similarity: {similarities[best_idx]:.3f})",
         }
@@ -132,7 +174,9 @@ class AudioProcessor:
 
             # Resample if needed
             if sample_rate != self.sample_rate:
-                resampler = torchaudio.transforms.Resample(sample_rate, self.sample_rate)
+                resampler = torchaudio.transforms.Resample(
+                    sample_rate, self.sample_rate
+                )
                 waveform = resampler(waveform)
 
             # Convert to mono if stereo
@@ -141,7 +185,9 @@ class AudioProcessor:
 
             # Extract MFCC features
             mfcc_transform = torchaudio.transforms.MFCC(
-                sample_rate=self.sample_rate, n_mfcc=13, melkwargs={"n_fft": 400, "hop_length": 160, "n_mels": 23}
+                sample_rate=self.sample_rate,
+                n_mfcc=13,
+                melkwargs={"n_fft": 400, "hop_length": 160, "n_mels": 23},
             )
 
             mfcc = mfcc_transform(waveform)
@@ -164,7 +210,11 @@ def demo_multimodal_processing():
     return {
         "multimodal_processor": "initialized",
         "audio_processor": "initialized",
-        "capabilities": ["image-text similarity", "image classification", "audio feature extraction"],
+        "capabilities": [
+            "image-text similarity",
+            "image classification",
+            "audio feature extraction",
+        ],
     }
 
 

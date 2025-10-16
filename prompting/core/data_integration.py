@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 DataIntegrationUnit - Handles smart web search, community scraping, and dataset aggregation
 """
@@ -52,7 +74,9 @@ class DataIntegrationUnit:
             "general": ["reddit", "github"],
         }
 
-    async def gather_data(self, query: str, context: Dict[str, Any], mode: str = "technical") -> Dict[str, Any]:
+    async def gather_data(
+        self, query: str, context: Dict[str, Any], mode: str = "technical"
+    ) -> Dict[str, Any]:
         """
         Gather relevant data from multiple sources
 
@@ -100,12 +124,16 @@ class DataIntegrationUnit:
                 aggregated_data["summary"]["failed_sources"] += 1
             else:
                 aggregated_data["sources"][source_name] = result
-                aggregated_data["summary"]["total_results"] += len(result.get("data", []))
+                aggregated_data["summary"]["total_results"] += len(
+                    result.get("data", [])
+                )
                 aggregated_data["summary"]["successful_sources"] += 1
 
         return aggregated_data
 
-    async def _search_source(self, source_name: str, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    async def _search_source(
+        self, source_name: str, query: str, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Search a specific data source"""
         source = self.data_sources[source_name]
 
@@ -124,7 +152,9 @@ class DataIntegrationUnit:
         else:
             return {"status": "unsupported", "data": []}
 
-    async def _search_github(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    async def _search_github(
+        self, query: str, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Search GitHub repositories and code"""
         # Simulate GitHub API search
         await asyncio.sleep(0.1)  # Simulate network delay
@@ -136,19 +166,19 @@ class DataIntegrationUnit:
         mock_results = [
             {
                 "type": "repository",
-                "name": f'awesome-{query.replace(" ", "-")}',
+                "name": f"awesome-{query.replace(' ', '-')}",
                 "description": f"A curated list of {query} resources",
                 "stars": 1250,
                 "language": language,
-                "url": f'https://github.com/awesome/{query.replace(" ", "-")}',
+                "url": f"https://github.com/awesome/{query.replace(' ', '-')}",
                 "relevance_score": 0.9,
             },
             {
                 "type": "code",
-                "file": f'{query.replace(" ", "_")}.py',
-                "repository": f'example/{query.replace(" ", "-")}-toolkit',
+                "file": f"{query.replace(' ', '_')}.py",
+                "repository": f"example/{query.replace(' ', '-')}-toolkit",
                 "snippet": f"# Example implementation of {query}\ndef main():\n    pass",
-                "url": f'https://github.com/example/{query.replace(" ", "-")}-toolkit',
+                "url": f"https://github.com/example/{query.replace(' ', '-')}-toolkit",
                 "relevance_score": 0.8,
             },
         ]
@@ -164,26 +194,28 @@ class DataIntegrationUnit:
             },
         }
 
-    async def _search_huggingface(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    async def _search_huggingface(
+        self, query: str, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Search HuggingFace models and datasets"""
         await asyncio.sleep(0.1)
 
         mock_results = [
             {
                 "type": "model",
-                "name": f'{query.replace(" ", "-")}-base',
+                "name": f"{query.replace(' ', '-')}-base",
                 "description": f"Pre-trained model for {query} tasks",
                 "downloads": 50000,
                 "task": self._infer_ml_task(query),
-                "url": f'https://huggingface.co/models/{query.replace(" ", "-")}-base',
+                "url": f"https://huggingface.co/models/{query.replace(' ', '-')}-base",
                 "relevance_score": 0.85,
             },
             {
                 "type": "dataset",
-                "name": f'{query.replace(" ", "-")}-dataset',
+                "name": f"{query.replace(' ', '-')}-dataset",
                 "description": f"Dataset for {query} research",
                 "size": "10GB",
-                "url": f'https://huggingface.co/datasets/{query.replace(" ", "-")}-dataset',
+                "url": f"https://huggingface.co/datasets/{query.replace(' ', '-')}-dataset",
                 "relevance_score": 0.75,
             },
         ]
@@ -219,7 +251,9 @@ class DataIntegrationUnit:
         """Infer ML task type from query"""
         query_lower = query.lower()
 
-        if any(word in query_lower for word in ["classify", "classification", "categorize"]):
+        if any(
+            word in query_lower for word in ["classify", "classification", "categorize"]
+        ):
             return "classification"
         elif any(word in query_lower for word in ["generate", "generation", "create"]):
             return "generation"

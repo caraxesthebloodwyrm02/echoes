@@ -1,0 +1,10 @@
+TRAJECTORY EFFICIENCY SUMMARY
+==================================================
+
+• System classified as Imbalanced (score=0.420, balance=105.1°)
+• Strong influence-productivity alignment (28.7°)
+• Productivity-creativity opposition detected (152.7°)
+
+RECOMMENDED INTERVENTIONS:
+→ Introduce structured ideation sessions (weekly 2-hour blocks)
+→ Balance KPIs: add innovation metrics alongside output metrics

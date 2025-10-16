@@ -29,6 +29,7 @@ Provides logging, recovery, and monitoring capabilities.
 """
 
 import functools
+import json
 import logging
 import traceback
 from typing import Any, Callable, Dict, List, Optional, TypeVar

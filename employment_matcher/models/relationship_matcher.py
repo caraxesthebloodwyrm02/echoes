@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Relationship-Aware Matching: Understand that some skills naturally complement each other
 """
@@ -60,10 +82,14 @@ class RelationshipAwareMatcher:
         )
 
         # Context alignment multiplier
-        context_alignment = self._calculate_context_alignment(candidate_embedding.context, job_embedding.context)
+        context_alignment = self._calculate_context_alignment(
+            candidate_embedding.context, job_embedding.context
+        )
 
         # Final score combines all components
-        final_score = base_similarity * 0.6 + relationship_bonus * 0.3 + context_alignment * 0.1
+        final_score = (
+            base_similarity * 0.6 + relationship_bonus * 0.3 + context_alignment * 0.1
+        )
 
         # Ensure score is between 0 and 1
         final_score = max(0, min(1, final_score))
@@ -74,11 +100,17 @@ class RelationshipAwareMatcher:
             "context_alignment": context_alignment,
         }
 
-        explanation = self._generate_explanation(base_similarity, relationship_bonus, context_alignment)
+        explanation = self._generate_explanation(
+            base_similarity, relationship_bonus, context_alignment
+        )
 
-        return MatchScore(score=final_score, components=components, explanation=explanation)
+        return MatchScore(
+            score=final_score, components=components, explanation=explanation
+        )
 
-    def _calculate_relationship_bonus(self, candidate_tags: set, job_tags: set) -> float:
+    def _calculate_relationship_bonus(
+        self, candidate_tags: set, job_tags: set
+    ) -> float:
         """
         Reward complementary skill combinations.
         Returns a bonus between 0 and 0.3
@@ -104,7 +136,9 @@ class RelationshipAwareMatcher:
 
         return min(bonus, 0.3)  # Cap the bonus
 
-    def _calculate_context_alignment(self, candidate_context: str, job_context: str) -> float:
+    def _calculate_context_alignment(
+        self, candidate_context: str, job_context: str
+    ) -> float:
         """
         Calculate alignment between candidate and job contexts.
         Returns multiplier between 0.8 and 1.2
@@ -152,7 +186,6 @@ class RelationshipAwareMatcher:
         elif relationship_bonus > 0.1:
             explanation_parts.append("Good skill synergy")
         elif relationship_bonus > 0:
-
             explanation_parts.append("Some complementary skills")
 
         # Context alignment explanation

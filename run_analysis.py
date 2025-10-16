@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Codebase Analysis and Visualization Tool
 
@@ -36,7 +58,13 @@ def check_tools() -> List[str]:
     missing = []
     for tool, cmd in tools.items():
         try:
-            subprocess.run(cmd, shell=True, check=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            subprocess.run(
+                cmd,
+                shell=True,
+                check=True,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+            )
         except (subprocess.SubprocessError, FileNotFoundError):
             missing.append(tool)
 
@@ -138,7 +166,9 @@ def analyze_robustness() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Coverage: {avg_cov:.1f}% | " f"Avg Issues: {avg_issues:.1f} | " f"Files: {len(x)}",
+            f"Avg Coverage: {avg_cov:.1f}% | "
+            f"Avg Issues: {avg_issues:.1f} | "
+            f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -219,8 +249,12 @@ def analyze_practicality() -> bool:
         plt.scatter(x, y, c=colors, alpha=0.6, edgecolors="w")
 
         # Add reference lines
-        plt.axhline(y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability")
-        plt.axhline(y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability")
+        plt.axhline(
+            y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability"
+        )
+        plt.axhline(
+            y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability"
+        )
 
         plt.title("Codebase Practicality: Complexity vs. Maintainability")
         plt.xlabel("Average Cyclomatic Complexity (Lower is Better)")
@@ -234,7 +268,9 @@ def analyze_practicality() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Complexity: {avg_comp:.1f} | " f"Avg Maintainability: {avg_mi:.1f} | " f"Files: {len(x)}",
+            f"Avg Complexity: {avg_comp:.1f} | "
+            f"Avg Maintainability: {avg_mi:.1f} | "
+            f"Files: {len(x)}",
             fontsize=9,
         )
 

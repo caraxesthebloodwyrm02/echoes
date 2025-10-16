@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 # Resonance Governor - patched prototype (macro → middleware → micro)
 # Focus: scope risks, gap closure, and robust simulation with logs and validation.
 
@@ -52,7 +74,9 @@ def apply_ema(new_value: float, old_value: float, alpha: float) -> float:
     return alpha * new_value + (1.0 - alpha) * old_value
 
 
-def generate_noisy_input(base: float, variance: float, timestep: int, rng: random.Random) -> float:
+def generate_noisy_input(
+    base: float, variance: float, timestep: int, rng: random.Random
+) -> float:
     noise = (rng.random() - 0.5) * variance * 2.0
     sine = math.sin(timestep * 0.1) * 15.0
     raw = base + noise + sine
@@ -76,8 +100,13 @@ class ResonanceGovernor:
 
     def step(self):
         self.t += 1
-        raw = generate_noisy_input(self.macro.cadence, self.macro.variance, self.t, self.rng)
-        alpha = variance_to_filter_strength(self.macro.variance) * self.macro.smoothing_strength
+        raw = generate_noisy_input(
+            self.macro.cadence, self.macro.variance, self.t, self.rng
+        )
+        alpha = (
+            variance_to_filter_strength(self.macro.variance)
+            * self.macro.smoothing_strength
+        )
         alpha = max(1e-6, min(0.999999, alpha))
         smoothed = apply_ema(raw, self.state.smoothed_output, alpha)
         error = raw - self.macro.cadence
@@ -86,7 +115,9 @@ class ResonanceGovernor:
         if abs(error) > self.macro.variance * 0.7:
             adj = calculate_feedback(error, self.macro)
             new_strength = self.macro.smoothing_strength + adj
-            self.macro.smoothing_strength = max(self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength))
+            self.macro.smoothing_strength = max(
+                self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength)
+            )
         self.state.raw_input = raw
         self.state.smoothed_output = smoothed
         self.state.governor_angle = angle
@@ -128,7 +159,9 @@ class ResonanceGovernor:
 
 
 if __name__ == "__main__":
-    macro = MacroConfig(cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6)
+    macro = MacroConfig(
+        cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6
+    )
     gov = ResonanceGovernor(macro, seed=42)
     gov.run(250)
     m = gov.metrics()

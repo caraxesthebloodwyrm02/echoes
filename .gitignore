@@ -1,27 +1,437 @@
-# General
-/.vscode/
-/.idea/
-/.DS_Store
+# ==================================================
+# ECHOES PROJECT - COMPREHENSIVE GITIGNORE
+# ==================================================
 
-# Python
+# ==================================================
+# PYTHON
+# ==================================================
+# Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
-*.pyo
+*$py.class
 
-# Virtualenv
-python/.venv/
+# C extensions
+*.so
 
-# Context and cache data
-data/context/
-data/cache/
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
 
-# dotenv
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+cover/
+
+# Translations
+*.mo
+*.pot
+
+# Django stuff:
+*.log
+local_settings.py
+db.sqlite3
+db.sqlite3-journal
+
+# Flask stuff:
+instance/
+.webassets-cache
+
+# Scrapy stuff:
+.scrapy
+
+# Sphinx documentation
+docs/_build/
+
+# PyBuilder
+.pybuilder/
+target/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# pipenv
+Pipfile.lock
+
+# poetry
+poetry.lock
+
+# pdm
+.pdm.toml
+
+# PEP 582
+__pypackages__/
+
+# Celery stuff
+celerybeat-schedule
+celerybeat.pid
+
+# SageMath parsed files
+*.sage.py
+
+# Environments
 .env
-.env.unified
+.venv
+env/
+venv/
+ENV/
+env.bak/
+venv.bak/
 
-# Local runners and large binaries (keep out of repo)
-actions-runner/
-OPENAI scaffolds/ffmpeg-*/
-yt-transcribe-env/
-ffmpeg-*.7z
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# pytype static type analyzer
+.pytype/
+
+# Cython debug symbols
+cython_debug/
+
+# ==================================================
+# IDE & EDITOR
+# ==================================================
+# VS Code
+.vscode/settings.json
+.vscode/launch.json
+.vscode/tasks.json
+*.code-workspace
+
+# Windsurf
+.windsurf/config.json
+.windsurf/settings.json
+
+# PyCharm
+.idea/
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+*.swp
+*.swo
+*~
+
+# Emacs
+*~
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# ==================================================
+# AI & ML
+# ==================================================
+# Model files
+*.h5
+*.hdf5
+*.pkl
+*.pickle
+*.joblib
+*.model
+*.weights
+*.pb
+*.tflite
+*.onnx
+*.pt
+*.pth
+*.bin
+
+# Dataset files
+*.csv
+*.jsonl
+*.parquet
+*.feather
+*.pkl.gz
+
+# Logs
+logs/
+*.log
+tensorboard/
+
+# Cache
+.cache/
+__pycache__/
+
+# ==================================================
+# API KEYS & SECRETS
+# ==================================================
+.env
+.env.local
+.env.production
+.env.staging
+.env.test
+
+# API Keys
+*.key
+*.pem
+*_key.txt
+*secret*
+*token*
+
+# AWS
+.aws/
+
+# Azure
+.azure/
+
+# GCP
+.gcp/
+
+# ==================================================
+# DATABASE
+# ==================================================
+*.db
+*.sqlite
+*.sqlite3
+*.db-journal
+
+# PostgreSQL
+postgres_data/
+
+# MySQL
+mysql_data/
+
+# MongoDB
+mongo_data/
+dump/
+
+# Redis
+dump.rdb
+
+# ==================================================
+# WEB DEVELOPMENT
+# ==================================================
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# Production builds
+build/
+dist/
+.next/
+.nuxt/
+.vuepress/dist
+
+# ==================================================
+# CONTAINER & DEPLOYMENT
+# ==================================================
+# Docker
+.dockerignore
+
+# Kubernetes
+*.yaml
+*.yml
+!k8s/**/*.yaml
+!k8s/**/*.yml
+
+# Terraform
+.terraform/
+*.tfstate
+*.tfvars
+
+# Ansible
+ansible.retry
+
+# ==================================================
+# TESTING & QUALITY
+# ==================================================
+# Test results
+test-results/
+coverage/
+.coverage
+htmlcov/
+
+# Linting
+.pylint.d/
+.flake8
+.mypy.ini
+
+# Pre-commit
+.pre-commit-config.yaml
+
+# ==================================================
+# DOCUMENTATION
+# ==================================================
+docs/_build/
+docs/build/
+*.pdf
+*.docx
+
+# ==================================================
+# TEMPORARY FILES
+# ==================================================
+tmp/
+temp/
+.tmp/
+*.tmp
+*.temp
+.cache/
+
+# ==================================================
+# BACKUPS
+# ==================================================
+*.bak
+*.backup
+*~
+
+# ==================================================
+# CUSTOM PROJECT SPECIFIC
+# ==================================================
+# Echoes specific
+data/
+models/
+checkpoints/
+experiments/
+runs/
+
+# API responses
+responses/
+fixtures/
+
+# User data
+user_data/
+personal/
+
+# Debug files
+debug.log
+error.log
+access.log
+
+# ==================================================
+# LARGE FILES
+# ==================================================
+# Git LFS (if used)
+*.zip
+*.tar.gz
 *.7z
+*.rar
+*.mp4
+*.avi
+*.mov
+*.wmv
+*.flv
+*.mkv
+*.mp3
+*.wav
+*.flac
+*.ogg
+*.jpg
+*.jpeg
+*.png
+*.gif
+*.bmp
+*.tiff
+*.svg
+*.pdf
+*.doc
+*.docx
+*.xls
+*.xlsx
+*.ppt
+*.pptx
+
+# ==================================================
+# SENSITIVE DATA
+# ==================================================
+# Personal information
+*password*
+*secret*
+*key*
+*token*
+*api_key*
+
+# Financial data
+*card*
+*bank*
+*account*
+
+# Health data
+*medical*
+*health*
+*patient*
+
+# ==================================================
+# EXCEPTIONS (FILES TO KEEP)
+# ==================================================
+# Keep these even if they match patterns above
+!.env.example
+!.env.template
+!.gitignore
+!README.md
+!LICENSE
+!pyproject.toml
+!setup.py
+!requirements.txt
+!Dockerfile
+!docker-compose.yml
+!Makefile

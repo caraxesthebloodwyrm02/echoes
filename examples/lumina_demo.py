@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Lumina Demo - Showcase Lumina's Capabilities
 
@@ -83,7 +105,11 @@ async def demo_workflow_analysis(lumina):
 
     print(f"\n✅ Status: {result['status']}")
     print("📊 Workflow Analysis:\n")
-    print(result["analysis"][:500] + "..." if len(result["analysis"]) > 500 else result["analysis"])
+    print(
+        result["analysis"][:500] + "..."
+        if len(result["analysis"]) > 500
+        else result["analysis"]
+    )
 
 
 async def demo_codebase_upgrade(lumina):
@@ -122,7 +148,11 @@ async def demo_interactive_chat(lumina):
     for i, question in enumerate(questions, 1):
         print(f"\n[Q{i}] {question}")
         response = lumina.chat(question)
-        print(f"[Lumina] {response[:300]}..." if len(response) > 300 else f"[Lumina] {response}")
+        print(
+            f"[Lumina] {response[:300]}..."
+            if len(response) > 300
+            else f"[Lumina] {response}"
+        )
 
 
 async def demo_smart_refactor(lumina):
@@ -144,7 +174,11 @@ async def demo_smart_refactor(lumina):
 
         print(f"\n✅ Status: {result['status']}")
         print("📝 Refactoring Result:\n")
-        print(result["result"][:400] + "..." if len(result["result"]) > 400 else result["result"])
+        print(
+            result["result"][:400] + "..."
+            if len(result["result"]) > 400
+            else result["result"]
+        )
     else:
         print("Test file not found, skipping refactoring demo")
 

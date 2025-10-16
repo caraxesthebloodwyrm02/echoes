@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Comprehensive Test Suite for Symphony Implementation
 Validates all new AI-enhanced components
@@ -28,7 +50,9 @@ class TestSymphonyComponents:
             assert agent is not None
 
             # Test task addition
-            task = orchestrator.add_task("Review test file", "code_reviewer", "Review completed")
+            task = orchestrator.add_task(
+                "Review test file", "code_reviewer", "Review completed"
+            )
             assert task is not None
 
         except ImportError:
@@ -47,7 +71,9 @@ class TestSymphonyComponents:
             assert text_data["word_count"] == 2
 
             # Test cross-modal similarity (text-text for now)
-            similarity = processor.cross_modal_similarity(text_data["text_features"], text_data["text_features"])
+            similarity = processor.cross_modal_similarity(
+                text_data["text_features"], text_data["text_features"]
+            )
             assert similarity > 0.9  # Same text should be very similar
 
         except ImportError:
@@ -99,14 +125,21 @@ class TestSymphonyComponents:
             generator = SyntheticDataGenerator()
 
             # Create test data
-            test_data = pd.DataFrame({"age": np.random.normal(30, 5, 100), "score": np.random.uniform(0, 100, 100)})
+            test_data = pd.DataFrame(
+                {
+                    "age": np.random.normal(30, 5, 100),
+                    "score": np.random.uniform(0, 100, 100),
+                }
+            )
 
             # Test metadata detection
             metadata = generator.detect_metadata(test_data)
             assert metadata is not None
 
             # Test synthetic generation (small sample for speed)
-            synthetic, validation = generator.generate_synthetic_data(test_data, 10, method="copula")
+            synthetic, validation = generator.generate_synthetic_data(
+                test_data, 10, method="copula"
+            )
             assert len(synthetic) == 10
             assert "quality_metrics" in validation
 
@@ -166,12 +199,21 @@ class TestSymphonyComponents:
         )
 
         # Should complete (exit code 0 or 1 is acceptable, not crash with 2+)
-        assert result.returncode < 2, f"Visualizer crashed with exit code {result.returncode}"
+        assert result.returncode < 2, (
+            f"Visualizer crashed with exit code {result.returncode}"
+        )
 
     def test_symphony_integration(self):
         """Test integration between symphony components"""
         # Check that all new directories exist
-        symphony_dirs = ["ai_agents", "multimodal", "mlops", "security", "synthetic_data", "knowledge_graph"]
+        symphony_dirs = [
+            "ai_agents",
+            "multimodal",
+            "mlops",
+            "security",
+            "synthetic_data",
+            "knowledge_graph",
+        ]
 
         for dir_name in symphony_dirs:
             assert os.path.exists(dir_name), f"Symphony directory {dir_name} not found"
@@ -209,7 +251,9 @@ class TestSymphonyPerformance:
 
             _start_time = time.time()
 
-            synthetic, _ = generator.generate_synthetic_data(large_data, 100, method="copula")
+            synthetic, _ = generator.generate_synthetic_data(
+                large_data, 100, method="copula"
+            )
 
             duration = time.time() - _start_time
             assert duration < 30  # Should complete within 30 seconds

@@ -46,8 +46,8 @@ audit_logger = AuditLogger()
 def evaluate_bias_safely(
     prompt: str,
     user_id: str = "anonymous",
-    model: str = "gpt-4o-mini",
-    grader_model: str = "gpt-4o-mini",
+    model: str = "gpt-4.1",
+    grader_model: str = "gpt-4.1",
 ) -> Dict[str, Any]:
     """
     Evaluate bias with comprehensive safety mechanisms.
@@ -188,8 +188,8 @@ def evaluate_bias_safely(
 def batch_evaluate_bias_safely(
     prompts: list,
     user_id: str = "batch_user",
-    model: str = "gpt-4o-mini",
-    grader_model: str = "gpt-4o-mini",
+    model: str = "gpt-4.1",
+    grader_model: str = "gpt-4.1",
 ) -> list:
     """
     Evaluate multiple prompts for bias with safety mechanisms.

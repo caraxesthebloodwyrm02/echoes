@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Comprehensive Security Fix Script
 Version 1.0.0
@@ -98,10 +120,14 @@ class SecurityFixManager:
         try:
             # Test payload encryption
             test_payload = {"test": "data"}
-            encrypted = self.security_components["payload_handler"].encrypt_payload(test_payload, "test_client")
+            encrypted = self.security_components["payload_handler"].encrypt_payload(
+                test_payload, "test_client"
+            )
 
             # Test payload decryption
-            decrypted = self.security_components["payload_handler"].decrypt_payload(encrypted)
+            decrypted = self.security_components["payload_handler"].decrypt_payload(
+                encrypted
+            )
 
             if decrypted == test_payload:
                 self.security_status["payload_security"] = True
@@ -141,7 +167,9 @@ class SecurityFixManager:
                 "signature": "a" * 64,
             }
 
-            is_valid, _ = self.security_components["data_validator"].validate_payload(test_payload)
+            is_valid, _ = self.security_components["data_validator"].validate_payload(
+                test_payload
+            )
 
             if is_valid:
                 self.security_status["data_validation"] = True
@@ -157,7 +185,9 @@ class SecurityFixManager:
         """Verify security middleware configuration"""
         try:
             # Verify middleware configuration
-            if hasattr(self.security_components["security_middleware"], "secure_endpoint"):
+            if hasattr(
+                self.security_components["security_middleware"], "secure_endpoint"
+            ):
                 self.security_status["middleware_active"] = True
                 return True
 
