@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Task: automation.tasks.foreign_dependency_sanitize
 
@@ -139,7 +161,9 @@ def _scan_workflows(root: Path) -> Dict[str, Any]:
     workflows_dir = root / ".github" / "workflows"
     results: List[Dict[str, Any]] = []
     if workflows_dir.is_dir():
-        workflow_files = list(workflows_dir.glob("*.yml")) + list(workflows_dir.glob("*.yaml"))
+        workflow_files = list(workflows_dir.glob("*.yml")) + list(
+            workflows_dir.glob("*.yaml")
+        )
         for wf in workflow_files:
             try:
                 text = wf.read_text(encoding="utf-8")
@@ -191,17 +215,25 @@ def _scan_node_configs(root: Path) -> Dict[str, Any]:
         if p.exists():
             hits.append(str(p.resolve()))
     # node_modules directories
-    node_modules_dirs = [str(p.resolve()) for p in root.rglob("node_modules") if p.is_dir() and not _is_ignored(p)]
+    node_modules_dirs = [
+        str(p.resolve())
+        for p in root.rglob("node_modules")
+        if p.is_dir() and not _is_ignored(p)
+    ]
     return {"node_configs": sorted(hits), "node_modules": sorted(node_modules_dirs)}
 
 
-def _write_report(report: Dict[str, Any], out_path: Path, log: AutomationLogger) -> None:
+def _write_report(
+    report: Dict[str, Any], out_path: Path, log: AutomationLogger
+) -> None:
     out_path.parent.mkdir(parents=True, exist_ok=True)
     out_path.write_text(json.dumps(report, indent=2, sort_keys=True), encoding="utf-8")
     log.info(f"Wrote foreign dependency report: {out_path}")
 
 
-def _replace_in_file(path: Path, replacements: List[tuple[str, str]], log: AutomationLogger) -> bool:
+def _replace_in_file(
+    path: Path, replacements: List[tuple[str, str]], log: AutomationLogger
+) -> bool:
     try:
         text = path.read_text(encoding="utf-8")
     except Exception as e:
@@ -240,7 +272,9 @@ def _prune_precommit_node_blocks(root: Path, log: AutomationLogger) -> bool:
     removed = False
     for line in lines:
         # Remove commented markdownlint-cli block
-        if line.startswith("#  - repo: https://github.com/igorshubovych/markdownlint-cli"):
+        if line.startswith(
+            "#  - repo: https://github.com/igorshubovych/markdownlint-cli"
+        ):
             skip = True
             removed = True
             continue
@@ -294,7 +328,9 @@ def _add_precommit_guard_hook(root: Path, log: AutomationLogger) -> bool:
     return False
 
 
-def _delete_node_configs(paths: List[str], ctx, log: AutomationLogger, assume_yes: bool = False) -> List[str]:
+def _delete_node_configs(
+    paths: List[str], ctx, log: AutomationLogger, assume_yes: bool = False
+) -> List[str]:
     removed: List[str] = []
     for p_str in paths:
         p = Path(p_str)
@@ -304,7 +340,9 @@ def _delete_node_configs(paths: List[str], ctx, log: AutomationLogger, assume_ye
             log.info(f"[DRY-RUN] Would delete {p}")
             removed.append(str(p))
             continue
-        if assume_yes or ctx.require_confirmation(f"Delete Node-specific config '{p.name}' at {p}?"):
+        if assume_yes or ctx.require_confirmation(
+            f"Delete Node-specific config '{p.name}' at {p}?"
+        ):
             try:
                 p.unlink()
                 removed.append(str(p))
@@ -320,7 +358,9 @@ def foreign_dependency_sanitize(context) -> None:
 
     apply_changes = bool(context.extra_data.get("apply_changes", False))
     delete_node_configs = bool(context.extra_data.get("delete_node_configs", False))
-    report_file = context.extra_data.get("report_file", "automation/reports/foreign_dependency_report.json")
+    report_file = context.extra_data.get(
+        "report_file", "automation/reports/foreign_dependency_report.json"
+    )
     assume_yes = bool(context.extra_data.get("assume_yes", False))
 
     log.info("Scanning repository for foreign dependencies...")
@@ -403,6 +443,8 @@ def foreign_dependency_sanitize(context) -> None:
 
     # 4) Optionally remove Node-specific config files
     if delete_node_configs and node_cfg_info.get("node_configs"):
-        _delete_node_configs(node_cfg_info["node_configs"], context, log, assume_yes=assume_yes)
+        _delete_node_configs(
+            node_cfg_info["node_configs"], context, log, assume_yes=assume_yes
+        )
 
     log.info("Foreign dependency sanitation completed.")

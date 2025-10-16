@@ -1,9 +1,6 @@
 # Echoes - Multi-Modal AI Orchestration Platform
 # Consolidated Requirements File
-# Generated after full analysis of project dependencies
-
-# Core Python Version
-# python>=3.12.0,<4.0.0
+# Updated for streamlined development environment
 
 # ==================================================
 # WEB FRAMEWORK & API
@@ -20,6 +17,12 @@ python-multipart>=0.0.6
 httpx>=0.25.0
 requests>=2.32.5
 aiohttp>=3.9.0
+
+# ==================================================
+# KNOWLEDGE GRAPH & SEMANTIC PROCESSING
+# ==================================================
+networkx>=3.1
+rdflib>=6.3.0
 
 # ==================================================
 # SECURITY & AUTHENTICATION
@@ -42,7 +45,7 @@ pyyaml>=6.0
 # ==================================================
 numpy>=1.26.4
 scipy>=1.11.0
-pandas>=2.1.0
+pandas>=2.2.3
 scikit-learn>=1.3.0
 statsmodels>=0.14.0
 sympy>=1.12
@@ -51,6 +54,7 @@ sympy>=1.12
 # AI & MACHINE LEARNING
 # ==================================================
 openai>=1.0.0
+openai-agents>=0.0.20
 transformers>=4.35.0
 torch>=2.0.0
 torchaudio>=2.0.0
@@ -62,12 +66,6 @@ nltk>=3.8.1
 # ==================================================
 Pillow>=10.1.0
 opencv-python>=4.8.0
-
-# ==================================================
-# AI AGENTS & ORCHESTRATION
-# ==================================================
-crewai>=0.1.0
-langchain>=0.1.0
 
 # ==================================================
 # LOGGING & MONITORING
@@ -150,31 +148,17 @@ locust>=2.20.0
 streamlit>=1.28.0
 
 # ==================================================
-# OPTIONAL/EXTENDED DEPENDENCIES
-# ==================================================
-# For audio transcription (commented out due to platform issues)
-# openai-whisper>=20231117
-# For advanced audio processing
-# pyannote-audio>=2.1
-# For chemistry (requires conda on some platforms)
-# rdkit>=2023.9.1
-
-# ==================================================
 # DEVELOPMENT NOTES
 # ==================================================
-# This file consolidates all dependencies from:
-# - requirements/base.txt (core runtime)
-# - requirements/dev.txt (development tools)
-# - pyproject.toml (Poetry dependencies)
-# - Direct code analysis of imports
+# This file consolidates all dependencies for streamlined development
 #
 # To install all dependencies:
+# python bootstrap.py
+#
+# For manual installation:
 # pip install -r requirements.txt
 #
 # For production deployment (runtime only):
-# pip install fastapi uvicorn pydantic openai transformers torch numpy pandas scikit-learn
+# pip install fastapi uvicorn pydantic openai openai-agents transformers torch numpy pandas scikit-learn
 #
-# For development:
-# pip install -r requirements.txt
-#
-# Last updated: 2024
+# Last updated: 2025

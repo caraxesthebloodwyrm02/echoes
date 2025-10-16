@@ -147,18 +147,12 @@ class SafetyMonitor:
         """Calculate comprehensive safety metrics."""
         # Time windows
         last_24h = now - timedelta(hours=24)
-        last_1h = now - timedelta(hours=1)
 
         # Filter events by time
         events_24h = [
             e
             for e in events
             if datetime.fromisoformat(e.get("timestamp") or e.get("ts", "")) > last_24h
-        ]
-        events_1h = [
-            e
-            for e in events
-            if datetime.fromisoformat(e.get("timestamp") or e.get("ts", "")) > last_1h
         ]
 
         # Calculate metrics
@@ -319,8 +313,6 @@ class SafetyMonitor:
         recommendations = []
 
         level = threat_analysis["threat_level"]
-        rate_limited = threat_analysis["rate_limited_percent"]
-        blocked = threat_analysis["blocked_injections_percent"]
 
         if level == "high":
             recommendations.extend(

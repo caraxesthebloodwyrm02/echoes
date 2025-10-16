@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("language-bundle")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f39ac3493442485926c1759d589ed01ad7276670")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+d8bce219754454370c71b5261160a77abc47e085")]
 [assembly: System.Reflection.AssemblyProductAttribute("language-bundle")]
 [assembly: System.Reflection.AssemblyTitleAttribute("language-bundle")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

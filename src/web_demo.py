@@ -130,7 +130,7 @@ def render_sidebar():
     # Model pricing info
     st.sidebar.markdown("---")
     st.sidebar.subheader("💰 Model Pricing")
-    st.sidebar.write("**GPT-4o-mini:** $0.15/1k tokens")
+    st.sidebar.write("**GPT-4.1:** $0.15/1k tokens")
     st.sidebar.write("**GPT-3.5-turbo:** $0.50/1k tokens")
     st.sidebar.write("**GPT-4o:** $2.50/1k tokens")
 
@@ -381,7 +381,7 @@ def render_results(results):
                     # Calculate estimated cost
                     est_tokens = file_info["estimated_tokens"]
                     model = file_info["selected_model"]
-                    if model == "gpt-4o-mini":
+                    if model == "gpt-4.1":
                         est_cost = (est_tokens / 1000.0) * 0.15
                     elif model == "gpt-3.5-turbo":
                         est_cost = (est_tokens / 1000.0) * 0.50

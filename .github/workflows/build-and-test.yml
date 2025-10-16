@@ -82,14 +82,5 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .[test]
 
-      - name: Run diarisation unit tests
-        run: pytest -q tests/test_diarisation.py -m unit
-
-      - name: Run diarisation integration test (optional)
-        if: ${{ env.RUN_DIARISATION_INTEGRATION == '1' }}
-        env:
-          RUN_DIARISATION_INTEGRATION: ${{ env.RUN_DIARISATION_INTEGRATION }}
-          HUGGINGFACE_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-          DIARIZATION_AUTH_TOKEN: ${{ secrets.HUGGINGFACE_TOKEN }}
-          GITHUB_PAT: ${{ secrets.PAT_ECHOES }}
-        run: pytest -q tests/test_diarisation_integration.py -m integration
+      - name: Run test suite
+        run: python -m pytest tests/ -v --tb=short -x

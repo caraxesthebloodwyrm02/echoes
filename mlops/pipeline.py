@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 MLOps Pipeline System
 Automated machine learning operations with MLflow tracking and BentoML serving
@@ -55,7 +77,12 @@ class MLOpsPipeline:
             mlflow.log_artifact(model, model_name)
 
     def train_and_track(
-        self, model_class, X: pd.DataFrame, y: pd.Series, params: Dict[str, Any], test_size: float = 0.2
+        self,
+        model_class,
+        X: pd.DataFrame,
+        y: pd.Series,
+        params: Dict[str, Any],
+        test_size: float = 0.2,
     ) -> Dict[str, Any]:
         """Train model with full tracking"""
         run_id = self.start_run()
@@ -65,7 +92,9 @@ class MLOpsPipeline:
             self.log_parameters(params)
 
             # Split data
-            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=42)
+            X_train, X_test, y_train, y_test = train_test_split(
+                X, y, test_size=test_size, random_state=42
+            )
 
             # Train model
             model = model_class(**params)
@@ -93,7 +122,12 @@ class MLOpsPipeline:
             os.makedirs(model_path, exist_ok=True)
             joblib.dump(model, f"{model_path}/model.pkl")
 
-            result = {"run_id": run_id, "status": "success", "metrics": metrics, "model_path": model_path}
+            result = {
+                "run_id": run_id,
+                "status": "success",
+                "metrics": metrics,
+                "model_path": model_path,
+            }
 
         except Exception as e:
             result = {"run_id": run_id, "status": "failed", "error": str(e)}
@@ -122,7 +156,10 @@ class MLOpsPipeline:
                 prediction = self.model.predict(df)[0]
                 probability = self.model.predict_proba(df)[0]
 
-                return {"prediction": int(prediction), "probabilities": probability.tolist()}
+                return {
+                    "prediction": int(prediction),
+                    "probabilities": probability.tolist(),
+                }
 
         # Save BentoML service
         bentoml_service = MLModelService()
@@ -137,7 +174,9 @@ class ModelRegistry:
     def __init__(self):
         self.models = {}
 
-    def register_model(self, name: str, version: str, run_id: str, metadata: Dict[str, Any] = None):
+    def register_model(
+        self, name: str, version: str, run_id: str, metadata: Dict[str, Any] = None
+    ):
         """Register a model version"""
         if name not in self.models:
             self.models[name] = {}
@@ -151,7 +190,9 @@ class ModelRegistry:
         # Save to registry file
         self._save_registry()
 
-    def get_model_info(self, name: str, version: str = "latest") -> Optional[Dict[str, Any]]:
+    def get_model_info(
+        self, name: str, version: str = "latest"
+    ) -> Optional[Dict[str, Any]]:
         """Get model information"""
         if name not in self.models:
             return None
@@ -182,7 +223,12 @@ class AutomatedTraining:
         self.pipeline = mlops_pipeline
 
     def grid_search_training(
-        self, model_class, X: pd.DataFrame, y: pd.Series, param_grid: Dict[str, list], model_name: str = None
+        self,
+        model_class,
+        X: pd.DataFrame,
+        y: pd.Series,
+        param_grid: Dict[str, list],
+        model_name: str = None,
     ) -> Dict[str, Any]:
         """Perform grid search over hyperparameters"""
         best_result = None
@@ -192,7 +238,7 @@ class AutomatedTraining:
         print(f"Starting grid search with {total_combinations} combinations...")
 
         for i, params in enumerate(self._generate_param_combinations(param_grid)):
-            print(f"Training combination {i+1}/{total_combinations}: {params}")
+            print(f"Training combination {i + 1}/{total_combinations}: {params}")
 
             result = self.pipeline.train_and_track(model_class, X, y, params)
 
@@ -211,7 +257,10 @@ class AutomatedTraining:
                     model_name,
                     f"v{len(registry.models.get(model_name, {})) + 1}",
                     best_result["run_id"],
-                    {"params": best_result["params"], "metrics": best_result["metrics"]},
+                    {
+                        "params": best_result["params"],
+                        "metrics": best_result["metrics"],
+                    },
                 )
 
         return best_result
@@ -235,14 +284,20 @@ def demo_mlops_pipeline():
     # Create sample data
     np.random.seed(42)
     X = pd.DataFrame(
-        {"feature1": np.random.randn(1000), "feature2": np.random.randn(1000), "feature3": np.random.randn(1000)}
+        {
+            "feature1": np.random.randn(1000),
+            "feature2": np.random.randn(1000),
+            "feature3": np.random.randn(1000),
+        }
     )
     y = pd.Series(np.random.choice([0, 1], 1000))
 
     # Train model with tracking
     from sklearn.ensemble import RandomForestClassifier
 
-    result = pipeline.train_and_track(RandomForestClassifier, X, y, {"n_estimators": 100, "max_depth": 10})
+    result = pipeline.train_and_track(
+        RandomForestClassifier, X, y, {"n_estimators": 100, "max_depth": 10}
+    )
 
     print(f"Training completed: {result}")
 
@@ -251,11 +306,17 @@ def demo_mlops_pipeline():
 
     param_grid = {"n_estimators": [50, 100, 200], "max_depth": [5, 10, 15]}
 
-    best_result = automated.grid_search_training(RandomForestClassifier, X, y, param_grid, "random_forest_model")
+    best_result = automated.grid_search_training(
+        RandomForestClassifier, X, y, param_grid, "random_forest_model"
+    )
 
     print(f"Best model: {best_result}")
 
-    return {"pipeline_demo": "completed", "automated_training": "completed", "model_registry": "initialized"}
+    return {
+        "pipeline_demo": "completed",
+        "automated_training": "completed",
+        "model_registry": "initialized",
+    }
 
 
 if __name__ == "__main__":

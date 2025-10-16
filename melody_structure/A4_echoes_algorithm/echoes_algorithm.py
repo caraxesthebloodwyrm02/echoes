@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Echoes Algorithm Module
 =======================
@@ -67,7 +89,9 @@ class EchoesAlgorithm:
         return {"optimized_laps": optimized}
 
     # ===== Mathematical Graph Analogy =====
-    def plot_trajectory_3d(self, trajectory_points: List[TrajectoryPoint]) -> Dict[str, Any]:
+    def plot_trajectory_3d(
+        self, trajectory_points: List[TrajectoryPoint]
+    ) -> Dict[str, Any]:
         """
         Plot trajectory in 3D space (X=time, Y=alignment, Z=complexity).
         Returns analysis of optimal path.
@@ -77,8 +101,12 @@ class EchoesAlgorithm:
 
         # Calculate path metrics
         total_distance = self._calculate_3d_distance(trajectory_points)
-        alignment_trend = self._calculate_trend([p.alignment for p in trajectory_points])
-        complexity_variance = self._calculate_variance([p.complexity for p in trajectory_points])
+        alignment_trend = self._calculate_trend(
+            [p.alignment for p in trajectory_points]
+        )
+        complexity_variance = self._calculate_variance(
+            [p.complexity for p in trajectory_points]
+        )
 
         # Find optimal sub-paths
         optimal_segments = self._find_smooth_segments(trajectory_points)
@@ -110,7 +138,9 @@ class EchoesAlgorithm:
                 aligned_plan = self._apply_correction(aligned_plan, factor, correction)
 
         aligned_plan["magnetic_corrections"] = corrections
-        aligned_plan["final_alignment_score"] = self._recalculate_alignment(aligned_plan)
+        aligned_plan["final_alignment_score"] = self._recalculate_alignment(
+            aligned_plan
+        )
 
         return aligned_plan
 
@@ -137,7 +167,9 @@ class EchoesAlgorithm:
         return {
             "integration_score": integration_score,
             "gear_alignments": gear_alignments,
-            "escapement_recommendations": self._generate_escapement_fixes(gear_alignments),
+            "escapement_recommendations": self._generate_escapement_fixes(
+                gear_alignments
+            ),
         }
 
     # ===== Continuous Improvement =====
@@ -145,24 +177,32 @@ class EchoesAlgorithm:
         """
         Learn from execution feedback to improve algorithm.
         """
-        self.feedback_history.append({"timestamp": datetime.now(), "feedback": feedback})
+        self.feedback_history.append(
+            {"timestamp": datetime.now(), "feedback": feedback}
+        )
 
         # Adjust weights based on feedback
         if feedback.get("alignment_improved"):
             # Strengthen successful factors
             for factor in feedback.get("successful_factors", []):
                 if factor in self.alignment_weights:
-                    self.alignment_weights[factor] = min(0.4, self.alignment_weights[factor] + self.learning_rate)
+                    self.alignment_weights[factor] = min(
+                        0.4, self.alignment_weights[factor] + self.learning_rate
+                    )
 
         if feedback.get("alignment_declined"):
             # Weaken unsuccessful factors
             for factor in feedback.get("failed_factors", []):
                 if factor in self.alignment_weights:
-                    self.alignment_weights[factor] = max(0.05, self.alignment_weights[factor] - self.learning_rate)
+                    self.alignment_weights[factor] = max(
+                        0.05, self.alignment_weights[factor] - self.learning_rate
+                    )
 
         # Adjust magnetic field
         success_rate = feedback.get("success_rate", 0.5)
-        self.magnetic_field_strength = self.magnetic_field_strength * (0.5 + success_rate)
+        self.magnetic_field_strength = self.magnetic_field_strength * (
+            0.5 + success_rate
+        )
 
     # ===== Helper Methods =====
     def _simulate_alignment(self, milestone: Dict[str, Any]) -> float:
@@ -198,9 +238,9 @@ class EchoesAlgorithm:
         # Simple linear trend
         n = len(values)
         x = list(range(n))
-        slope = sum((x[i] - sum(x) / n) * (values[i] - sum(values) / n) for i in range(n)) / sum(
-            (x[i] - sum(x) / n) ** 2 for i in range(n)
-        )
+        slope = sum(
+            (x[i] - sum(x) / n) * (values[i] - sum(values) / n) for i in range(n)
+        ) / sum((x[i] - sum(x) / n) ** 2 for i in range(n))
         return math.tanh(slope)  # Normalize to -1,1
 
     def _calculate_variance(self, values: List[float]) -> float:
@@ -212,7 +252,9 @@ class EchoesAlgorithm:
         variance = sum((v - mean) ** 2 for v in values) / len(values)
         return min(1.0, variance * 10)  # Scale for 0-1
 
-    def _find_smooth_segments(self, points: List[TrajectoryPoint]) -> List[Tuple[int, int]]:
+    def _find_smooth_segments(
+        self, points: List[TrajectoryPoint]
+    ) -> List[Tuple[int, int]]:
         """Find smooth segments with high alignment, low complexity."""
         smooth_segments = []
         start = 0
@@ -241,9 +283,13 @@ class EchoesAlgorithm:
         elif avg_alignment > 0.8:
             return "Good trajectory: minor complexity optimizations needed"
         else:
-            return "Trajectory needs realignment: focus on solo-feasibility and toolchain"
+            return (
+                "Trajectory needs realignment: focus on solo-feasibility and toolchain"
+            )
 
-    def _calculate_magnetic_correction(self, factor: str, score: float) -> Dict[str, Any]:
+    def _calculate_magnetic_correction(
+        self, factor: str, score: float
+    ) -> Dict[str, Any]:
         """Calculate magnetic correction for misaligned factor."""
         correction_strength = self.magnetic_field_strength * (1 - score)
         return {
@@ -252,7 +298,9 @@ class EchoesAlgorithm:
             "direction": "attract" if score < 0.8 else "maintain",
         }
 
-    def _apply_correction(self, plan: Dict[str, Any], factor: str, correction: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_correction(
+        self, plan: Dict[str, Any], factor: str, correction: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Apply magnetic correction to plan."""
         # Simplified: adjust weights or add recommendations
         if "recommendations" not in plan:
@@ -268,7 +316,9 @@ class EchoesAlgorithm:
         factors = plan.get("simulation_results", {}).get("factors", {})
         return sum(factors.get(f, 0) * w for f, w in self.alignment_weights.items())
 
-    def _check_gear_alignment(self, current: Dict[str, Any], next_milestone: Dict[str, Any]) -> float:
+    def _check_gear_alignment(
+        self, current: Dict[str, Any], next_milestone: Dict[str, Any]
+    ) -> float:
         """Check if milestones align like watch gears."""
         # Simplified: check if outputs match inputs
         current_tasks = set(current.get("tasks", []))
@@ -285,7 +335,7 @@ class EchoesAlgorithm:
         fixes = []
         for i, alignment in enumerate(alignments):
             if alignment < 0.8:
-                fixes.append(f"Improve gear alignment for milestone {i+1} to {i+2}")
+                fixes.append(f"Improve gear alignment for milestone {i + 1} to {i + 2}")
 
         return fixes
 

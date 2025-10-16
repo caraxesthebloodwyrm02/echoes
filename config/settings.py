@@ -27,7 +27,8 @@ from pathlib import Path
 from typing import Any, Dict, Optional
 
 from dotenv import load_dotenv
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 from utils.path_resolver import get_project_root
 
@@ -63,12 +64,12 @@ class AppSettings(BaseSettings):
         default_factory=lambda: secrets.token_urlsafe(32), env="SECRET_KEY"
     )
 
-    class Config:
-        """Pydantic configuration."""
-
-        env_file = ".env"
-        env_file_encoding = "utf-8"
-        case_sensitive = False
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="forbid",  # Security: Prevent unvalidated fields
+    )
 
 
 class LoggingSettings:

@@ -31,6 +31,15 @@ from typing import Any, Dict, List, Optional
 
 from utils.path_resolver import PathResolver
 
+# Import privacy filter
+try:
+    from packages.security.privacy_filter import PrivacyFilter
+
+    privacy_filter = PrivacyFilter()
+except ImportError:
+    # Fallback if privacy filter not available
+    privacy_filter = None
+
 
 @dataclass
 class ProcessingResult:
@@ -86,8 +95,19 @@ class DocumentProcessor:
             # Read file content
             content = file_path.read_text(encoding="utf-8")
 
+            # Apply privacy filtering to input content if available
+            if privacy_filter:
+                original_content = content
+                content = privacy_filter.mask(content)
+                if content != original_content:
+                    self.logger.info(f"Applied privacy filtering to {file_path}")
+
             # Apply processing logic (can be customized)
             processed_content = self._process_content(content, file_path)
+
+            # Apply additional privacy filtering to processed content if available
+            if privacy_filter:
+                processed_content = privacy_filter.mask(processed_content)
 
             # Generate output path
             output_path = self._generate_output_path(file_path)
@@ -101,6 +121,7 @@ class DocumentProcessor:
                 "processed_size": len(processed_content),
                 "timestamp": file_path.stat().st_mtime,
                 "output_path": str(output_path),
+                "privacy_filtered": privacy_filter is not None,
             }
 
             return ProcessingResult(

@@ -1,0 +1,2394 @@
+{
+  "project_overview": {
+    "name": "ECHOES",
+    "description": "Modular Python AI orchestration platform",
+    "root_path": "e:\\Projects\\Development",
+    "timestamp": "2025-10-15"
+  },
+  "codebase_metrics": {
+    "total_files": 1443,
+    "python_files": 442,
+    "total_lines": 82073,
+    "total_classes": 460,
+    "total_functions": 841,
+    "language_distribution": {
+      "": 38,
+      ".example": 3,
+      ".local": 1,
+      ".unified": 1,
+      ".yaml": 26,
+      ".md": 306,
+      ".py": 442,
+      ".tsx": 34,
+      ".txt": 63,
+      ".json": 118,
+      ".ps1": 24,
+      ".ts": 41,
+      ".sln": 1,
+      ".7z": 2,
+      ".m4a": 1,
+      ".html": 114,
+      ".yml": 20,
+      ".png": 4,
+      ".lock": 6,
+      ".toml": 13,
+      ".ini": 6,
+      ".bak": 1,
+      ".dat": 1,
+      ".dir": 1,
+      ".zip": 1,
+      ".exe": 14,
+      ".log": 42,
+      ".sh": 3,
+      ".csproj": 2,
+      ".cs": 8,
+      ".props": 2,
+      ".targets": 2,
+      ".cache": 6,
+      ".editorconfig": 2,
+      ".fastapi": 2,
+      ".pdf": 12,
+      ".xlsx": 2,
+      ".csv": 6,
+      ".cfg": 1,
+      ".bat": 2,
+      ".1": 1,
+      ".js": 43,
+      ".conf": 1,
+      ".ndjson": 2,
+      ".cjs": 4,
+      ".css": 8,
+      ".mjs": 2,
+      ".ico": 1,
+      ".jpg": 1,
+      ".xml": 1,
+      ".gz": 1,
+      ".map": 4
+    }
+  },
+  "architecture_analysis": {
+    "ai_agents": [
+      "actions-runner\\_work\\echoes\\echoes\\automation\\core\\orchestrator.py",
+      "actions-runner\\_work\\echoes\\echoes\\examples\\orchestrator_demo.py",
+      "ai_agents\\orchestrator.py",
+      "examples\\orchestrator_demo.py",
+      "melody_structure\\G4_orchestrator\\orchestrator.py"
+    ],
+    "orchestration": [
+      "actions-runner\\_work\\echoes\\echoes\\tests\\test_workflows_macro.py",
+      "actions-runner\\_work\\echoes\\echoes\\workflows\\macro.py",
+      "testing\\tests\\test_workflows_macro.py",
+      "workflows\\macro.py",
+      "workflows\\solar_workflow.py"
+    ],
+    "security": [
+      "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\security_monitoring.py",
+      "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\security_scan.py",
+      "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\semantic_guardrails.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\secure_coordinate_handler.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\security_fix_manager.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\vulnerability_analyzer.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\auth\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\encryption\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\monitoring\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\scanning\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security_comprehensive.py",
+      "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\security_scan.py",
+      "automation\\tasks\\security_monitoring.py",
+      "automation\\tasks\\security_scan.py",
+      "automation\\tasks\\semantic_guardrails.py",
+      "echoes\\core_inference\\safeguards.py",
+      "packages\\security\\secure_coordinate_handler.py",
+      "packages\\security\\security_fix_manager.py",
+      "packages\\security\\vulnerability_analyzer.py",
+      "packages\\security\\__init__.py",
+      "packages\\security\\auth\\__init__.py",
+      "packages\\security\\encryption\\__init__.py",
+      "packages\\security\\monitoring\\__init__.py",
+      "packages\\security\\scanning\\__init__.py",
+      "packages\\security\\tests\\test_security.py",
+      "packages\\security\\tests\\test_security_comprehensive.py",
+      "Q4\\automation\\security_scan.py",
+      "security\\scanner.py",
+      "src\\safety\\guards.py",
+      "src\\utils\\budget_guard.py",
+      "tests\\test_safety_guards.py"
+    ],
+    "analysis": [
+      "audit_codebase.py",
+      "comprehensive_analysis.py",
+      "mini_analysis.py",
+      "rate_limit_aware_audit.py",
+      "run_analysis.py",
+      "run_api_audit.py",
+      "run_rate_limit_audit.py",
+      "simple_audit.py",
+      "scripts\\run_audit_ci.py",
+      "src\\safety\\audit.py",
+      "tests\\test_safety_audit_logger.py"
+    ],
+    "utilities": [
+      "actions-runner\\_work\\echoes\\echoes\\minicon\\utils.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\core\\datetime_utils\\__init__.py",
+      "actions-runner\\_work\\echoes\\echoes\\packages\\core\\utils\\__init__.py",
+      "ai_modules\\minicon\\utils.py",
+      "echoes\\core_inference\\utils.py",
+      "packages\\core\\datetime_utils\\__init__.py",
+      "packages\\core\\utils\\__init__.py",
+      "prompting\\core\\proxy_helper.py",
+      "src\\utils\\log_safety.py",
+      "utils\\backup_manager.py",
+      "utils\\path_resolver.py"
+    ]
+  },
+  "file_analysis": {
+    "top_files": [
+      {
+        "path": "audit_codebase.py",
+        "size": 32816,
+        "lines": 897,
+        "classes": 1,
+        "functions": 1,
+        "imports": 5,
+        "async_patterns": false,
+        "openai_integration": true,
+        "key_imports": [
+          "pathlib",
+          "typing",
+          "ast",
+          "re"
+        ],
+        "key_classes": [
+          "CodebaseAuditor"
+        ],
+        "key_functions": [
+          "main"
+        ]
+      },
+      {
+        "path": "ai_modules\\minicon\\pipeline.py",
+        "size": 31997,
+        "lines": 795,
+        "classes": 6,
+        "functions": 1,
+        "imports": 10,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          ".utils",
+          "pathlib",
+          ".config",
+          "__future__",
+          "tqdm",
+          "concurrent.futures",
+          ".download_cache",
+          "logging"
+        ],
+        "key_classes": [
+          "WhisperResult",
+          "MiniConError",
+          "DownloadError",
+          "TranscriptionError",
+          "CacheError"
+        ],
+        "key_functions": [
+          "test_run_batch_statistics"
+        ]
+      },
+      {
+        "path": "actions-runner\\_work\\echoes\\echoes\\minicon\\pipeline.py",
+        "size": 30898,
+        "lines": 775,
+        "classes": 6,
+        "functions": 1,
+        "imports": 10,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          ".utils",
+          "pathlib",
+          ".config",
+          "__future__",
+          "tqdm",
+          "concurrent.futures",
+          ".download_cache",
+          "logging"
+        ],
+        "key_classes": [
+          "WhisperResult",
+          "MiniConError",
+          "DownloadError",
+          "TranscriptionError",
+          "CacheError"
+        ],
+        "key_functions": [
+          "test_run_batch_statistics"
+        ]
+      },
+      {
+        "path": "prompting\\core\\inference_engine.py",
+        "size": 29613,
+        "lines": 705,
+        "classes": 2,
+        "functions": 1,
+        "imports": 5,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "enum",
+          "logging",
+          ".llm_client"
+        ],
+        "key_classes": [
+          "ReasoningStyle",
+          "InferenceEngine"
+        ],
+        "key_functions": [
+          "_call_llm"
+        ]
+      },
+      {
+        "path": "Q4\\drucker_management.py",
+        "size": 28494,
+        "lines": 805,
+        "classes": 5,
+        "functions": 0,
+        "imports": 6,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "re",
+          "pathlib",
+          "__future__",
+          "datetime",
+          "dataclasses"
+        ],
+        "key_classes": [
+          "RoadmapItem",
+          "DruckerFoundationModel",
+          "StressorEvent",
+          "TerraformingMetric",
+          "EcosystemManager"
+        ],
+        "key_functions": []
+      },
+      {
+        "path": "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\inference_engine.py",
+        "size": 28095,
+        "lines": 639,
+        "classes": 2,
+        "functions": 1,
+        "imports": 5,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "enum",
+          "logging",
+          ".llm_client"
+        ],
+        "key_classes": [
+          "ReasoningStyle",
+          "InferenceEngine"
+        ],
+        "key_functions": [
+          "_call_llm"
+        ]
+      },
+      {
+        "path": "comprehensive_analysis.py",
+        "size": 26510,
+        "lines": 673,
+        "classes": 0,
+        "functions": 5,
+        "imports": 4,
+        "async_patterns": true,
+        "openai_integration": true,
+        "key_imports": [
+          "openai",
+          "os",
+          "asyncio"
+        ],
+        "key_classes": [],
+        "key_functions": [
+          "clear_result_cache",
+          "check_openai_usage",
+          "batch_code_chunks",
+          "load_project_files",
+          "chunk_code_files"
+        ]
+      },
+      {
+        "path": "openai-chatkit-advanced-samples\\backend\\app\\sample_widget.py",
+        "size": 25805,
+        "lines": 742,
+        "classes": 2,
+        "functions": 34,
+        "imports": 6,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "base64",
+          "__future__",
+          "datetime",
+          "chatkit.widgets",
+          "dataclasses"
+        ],
+        "key_classes": [
+          "HourlyForecast",
+          "WeatherWidgetData"
+        ],
+        "key_functions": [
+          "_sun_svg",
+          "_sun_peek_svg",
+          "_fog_lines_svg",
+          "_drizzle_lines_svg",
+          "_rain_lines_svg",
+          "_snow_symbols_svg",
+          "_lightning_svg",
+          "_cloud_svg",
+          "_encode_svg",
+          "_weather_icon_src"
+        ]
+      },
+      {
+        "path": "monitoring\\feedback_mechanism.py",
+        "size": 24190,
+        "lines": 647,
+        "classes": 3,
+        "functions": 2,
+        "imports": 8,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "monitoring.continuous_monitor",
+          "pathlib",
+          "json",
+          "datetime",
+          "dataclasses",
+          "collections"
+        ],
+        "key_classes": [
+          "FeedbackEntry",
+          "FeedbackAnalysis",
+          "FeedbackMechanism"
+        ],
+        "key_functions": [
+          "collect_user_feedback",
+          "export_feedback_report"
+        ]
+      },
+      {
+        "path": "Q4\\dashboard.py",
+        "size": 24138,
+        "lines": 709,
+        "classes": 0,
+        "functions": 11,
+        "imports": 10,
+        "async_patterns": false,
+        "openai_integration": false,
+        "key_imports": [
+          "typing",
+          "drucker_management",
+          "dash.exceptions",
+          "__future__",
+          "datetime",
+          "dash",
+          "pandas as pd"
+        ],
+        "key_classes": [],
+        "key_functions": [
+          "_status_options",
+          "_create_default_item",
+          "apply_privacy_filter",
+          "scan_codebase_for_pii",
+          "apply_privacy_to_dataframe",
+          "update_status_options",
+          "refresh_dashboard",
+          "add_new_item",
+          "persist_table_changes",
+          "export_to_csv"
+        ]
+      }
+    ],
+    "file_categories": {
+      "ai_agents": [
+        "actions-runner\\_work\\echoes\\echoes\\automation\\core\\orchestrator.py",
+        "actions-runner\\_work\\echoes\\echoes\\examples\\orchestrator_demo.py",
+        "ai_agents\\orchestrator.py",
+        "examples\\orchestrator_demo.py",
+        "melody_structure\\G4_orchestrator\\orchestrator.py"
+      ],
+      "orchestration": [
+        "actions-runner\\_work\\echoes\\echoes\\tests\\test_workflows_macro.py",
+        "actions-runner\\_work\\echoes\\echoes\\workflows\\macro.py",
+        "testing\\tests\\test_workflows_macro.py",
+        "workflows\\macro.py",
+        "workflows\\solar_workflow.py"
+      ],
+      "security": [
+        "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\security_monitoring.py",
+        "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\security_scan.py",
+        "actions-runner\\_work\\echoes\\echoes\\automation\\tasks\\semantic_guardrails.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\secure_coordinate_handler.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\security_fix_manager.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\vulnerability_analyzer.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\auth\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\encryption\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\monitoring\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\scanning\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security_comprehensive.py",
+        "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\security_scan.py",
+        "automation\\tasks\\security_monitoring.py",
+        "automation\\tasks\\security_scan.py",
+        "automation\\tasks\\semantic_guardrails.py",
+        "echoes\\core_inference\\safeguards.py",
+        "packages\\security\\secure_coordinate_handler.py",
+        "packages\\security\\security_fix_manager.py",
+        "packages\\security\\vulnerability_analyzer.py",
+        "packages\\security\\__init__.py",
+        "packages\\security\\auth\\__init__.py",
+        "packages\\security\\encryption\\__init__.py",
+        "packages\\security\\monitoring\\__init__.py",
+        "packages\\security\\scanning\\__init__.py",
+        "packages\\security\\tests\\test_security.py",
+        "packages\\security\\tests\\test_security_comprehensive.py",
+        "Q4\\automation\\security_scan.py",
+        "security\\scanner.py",
+        "src\\safety\\guards.py",
+        "src\\utils\\budget_guard.py",
+        "tests\\test_safety_guards.py"
+      ],
+      "analysis": [
+        "audit_codebase.py",
+        "comprehensive_analysis.py",
+        "mini_analysis.py",
+        "rate_limit_aware_audit.py",
+        "run_analysis.py",
+        "run_api_audit.py",
+        "run_rate_limit_audit.py",
+        "simple_audit.py",
+        "scripts\\run_audit_ci.py",
+        "src\\safety\\audit.py",
+        "tests\\test_safety_audit_logger.py"
+      ],
+      "utilities": [
+        "actions-runner\\_work\\echoes\\echoes\\minicon\\utils.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\core\\datetime_utils\\__init__.py",
+        "actions-runner\\_work\\echoes\\echoes\\packages\\core\\utils\\__init__.py",
+        "ai_modules\\minicon\\utils.py",
+        "echoes\\core_inference\\utils.py",
+        "packages\\core\\datetime_utils\\__init__.py",
+        "packages\\core\\utils\\__init__.py",
+        "prompting\\core\\proxy_helper.py",
+        "src\\utils\\log_safety.py",
+        "utils\\backup_manager.py",
+        "utils\\path_resolver.py"
+      ]
+    }
+  },
+  "dependency_analysis": {
+    "total_unique_imports": 292,
+    "top_dependencies": [
+      {
+        "package": "typing",
+        "count": 237
+      },
+      {
+        "package": "pathlib",
+        "count": 164
+      },
+      {
+        "package": "datetime",
+        "count": 123
+      },
+      {
+        "package": "json",
+        "count": 92
+      },
+      {
+        "package": "__future__",
+        "count": 68
+      },
+      {
+        "package": "os",
+        "count": 65
+      },
+      {
+        "package": "dataclasses",
+        "count": 51
+      },
+      {
+        "package": "logging",
+        "count": 47
+      },
+      {
+        "package": "sys",
+        "count": 46
+      },
+      {
+        "package": "automation.core.logger",
+        "count": 34
+      },
+      {
+        "package": "dotenv",
+        "count": 27
+      },
+      {
+        "package": "asyncio",
+        "count": 26
+      },
+      {
+        "package": "time",
+        "count": 25
+      },
+      {
+        "package": "pytest",
+        "count": 23
+      },
+      {
+        "package": "automation.core.context",
+        "count": 20
+      },
+      {
+        "package": "subprocess",
+        "count": 19
+      },
+      {
+        "package": "numpy as np",
+        "count": 18
+      },
+      {
+        "package": "openai",
+        "count": 16
+      },
+      {
+        "package": "packages.core",
+        "count": 16
+      },
+      {
+        "package": "prompting.system",
+        "count": 14
+      }
+    ],
+    "external_vs_stdlib": {
+      "likely_external": [
+        "__future__",
+        "dataclasses",
+        "logging",
+        "automation.core.logger",
+        "dotenv",
+        "asyncio",
+        "time",
+        "pytest",
+        "automation.core.context",
+        "subprocess",
+        "numpy as np",
+        "openai",
+        "packages.core",
+        "prompting.system"
+      ],
+      "likely_stdlib": [
+        "typing",
+        "pathlib",
+        "datetime",
+        "json",
+        "os",
+        "sys"
+      ]
+    }
+  },
+  "security_scan": {
+    "api_keys": [],
+    "passwords": [],
+    "secrets": [
+      {
+        "file": "api_test.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "atlas.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "audit_codebase.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "comprehensive_analysis.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "generate_snapshot.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "main.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "mini_analysis.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "rate_limit_aware_audit.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "run_api_audit.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "run_rate_limit_audit.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "simple_audit.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "summon_atlas.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "test_model_integrity.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "test_provider_connectivity.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "thoughts_api.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\agentic_assistant_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\assistant_automation_integration.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\assistant_basic_usage.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\assistant_interactive_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\assistant_with_tools.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\lumina_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\natural_language_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\orchestrator_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\quickstart.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\stick_shift_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\Untitled-1.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\config.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\pipeline.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\test_openai.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\auth\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\encryption\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\scanning\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security_comprehensive.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\llm_client.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\python\\service.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\privacy_filters.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\security_scan.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\setup_database.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_diarisation.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_diarisation_integration.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_pipeline_features.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\tools\\format_all.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "ai_modules\\bias_detection\\evaluate_bias.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "ai_modules\\minicon\\config.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "ai_modules\\minicon\\pipeline.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "ai_modules\\minicon\\test_openai.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "api\\clients\\openai_client.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "automation\\backend\\assistant_api.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "automation\\cli\\assistant_cli.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "automation\\core\\unified_vector_module.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "automation\\integration\\symphony_assistant_integration.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "config\\settings.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\agentic_assistant_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\assistant_automation_integration.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\assistant_basic_usage.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\assistant_interactive_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\assistant_with_tools.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\lumina_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\natural_language_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\orchestrator_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\quickstart.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\stick_shift_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "examples\\Untitled-1.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "openai-chatkit-advanced-samples\\examples\\marketing-assets\\backend\\app\\chat.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\core\\config\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\security\\auth\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\security\\encryption\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\security\\scanning\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\security\\tests\\test_security.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "packages\\security\\tests\\test_security_comprehensive.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "prompting\\core\\llm_client.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "python\\service.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "Q4\\automation\\privacy_filters.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "Q4\\automation\\security_scan.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "Q4\\automation\\setup_database.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "security\\scanner.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\batch_processor.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\web_demo.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\config\\loader.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\core\\validators.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\modules\\transformer.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\repl\\engine.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\safety\\guards.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\safety\\limiter.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\safety\\monitor.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\safety\\__init__.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "src\\utils\\budget_guard.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "testing\\tests\\test_assistant_api.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "testing\\tests\\test_assistant_cache_and_config.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "testing\\tests\\test_diarisation.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "testing\\tests\\test_diarisation_integration.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "testing\\tests\\test_pipeline_features.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_config_loader.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_data_contracts.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_repl_with_safety.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_safety_audit_logger.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_safety_guards.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tests\\test_safety_limiter.py",
+        "pattern": "Potential secret/credential reference"
+      },
+      {
+        "file": "tools\\format_all.py",
+        "pattern": "Potential secret/credential reference"
+      }
+    ],
+    "insecure_patterns": [
+      {
+        "file": "generate_snapshot.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\scanning\\__init__.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "actions-runner\\_work\\echoes\\echoes\\packages\\security\\tests\\test_security_comprehensive.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "multimodal\\processor.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "packages\\security\\scanning\\__init__.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "packages\\security\\tests\\test_security_comprehensive.py",
+        "pattern": "Use of eval()/exec()"
+      },
+      {
+        "file": "src\\utils\\log_safety.py",
+        "pattern": "Use of eval()/exec()"
+      }
+    ]
+  },
+  "innovation_patterns": {
+    "trajectory_concepts": [
+      "generate_snapshot.py",
+      "generate_snapshot.py",
+      "mini_analysis.py",
+      "run_master_channel.py",
+      "run_rate_limit_audit.py",
+      "run_simulator.py",
+      "simple_audit.py",
+      "simple_audit.py",
+      "validate_json_structure.py",
+      "actions-runner\\_work\\echoes\\echoes\\employment_matcher\\models\\demo.py",
+      "actions-runner\\_work\\echoes\\echoes\\employment_matcher\\models\\relationship_matcher.py",
+      "actions-runner\\_work\\echoes\\echoes\\employment_matcher\\models\\semantic_engine.py",
+      "actions-runner\\_work\\echoes\\echoes\\employment_matcher\\models\\validation_engine.py",
+      "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\inference_engine.py",
+      "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\insight_synthesizer.py",
+      "automation\\cli\\assistant_cli.py",
+      "automation\\scripts\\index_codebase.py",
+      "employment_matcher\\models\\demo.py",
+      "employment_matcher\\models\\relationship_matcher.py",
+      "employment_matcher\\models\\semantic_engine.py",
+      "employment_matcher\\models\\validation_engine.py",
+      "melody_structure\\master_channel.py",
+      "melody_structure\\A4_echoes_algorithm\\echoes_algorithm.py",
+      "melody_structure\\A4_echoes_algorithm\\echoes_algorithm.py",
+      "melody_structure\\F4_simulator\\simulator.py",
+      "monitoring\\continuous_monitor.py",
+      "monitoring\\feedback_mechanism.py",
+      "prompting\\core\\inference_engine.py",
+      "prompting\\core\\insight_synthesizer.py",
+      "SCIENCE\\renewable_energy\\solar_ai_improvements.py",
+      "SCIENCE\\renewable_energy\\solar_microgrid_tool.py",
+      "testing\\tests\\test_trajectory_scenarios.py"
+    ],
+    "harmonic_resonance": [
+      "generate_snapshot.py",
+      "generate_snapshot.py",
+      "mini_analysis.py",
+      "mini_analysis.py",
+      "simple_audit.py",
+      "simple_audit.py",
+      "actions-runner\\_work\\echoes\\echoes\\examples\\prompting_system_demo.py",
+      "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\inference_engine.py",
+      "actions-runner\\_work\\echoes\\echoes\\research-lab\\steam-engine-dynamics\\resonance_governor_patch.py",
+      "examples\\prompting_system_demo.py",
+      "prompting\\core\\inference_engine.py",
+      "research-lab\\steam-engine-dynamics\\resonance_governor_patch.py"
+    ],
+    "ai_orchestration": [
+      "comprehensive_analysis.py",
+      "generate_snapshot.py",
+      "main.py",
+      "mini_analysis.py",
+      "run_api_audit.py",
+      "run_rate_limit_audit.py",
+      "simple_audit.py",
+      "test_symphony.py",
+      "actions-runner\\_work\\echoes\\echoes\\automation\\core\\orchestrator.py",
+      "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\deploy.py",
+      "actions-runner\\_work\\echoes\\echoes\\Q4\\automation\\setup_all.py",
+      "ai_agents\\orchestrator.py",
+      "echoes\\core_inference\\task_executor.py",
+      "examples\\agent_usage_example.py",
+      "melody_structure\\G4_orchestrator\\orchestrator.py",
+      "Q4\\automation\\deploy.py",
+      "Q4\\automation\\setup_all.py"
+    ],
+    "unique_terminology": [
+      {
+        "term": "echoes",
+        "file": "api_test.py"
+      },
+      {
+        "term": "echoes",
+        "file": "atlas.py"
+      },
+      {
+        "term": "echoes",
+        "file": "audit_codebase.py"
+      },
+      {
+        "term": "echoes",
+        "file": "comprehensive_analysis.py"
+      },
+      {
+        "term": "echoes",
+        "file": "create_telephone_communication.py"
+      },
+      {
+        "term": "echoes",
+        "file": "deep_theory_mindmap.py"
+      },
+      {
+        "term": "echoes",
+        "file": "flashcard_app.py"
+      },
+      {
+        "term": "echoes",
+        "file": "generate_snapshot.py"
+      },
+      {
+        "term": "symphony",
+        "file": "generate_snapshot.py"
+      },
+      {
+        "term": "plant",
+        "file": "generate_snapshot.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "generate_snapshot.py"
+      },
+      {
+        "term": "minicon",
+        "file": "generate_snapshot.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ide_task_generator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "llm_smoke_test.py"
+      },
+      {
+        "term": "echoes",
+        "file": "lumina_agent.py"
+      },
+      {
+        "term": "echoes",
+        "file": "main.py"
+      },
+      {
+        "term": "echoes",
+        "file": "mini_analysis.py"
+      },
+      {
+        "term": "plant",
+        "file": "mini_analysis.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "mini_analysis.py"
+      },
+      {
+        "term": "echoes",
+        "file": "process_text_response.py"
+      },
+      {
+        "term": "echoes",
+        "file": "rate_limit_aware_audit.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_analysis.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_api_audit.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_ide_prompt_task.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_master_channel.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_rate_limit_audit.py"
+      },
+      {
+        "term": "echoes",
+        "file": "run_simulator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "setup_metrics.py"
+      },
+      {
+        "term": "echoes",
+        "file": "simple_audit.py"
+      },
+      {
+        "term": "plant",
+        "file": "simple_audit.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "simple_audit.py"
+      },
+      {
+        "term": "echoes",
+        "file": "summon_atlas.py"
+      },
+      {
+        "term": "echoes",
+        "file": "test_model_integrity.py"
+      },
+      {
+        "term": "minicon",
+        "file": "test_model_integrity.py"
+      },
+      {
+        "term": "echoes",
+        "file": "test_provider_connectivity.py"
+      },
+      {
+        "term": "minicon",
+        "file": "test_provider_connectivity.py"
+      },
+      {
+        "term": "echoes",
+        "file": "test_symphony.py"
+      },
+      {
+        "term": "symphony",
+        "file": "test_symphony.py"
+      },
+      {
+        "term": "echoes",
+        "file": "test_venv_functionality.py"
+      },
+      {
+        "term": "echoes",
+        "file": "test_web_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "thoughts_api.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tmp_debug_venv.py"
+      },
+      {
+        "term": "echoes",
+        "file": "transcribe_altj_report.py"
+      },
+      {
+        "term": "echoes",
+        "file": "validate_json_structure.py"
+      },
+      {
+        "term": "echoes",
+        "file": "yttranscribe.py"
+      },
+      {
+        "term": "echoes",
+        "file": ".github\\preview.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "actions-runner\\_work\\echoes\\echoes\\examples\\test_a1_implementation.py"
+      },
+      {
+        "term": "symphony",
+        "file": "actions-runner\\_work\\echoes\\echoes\\maintenance\\reorganization_summary.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\cli.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\config.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\pipeline.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\test_openai.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\minicon\\__init__.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\inference_engine.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "actions-runner\\_work\\echoes\\echoes\\prompting\\modes\\concise_mode.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_diarisation.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_diarisation_integration.py"
+      },
+      {
+        "term": "minicon",
+        "file": "actions-runner\\_work\\echoes\\echoes\\tests\\test_pipeline_features.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_agents\\orchestrator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\bias_pattern_detector.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\evaluate_bias.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\inference_engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\validate_bias_json.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\bias_detection\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\cli.py"
+      },
+      {
+        "term": "minicon",
+        "file": "ai_modules\\minicon\\cli.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\config.py"
+      },
+      {
+        "term": "minicon",
+        "file": "ai_modules\\minicon\\config.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\download_cache.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\pipeline.py"
+      },
+      {
+        "term": "minicon",
+        "file": "ai_modules\\minicon\\pipeline.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\test_openai.py"
+      },
+      {
+        "term": "minicon",
+        "file": "ai_modules\\minicon\\test_openai.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\utils.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ai_modules\\minicon\\__init__.py"
+      },
+      {
+        "term": "minicon",
+        "file": "ai_modules\\minicon\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "api\\clients\\openai_client.py"
+      },
+      {
+        "term": "echoes",
+        "file": "app\\adapters\\mcp_server_adapter.py"
+      },
+      {
+        "term": "echoes",
+        "file": "app\\core\\mcp_client.py"
+      },
+      {
+        "term": "echoes",
+        "file": "app\\core\\resource_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "app\\core\\tool_registry.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\backend\\assistant_api.py"
+      },
+      {
+        "term": "symphony",
+        "file": "automation\\backend\\assistant_api.py"
+      },
+      {
+        "term": "minicon",
+        "file": "automation\\backend\\assistant_api.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\cli\\assistant_cli.py"
+      },
+      {
+        "term": "symphony",
+        "file": "automation\\cli\\assistant_cli.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\core\\context.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\core\\logger.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\core\\unified_vector_module.py"
+      },
+      {
+        "term": "symphony",
+        "file": "automation\\core\\unified_vector_module.py"
+      },
+      {
+        "term": "minicon",
+        "file": "automation\\core\\unified_vector_module.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\core\\weekly_plan.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\core\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\integration\\symphony_assistant_integration.py"
+      },
+      {
+        "term": "symphony",
+        "file": "automation\\integration\\symphony_assistant_integration.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "automation\\integration\\symphony_assistant_integration.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\notifications\\notify.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\scripts\\index_codebase.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\deps_update.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\foreign_dependency_sanitize.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\health_check.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\lumina_organize_codebase.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\perf_bench.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\release_notes.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\sanitize_codebase.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\security_monitoring.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\security_scan.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\semantic_guardrails.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\smoke_test_endpoints.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\sync_api_docs.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\task_generator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\weekly_planning.py"
+      },
+      {
+        "term": "echoes",
+        "file": "automation\\tasks\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "batch\\maintenance\\cleanup.py"
+      },
+      {
+        "term": "echoes",
+        "file": "batch\\processing\\document_processor.py"
+      },
+      {
+        "term": "echoes",
+        "file": "caching\\prompt_engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "config\\settings.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\anomaly_detector.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\dashboard.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\shadow_runner.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\test_minimal.py"
+      },
+      {
+        "term": "echoes",
+        "file": "detectors\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "echoes\\core_inference\\safeguards.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\models\\context_filter.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\models\\demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\models\\relationship_matcher.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\models\\semantic_engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "employment_matcher\\models\\validation_engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\core_principles.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\evolution_mechanisms.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\integration.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\societal_inspirations.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\transparency_layer.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ethics\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\a4_automation_verification.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\agentic_assistant_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\agent_usage_example.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\assistant_automation_integration.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\assistant_basic_usage.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\assistant_interactive_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\assistant_with_tools.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\lumina_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\natural_language_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\orchestrator_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\phase2_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\prompting_system_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\quickstart.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\stick_shift_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\test_a1_implementation.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "examples\\test_a1_implementation.py"
+      },
+      {
+        "term": "echoes",
+        "file": "examples\\Untitled-1.py"
+      },
+      {
+        "term": "echoes",
+        "file": "experts\\base.py"
+      },
+      {
+        "term": "echoes",
+        "file": "experts\\registry.py"
+      },
+      {
+        "term": "echoes",
+        "file": "experts\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "knowledge_graph\\system.py"
+      },
+      {
+        "term": "echoes",
+        "file": "maintenance\\reorganization_summary.py"
+      },
+      {
+        "term": "symphony",
+        "file": "maintenance\\reorganization_summary.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\master_channel.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\A4_echoes_algorithm\\echoes_algorithm.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\C4_logger\\logger.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\C5_quickfix\\cli.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\F4_simulator\\simulator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "melody_structure\\G4_orchestrator\\orchestrator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "metrics\\codebase_visualizer.py"
+      },
+      {
+        "term": "echoes",
+        "file": "mlops\\pipeline.py"
+      },
+      {
+        "term": "echoes",
+        "file": "monitoring\\continuous_monitor.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "monitoring\\continuous_monitor.py"
+      },
+      {
+        "term": "echoes",
+        "file": "monitoring\\feedback_mechanism.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "monitoring\\feedback_mechanism.py"
+      },
+      {
+        "term": "echoes",
+        "file": "multimodal\\processor.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\schemas.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\config\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\datetime_utils\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\exceptions\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\http\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\logging\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\tests\\test_core_comprehensive.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\core\\utils\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\integrations\\slack.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\monitor_session.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\pipeline_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\alerts\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\ci\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\health\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\metrics\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\monitoring\\tests\\test_monitoring_comprehensive.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\secure_coordinate_handler.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\security_fix_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\vulnerability_analyzer.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\auth\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\encryption\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\monitoring\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\scanning\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\tests\\test_security.py"
+      },
+      {
+        "term": "echoes",
+        "file": "packages\\security\\tests\\test_security_comprehensive.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\integration_tasks.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\system.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\context_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\data_integration.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\data_laundry.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\inference_engine.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "prompting\\core\\inference_engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\insight_synthesizer.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\llm_client.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\loop_controller.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\prompt_router.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\proxy_helper.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\core\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\business_mode.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\concise_mode.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "prompting\\modes\\concise_mode.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\conversational_mode.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\ide_mode.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\mode_registry.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\star_stuff_mode.py"
+      },
+      {
+        "term": "echoes",
+        "file": "prompting\\modes\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "python\\service.py"
+      },
+      {
+        "term": "echoes",
+        "file": "python\\tool_registry.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\dashboard.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\data_analytics_comprehension_pipeline.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\db_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\drucker_management.py"
+      },
+      {
+        "term": "plant",
+        "file": "Q4\\drucker_management.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "Q4\\drucker_management.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\export_roadmap.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\models.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\test_pipeline.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\compliance_check.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\deploy.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\privacy_filters.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\privacy_scanner.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\run_load_tests.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\run_tests.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\security_scan.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\setup_all.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\setup_database.py"
+      },
+      {
+        "term": "echoes",
+        "file": "Q4\\automation\\setup_metering.py"
+      },
+      {
+        "term": "echoes",
+        "file": "research-lab\\steam-engine-dynamics\\resonance_governor_patch.py"
+      },
+      {
+        "term": "echoes",
+        "file": "routines\\engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\solar_ai_improvements.py"
+      },
+      {
+        "term": "minicon",
+        "file": "SCIENCE\\renewable_energy\\solar_ai_improvements.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\solar_datastore.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\solar_microgrid_tool.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\solar_module.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\solar_salesman_tools.py"
+      },
+      {
+        "term": "minicon",
+        "file": "SCIENCE\\renewable_energy\\solar_salesman_tools.py"
+      },
+      {
+        "term": "echoes",
+        "file": "SCIENCE\\renewable_energy\\test_solar_module.py"
+      },
+      {
+        "term": "echoes",
+        "file": "scripts\\run_audit_ci.py"
+      },
+      {
+        "term": "echoes",
+        "file": "security\\scanner.py"
+      },
+      {
+        "term": "echoes",
+        "file": "speech\\pause_model.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\batch_processor.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\main.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\web_demo.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\config\\loader.py"
+      },
+      {
+        "term": "minicon",
+        "file": "src\\config\\loader.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\core\\validators.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\modules\\transformer.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\repl\\engine.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\safety\\audit.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\safety\\guards.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\safety\\limiter.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\safety\\monitor.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\safety\\__init__.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\utils\\budget_guard.py"
+      },
+      {
+        "term": "echoes",
+        "file": "src\\utils\\log_safety.py"
+      },
+      {
+        "term": "echoes",
+        "file": "synthetic_data\\generator.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\conftest.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_a5_regression_suite.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_assistant_api.py"
+      },
+      {
+        "term": "symphony",
+        "file": "testing\\tests\\test_assistant_api.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_assistant_cache_and_config.py"
+      },
+      {
+        "term": "symphony",
+        "file": "testing\\tests\\test_assistant_cache_and_config.py"
+      },
+      {
+        "term": "minicon",
+        "file": "testing\\tests\\test_assistant_cache_and_config.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_cli.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_diarisation.py"
+      },
+      {
+        "term": "minicon",
+        "file": "testing\\tests\\test_diarisation.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_diarisation_integration.py"
+      },
+      {
+        "term": "minicon",
+        "file": "testing\\tests\\test_diarisation_integration.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_llm_client.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_mcp.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_pause.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_pipeline.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_pipeline_features.py"
+      },
+      {
+        "term": "minicon",
+        "file": "testing\\tests\\test_pipeline_features.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_prompt_cache.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_trajectory_scenarios.py"
+      },
+      {
+        "term": "plant",
+        "file": "testing\\tests\\test_trajectory_scenarios.py"
+      },
+      {
+        "term": "ecosystem",
+        "file": "testing\\tests\\test_trajectory_scenarios.py"
+      },
+      {
+        "term": "echoes",
+        "file": "testing\\tests\\test_workflows_macro.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_bias_validation.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_config_loader.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_data_contracts.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_repl_with_safety.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_safety_audit_logger.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_safety_guards.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tests\\test_safety_limiter.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tools\\check_requirements_drift.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tools\\format_all.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tools\\profile_modes.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tools\\temp_probe.py"
+      },
+      {
+        "term": "echoes",
+        "file": "tools\\youtube_transcriber.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\api\\main.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\dashboard\\app.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\data\\data_loader.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\models\\ubi_model.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\tests\\test_api.py"
+      },
+      {
+        "term": "echoes",
+        "file": "ubi_simulator\\tests\\test_model.py"
+      },
+      {
+        "term": "echoes",
+        "file": "utils\\backup_manager.py"
+      },
+      {
+        "term": "echoes",
+        "file": "utils\\path_resolver.py"
+      },
+      {
+        "term": "echoes",
+        "file": "workflows\\macro.py"
+      },
+      {
+        "term": "echoes",
+        "file": "workflows\\solar_workflow.py"
+      }
+    ]
+  }
+}

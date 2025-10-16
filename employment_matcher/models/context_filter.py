@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Context-Aware Filtering: Understand that 'Python' means different things in different contexts
 """
@@ -39,7 +61,9 @@ class ContextFilter:
         },
     }
 
-    def apply_context(self, embedding: SemanticVector, job_context: str) -> ContextualEmbedding:
+    def apply_context(
+        self, embedding: SemanticVector, job_context: str
+    ) -> ContextualEmbedding:
         """
         Weight embedding based on job context.
         This is where the semantic understanding gets contextualized.
@@ -47,16 +71,22 @@ class ContextFilter:
         context_config = self.CONTEXT_MAPPINGS.get(job_context, {})
 
         # Adjust weights based on context relevance
-        adjusted_vector = self._adjust_weights(embedding.vector, embedding.semantic_tags, context_config)
+        adjusted_vector = self._adjust_weights(
+            embedding.vector, embedding.semantic_tags, context_config
+        )
 
         return ContextualEmbedding(
             vector=adjusted_vector,
             original_embedding=embedding,
             context=job_context,
-            relevance_score=self._calculate_context_relevance(embedding.semantic_tags, job_context),
+            relevance_score=self._calculate_context_relevance(
+                embedding.semantic_tags, job_context
+            ),
         )
 
-    def _adjust_weights(self, vector: np.ndarray, semantic_tags: set, context_config: Dict) -> np.ndarray:
+    def _adjust_weights(
+        self, vector: np.ndarray, semantic_tags: set, context_config: Dict
+    ) -> np.ndarray:
         """Apply context-specific weight adjustments to the embedding vector"""
 
         adjusted_vector = vector.copy()
@@ -126,7 +156,9 @@ class ContextValidator:
     Validate that context filtering makes intuitive sense
     """
 
-    def validate_context_separation(self, context_filter: ContextFilter) -> Dict[str, bool]:
+    def validate_context_separation(
+        self, context_filter: ContextFilter
+    ) -> Dict[str, bool]:
         """
         Test that different contexts produce different embeddings for the same skill
         """

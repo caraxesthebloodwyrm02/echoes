@@ -31,6 +31,15 @@ from fastapi import Depends, FastAPI, HTTPException
 from minicon.config import Config
 from pydantic import BaseModel, Field
 
+# Import privacy middleware
+try:
+    from packages.security.privacy_middleware import PrivacyMiddleware
+
+    privacy_middleware = PrivacyMiddleware(filter_mode="mask")
+except ImportError:
+    # Fallback if privacy middleware not available
+    privacy_middleware = None
+
 app = FastAPI(title="Symphony Assistance API", version="1.0.0")
 
 
@@ -92,6 +101,10 @@ async def assistant_query(
     client: Any = Depends(get_openai_client),
 ) -> AssistResponse:
     """Submit a prompt to OpenAI and return the generated content."""
+    if privacy_middleware:
+        # Apply privacy filtering to the response
+        pass  # The middleware will filter the return value automatically
+
     model = request.model or os.getenv("LLM_MODEL_PRIMARY", "gpt-4o-mini")
     kwargs: Dict[str, Any] = {
         "model": model,
@@ -112,11 +125,17 @@ async def assistant_query(
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 
     content = _extract_response_text(response)
-    return AssistResponse(
+    result = AssistResponse(
         model=getattr(response, "model", model),
         content=content,
         usage=getattr(response, "usage", None),
     )
+
+    # Apply privacy filtering if middleware is available
+    if privacy_middleware:
+        result.content = privacy_middleware._filter_string(result.content)
+
+    return result
 
 
 @app.post("/assistant/switch-key", response_model=SwitchKeyResponse)

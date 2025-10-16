@@ -22,36 +22,67 @@
 
 # src/modules/transformer.py
 import os
+import sys
 
-from dotenv import load_dotenv
-from openai import OpenAI
+# Add project root to path for imports
+PROJECT_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+sys.path.insert(0, PROJECT_ROOT)
 
-load_dotenv()
-client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+from utils.openai_integration import get_openai_integration
 
 
-def transform_text(task, text, model="gpt-4o-mini", max_tokens=300):
+def transform_text(task, text, model=None, max_tokens=300):
     """
-    Perform a transformation and return (result_text, usage_dict, model_used)
+    Perform a transformation using our streamlined OpenAI integration.
+    Returns (result_text, usage_dict, model_used)
     """
-    system_prompt = f"You are a precise text transformer that can {task} any input."
-    response = client.chat.completions.create(
-        model=model,
-        messages=[
-            {"role": "system", "content": system_prompt},
-            {"role": "user", "content": text},
-        ],
-        max_tokens=max_tokens,
+    # Get our OpenAI integration instance
+    openai_integration = get_openai_integration()
+
+    if not openai_integration.is_configured:
+        raise RuntimeError("OpenAI integration not configured. Check OPENAI_API_KEY.")
+
+    # Use model from integration if not specified
+    if model is None:
+        model = openai_integration.model
+
+    # Create system prompt based on task
+    system_prompts = {
+        "summarize": "You are an expert at creating concise, accurate summaries. Summarize the given text while preserving all key information and main points.",
+        "rephrase": "You are a skilled writer who can rephrase text while maintaining the original meaning. Rephrase the given text to make it clearer and more engaging.",
+        "actions": "You are an analyst who extracts actionable items from text. Identify all tasks, actions, and recommendations mentioned in the text. Format them as a clear, numbered list.",
+        "analyze": "You are an expert analyst. Provide a detailed analysis of the given text, including key themes, insights, and observations.",
+    }
+
+    system_prompt = system_prompts.get(
+        task.lower(), f"You are a precise text transformer that can {task} any input."
     )
 
-    # Some clients return usage as response.usage or response["usage"]
-    usage = getattr(response, "usage", None) or response.get("usage", {})
-    # extract the content safely
-    content = ""
     try:
-        content = response.choices[0].message.content.strip()
-    except Exception:
-        # fallback if shape differs
-        content = str(response)
+        # Use our integration to make the API call with custom messages
+        response = openai_integration.create_chat_completion(
+            messages=[
+                {"role": "system", "content": system_prompt},
+                {"role": "user", "content": text},
+            ],
+            model=model,
+            temperature=0.3,  # Lower temperature for more consistent results
+            max_tokens=max_tokens,
+        )
 
-    return content, usage, model
+        if response is None:
+            raise RuntimeError("OpenAI API call failed - no response received")
+
+        # Create usage dict (our integration doesn't return usage yet, so create a basic one)
+        usage = {
+            "prompt_tokens": len(text.split()) * 1.3,  # Rough estimate
+            "completion_tokens": len(response.split()) * 1.3,  # Rough estimate
+            "total_tokens": (len(text.split()) + len(response.split())) * 1.3,
+        }
+
+        return response.strip(), usage, model
+
+    except Exception as e:
+        raise RuntimeError(f"Text transformation failed: {e}")

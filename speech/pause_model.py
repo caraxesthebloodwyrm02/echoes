@@ -1,19 +1,35 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import json
 import os
 import random
 from dataclasses import dataclass
-
-<<<<<<< Updated upstream
-from typing import Any, Dict, List
-
-=======
 from typing import Any, Dict, List, Tuple
 
 from packages.core import get_logger
 from packages.core.schemas import PodcastData
 
 logger = get_logger(__name__)
->>>>>>> Stashed changes
 
 
 @dataclass
@@ -44,8 +60,6 @@ def predict_pause_type(priors: Dict[str, float], features: Dict[str, float]) -> 
     if not priors:
         return "other"
     return max(priors.items(), key=lambda kv: kv[1])[0]
-<<<<<<< Updated upstream
-=======
 
 
 # --- Extended JSON-based training and heuristic model ---
@@ -173,4 +187,3 @@ def predict_pause_label(model: Dict[str, Any], features: Dict[str, float]) -> st
         return order[2]
     # Fallback to priors argmax
     return predict_pause_type(model.get("priors", {}), features)
->>>>>>> Stashed changes

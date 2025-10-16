@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Simple performance benchmark for key endpoints.
 Task name: "Performance Benchmark" -> function: performance_benchmark(context)
@@ -43,7 +65,9 @@ def performance_benchmark(context):
     n = int(context.extra_data.get("iterations", 10))
     results = {}
     results["health_get"] = _bench(client, "GET", "/api/health", n=n)
-    results["science_search"] = _bench(client, "POST", "/api/science/biomedical/search", {"query": "test"}, n)
+    results["science_search"] = _bench(
+        client, "POST", "/api/science/biomedical/search", {"query": "test"}, n
+    )
     results["finance_personal"] = _bench(
         client,
         "POST",
@@ -53,5 +77,5 @@ def performance_benchmark(context):
     )
 
     for k, v in results.items():
-        log.info(f"{k}: {v*1000:.2f} ms (avg over {n})")
+        log.info(f"{k}: {v * 1000:.2f} ms (avg over {n})")
     log.info("✅ Performance benchmark complete")

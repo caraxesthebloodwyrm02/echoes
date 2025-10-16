@@ -1,21 +1,28 @@
 {
-  "name": "pac-man:-let-bro-cook-edition",
+  "name": "python-openai-dev",
+  "version": "1.0.0",
+  "description": "Minimal VSCode workspace for pure Python development with OpenAI integration",
   "private": true,
-  "version": "0.0.0",
-  "type": "module",
+
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "python main.py",
+    "dev": "python main.py --mode dev",
+    "format": "black .",
+    "lint": "ruff check .",
+    "test": "pytest",
+    "openai:check": "python -m openai models.list"
   },
-  "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0"
+
+  "engines": {
+    "node": ">=18"
   },
-  "devDependencies": {
-    "@types/node": "^22.14.0",
-    "@vitejs/plugin-react": "^5.0.0",
-    "typescript": "~5.8.2",
-    "vite": "^6.2.0"
+
+  "dependencies": {},
+
+  "devDependencies": {},
+
+  "openai": {
+    "model": "gpt-4o-mini",
+    "apiKey": "${env:OPENAI_API_KEY}"
   }
 }

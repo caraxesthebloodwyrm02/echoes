@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Synthetic Data Generation System
 Privacy-preserving data augmentation using SDV and Faker
@@ -20,7 +42,11 @@ class SyntheticDataGenerator:
 
     def __init__(self):
         self.fake = Faker()
-        self.generators = {"ctgan": CTGANSynthesizer, "tvae": TVAESynthesizer, "copula": CopulaGANSynthesizer}
+        self.generators = {
+            "ctgan": CTGANSynthesizer,
+            "tvae": TVAESynthesizer,
+            "copula": CopulaGANSynthesizer,
+        }
 
     def detect_metadata(self, data: pd.DataFrame) -> SingleTableMetadata:
         """Automatically detect data metadata"""
@@ -29,7 +55,11 @@ class SyntheticDataGenerator:
         return metadata
 
     def generate_synthetic_data(
-        self, real_data: pd.DataFrame, num_samples: int, method: str = "ctgan", privacy_level: str = "balanced"
+        self,
+        real_data: pd.DataFrame,
+        num_samples: int,
+        method: str = "ctgan",
+        privacy_level: str = "balanced",
     ) -> pd.DataFrame:
         """Generate synthetic data using specified method"""
 
@@ -43,7 +73,9 @@ class SyntheticDataGenerator:
         synthesizer_class = self.generators[method]
 
         if method == "ctgan":
-            synthesizer = synthesizer_class(metadata, epochs=100 if privacy_level == "high" else 50, verbose=True)
+            synthesizer = synthesizer_class(
+                metadata, epochs=100 if privacy_level == "high" else 50, verbose=True
+            )
         elif method == "tvae":
             synthesizer = synthesizer_class(
                 metadata,
@@ -68,7 +100,9 @@ class SyntheticDataGenerator:
 
         return synthetic_data, validation_report
 
-    def augment_with_faker(self, data: pd.DataFrame, column_mappings: Dict[str, str]) -> pd.DataFrame:
+    def augment_with_faker(
+        self, data: pd.DataFrame, column_mappings: Dict[str, str]
+    ) -> pd.DataFrame:
         """Augment data with Faker-generated values"""
 
         augmented_data = data.copy()
@@ -90,12 +124,17 @@ class SyntheticDataGenerator:
         for column, faker_type in column_mappings.items():
             if column in augmented_data.columns and faker_type in faker_methods:
                 print(f"Augmenting column '{column}' with {faker_type} data...")
-                augmented_data[column] = [faker_methods[faker_type]() for _ in range(len(augmented_data))]
+                augmented_data[column] = [
+                    faker_methods[faker_type]() for _ in range(len(augmented_data))
+                ]
 
         return augmented_data
 
     def create_hybrid_dataset(
-        self, real_data: pd.DataFrame, synthetic_ratio: float = 0.5, method: str = "ctgan"
+        self,
+        real_data: pd.DataFrame,
+        synthetic_ratio: float = 0.5,
+        method: str = "ctgan",
     ) -> pd.DataFrame:
         """Create hybrid dataset mixing real and synthetic data"""
 
@@ -103,7 +142,9 @@ class SyntheticDataGenerator:
         num_real = len(real_data) - num_synthetic
 
         # Generate synthetic data
-        synthetic_data, _ = self.generate_synthetic_data(real_data, num_synthetic, method)
+        synthetic_data, _ = self.generate_synthetic_data(
+            real_data, num_synthetic, method
+        )
 
         # Sample real data
         real_sample = real_data.sample(n=num_real, random_state=42)
@@ -116,7 +157,9 @@ class SyntheticDataGenerator:
 
         return hybrid_data
 
-    def validate_synthetic_data(self, real_data: pd.DataFrame, synthetic_data: pd.DataFrame) -> Dict[str, Any]:
+    def validate_synthetic_data(
+        self, real_data: pd.DataFrame, synthetic_data: pd.DataFrame
+    ) -> Dict[str, Any]:
         """Validate synthetic data quality and privacy"""
 
         validation_report = {
@@ -134,15 +177,23 @@ class SyntheticDataGenerator:
 
                 # Basic statistics
                 real_stats = {
-                    "mean": real_col.mean() if pd.api.types.is_numeric_dtype(real_col) else None,
-                    "std": real_col.std() if pd.api.types.is_numeric_dtype(real_col) else None,
+                    "mean": real_col.mean()
+                    if pd.api.types.is_numeric_dtype(real_col)
+                    else None,
+                    "std": real_col.std()
+                    if pd.api.types.is_numeric_dtype(real_col)
+                    else None,
                     "unique_count": real_col.nunique(),
                     "null_count": real_col.isnull().sum(),
                 }
 
                 synth_stats = {
-                    "mean": synth_col.mean() if pd.api.types.is_numeric_dtype(synth_col) else None,
-                    "std": synth_col.std() if pd.api.types.is_numeric_dtype(synth_col) else None,
+                    "mean": synth_col.mean()
+                    if pd.api.types.is_numeric_dtype(synth_col)
+                    else None,
+                    "std": synth_col.std()
+                    if pd.api.types.is_numeric_dtype(synth_col)
+                    else None,
                     "unique_count": synth_col.nunique(),
                     "null_count": synth_col.isnull().sum(),
                 }
@@ -150,7 +201,9 @@ class SyntheticDataGenerator:
                 validation_report["column_analysis"][column] = {
                     "real_stats": real_stats,
                     "synthetic_stats": synth_stats,
-                    "distribution_similarity": self._calculate_distribution_similarity(real_col, synth_col),
+                    "distribution_similarity": self._calculate_distribution_similarity(
+                        real_col, synth_col
+                    ),
                 }
 
         # Privacy checks (basic uniqueness)
@@ -165,7 +218,8 @@ class SyntheticDataGenerator:
 
         # Quality metrics
         validation_report["quality_metrics"] = {
-            "column_coverage": len(set(real_data.columns) & set(synthetic_data.columns)) / len(real_data.columns),
+            "column_coverage": len(set(real_data.columns) & set(synthetic_data.columns))
+            / len(real_data.columns),
             "row_coverage": len(synthetic_data) / len(real_data),
         }
 
@@ -174,7 +228,9 @@ class SyntheticDataGenerator:
     def _calculate_distribution_similarity(self, real_col, synth_col) -> float:
         """Calculate similarity between real and synthetic distributions"""
         try:
-            if pd.api.types.is_numeric_dtype(real_col) and pd.api.types.is_numeric_dtype(synth_col):
+            if pd.api.types.is_numeric_dtype(
+                real_col
+            ) and pd.api.types.is_numeric_dtype(synth_col):
                 # Kolmogorov-Smirnov test for numerical data
                 from scipy.stats import ks_2samp
 
@@ -213,11 +269,15 @@ class PrivacyPreservingAugmentation:
     def __init__(self):
         self.generator = SyntheticDataGenerator()
 
-    def anonymize_dataset(self, data: pd.DataFrame, sensitive_columns: List[str], k_anonymity: int = 5) -> pd.DataFrame:
+    def anonymize_dataset(
+        self, data: pd.DataFrame, sensitive_columns: List[str], k_anonymity: int = 5
+    ) -> pd.DataFrame:
         """Apply k-anonymity and synthetic augmentation"""
 
         # Identify quasi-identifiers (columns that could identify individuals)
-        quasi_identifiers = [col for col in data.columns if col not in sensitive_columns]
+        quasi_identifiers = [
+            col for col in data.columns if col not in sensitive_columns
+        ]
 
         # Apply generalization to quasi-identifiers
         anonymized_data = data.copy()
@@ -238,11 +298,15 @@ class PrivacyPreservingAugmentation:
         )
 
         # Combine anonymized quasi-identifiers with synthetic sensitive data
-        final_data = pd.concat([anonymized_data[quasi_identifiers], synthetic_sensitive], axis=1)
+        final_data = pd.concat(
+            [anonymized_data[quasi_identifiers], synthetic_sensitive], axis=1
+        )
 
         return final_data
 
-    def differential_privacy_augmentation(self, data: pd.DataFrame, epsilon: float = 1.0) -> pd.DataFrame:
+    def differential_privacy_augmentation(
+        self, data: pd.DataFrame, epsilon: float = 1.0
+    ) -> pd.DataFrame:
         """Apply differential privacy to numerical columns"""
 
         augmented_data = data.copy()
@@ -256,7 +320,9 @@ class PrivacyPreservingAugmentation:
             augmented_data[col] = data[col] + noise
 
             # Clip to original range
-            augmented_data[col] = np.clip(augmented_data[col], data[col].min(), data[col].max())
+            augmented_data[col] = np.clip(
+                augmented_data[col], data[col].min(), data[col].max()
+            )
 
         return augmented_data
 
@@ -296,11 +362,17 @@ def demo_synthetic_data_generation():
 
     # Privacy-preserving augmentation
     privacy_engine = PrivacyPreservingAugmentation()
-    anonymized_data = privacy_engine.anonymize_dataset(sample_data, sensitive_columns=["income"], k_anonymity=3)
+    anonymized_data = privacy_engine.anonymize_dataset(
+        sample_data, sensitive_columns=["income"], k_anonymity=3
+    )
 
     print(f"Anonymized data shape: {anonymized_data.shape}")
 
-    return {"synthetic_generation": "completed", "hybrid_creation": "completed", "privacy_preservation": "completed"}
+    return {
+        "synthetic_generation": "completed",
+        "hybrid_creation": "completed",
+        "privacy_preservation": "completed",
+    }
 
 
 if __name__ == "__main__":

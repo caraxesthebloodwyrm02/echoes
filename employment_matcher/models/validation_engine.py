@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Semantic Match Validator: Ensure matches feel right, not just statistically strong
 """
@@ -32,7 +54,9 @@ class ValidationResult:
     ):
         self.test_case = test_case
         self.match_score = match_score
-        self.intuitive_alignment = intuitive_alignment  # How well score matches human intuition
+        self.intuitive_alignment = (
+            intuitive_alignment  # How well score matches human intuition
+        )
         self.passes_threshold = passes_threshold
 
 
@@ -46,20 +70,28 @@ class SemanticMatchValidator:
         self.test_cases = self._load_validation_cases()
         self.feedback_loop = FeedbackCollector()
 
-    def run_intuitive_validation(self, matcher: RelationshipAwareMatcher) -> "ValidationReport":
+    def run_intuitive_validation(
+        self, matcher: RelationshipAwareMatcher
+    ) -> "ValidationReport":
         """Test against cases where human intuition matters"""
 
         results = []
         for test_case in self.test_cases:
             # Embed skills
-            candidate_embedding = self._embed_skills(test_case.candidate_skills, "candidate")
+            candidate_embedding = self._embed_skills(
+                test_case.candidate_skills, "candidate"
+            )
             job_embedding = self._embed_skills(test_case.job_skills, "job")
 
             # Run matching
-            match_score = matcher.calculate_semantic_similarity(candidate_embedding, job_embedding)
+            match_score = matcher.calculate_semantic_similarity(
+                candidate_embedding, job_embedding
+            )
 
             # Compare with human judgment
-            intuitive_alignment = self._compare_with_human_judgment(match_score.score, test_case.expected_score)
+            intuitive_alignment = self._compare_with_human_judgment(
+                match_score.score, test_case.expected_score
+            )
 
             passes_threshold = intuitive_alignment >= 0.8
 
@@ -106,7 +138,9 @@ class SemanticMatchValidator:
         context_filter = ContextFilter()
         return context_filter.apply_context(mock_semantic, "general")
 
-    def _compare_with_human_judgment(self, actual_score: float, expected_score: float) -> float:
+    def _compare_with_human_judgment(
+        self, actual_score: float, expected_score: float
+    ) -> float:
         """
         Compare actual match score with human-expected score.
         Returns alignment score between 0 and 1.
@@ -126,7 +160,9 @@ class SemanticMatchValidator:
         else:
             return 0.3
 
-    def _generate_validation_report(self, results: List[ValidationResult]) -> "ValidationReport":
+    def _generate_validation_report(
+        self, results: List[ValidationResult]
+    ) -> "ValidationReport":
         """Generate comprehensive validation report"""
 
         total_cases = len(results)
@@ -261,7 +297,9 @@ class FeedbackCollector:
         if not self.feedback_data:
             return {"message": "No feedback data available"}
 
-        score_differences = [abs(f["human_score"] - f["system_score"]) for f in self.feedback_data]
+        score_differences = [
+            abs(f["human_score"] - f["system_score"]) for f in self.feedback_data
+        ]
 
         avg_difference = np.mean(score_differences)
         max_difference = np.max(score_differences)

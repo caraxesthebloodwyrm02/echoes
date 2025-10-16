@@ -33,16 +33,19 @@ Interactive command-line interface for the Echoes platform featuring:
 
 Commands:
   /help              - Show available commands
+  /assistant         - Start AI assistant mode (interactive chat)
   /batch             - Batch processing menu
-  /assistant         - Start AI assistant mode
   /budget            - Check budget status
   /files             - Show input/output files
   /quit              - Exit the system
 
+Assistant Mode:
+  Interactive AI chat with conversation history, budget tracking, and help
+
 Batch Processing Commands:
   /batch dry-run     - Run batch processor in dry-run mode
-  /batch summarize   - Batch summarize all input files
-  /batch rephrase    - Batch rephrase all input files
+  /batch summarize   - Batch summarize all .txt files in input_samples/
+  /batch rephrase    - Batch rephrase all .txt files
   /batch actions     - Extract actions from all input files
   /batch status      - Show batch processing status
 """
@@ -227,8 +230,7 @@ class EchoesREPL:
 
     def _handle_assistant_command(self, input_text):
         """Handle assistant mode input."""
-        print("Assistant mode not yet implemented")
-        print("Use /main to return to main mode")
+        self._enter_assistant_mode()
 
     def _show_help(self):
         """Show help information."""
@@ -403,11 +405,210 @@ NOTES:
         print()
 
     def _enter_assistant_mode(self):
-        """Enter assistant mode (placeholder for now)."""
-        print("Assistant mode not yet implemented")
-        print("AI Assistant integration coming soon!")
-        print("Use /main to return to main menu")
+        """Enter interactive AI assistant mode with chat capabilities."""
+        print("\n🤖 ECHOES AI ASSISTANT MODE")
+        print("=" * 40)
+        print("Interactive AI assistant powered by OpenAI")
+        print("Type your questions or requests naturally.")
+        print("Commands: /help, /clear, /quit, /main")
+        print("=" * 40)
+        print()
+
         self.current_mode = "assistant"
+
+        # Import our OpenAI integration
+        try:
+            from utils.openai_integration import get_openai_integration
+
+            openai_integration = get_openai_integration()
+
+            if not openai_integration.is_configured:
+                print("❌ OpenAI integration not configured.")
+                print("Please ensure OPENAI_API_KEY is set in your .env file.")
+                print("Use /main to return to main menu")
+                return
+
+            print(f"✅ Connected to OpenAI ({openai_integration.model})")
+            print()
+
+        except ImportError as e:
+            print(f"❌ Failed to load OpenAI integration: {e}")
+            print("Use /main to return to main menu")
+            return
+
+        # Conversation history
+        conversation_history = []
+
+        while self.current_mode == "assistant":
+            try:
+                user_input = input("assistant> ").strip()
+
+                if not user_input:
+                    continue
+
+                # Handle commands
+                if user_input.lower() in ["/quit", "/q", "quit", "exit"]:
+                    print("Goodbye! 👋")
+                    break
+                elif user_input.lower() in ["/main", "/menu"]:
+                    self.current_mode = "main"
+                    print("Returning to main menu...")
+                    return
+                elif user_input.lower() == "/help":
+                    self._show_assistant_help()
+                    continue
+                elif user_input.lower() == "/clear":
+                    conversation_history = []
+                    print("✅ Conversation history cleared")
+                    continue
+                elif user_input.lower() == "/history":
+                    self._show_conversation_history(conversation_history)
+                    continue
+
+                # Check budget before making API call
+                try:
+                    from utils.budget_guard import check_budget
+
+                    budget_ok, remaining, _ = check_budget()
+                    if not budget_ok:
+                        print(f"❌ Budget exhausted. Remaining: ${remaining:.2f}")
+                        print("Use /main to return to menu and check budget")
+                        continue
+                except ImportError:
+                    print("⚠️ Budget checking unavailable")
+
+                # Make API call
+                print("🤔 Thinking...")
+
+                try:
+                    response = openai_integration.create_chat_completion(
+                        messages=self._build_conversation_messages(
+                            user_input, conversation_history
+                        ),
+                        model=openai_integration.model,
+                        temperature=0.7,
+                        max_tokens=1000,
+                    )
+
+                    if response:
+                        print(f"\n🤖 {response}\n")
+
+                        # Add to conversation history
+                        conversation_history.append(
+                            {"role": "user", "content": user_input}
+                        )
+                        conversation_history.append(
+                            {"role": "assistant", "content": response}
+                        )
+
+                        # Keep only last 10 exchanges (20 messages)
+                        if len(conversation_history) > 20:
+                            conversation_history = conversation_history[-20:]
+
+                        # Update budget (rough estimate)
+                        try:
+                            from utils.budget_guard import (
+                                estimate_tokens,
+                                update_budget,
+                            )
+
+                            tokens_used = estimate_tokens(user_input + response)
+                            update_budget(tokens_used, openai_integration.model)
+                        except ImportError:
+                            pass  # Budget tracking unavailable
+
+                    else:
+                        print("❌ No response received from AI")
+
+                except Exception as e:
+                    print(f"❌ Error communicating with AI: {e}")
+                    print("Check your internet connection and API key")
+
+            except KeyboardInterrupt:
+                print("\nGoodbye! 👋")
+                break
+            except EOFError:
+                print("\nGoodbye! 👋")
+                break
+
+    def _build_conversation_messages(self, user_input, history):
+        """Build conversation messages for OpenAI API."""
+        system_message = {
+            "role": "system",
+            "content": """You are Echoes, an advanced AI assistant for a multi-modal AI platform.
+You help users with AI development, data processing, analysis, and general questions.
+Be helpful, accurate, and engaging. Keep responses concise but informative.
+You have access to various AI tools and can help with:
+- Code analysis and development
+- Data processing and analysis
+- AI model selection and usage
+- Technical problem solving
+- General assistance and advice""",
+        }
+
+        messages = [system_message]
+
+        # Add conversation history (last 10 exchanges)
+        messages.extend(history[-20:])
+
+        # Add current user input
+        messages.append({"role": "user", "content": user_input})
+
+        return messages
+
+    def _show_assistant_help(self):
+        """Show assistant mode help."""
+        help_text = """
+ECHOES AI ASSISTANT HELP
+========================
+
+COMMANDS:
+  /help     - Show this help
+  /clear    - Clear conversation history
+  /history  - Show conversation history
+  /main     - Return to main menu
+  /quit     - Exit assistant mode
+
+CAPABILITIES:
+  • Natural language conversations
+  • Code analysis and generation
+  • Technical problem solving
+  • Data analysis questions
+  • AI model recommendations
+  • General assistance
+
+EXAMPLES:
+  "How do I optimize this Python code?"
+  "Explain machine learning concepts"
+  "Help me debug this error"
+  "What's the best AI model for text classification?"
+
+TIPS:
+  • Be specific about your questions for better answers
+  • Mention programming languages or frameworks you're using
+  • Ask follow-up questions to dive deeper
+        """
+        print(help_text)
+
+    def _show_conversation_history(self, history):
+        """Show conversation history."""
+        if not history:
+            print("No conversation history")
+            return
+
+        print("\nCONVERSATION HISTORY")
+        print("=" * 30)
+
+        for i, msg in enumerate(history, 1):
+            role = msg["role"].title()
+            content = (
+                msg["content"][:100] + "..."
+                if len(msg["content"]) > 100
+                else msg["content"]
+            )
+            print(f"{i:2d}. {role}: {content}")
+
+        print()
 
 
 def main():

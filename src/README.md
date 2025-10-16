@@ -72,7 +72,7 @@ src/
 - **Cost Optimization**: Uses token estimates to select appropriate models
 
 ### Model Pricing (per 1,000 tokens, input rate)
-- `gpt-4o-mini`: $0.15
+- `gpt-4.1`: $0.15
 - `gpt-3.5-turbo`: $0.50
 - `gpt-4o`: $2.50
 

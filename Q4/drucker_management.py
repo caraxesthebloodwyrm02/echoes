@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """Drucker Foundation Management Model utilities.
 
 This module operationalizes Peter Drucker's foundational management principles
@@ -119,7 +141,9 @@ class DruckerFoundationModel:
     def ingest_roadmap(self, items: Iterable[Dict[str, Any]]) -> int:
         """Replace the current roadmap with structured items."""
 
-        self.roadmap = [self._coerce_item(index, raw) for index, raw in enumerate(items, start=1)]
+        self.roadmap = [
+            self._coerce_item(index, raw) for index, raw in enumerate(items, start=1)
+        ]
         return len(self.roadmap)
 
     def add_roadmap_item(self, item: Dict[str, Any]) -> RoadmapItem:
@@ -130,7 +154,9 @@ class DruckerFoundationModel:
         self.roadmap.append(roadmap_item)
         return roadmap_item
 
-    def _coerce_item(self, index: int, raw: Dict[str, Any], override_id: bool = False) -> RoadmapItem:
+    def _coerce_item(
+        self, index: int, raw: Dict[str, Any], override_id: bool = False
+    ) -> RoadmapItem:
         """Convert arbitrary dictionaries into `RoadmapItem` instances."""
 
         def _parse_date(value: Any) -> date:
@@ -246,7 +272,11 @@ class EcosystemManager:
         roots, branches, leaves = self._categorize_files()
         complexity = self._calculate_complexity_score()
         metric = TerraformingMetric(
-            timestamp=datetime.now(), roots=roots, branches=branches, leaves=leaves, complexity_score=complexity
+            timestamp=datetime.now(),
+            roots=roots,
+            branches=branches,
+            leaves=leaves,
+            complexity_score=complexity,
         )
         self.terraforming_history.append(metric)
         return metric
@@ -279,7 +309,13 @@ class EcosystemManager:
         }
 
         gate_passed = all(v.get("passed", False) for v in validations.values())
-        self.gate_validations.append({"timestamp": datetime.now(), "passed": gate_passed, "validations": validations})
+        self.gate_validations.append(
+            {
+                "timestamp": datetime.now(),
+                "passed": gate_passed,
+                "validations": validations,
+            }
+        )
 
         return {
             "gate_status": "open" if gate_passed else "closed",
@@ -307,7 +343,10 @@ class EcosystemManager:
     def _is_branch_file(self, path: Path) -> bool:
         """Determine if file is a branch (feature) component."""
         # Feature directories: features/, integrations/, apis/
-        return any(part in ["features", "integrations", "apis", "services"] for part in path.parts)
+        return any(
+            part in ["features", "integrations", "apis", "services"]
+            for part in path.parts
+        )
 
     def _calculate_complexity_score(self) -> float:
         """Calculate codebase complexity using cyclomatic complexity approximation."""
@@ -319,7 +358,9 @@ class EcosystemManager:
                     content = f.read()
                     total_lines += len(content.splitlines())
                     # Simple heuristic: count if/elif/for/while/try/except
-                    control_structures += len(re.findall(r"\b(if|elif|for|while|try|except)\b", content))
+                    control_structures += len(
+                        re.findall(r"\b(if|elif|for|while|try|except)\b", content)
+                    )
             except (OSError, UnicodeDecodeError):
                 continue
         return control_structures / max(total_lines, 1) * 100
@@ -394,7 +435,13 @@ class EcosystemManager:
             "passed": len(issues) == 0,
             "details": f"Found {len(issues)} endpoint vulnerability vectors",
             "issues": issues,
-            "vectors_checked": ["confusion", "decision_points", "timing", "absence_changes", "cascade"],
+            "vectors_checked": [
+                "confusion",
+                "decision_points",
+                "timing",
+                "absence_changes",
+                "cascade",
+            ],
         }
 
     def _detect_confusion_vectors(self) -> List[str]:
@@ -404,12 +451,16 @@ class EcosystemManager:
         # Check for inconsistent error handling patterns
         error_patterns = self._analyze_error_patterns()
         if error_patterns.get("inconsistent", False):
-            issues.append("Inconsistent error handling patterns detected - confusion vector active")
+            issues.append(
+                "Inconsistent error handling patterns detected - confusion vector active"
+            )
 
         # Check for unclear decision branches
         branch_complexity = self._measure_decision_complexity()
         if branch_complexity > 15:  # Threshold for complex decision trees
-            issues.append(f"High decision complexity ({branch_complexity}) - confusion risk")
+            issues.append(
+                f"High decision complexity ({branch_complexity}) - confusion risk"
+            )
 
         # Check for ambiguous naming conventions
         naming_issues = self._check_naming_consistency()
@@ -425,7 +476,12 @@ class EcosystemManager:
         # Check decision point coverage
         uncovered_decisions = self._find_uncovered_decisions()
         if uncovered_decisions:
-            issues.extend([f"Uncovered decision point: {decision}" for decision in uncovered_decisions])
+            issues.extend(
+                [
+                    f"Uncovered decision point: {decision}"
+                    for decision in uncovered_decisions
+                ]
+            )
 
         # Validate decision logic consistency
         logic_issues = self._check_decision_logic()
@@ -441,12 +497,19 @@ class EcosystemManager:
         # Check for potential race conditions
         race_conditions = self._detect_race_conditions()
         if race_conditions:
-            issues.extend([f"Potential race condition: {condition}" for condition in race_conditions])
+            issues.extend(
+                [
+                    f"Potential race condition: {condition}"
+                    for condition in race_conditions
+                ]
+            )
 
         # Check for timing attack vulnerabilities
         timing_attacks = self._check_timing_attacks()
         if timing_attacks:
-            issues.extend([f"Timing attack vulnerability: {attack}" for attack in timing_attacks])
+            issues.extend(
+                [f"Timing attack vulnerability: {attack}" for attack in timing_attacks]
+            )
 
         # Validate async operation handling
         async_issues = self._validate_async_operations()
@@ -462,17 +525,26 @@ class EcosystemManager:
         # Check for missing validations
         missing_validations = self._find_missing_validations()
         if missing_validations:
-            issues.extend([f"Missing validation: {validation}" for validation in missing_validations])
+            issues.extend(
+                [
+                    f"Missing validation: {validation}"
+                    for validation in missing_validations
+                ]
+            )
 
         # Detect sudden architectural changes
         sudden_changes = self._detect_sudden_changes()
         if sudden_changes:
-            issues.extend([f"Sudden change detected: {change}" for change in sudden_changes])
+            issues.extend(
+                [f"Sudden change detected: {change}" for change in sudden_changes]
+            )
 
         # Check for absent error boundaries
         absent_boundaries = self._check_error_boundaries()
         if absent_boundaries:
-            issues.extend([f"Absent error boundary: {boundary}" for boundary in absent_boundaries])
+            issues.extend(
+                [f"Absent error boundary: {boundary}" for boundary in absent_boundaries]
+            )
 
         return issues
 
@@ -483,17 +555,29 @@ class EcosystemManager:
         # Analyze dependency cascades
         dependency_cascades = self._analyze_dependency_cascades()
         if dependency_cascades:
-            issues.extend([f"Dependency cascade risk: {cascade}" for cascade in dependency_cascades])
+            issues.extend(
+                [
+                    f"Dependency cascade risk: {cascade}"
+                    for cascade in dependency_cascades
+                ]
+            )
 
         # Check for failure propagation
         failure_propagation = self._check_failure_propagation()
         if failure_propagation:
-            issues.extend([f"Failure propagation: {propagation}" for propagation in failure_propagation])
+            issues.extend(
+                [
+                    f"Failure propagation: {propagation}"
+                    for propagation in failure_propagation
+                ]
+            )
 
         # Validate isolation boundaries
         isolation_issues = self._check_isolation_boundaries()
         if isolation_issues:
-            issues.extend([f"Isolation boundary breach: {issue}" for issue in isolation_issues])
+            issues.extend(
+                [f"Isolation boundary breach: {issue}" for issue in isolation_issues]
+            )
 
         return issues
 

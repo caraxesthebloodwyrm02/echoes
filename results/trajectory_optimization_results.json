@@ -1,0 +1,46 @@
+{
+  "comparison": {
+    "num_steps": 50,
+    "num_trials": 10,
+    "data_driven": {
+      "avg_quality": 0.8345706090212477,
+      "final_quality": 0.8106174769303147,
+      "avg_time": 90.31448430216122,
+      "avg_cognitive_load": 41.93029567659358,
+      "efficiency_ratio": 0.011023814674501083,
+      "learning_slope": -0.0009687741378607486
+    },
+    "fast_compound": {
+      "avg_quality": 0.8837479530927517,
+      "final_quality": 1.0,
+      "avg_time": 18.00755008080775,
+      "avg_cognitive_load": 13.002218809010401,
+      "efficiency_ratio": 0.1887440883541351,
+      "learning_slope": 0.01027571420960506,
+      "compound_gain": 22.373050464600617
+    },
+    "advantages": {
+      "fc_time_saved": 72.30693422135347,
+      "fc_cognitive_saved": 28.92807686758318,
+      "fc_efficiency_gain": 1612.1485976239644,
+      "fc_learning_advantage": -1160.6924574076615
+    }
+  },
+  "against_the_clock": {
+    "data_driven": {
+      "total_steps": 34,
+      "average_quality": 0.8497119478881222,
+      "final_quality": 0.831554551285439,
+      "total_time": 59.95116157916005,
+      "efficiency_ratio": 0.016934730200918846
+    },
+    "fast_compound": {
+      "total_steps": 166,
+      "average_quality": 0.9649843232207083,
+      "final_quality": 1.0,
+      "total_time": 59.801001623762126,
+      "efficiency_ratio": 0.061954872348100355,
+      "compound_gain": 91.97305046460045
+    }
+  }
+}

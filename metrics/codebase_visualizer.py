@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Codebase Visualization Tool
 
@@ -49,12 +71,22 @@ def clean_environment():
 
 def check_tools() -> List[str]:
     """Check if required tools are installed"""
-    tools = {"flake8": ["--version"], "coverage": ["--version"], "radon": ["--version"], "pytest": ["--version"]}
+    tools = {
+        "flake8": ["--version"],
+        "coverage": ["--version"],
+        "radon": ["--version"],
+        "pytest": ["--version"],
+    }
 
     missing = []
     for tool, args in tools.items():
         try:
-            subprocess.run([tool] + args, check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            subprocess.run(
+                [tool] + args,
+                check=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
         except (subprocess.SubprocessError, FileNotFoundError):
             missing.append(tool)
 
@@ -67,10 +99,17 @@ def run_tool(command: List[str], output_file: Optional[Path] = None) -> bool:
         if output_file:
             with open(output_file, "w", encoding="utf-8") as f:
                 result = subprocess.run(
-                    command, check=False, stdout=f, stderr=subprocess.PIPE, text=True, encoding="utf-8"
+                    command,
+                    check=False,
+                    stdout=f,
+                    stderr=subprocess.PIPE,
+                    text=True,
+                    encoding="utf-8",
                 )
         else:
-            result = subprocess.run(command, check=False, capture_output=True, text=True, encoding="utf-8")
+            result = subprocess.run(
+                command, check=False, capture_output=True, text=True, encoding="utf-8"
+            )
 
         # Handle special exit codes
         if result.returncode != 0:
@@ -98,7 +137,16 @@ def generate_reports() -> bool:
 
     commands = [
         (["coverage", "run", "--data-file=.coverage.new", "-m", "pytest", "-s"], None),
-        (["coverage", "json", "--data-file=.coverage.new", "-o", str(REPORTS["coverage"])], None),
+        (
+            [
+                "coverage",
+                "json",
+                "--data-file=.coverage.new",
+                "-o",
+                str(REPORTS["coverage"]),
+            ],
+            None,
+        ),
         # Flake8 handled separately with text parsing to ensure valid JSON
         (["radon", "cc", "-j", "-O", str(REPORTS["complexity"]), "."], None),
         (["radon", "mi", "-j", "-O", str(REPORTS["maintainability"]), "."], None),
@@ -117,7 +165,9 @@ def generate_reports() -> bool:
     # Handle flake8 output
     flake8_command = ["flake8", "--max-line-length=120", "."]
     print(f"Running {flake8_command[0]}...")
-    result = subprocess.run(flake8_command, check=False, capture_output=True, text=True, encoding="utf-8")
+    result = subprocess.run(
+        flake8_command, check=False, capture_output=True, text=True, encoding="utf-8"
+    )
     if result.returncode not in [0, 1]:
         print("[FAILED] flake8")
         success = False
@@ -127,7 +177,12 @@ def generate_reports() -> bool:
         for line in result.stdout.splitlines():
             parts = line.split(":", 3)
             if len(parts) >= 4:
-                filename, line_num, col_num, message = parts[0], parts[1], parts[2], parts[3]
+                filename, line_num, col_num, message = (
+                    parts[0],
+                    parts[1],
+                    parts[2],
+                    parts[3],
+                )
                 issues.append(
                     {
                         "filename": filename,
@@ -228,7 +283,9 @@ def analyze_robustness() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Coverage: {avg_cov:.1f}% | " f"Avg Issues: {avg_issues:.1f} | " f"Files: {len(x)}",
+            f"Avg Coverage: {avg_cov:.1f}% | "
+            f"Avg Issues: {avg_issues:.1f} | "
+            f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -242,7 +299,9 @@ def analyze_robustness() -> bool:
 
     except ImportError:
         print("Installing required visualization packages...")
-        subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True)
+        subprocess.run(
+            [sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True
+        )
         return analyze_robustness()
     except Exception as e:
         print(f"[ERROR] In robustness analysis: {e}")
@@ -300,8 +359,12 @@ def analyze_practicality() -> bool:
         plt.scatter(x, y, c=colors, alpha=0.6, edgecolors="w")
 
         # Add reference lines
-        plt.axhline(y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability")
-        plt.axhline(y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability")
+        plt.axhline(
+            y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability"
+        )
+        plt.axhline(
+            y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability"
+        )
 
         plt.title("Codebase Practicality: Complexity vs. Maintainability")
         plt.xlabel("Average Cyclomatic Complexity (Lower is Better)")
@@ -315,7 +378,9 @@ def analyze_practicality() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Complexity: {avg_comp:.1f} | " f"Avg Maintainability: {avg_mi:.1f} | " f"Files: {len(x)}",
+            f"Avg Complexity: {avg_comp:.1f} | "
+            f"Avg Maintainability: {avg_mi:.1f} | "
+            f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -329,7 +394,9 @@ def analyze_practicality() -> bool:
 
     except ImportError:
         print("Installing required visualization packages...")
-        subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True)
+        subprocess.run(
+            [sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True
+        )
         return analyze_practicality()
     except Exception as e:
         print(f"[ERROR] In practicality analysis: {e}")
@@ -361,7 +428,9 @@ def main() -> int:
         success = False
 
     if success:
-        print("\n[SUCCESS] Analysis complete! Check the 'metrics/plots' directory for results.")
+        print(
+            "\n[SUCCESS] Analysis complete! Check the 'metrics/plots' directory for results."
+        )
         return 0
 
     print("\n[WARNING] Some analyses failed. Check the output for details.")

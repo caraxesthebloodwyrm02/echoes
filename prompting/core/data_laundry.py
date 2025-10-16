@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 DataLaundry - Cleans, deduplicates, and aligns incoming data for ingestion
 """
@@ -20,7 +42,9 @@ class DataLaundry:
             "normalized": 0,
         }
 
-    def clean_and_filter(self, raw_data: Dict[str, Any], quality_threshold: float = 0.6) -> Dict[str, Any]:
+    def clean_and_filter(
+        self, raw_data: Dict[str, Any], quality_threshold: float = 0.6
+    ) -> Dict[str, Any]:
         """
         Clean and filter data from DataIntegrationUnit
 
@@ -207,7 +231,9 @@ class DataLaundry:
 
         return text
 
-    def align_vocabulary(self, data: Dict[str, Any], domain_vocabulary: Dict[str, List[str]]) -> Dict[str, Any]:
+    def align_vocabulary(
+        self, data: Dict[str, Any], domain_vocabulary: Dict[str, List[str]]
+    ) -> Dict[str, Any]:
         """
         Align data vocabulary with codebase domain
 
@@ -229,7 +255,9 @@ class DataLaundry:
 
                 # Align description
                 if "description" in item:
-                    item["description"] = self._align_text(item["description"], domain_vocabulary)
+                    item["description"] = self._align_text(
+                        item["description"], domain_vocabulary
+                    )
 
                 # Add domain tags
                 item["domain_tags"] = self._extract_domain_tags(item, domain_vocabulary)
@@ -249,7 +277,9 @@ class DataLaundry:
 
         return aligned_text
 
-    def _extract_domain_tags(self, item: Dict[str, Any], vocabulary: Dict[str, List[str]]) -> List[str]:
+    def _extract_domain_tags(
+        self, item: Dict[str, Any], vocabulary: Dict[str, List[str]]
+    ) -> List[str]:
         """Extract domain tags from item"""
         tags = set()
 
@@ -274,8 +304,12 @@ class DataLaundry:
         stats = self.cleaning_stats.copy()
 
         if stats["total_processed"] > 0:
-            stats["duplicate_rate"] = stats["duplicates_removed"] / stats["total_processed"]
-            stats["quality_filter_rate"] = stats["low_quality_filtered"] / stats["total_processed"]
+            stats["duplicate_rate"] = (
+                stats["duplicates_removed"] / stats["total_processed"]
+            )
+            stats["quality_filter_rate"] = (
+                stats["low_quality_filtered"] / stats["total_processed"]
+            )
             stats["success_rate"] = stats["normalized"] / stats["total_processed"]
         else:
             stats["duplicate_rate"] = 0.0

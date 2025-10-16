@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 ContextManager - Maintains state, cross-session memory, and codebase metadata
 """
@@ -12,7 +34,12 @@ from typing import Any, Dict, List, Optional
 class ContextManager:
     """Manages execution context, memory, and codebase metadata"""
 
-    def __init__(self, storage_path: Optional[str] = None):
+    def __init__(
+        self,
+        storage_path: Optional[str] = None,
+        enable_kg: bool = True,
+        kg_cache_size: int = 100,
+    ):
         self.storage_path = Path(storage_path or "data/context")
         self.storage_path.mkdir(parents=True, exist_ok=True)
 
@@ -34,6 +61,24 @@ class ContextManager:
 
         # Codebase metadata cache
         self.codebase_metadata = {}
+
+        # Knowledge Graph Integration
+        self.kg_bridge = None
+        self._kg_enabled = enable_kg
+        if enable_kg:
+            try:
+                from utils.safe_imports import get_safe_kg_bridge
+
+                self.kg_bridge = get_safe_kg_bridge(enable_kg=True)
+                # Sync existing insights to KG if bridge is available
+                if self.kg_bridge.enabled and self.memory.get("insights"):
+                    self.kg_bridge.sync_insights_to_kg(self.memory["insights"])
+            except ImportError:
+                # Silently fall back to keyword search if safe imports not available
+                pass
+            except Exception as e:
+                # Log but don't fail initialization
+                print(f"Warning: KG integration failed: {e}")
 
     def _generate_session_id(self) -> str:
         """Generate unique session ID"""
@@ -63,7 +108,9 @@ class ContextManager:
 
         # Keep only last 100 entries to manage memory
         if len(self.session_context["conversation_history"]) > 100:
-            self.session_context["conversation_history"] = self.session_context["conversation_history"][-100:]
+            self.session_context["conversation_history"] = self.session_context[
+                "conversation_history"
+            ][-100:]
 
     def get_context_for_mode(self, mode: str) -> Dict[str, Any]:
         """Get relevant context for a specific mode"""
@@ -95,7 +142,9 @@ class ContextManager:
         elif mode == "conversational":
             base_context.update(
                 {
-                    "recent_conversation": self.session_context["conversation_history"][-5:],
+                    "recent_conversation": self.session_context["conversation_history"][
+                        -5:
+                    ],
                     "user_preferences": self.session_context["user_profile"],
                 }
             )
@@ -129,7 +178,12 @@ class ContextManager:
         try:
             for root, dirs, files in os.walk(project_root):
                 # Skip common ignore directories
-                dirs[:] = [d for d in dirs if not d.startswith(".") and d not in ["__pycache__", "node_modules"]]
+                dirs[:] = [
+                    d
+                    for d in dirs
+                    if not d.startswith(".")
+                    and d not in ["__pycache__", "node_modules"]
+                ]
 
                 rel_root = os.path.relpath(root, project_root)
                 if rel_root == ".":
@@ -209,7 +263,9 @@ class ContextManager:
         except Exception as e:
             print(f"Error saving memory: {e}")
 
-    def add_insight(self, insight: str, category: str = "general", confidence: float = 1.0):
+    def add_insight(
+        self, insight: str, category: str = "general", confidence: float = 1.0
+    ):
         """Add a learned insight to memory"""
         insight_entry = {
             "content": insight,
@@ -225,9 +281,31 @@ class ContextManager:
         if len(self.memory["insights"]) > 1000:
             self.memory["insights"] = self.memory["insights"][-1000:]
 
-    def get_relevant_insights(self, query: str, category: str = None, limit: int = 5) -> List[Dict[str, Any]]:
-        """Get insights relevant to a query"""
-        # Simple keyword matching - could be enhanced with embeddings
+        # Sync to knowledge graph if available
+        if self.kg_bridge and self.kg_bridge.enabled:
+            try:
+                self.kg_bridge.sync_insights_to_kg([insight_entry])
+            except Exception:
+                # Don't fail on KG sync errors
+                pass
+
+    def get_relevant_insights(
+        self, query: str, category: str = None, limit: int = 5
+    ) -> List[Dict[str, Any]]:
+        """Get insights relevant to a query using semantic search if available"""
+        # Try semantic search via knowledge graph first
+        if self.kg_bridge and self.kg_bridge.enabled:
+            try:
+                semantic_results = self.kg_bridge.semantic_search(
+                    query=query, category=category, limit=limit, min_confidence=0.5
+                )
+                if semantic_results:
+                    return semantic_results
+            except Exception:
+                # Fall back to keyword search on error
+                pass
+
+        # Fallback: Simple keyword matching
         query_lower = query.lower()
         relevant = []
 
@@ -249,13 +327,25 @@ class ContextManager:
 
     def get_session_summary(self) -> Dict[str, Any]:
         """Get summary of current session"""
-        return {
+        summary = {
             "session_id": self.session_context["session_id"],
-            "duration": (datetime.now() - self.session_context["start_time"]).total_seconds(),
+            "duration": (
+                datetime.now() - self.session_context["start_time"]
+            ).total_seconds(),
             "conversation_entries": len(self.session_context["conversation_history"]),
             "active_tasks": len(self.session_context["active_tasks"]),
             "project_context": bool(self.session_context["project_root"]),
             "insights_generated": len(
-                [i for i in self.memory["insights"] if i["session_id"] == self.session_context["session_id"]]
+                [
+                    i
+                    for i in self.memory["insights"]
+                    if i["session_id"] == self.session_context["session_id"]
+                ]
             ),
         }
+
+        # Add KG statistics if available
+        if self.kg_bridge:
+            summary["kg_stats"] = self.kg_bridge.get_stats()
+
+        return summary

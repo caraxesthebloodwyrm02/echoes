@@ -1,4 +1,26 @@
 #!/usr/bin/env python3
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Phase 2 Multi-Mode Prompting System Demo
 Demonstrates:
@@ -54,10 +76,10 @@ prompts = [
 
 # Phase 2 Demo Execution
 for i, prompt in enumerate(prompts, 1):
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print(f"PHASE 2 DEMO #{i}")
     print(f"Prompt: {prompt}")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     # M1: Inference with caching
     print("\n🧠 M1: Inference Optimization (Caching)")
@@ -91,7 +113,9 @@ for i, prompt in enumerate(prompts, 1):
     # Simulate adaptive iterations
     for iteration in range(min(max_iters, 3)):  # Limit for demo
         # In real implementation, this would refine based on quality scores
-        print(f"    Iteration {iteration+1}: Processing with {complexity} complexity logic...")
+        print(
+            f"    Iteration {iteration + 1}: Processing with {complexity} complexity logic..."
+        )
 
     # M3: Hybrid Mode Fusion
     print("\n🔗 M3: Hybrid Mode Synthesis")
@@ -121,7 +145,7 @@ for i, prompt in enumerate(prompts, 1):
     print(f"  Complexity assessment: {complexity}")
     print(f"  Adaptive iterations: {max_iters}")
 
-print(f"\n{'='*80}")
+print(f"\n{'=' * 80}")
 print("🎉 PHASE 2 DEMO COMPLETE")
 print("Key Achievements:")
 print("  ✅ M1: Cached reasoning reduces repeated computations")

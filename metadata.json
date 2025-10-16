@@ -1,5 +1,23 @@
 {
-  "name": "Pac-Man: Let Bro Cook Edition",
-  "description": "A web-based Pac-Man style game with a 'Let Bro Cook' power-up mechanic. Guide Pac-Man through the maze, eat dots, and when you grab a power pellet, it's time to 'Let Bro Cook' and chase down the ghosts for multiplier points.",
-  "requestFramePermissions": []
+  "name": "Echoes AI Platform",
+  "description": "A comprehensive AI agent orchestration platform with privacy protection, multimodal capabilities, and enterprise-grade MLOps. Features include AI model management, automated privacy scanning, federated learning, and scalable deployment infrastructure.",
+  "version": "2.0.0",
+  "project_type": "AI Platform",
+  "architecture": "Modular Agent System",
+  "key_features": [
+    "Privacy-first AI orchestration",
+    "Multi-modal reasoning capabilities",
+    "Automated MLOps pipeline",
+    "Enterprise security and compliance",
+    "Federated learning support"
+  ],
+  "components": {
+    "ai_orchestration": "Multi-provider AI model management",
+    "privacy_system": "PII detection and automated filtering",
+    "mlops_pipeline": "Model versioning and deployment",
+    "monitoring": "Real-time performance and security monitoring",
+    "automation": "Task orchestration and workflow management"
+  },
+  "last_updated": "2025-10-15",
+  "status": "Production Ready"
 }

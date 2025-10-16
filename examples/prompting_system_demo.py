@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2024 Echoes Project
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+# copies of the Software, and to permit persons to whom the Software is
+# furnished to do so, subject to the following conditions:
+#
+# The above copyright notice and this permission notice shall be included in all
+# copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """
 Multi-Mode Prompting System Demo
 Demonstrates the system using the sample prompt through all five modes
@@ -84,7 +106,9 @@ async def demo_data_loop():
     print("Running with data loop enabled...")
 
     try:
-        result = await system.process_prompt(prompt=prompt, mode="ide", enable_data_loop=True)
+        result = await system.process_prompt(
+            prompt=prompt, mode="ide", enable_data_loop=True
+        )
 
         print("\nResponse:")
         print("-" * 60)
@@ -168,7 +192,9 @@ async def demo_workflow_integration():
     integration_config = system.integrate_with_workflow_macro(phases)
 
     print(f"Integration phases: {len(integration_config['phases'])}")
-    print(f"Priority map: {integration_config['deterministic_merge_config']['priority_map']}")
+    print(
+        f"Priority map: {integration_config['deterministic_merge_config']['priority_map']}"
+    )
 
     # This would integrate with the existing workflows/macro.py system
     print("Integration configuration created successfully!")

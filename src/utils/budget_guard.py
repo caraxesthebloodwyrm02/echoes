@@ -23,7 +23,14 @@
 # src/utils/budget_guard.py
 import json
 import os
+import sys
 import time
+
+# Add project root to path for imports
+PROJECT_ROOT = os.path.dirname(
+    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+)
+sys.path.insert(0, PROJECT_ROOT)
 
 # Fix path to be relative to the script location
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -34,10 +41,15 @@ DEFAULT_BUDGET = 5.00  # USD - change if needed
 
 # Configure model prices (USD per 1,000 tokens). **UPDATED with current OpenAI pricing as of Oct 2024**
 MODEL_COST_PER_1K = {
-    "gpt-4o-mini": 0.15,  # $0.15 per 1k tokens (input rate)
-    "gpt-4o": 2.50,  # $2.50 per 1k tokens (input rate)
-    "gpt-3.5-turbo": 0.50,  # $0.50 per 1k tokens (input rate)
+    "gpt-4o": 2.50,  # $2.50 per 1k input tokens, $10.00 per 1k output tokens
+    "gpt-4o-mini": 0.15,  # $0.15 per 1k input tokens, $0.60 per 1k output tokens
+    "gpt-3.5-turbo": 0.50,  # $0.50 per 1k input tokens, $1.50 per 1k output tokens
+    "gpt-4": 30.00,  # $30.00 per 1k input tokens, $60.00 per 1k output tokens
+    "gpt-4-turbo": 10.00,  # $10.00 per 1k input tokens, $30.00 per 1k output tokens
 }
+
+# Ensure logs directory exists
+os.makedirs(os.path.dirname(LOG_FILE), exist_ok=True)
 
 # initialize budget log
 if not os.path.exists(LOG_FILE):
@@ -50,14 +62,14 @@ def load_budget():
         return json.load(f)
 
 
-def update_budget(tokens_used, model="gpt-4o-mini"):
+def update_budget(tokens_used, model="gpt-4.1"):
     """
     Add actual token usage to spent and return (data, cost)
     tokens_used: integer number of tokens used
     model: which model was used to calculate cost
     """
     data = load_budget()
-    cost_per_1k = MODEL_COST_PER_1K.get(model, MODEL_COST_PER_1K["gpt-4o-mini"])
+    cost_per_1k = MODEL_COST_PER_1K.get(model, MODEL_COST_PER_1K["gpt-4.1"])
     cost = (tokens_used / 1000.0) * cost_per_1k
     data["spent"] += cost
     data["calls"] += 1

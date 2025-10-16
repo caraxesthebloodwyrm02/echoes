@@ -25,6 +25,15 @@
 import logging
 import sys
 
+# Import privacy filter
+try:
+    from packages.security.privacy_filter import PrivacyFilter
+
+    privacy_filter = PrivacyFilter()
+except ImportError:
+    # Fallback if privacy filter not available
+    privacy_filter = None
+
 
 class ColoredFormatter(logging.Formatter):
     """Colored log formatter with SUCCESS level support."""
@@ -83,29 +92,35 @@ class AutomationLogger:
 
         self.logger.addHandler(handler)
 
+    def _filter_message(self, message: str) -> str:
+        """Apply privacy filtering to log messages if available."""
+        if privacy_filter:
+            return privacy_filter.mask(message)
+        return message
+
     def debug(self, message: str):
         """Log debug message."""
-        self.logger.debug(message)
+        self.logger.debug(self._filter_message(message))
 
     def info(self, message: str):
         """Log info message."""
-        self.logger.info(message)
+        self.logger.info(self._filter_message(message))
 
     def success(self, message: str):
         """Log success message."""
-        self.logger.log(25, message)  # SUCCESS level
+        self.logger.log(25, self._filter_message(message))  # SUCCESS level
 
     def warning(self, message: str):
         """Log warning message."""
-        self.logger.warning(message)
+        self.logger.warning(self._filter_message(message))
 
     def error(self, message: str):
         """Log error message."""
-        self.logger.error(message)
+        self.logger.error(self._filter_message(message))
 
     def critical(self, message: str):
         """Log critical message."""
-        self.logger.critical(message)
+        self.logger.critical(self._filter_message(message))
 
     def set_level(self, level: int):
         """Set logging level."""
