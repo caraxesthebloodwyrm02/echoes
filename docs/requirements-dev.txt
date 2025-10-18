@@ -1,0 +1,8 @@
+-r requirements.txt
+black>=25.9.0
+isort>=6.1.0
+mypy>=1.18.2
+pytest>=8.2.0
+pytest-cov>=4.1.0
+flake8>=7.3.0
+bandit>=1.8.6

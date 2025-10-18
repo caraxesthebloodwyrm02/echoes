@@ -117,6 +117,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+openai_env/
 
 # Spyder project settings
 .spyderproject
@@ -145,10 +146,8 @@ cython_debug/
 # ==================================================
 # IDE & EDITOR
 # ==================================================
-# VS Code
+# VS Code (keep tasks and launch for team sharing)
 .vscode/settings.json
-.vscode/launch.json
-.vscode/tasks.json
 *.code-workspace
 
 # Windsurf
@@ -204,12 +203,12 @@ Thumbs.db
 *.pth
 *.bin
 
-# Dataset files
-*.csv
-*.jsonl
-*.parquet
-*.feather
-*.pkl.gz
+# Dataset files (exclude large data files)
+data/*.csv
+data/*.jsonl
+data/*.parquet
+data/*.feather
+data/*.pkl.gz
 
 # Logs
 logs/
@@ -233,8 +232,6 @@ __pycache__/
 *.key
 *.pem
 *_key.txt
-*secret*
-*token*
 
 # AWS
 .aws/
@@ -288,12 +285,6 @@ dist/
 # Docker
 .dockerignore
 
-# Kubernetes
-*.yaml
-*.yml
-!k8s/**/*.yaml
-!k8s/**/*.yml
-
 # Terraform
 .terraform/
 *.tfstate
@@ -316,16 +307,11 @@ htmlcov/
 .flake8
 .mypy.ini
 
-# Pre-commit
-
-
 # ==================================================
 # DOCUMENTATION
 # ==================================================
 docs/_build/
 docs/build/
-*.pdf
-*.docx
 
 # ==================================================
 # TEMPORARY FILES
@@ -348,7 +334,6 @@ temp/
 # CUSTOM PROJECT SPECIFIC
 # ==================================================
 # Echoes specific
-data/
 models/
 checkpoints/
 experiments/
@@ -368,59 +353,6 @@ error.log
 access.log
 
 # ==================================================
-# LARGE FILES
-# ==================================================
-# Git LFS (if used)
-*.zip
-*.tar.gz
-*.7z
-*.rar
-*.mp4
-*.avi
-*.mov
-*.wmv
-*.flv
-*.mkv
-*.mp3
-*.wav
-*.flac
-*.ogg
-*.jpg
-*.jpeg
-*.png
-*.gif
-*.bmp
-*.tiff
-*.svg
-*.pdf
-*.doc
-*.docx
-*.xls
-*.xlsx
-*.ppt
-*.pptx
-
-# ==================================================
-# SENSITIVE DATA
-# ==================================================
-# Personal information
-*password*
-*secret*
-*key*
-*token*
-*api_key*
-
-# Financial data
-*card*
-*bank*
-*account*
-
-# Health data
-*medical*
-*health*
-*patient*
-
-# ==================================================
 # EXCEPTIONS (FILES TO KEEP)
 # ==================================================
 # Keep these even if they match patterns above
@@ -435,3 +367,5 @@ access.log
 !Dockerfile
 !docker-compose.yml
 !Makefile
+!.vscode/tasks.json
+!.vscode/launch.json

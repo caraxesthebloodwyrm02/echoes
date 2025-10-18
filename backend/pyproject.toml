@@ -1,0 +1,100 @@
+[tool.poetry]
+name = "minicon-cli"
+version = "0.1.0"
+description = "MiniCon transcription pipeline CLI"
+authors = ["Echoes Team <team@echoes.com>"]
+readme = "README.md"
+packages = [{include = "minicon"}]
+
+[tool.poetry.dependencies]
+python = "^3.12"
+typer = "^0.12.0"
+pytube = "^15.0.0"
+tqdm = "^4.66.0"
+# openai-whisper = "^20231117"  # Requires torch/triton, causing install issues on Windows CPU
+pydantic = "^2.7.0"
+python-dotenv = "^1.0.0"
+plotly = "^5.18.0"
+rich = "^13.7.0"
+
+[tool.poetry.group.diarisation.dependencies]
+# pyannote-audio = "^2.1"
+# torch = "^2.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.0"
+pytest-mock = "^3.12"
+pytest-asyncio = "^0.23"
+pandas = "^2.0"
+openai = "^1.0"
+fastapi = "^0.100"
+uvicorn = "^0.20"
+pydantic = "^2.0"
+authlib = {extras = ["cryptography"], version = "^1.3"}
+passlib = {extras = ["bcrypt"], version = "^1.7"}
+python-multipart = "^0.0.6"
+# whisper = "^1.0"
+pytube = "^15.0"
+tqdm = "^4.66"
+
+[tool.poetry.scripts]
+framework-cli = "minicon.cli:app"
+trajectory = "src.cli:app"
+
+[tool.pytest.ini_options]
+markers = [
+    "unit: unit-level tests",
+]
+
+[tool.black]
+line-length = 120
+extend-exclude = "\\.venv|yt-transcribe-env"
+
+[tool.setuptools.packages.find]
+include = ["minicon*"]
+exclude = [
+    "Q4*",
+    "cli*",
+    "data*",
+    "speech*",
+    "docker*",
+    "deploy*",
+    "csharp*",
+    "metrics*",
+    "experts*",
+    "caching*",
+    "configs*",
+    "routines*",
+    "packages*",
+    "planning*",
+    "workflows*",
+    "prompting*",
+    "templates*",
+    "automation*",
+    "maintenance*",
+    "session_logs*",
+    "ubi_simulator*",
+    "employment_matcher*",
+]
+
+[tool.flake8]
+max-line-length = 120
+extend-ignore = "E203, W503"
+per-file-ignores = [
+    "examples/*: E402",
+    "tests/*: E402",
+    "tools/*: E402",
+    "maintenance/*: E402",
+    "research-lab/*: E402",
+    "automation/core/orchestrator.py: E402, F401",
+    "minicon/cli.py: B008",
+]
+
+[tool.echoes_vectors]
+analysis_writer_model = "o3"
+doc_writer_model = "sonnet-4.5"
+seed = 42
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
