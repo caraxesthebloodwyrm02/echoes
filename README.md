@@ -28,6 +28,31 @@ An end-to-end demonstration can be run via the [run_context_aware_call.py](examp
 
 ---
 
+## 📋 Project Status & Findings
+
+### Recent Updates (October 2025)
+- ✅ Implemented Context-Aware AI Agent with multi-step reasoning
+- ✅ Created Documentation-Driven Security middleware
+- ✅ Resolved multiple dependency vulnerabilities
+- ✅ Added comprehensive testing and documentation
+
+### Known Issues & Solutions
+For a complete list of findings, issues, and solutions, see [FINDINGS_AND_SOLUTIONS.md](docs/FINDINGS_AND_SOLUTIONS.md)
+
+**Quick Fixes:**
+```bash
+# Fix dependency vulnerabilities
+python scripts/manage_deps.py
+
+# Install pre-commit hooks
+pre-commit install
+
+# Run security audit
+pip-audit -r requirements.txt
+```
+
+---
+
 ## Setup
 
 1. Backend: cd backend && poetry install

@@ -1,0 +1,50 @@
+# ==================================================
+# CORE DEPENDENCIES
+# ==================================================
+# Web Framework & API
+fastapi>=0.118.0
+uvicorn[standard]>=0.37.0
+pydantic>=2.12.3
+pydantic-settings>=2.0.0
+python-multipart>=0.0.20
+httpx>=0.28.1
+httpcore>=1.0.9
+
+# Security & Authentication
+python-dotenv>=1.0.0
+authlib>=1.6.5
+cryptography>=46.0.3
+
+# Data Processing & ML
+numpy>=2.0.0,<2.2.0
+pandas>=2.2.0
+scikit-learn>=1.5.0
+nltk>=3.9.2
+joblib>=1.5.2
+
+# Computer Vision
+Pillow>=11.3.0,<12.0.0
+opencv-python>=4.12.0.88
+
+# Database
+sqlalchemy>=2.0.0
+alembic>=1.13.1
+psycopg2-binary>=2.9.9
+
+# Testing & Development
+pytest>=8.2.0
+pytest-cov>=4.1.0
+black>=25.9.0
+flake8>=7.3.0
+mypy>=1.18.2
+isort>=6.1.0
+bandit>=1.8.6
+
+# Documentation
+sphinx>=7.3.7
+sphinx-rtd-theme>=2.0.0
+myst-parser>=2.0.0
+
+# Utilities
+tqdm>=4.66.1
+loguru>=0.7.2

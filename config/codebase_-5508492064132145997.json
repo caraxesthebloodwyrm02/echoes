@@ -1,0 +1,523 @@
+{
+  "project_root": "E:\\Projects\\Development",
+  "last_analyzed": "2025-10-09T11:39:09.767189",
+  "structure": {
+    "": [
+      "AGENT_TASKS.md",
+      "codebase_analysis.json",
+      "context.txt",
+      "DEVELOPER_QUICKSTART.md",
+      "integration_test.ps1",
+      "integration_test_output.txt",
+      "lumina_agent.py",
+      "pr_body.md",
+      "pytest.ini",
+      "README.md",
+      "render.yaml",
+      "REORGANIZATION_COMPLETE.md",
+      "REPO_LAYOUT.md",
+      "tmp_debug_venv.py",
+      "tools.ps1"
+    ],
+    "automation": [
+      "README.md",
+      "__init__.py"
+    ],
+    "automation\\config": [
+      "automation_config.yaml",
+      "guardrails_blacklist.yaml",
+      "guardrails_whitelist.yaml",
+      "lumina_config.yaml"
+    ],
+    "automation\\core": [
+      "context.py",
+      "logger.py",
+      "orchestrator.py",
+      "__init__.py"
+    ],
+    "automation\\reports": [
+      "bandit_scan.json",
+      "consolidation_report.json",
+      "foreign_dependency_report.json",
+      "generation_test_user_test_goal.yaml",
+      "highrisk_review.json",
+      "security_monitoring_report.json",
+      "security_vulnerability_analysis.md",
+      "user_test_user.yaml"
+    ],
+    "automation\\tasks": [
+      "deps_update.py",
+      "foreign_dependency_sanitize.py",
+      "health_check.py",
+      "lumina_organize_codebase.py",
+      "perf_bench.py",
+      "release_notes.py",
+      "sanitize_codebase.py",
+      "security_monitoring.py",
+      "security_scan.py",
+      "semantic_guardrails.py",
+      "smoke_test_endpoints.py",
+      "sync_api_docs.py",
+      "test_generator.py",
+      "__init__.py"
+    ],
+    "caching": [
+      "prompt_engine.py"
+    ],
+    "cli": [
+      "examples.ps1",
+      "examples.sh"
+    ],
+    "configs": [
+      "integration_examples.yaml"
+    ],
+    "configs\\ai": [
+      "llm_swing_profiles.yaml",
+      "user_profiles.yaml"
+    ],
+    "configs\\audit": [
+      "default.yaml"
+    ],
+    "configs\\maintenance": [
+      "consolidation_manifest.yaml"
+    ],
+    "csharp": [
+      "language-bundle.csproj",
+      "Program.cs",
+      "README.md"
+    ],
+    "data": [
+      "memory.json",
+      "organizing_memory.json"
+    ],
+    "data\\podcasts": [
+      "jre_trump.json",
+      "lex_musk.json"
+    ],
+    "deploy": [
+      "docker-compose.yml",
+      "Dockerfile",
+      "Dockerfile.fastapi"
+    ],
+    "docker": [
+      "docker-compose.yml",
+      "Dockerfile"
+    ],
+    "docs": [
+      "ADVANCED_AGENTIC_ARCHITECTURE_PLAN.md",
+      "ADVANCED_FEATURES_PLAN.md",
+      "AGENTIC_ASSISTANT_GUIDE.md",
+      "AGENTS.md",
+      "AGENT_CAPABILITIES.md",
+      "AI_ADVISOR_README.md",
+      "AI_AGENT_README.md",
+      "AI_ASSISTANT_GUIDE.md",
+      "AI_ASSISTANT_INTEGRATION.md",
+      "AI_INTEGRATION_GUIDE.md",
+      "analytics_queries.md",
+      "API_REFERENCE.md",
+      "CHANGELOG.md",
+      "CI_SETUP.md",
+      "CLEANUP_SUMMARY.md",
+      "CODE_QUALITY_README.md",
+      "COMPLETE-SECURITY-RESOLUTION.md",
+      "COMPLIANCE.md",
+      "CONTAINER_RESPONSE_PLAYBOOK.md",
+      "CONTRIBUTING.md",
+      "CREATIVE_CORNER.md",
+      "CREATIVE_CORNER_SUMMARY.md",
+      "DATA_PROTECTION.md",
+      "DEPLOYMENT-GUIDE.md",
+      "DESIGN_PHILOSOPHY.md",
+      "DEVELOPMENT.md",
+      "docker-images-security-audit.md",
+      "DOCKER_README.md",
+      "document.md",
+      "DOMAIN_EXPANSION_PLAN.md",
+      "Echoes Automation Blueprint.pdf",
+      "ECOSYSTEM_README.md",
+      "EXECUTIVE_SUMMARY.md",
+      "EXECUTIVE_SUMMARY_V3.0.md",
+      "FINAL-SECURITY-STATUS.md",
+      "FINAL_42CRUNCH_GUIDE.md",
+      "FINAL_SUMMARY.md",
+      "Fixing Markdown Linting.md",
+      "force-push-notice.md",
+      "GET_STARTED_NOW.md",
+      "HARMONYHUB_AUDIT_TOOL_DESIGN.md",
+      "HARMONYHUB_DIFF.md",
+      "HARMONYHUB_INTEGRATION_COMPLETE.md",
+      "HARMONYHUB_WORKFLOW_GUIDE.md",
+      "IMPLEMENTATION_COMPLETE.md",
+      "IMPLEMENTATION_SUMMARY.md",
+      "INCIDENT_RESPONSE.md",
+      "INTERVIEW_CARDS.md",
+      "KNOWLEDGE_GRAPH_PLAN.md",
+      "LUMINA_COMPLETE.md",
+      "MASTER_DEVELOPMENT_PLAN.md",
+      "MASTER_IMPLEMENTATION_ROADMAP.md",
+      "MCP_INTEGRATION_PLAN.md",
+      "MOE_ARCHITECTURE_PLAN.md",
+      "NATURAL_LANGUAGE_GUIDE.md",
+      "NEXT-STEPS.md",
+      "ollama-security-monitoring.md",
+      "openapi.json",
+      "PHASE1_SWING_SAMPLER.md",
+      "PHASE2_ORGANIZE_DECLUTTER.md",
+      "PHASES_1_2_COMPLETED.md",
+      "PHASE_3_CHECKLIST.md",
+      "privacy.md",
+      "PROJECT_GOALS.md",
+      "PROMPTING_SYSTEM_ROADMAP.md",
+      "Q4_EXECUTIVE_SUMMARY.md",
+      "QUICKSTART.md",
+      "QUICKSTART_NATURAL_LANGUAGE.md",
+      "README-STORAGE-SECURITY.md",
+      "README.md",
+      "README_HARMONYHUB.md",
+      "REORGANIZATION_SUMMARY.md",
+      "RLHF_TRAINING_PLAN.md",
+      "SAFETY_GUIDE.md",
+      "sbom (1).json",
+      "sbom-detailed-analysis.md",
+      "SECURITY-ANALYSIS-AND-REMEDIATION.md",
+      "SECURITY-BEST-PRACTICES.md",
+      "SECURITY-HARDENING-PLAN.md",
+      "security-report-2025-10-06.md",
+      "SECURITY.md",
+      "SECURITY_BEST_PRACTICES.md",
+      "SECURITY_IMPLEMENTATION_REPORT.md",
+      "SESSION_SUMMARY.md",
+      "speech-module.md",
+      "START-HERE.md",
+      "START_HERE.md",
+      "STICK_SHIFT_COMPLETE.md",
+      "STICK_SHIFT_GUIDE.md",
+      "storage-provisioner-quick-ref.md",
+      "storage-provisioner-security-guide.md",
+      "STRUCTURE.md",
+      "TECHNICAL_LOG_V3.0.md",
+      "TESTING_GUIDE.md",
+      "TEST_REPORT.md",
+      "time_guidelines.md",
+      "TOOLS_USAGE.md",
+      "VERSION",
+      "WORKFLOW_COMPLETE.md"
+    ],
+    "docs\\harmonyhub": [
+      "HARMONYHUB_INTEGRATION_STRATEGY.md"
+    ],
+    "employment_matcher": [
+      "README.md",
+      "requirements.txt",
+      "__init__.py"
+    ],
+    "employment_matcher\\models": [
+      "context_filter.py",
+      "demo.py",
+      "relationship_matcher.py",
+      "semantic_engine.py",
+      "validation_engine.py"
+    ],
+    "examples": [
+      "agentic_assistant_demo.py",
+      "assistant_automation_integration.py",
+      "assistant_basic_usage.py",
+      "assistant_interactive_demo.py",
+      "assistant_with_tools.py",
+      "lumina_demo.py",
+      "natural_language_demo.py",
+      "orchestrator_demo.py",
+      "prompting_system_demo.py",
+      "quickstart.py",
+      "README_ASSISTANT.md",
+      "stick_shift_demo.py",
+      "Untitled-1.py"
+    ],
+    "experts": [
+      "assignments.json"
+    ],
+    "maintenance": [
+      "reorganization_summary.py"
+    ],
+    "packages": [
+      "requirements-locked.txt"
+    ],
+    "packages\\core": [
+      "pyproject.toml",
+      "schemas.py",
+      "__init__.py"
+    ],
+    "packages\\core\\config": [
+      "__init__.py"
+    ],
+    "packages\\core\\datetime_utils": [
+      "__init__.py"
+    ],
+    "packages\\core\\exceptions": [
+      "__init__.py"
+    ],
+    "packages\\core\\http": [
+      "__init__.py"
+    ],
+    "packages\\core\\logging": [
+      "__init__.py"
+    ],
+    "packages\\core\\tests": [
+      "test_core_comprehensive.py"
+    ],
+    "packages\\core\\utils": [
+      "__init__.py"
+    ],
+    "packages\\integrations": [
+      "slack.py"
+    ],
+    "packages\\monitoring": [
+      "monitor_session.py",
+      "pipeline_manager.py",
+      "pyproject.toml",
+      "__init__.py"
+    ],
+    "packages\\monitoring\\alerts": [
+      "__init__.py"
+    ],
+    "packages\\monitoring\\ci": [
+      "__init__.py"
+    ],
+    "packages\\monitoring\\health": [
+      "__init__.py"
+    ],
+    "packages\\monitoring\\metrics": [
+      "__init__.py"
+    ],
+    "packages\\monitoring\\tests": [
+      "test_monitoring_comprehensive.py"
+    ],
+    "packages\\security": [
+      "pyproject.toml",
+      "secure_coordinate_handler.py",
+      "security_fix_manager.py",
+      "vulnerability_analyzer.py",
+      "__init__.py"
+    ],
+    "packages\\security\\auth": [
+      "__init__.py"
+    ],
+    "packages\\security\\encryption": [
+      "__init__.py"
+    ],
+    "packages\\security\\monitoring": [
+      "__init__.py"
+    ],
+    "packages\\security\\scanning": [
+      "__init__.py"
+    ],
+    "packages\\security\\tests": [
+      "test_security.py",
+      "test_security_comprehensive.py"
+    ],
+    "planning": [
+      "scaffold.md"
+    ],
+    "prompting": [
+      "integration_tasks.py",
+      "system.py",
+      "__init__.py"
+    ],
+    "prompting\\core": [
+      "context_manager.py",
+      "data_integration.py",
+      "data_laundry.py",
+      "inference_engine.py",
+      "insight_synthesizer.py",
+      "loop_controller.py",
+      "prompt_router.py",
+      "__init__.py"
+    ],
+    "prompting\\modes": [
+      "business_mode.py",
+      "concise_mode.py",
+      "conversational_mode.py",
+      "ide_mode.py",
+      "mode_registry.py",
+      "star_stuff_mode.py",
+      "__init__.py"
+    ],
+    "python": [
+      "requirements.txt",
+      "service.py"
+    ],
+    "Q4": [
+      "API_REFERENCE.md",
+      "COMPLETION_SUMMARY.md",
+      "coverage.json",
+      "dashboard.py",
+      "data_analytics_comprehension_pipeline.py",
+      "db_manager.py",
+      "drucker_management.py",
+      "export_roadmap.py",
+      "models.py",
+      "mypy.ini",
+      "openapi.json",
+      "pytest.ini",
+      "Q4_COMPREHENSIVE_ANALYSIS_AND_ROADMAP.md",
+      "README.md",
+      "requirements.txt",
+      "roadmap_export_updated.xlsx",
+      "sample_roadmap.csv",
+      "SYSTEM_VALIDATION_REPORT.md",
+      "test_pipeline.py",
+      "TODO_QUICK_REFERENCE.md"
+    ],
+    "Q4\\automation": [
+      "compliance_check.py",
+      "database_setup_report.json",
+      "deploy.py",
+      "deployment_report_development.json",
+      "privacy_filters.py",
+      "privacy_filters_report.json",
+      "privacy_scanner.py",
+      "README.md",
+      "run_load_tests.py",
+      "run_tests.py",
+      "security_scan.py",
+      "setup_all.py",
+      "setup_database.py",
+      "setup_metering.py",
+      "setup_report.json"
+    ],
+    "Q4\\outputs": [
+      "roadmap_metrics.csv",
+      "roadmap_records.csv",
+      "workflow"
+    ],
+    "requirements": [
+      "ai_advisor_base.txt",
+      "ai_advisor_dev.txt",
+      "ai_advisor_domains.txt",
+      "automation.txt",
+      "base.txt",
+      "dev.txt",
+      "docs.txt",
+      "requirements.txt"
+    ],
+    "research-lab\\steam-engine-dynamics": [
+      "resonance_governor_patch.py"
+    ],
+    "routines": [
+      "engine.py"
+    ],
+    "session_logs": [
+      "summary.md"
+    ],
+    "speech": [
+      "pause_model.py"
+    ],
+    "templates": [
+      "prompts.json"
+    ],
+    "tests": [
+      "conftest.py",
+      "test_pause.py",
+      "test_prompt_cache.py",
+      "test_workflows_macro.py"
+    ],
+    "tools": [
+      "admin_fix_output.txt",
+      "admin_fix_temp.ps1",
+      "application_events.txt",
+      "check_requirements_drift.py",
+      "defender_allowed_apps.txt",
+      "defender_events.txt",
+      "fix_python_venv.ps1",
+      "format_all.py",
+      "git_push_pr_helper.ps1",
+      "probe_and_fix_temp.ps1",
+      "purge_repo_mirror.ps1",
+      "remove_tracked_env.ps1",
+      "run_purge_and_push.ps1",
+      "system_events.txt",
+      "temp_probe.py",
+      "temp_probe_result.txt",
+      "TOOLS_INDEX.md"
+    ],
+    "ubi_simulator": [
+      "README.md",
+      "requirements.txt"
+    ],
+    "ubi_simulator\\api": [
+      "main.py"
+    ],
+    "ubi_simulator\\dashboard": [
+      "app.py"
+    ],
+    "ubi_simulator\\data": [
+      "data_loader.py"
+    ],
+    "ubi_simulator\\models": [
+      "ubi_model.py"
+    ],
+    "ubi_simulator\\tests": [
+      "test_api.py",
+      "test_model.py"
+    ],
+    "workflows": [
+      "macro.py"
+    ]
+  },
+  "file_types": {
+    ".md": 118,
+    ".json": 20,
+    ".txt": 21,
+    ".ps1": 10,
+    ".py": 122,
+    ".ini": 3,
+    ".yaml": 12,
+    ".sh": 1,
+    ".csproj": 1,
+    ".cs": 1,
+    ".yml": 2,
+    "": 4,
+    ".fastapi": 1,
+    ".pdf": 1,
+    ".toml": 3,
+    ".xlsx": 1,
+    ".csv": 3
+  },
+  "dependencies": [],
+  "test_files": [
+    "integration_test.ps1",
+    "integration_test_output.txt",
+    "pytest.ini",
+    "automation\\reports\\generation_test_user_test_goal.yaml",
+    "automation\\reports\\user_test_user.yaml",
+    "automation\\tasks\\smoke_test_endpoints.py",
+    "automation\\tasks\\test_generator.py",
+    "docs\\TESTING_GUIDE.md",
+    "docs\\TEST_REPORT.md",
+    "packages\\core\\tests\\test_core_comprehensive.py",
+    "packages\\monitoring\\tests\\test_monitoring_comprehensive.py",
+    "packages\\security\\tests\\test_security.py",
+    "packages\\security\\tests\\test_security_comprehensive.py",
+    "Q4\\pytest.ini",
+    "Q4\\test_pipeline.py",
+    "Q4\\automation\\run_load_tests.py",
+    "Q4\\automation\\run_tests.py",
+    "tests\\conftest.py",
+    "tests\\test_pause.py",
+    "tests\\test_prompt_cache.py",
+    "tests\\test_workflows_macro.py",
+    "ubi_simulator\\tests\\test_api.py",
+    "ubi_simulator\\tests\\test_model.py"
+  ],
+  "config_files": [
+    "employment_matcher\\requirements.txt",
+    "packages\\core\\pyproject.toml",
+    "packages\\monitoring\\pyproject.toml",
+    "packages\\security\\pyproject.toml",
+    "python\\requirements.txt",
+    "Q4\\requirements.txt",
+    "requirements\\requirements.txt",
+    "ubi_simulator\\requirements.txt"
+  ]
+}
