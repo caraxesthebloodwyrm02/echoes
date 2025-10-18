@@ -28,7 +28,7 @@ Ontology-based knowledge management and inference
 # removed unused import json
 import datetime
 import os
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Tuple, Optional
 
 import networkx as nx
 from rdflib import BNode, Graph, Literal, Namespace, URIRef
@@ -56,7 +56,7 @@ class KnowledgeGraph:
             self.rdf_graph.bind(prefix, namespace)
 
     def add_code_entity(
-        self, entity_type: str, name: str, properties: Dict[str, Any] = None
+        self, entity_type: str, name: str, properties: Optional[Dict[str, Any]] = None
     ):
         """Add a code-related entity to the knowledge graph"""
 
@@ -94,7 +94,7 @@ class KnowledgeGraph:
         return entity_uri
 
     def add_relationship(
-        self, subject_uri, predicate, object_uri, properties: Dict[str, Any] = None
+        self, subject_uri, predicate, object_uri, properties: Optional[Dict[str, Any]] = None
     ):
         """Add relationship between entities"""
 
@@ -114,7 +114,7 @@ class KnowledgeGraph:
                 self.rdf_graph.add((rel_node, self.ns["code"][prop], Literal(value)))
 
     def add_metric_data(
-        self, entity_uri, metric_name: str, value: float, timestamp: str = None
+        self, entity_uri, metric_name: str, value: float, timestamp: Optional[str] = None
     ):
         """Add metric data to an entity"""
 
@@ -387,7 +387,7 @@ class SemanticReasoner:
     def find_code_patterns(self) -> Dict[str, List[str]]:
         """Identify common code patterns and anti-patterns"""
 
-        patterns = {
+        patterns: Dict[str, List[str]] = {
             "high_risk_files": [],
             "complex_functions": [],
             "security_hotspots": [],

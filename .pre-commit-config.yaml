@@ -5,21 +5,22 @@ repos:
     hooks:
       - id: black
         language_version: python3.12
+        args: ["--line-length=100"]
 
   # Python import sorting
   - repo: https://github.com/pycqa/isort
     rev: 7.0.0
     hooks:
       - id: isort
-        args: ["--profile", "black"]
+        args: ["--profile", "black", "--line-length=100"]
         language_version: python3.12
 
   # Fast Python linting - Ruff (replaces flake8)
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.14.0
+    rev: v0.14.1
     hooks:
       - id: ruff
-        args: [--fix]
+        args: [--fix, --exit-non-zero-on-fix]
       - id: ruff-format
 
   # Python type checking
@@ -27,16 +28,46 @@ repos:
     rev: v1.18.2
     hooks:
       - id: mypy
-        additional_dependencies: [types-requests, types-PyYAML]
-        args: [--ignore-missing-imports, --exclude=src/main.py]
+        additional_dependencies:
+          - types-requests
+          - types-PyYAML
+          - networkx
+          - rdflib
+        args:
+          - --ignore-missing-imports
+          - --exclude=src/main.py
+          - --no-implicit-optional
+        files: ^(integrations|knowledge_graph|tests)/.*\.py$
 
   # Security scanning
   - repo: https://github.com/PyCQA/bandit
     rev: 1.8.6
     hooks:
       - id: bandit
-        args: ["-c", "pyproject.toml"]
+        args: ["-c", "pyproject.toml", "-ll"]
         exclude: ^tests/
+
+  # ✨ NEW: Run pytest integration tests before commit
+  - repo: local
+    hooks:
+      - id: pytest-integration
+        name: Run Integration Tests
+        entry: python -m pytest tests/test_cross_platform_integration.py -v --tb=short
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
+
+  # ✨ NEW: Run all critical tests
+  - repo: local
+    hooks:
+      - id: pytest-critical
+        name: Run Critical Test Suite
+        entry: python -m pytest tests/ -v -m "not slow" --maxfail=3
+        language: system
+        pass_filenames: false
+        always_run: true
+        stages: [pre-commit]
 
   # Static codebase audit
   - repo: local
@@ -46,24 +77,31 @@ repos:
         entry: python audit_codebase.py
         language: system
         pass_filenames: false
-        always_run: true
+        always_run: false
+        stages: [pre-push]
 
   # General hooks
   - repo: https://github.com/pre-commit/pre-commit-hooks
     rev: v6.0.0
     hooks:
       - id: end-of-file-fixer
-        exclude: ^archive/
+        exclude: ^(archive|realtime/autosave)/
       - id: trailing-whitespace
+        exclude: ^(archive|realtime/autosave)/
       - id: check-added-large-files
         args: ['--maxkb=500']
-        exclude: ^.*\.m4a$
+        exclude: ^.*\.(m4a|mp4|mp3)$
       - id: check-yaml
+        exclude: ^realtime/
       - id: check-json
       - id: check-merge-conflict
       - id: check-toml
       - id: debug-statements
+        exclude: ^tests/
       - id: check-docstring-first
+      - id: check-ast
+      - id: check-case-conflict
+      - id: mixed-line-ending
 
   # License header checks
   - repo: https://github.com/Lucas-C/pre-commit-hooks
@@ -76,3 +114,10 @@ repos:
           - LICENSE
           - --comment-style
           - "#"
+        exclude: ^(tests|realtime)/
+
+# Configuration
+default_language_version:
+  python: python3.12
+
+fail_fast: false

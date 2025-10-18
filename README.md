@@ -255,11 +255,19 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📖 Documentation
 
+### Core Documentation
 - **[Trajectory Analysis Guide](TRAJECTORY_ANALYSIS_README.md)** - Complete usage guide
 - **[Experiment Protocol](EXPERIMENT_PROTOCOL.md)** - Two-track scientific computing
 - **[Research Findings](TRAJECTORY_RESEARCH_FINDINGS.md)** - Fast Compounding vs Data-Driven
 - **[Implementation Summary](IMPLEMENTATION_SUMMARY.md)** - Quick reference
 - **[Completion Report](PROJECT_COMPLETION_REPORT.md)** - Full project details
+
+### HITL Middleware Documentation
+- **[HITL Integration Summary](HITL_INTEGRATION_SUMMARY.md)** - Complete integration overview
+- **[HITL Operator Guide](realtime/HITL_Operator_Guide.md)** - Operator training & workflows
+- **[HITL KPI Report](realtime/HITL_KPI_Report.md)** - Quantified impact & ROI analysis
+- **[HITL Stakeholder Summary](realtime/HITL_Stakeholder_Summary.md)** - Executive overview & roadmap
+- **[Realtime Preview System](realtime/README.md)** - Interactive validation canvas
 
 ## 🎓 Research Highlights
 
