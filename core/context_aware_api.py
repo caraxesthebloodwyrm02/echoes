@@ -41,6 +41,27 @@ class ContextAwareAPICall:
 
             if "TOOL_CALL:" in text:
                 payload = text.split("TOOL_CALL:", 1)[1].strip()
+                
+                # Take only the first tool call if multiple are present
+                if "TOOL_CALL:" in payload:
+                    payload = payload.split("TOOL_CALL:")[0].strip()
+                
+                # Robust parsing: clean common formatting artifacts
+                payload = payload.strip('`').strip()  # Remove backticks
+                payload = payload.strip('"').strip()  # Remove quotes
+                
+                # Extract from code blocks if present
+                if '```json' in payload:
+                    payload = payload.split('```json')[1].split('```')[0].strip()
+                elif '```' in payload:
+                    payload = payload.split('```')[1].split('```')[0].strip()
+                
+                # Extract just the JSON object if there's extra text
+                import re
+                json_match = re.search(r'\{[^{}]*(?:\{[^{}]*\}[^{}]*)*\}', payload)
+                if json_match:
+                    payload = json_match.group()
+                
                 try:
                     tool_req = json.loads(payload)
                     tool_result = self._handle_tool_call(tool_req)
@@ -70,10 +91,11 @@ class ContextAwareAPICall:
         tool_args = tool_req.get("args", {})
 
         # Intent Recognition: If the model forgets the tool name but provides a file path, infer 'read_file'.
-        if not tool_name and ('file_path' in tool_req or 'file' in tool_req):
+        # Accept multiple variations: file_path, file, path
+        if not tool_name and ('file_path' in tool_req or 'file' in tool_req or 'path' in tool_req):
             tool_name = 'read_file'
             # Synthesize the args from the root of the request
-            file_path = tool_req.get('file_path') or tool_req.get('file')
+            file_path = tool_req.get('file_path') or tool_req.get('file') or tool_req.get('path')
             tool_args = {'file_path': file_path}
 
         if tool_name == "search_for_file":
