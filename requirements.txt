@@ -7,7 +7,7 @@
 # ==================================================
 fastapi>=0.118.0
 uvicorn[standard]>=0.37.0
-pydantic>=2.11.9
+pydantic>=2.12.3
 pydantic-settings>=2.0.0
 python-multipart>=0.0.6
 
@@ -16,7 +16,7 @@ python-multipart>=0.0.6
 # ==================================================
 httpx>=0.25.0
 requests>=2.32.5
-aiohttp>=3.9.0
+aiohttp>=3.13.1
 
 # ==================================================
 # KNOWLEDGE GRAPH & SEMANTIC PROCESSING
@@ -31,7 +31,9 @@ PyJWT>=2.0.0
 passlib[bcrypt]>=1.7.4
 python-dotenv>=1.1.1
 slowapi>=0.1.9
-authlib[cryptography]>=1.3.0
+authlib[cryptography]>=1.6.5
+cryptography>=46.0.3
+certifi>=2025.10.5
 
 # ==================================================
 # DATA VALIDATION & PROCESSING
@@ -64,7 +66,7 @@ nltk>=3.8.1
 # ==================================================
 # MULTI-MODAL AI & COMPUTER VISION
 # ==================================================
-Pillow>=10.1.0
+Pillow>=11.3.0,<12.0.0
 opencv-python>=4.8.0
 
 # ==================================================
