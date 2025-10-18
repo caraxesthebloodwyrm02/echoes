@@ -1,0 +1,19 @@
+# Realtime Preview System - Requirements
+# Pure Python implementation - no external dependencies required!
+# Python 3.8+ required
+
+# All functionality is implemented using Python standard library:
+# - dataclasses (Python 3.7+)
+# - typing (Python 3.5+)
+# - pathlib (Python 3.4+)
+# - json, time, logging, collections, enum, difflib, etc.
+
+# Optional: For enhanced testing
+# unittest (built-in)
+
+# Optional: For future ML integration (not currently used)
+# numpy>=1.20.0
+# scikit-learn>=0.24.0
+
+# Note: The system is designed to work with zero external dependencies
+# This makes it lightweight, portable, and easy to deploy

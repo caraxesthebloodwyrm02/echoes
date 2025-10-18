@@ -1,0 +1,11 @@
+# System Design: Versioning System
+
+Design a versioning system for JSON documents that supports offline editing. Include:
+
+1. Data structures for storing document versions
+2. Algorithm for generating version identifiers
+3. Approach to handling concurrent edits
+4. Method for three-way merge during sync
+5. Conflict detection and resolution strategy
+
+Provide pseudo-code or Python examples for key operations.

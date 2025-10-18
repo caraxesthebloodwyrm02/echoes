@@ -1,0 +1,15 @@
+# Testing: Offline Functionality
+
+Design a test suite for verifying offline functionality in a document editing application. Include:
+
+1. Unit tests for core offline operations
+2. Integration tests for sync behavior
+3. How you would simulate:
+   - Network latency
+   - Complete offline scenarios
+   - Intermittent connectivity
+   - Server unavailability
+4. Test data generation strategy
+5. Performance testing approach
+
+Provide example test cases in Python using a testing framework of your choice.

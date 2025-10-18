@@ -1,0 +1,12 @@
+# Technical Reasoning: OT vs CRDTs
+
+Compare and contrast Operational Transformation (OT) and Conflict-free Replicated Data Types (CRDTs) for implementing collaborative editing in an offline-first application. Address:
+
+1. Core principles of each approach
+2. Implementation complexity
+3. Performance characteristics
+4. Use cases where each excels
+5. Real-world examples of each
+6. Recommended choice for a document editing application with offline support
+
+Provide specific examples and consider edge cases.

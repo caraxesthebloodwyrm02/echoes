@@ -1,0 +1,14 @@
+# Advanced Financial Risk Modeling
+
+Design a comprehensive financial risk management system using advanced AI techniques:
+
+1. Multi-asset risk modeling incorporating equities, bonds, derivatives, and cryptocurrencies
+2. Extreme risk event prediction using generative models and anomaly detection
+3. Market microstructure analysis with high-frequency trading data
+4. Counterparty credit risk assessment using network analysis and graph neural networks
+5. Systemic risk identification using complex network theory and contagion models
+6. Real-time risk monitoring with streaming data processing and online learning
+7. Regulatory compliance automation using natural language processing
+8. Stress testing frameworks with scenario generation and impact analysis
+
+Provide detailed model architectures, risk metrics, validation methodologies, and implementation strategies. Include specific regulatory requirements (Basel III, Dodd-Frank), computational architectures, and integration with existing financial systems.

@@ -1,0 +1,14 @@
+# Advanced Climate Modeling with Machine Learning
+
+Develop an integrated climate modeling system combining physics-based models with ML:
+
+1. Hybrid modeling approach combining GCMs with neural networks
+2. Uncertainty quantification using ensemble methods and Bayesian neural networks
+3. Multi-scale modeling from global circulation to local weather patterns
+4. Incorporation of anthropogenic factors (emissions, land use, geoengineering)
+5. Extreme event prediction using generative adversarial networks
+6. Climate sensitivity analysis with causal inference techniques
+7. Long-term projection capabilities extending to century timescales
+8. Real-time adaptation and forecasting with streaming data integration
+
+Provide detailed model architectures, training methodologies, validation strategies, and uncertainty quantification techniques. Include specific performance metrics, computational requirements, and pathways for improving climate prediction accuracy.

@@ -1,0 +1,10 @@
+GPU-Enabled Model Evaluation Test
+==================================
+Script directory: d:\realtime\model_eval
+Questions directory: d:\realtime\model_eval\questions
+Output root: d:\realtime\model_eval\gpu_evaluations
+Directories validated. Starting evaluation...
+GPU evaluator created with 1 models
+GPU evaluation interrupted by user
+GPU evaluation completed. Processing 1 result sets...
+GPU evaluation complete! Results saved to: d:\realtime\model_eval\gpu_evaluations

@@ -1,0 +1,17 @@
+# Code Generation
+
+Generate a Python class called `LocalFirstStore` that implements a local-first document store with the following requirements:
+
+1. Methods:
+   - `save_document(doc_id: str, content: dict) -> bool`
+   - `get_document(doc_id: str) -> Optional[dict]`
+   - `sync_with_remote() -> bool`
+   - `resolve_conflicts() -> List[str]`
+
+2. Features:
+   - Offline-first operation
+   - Versioning of documents
+   - Basic conflict detection
+   - Thread-safe operations
+
+Include type hints and docstrings. Focus on clean, production-quality code.

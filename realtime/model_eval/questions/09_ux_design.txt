@@ -1,0 +1,12 @@
+# UX Design: Sync Status Communication
+
+What UI/UX patterns would you implement to clearly communicate sync status and potential conflicts to users in an offline-first application? Consider:
+
+1. Visual indicators for sync status
+2. Conflict resolution interfaces
+3. Offline mode notifications
+4. Progress feedback for sync operations
+5. Error messaging
+6. User preferences for sync behavior
+
+Provide mockups or detailed descriptions of key screens and interactions.

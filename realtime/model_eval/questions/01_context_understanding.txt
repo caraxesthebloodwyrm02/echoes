@@ -1,0 +1,11 @@
+# Context Understanding
+
+Please explain how you would implement an offline-first architecture for a middleware system that needs to handle intermittent connectivity. Focus specifically on:
+
+1. Data synchronization strategies between local and remote storage
+2. Conflict resolution approaches
+3. Handling of failed operations when offline
+4. State management during connectivity changes
+5. Performance considerations
+
+Provide a high-level overview first, then dive into the key components and their interactions.

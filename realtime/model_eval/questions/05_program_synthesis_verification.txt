@@ -1,0 +1,14 @@
+# Advanced Program Synthesis and Verification
+
+Create a system for automated program synthesis with formal verification guarantees:
+
+1. Type-directed synthesis using dependent types and refinement types
+2. Integration of formal verification tools (Coq, Isabelle, TLA+) into the synthesis pipeline
+3. Multi-stage synthesis combining neural approaches with symbolic methods
+4. Specification languages supporting temporal logic and hyperproperties
+5. Counterexample-guided synthesis with automatic specification refinement
+6. Modular synthesis enabling composition of verified components
+7. Resource-aware synthesis considering time, space, and energy constraints
+8. Interactive synthesis with human-in-the-loop verification and guidance
+
+Provide formal specifications, algorithm designs, soundness and completeness proofs where applicable, and implementation strategies. Include case studies demonstrating synthesis of complex algorithms with full verification.

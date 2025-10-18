@@ -729,9 +729,11 @@ class UnifiedAssistant:
         for assistant_type, assistant in self.assistants.items():
             assistant_status = {
                 "available": assistant.is_available,
-                "last_health_check": assistant.last_health_check.isoformat()
-                if assistant.last_health_check
-                else None,
+                "last_health_check": (
+                    assistant.last_health_check.isoformat()
+                    if assistant.last_health_check
+                    else None
+                ),
                 "capabilities": asdict(assistant.capabilities),
             }
             status["assistants"][assistant_type.value] = assistant_status

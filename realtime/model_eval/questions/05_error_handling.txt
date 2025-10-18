@@ -1,0 +1,15 @@
+# Error Handling: Exponential Backoff
+
+Write a Python function that implements exponential backoff with jitter for retrying failed API requests. Requirements:
+
+1. Function signature: `def fetch_with_retry(url: str, max_retries: int = 5) -> Optional[dict]:`
+2. Features:
+   - Exponential backoff starting at 1 second
+   - Full jitter for better distribution
+   - Maximum retry limit
+   - Logging of retry attempts
+   - Proper exception handling
+   - Timeout handling
+   - Return None if all retries fail
+
+Include type hints and docstrings.

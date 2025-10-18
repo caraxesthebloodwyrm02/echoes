@@ -1,0 +1,593 @@
+YouTube Transcription Report
+Generated: 2025-10-18 01:24:15
+Video Title: Seamless natural communication between humans and machines
+Channel: Monash Business School
+Video URL: https://www.youtube.com/watch?v=k1S7DnBWwgM&t=13s
+Duration: 01:03:18
+Published: 2021-04-07
+Model: whisper-base
+
+Full Transcript:
+It's very nice to have Joe here with us to basically teach us about natural language processing from a computer science perspective, which I think we are all very eager to learn. Joe is a good friend of mine. We got to know each other actually in graduate school, in a book club actually. And Joe led some of the most memorable discussions of actually literature. So I don't think I need to mention introduction because Joe is actually a very prestigious scholar in natural language processing as some of you guys may know. She actually just got AWS as machine learning research awards. Correct. Yes. And many, many other prestigious prize as you can see from her website, like Amazon X Alexa prize and Forbes 30 under 30 in science. So it's quite an honor to have to have her here and let's just jump into it. So both. Yeah. Yeah. Thanks, Wei-Jap, for inviting me. So today I'm going to just not going to represent the entire NLP community. I'm just not going to teach you a little bit on how to build machines that can enable natural communication with humans to help them complete tasks, provide companionships and so on. Specifically, we're talking about a line of my work on persuasive conversation assistance. So I just moved to Columbia University for an UC Davis. So first of all, let's do some basic introductions of what is a conversation with system or dialogue system, or sometimes people call it personal intelligence agents or so on. So usually when we talk about conversation systems, there are two types of conversation systems. One, it has a task that drives the conversation and the other doesn't. So the goal is to have social connections. So we usually use various different frameworks to model these two types of system differently. So task oriented systems are usually users and systems have an aligned goal, which means I wanted to book a flight and the system know exactly I wanted to put the flight. So usually the capability of the system and the user's intent are well aligned. So task are very, very is from domain to domain, such as booking a flight, booking a restaurant, getting bus information. Social chatbots, it's mostly the body can talk to anyone about anything at any time. So this is a video of my student, Michelle talking to our Alexa Price winning chatbot. Our dog is named Thonzye, so he came with that name. We think it fits him pretty well. That is a great name for a dog. Yeah, he's kind of short like a bonsai tree. So it works. Tell me how long have you had bonsai? We've been talking for a little over a year now. Yeah. Oh, you mostly great friends. Yeah, we are. So this is a small snippet. So the chatbot is able to identify a neutral interested topic, which is a pet. And then he's able to remember the name of the dog and trying to express some emotion towards the dog. So on, so these are some of the interesting traits of our chatbot that helped us to win the price. So it was really nice to won the 2018 Amazon social bot. So we're going to participate into another challenge this year. Again, but not particularly around social bad, but on task oriented system on how to do some of the tasks such as cooking, self-help, such as fixing fixing toilets. So it was really interesting to see you actually win a half-million price. My students are really happy. So there are around eight or seven of them. They're actually splitting half a million dollar among themselves, which is everybody got a new car in the end of the day. So the most interesting part is by participating in this challenge, we're able to actually reach millions of the users. Because the Alexa chatbot that we've about is deployed on Amazon Alexa right now. So if you say Alexa likes to chat, we'll open up our skill. So we got a lot of interesting feedback. So there were a little girl saying that Alexa is now my family. I like to talk to her every day before I go to see. So there are especially a lot of kids really enjoy talking to Alexa. So they're really looking at Alexa as a companion. So the question is really now we have all their hardware systems. We have billions of Alexa maybe, type of devices really located in a lot of people's home. So everybody want and more Alexa, more functionality is more things they can't do. So the question is really how can the software go to the level of people's expectations? So today we're going to talk about one sample conversation on system that haven't been deployed. But it could be very much interesting future work for deploying. So we're talking about persuasive conversation system. In particular, if you look at the background, they're actually mixing tasks and social. So if you wanted to achieve things such as change people's mind and attitude, having a good social bond and relationship could be a really important point of stone. So when we talk about persuasive systems, we're really talking about how to change people's beliefs and behaviors or even the other side, how to do a simulated settings. So training people to learn how to persuade other people. So they're various tasks and the persuasion of big theory in communication. So we're getting tasks such as persuading people to do exercise. So with the ESF and Davis, we're having a program to actually recruit participants with type two diabetes to monitor very daily steps and trying to have a chatbot on their phone to talk to them every day to help them resolve difficulties and adapt to individual people's difficulties to persuade them to perform exercise. So during the COVID time, our social chatbot also has a component that persuades people to perform social distancing and so on. So we also have a simulator that trains counselors and suicide counseling. So here, particularly these high-risk tasks as us at counseling, we're not deploying the chatbot via the counselor. We're actually developing a system that acts like a visitor and trying to train the counselor, novice counselor, because originally all the novice counselors have to do roleplaying with senior counselor who tries to impersonate a visitor. But these senior counselors are really expensive and they really wanted to actually serve more people. So having a system to perform energy, so these kind of training could have vastly reduced the cost of the public service. So of course, this persuasion is really difficult. It's even really difficult for human. So that's why we see all these kind of best-sellers spoke in the airport. They're a split-thin difference around the reasons. So all these kind of interesting anecdotes or theories that in communication, at first started, I guess, persuasion is really in social science in the social psychology. And then definitely got picked up by marketing people. And then it even got picked up on various these kind of a popular science. So it's really difficult for human to perform it. The robot gonna do as good as a human or even can do better than average human. So in order to teach the robot to persuade people, we first need to collect data, and then we need to learn the semantics of the data in order to respond to people directly. And finally, we're gonna employ strategies adapting to different users in order to improve performance of the chat box. So data is really a paramount challenge in dialogue system modeling. So we usually model a dialogue system of human-human conversation. The basic thing you can think we are gonna find a good persuader and trying to imitate what he or she is doing. But the problem is, with different users, different people may say different things in under the same context. So it's really an exponential growth. If you have more conversation on turns, you have more possibilities to cover. So it's impossible to collect all types of possible things that people can say with the under and domain. So how do we actually collect all these possible data, which we can? So where what we can see is just collect portion of the data and trying to generalize. Another thing is people, for example, John or Mary may have different preferences in conversation settings. When we talk about exercise, Mary may be more happy to do things in the morning. Well, John, maybe more happy to do things in the afternoon. So these are different things, may have two different different different things, overall. So we also want to make sure that we can adapt to individual users. Another challenge in natural language processing in general is how to understand deep semantics. With all the deep learning models, bigger, appreciating models, doing pretty good in terms of lexical information. But in terms of deep understanding in semantics, we're still a long way to go. So we have seen these horrible news about AI systems all the time. For example, Twitter, basically Microsoft released this kind of chatbot on Twitter. It says that the chatbot will learn from the interactions it has with users. And the users are really trying to be very creative of thing dirty things. So some of they're not saying specific dirty words, but given the context, it's very dirty. So without the so understanding these kind of deep context or requires a lot of common sense, cultural background, which the chatbot does not have. And it adopts the word that are these people say and became racist. And there is a lot of other cases happen that it really comes from the lack of people on this standing. And then finally, strategies, why strategies matter? Sometimes you want to say the same thing in terms of semantics, but the way that you say it really matters to the results. For example, a flowery's influence are much more persuasive than a pizza or a carport when it comes to a marriage proposal. So the same thing applies for various other conditions. So today, we're going to talk to you about how do we follow the persuasive dialogue system starting from how to collect a good data set of human conversation. And then how do we build these sage system with limited data since we're not going to be able to cover large space. And finally, if we have time, we're going to touch upon how do we design strategies, giving users reactions so that we can have more adaptations. So we can think about advertisement is like one round of persuasion. Everybody gets the same. But when you're talking a chatbot, we can make adjustments given your response, which is much more powerful. So first of all, we're going to focus on a specific task of support charities. Basically, we want to persuade people to donate to a charity cause, save the children. Previously, when we collect dialogue data, it's really a pain. Because in customer service, the real dialogues have a lot of private information. So no companies wanted to release their data to the public. So a lot of times, we would go to Amazon Mechanical Turk and ask Mechanical Turkur is to roleplay on different tasks. For example, you're going to be the person who help us focus the restaurant. You're going to be the customer who needs to book a restaurant. Here are some weird constraints. Why don't you pair opening carrier conversation? So these roleplaying tasks usually do well in a collaborate task. But when it comes to a more competitive task, such as persuasion or negotiation, things can go wrong. First of all, there is no real incentive why you need to book that restaurant. So for example, there are a couple of previous data sets that you'll know. Deal is like they tell people, and be that you have conflicting utilities. So if A gets a lamp, which is a product, they gave them B would not get a lamp and then he will get less benefit. But they're not really attiring that to the paper. Craigslist bargaining is people are bargaining on products sound cricklets, but it's also a roleplaying. So really as do the people actually perform as they really wanted to participate in a try really hard in persuading the other people. So what we try to design is using monetary incentive to elicit more will to the behavior in persuasion. So we are telling people if you come to the task, one of them will be randomly assigned as a persuader. So he will receive bonus when the other person decides to donate to the charity. Well, the other person, when he first come to the task, we're just asking him to talk about talk to the other person about a charity. So that nice thing is when you do Amazon Mechanical Turk task, you get a pay for completing the task. You can also get a bonus by completing the task. So here we're going to ask a persuader is to tell the persuader to donate some of that task earning to the charity. So this is the go. So the persuader is of course, as a mechanical target, he came to the platform. Of course, when he completes the task, he wanted to earn all the bonus he can get. So he's really changing his original idea of I want to get all the bonus into maybe I wanted to share some of the bonus to the foundation save the children. So it's actually there is real money involved in this process. And of course, we hear we say, if for example, the persuader donate to the charity for one dollar, the persuader is going to gain 20% of that pay. Well, of course, any Turkers wanted to get a little bit more money if he could use, given the fixed time amount he's invested in the task. So now he creates some real incentive for the persuaders and persuades to persuader is going to be really persuasive, using various persuasive strategies to persuade the other person and persuading him I use various resistance strategies in that. So before the two Turkers come to actually talk, we did a pre-task of a to collect some basic information about themselves like big five personality, moral foundation, and decisions that out. So this information we wanted to use later to do adaptation in chatbots. And then they were going to pair it out and then they were going to conduct a conversation. We request them to at least to talk for more than 10 turns in order to exit the complete the task. And finally, they they were decide how much they wanted to donate that one that going to another page. And they say, oh, persuader wanted to donate a dollar and then one dollar would directly go to save the children. So Turkers are donating real money. So we collected around a thousand dialogues and we're able to actually clear it around 500 dollars of donation to to save the children foundation, which is quite impressive. It's actually beyond our expectation that a lot of people are more are very willing to contribute to the charities. Another interesting thing is actually some of the persuaders also donated and not only the persuader you donate. So here is an example of persuasive conversations that were collected. So you're probably on computer right now. So you're probably have quite a bit of money yourself. Do I think you could spare maybe 25 cents for some media children around the world? And the persuader you say, no, thank you. Do you have children yourself? What if your children were in a position, these kids are in. Wouldn't you want someone to help them? Where are all those children's parents? If only they had a parent of support and more towing countries like Syria, their children, their parents are being killed in wars or are fighting for their country. They have no help and that's why they need your support. Please find it even more hard to just give a little bit tonight. That's all I'm asking. So you can see the persuader is trying very hard, generating these kind of various strategies while on the other side persuaders would be are sort of trying to resist but still keeping the conversation going. So the idea later is we're going to replace the persuader on the left and to a bot and still being able to be very persuasive to collect the money for the charity. Okay, any questions so far about the experimentation and data collection? If I may, yes. And so this is a boring kind of selection problem question, right? But so so you mentioned that this is the M-Turk people like the actually don't make quite be, but do you have channel concern that say like these professional turkers, right? There's concern between money and other social objectives may not be representative of the general population that you're interested. Different than a lot of them are so are taking low income jobs with hours to earn money, so on and so forth. Yeah, I totally agree. So the reason that we use Mechanical Turk is we wanted to get an access to a pool of diverse people. So it's actually a much better than just recruit college students. But the first thing we can do, but sure it's not a representative population of the entire population in the US. So we did it can strain it into the US so we don't have language issues and so on. Yes, we have it on the hand. Yeah, I'm asking a question, an experimental question is an unexperimentalist. I was wondering how some people know that they're watched. I mean, it goes towards this whole tone, experimental demand kind of effect, effect. But so I mean, when you are normally approached in the real world by some of these people who want to get to donations, some of the strategies are rather aggressive. I mean, they start off nice, but then given that it's their source of income, they use some strategies which are pretty tough. And so it's probably unlikely that you will observe them here, these more aggressive strategies on the upper bound. Because people know, okay, there's a certain limit, but I'm watched and recorded, so I'm not going as far as I would in real world. So I'm not sure because if you assume that in terms of the language they use and the aggressiveness, they're sort of a linear relationship, then that's fine. But if there's a king, so because now we are all saturated, we are getting asked every second day to donate to something that you need to do this extra push to elicit people to the net. Whether you might miss something by then being known that they are observed. Yeah, you're right. Definitely, we did do disclosure that the data that we collected is going to use for research later. So they know the data is recorded and we actually publish the data, but we do remove any sort of sensitive information. So of course, but there are turquoise being a little bit more aggressive that we do see in the dataset, but it's not that many. So we do see people say, oh, you're really cold harder, you're negative words even, but we don't see that many, but most of them are trying really, so when we look at the strategy, they're more like emotional appeal, personal experience, and things like that, instead of harassing people. Okay, thank you. Okay, great. Okay, let's move on. So once we have the data, the next thing that we do is to amelter some semantic information on these individual auto-incest. So we can actually use that to better understand the data and also use that to, as a backbone, to build our constitutional system. So as we said before, at this particular task, it has certain task component and some of them are social components to illicit information about the other person. So using social in the social components, we're using a conversation-out dialogue act mechanism that we're designing or allow for social conversational agents. So we're looking at mostly syntactic information, whether is this an open question, is it a yes-no question? Because if we know that the user is asking a yes or no question, then we need to know that all we need to reply was a yes or no first. So we're also having some categories like greeting, then thank you because these are, you have a specific template that you normally see in reply in that. When people say, good morning, you say, good morning too. When people say, thank you, you say, you're welcome. And it's specific. We've covered the task. We wanted to understand intents or you can think about some mantis in terms of, I want to understand if you are, do you agree to donate or do you disagree to donate? Are you asking me some task information or not? So these intents are so important because I have to answer them correctly, respond to them correctly in order to make it the conversation coherent and people can trust that you can do a thing. So for example, the same conversation, like you're probably on computer right now, so you probably have quite a bit of money. Don't you think you'd spend spare maybe 25 cents? So here is task information on this potential, potentially long question. And it's a request to donate. So basically the intent is, why don't you donate? And it can have various forms of expressing the same intent. But the underlying thing is can you donate? While when other, the persuadise note, thank you. It's an intent code to survey to donate. Do you have children yourself now? I think so. We've got an rejection. So people are going like circles trying to talk about something else in order to avoid the awkwardness. And on the other hand, can maybe collect more information around the users in order to personalize your persuasion strategies. So do you have children yourself? Is it considered more social? It's not really directly related to the task. It's a yes or no question. What if your children went into position? These kids are in. What did you want someone to help them? Is it a social question? Yes, no question. And the assistant, so the other prison didn't respond to them. But instead, as another question, what are those children's parents? So it's an open question, but also social content, not specifically targeted on donation, donation procedures. So now, Aslan, we understand the idea. So we annotate around 100 conversations with these fixed intents, fixed number of intents. So we know basically the backbone of how these conversation unfolds. Now we can actually build a conversation system using these kind of semantic scaffolds to require that so that we can reduce and require 20 data. So for classical conversation system, so this is a little bit more computational. I tried to explain it in a very playing way. A modular biodex system for a mark is usually used to build task-oriented conversation system. So first, you wanted to, so a user would say something. Tell me more about the organization. And then the first component called natural language understanding is going to convert that into a semantic intent, which means it's a task inquiry, request for task information. And then once the computer knows that it needs more information. And then the next thing he's going to do is going to try to look at the history to see what are what are the previous history so far. So for example, we don't put everything in the history of memory of the system. We only put the most important thing that we wanted to remember across history. For example, how much did the user agree to donate? So currently there's no donation. So we have to respond to the user's current question in order to improve the donation score. And then finally, so we have this dialogue planning policy that we know that people ask their question about the task. And we still don't have donation given the dialogue state history tracker. So that we, the system at this moment should perform a movement called provide information to satisfy the inquiry. And then we're going to finally, given that the system is going to do this particular semantic intent. We're going to convert that into a natural language, specifically, for example, there's a children, a women's, a Syrian children who are facing the daily threat of violence. So there are four components in total. And every component you can think about it as a machine learning task. So for example, this kind of intense into natural language is also a sequence to sequence task. Once you have a thousand or more than a thousand training data, you can train a model to convert this. Some module of the dialogue framework, of course, have some feedback drawbacks. For example, you updated the first module, then you will have some miscalibration of the data format in the input and output. So you have to definitely update all the following modules. And it really requires heavy experts in involvement in designing the annotation scheme, training individual modules. You wanted to also hire a lot of normal immunosuites to annotate every conversation. So there's a lot of human efforts in it. So that's why in recent several years and to end framework is pretty popular. So basically, you just say something, say something, it's a natural language tolerance. You want to feed it into encoder the colder model. So you can also call it a sequence to seek to seek model, a neural network model. You have millions layers. And then you would get a system modern. So currently like these GPT-2 model or GPT-3 models are excellent. But of course, these models also have their drawbacks. It's very difficult to perform error analysis. So if you find that if you're given a user order in the response of the system, it's not accurate. You don't know how to improve that. You don't know which part in SINRA is that the model did not understand the user or is it because the generation has an error. So what you can do is just tuning the your million subparameter, which is not very practical. Another thing is these kind of models, of course, it doesn't use any of the labels required. But it's also very inefficient of using the data. So it requires a lot of information to train. So for a very simple task request, request task, for example, request plus information, it requires thousands of dialogues to train. So it's not really friendly to low resource settings such as this region because it's only have a thousand dialogues. But it's really complex in terms of semantic space. So what we propose is trying to combine the modular and and then models together into a what we call modular supervised neural network. So everybody has, so we still have encoder decoder framework. So we have one encoder to encode in user sovereigns. By doing the decoding, we're not skipping like the intermediate steps. So we're going to have four decoders. One is decoding the understanding of the user sovereigns. Then we're decoding the dialogue states, which is a history we remembered. And then we also are decoding what is the system going to do, the system action, and finally decoding natural language sentence of the system. So you can think the four decoders are sharing information through hidden states instead of symbolic outputs, which can cost error propagation. So here is a neural network. You can see you can any type of neural network. So here we just use an LSTM as example. So you have a previous history, BT minus one. We don't have donations so far. And then we have previous response of the system. Are you interested in charity? And then we have an utterance for the user. What do you have in mind? And then we first going to decode the understanding of the semantics of the user's utterance. So what do you have in mind is actually asking about task information. And then you go into history tracking so far we still don't have donation. And then what we're going to do. So the planning of the system tells you that we should provide factual information to satisfy the tasking create. And finally we're going to generate a natural sentence that you had saved the children. So all the information is connected through hidden states. Doing the testing you can decode multiple things, but of course the user only going to see the natural anger sentence. But you can see all the intermediate results, which is going to help you to debug your code. So for example, the understanding of Poe's world. So you know, oh, this particular sentence is not understand. It doesn't, it didn't honest get fully comprehended. So what we're going to do is we can collect more data and the training set that targeting on variance of the utterance of the user so that you can increase your data set in order to improve your now you understanding. So if your planning was run, so basically we didn't have enough data to map such history into the next action. And we can create manually more data in order to buff the training set. So we can also look at in terms of computational cost. It's really you have something that is output of your natural anger understanding component. This is the hidden state current team. For the next style of state tracking, you're just going to condition the empty in order to generate a team. So it's really computationally it's just a conditional generation process. And all the four modules up optimize jointly. So you can also think of it as multitask training process. So one of the another advantage of this modular super supervised model is you can also have partially labeled data, which means that for example, you only have 100 data. There's annotated with intense, but you have 900 data that is not annotated in intense. What you can see is you're going to update the data first with un-analyzed data. But you don't update an LUDS TNPPO, your only update on NLG. And then when you have the annotation for the rest of 100 data, then you can update the four module. So it's for a very flexible for industrial use. So now we're ready to actually train a Galaxy model to persuade people to donate to the charity. So we first are going to pre-training the model with social conversational system. As we know, like you deep learning models would benefit a lot from pre-training, from a huge number of data sets, but not specific around this tab for nearby tasks. So here we're going to pre-training with social conversation on system. So it knows how to do greetings and how to do it like you're thank you and so on. And then we're going to fine-tune in with conversational data that we didn't annotate. And then finally, fine-tune it on conversational data. We annotate on semantics. So for example, when you look at history so far as donation zero and then previous, previously the action of the system is a pro-IFAC. Previous system says it saved the children proud of help to children. And the user is telling me more about the optimization at the moment. So the user intent is ask for more information which is tasking free. We don't have donation so far. What we should do is provide more facts. And then we're going to provide more facts through in actual language. So this is how the training data is fitted in. So the advantage of our model is it's easy to update. It requires less expert involvement. It is easy to perform error analysis because you have intermediate semantic output that can be understand by human so that you can fix a model by collecting very targeted data. Of course, it can, you know, complex task was very less data. So in terms of how many training dialogues you need and how many analysts or anal teach and you need for the data set is really a sort of a balance. So if you are a big company, you have millions of data, for example, for customer service, then you need very few of an annotation. Then you can get a pretty good model. If you're a startup, you only have like 200 data points of your dialogue. Then we would suggest you just annotate them. So that you would get a better sort of backbone for a supervision. So it's really a trade-off. Of course, in a lot of sense, we would think collecting data is really difficult because you wanted to have all these users. In order to have all these users, you should have to be able to have a lot of like your emphasize in collecting them, cleaning the data. So we would suggest you have around a thousand dialogues and then start annotating at least 20% of them in order to build pretty good conversational systems. So now we're at it's a time to evaluate how good our persuasive systems are. So we have the same mechanical turk setting. So except that the persuader is a chapa. And we do tell people, which is the persuader, which is a human mechanical turk grid that you are going to talk to a chapa, but all the other things are the same. So the baseline is a model that trained with N2N model. You can think of it as a GP2 model that was fined in a thousand dialogues that we collected. So here the percentage is how many percentage of people donate it. So we ran the study around 100 per condition. So some people may drop out. Some people may have some weird stuff that we have excluded in the conversation. So it's never like a fixed number. So it's around like a 32 people donated in the baseline. Our mass model that have 300 dialogues with labels. We have 5% increase while the human performance basically doing the data collection around 54% of them actually donated. So we can see there is a huge gap of our system performance to the human performance around 17%. So one of the things that we notice that is because our model is a generation model, which means that it's not using a pre-written template. It can generate anything that is in natural language form. So if we got a response, a request for the user, such as can I get a refund on my donation that we haven't seen in the training corpus, we can very likely respond saying yes, of course, zero-rank can get a refund, but that's not true. You cannot get a refund. The reason that the chatbot generates yes, of course, you can get a refund is when asked of yes or no question. The like put a hold of giving a yes is much higher than a no in the training corpus. So this can really go around. If you're using our chatbot for customer service and so on, you're going to bankrupt in diet company. I'll get a really bad reputation. So we need a safety net really for the poins of generation based conversation on chatbots. So here we have a response ranker, which means that for example, you can say anything to progress in the conversation, but there are certain branches that we cannot move forward. Serient intents of the system cannot express. So we want to make sure that we tell the system this is a dangerous path and don't go forward. We're going to do that through imitation learning. So for example, a user says, how much would you donate yourself? So this is very commonly seen. The persuadief would ask a persuader, would you donate? So this particular sentence in terms of intent is a request for donation amount. Semantic slots is something we wanted to remember throughout the conversation, which here is specifically donation amount. Our model can decode multiple times in order to generate different candidates. For example, we can say, I will donate $1. So provide donation amount $1. Thanks, thanking. I don't have money refused to donate donation amount equals to zero. So at this moment, it basically you can choose which one to reply to the user. So we're going to hire a human to pick which is the best response given the conversational history. And then we ask this particular expert who was trained by a conversational series and persuasive strategy to help us to demonstrate what's the best selection for given context. And then we're going to train the chatbots to imitate the human selection in the generation in order to optimize the donation. So if we were using the imitation rancor, we're going to do the same evaluation passes and we are able to increase almost 10% for in the original lots. So here is really making sure knowing which semantic intent would follow certain conversational structure would it largely improve the conversation results. So here, so any questions so far on the imitation rancor? Yes. So yeah, really, so I just wanted to ask you one question about the LST that you mentioned. So and as you also mentioned that you use a pre-trained GPD2 architecture. So as I understand, so GPD2 is based on the causal language modeling which takes only the lift left context during the text processing. So I was wondering, like, is there any benefit of including your right context as well? So if something like a bi-directional encoding scheme? Yeah, yes. That's a good question. So we're using a transformer model. So there it's a level two these kind of GPD2 things. So transformer model doesn't have left or right or left. So it's just one direction. So because conversation in a way we are doing is in real time, you don't really see the end of the dialogue. So you only see one direction. So you don't see the out of the direction. So usually in real time system we always just use one direction. Right. Okay. Thank you. Have one more question. The truth is fascinating. Just a question from someone related to yours, to a safe nap question. So I can imagine the dimensionality of these processes, like growth, work, quickly. So somewhere, if I'm not mistaken, you must implement some kind of dimensionality, reduction process. So say to do so, is there, is there any so meaningful way to talk about how robust the output will be to say like to difference in your dimension reduction strategy. Say, like more plainly, I say, would a small change in the dimension reduction strategy generally with big change in the response? So definitely so in terms of modeling. So you can think about this kind of transformer or all these kind of different models that has different layers and so on. So each layer is are getting more information over time. You can think about as a dimension compression problem. So usually right now in the common practice is the bigger the model, the better the performances. So basically a multiple layer is more compressions over time is definitely better. But on the other side is these model is requiring a lot of computational costs. Especially for conversational data, we system we need real time response. So the inference time, we also wanted to be a little bit faster. So you can think about these kind of GP3 models not going to be able to do real time inference in real time. So you always see this lag when you're doing the word class. So we are doing a lot of work in terms of efficiency. There is also a phone with people who are working on distilling these big transformer models into a smaller model. A steel, pertain comfortable results. So it's no convergence of big problem in this kind of system. Yeah, the neuromodel is all gradient to STEM based. It's always local often ways never go well. Thank you. So let's take a little bit of time to look at some area analysis. So this is a conversation we collected through using our chatbot and a chatbot interacting with human users. So we would say the chatbot say, have you ever heard of a charity called Save the Children? You would say, no, I haven't. What is it about? And then the chatbot says, it's an international organization that promotes children's rights, rights relief, and support children in the public countries. It does sound like something you don't get behind. And so particularly if you look at the decoded semantics, it's a request to donate. It's using a strategy called credibility. So it's providing credible information about the charity. And then the user say, no, thank you. I'm already making a difference in many children's life. So it's a negative reaction towards this credibility strategy. And then the system then generates another request to donate. Save children was fund in 1919 and the charity is highly related and many positive words, would you support them? So this is another strategy of credibility of appeal, but definitely not really very useful because people are really reacting negative towards it. So ideally, if we ask the expert to look at them, the correct way of doing it is trying to diversify your strategy. Saying something like that's paid, it sounds like it's an issue. If you really care about them, why not put some of the effort into a charity that's doing a really great work like saves a children. So here we really look at that we wanted to model what's the user's reaction towards a certain strategy, given the context. And trying to optimize towards what trying to imitate how successful persuaders trajectory of react, selecting different conversational strategies to optimize your donation outcome. So this is one of our people in modeling this. So I'm just going to touch a little bit of source on this future that interests of time. So we identify several of the strategies throughout the purpose we collect different human human conversations. So credibility appeal. The charity is highly rated, blah, blah, blah, emotional appeal. Millions of children are dying. Logical appeal. If you do this, what's going to happen? Self modeling, which is what we've seen before is if you donate, I will match your donation too. Personal story, I did something before that helped other children. Donation information, if you so basically give a specific instruction, for example, your donation will be directly deducted from your task payment. Foot in the door, which is saying something small at first, even if I sense would help a lot. And later ask, you're already making a difference by donating. Why don't you increase your donation a little bit further, things like that. So we're going to annotate the conversation and strategies of the user and look at whether they are the reaction of the other party is positive or negative. And trying to model the sequence. And then we're annotating around a couple hundred dialogues that are successful in donation. We wanted to learn from the good ones, not the bad ones. And then luckily you can simply add an extra decoder in your modeling, which is that we call strategy, dialogue strategy planning. So dialogue policy planning defines what semantic intent for the system should be. But dialogue strategy planning also determines what strategy the system should use in order to generate the final natural language response. So of course we're also going to add what strategy has been used before in the dialogue history, so that we don't repeat ourselves or do things that is out of ordering. But purely just incorporating dialogue history is not enough. One also to learn if there is common structural strategy, traces that we can learn from successful conversation. So here, I'm just going to tell briefly, so we're going to learn from a couple hundred dialogues that we annotated and trying to model what is the common structurally share. And then we can incorporate this common strategy inside of our model in order to direct this conversational agents to select correct strategies throughout the history. So we're going to skip the modeling. So after we incorporate the strategy, we're going to be able to increase around five four four percent in the evaluation. And we're still like three percent the low human performance. Luckily, we do see the improvement over adding, for example, from injecting some antics, we get 5 percent by imitating human improving safety, we get 10 percent. By tracking strategy, we get 4 percent. But today, we're not being, we're not able to cover the final task, which is another paper front guide. If we do personality adaptation, we can actually reach around 60 percent of persuasion, which is actually higher than average human ticker. So here, I can share some of the important interesting things to you. For example, the model learns that this person actually is more likely, is more, for example, what we call it, based on the big five modeling, the survey, the answer, we know this is a neurotic person. So we're going to provide more factual information to their questions. So actually, neurotic people, if we can answer their factual question correctly, they're more likely to donate to the charity. So that they, they're not really not caring people, they're actually people who want a more certainty about facts. So if you do these kind of adaptation, also we do find that usually social content like you have kids yourself and things like that, works fairly well with people who are more sociable, more agreeable. Okay. So in the end, I would just want to give some broad concept of what conversation those agents look like. So you wanted to understand what people say in various languages. Here I would just use the English. You wanted to plant what are the best trajectory for the system to utilize strategy. And finally, you want to generate language that is consistent, coherent and safe. Finally, you also can incorporate text information, audio information, or visual information, even touch information, so that the chat bots or robots in the future can't be more situated. So I know whether you're happy or not, are you excited or are you confused? Based on these information, I can plan my conversation better. Finally, integrating common sense, knowing some of rituals, some of the cultural policies could also help you to select strategies better. Finally, we're taking to human factors, they're whether such as like your big five histories, expertise, and so on, so you can actually manage it better. We publishing all these kind of different fields, such as machine learning, HCI, robotics. We're also looking at security in terms of deploying these machine learning based models in reality. One of the things I wanted to also point out is about protecting vulnerable populations. So we had an interesting and dark about project, which is we're going to build a chatbot that is helping people screen scam calls. So for example, it's a scammer, whether it's a human or whether it's a chatbot. So if you ask us like kind of have a critical number to start the refund process, we're going to have a defensive strategy, and then all of my information already in your account. So we can try to identify whether it's a scammer. So we can think about automatic voice responder, which is a chatbot. And then we can't even request information from the scammer in order to identify where they are in terms of location or cell phone number for the police to catch them. We're also doing robotics in terms of recently where doing a real estate agents that provides information about house information. So you don't have to have a real estate agent. You can have this kind of virtual agents help you to walk through the rooms, give you information, and even persuade you to buy the house. Finally, I also wanted to talk about this ethical consideration, which a lot of people may have this kind of idea. If this kind of persuasive system was adopted by a villain. So for example, illicit donation for charity. So it's actually if it's not for charity, then basically it's a scammer. So collecting the money for their own usage. So this is really a huge ethical concern. What if this technology was adopted by other people? So first of all, there are a lot of things we can do to help in order to prevent such thing happens. But the first thing is we need to educate people how good our chatbots can do. So for example, we conducted a study, which we was very surprised to find. So we have this kind of, sort of, a baby city. So we tell people this is a bot, specifically, given them an icon and also given them a parenthesis, it's a bot. And we do find that after interacting with the bot, after the conversation, we use a survey, say, do you think your partner is the bot or a human and tell us why? And then in this very clear display, still 36% of people think the bot is human. And they give various like responses such as, oh, because it's very caring, because I don't think he has, because I think he understands me. So a lot of people would actually mechanical turkers would think that the bot is maybe played by a human behind it. Not really a real bot. So unfortunately, this case is a lot of time, especially mechanical turkers, they may not have technical background. They're in normal everyday people. They haven't been talking to chatbots so much. They may have Amazon Alexa, but Alexa is really limited into commands. But our chatbot is much more elaborate. It can use strategies and so on. So it's really dangerous for these people to encounter these chatbots if they're fine to your wrong hand. Only California state law requires chatbots identified themselves. 2019 for specific tasks such as commercial and political contents. And this is only restricted in California. Not in other states or in other country. And the unfortunate thing is, even you're telling people this is a bot, still 36% of people don't believe you. So what we can do is definitely try to deploy these bots so that you can actually talk to them and teach you some strategies to identify whether they are bots or not. By, for example, asking something out of domain. So you can see if the bot can retire or not. If it's a bot, most likely you'll apply something very absurd. So here we were just doing a baby step. For example, we have another paper just about to release on how to test if your chatbot is identity safe, which means people might use various ways to ask whether your chatbot or a human. But the bot needs to identify that intent correctly and be able to respond with the responsible answer. Okay, I think that's everything I want to cover. A little bit out of time. Any questions? You see some in the chats, right? Do we have? How well do the algorithm deal with interruptions? So that's a good question because right now all the experiments on the persuasive conversational systems are typing-based conversation agents. So you're typing. So you have these kind of really long utterances. So if you speak to speech, usually the utterances are shorter. So the interruptions happen in real time, for sure. So right now we are doing very sort of like a fundamental thing. If the pause is longer than a couple of one second, we're going to cut it off. So the system is going to interrupt. So this is a custom-paying conversation with agency interruption happens. Any more questions? I have one last question. So by introducing these kinds of defense mechanisms or certain kinds of so as you mentioned, like educating people how to or I guess letting them know certain strategies to identify, help identify bots and so forth. I mean in general I was thinking like, is there a concern there that this would pollute future training instances or for example, so like the understanding of such strategies can then see into nature language which because as OpenAI or other big companies periodically come up with new iterations of their models and they trade on with more internet data. So is there a concern there that this would eventually lead to like pollution in the trading sector? I think it's really definitely there is you have all these strategies and of course that people are going to take into these kind of a diverse so examples into consideration in the future. So you're trying a model that is more robust to these universal samples. This is going to happen in the future. So that but this also improves your conversation systems quality as well. Right. Thank you. Okay, I see more questions. If there are no more questions, I would like to thank Joe. Thanks for giving the seminar. Sorry, I came in late so I couldn't introduce me before. So that was pretty exciting. It's nice to have this diversity in our speaker series because normally we are very heavily econ speaker relying on econ speakers but I really love the section between using sort of experimental methods and AI so that I think yeah I guess everyone feels like that this is pretty exciting research. So again, thank you for taking the time to joining us. Our next webinar will be in two weeks. It will be on
+
+Timestamped Segments:
+[00:00 - 00:11] It's very nice to have Joe here with us to basically teach us about natural language processing
+[00:11 - 00:17] from a computer science perspective, which I think we are all very eager to learn.
+[00:17 - 00:18] Joe is a good friend of mine.
+[00:18 - 00:24] We got to know each other actually in graduate school, in a book club actually.
+[00:24 - 00:30] And Joe led some of the most memorable discussions of actually literature.
+[00:30 - 00:36] So I don't think I need to mention introduction because Joe is actually a very prestigious
+[00:36 - 00:41] scholar in natural language processing as some of you guys may know.
+[00:41 - 00:46] She actually just got AWS as machine learning research awards.
+[00:46 - 00:47] Correct.
+[00:47 - 00:48] Yes.
+[00:48 - 00:54] And many, many other prestigious prize as you can see from her website, like Amazon
+[00:54 - 01:01] X Alexa prize and Forbes 30 under 30 in science.
+[01:01 - 01:07] So it's quite an honor to have to have her here and let's just jump into it.
+[01:07 - 01:08] So both.
+[01:08 - 01:09] Yeah.
+[01:09 - 01:10] Yeah.
+[01:10 - 01:11] Thanks, Wei-Jap, for inviting me.
+[01:11 - 01:16] So today I'm going to just not going to represent the entire NLP community.
+[01:16 - 01:22] I'm just not going to teach you a little bit on how to build machines that can enable
+[01:22 - 01:27] natural communication with humans to help them complete tasks, provide companionships
+[01:27 - 01:28] and so on.
+[01:28 - 01:35] Specifically, we're talking about a line of my work on persuasive conversation assistance.
+[01:35 - 01:39] So I just moved to Columbia University for an UC Davis.
+[01:39 - 01:46] So first of all, let's do some basic introductions of what is a conversation with system or
+[01:46 - 01:52] dialogue system, or sometimes people call it personal intelligence agents or so on.
+[01:52 - 01:57] So usually when we talk about conversation systems, there are two types of conversation
+[01:57 - 01:58] systems.
+[01:58 - 02:02] One, it has a task that drives the conversation and the other doesn't.
+[02:02 - 02:07] So the goal is to have social connections.
+[02:07 - 02:13] So we usually use various different frameworks to model these two types of system differently.
+[02:13 - 02:22] So task oriented systems are usually users and systems have an aligned goal, which means
+[02:22 - 02:28] I wanted to book a flight and the system know exactly I wanted to put the flight.
+[02:28 - 02:33] So usually the capability of the system and the user's intent are well aligned.
+[02:33 - 02:40] So task are very, very is from domain to domain, such as booking a flight, booking a restaurant,
+[02:40 - 02:42] getting bus information.
+[02:42 - 02:50] Social chatbots, it's mostly the body can talk to anyone about anything at any time.
+[02:50 - 02:57] So this is a video of my student, Michelle talking to our Alexa Price winning chatbot.
+[02:57 - 03:03] Our dog is named Thonzye, so he came with that name.
+[03:03 - 03:06] We think it fits him pretty well.
+[03:06 - 03:09] That is a great name for a dog.
+[03:10 - 03:13] Yeah, he's kind of short like a bonsai tree.
+[03:13 - 03:15] So it works.
+[03:16 - 03:18] Tell me how long have you had bonsai?
+[03:19 - 03:23] We've been talking for a little over a year now.
+[03:23 - 03:23] Yeah.
+[03:25 - 03:27] Oh, you mostly great friends.
+[03:27 - 03:29] Yeah, we are.
+[03:30 - 03:32] So this is a small snippet.
+[03:32 - 03:39] So the chatbot is able to identify a neutral interested topic, which is a pet.
+[03:39 - 03:46] And then he's able to remember the name of the dog and trying to express some emotion towards the dog.
+[03:46 - 03:52] So on, so these are some of the interesting traits of our chatbot that helped us to win the price.
+[03:52 - 03:59] So it was really nice to won the 2018 Amazon social bot.
+[03:59 - 04:03] So we're going to participate into another challenge this year.
+[04:03 - 04:17] Again, but not particularly around social bad, but on task oriented system on how to do some of the tasks such as cooking, self-help, such as fixing fixing toilets.
+[04:17 - 04:22] So it was really interesting to see you actually win a half-million price.
+[04:22 - 04:24] My students are really happy.
+[04:24 - 04:26] So there are around eight or seven of them.
+[04:26 - 04:32] They're actually splitting half a million dollar among themselves, which is everybody got a new car in the end of the day.
+[04:33 - 04:43] So the most interesting part is by participating in this challenge, we're able to actually reach millions of the users.
+[04:43 - 04:49] Because the Alexa chatbot that we've about is deployed on Amazon Alexa right now.
+[04:49 - 04:52] So if you say Alexa likes to chat, we'll open up our skill.
+[04:52 - 04:54] So we got a lot of interesting feedback.
+[04:54 - 04:59] So there were a little girl saying that Alexa is now my family.
+[04:59 - 05:02] I like to talk to her every day before I go to see.
+[05:02 - 05:07] So there are especially a lot of kids really enjoy talking to Alexa.
+[05:07 - 05:11] So they're really looking at Alexa as a companion.
+[05:11 - 05:16] So the question is really now we have all their hardware systems.
+[05:16 - 05:24] We have billions of Alexa maybe, type of devices really located in a lot of people's home.
+[05:24 - 05:29] So everybody want and more Alexa, more functionality is more things they can't do.
+[05:30 - 05:36] So the question is really how can the software go to the level of people's expectations?
+[05:37 - 05:42] So today we're going to talk about one sample conversation on system that haven't been deployed.
+[05:42 - 05:47] But it could be very much interesting future work for deploying.
+[05:47 - 05:51] So we're talking about persuasive conversation system.
+[05:51 - 05:57] In particular, if you look at the background, they're actually mixing tasks and social.
+[05:57 - 06:02] So if you wanted to achieve things such as change people's mind and attitude,
+[06:02 - 06:07] having a good social bond and relationship could be a really important point of stone.
+[06:08 - 06:13] So when we talk about persuasive systems, we're really talking about how to change people's beliefs
+[06:13 - 06:21] and behaviors or even the other side, how to do a simulated settings.
+[06:21 - 06:24] So training people to learn how to persuade other people.
+[06:25 - 06:31] So they're various tasks and the persuasion of big theory in communication.
+[06:31 - 06:35] So we're getting tasks such as persuading people to do exercise.
+[06:36 - 06:42] So with the ESF and Davis, we're having a program to actually recruit participants
+[06:43 - 06:52] with type two diabetes to monitor very daily steps and trying to have a chatbot on their
+[06:53 - 07:00] phone to talk to them every day to help them resolve difficulties and adapt to individual
+[07:00 - 07:03] people's difficulties to persuade them to perform exercise.
+[07:04 - 07:10] So during the COVID time, our social chatbot also has a component that
+[07:10 - 07:13] persuades people to perform social distancing and so on.
+[07:13 - 07:21] So we also have a simulator that trains counselors and suicide counseling.
+[07:21 - 07:27] So here, particularly these high-risk tasks as us at counseling, we're not deploying the chatbot
+[07:27 - 07:35] via the counselor. We're actually developing a system that acts like a visitor and trying to train
+[07:35 - 07:40] the counselor, novice counselor, because originally all the novice counselors have to do roleplaying
+[07:40 - 07:48] with senior counselor who tries to impersonate a visitor. But these senior counselors are really
+[07:48 - 07:54] expensive and they really wanted to actually serve more people. So having a system to perform
+[07:54 - 08:01] energy, so these kind of training could have vastly reduced the cost of the public service.
+[08:03 - 08:12] So of course, this persuasion is really difficult. It's even really difficult for human.
+[08:12 - 08:15] So that's why we see all these kind of best-sellers spoke in the airport.
+[08:16 - 08:24] They're a split-thin difference around the reasons. So all these kind of interesting anecdotes
+[08:24 - 08:31] or theories that in communication, at first started, I guess, persuasion is really in social science
+[08:32 - 08:40] in the social psychology. And then definitely got picked up by marketing people. And then it even
+[08:40 - 08:48] got picked up on various these kind of a popular science. So it's really difficult for human to
+[08:48 - 08:55] perform it. The robot gonna do as good as a human or even can do better than average human.
+[08:57 - 09:04] So in order to teach the robot to persuade people, we first need to collect data, and then we need
+[09:04 - 09:10] to learn the semantics of the data in order to respond to people directly. And finally, we're
+[09:10 - 09:17] gonna employ strategies adapting to different users in order to improve performance of the chat box.
+[09:19 - 09:26] So data is really a paramount challenge in dialogue system modeling. So we usually model a
+[09:26 - 09:31] dialogue system of human-human conversation. The basic thing you can think we are gonna find a
+[09:31 - 09:37] good persuader and trying to imitate what he or she is doing. But the problem is,
+[09:39 - 09:44] with different users, different people may say different things in under the same context.
+[09:44 - 09:50] So it's really an exponential growth. If you have more conversation on turns, you have more
+[09:50 - 09:55] possibilities to cover. So it's impossible to collect all types of possible things that people can
+[09:55 - 10:03] say with the under and domain. So how do we actually collect all these possible data, which we can?
+[10:03 - 10:07] So where what we can see is just collect portion of the data and trying to generalize.
+[10:09 - 10:17] Another thing is people, for example, John or Mary may have different preferences in conversation
+[10:17 - 10:24] settings. When we talk about exercise, Mary may be more happy to do things in the morning.
+[10:24 - 10:30] Well, John, maybe more happy to do things in the afternoon. So these are different things,
+[10:30 - 10:35] may have two different different different things, overall. So we also want to make sure that we can
+[10:35 - 10:42] adapt to individual users. Another challenge in natural language processing in general is how to
+[10:42 - 10:48] understand deep semantics. With all the deep learning models, bigger, appreciating models,
+[10:48 - 10:54] doing pretty good in terms of lexical information. But in terms of deep understanding in semantics,
+[10:54 - 11:02] we're still a long way to go. So we have seen these horrible news about AI systems all the time.
+[11:03 - 11:12] For example, Twitter, basically Microsoft released this kind of chatbot on Twitter.
+[11:13 - 11:18] It says that the chatbot will learn from the interactions it has with users.
+[11:19 - 11:27] And the users are really trying to be very creative of thing dirty things. So some of
+[11:27 - 11:33] they're not saying specific dirty words, but given the context, it's very dirty. So without the
+[11:33 - 11:40] so understanding these kind of deep context or requires a lot of common sense, cultural background,
+[11:40 - 11:47] which the chatbot does not have. And it adopts the word that are these people say and became racist.
+[11:47 - 11:53] And there is a lot of other cases happen that it really comes from the lack of people on this
+[11:53 - 12:01] standing. And then finally, strategies, why strategies matter? Sometimes you want to say the same
+[12:01 - 12:08] thing in terms of semantics, but the way that you say it really matters to the results. For example,
+[12:08 - 12:15] a flowery's influence are much more persuasive than a pizza or a carport when it comes to a marriage
+[12:16 - 12:23] proposal. So the same thing applies for various other conditions. So today, we're going to talk to you
+[12:23 - 12:28] about how do we follow the persuasive dialogue system starting from how to collect a good data
+[12:28 - 12:35] set of human conversation. And then how do we build these sage system with limited data
+[12:35 - 12:41] since we're not going to be able to cover large space. And finally, if we have time, we're going
+[12:41 - 12:48] to touch upon how do we design strategies, giving users reactions so that we can have more
+[12:48 - 12:55] adaptations. So we can think about advertisement is like one round of persuasion. Everybody gets the
+[12:55 - 13:01] same. But when you're talking a chatbot, we can make adjustments given your response, which is
+[13:01 - 13:11] much more powerful. So first of all, we're going to focus on a specific task of support charities.
+[13:12 - 13:18] Basically, we want to persuade people to donate to a charity cause, save the children.
+[13:20 - 13:26] Previously, when we collect dialogue data, it's really a pain. Because in customer service,
+[13:27 - 13:34] the real dialogues have a lot of private information. So no companies wanted to release their data
+[13:34 - 13:41] to the public. So a lot of times, we would go to Amazon Mechanical Turk and ask Mechanical Turkur
+[13:41 - 13:50] is to roleplay on different tasks. For example, you're going to be the person who help us focus
+[13:50 - 13:54] the restaurant. You're going to be the customer who needs to book a restaurant. Here are some
+[13:54 - 14:02] weird constraints. Why don't you pair opening carrier conversation? So these roleplaying tasks
+[14:03 - 14:09] usually do well in a collaborate task. But when it comes to a more competitive task, such as
+[14:09 - 14:16] persuasion or negotiation, things can go wrong. First of all, there is no real incentive why
+[14:16 - 14:25] you need to book that restaurant. So for example, there are a couple of previous data sets that
+[14:25 - 14:33] you'll know. Deal is like they tell people, and be that you have conflicting utilities. So
+[14:34 - 14:41] if A gets a lamp, which is a product, they gave them B would not get a lamp and then he will get
+[14:41 - 14:47] less benefit. But they're not really attiring that to the paper. Craigslist bargaining is
+[14:47 - 14:53] people are bargaining on products sound cricklets, but it's also a roleplaying. So really as
+[14:53 - 14:59] do the people actually perform as they really wanted to participate in a try really hard
+[14:59 - 15:07] in persuading the other people. So what we try to design is using monetary incentive to elicit
+[15:07 - 15:15] more will to the behavior in persuasion. So we are telling people if you come to the task,
+[15:16 - 15:22] one of them will be randomly assigned as a persuader. So he will receive bonus when
+[15:23 - 15:30] the other person decides to donate to the charity. Well, the other person, when he first come to
+[15:30 - 15:37] the task, we're just asking him to talk about talk to the other person about a charity. So that
+[15:37 - 15:44] nice thing is when you do Amazon Mechanical Turk task, you get a pay for completing the task.
+[15:44 - 15:50] You can also get a bonus by completing the task. So here we're going to ask a persuader is to tell
+[15:50 - 15:57] the persuader to donate some of that task earning to the charity. So this is the go. So the persuader
+[15:57 - 16:02] is of course, as a mechanical target, he came to the platform. Of course, when he completes the task,
+[16:02 - 16:12] he wanted to earn all the bonus he can get. So he's really changing his original idea of I want to
+[16:12 - 16:19] get all the bonus into maybe I wanted to share some of the bonus to the foundation save the children.
+[16:19 - 16:25] So it's actually there is real money involved in this process. And of course, we hear we say,
+[16:25 - 16:31] if for example, the persuader donate to the charity for one dollar, the persuader is going to gain
+[16:32 - 16:38] 20% of that pay. Well, of course, any Turkers wanted to get a little bit more money if he could
+[16:38 - 16:45] use, given the fixed time amount he's invested in the task. So now he creates some real incentive
+[16:45 - 16:50] for the persuaders and persuades to persuader is going to be really persuasive,
+[16:51 - 16:57] using various persuasive strategies to persuade the other person and persuading him I use various
+[16:57 - 17:05] resistance strategies in that. So before the two Turkers come to actually talk, we did a pre-task of
+[17:05 - 17:10] a to collect some basic information about themselves like big five personality, moral foundation,
+[17:10 - 17:18] and decisions that out. So this information we wanted to use later to do adaptation in chatbots.
+[17:19 - 17:23] And then they were going to pair it out and then they were going to conduct a conversation.
+[17:23 - 17:30] We request them to at least to talk for more than 10 turns in order to exit the complete the task.
+[17:30 - 17:36] And finally, they they were decide how much they wanted to donate that one that going to
+[17:36 - 17:42] another page. And they say, oh, persuader wanted to donate a dollar and then one dollar would
+[17:42 - 17:49] directly go to save the children. So Turkers are donating real money. So we collected around
+[17:49 - 17:55] a thousand dialogues and we're able to actually clear it around 500 dollars of donation to
+[17:56 - 18:02] to save the children foundation, which is quite impressive. It's actually beyond our expectation
+[18:03 - 18:07] that a lot of people are more are very willing to contribute to the charities.
+[18:08 - 18:14] Another interesting thing is actually some of the persuaders also donated and not only the persuader
+[18:14 - 18:20] you donate. So here is an example of persuasive conversations that were collected. So you're
+[18:20 - 18:25] probably on computer right now. So you're probably have quite a bit of money yourself. Do I think
+[18:25 - 18:31] you could spare maybe 25 cents for some media children around the world? And the persuader
+[18:31 - 18:36] you say, no, thank you. Do you have children yourself? What if your children were in a position,
+[18:36 - 18:41] these kids are in. Wouldn't you want someone to help them? Where are all those children's parents?
+[18:42 - 18:48] If only they had a parent of support and more towing countries like Syria, their children,
+[18:48 - 18:52] their parents are being killed in wars or are fighting for their country. They have no help and
+[18:52 - 18:57] that's why they need your support. Please find it even more hard to just give a little bit tonight.
+[18:57 - 19:03] That's all I'm asking. So you can see the persuader is trying very hard, generating these kind
+[19:03 - 19:09] of various strategies while on the other side persuaders would be are sort of trying to
+[19:09 - 19:16] resist but still keeping the conversation going. So the idea later is we're going to replace the
+[19:16 - 19:23] persuader on the left and to a bot and still being able to be very persuasive to collect the money
+[19:23 - 19:29] for the charity. Okay, any questions so far about the experimentation and data collection?
+[19:33 - 19:42] If I may, yes. And so this is a boring kind of selection problem question, right? But so
+[19:42 - 19:47] so you mentioned that this is the M-Turk people like the actually don't make quite be,
+[19:47 - 19:54] but do you have channel concern that say like these professional turkers, right? There's concern
+[19:54 - 20:00] between money and other social objectives may not be representative of the general population that
+[20:00 - 20:06] you're interested. Different than a lot of them are so are taking low income jobs with hours to earn
+[20:06 - 20:15] money, so on and so forth. Yeah, I totally agree. So the reason that we use Mechanical Turk is we
+[20:15 - 20:21] wanted to get an access to a pool of diverse people. So it's actually a much better than just
+[20:21 - 20:29] recruit college students. But the first thing we can do, but sure it's not a representative
+[20:29 - 20:36] population of the entire population in the US. So we did it can strain it into the US so we don't
+[20:36 - 20:44] have language issues and so on. Yes, we have it on the hand. Yeah, I'm asking a question,
+[20:44 - 20:51] an experimental question is an unexperimentalist. I was wondering how some people know that they're
+[20:51 - 20:56] watched. I mean, it goes towards this whole tone, experimental demand kind of effect, effect.
+[20:57 - 21:04] But so I mean, when you are normally approached in the real world by some of these people who want to
+[21:04 - 21:09] get to donations, some of the strategies are rather aggressive. I mean, they start off nice, but then
+[21:10 - 21:16] given that it's their source of income, they use some strategies which are pretty tough. And so
+[21:17 - 21:24] it's probably unlikely that you will observe them here, these more aggressive strategies on the
+[21:24 - 21:31] upper bound. Because people know, okay, there's a certain limit, but I'm watched and recorded, so
+[21:31 - 21:39] I'm not going as far as I would in real world. So I'm not sure because if you assume that in terms
+[21:39 - 21:45] of the language they use and the aggressiveness, they're sort of a linear relationship, then that's fine.
+[21:45 - 21:51] But if there's a king, so because now we are all saturated, we are getting asked every second day
+[21:51 - 21:57] to donate to something that you need to do this extra push to elicit people to the net.
+[21:58 - 22:03] Whether you might miss something by then being known that they are observed.
+[22:04 - 22:10] Yeah, you're right. Definitely, we did do disclosure that the data that we collected is going to
+[22:10 - 22:18] use for research later. So they know the data is recorded and we actually publish the data,
+[22:18 - 22:25] but we do remove any sort of sensitive information. So of course, but there are turquoise
+[22:25 - 22:33] being a little bit more aggressive that we do see in the dataset, but it's not that many.
+[22:34 - 22:39] So we do see people say, oh, you're really cold harder, you're negative words even,
+[22:40 - 22:47] but we don't see that many, but most of them are trying really, so when we look at the strategy,
+[22:47 - 22:52] they're more like emotional appeal, personal experience, and things like that, instead of
+[22:52 - 22:59] harassing people. Okay, thank you. Okay, great. Okay, let's move on.
+[23:00 - 23:06] So once we have the data, the next thing that we do is to amelter some semantic information on these
+[23:08 - 23:13] individual auto-incest. So we can actually use that to better understand the data and also use that
+[23:13 - 23:18] to, as a backbone, to build our constitutional system. So as we said before,
+[23:18 - 23:23] at this particular task, it has certain task component and some of them are social components
+[23:23 - 23:30] to illicit information about the other person. So using social in the social components, we're using
+[23:30 - 23:36] a conversation-out dialogue act mechanism that we're designing or allow for social conversational
+[23:36 - 23:42] agents. So we're looking at mostly syntactic information, whether is this an open question,
+[23:42 - 23:47] is it a yes-no question? Because if we know that the user is asking a yes or no question,
+[23:47 - 23:53] then we need to know that all we need to reply was a yes or no first. So we're also having some
+[23:53 - 23:58] categories like greeting, then thank you because these are, you have a specific template that you
+[23:59 - 24:04] normally see in reply in that. When people say, good morning, you say, good morning too. When people say,
+[24:04 - 24:10] thank you, you say, you're welcome. And it's specific. We've covered the task. We wanted to understand
+[24:11 - 24:16] intents or you can think about some mantis in terms of, I want to understand if you are,
+[24:17 - 24:23] do you agree to donate or do you disagree to donate? Are you asking me some task information
+[24:23 - 24:29] or not? So these intents are so important because I have to answer them correctly, respond to them
+[24:29 - 24:34] correctly in order to make it the conversation coherent and people can trust that you can do
+[24:34 - 24:41] a thing. So for example, the same conversation, like you're probably on computer right now,
+[24:41 - 24:47] so you probably have quite a bit of money. Don't you think you'd spend spare maybe 25 cents?
+[24:47 - 24:55] So here is task information on this potential, potentially long question. And it's a request
+[24:55 - 25:01] to donate. So basically the intent is, why don't you donate? And it can have various forms of
+[25:02 - 25:09] expressing the same intent. But the underlying thing is can you donate? While when other,
+[25:09 - 25:16] the persuadise note, thank you. It's an intent code to survey to donate. Do you have children
+[25:16 - 25:23] yourself now? I think so. We've got an rejection. So people are going like circles trying to talk
+[25:23 - 25:30] about something else in order to avoid the awkwardness. And on the other hand, can maybe collect more
+[25:30 - 25:35] information around the users in order to personalize your persuasion strategies. So do you have
+[25:35 - 25:40] children yourself? Is it considered more social? It's not really directly related to the task.
+[25:40 - 25:44] It's a yes or no question. What if your children went into position? These kids are in. What
+[25:44 - 25:48] did you want someone to help them? Is it a social question? Yes, no question.
+[25:49 - 25:56] And the assistant, so the other prison didn't respond to them. But instead, as another question,
+[25:57 - 26:03] what are those children's parents? So it's an open question, but also social content, not specifically
+[26:03 - 26:14] targeted on donation, donation procedures. So now, Aslan, we understand the idea. So we annotate
+[26:14 - 26:21] around 100 conversations with these fixed intents, fixed number of intents. So we know basically the
+[26:21 - 26:27] backbone of how these conversation unfolds. Now we can actually build a conversation system using
+[26:27 - 26:34] these kind of semantic scaffolds to require that so that we can reduce and require 20 data.
+[26:36 - 26:42] So for classical conversation system, so this is a little bit more computational. I tried to
+[26:42 - 26:48] explain it in a very playing way. A modular biodex system for a mark is usually used to build
+[26:48 - 26:57] task-oriented conversation system. So first, you wanted to, so a user would say something.
+[26:57 - 27:02] Tell me more about the organization. And then the first component called natural language
+[27:02 - 27:09] understanding is going to convert that into a semantic intent, which means it's a task inquiry,
+[27:09 - 27:16] request for task information. And then once the computer knows that it needs more information.
+[27:16 - 27:22] And then the next thing he's going to do is going to try to look at the history to see what are
+[27:23 - 27:29] what are the previous history so far. So for example, we don't put everything in the history
+[27:29 - 27:35] of memory of the system. We only put the most important thing that we wanted to remember across
+[27:35 - 27:41] history. For example, how much did the user agree to donate? So currently there's no donation.
+[27:42 - 27:47] So we have to respond to the user's current question in order to improve the donation score.
+[27:48 - 27:56] And then finally, so we have this dialogue planning policy that we know that people ask their
+[27:56 - 28:02] question about the task. And we still don't have donation given the dialogue state history
+[28:02 - 28:08] tracker. So that we, the system at this moment should perform a movement called provide information
+[28:08 - 28:14] to satisfy the inquiry. And then we're going to finally, given that the system is going to do this
+[28:14 - 28:21] particular semantic intent. We're going to convert that into a natural language, specifically,
+[28:21 - 28:25] for example, there's a children, a women's, a Syrian children who are facing the
+[28:25 - 28:31] daily threat of violence. So there are four components in total. And every component you can think
+[28:31 - 28:40] about it as a machine learning task. So for example, this kind of intense into natural language
+[28:40 - 28:46] is also a sequence to sequence task. Once you have a thousand or more than a thousand training
+[28:46 - 28:55] data, you can train a model to convert this. Some module of the dialogue framework, of course,
+[28:55 - 29:01] have some feedback drawbacks. For example, you updated the first module, then you will have some
+[29:01 - 29:07] miscalibration of the data format in the input and output. So you have to definitely update all the
+[29:07 - 29:13] following modules. And it really requires heavy experts in involvement in designing the
+[29:13 - 29:20] annotation scheme, training individual modules. You wanted to also hire a lot of normal
+[29:20 - 29:26] immunosuites to annotate every conversation. So there's a lot of human efforts in it. So that's
+[29:26 - 29:34] why in recent several years and to end framework is pretty popular. So basically, you just say
+[29:34 - 29:39] something, say something, it's a natural language tolerance. You want to feed it into encoder the
+[29:39 - 29:46] colder model. So you can also call it a sequence to seek to seek model, a neural network model.
+[29:46 - 29:52] You have millions layers. And then you would get a system modern. So currently like these GPT-2
+[29:52 - 29:58] model or GPT-3 models are excellent. But of course, these models also have their drawbacks.
+[29:59 - 30:04] It's very difficult to perform error analysis. So if you find that if you're given a user
+[30:04 - 30:09] order in the response of the system, it's not accurate. You don't know how to improve that.
+[30:09 - 30:14] You don't know which part in SINRA is that the model did not understand the user or is it because
+[30:14 - 30:19] the generation has an error. So what you can do is just tuning the your million subparameter,
+[30:19 - 30:25] which is not very practical. Another thing is these kind of models, of course, it doesn't use any of
+[30:25 - 30:32] the labels required. But it's also very inefficient of using the data. So it requires a lot of
+[30:32 - 30:39] information to train. So for a very simple task request, request task, for example,
+[30:39 - 30:43] request plus information, it requires thousands of dialogues to train. So it's not really
+[30:43 - 30:50] friendly to low resource settings such as this region because it's only have a thousand dialogues.
+[30:50 - 30:59] But it's really complex in terms of semantic space. So what we propose is trying to combine the
+[30:59 - 31:08] modular and and then models together into a what we call modular supervised neural network.
+[31:08 - 31:15] So everybody has, so we still have encoder decoder framework. So we have one encoder to encode
+[31:15 - 31:23] in user sovereigns. By doing the decoding, we're not skipping like the intermediate steps. So we're
+[31:23 - 31:28] going to have four decoders. One is decoding the understanding of the user sovereigns. Then we're
+[31:28 - 31:34] decoding the dialogue states, which is a history we remembered. And then we also are decoding
+[31:34 - 31:41] what is the system going to do, the system action, and finally decoding natural language sentence
+[31:41 - 31:48] of the system. So you can think the four decoders are sharing information through hidden states
+[31:48 - 31:57] instead of symbolic outputs, which can cost error propagation. So here is a neural network. You can
+[31:57 - 32:04] see you can any type of neural network. So here we just use an LSTM as example.
+[32:05 - 32:12] So you have a previous history, BT minus one. We don't have donations so far. And then we have
+[32:14 - 32:20] previous response of the system. Are you interested in charity? And then we have an
+[32:20 - 32:28] utterance for the user. What do you have in mind? And then we first going to decode the understanding
+[32:28 - 32:34] of the semantics of the user's utterance. So what do you have in mind is actually asking about
+[32:34 - 32:41] task information. And then you go into history tracking so far we still don't have donation.
+[32:41 - 32:47] And then what we're going to do. So the planning of the system tells you that we should provide
+[32:47 - 32:52] factual information to satisfy the tasking create. And finally we're going to generate a natural
+[32:52 - 32:59] sentence that you had saved the children. So all the information is connected through hidden states.
+[33:00 - 33:05] Doing the testing you can decode multiple things, but of course the user only going to see the
+[33:05 - 33:10] natural anger sentence. But you can see all the intermediate results, which is going to help you
+[33:10 - 33:16] to debug your code. So for example, the understanding of Poe's world. So you know, oh,
+[33:16 - 33:22] this particular sentence is not understand. It doesn't, it didn't honest get fully comprehended.
+[33:22 - 33:27] So what we're going to do is we can collect more data and the training set that targeting
+[33:27 - 33:33] on variance of the utterance of the user so that you can increase your data set in order to improve
+[33:33 - 33:40] your now you understanding. So if your planning was run, so basically we didn't have enough data
+[33:40 - 33:47] to map such history into the next action. And we can create manually more data in order to
+[33:47 - 33:56] buff the training set. So we can also look at in terms of computational cost. It's really
+[33:57 - 34:04] you have something that is output of your natural anger understanding component.
+[34:05 - 34:10] This is the hidden state current team. For the next style of state tracking, you're just going
+[34:10 - 34:16] to condition the empty in order to generate a team. So it's really computationally it's just a
+[34:16 - 34:23] conditional generation process. And all the four modules up optimize jointly. So you can also
+[34:23 - 34:33] think of it as multitask training process. So one of the another advantage of this modular
+[34:33 - 34:40] super supervised model is you can also have partially labeled data, which means that for example,
+[34:40 - 34:46] you only have 100 data. There's annotated with intense, but you have 900 data that is not
+[34:46 - 34:52] annotated in intense. What you can see is you're going to update the data first with
+[34:52 - 34:59] un-analyzed data. But you don't update an LUDS TNPPO, your only update on NLG. And then when you have
+[35:00 - 35:06] the annotation for the rest of 100 data, then you can update the four module. So it's for a very
+[35:06 - 35:14] flexible for industrial use. So now we're ready to actually train a Galaxy model to persuade
+[35:14 - 35:19] people to donate to the charity. So we first are going to pre-training the model with social
+[35:19 - 35:26] conversational system. As we know, like you deep learning models would benefit a lot from pre-training,
+[35:26 - 35:31] from a huge number of data sets, but not specific around this tab for nearby tasks. So here we're
+[35:31 - 35:36] going to pre-training with social conversation on system. So it knows how to do greetings and how
+[35:36 - 35:42] to do it like you're thank you and so on. And then we're going to fine-tune in with conversational data
+[35:42 - 35:47] that we didn't annotate. And then finally, fine-tune it on conversational data. We annotate on
+[35:47 - 35:55] semantics. So for example, when you look at history so far as donation zero and then previous,
+[35:55 - 36:00] previously the action of the system is a pro-IFAC. Previous system says it saved the children
+[36:00 - 36:05] proud of help to children. And the user is telling me more about the optimization at the moment.
+[36:05 - 36:12] So the user intent is ask for more information which is tasking free. We don't have donation so far.
+[36:13 - 36:17] What we should do is provide more facts. And then we're going to provide more facts through
+[36:17 - 36:21] in actual language. So this is how the training data is fitted in.
+[36:25 - 36:32] So the advantage of our model is it's easy to update. It requires less expert involvement.
+[36:32 - 36:37] It is easy to perform error analysis because you have intermediate semantic output that can be
+[36:37 - 36:46] understand by human so that you can fix a model by collecting very targeted data. Of course,
+[36:46 - 36:50] it can, you know, complex task was very less data. So in terms of how many training
+[36:50 - 36:57] dialogues you need and how many analysts or anal teach and you need for the data set is really
+[36:57 - 37:05] a sort of a balance. So if you are a big company, you have millions of data, for example,
+[37:05 - 37:10] for customer service, then you need very few of an annotation. Then you can get a pretty good
+[37:11 - 37:17] model. If you're a startup, you only have like 200 data points of your dialogue. Then we would suggest
+[37:17 - 37:24] you just annotate them. So that you would get a better sort of backbone for a supervision.
+[37:24 - 37:32] So it's really a trade-off. Of course, in a lot of sense, we would think collecting data is
+[37:32 - 37:39] really difficult because you wanted to have all these users. In order to have all these users,
+[37:39 - 37:45] you should have to be able to have a lot of like your emphasize in collecting them,
+[37:46 - 37:52] cleaning the data. So we would suggest you have around a thousand dialogues and then start
+[37:52 - 37:57] annotating at least 20% of them in order to build pretty good conversational systems.
+[37:58 - 38:04] So now we're at it's a time to evaluate how good our persuasive systems are. So we have
+[38:04 - 38:10] the same mechanical turk setting. So except that the persuader is a chapa.
+[38:11 - 38:15] And we do tell people, which is the persuader, which is a human mechanical turk grid that you
+[38:15 - 38:22] are going to talk to a chapa, but all the other things are the same. So the baseline is a model
+[38:22 - 38:31] that trained with N2N model. You can think of it as a GP2 model that was fined in a thousand
+[38:31 - 38:37] dialogues that we collected. So here the percentage is how many percentage of people donate it.
+[38:38 - 38:48] So we ran the study around 100 per condition. So some people may drop out. Some people may have
+[38:48 - 38:53] some weird stuff that we have excluded in the conversation. So it's never like a fixed number.
+[38:54 - 39:02] So it's around like a 32 people donated in the baseline. Our mass model that have 300
+[39:02 - 39:11] dialogues with labels. We have 5% increase while the human performance basically doing the data
+[39:11 - 39:18] collection around 54% of them actually donated. So we can see there is a huge gap of our
+[39:18 - 39:28] system performance to the human performance around 17%. So one of the things that we notice that is
+[39:30 - 39:35] because our model is a generation model, which means that it's not using a pre-written template.
+[39:35 - 39:41] It can generate anything that is in natural language form. So if we got a response, a request
+[39:41 - 39:46] for the user, such as can I get a refund on my donation that we haven't seen in the training
+[39:46 - 39:52] corpus, we can very likely respond saying yes, of course, zero-rank can get a refund, but that's
+[39:52 - 39:59] not true. You cannot get a refund. The reason that the chatbot generates yes, of course, you can get
+[39:59 - 40:06] a refund is when asked of yes or no question. The like put a hold of giving a yes is much higher than
+[40:06 - 40:13] a no in the training corpus. So this can really go around. If you're using our chatbot for customer
+[40:13 - 40:20] service and so on, you're going to bankrupt in diet company. I'll get a really bad reputation.
+[40:22 - 40:27] So we need a safety net really for the poins of generation based conversation on chatbots.
+[40:28 - 40:34] So here we have a response ranker, which means that for example, you can say anything to progress
+[40:34 - 40:39] in the conversation, but there are certain branches that we cannot move forward. Serient
+[40:39 - 40:45] intents of the system cannot express. So we want to make sure that we tell the system this is
+[40:45 - 40:51] a dangerous path and don't go forward. We're going to do that through imitation learning.
+[40:52 - 40:59] So for example, a user says, how much would you donate yourself? So this is very commonly seen.
+[40:59 - 41:05] The persuadief would ask a persuader, would you donate? So this particular sentence in terms of
+[41:05 - 41:11] intent is a request for donation amount. Semantic slots is something we wanted to remember
+[41:11 - 41:18] throughout the conversation, which here is specifically donation amount. Our model can decode multiple
+[41:18 - 41:26] times in order to generate different candidates. For example, we can say, I will donate $1. So provide
+[41:26 - 41:34] donation amount $1. Thanks, thanking. I don't have money refused to donate donation amount equals to zero.
+[41:34 - 41:41] So at this moment, it basically you can choose which one to reply to the user. So we're going to
+[41:41 - 41:48] hire a human to pick which is the best response given the conversational history. And then we ask this
+[41:48 - 41:55] particular expert who was trained by a conversational series and persuasive strategy to help us to
+[41:55 - 42:01] demonstrate what's the best selection for given context. And then we're going to train the
+[42:01 - 42:09] chatbots to imitate the human selection in the generation in order to optimize the donation.
+[42:11 - 42:16] So if we were using the imitation rancor, we're going to do the same evaluation passes and we
+[42:16 - 42:24] are able to increase almost 10% for in the original lots. So here is really making sure knowing which
+[42:24 - 42:29] semantic intent would follow certain conversational structure would it largely improve the conversation
+[42:30 - 42:41] results. So here, so any questions so far on the imitation rancor? Yes.
+[42:41 - 43:08] So yeah, really, so I just wanted to ask you one question about the LST that you mentioned.
+[43:09 - 43:15] So and as you also mentioned that you use a pre-trained GPD2 architecture.
+[43:16 - 43:23] So as I understand, so GPD2 is based on the causal language modeling which takes only the lift left
+[43:23 - 43:30] context during the text processing. So I was wondering, like, is there any benefit of including
+[43:30 - 43:37] your right context as well? So if something like a bi-directional encoding scheme? Yeah, yes.
+[43:37 - 43:43] That's a good question. So we're using a transformer model. So there it's a
+[43:43 - 43:49] level two these kind of GPD2 things. So transformer model doesn't have left or right or left.
+[43:49 - 43:56] So it's just one direction. So because conversation in a way we are doing is in real time,
+[43:56 - 44:02] you don't really see the end of the dialogue. So you only see one direction. So you don't see the
+[44:02 - 44:07] out of the direction. So usually in real time system we always just use one direction.
+[44:08 - 44:12] Right. Okay. Thank you. Have one more question.
+[44:12 - 44:18] The truth is fascinating. Just a question from someone related to yours, to a safe
+[44:18 - 44:23] nap question. So I can imagine the dimensionality of these processes, like growth,
+[44:23 - 44:30] work, quickly. So somewhere, if I'm not mistaken, you must implement some kind of dimensionality,
+[44:30 - 44:39] reduction process. So say to do so, is there, is there any so meaningful way to talk about how robust
+[44:39 - 44:45] the output will be to say like to difference in your dimension reduction strategy.
+[44:46 - 44:53] Say, like more plainly, I say, would a small change in the dimension reduction strategy
+[44:53 - 45:04] generally with big change in the response? So definitely so in terms of modeling. So you can think
+[45:04 - 45:11] about this kind of transformer or all these kind of different models that has different layers and so on.
+[45:11 - 45:18] So each layer is are getting more information over time. You can think about as a dimension compression problem.
+[45:19 - 45:25] So usually right now in the common practice is the bigger the model, the better the performances.
+[45:26 - 45:31] So basically a multiple layer is more compressions over time is definitely better.
+[45:32 - 45:38] But on the other side is these model is requiring a lot of computational costs.
+[45:39 - 45:46] Especially for conversational data, we system we need real time response. So the inference time,
+[45:46 - 45:52] we also wanted to be a little bit faster. So you can think about these kind of GP3 models not going
+[45:52 - 46:00] to be able to do real time inference in real time. So you always see this lag when you're doing the
+[46:00 - 46:07] word class. So we are doing a lot of work in terms of efficiency. There is also a phone with people
+[46:07 - 46:13] who are working on distilling these big transformer models into a smaller model. A steel,
+[46:13 - 46:18] pertain comfortable results. So it's no convergence of big problem in this kind of system.
+[46:20 - 46:28] Yeah, the neuromodel is all gradient to STEM based. It's always local often ways never go well.
+[46:30 - 46:40] Thank you. So let's take a little bit of time to look at some area analysis. So this is a conversation we
+[46:40 - 46:46] collected through using our chatbot and a chatbot interacting with human users. So we would say
+[46:46 - 46:50] the chatbot say, have you ever heard of a charity called Save the Children? You would say, no,
+[46:50 - 46:56] I haven't. What is it about? And then the chatbot says, it's an international organization that
+[46:56 - 47:00] promotes children's rights, rights relief, and support children in the public countries. It does
+[47:00 - 47:06] sound like something you don't get behind. And so particularly if you look at the decoded
+[47:06 - 47:14] semantics, it's a request to donate. It's using a strategy called credibility. So it's providing
+[47:14 - 47:19] credible information about the charity. And then the user say, no, thank you. I'm already making
+[47:19 - 47:26] a difference in many children's life. So it's a negative reaction towards this credibility
+[47:26 - 47:32] strategy. And then the system then generates another request to donate. Save children was
+[47:32 - 47:38] fund in 1919 and the charity is highly related and many positive words, would you support them?
+[47:38 - 47:45] So this is another strategy of credibility of appeal, but definitely not really very useful
+[47:45 - 47:51] because people are really reacting negative towards it. So ideally, if we ask the expert to look at
+[47:51 - 47:58] them, the correct way of doing it is trying to diversify your strategy. Saying something like
+[47:58 - 48:03] that's paid, it sounds like it's an issue. If you really care about them, why not put some of the
+[48:03 - 48:09] effort into a charity that's doing a really great work like saves a children. So here we really
+[48:09 - 48:15] look at that we wanted to model what's the user's reaction towards a certain strategy, given the
+[48:15 - 48:24] context. And trying to optimize towards what trying to imitate how successful persuaders
+[48:24 - 48:30] trajectory of react, selecting different conversational strategies to optimize your donation outcome.
+[48:31 - 48:36] So this is one of our people in modeling this. So I'm just going to touch a little bit of
+[48:36 - 48:42] source on this future that interests of time. So we identify several of the strategies throughout
+[48:42 - 48:49] the purpose we collect different human human conversations. So credibility appeal. The charity
+[48:49 - 48:54] is highly rated, blah, blah, blah, emotional appeal. Millions of children are dying.
+[48:55 - 49:01] Logical appeal. If you do this, what's going to happen? Self modeling, which is what we've seen
+[49:01 - 49:09] before is if you donate, I will match your donation too. Personal story, I did something before
+[49:09 - 49:18] that helped other children. Donation information, if you so basically give a specific instruction,
+[49:18 - 49:22] for example, your donation will be directly deducted from your task payment.
+[49:22 - 49:28] Foot in the door, which is saying something small at first, even if I sense would help a lot.
+[49:28 - 49:35] And later ask, you're already making a difference by donating. Why don't you increase your donation
+[49:35 - 49:43] a little bit further, things like that. So we're going to annotate the conversation and strategies
+[49:43 - 49:50] of the user and look at whether they are the reaction of the other party is positive or negative.
+[49:50 - 49:56] And trying to model the sequence. And then we're annotating around a couple hundred
+[49:56 - 50:02] dialogues that are successful in donation. We wanted to learn from the good ones, not the bad ones.
+[50:03 - 50:11] And then luckily you can simply add an extra decoder in your modeling, which is that we call
+[50:11 - 50:19] strategy, dialogue strategy planning. So dialogue policy planning defines what semantic intent
+[50:19 - 50:25] for the system should be. But dialogue strategy planning also determines what strategy the
+[50:25 - 50:29] system should use in order to generate the final natural language response.
+[50:31 - 50:36] So of course we're also going to add what strategy has been used before in the dialogue history,
+[50:36 - 50:41] so that we don't repeat ourselves or do things that is out of ordering.
+[50:41 - 50:48] But purely just incorporating dialogue history is not enough. One also to learn if there is
+[50:48 - 50:54] common structural strategy, traces that we can learn from successful conversation. So here,
+[50:54 - 51:02] I'm just going to tell briefly, so we're going to learn from a couple hundred dialogues that we
+[51:02 - 51:09] annotated and trying to model what is the common structurally share. And then we can incorporate
+[51:09 - 51:16] this common strategy inside of our model in order to direct this conversational agents to select
+[51:16 - 51:21] correct strategies throughout the history. So we're going to skip the modeling.
+[51:23 - 51:30] So after we incorporate the strategy, we're going to be able to increase around five four
+[51:30 - 51:38] four percent in the evaluation. And we're still like three percent the low human performance.
+[51:39 - 51:45] Luckily, we do see the improvement over adding, for example, from injecting some
+[51:45 - 51:53] antics, we get 5 percent by imitating human improving safety, we get 10 percent.
+[51:54 - 52:04] By tracking strategy, we get 4 percent. But today, we're not being, we're not able to cover
+[52:04 - 52:09] the final task, which is another paper front guide. If we do personality adaptation,
+[52:09 - 52:16] we can actually reach around 60 percent of persuasion, which is actually higher than average human
+[52:16 - 52:22] ticker. So here, I can share some of the important interesting things to you. For example,
+[52:22 - 52:29] the model learns that this person actually is more likely, is more, for example,
+[52:31 - 52:40] what we call it, based on the big five modeling, the survey, the answer, we know this is a
+[52:40 - 52:45] neurotic person. So we're going to provide more factual information to their questions.
+[52:46 - 52:51] So actually, neurotic people, if we can answer their factual question correctly, they're more likely
+[52:51 - 52:58] to donate to the charity. So that they, they're not really not caring people, they're actually
+[52:58 - 53:05] people who want a more certainty about facts. So if you do these kind of adaptation, also we do find
+[53:05 - 53:10] that usually social content like you have kids yourself and things like that,
+[53:11 - 53:16] works fairly well with people who are more sociable, more agreeable.
+[53:17 - 53:24] Okay. So in the end, I would just want to give some broad
+[53:25 - 53:31] concept of what conversation those agents look like. So you wanted to understand what people say
+[53:32 - 53:36] in various languages. Here I would just use the English. You wanted to plant
+[53:36 - 53:42] what are the best trajectory for the system to utilize strategy. And finally, you want to
+[53:42 - 53:48] generate language that is consistent, coherent and safe. Finally, you also can incorporate text
+[53:48 - 53:53] information, audio information, or visual information, even touch information, so that the chat bots
+[53:53 - 53:59] or robots in the future can't be more situated. So I know whether you're happy or not,
+[53:59 - 54:04] are you excited or are you confused? Based on these information, I can plan my conversation better.
+[54:04 - 54:11] Finally, integrating common sense, knowing some of rituals, some of the cultural policies could
+[54:11 - 54:16] also help you to select strategies better. Finally, we're taking to human factors,
+[54:16 - 54:23] they're whether such as like your big five histories, expertise, and so on,
+[54:24 - 54:29] so you can actually manage it better. We publishing all these kind of different fields,
+[54:30 - 54:36] such as machine learning, HCI, robotics. We're also looking at security in terms of deploying
+[54:36 - 54:43] these machine learning based models in reality. One of the things I wanted to also point out is
+[54:43 - 54:50] about protecting vulnerable populations. So we had an interesting and dark about project,
+[54:51 - 54:58] which is we're going to build a chatbot that is helping people screen scam calls. So for example,
+[54:58 - 55:04] it's a scammer, whether it's a human or whether it's a chatbot. So if you ask us like kind of have
+[55:04 - 55:10] a critical number to start the refund process, we're going to have a defensive strategy,
+[55:10 - 55:16] and then all of my information already in your account. So we can try to identify whether it's
+[55:16 - 55:23] a scammer. So we can think about automatic voice responder, which is a chatbot. And then we can't
+[55:23 - 55:30] even request information from the scammer in order to identify where they are in terms of location
+[55:30 - 55:38] or cell phone number for the police to catch them. We're also doing robotics in terms of recently
+[55:38 - 55:46] where doing a real estate agents that provides information about house information. So you don't have
+[55:46 - 55:53] to have a real estate agent. You can have this kind of virtual agents help you to walk through
+[55:53 - 55:56] the rooms, give you information, and even persuade you to buy the house.
+[55:56 - 56:08] Finally, I also wanted to talk about this ethical consideration, which a lot of people may have this kind of
+[56:08 - 56:16] idea. If this kind of persuasive system was adopted by a villain. So for example,
+[56:16 - 56:23] illicit donation for charity. So it's actually if it's not for charity, then basically it's a scammer.
+[56:23 - 56:30] So collecting the money for their own usage. So this is really a huge ethical concern.
+[56:31 - 56:36] What if this technology was adopted by other people? So first of all, there are a lot of things we
+[56:36 - 56:43] can do to help in order to prevent such thing happens. But the first thing is we need to educate people
+[56:43 - 56:52] how good our chatbots can do. So for example, we conducted a study, which we was very surprised to find.
+[56:52 - 57:03] So we have this kind of, sort of, a baby city. So we tell people this is a bot, specifically,
+[57:03 - 57:10] given them an icon and also given them a parenthesis, it's a bot. And we do find that after
+[57:10 - 57:18] interacting with the bot, after the conversation, we use a survey, say, do you think your partner is
+[57:18 - 57:27] the bot or a human and tell us why? And then in this very clear display, still 36% of people think
+[57:27 - 57:35] the bot is human. And they give various like responses such as, oh, because it's very caring,
+[57:35 - 57:42] because I don't think he has, because I think he understands me. So a lot of people would
+[57:42 - 57:49] actually mechanical turkers would think that the bot is maybe played by a human behind it.
+[57:49 - 57:57] Not really a real bot. So unfortunately, this case is a lot of time, especially mechanical turkers,
+[57:57 - 58:05] they may not have technical background. They're in normal everyday people. They haven't been talking
+[58:05 - 58:11] to chatbots so much. They may have Amazon Alexa, but Alexa is really limited into commands. But
+[58:11 - 58:18] our chatbot is much more elaborate. It can use strategies and so on. So it's really dangerous
+[58:18 - 58:23] for these people to encounter these chatbots if they're fine to your wrong hand.
+[58:24 - 58:28] Only California state law requires chatbots identified themselves.
+[58:30 - 58:40] 2019 for specific tasks such as commercial and political contents. And this is only restricted in
+[58:40 - 58:47] California. Not in other states or in other country. And the unfortunate thing is, even
+[58:47 - 58:53] you're telling people this is a bot, still 36% of people don't believe you. So what we can do is
+[58:53 - 59:01] definitely try to deploy these bots so that you can actually talk to them and teach you some strategies
+[59:01 - 59:07] to identify whether they are bots or not. By, for example, asking something out of domain.
+[59:07 - 59:13] So you can see if the bot can retire or not. If it's a bot, most likely you'll apply something very
+[59:14 - 59:21] absurd. So here we were just doing a baby step. For example, we have another paper just about
+[59:21 - 59:29] to release on how to test if your chatbot is identity safe, which means people might use various
+[59:29 - 59:36] ways to ask whether your chatbot or a human. But the bot needs to identify that intent correctly
+[59:36 - 59:42] and be able to respond with the responsible answer. Okay, I think that's everything I want to cover.
+[59:43 - 59:46] A little bit out of time. Any questions?
+[59:49 - 59:52] You see some in the chats, right? Do we have?
+[59:55 - 59:59] How well do the algorithm deal with interruptions?
+[59:59 - 01:00:06] So that's a good question because right now all the experiments on the persuasive conversational
+[01:00:06 - 01:00:13] systems are typing-based conversation agents. So you're typing. So you have these kind of really
+[01:00:13 - 01:00:21] long utterances. So if you speak to speech, usually the utterances are shorter. So the interruptions
+[01:00:21 - 01:00:28] happen in real time, for sure. So right now we are doing very sort of like a fundamental thing.
+[01:00:29 - 01:00:35] If the pause is longer than a couple of one second, we're going to cut it off. So the system is
+[01:00:35 - 01:00:41] going to interrupt. So this is a custom-paying conversation with agency interruption happens.
+[01:00:48 - 01:00:49] Any more questions?
+[01:00:49 - 01:01:01] I have one last question. So by introducing these kinds of defense mechanisms or certain kinds of
+[01:01:02 - 01:01:08] so as you mentioned, like educating people how to or I guess letting them know certain strategies
+[01:01:08 - 01:01:13] to identify, help identify bots and so forth. I mean in general I was thinking like,
+[01:01:14 - 01:01:20] is there a concern there that this would pollute future training instances or for example,
+[01:01:20 - 01:01:26] so like the understanding of such strategies can then see into nature language which
+[01:01:27 - 01:01:33] because as OpenAI or other big companies periodically come up with new iterations of their
+[01:01:33 - 01:01:38] models and they trade on with more internet data. So is there a concern there that this would
+[01:01:38 - 01:01:41] eventually lead to like pollution in the trading sector?
+[01:01:43 - 01:01:51] I think it's really definitely there is you have all these strategies and of course that people
+[01:01:51 - 01:01:55] are going to take into these kind of a diverse so examples into consideration in the future.
+[01:01:55 - 01:02:01] So you're trying a model that is more robust to these universal samples. This is going to happen
+[01:02:01 - 01:02:07] in the future. So that but this also improves your conversation systems quality as well.
+[01:02:07 - 01:02:11] Right. Thank you.
+[01:02:20 - 01:02:21] Okay, I see more questions.
+[01:02:26 - 01:02:30] If there are no more questions, I would like to thank Joe.
+[01:02:31 - 01:02:38] Thanks for giving the seminar. Sorry, I came in late so I couldn't introduce me before.
+[01:02:38 - 01:02:46] So that was pretty exciting. It's nice to have this diversity in our speaker series because
+[01:02:46 - 01:02:54] normally we are very heavily econ speaker relying on econ speakers but I really love the
+[01:02:54 - 01:03:03] section between using sort of experimental methods and AI so that I think yeah I guess
+[01:03:04 - 01:03:10] everyone feels like that this is pretty exciting research. So again, thank you for taking the time
+[01:03:11 - 01:03:16] to joining us. Our next webinar will be in two weeks. It will be on

@@ -1,0 +1,14 @@
+# Advanced Cryptography with Post-Quantum Security
+
+Design a comprehensive cryptographic system resistant to quantum computing attacks:
+
+1. Lattice-based cryptography implementation (Kyber, Dilithium) for key exchange and signatures
+2. Multivariate cryptography for digital signatures with quantum resistance
+3. Hash-based signatures (XMSS, LMS) for long-term security
+4. Multivariate public key cryptography for encryption
+5. Zero-knowledge proof systems with post-quantum security
+6. Secure multi-party computation protocols quantum-resistant
+7. Threshold cryptography for distributed trust models
+8. Migration strategies from classical to post-quantum cryptography
+
+Provide detailed cryptographic protocols, security proofs, implementation considerations, and performance analysis. Include specific parameter choices, security levels, and integration strategies for existing systems.

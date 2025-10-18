@@ -317,7 +317,7 @@ htmlcov/
 .mypy.ini
 
 # Pre-commit
-.pre-commit-config.yaml
+
 
 # ==================================================
 # DOCUMENTATION

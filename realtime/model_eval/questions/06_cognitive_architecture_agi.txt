@@ -1,0 +1,14 @@
+# Cognitive Architecture for AGI Development
+
+Design a cognitive architecture for artificial general intelligence that integrates:
+
+1. Hierarchical memory systems (sensory, episodic, semantic, procedural)
+2. Multi-scale temporal processing (from milliseconds to years)
+3. Emotional and motivational subsystems influencing decision making
+4. Meta-cognitive capabilities for self-monitoring and self-improvement
+5. Social cognition and theory of mind implementation
+6. Creative problem-solving and analogical reasoning mechanisms
+7. Ethical reasoning frameworks with value alignment capabilities
+8. Continual learning without catastrophic forgetting
+
+Provide detailed cognitive models, neural implementations, learning algorithms, and evaluation methodologies. Include mathematical formulations for cognitive processes, architectural diagrams, and pathways to AGI development.

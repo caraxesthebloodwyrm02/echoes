@@ -1,0 +1,12 @@
+# Security: End-to-End Encryption
+
+How would you implement end-to-end encryption for data stored in an offline-first application? Cover:
+
+1. Key management strategy
+2. Encryption at rest vs. in transit
+3. Handling key rotation
+4. Recovery mechanisms
+5. Performance implications
+6. Platform-specific considerations
+
+Provide a high-level design and specific implementation details for the most critical components.

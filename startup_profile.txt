@@ -1,0 +1,23 @@
+
+================================================================================
+                    ECHOES PLATFORM
+================================================================================
+
+  Multi-Modal AI Platform with Batch Processing & Budget Control
+
+  Type /help for commands or start chatting naturally
+  Use /batch for batch processing operations
+  Use /assistant for AI assistant mode
+
+================================================================================
+        
+System Status:
+  * Environment loaded
+  * Batch processing ready
+  * Budget protection active
+  ACTIVE Budget: $5.00 remaining ($0.00 spent, 0 calls)
+  Files: 3 input, 0 output
+
+echoes> 
+
+Goodbye!

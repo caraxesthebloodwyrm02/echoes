@@ -167,9 +167,11 @@ class PrivacyScanner:
                             "type": entity.type,
                             "value": entity.value,
                             "confidence": entity.confidence,
-                            "line_content": line.strip()[:100] + "..."
-                            if len(line.strip()) > 100
-                            else line.strip(),
+                            "line_content": (
+                                line.strip()[:100] + "..."
+                                if len(line.strip()) > 100
+                                else line.strip()
+                            ),
                         },
                     )
 

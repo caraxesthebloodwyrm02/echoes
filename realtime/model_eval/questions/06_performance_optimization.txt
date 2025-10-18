@@ -1,0 +1,12 @@
+# Performance Optimization: Storage Efficiency
+
+What strategies would you implement to minimize the storage footprint of an offline cache for a document-based application? Consider:
+
+1. Data compression techniques
+2. Delta encoding for updates
+3. Efficient indexing strategies
+4. Garbage collection of stale data
+5. Selective synchronization
+6. Binary encoding formats
+
+Provide specific implementation examples and discuss the trade-offs of each approach.

@@ -28,7 +28,7 @@ Ontology-based knowledge management and inference
 # removed unused import json
 import datetime
 import os
-from typing import Any, Dict, List, Tuple, Optional
+from typing import Any, Dict, List, Optional, Tuple
 
 import networkx as nx
 from rdflib import BNode, Graph, Literal, Namespace, URIRef
@@ -94,7 +94,11 @@ class KnowledgeGraph:
         return entity_uri
 
     def add_relationship(
-        self, subject_uri, predicate, object_uri, properties: Optional[Dict[str, Any]] = None
+        self,
+        subject_uri,
+        predicate,
+        object_uri,
+        properties: Optional[Dict[str, Any]] = None,
     ):
         """Add relationship between entities"""
 
@@ -114,7 +118,11 @@ class KnowledgeGraph:
                 self.rdf_graph.add((rel_node, self.ns["code"][prop], Literal(value)))
 
     def add_metric_data(
-        self, entity_uri, metric_name: str, value: float, timestamp: Optional[str] = None
+        self,
+        entity_uri,
+        metric_name: str,
+        value: float,
+        timestamp: Optional[str] = None,
     ):
         """Add metric data to an entity"""
 

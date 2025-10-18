@@ -1,0 +1,31 @@
+{
+  "rate_limiting": {
+    "max_retries": 5,
+    "base_delay": 2.0,
+    "max_delay": 120.0,
+    "backoff_factor": 1.5,
+    "rate_limit_window": 60.0,
+    "max_requests_per_window": 20,
+    "concurrent_limit": 2
+  },
+  "models": ["mistral:7b-instruct"],
+  "evaluation": {
+    "questions_directory": "questions",
+    "output_directory": "evaluations",
+    "timeout_per_question": 600,
+    "enable_caching": true,
+    "enable_metrics": true
+  },
+  "load_testing": {
+    "enabled": false,
+    "requests_per_model": 30,
+    "test_prompt": "What is the capital of France?",
+    "max_concurrent_requests": 3
+  },
+  "logging": {
+    "level": "INFO",
+    "file": "model_eval.log",
+    "console": true,
+    "metrics_file": "evaluation_metrics.json"
+  }
+}

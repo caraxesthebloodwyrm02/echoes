@@ -1,0 +1,28 @@
+{
+  "export_time": 1760698476.0057185,
+  "summary": {
+    "total_points": 1,
+    "total_segments": 0,
+    "current_direction": "uncertain",
+    "segments": [],
+    "trajectory_health": 0.4
+  },
+  "all_points": [
+    {
+      "timestamp": 1760698476.0057185,
+      "content": "Hello",
+      "metadata": {
+        "event_type": "insert",
+        "delta": "Hello",
+        "typing_velocity": 0.0,
+        "edit_intensity": 0.0
+      },
+      "direction": "uncertain",
+      "confidence": 0.3,
+      "cause_effect_chain": [
+        "Initial input"
+      ]
+    }
+  ],
+  "all_segments": []
+}

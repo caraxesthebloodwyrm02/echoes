@@ -452,10 +452,11 @@ class CodebaseAuditor:
                 if ai_modules_files
                 else 0
             ),
-            "src_test_ratio": len([f for f in src_files if "test" in f.lower()])
-            / len(src_files)
-            if src_files
-            else 0,
+            "src_test_ratio": (
+                len([f for f in src_files if "test" in f.lower()]) / len(src_files)
+                if src_files
+                else 0
+            ),
         }
 
         self.findings["testing"] = findings

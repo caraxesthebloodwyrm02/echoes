@@ -1,0 +1,14 @@
+# Advanced Neural Architecture Search with Meta-Learning
+
+Design a meta-learning framework for automated neural architecture search that can:
+
+1. Learn architectural patterns across multiple domains (vision, language, reinforcement learning)
+2. Implement transfer learning between different task families
+3. Use multi-objective optimization balancing accuracy, efficiency, and robustness
+4. Incorporate domain-specific constraints and hardware targets
+5. Enable few-shot architecture adaptation to new tasks
+6. Provide uncertainty quantification for architecture recommendations
+7. Scale to billion-parameter models while maintaining search efficiency
+8. Integrate with existing deep learning frameworks
+
+Provide mathematical formulations for the meta-learning objectives, detailed algorithm pseudocode, computational complexity analysis, and experimental design for validation. Include specific techniques for handling catastrophic forgetting and negative transfer.

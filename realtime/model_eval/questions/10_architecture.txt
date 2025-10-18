@@ -1,0 +1,12 @@
+# Architecture: Plugin System
+
+Design a plugin system for an offline-first application that allows extending functionality while maintaining data consistency. Include:
+
+1. Plugin architecture overview
+2. Lifecycle management
+3. Data access patterns
+4. Security model
+5. Performance considerations
+6. Example implementation of a simple plugin
+
+Focus on how the system handles offline scenarios and data synchronization.

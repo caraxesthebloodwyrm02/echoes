@@ -1,0 +1,85 @@
+{
+  "timestamp": "2025-10-18T07:40:07.403594",
+  "total_questions": 10,
+  "total_models": 1,
+  "total_evaluations": 10,
+  "overall_success_rate": 1.0,
+  "rate_limiting_metrics": {
+    "requests_made": 10,
+    "rate_limit_hits": 0,
+    "retries_attempted": 0,
+    "success_rate": 1.0,
+    "average_response_time": 133.63032159805297,
+    "error_breakdown": {}
+  },
+  "model_performance": {
+    "mistral:7b-instruct": {
+      "total_evaluations": 10,
+      "successful_evaluations": 10,
+      "success_rate": 1.0,
+      "average_processing_time": 133.63156349658965
+    }
+  },
+  "question_performance": {
+    "01_context_understanding": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 65.4099178314209
+    },
+    "02_code_generation": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 182.9884114265442
+    },
+    "03_technical_reasoning": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 201.80220556259155
+    },
+    "04_system_design": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 144.9761791229248
+    },
+    "05_error_handling": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 118.96111369132996
+    },
+    "06_performance_optimization": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 111.13581776618958
+    },
+    "07_security": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 112.63861417770386
+    },
+    "08_testing": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 130.44518399238586
+    },
+    "09_ux_design": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 134.4097650051117
+    },
+    "10_architecture": {
+      "total_evaluations": 1,
+      "successful_evaluations": 1,
+      "success_rate": 1.0,
+      "average_processing_time": 133.5484263896942
+    }
+  }
+}

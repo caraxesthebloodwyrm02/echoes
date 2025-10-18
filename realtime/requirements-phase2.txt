@@ -1,0 +1,22 @@
+# Phase 2 Requirements - Authentication & Security
+
+# JWT token handling
+PyJWT>=2.8.0
+
+# Testing
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+
+# API framework (for unified gateway)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+python-multipart>=0.0.6
+
+# Rate limiting and middleware
+starlette>=0.27.0
+
+# Optional: Enhanced logging
+loguru>=0.7.0
+
+# Optional: Metrics
+prometheus-client>=0.18.0
