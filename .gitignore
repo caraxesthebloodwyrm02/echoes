@@ -48,6 +48,22 @@ htmlcov/
 .coverage
 .coverage.*
 .cache
+
+# Action Runner
+actions-runner/_diag/
+actions-runner/_work/
+actions-runner/bin/
+actions-runner/externals/
+
+# Project specific directories
+backup_pre_restructure/
+archive/
+yt_temp/
+site/
+session_logs/
+trajectory logs/
+Q4/
+speech/
 nosetests.xml
 coverage.xml
 *.cover
