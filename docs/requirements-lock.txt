@@ -224,7 +224,7 @@ spacy-loggers==1.0.5
 SQLAlchemy==2.0.44
 srsly==2.5.1
 sse-starlette==3.0.2
-starlette==0.48.0
+starlette==0.47.2
 statsmodels==0.14.5
 stevedore==5.5.0
 streamlit==1.50.0
