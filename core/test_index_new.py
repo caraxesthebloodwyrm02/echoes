@@ -1,6 +1,7 @@
 """
 Tests for the Index constructor conducting inference.
 """
+
 from datetime import (
     datetime,
     timedelta,
@@ -91,9 +92,7 @@ class TestIndexConstructorInference:
         tm.assert_index_equal(result, expected)
 
     @pytest.mark.parametrize("cast_index", [True, False])
-    @pytest.mark.parametrize(
-        "vals", [[True, False, True], np.array([True, False, True], dtype=bool)]
-    )
+    @pytest.mark.parametrize("vals", [[True, False, True], np.array([True, False, True], dtype=bool)])
     def test_constructor_dtypes_to_object(self, cast_index, vals):
         if cast_index:
             index = Index(vals, dtype=bool)
@@ -130,15 +129,10 @@ class TestIndexConstructorInference:
             (TimedeltaIndex, "timedelta64[ns]", np.timedelta64("nat")),
         ],
     )
-    def test_constructor_infer_nat_dt_like(
-        self, pos, klass, dtype, ctor, nulls_fixture, request
-    ):
+    def test_constructor_infer_nat_dt_like(self, pos, klass, dtype, ctor, nulls_fixture, request):
         if isinstance(nulls_fixture, Decimal):
             # We dont cast these to datetime64/timedelta64
-            pytest.skip(
-                f"We don't cast {type(nulls_fixture).__name__} to "
-                "datetime64/timedelta64"
-            )
+            pytest.skip(f"We don't cast {type(nulls_fixture).__name__} to " "datetime64/timedelta64")
 
         expected = klass([NaT, NaT])
         assert expected.dtype == dtype
@@ -424,9 +418,6 @@ class TestIndexConstructorUnwrapping:
 class TestIndexConstructionErrors:
     def test_constructor_overflow_int64(self):
         # see GH#15832
-        msg = (
-            "The elements provided in the data cannot "
-            "all be casted to the dtype int64"
-        )
+        msg = "The elements provided in the data cannot " "all be casted to the dtype int64"
         with pytest.raises(OverflowError, match=msg):
             Index([np.iinfo(np.uint64).max - 1], dtype="int64")

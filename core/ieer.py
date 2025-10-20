@@ -51,9 +51,7 @@ class IEERDocument:
         if self.headline:
             headline = " ".join(self.headline.leaves())
         else:
-            headline = (
-                " ".join([w for w in self.text.leaves() if w[:1] != "<"][:12]) + "..."
-            )
+            headline = " ".join([w for w in self.text.leaves() if w[:1] != "<"][:12]) + "..."
         if self.docno is not None:
             return f"<IEERDocument {self.docno}: {headline!r}>"
         else:
@@ -81,11 +79,7 @@ class IEERCorpusReader(CorpusReader):
 
     def _read_parsed_block(self, stream):
         # TODO: figure out while empty documents are being returned
-        return [
-            self._parse(doc)
-            for doc in self._read_block(stream)
-            if self._parse(doc).docno is not None
-        ]
+        return [self._parse(doc) for doc in self._read_block(stream) if self._parse(doc).docno is not None]
 
     def _parse(self, doc):
         val = nltk.chunk.ieerstr2tree(doc, root_label="DOCUMENT")

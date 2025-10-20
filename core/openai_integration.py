@@ -177,9 +177,7 @@ class OpenAIIntegration:
             logger.error(f"OpenAI chat completion failed: {e}")
             return None
 
-    def create_agent(
-        self, name: str, instructions: str, model: Optional[str] = None, **kwargs
-    ) -> Optional[Any]:
+    def create_agent(self, name: str, instructions: str, model: Optional[str] = None, **kwargs) -> Optional[Any]:
         """Create an OpenAI Agent if Agents SDK is available"""
         if not self._agents_available:
             logger.warning("OpenAI Agents SDK not available")
@@ -238,9 +236,7 @@ class OpenAIIntegration:
             "model": getattr(self, "model", None),
             "max_retries": getattr(self, "max_retries", None),
             "timeout": getattr(self, "timeout", None),
-            "connection_valid": self.validate_connection()
-            if self._configured
-            else False,
+            "connection_valid": self.validate_connection() if self._configured else False,
         }
 
 

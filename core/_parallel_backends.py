@@ -48,9 +48,7 @@ class ParallelBackendBase(metaclass=ABCMeta):
 
     nesting_level = None
 
-    def __init__(
-        self, nesting_level=None, inner_max_num_threads=None, **backend_kwargs
-    ):
+    def __init__(self, nesting_level=None, inner_max_num_threads=None, **backend_kwargs):
         super().__init__()
         self.nesting_level = nesting_level
         self.inner_max_num_threads = inner_max_num_threads
@@ -154,9 +152,7 @@ class ParallelBackendBase(metaclass=ABCMeta):
         else:
             return out.get()
 
-    def configure(
-        self, n_jobs=1, parallel=None, prefer=None, require=None, **backend_kwargs
-    ):
+    def configure(self, n_jobs=1, parallel=None, prefer=None, require=None, **backend_kwargs):
         """Reconfigure the backend and return the number of workers.
 
         This makes it possible to reuse an existing backend instance for
@@ -392,9 +388,7 @@ class AutoBatchingMixin(object):
             # The current batch size is too small: the duration of the
             # processing of a batch of task is not large enough to hide
             # the scheduling overhead.
-            ideal_batch_size = int(
-                old_batch_size * self.MIN_IDEAL_BATCH_DURATION / batch_duration
-            )
+            ideal_batch_size = int(old_batch_size * self.MIN_IDEAL_BATCH_DURATION / batch_duration)
             # Multiply by two to limit oscilations between min and max.
             ideal_batch_size *= 2
 
@@ -407,8 +401,7 @@ class AutoBatchingMixin(object):
             self._effective_batch_size = batch_size
             if self.parallel.verbose >= 10:
                 self.parallel._print(
-                    f"Batch computation too fast ({batch_duration}s.) "
-                    f"Setting batch_size={batch_size}."
+                    f"Batch computation too fast ({batch_duration}s.) " f"Setting batch_size={batch_size}."
                 )
         elif batch_duration > self.MAX_IDEAL_BATCH_DURATION and old_batch_size >= 2:
             # The current batch size is too big. If we schedule overly long
@@ -418,16 +411,13 @@ class AutoBatchingMixin(object):
             # likelihood of scheduling such stragglers.
 
             # decrease the batch size quickly to limit potential starving
-            ideal_batch_size = int(
-                old_batch_size * self.MIN_IDEAL_BATCH_DURATION / batch_duration
-            )
+            ideal_batch_size = int(old_batch_size * self.MIN_IDEAL_BATCH_DURATION / batch_duration)
             # Multiply by two to limit oscilations between min and max.
             batch_size = max(2 * ideal_batch_size, 1)
             self._effective_batch_size = batch_size
             if self.parallel.verbose >= 10:
                 self.parallel._print(
-                    f"Batch computation too slow ({batch_duration}s.) "
-                    f"Setting batch_size={batch_size}."
+                    f"Batch computation too slow ({batch_duration}s.) " f"Setting batch_size={batch_size}."
                 )
         else:
             # No batch size adjustment
@@ -542,10 +532,7 @@ class MultiprocessingBackend(PoolManagerMixin, AutoBatchingMixin, ParallelBacken
                         "before creating your Dask cluster."
                     )
                 else:
-                    msg = (
-                        "Multiprocessing-backed parallel loops "
-                        "cannot be nested, setting n_jobs=1"
-                    )
+                    msg = "Multiprocessing-backed parallel loops " "cannot be nested, setting n_jobs=1"
                 warnings.warn(msg, stacklevel=3)
             return 1
 
@@ -553,8 +540,7 @@ class MultiprocessingBackend(PoolManagerMixin, AutoBatchingMixin, ParallelBacken
             # Mixing loky and multiprocessing in nested loop is not supported
             if n_jobs != 1:
                 warnings.warn(
-                    "Multiprocessing-backed parallel loops cannot be nested,"
-                    " below loky, setting n_jobs=1",
+                    "Multiprocessing-backed parallel loops cannot be nested," " below loky, setting n_jobs=1",
                     stacklevel=3,
                 )
             return 1
@@ -563,8 +549,7 @@ class MultiprocessingBackend(PoolManagerMixin, AutoBatchingMixin, ParallelBacken
             # Prevent posix fork inside in non-main posix threads
             if n_jobs != 1:
                 warnings.warn(
-                    "Multiprocessing-backed parallel loops cannot be nested"
-                    " below threads, setting n_jobs=1",
+                    "Multiprocessing-backed parallel loops cannot be nested" " below threads, setting n_jobs=1",
                     stacklevel=3,
                 )
             return 1
@@ -668,10 +653,7 @@ class LokyBackend(AutoBatchingMixin, ParallelBackendBase):
                         "before creating your Dask cluster."
                     )
                 else:
-                    msg = (
-                        "Loky-backed parallel loops cannot be called in a"
-                        " multiprocessing, setting n_jobs=1"
-                    )
+                    msg = "Loky-backed parallel loops cannot be called in a" " multiprocessing, setting n_jobs=1"
                 warnings.warn(msg, stacklevel=3)
 
             return 1
@@ -679,8 +661,7 @@ class LokyBackend(AutoBatchingMixin, ParallelBackendBase):
             # Prevent posix fork inside in non-main posix threads
             if n_jobs != 1:
                 warnings.warn(
-                    "Loky-backed parallel loops cannot be nested below "
-                    "threads, setting n_jobs=1",
+                    "Loky-backed parallel loops cannot be nested below " "threads, setting n_jobs=1",
                     stacklevel=3,
                 )
             return 1
@@ -713,9 +694,7 @@ class LokyBackend(AutoBatchingMixin, ParallelBackendBase):
             # Don't terminate the workers as we want to reuse them in later
             # calls, but cleanup the temporary resources that the Parallel call
             # created. This 'hack' requires a private, low-level operation.
-            self._workers._temp_folder_manager._clean_temporary_resources(
-                context_id=self.parallel._id, force=False
-            )
+            self._workers._temp_folder_manager._clean_temporary_resources(context_id=self.parallel._id, force=False)
             self._workers = None
 
         self.reset_batch_stats()

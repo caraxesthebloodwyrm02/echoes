@@ -116,12 +116,8 @@ class AssistantRouter:
 
     def __init__(self):
         self.routing_strategy = os.getenv("HYBRID_ASSISTANT_DEFAULT_STRATEGY", "auto")
-        self.complexity_threshold = float(
-            os.getenv("HYBRID_ASSISTANT_COMPLEXITY_THRESHOLD", "0.7")
-        )
-        self.enable_cross_validation = (
-            os.getenv("HYBRID_ASSISTANT_CROSS_VALIDATION", "true").lower() == "true"
-        )
+        self.complexity_threshold = float(os.getenv("HYBRID_ASSISTANT_COMPLEXITY_THRESHOLD", "0.7"))
+        self.enable_cross_validation = os.getenv("HYBRID_ASSISTANT_CROSS_VALIDATION", "true").lower() == "true"
 
         # Define assistant capabilities
         self.capabilities = {
@@ -396,9 +392,7 @@ class AzureAssistant(BaseAssistant):
             from azure.ai.inference import ChatCompletionsClient
             from azure.core.credentials import AzureKeyCredential
 
-            client = ChatCompletionsClient(
-                endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)
-            )
+            client = ChatCompletionsClient(endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key))
 
             # Simple health check
             response = client.complete(
@@ -424,9 +418,7 @@ class AzureAssistant(BaseAssistant):
             from azure.ai.inference import ChatCompletionsClient
             from azure.core.credentials import AzureKeyCredential
 
-            client = ChatCompletionsClient(
-                endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key)
-            )
+            client = ChatCompletionsClient(endpoint=self.endpoint, credential=AzureKeyCredential(self.api_key))
 
             # Prepare context
             context_str = ""
@@ -503,9 +495,7 @@ class LocalAssistant(BaseAssistant):
         description = task.description.lower()
 
         if "hello" in description or "hi" in description:
-            response = (
-                "Hello! I'm the local ECHOES assistant. How can I help you today?"
-            )
+            response = "Hello! I'm the local ECHOES assistant. How can I help you today?"
         elif "status" in description:
             response = "Local assistant is operational. All systems nominal."
         elif "list" in description or "show" in description:
@@ -564,9 +554,7 @@ class ResponseValidator:
             recommended_response=recommended,
         )
 
-    def _calculate_consensus(
-        self, primary: TaskResponse, secondary: List[TaskResponse]
-    ) -> float:
+    def _calculate_consensus(self, primary: TaskResponse, secondary: List[TaskResponse]) -> float:
         """Calculate consensus score between responses"""
         # Simple implementation - in production, use semantic similarity
         similarities = []
@@ -581,9 +569,7 @@ class ResponseValidator:
 
         return sum(similarities) / len(similarities) if similarities else 1.0
 
-    def _identify_discrepancies(
-        self, primary: TaskResponse, secondary: List[TaskResponse]
-    ) -> List[str]:
+    def _identify_discrepancies(self, primary: TaskResponse, secondary: List[TaskResponse]) -> List[str]:
         """Identify discrepancies between responses"""
         discrepancies = []
 
@@ -592,16 +578,12 @@ class ResponseValidator:
         for resp in secondary:
             secondary_length = len(resp.response.split())
             if abs(primary_length - secondary_length) > primary_length * 0.5:
-                discrepancies.append(
-                    f"Response length discrepancy: {primary_length} vs {secondary_length} words"
-                )
+                discrepancies.append(f"Response length discrepancy: {primary_length} vs {secondary_length} words")
 
         # Check for error responses
         for resp in secondary:
             if "error" in resp.response.lower() or "failed" in resp.response.lower():
-                discrepancies.append(
-                    f"{resp.assistant_type.value} assistant reported an error"
-                )
+                discrepancies.append(f"{resp.assistant_type.value} assistant reported an error")
 
         return discrepancies
 
@@ -621,9 +603,7 @@ class UnifiedAssistant:
         }
 
         # Performance monitoring
-        self.enable_monitoring = (
-            os.getenv("HYBRID_ASSISTANT_MONITORING", "true").lower() == "true"
-        )
+        self.enable_monitoring = os.getenv("HYBRID_ASSISTANT_MONITORING", "true").lower() == "true"
         self.performance_log = []
 
         logger.info("UnifiedAssistant initialized with hybrid capabilities")
@@ -637,19 +617,13 @@ class UnifiedAssistant:
             try:
                 is_healthy = await assistant.check_health()
                 health_results[assistant_type.value] = is_healthy
-                logger.info(
-                    f"{assistant_type.value} assistant health: {'OK' if is_healthy else 'FAILED'}"
-                )
+                logger.info(f"{assistant_type.value} assistant health: {'OK' if is_healthy else 'FAILED'}")
             except Exception as e:
                 health_results[assistant_type.value] = False
-                logger.error(
-                    f"{assistant_type.value} assistant initialization failed: {e}"
-                )
+                logger.error(f"{assistant_type.value} assistant initialization failed: {e}")
 
         healthy_count = sum(1 for status in health_results.values() if status)
-        logger.info(
-            f"Assistant initialization complete: {healthy_count}/{len(self.assistants)} healthy"
-        )
+        logger.info(f"Assistant initialization complete: {healthy_count}/{len(self.assistants)} healthy")
 
         return health_results
 
@@ -683,15 +657,11 @@ class UnifiedAssistant:
                 try:
                     response = await assistant.process_task(task)
                     responses.append(response)
-                    logger.info(
-                        f"{assistant_type.value} processing complete in {response.processing_time:.2f}s"
-                    )
+                    logger.info(f"{assistant_type.value} processing complete in {response.processing_time:.2f}s")
                 except Exception as e:
                     logger.error(f"{assistant_type.value} processing failed: {e}")
             else:
-                logger.warning(
-                    f"{assistant_type.value} assistant not available, skipping"
-                )
+                logger.warning(f"{assistant_type.value} assistant not available, skipping")
 
         if not responses:
             # Fallback to local assistant
@@ -729,11 +699,7 @@ class UnifiedAssistant:
         for assistant_type, assistant in self.assistants.items():
             assistant_status = {
                 "available": assistant.is_available,
-                "last_health_check": (
-                    assistant.last_health_check.isoformat()
-                    if assistant.last_health_check
-                    else None
-                ),
+                "last_health_check": (assistant.last_health_check.isoformat() if assistant.last_health_check else None),
                 "capabilities": asdict(assistant.capabilities),
             }
             status["assistants"][assistant_type.value] = assistant_status
@@ -845,9 +811,7 @@ if __name__ == "__main__":
         # Get status
         status = await assistant.get_status()
         print(f"System Health: {status['system_health']}")
-        print(
-            f"Available Assistants: {sum(1 for a in status['assistants'].values() if a['available'])}"
-        )
+        print(f"Available Assistants: {sum(1 for a in status['assistants'].values() if a['available'])}")
 
         # Process sample tasks
         tasks = [

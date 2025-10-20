@@ -44,9 +44,7 @@ with warnings.catch_warnings():
         [
             pckg[1]
             for pckg in walk_packages(prefix="sklearn.", path=sklearn_path)
-            if not any(
-                substr in pckg[1] for substr in ["._", ".tests.", "sklearn.externals"]
-            )
+            if not any(substr in pckg[1] for substr in ["._", ".tests.", "sklearn.externals"])
         ]
     )
 
@@ -74,9 +72,7 @@ def test_docstring_parameters():
     # Test module docstring formatting
 
     # Skip test if numpydoc is not found
-    pytest.importorskip(
-        "numpydoc", reason="numpydoc is required to test the docstrings"
-    )
+    pytest.importorskip("numpydoc", reason="numpydoc is required to test the docstrings")
 
     # XXX unreached code as of v0.22
     from numpydoc import docscrape
@@ -103,9 +99,7 @@ def test_docstring_parameters():
             with warnings.catch_warnings(record=True) as w:
                 cdoc = docscrape.ClassDoc(cls)
             if len(w):
-                raise RuntimeError(
-                    "Error for __init__ of %s in %s:\n%s" % (cls, name, w[0])
-                )
+                raise RuntimeError("Error for __init__ of %s in %s:\n%s" % (cls, name, w[0]))
 
             # Skip checks on deprecated classes
             if _is_deprecated(cls.__new__):
@@ -139,9 +133,7 @@ def test_docstring_parameters():
             if fname == "configuration" and name.endswith("setup"):
                 continue
             name_ = _get_func_name(func)
-            if not any(d in name_ for d in _DOCSTRING_IGNORES) and not _is_deprecated(
-                func
-            ):
+            if not any(d in name_ for d in _DOCSTRING_IGNORES) and not _is_deprecated(func):
                 incorrect += check_docstring_parameters(func)
 
     msg = "\n".join(incorrect)
@@ -298,9 +290,7 @@ def test_fit_docstring_attributes(name, Estimator):
     undocumented_attrs = set(fit_attr).difference(fit_attr_names)
     undocumented_attrs = set(undocumented_attrs).difference(skipped_attributes)
     if undocumented_attrs:
-        raise AssertionError(
-            f"Undocumented attributes for {Estimator.__name__}: {undocumented_attrs}"
-        )
+        raise AssertionError(f"Undocumented attributes for {Estimator.__name__}: {undocumented_attrs}")
 
 
 def _get_all_fitted_attributes(estimator):

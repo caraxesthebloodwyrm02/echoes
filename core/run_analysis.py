@@ -166,9 +166,7 @@ def analyze_robustness() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Coverage: {avg_cov:.1f}% | "
-            f"Avg Issues: {avg_issues:.1f} | "
-            f"Files: {len(x)}",
+            f"Avg Coverage: {avg_cov:.1f}% | " f"Avg Issues: {avg_issues:.1f} | " f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -249,12 +247,8 @@ def analyze_practicality() -> bool:
         plt.scatter(x, y, c=colors, alpha=0.6, edgecolors="w")
 
         # Add reference lines
-        plt.axhline(
-            y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability"
-        )
-        plt.axhline(
-            y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability"
-        )
+        plt.axhline(y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability")
+        plt.axhline(y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability")
 
         plt.title("Codebase Practicality: Complexity vs. Maintainability")
         plt.xlabel("Average Cyclomatic Complexity (Lower is Better)")
@@ -268,9 +262,7 @@ def analyze_practicality() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Complexity: {avg_comp:.1f} | "
-            f"Avg Maintainability: {avg_mi:.1f} | "
-            f"Files: {len(x)}",
+            f"Avg Complexity: {avg_comp:.1f} | " f"Avg Maintainability: {avg_mi:.1f} | " f"Files: {len(x)}",
             fontsize=9,
         )
 

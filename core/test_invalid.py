@@ -16,19 +16,13 @@ class TestInvalidConcat:
     def test_concat_invalid(self, obj):
         # trying to concat a ndframe with a non-ndframe
         df1 = DataFrame(range(2))
-        msg = (
-            f"cannot concatenate object of type '{type(obj)}'; "
-            "only Series and DataFrame objs are valid"
-        )
+        msg = f"cannot concatenate object of type '{type(obj)}'; " "only Series and DataFrame objs are valid"
         with pytest.raises(TypeError, match=msg):
             concat([df1, obj])
 
     def test_concat_invalid_first_argument(self):
         df1 = DataFrame(range(2))
-        msg = (
-            "first argument must be an iterable of pandas "
-            'objects, you passed an object of type "DataFrame"'
-        )
+        msg = "first argument must be an iterable of pandas " 'objects, you passed an object of type "DataFrame"'
         with pytest.raises(TypeError, match=msg):
             concat(df1)
 

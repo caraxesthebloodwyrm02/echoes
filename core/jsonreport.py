@@ -103,9 +103,7 @@ class JsonReporter:
 
         return self.total.n_statements and self.total.pc_covered
 
-    def report_one_file(
-        self, coverage_data: CoverageData, analysis: Analysis, file_reporter: FileReporter
-    ) -> JsonObj:
+    def report_one_file(self, coverage_data: CoverageData, analysis: Analysis, file_reporter: FileReporter) -> JsonObj:
         """Extract the relevant report data for a single file."""
         nums = analysis.numbers
         self.total += nums

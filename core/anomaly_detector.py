@@ -44,10 +44,7 @@ class AnomalyDetector(BaseDetector):
         if isinstance(data, (int, float)):
             value = float(data)
             mean = sum(self.baseline_values) / len(self.baseline_values)
-            std_dev = (
-                sum((x - mean) ** 2 for x in self.baseline_values)
-                / len(self.baseline_values)
-            ) ** 0.5
+            std_dev = (sum((x - mean) ** 2 for x in self.baseline_values) / len(self.baseline_values)) ** 0.5
 
             # Check against config thresholds
             deviation = abs(value - mean)

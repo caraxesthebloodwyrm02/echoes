@@ -335,9 +335,7 @@ def test_rfe_estimator_tags():
 
 def test_rfe_min_step(global_random_seed):
     n_features = 10
-    X, y = make_friedman1(
-        n_samples=50, n_features=n_features, random_state=global_random_seed
-    )
+    X, y = make_friedman1(n_samples=50, n_features=n_features, random_state=global_random_seed)
     n_samples, n_features = X.shape
     estimator = SVR(kernel="linear")
 
@@ -378,9 +376,7 @@ def test_number_of_subsets_of_features(global_random_seed):
     n_features_list = [11, 11]
     n_features_to_select_list = [3, 3]
     step_list = [2, 3]
-    for n_features, n_features_to_select, step in zip(
-        n_features_list, n_features_to_select_list, step_list
-    ):
+    for n_features, n_features_to_select, step in zip(n_features_list, n_features_to_select_list, step_list):
         generator = check_random_state(global_random_seed)
         X = generator.normal(size=(100, n_features))
         y = generator.rand(100).round()
@@ -414,12 +410,8 @@ def test_number_of_subsets_of_features(global_random_seed):
         rfecv.fit(X, y)
 
         for key in rfecv.cv_results_.keys():
-            assert len(rfecv.cv_results_[key]) == formula1(
-                n_features, n_features_to_select, step
-            )
-            assert len(rfecv.cv_results_[key]) == formula2(
-                n_features, n_features_to_select, step
-            )
+            assert len(rfecv.cv_results_[key]) == formula1(n_features, n_features_to_select, step)
+            assert len(rfecv.cv_results_[key]) == formula2(n_features, n_features_to_select, step)
 
 
 def test_rfe_cv_n_jobs(global_random_seed):
@@ -461,9 +453,7 @@ def test_rfe_cv_groups():
     assert est_groups.n_features_ > 0
 
 
-@pytest.mark.parametrize(
-    "importance_getter", [attrgetter("regressor_.coef_"), "regressor_.coef_"]
-)
+@pytest.mark.parametrize("importance_getter", [attrgetter("regressor_.coef_"), "regressor_.coef_"])
 @pytest.mark.parametrize("selector, expected_n_features", [(RFE, 5), (RFECV, 4)])
 def test_rfe_wrapped_estimator(importance_getter, selector, expected_n_features):
     # Non-regression test for
@@ -471,9 +461,7 @@ def test_rfe_wrapped_estimator(importance_getter, selector, expected_n_features)
     X, y = make_friedman1(n_samples=50, n_features=10, random_state=0)
     estimator = LinearSVR(random_state=0)
 
-    log_estimator = TransformedTargetRegressor(
-        regressor=estimator, func=np.log, inverse_func=np.exp
-    )
+    log_estimator = TransformedTargetRegressor(regressor=estimator, func=np.log, inverse_func=np.exp)
 
     selector = selector(log_estimator, importance_getter=importance_getter)
     sel = selector.fit(X, y)
@@ -492,9 +480,7 @@ def test_rfe_wrapped_estimator(importance_getter, selector, expected_n_features)
 def test_rfe_importance_getter_validation(importance_getter, err_type, Selector):
     X, y = make_friedman1(n_samples=50, n_features=10, random_state=42)
     estimator = LinearSVR()
-    log_estimator = TransformedTargetRegressor(
-        regressor=estimator, func=np.log, inverse_func=np.exp
-    )
+    log_estimator = TransformedTargetRegressor(regressor=estimator, func=np.log, inverse_func=np.exp)
 
     with pytest.raises(err_type):
         model = Selector(log_estimator, importance_getter=importance_getter)
@@ -542,11 +528,7 @@ def test_rfecv_std_and_mean(global_random_seed):
 
     rfecv = RFECV(estimator=SVC(kernel="linear"))
     rfecv.fit(X, y)
-    split_keys = [
-        key
-        for key in rfecv.cv_results_.keys()
-        if re.search(r"split\d+_test_score", key)
-    ]
+    split_keys = [key for key in rfecv.cv_results_.keys() if re.search(r"split\d+_test_score", key)]
     cv_scores = np.asarray([rfecv.cv_results_[key] for key in split_keys])
     expected_mean = np.mean(cv_scores, axis=0)
     expected_std = np.std(cv_scores, axis=0)
@@ -577,9 +559,7 @@ def test_rfecv_cv_results_n_features(
     step,
     cv_results_n_features,
 ):
-    X, y = make_classification(
-        n_samples=20, n_features=n_features, n_informative=n_features, n_redundant=0
-    )
+    X, y = make_classification(n_samples=20, n_features=n_features, n_informative=n_features, n_redundant=0)
     rfecv = RFECV(
         estimator=SVC(kernel="linear"),
         step=step,
@@ -587,10 +567,7 @@ def test_rfecv_cv_results_n_features(
     )
     rfecv.fit(X, y)
     assert_array_equal(rfecv.cv_results_["n_features"], cv_results_n_features)
-    assert all(
-        len(value) == len(rfecv.cv_results_["n_features"])
-        for value in rfecv.cv_results_.values()
-    )
+    assert all(len(value) == len(rfecv.cv_results_["n_features"]) for value in rfecv.cv_results_.values())
 
 
 @pytest.mark.parametrize("ClsRFE", [RFE, RFECV])
@@ -660,9 +637,7 @@ def test_rfe_estimator_attribute_error():
     assert inner_msg in str(exec_info.value.__cause__)
 
 
-@pytest.mark.parametrize(
-    "ClsRFE, param", [(RFE, "n_features_to_select"), (RFECV, "min_features_to_select")]
-)
+@pytest.mark.parametrize("ClsRFE, param", [(RFE, "n_features_to_select"), (RFECV, "min_features_to_select")])
 def test_rfe_n_features_to_select_warning(ClsRFE, param):
     """Check if the correct warning is raised when trying to initialize a RFE
     object with a n_features_to_select attribute larger than the number of
@@ -744,12 +719,6 @@ def test_results_per_cv_in_rfecv(global_random_seed):
 
     rfecv.fit(X, y)
 
-    assert len(rfecv.cv_results_["split1_test_score"]) == len(
-        rfecv.cv_results_["split2_test_score"]
-    )
-    assert len(rfecv.cv_results_["split1_support"]) == len(
-        rfecv.cv_results_["split2_support"]
-    )
-    assert len(rfecv.cv_results_["split1_ranking"]) == len(
-        rfecv.cv_results_["split2_ranking"]
-    )
+    assert len(rfecv.cv_results_["split1_test_score"]) == len(rfecv.cv_results_["split2_test_score"])
+    assert len(rfecv.cv_results_["split1_support"]) == len(rfecv.cv_results_["split2_support"])
+    assert len(rfecv.cv_results_["split1_ranking"]) == len(rfecv.cv_results_["split2_ranking"])

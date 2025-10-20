@@ -130,9 +130,7 @@ def _guess_datetime_format_for_array(arr, dayfirst: bool | None = False) -> str 
     if (first_non_null := tslib.first_non_null(arr)) != -1:
         if type(first_non_nan_element := arr[first_non_null]) is str:  # noqa: E721
             # GH#32264 np.str_ object
-            guessed_format = guess_datetime_format(
-                first_non_nan_element, dayfirst=dayfirst
-            )
+            guessed_format = guess_datetime_format(first_non_nan_element, dayfirst=dayfirst)
             if guessed_format is not None:
                 return guessed_format
             # If there are multiple non-null elements, warn about
@@ -148,9 +146,7 @@ def _guess_datetime_format_for_array(arr, dayfirst: bool | None = False) -> str 
     return None
 
 
-def should_cache(
-    arg: ArrayConvertible, unique_share: float = 0.7, check_count: int | None = None
-) -> bool:
+def should_cache(arg: ArrayConvertible, unique_share: float = 0.7, check_count: int | None = None) -> bool:
     """
     Decides whether to do caching.
 
@@ -190,9 +186,7 @@ def should_cache(
         else:
             check_count = 500
     else:
-        assert (
-            0 <= check_count <= len(arg)
-        ), "check_count must be in next bounds: [0; len(arg)]"
+        assert 0 <= check_count <= len(arg), "check_count must be in next bounds: [0; len(arg)]"
         if check_count == 0:
             return False
 
@@ -258,9 +252,7 @@ def _maybe_cache(
     return cache_array
 
 
-def _box_as_indexlike(
-    dt_array: ArrayLike, utc: bool = False, name: Hashable | None = None
-) -> Index:
+def _box_as_indexlike(dt_array: ArrayLike, utc: bool = False, name: Hashable | None = None) -> Index:
     """
     Properly boxes the ndarray of datetimes to DatetimeIndex
     if it is possible or to generic Index instead
@@ -408,9 +400,7 @@ def _convert_listlike_datetimes(
             raise ValueError("cannot specify both format and unit")
         return _to_datetime_with_unit(arg, unit, name, utc, errors)
     elif getattr(arg, "ndim", 1) > 1:
-        raise TypeError(
-            "arg must be a string, datetime, list, tuple, 1-d array, or Series"
-        )
+        raise TypeError("arg must be a string, datetime, list, tuple, 1-d array, or Series")
 
     # warn if passing timedelta64, raise for PeriodDtype
     # NB: this must come after unit transformation
@@ -517,12 +507,8 @@ def _to_datetime_with_unit(arg, unit, name, utc: bool, errors: str) -> Index:
                     arr = cast_from_unit_vectorized(arg, unit=unit)
                 except OutOfBoundsDatetime:
                     if errors != "raise":
-                        return _to_datetime_with_unit(
-                            arg.astype(object), unit, name, utc, errors
-                        )
-                    raise OutOfBoundsDatetime(
-                        f"cannot convert input with unit '{unit}'"
-                    )
+                        return _to_datetime_with_unit(arg.astype(object), unit, name, utc, errors)
+                    raise OutOfBoundsDatetime(f"cannot convert input with unit '{unit}'")
 
             arr = arr.view("M8[ns]")
             tz_parsed = None
@@ -578,25 +564,18 @@ def _adjust_to_origin(arg, origin, unit):
         try:
             arg = arg - j0
         except TypeError as err:
-            raise ValueError(
-                "incompatible 'arg' type for given 'origin'='julian'"
-            ) from err
+            raise ValueError("incompatible 'arg' type for given 'origin'='julian'") from err
 
         # preemptively check this for a nice range
         j_max = Timestamp.max.to_julian_date() - j0
         j_min = Timestamp.min.to_julian_date() - j0
         if np.any(arg > j_max) or np.any(arg < j_min):
-            raise OutOfBoundsDatetime(
-                f"{original} is Out of Bounds for origin='julian'"
-            )
+            raise OutOfBoundsDatetime(f"{original} is Out of Bounds for origin='julian'")
     else:
         # arg must be numeric
-        if not (
-            (is_integer(arg) or is_float(arg)) or is_numeric_dtype(np.asarray(arg))
-        ):
+        if not ((is_integer(arg) or is_float(arg)) or is_numeric_dtype(np.asarray(arg))):
             raise ValueError(
-                f"'{arg}' is not compatible with origin='{origin}'; "
-                "it must be numeric with a unit specified"
+                f"'{arg}' is not compatible with origin='{origin}'; " "it must be numeric with a unit specified"
             )
 
         # we are going to offset back to unix / epoch time
@@ -605,9 +584,7 @@ def _adjust_to_origin(arg, origin, unit):
         except OutOfBoundsDatetime as err:
             raise OutOfBoundsDatetime(f"origin {origin} is Out of Bounds") from err
         except ValueError as err:
-            raise ValueError(
-                f"origin {origin} cannot be converted to a Timestamp"
-            ) from err
+            raise ValueError(f"origin {origin} cannot be converted to a Timestamp") from err
 
         if offset.tz is not None:
             raise ValueError(f"origin offset {offset} must be tz-naive")
@@ -637,8 +614,7 @@ def to_datetime(
     infer_datetime_format: bool = ...,
     origin=...,
     cache: bool = ...,
-) -> Timestamp:
-    ...
+) -> Timestamp: ...
 
 
 @overload
@@ -654,8 +630,7 @@ def to_datetime(
     infer_datetime_format: bool = ...,
     origin=...,
     cache: bool = ...,
-) -> Series:
-    ...
+) -> Series: ...
 
 
 @overload
@@ -671,8 +646,7 @@ def to_datetime(
     infer_datetime_format: bool = ...,
     origin=...,
     cache: bool = ...,
-) -> DatetimeIndex:
-    ...
+) -> DatetimeIndex: ...
 
 
 def to_datetime(
@@ -1085,9 +1059,7 @@ def to_datetime(
             # "Union[float, str, datetime, List[Any], Tuple[Any, ...], ExtensionArray,
             # ndarray[Any, Any], Series]"; expected "Union[List[Any], Tuple[Any, ...],
             # Union[Union[ExtensionArray, ndarray[Any, Any]], Index, Series], Series]"
-            argc = cast(
-                Union[list, tuple, ExtensionArray, np.ndarray, "Series", Index], arg
-            )
+            argc = cast(Union[list, tuple, ExtensionArray, np.ndarray, "Series", Index], arg)
             cache_array = _maybe_cache(argc, format, cache, convert_listlike)
         except OutOfBoundsDatetime:
             # caching attempts to create a DatetimeIndex, which may raise
@@ -1189,17 +1161,14 @@ def _assemble_from_unit_mappings(arg, errors: DateTimeErrorChoices, utc: bool):
     if len(req):
         _required = ",".join(req)
         raise ValueError(
-            "to assemble mappings requires at least that "
-            f"[year, month, day] be specified: [{_required}] is missing"
+            "to assemble mappings requires at least that " f"[year, month, day] be specified: [{_required}] is missing"
         )
 
     # keys we don't recognize
     excess = sorted(set(unit_rev.keys()) - set(_unit_map.values()))
     if len(excess):
         _excess = ",".join(excess)
-        raise ValueError(
-            f"extra keys have been passed to the datetime assemblage: [{_excess}]"
-        )
+        raise ValueError(f"extra keys have been passed to the datetime assemblage: [{_excess}]")
 
     def coerce(values):
         # we allow coercion to if errors allows
@@ -1210,11 +1179,7 @@ def _assemble_from_unit_mappings(arg, errors: DateTimeErrorChoices, utc: bool):
             values = values.astype("int64", copy=False)
         return values
 
-    values = (
-        coerce(arg[unit_rev["year"]]) * 10000
-        + coerce(arg[unit_rev["month"]]) * 100
-        + coerce(arg[unit_rev["day"]])
-    )
+    values = coerce(arg[unit_rev["year"]]) * 10000 + coerce(arg[unit_rev["month"]]) * 100 + coerce(arg[unit_rev["day"]])
     try:
         values = to_datetime(values, format="%Y%m%d", errors=errors, utc=utc)
     except (TypeError, ValueError) as err:
@@ -1227,9 +1192,7 @@ def _assemble_from_unit_mappings(arg, errors: DateTimeErrorChoices, utc: bool):
             try:
                 values += to_timedelta(coerce(arg[value]), unit=u, errors=errors)
             except (TypeError, ValueError) as err:
-                raise ValueError(
-                    f"cannot assemble the datetimes [{value}]: {err}"
-                ) from err
+                raise ValueError(f"cannot assemble the datetimes [{value}]: {err}") from err
     return values
 
 

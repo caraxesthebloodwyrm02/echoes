@@ -140,10 +140,7 @@ class TestSeriesReplace:
         # GH 5319
         ser = pd.Series([0, np.nan, 2, 3, 4])
         expected = ser.ffill()
-        msg = (
-            "Series.replace without 'value' and with non-dict-like "
-            "'to_replace' is deprecated"
-        )
+        msg = "Series.replace without 'value' and with non-dict-like " "'to_replace' is deprecated"
         with tm.assert_produces_warning(FutureWarning, match=msg):
             result = ser.replace([np.nan])
         tm.assert_series_equal(result, expected)
@@ -184,10 +181,7 @@ class TestSeriesReplace:
 
     def test_replace_with_single_list(self):
         ser = pd.Series([0, 1, 2, 3, 4])
-        msg2 = (
-            "Series.replace without 'value' and with non-dict-like "
-            "'to_replace' is deprecated"
-        )
+        msg2 = "Series.replace without 'value' and with non-dict-like " "'to_replace' is deprecated"
         with tm.assert_produces_warning(FutureWarning, match=msg2):
             result = ser.replace([1, 2, 3])
         tm.assert_series_equal(result, pd.Series([0, 0, 0, 0, 4]))
@@ -200,10 +194,7 @@ class TestSeriesReplace:
 
         # make sure things don't get corrupted when fillna call fails
         s = ser.copy()
-        msg = (
-            r"Invalid fill method\. Expecting pad \(ffill\) or backfill "
-            r"\(bfill\)\. Got crash_cymbal"
-        )
+        msg = r"Invalid fill method\. Expecting pad \(ffill\) or backfill " r"\(bfill\)\. Got crash_cymbal"
         msg3 = "The 'method' keyword in Series.replace is deprecated"
         with pytest.raises(ValueError, match=msg):
             with tm.assert_produces_warning(FutureWarning, match=msg3):
@@ -410,9 +401,7 @@ class TestSeriesReplace:
             expected = expected.cat.add_categories(2)
         tm.assert_series_equal(expected, result)
 
-    @pytest.mark.parametrize(
-        "data, data_exp", [(["a", "b", "c"], ["b", "b", "c"]), (["a"], ["b"])]
-    )
+    @pytest.mark.parametrize("data, data_exp", [(["a", "b", "c"], ["b", "b", "c"]), (["a"], ["b"])])
     def test_replace_categorical_inplace(self, data, data_exp):
         # GH 53358
         result = pd.Series(data, dtype="category")
@@ -484,9 +473,7 @@ class TestSeriesReplace:
 
         tm.assert_series_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "ser, exp", [([1, 2, 3], [1, True, 3]), (["x", 2, 3], ["x", True, 3])]
-    )
+    @pytest.mark.parametrize("ser, exp", [([1, 2, 3], [1, True, 3]), (["x", 2, 3], ["x", True, 3])])
     def test_replace_no_cast(self, ser, exp):
         # GH 9113
         # BUG: replace int64 dtype with bool coerces to int64
@@ -501,14 +488,8 @@ class TestSeriesReplace:
         # GH 18634
         # API: replace() should raise an exception if invalid argument is given
         series = pd.Series(["a", "b", "c "])
-        msg = (
-            r"Expecting 'to_replace' to be either a scalar, array-like, "
-            r"dict or None, got invalid type.*"
-        )
-        msg2 = (
-            "Series.replace without 'value' and with non-dict-like "
-            "'to_replace' is deprecated"
-        )
+        msg = r"Expecting 'to_replace' to be either a scalar, array-like, " r"dict or None, got invalid type.*"
+        msg2 = "Series.replace without 'value' and with non-dict-like " "'to_replace' is deprecated"
         with pytest.raises(TypeError, match=msg):
             with tm.assert_produces_warning(FutureWarning, match=msg2):
                 series.replace(lambda x: x.strip())
@@ -634,9 +615,7 @@ class TestSeriesReplace:
             "CC": "CC-REPL",
         }
         result = ser.replace(regex_mapping, regex=True)
-        exp = pd.Series(
-            ["CC", "CC", "CC-REPL", "DD", "CC", "", pd.NA, "CC"], dtype="string"
-        )
+        exp = pd.Series(["CC", "CC", "CC-REPL", "DD", "CC", "", pd.NA, "CC"], dtype="string")
         tm.assert_series_equal(result, exp)
 
     @pytest.mark.parametrize(

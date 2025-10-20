@@ -74,9 +74,7 @@ class DataIntegrationUnit:
             "general": ["reddit", "github"],
         }
 
-    async def gather_data(
-        self, query: str, context: Dict[str, Any], mode: str = "technical"
-    ) -> Dict[str, Any]:
+    async def gather_data(self, query: str, context: Dict[str, Any], mode: str = "technical") -> Dict[str, Any]:
         """
         Gather relevant data from multiple sources
 
@@ -124,16 +122,12 @@ class DataIntegrationUnit:
                 aggregated_data["summary"]["failed_sources"] += 1
             else:
                 aggregated_data["sources"][source_name] = result
-                aggregated_data["summary"]["total_results"] += len(
-                    result.get("data", [])
-                )
+                aggregated_data["summary"]["total_results"] += len(result.get("data", []))
                 aggregated_data["summary"]["successful_sources"] += 1
 
         return aggregated_data
 
-    async def _search_source(
-        self, source_name: str, query: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def _search_source(self, source_name: str, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Search a specific data source"""
         source = self.data_sources[source_name]
 
@@ -152,9 +146,7 @@ class DataIntegrationUnit:
         else:
             return {"status": "unsupported", "data": []}
 
-    async def _search_github(
-        self, query: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def _search_github(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Search GitHub repositories and code"""
         # Simulate GitHub API search
         await asyncio.sleep(0.1)  # Simulate network delay
@@ -194,9 +186,7 @@ class DataIntegrationUnit:
             },
         }
 
-    async def _search_huggingface(
-        self, query: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def _search_huggingface(self, query: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Search HuggingFace models and datasets"""
         await asyncio.sleep(0.1)
 
@@ -251,9 +241,7 @@ class DataIntegrationUnit:
         """Infer ML task type from query"""
         query_lower = query.lower()
 
-        if any(
-            word in query_lower for word in ["classify", "classification", "categorize"]
-        ):
+        if any(word in query_lower for word in ["classify", "classification", "categorize"]):
             return "classification"
         elif any(word in query_lower for word in ["generate", "generation", "create"]):
             return "generation"

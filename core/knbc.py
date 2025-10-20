@@ -9,7 +9,7 @@
 
 import re
 
-from nltk.corpus.reader.api import CorpusReader, SyntaxCorpusReader
+from nltk.corpus.reader.api import SyntaxCorpusReader
 from nltk.corpus.reader.util import (
     FileSystemPathPointer,
     find_corpus_fileids,
@@ -135,9 +135,7 @@ def demo():
 
     root = nltk.data.find("corpora/knbc/corpus1")
     fileids = [
-        f
-        for f in find_corpus_fileids(FileSystemPathPointer(root), ".*")
-        if re.search(r"\d\-\d\-[\d]+\-[\d]+", f)
+        f for f in find_corpus_fileids(FileSystemPathPointer(root), ".*") if re.search(r"\d\-\d\-[\d]+\-[\d]+", f)
     ]
 
     def _knbc_fileids_sort(x):
@@ -163,19 +161,14 @@ def demo():
     print("\n\n".join("%s" % tree for tree in knbc.parsed_sents()[:2]))
 
     print(
-        "\n".join(
-            " ".join("{}/{}".format(w[0], w[1].split(" ")[2]) for w in sent)
-            for sent in knbc.tagged_sents()[0:2]
-        )
+        "\n".join(" ".join("{}/{}".format(w[0], w[1].split(" ")[2]) for w in sent) for sent in knbc.tagged_sents()[0:2])
     )
 
 
 def test():
     from nltk.corpus.util import LazyCorpusLoader
 
-    knbc = LazyCorpusLoader(
-        "knbc/corpus1", KNBCorpusReader, r".*/KN.*", encoding="euc-jp"
-    )
+    knbc = LazyCorpusLoader("knbc/corpus1", KNBCorpusReader, r".*/KN.*", encoding="euc-jp")
     assert isinstance(knbc.words()[0], str)
     assert isinstance(knbc.sents()[0][0], str)
     assert isinstance(knbc.tagged_words()[0], tuple)

@@ -67,9 +67,7 @@ def _retry_with_clean_cache(
             except URLError:
                 raise
             except Exception as exc:
-                if no_retry_exception is not None and isinstance(
-                    exc, no_retry_exception
-                ):
+                if no_retry_exception is not None and isinstance(exc, no_retry_exception):
                     raise
                 warn("Invalid cache, redownloading file", RuntimeWarning)
                 local_path = _get_local_path(openml_path, data_home)
@@ -82,9 +80,7 @@ def _retry_with_clean_cache(
     return decorator
 
 
-def _retry_on_network_error(
-    n_retries: int = 3, delay: float = 1.0, url: str = ""
-) -> Callable:
+def _retry_on_network_error(n_retries: int = 3, delay: float = 1.0, url: str = "") -> Callable:
     """If the function call results in a network error, call the function again
     up to ``n_retries`` times with a ``delay`` between each call. If the error
     has a 412 status code, don't call the function again as this is a specific
@@ -106,9 +102,7 @@ def _retry_on_network_error(
                         raise
                     if retry_counter == 0:
                         raise
-                    warn(
-                        f"A network error occurred while downloading {url}. Retrying..."
-                    )
+                    warn(f"A network error occurred while downloading {url}. Retrying...")
                     # Avoid a ResourceWarning on Python 3.14 and later.
                     if isinstance(e, HTTPError):
                         e.close()
@@ -121,9 +115,7 @@ def _retry_on_network_error(
     return decorator
 
 
-def _open_openml_url(
-    url: str, data_home: Optional[str], n_retries: int = 3, delay: float = 1.0
-):
+def _open_openml_url(url: str, data_home: Optional[str], n_retries: int = 3, delay: float = 1.0):
     """
     Returns a resource from OpenML.org. Caches it to data_home if required.
 
@@ -174,11 +166,7 @@ def _open_openml_url(
             # renaming operation to the final location is atomic to ensure the
             # concurrence safety of the dataset caching mechanism.
             with TemporaryDirectory(dir=dir_name) as tmpdir:
-                with closing(
-                    _retry_on_network_error(n_retries, delay, req.full_url)(urlopen)(
-                        req
-                    )
-                ) as fsrc:
+                with closing(_retry_on_network_error(n_retries, delay, req.full_url)(urlopen)(req)) as fsrc:
                     opener: Callable
                     if is_gzip_encoded(fsrc):
                         opener = open
@@ -242,9 +230,7 @@ def _get_json_content_from_openml_api(
 
     @_retry_with_clean_cache(url, data_home=data_home)
     def _load_json():
-        with closing(
-            _open_openml_url(url, data_home, n_retries=n_retries, delay=delay)
-        ) as response:
+        with closing(_open_openml_url(url, data_home, n_retries=n_retries, delay=delay)) as response:
             return json.loads(response.read().decode("utf-8"))
 
     try:
@@ -322,9 +308,7 @@ def _get_data_info_by_name(
             )
             for r in res:
                 warning_msg += f"- version {r['version']}, status: {r['status']}\n"
-                warning_msg += (
-                    f"  url: https://www.openml.org/search?type=data&id={r['did']}\n"
-                )
+                warning_msg += f"  url: https://www.openml.org/search?type=data&id={r['did']}\n"
             warn(warning_msg)
         return res[0]
 
@@ -551,9 +535,7 @@ def _load_arff_response(
         read_csv_kwargs=read_csv_kwargs or {},
     )
     try:
-        X, y, frame, categories = _open_url_and_load_gzip_file(
-            url, data_home, n_retries, delay, arff_params
-        )
+        X, y, frame, categories = _open_url_and_load_gzip_file(url, data_home, n_retries, delay, arff_params)
     except Exception as exc:
         if parser != "pandas":
             raise
@@ -567,9 +549,7 @@ def _load_arff_response(
         # to pandas. By default, we use a double quote. Thus, we retry
         # with a single quote before to raise the error.
         arff_params["read_csv_kwargs"].update(quotechar="'")
-        X, y, frame, categories = _open_url_and_load_gzip_file(
-            url, data_home, n_retries, delay, arff_params
-        )
+        X, y, frame, categories = _open_url_and_load_gzip_file(url, data_home, n_retries, delay, arff_params)
 
     return X, y, frame, categories
 
@@ -686,9 +666,7 @@ def _download_data_to_bunch(
 
         no_retry_exception = ParserError
 
-    X, y, frame, categories = _retry_with_clean_cache(
-        url, data_home, no_retry_exception
-    )(_load_arff_response)(
+    X, y, frame, categories = _retry_with_clean_cache(url, data_home, no_retry_exception)(_load_arff_response)(
         url,
         data_home,
         parser=parser,
@@ -1013,9 +991,7 @@ def fetch_openml(
                 "specify a numeric data_id or a name, not "
                 "both.".format(data_id, name)
             )
-        data_info = _get_data_info_by_name(
-            name, version, data_home, n_retries=n_retries, delay=delay
-        )
+        data_info = _get_data_info_by_name(name, version, data_home, n_retries=n_retries, delay=delay)
         data_id = data_info["did"]
     elif data_id is not None:
         # from the previous if statement, it is given that name is None
@@ -1026,9 +1002,7 @@ def fetch_openml(
                 "both.".format(data_id, version)
             )
     else:
-        raise ValueError(
-            "Neither name nor data_id are provided. Please provide name or data_id."
-        )
+        raise ValueError("Neither name nor data_id are provided. Please provide name or data_id.")
 
     data_description = _get_data_description_by_id(data_id, data_home)
     if data_description["status"] != "active":
@@ -1096,20 +1070,13 @@ def fetch_openml(
             if "true" in (feature["is_ignore"], feature["is_row_identifier"]):
                 continue
             if feature["data_type"] == "string":
-                raise ValueError(
-                    "STRING attributes are not supported for "
-                    "array representation. Try as_frame=True"
-                )
+                raise ValueError("STRING attributes are not supported for " "array representation. Try as_frame=True")
 
     if target_column == "default-target":
         # determines the default target based on the data feature results
         # (which is currently more reliable than the data description;
         # see issue: https://github.com/openml/OpenML/issues/768)
-        target_columns = [
-            feature["name"]
-            for feature in features_list
-            if feature["is_target"] == "true"
-        ]
+        target_columns = [feature["name"] for feature in features_list if feature["is_target"] == "true"]
     elif isinstance(target_column, str):
         # for code-simplicity, make target_column by default a list
         target_columns = [target_column]
@@ -1151,9 +1118,7 @@ def fetch_openml(
     if return_X_y:
         return bunch.data, bunch.target
 
-    description = "{}\n\nDownloaded from openml.org.".format(
-        data_description.pop("description")
-    )
+    description = "{}\n\nDownloaded from openml.org.".format(data_description.pop("description"))
 
     bunch.update(
         DESCR=description,

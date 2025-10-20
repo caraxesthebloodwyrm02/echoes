@@ -72,21 +72,16 @@ def classify(
     # Determine primary label
     if score_abs >= th["aligned_score"] and balance < th["synergy_balance_deg"]:
         label = "Aligned"
-        reason = "|score| >= {:.2f} and balance_angle < {:.0f}°".format(
-            th["aligned_score"], th["synergy_balance_deg"]
-        )
+        reason = "|score| >= {:.2f} and balance_angle < {:.0f}°".format(th["aligned_score"], th["synergy_balance_deg"])
     elif (score_abs >= th["imbalanced_score"] and score_abs < th["aligned_score"]) or (
         th["synergy_balance_deg"] <= balance <= th["imbalanced_upper_deg"]
     ):
         label = "Imbalanced"
-        reason = (
-            "efficiency_score between {:.1f} and {:.1f} or "
-            "balance_angle between {:.0f}° and {:.0f}°".format(
-                th["imbalanced_score"],
-                th["aligned_score"],
-                th["synergy_balance_deg"],
-                th["imbalanced_upper_deg"],
-            )
+        reason = "efficiency_score between {:.1f} and {:.1f} or " "balance_angle between {:.0f}° and {:.0f}°".format(
+            th["imbalanced_score"],
+            th["aligned_score"],
+            th["synergy_balance_deg"],
+            th["imbalanced_upper_deg"],
         )
     else:
         label = "Fragmented"

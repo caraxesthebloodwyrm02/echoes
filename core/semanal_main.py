@@ -143,9 +143,7 @@ def semantic_analysis_for_targets(
         if isinstance(n.node, MypyFile):
             # Already done above.
             continue
-        process_top_level_function(
-            analyzer, state, state.id, n.node.fullname, n.node, n.active_typeinfo, patches
-        )
+        process_top_level_function(analyzer, state, state.id, n.node.fullname, n.node, n.active_typeinfo, patches)
     apply_semantic_analyzer_patches(patches)
     apply_class_plugin_hooks(graph, [state.id], state.manager.errors)
     check_type_arguments_in_targets(nodes, state, state.manager.errors)
@@ -284,16 +282,12 @@ def process_functions(graph: Graph, scc: list[str], patches: Patches) -> None:
         # There can be multiple generated methods per line. Use target
         # name as the second sort key to get a repeatable sort order.
         targets = sorted(get_all_leaf_targets(tree), key=lambda x: (x[1].line, x[0]))
-        all_targets.extend(
-            [(module, target, node, active_type) for target, node, active_type in targets]
-        )
+        all_targets.extend([(module, target, node, active_type) for target, node, active_type in targets])
 
     for module, target, node, active_type in order_by_subclassing(all_targets):
         analyzer = graph[module].manager.semantic_analyzer
         assert isinstance(node, (FuncDef, OverloadedFuncDef, Decorator)), node
-        process_top_level_function(
-            analyzer, graph[module], module, target, node, active_type, patches
-        )
+        process_top_level_function(analyzer, graph[module], module, target, node, active_type, patches)
 
 
 def process_top_level_function(
@@ -346,14 +340,10 @@ def process_top_level_function(
     analyzer.saved_locals.clear()
 
 
-TargetInfo: _TypeAlias = tuple[
-    str, Union[MypyFile, FuncDef, OverloadedFuncDef, Decorator], Optional[TypeInfo]
-]
+TargetInfo: _TypeAlias = tuple[str, Union[MypyFile, FuncDef, OverloadedFuncDef, Decorator], Optional[TypeInfo]]
 
 # Same as above but includes module as first item.
-FullTargetInfo: _TypeAlias = tuple[
-    str, str, Union[MypyFile, FuncDef, OverloadedFuncDef, Decorator], Optional[TypeInfo]
-]
+FullTargetInfo: _TypeAlias = tuple[str, str, Union[MypyFile, FuncDef, OverloadedFuncDef, Decorator], Optional[TypeInfo]]
 
 
 def get_all_leaf_targets(file: MypyFile) -> list[TargetInfo]:
@@ -438,9 +428,7 @@ def check_type_arguments(graph: Graph, scc: list[str], errors: Errors) -> None:
                 state.tree.accept(analyzer)
 
 
-def check_type_arguments_in_targets(
-    targets: list[FineGrainedDeferredNode], state: State, errors: Errors
-) -> None:
+def check_type_arguments_in_targets(targets: list[FineGrainedDeferredNode], state: State, errors: Errors) -> None:
     """Check type arguments against type variable bounds and restrictions.
 
     This mirrors the logic in check_type_arguments() except that we process only
@@ -551,9 +539,7 @@ def calculate_class_properties(graph: Graph, scc: list[str], errors: Errors) -> 
                     calculate_class_abstract_status(node.node, tree.is_stub, errors)
                     check_protocol_status(node.node, errors)
                     calculate_class_vars(node.node)
-                    add_type_promotion(
-                        node.node, tree.names, graph[module].options, builtins.names
-                    )
+                    add_type_promotion(node.node, tree.names, graph[module].options, builtins.names)
 
 
 def check_blockers(graph: Graph, scc: list[str]) -> None:

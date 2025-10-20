@@ -47,9 +47,7 @@ def _pinv2_old(a):
     return np.transpose(np.conjugate(np.dot(u, vh[:rank])))
 
 
-def _get_first_singular_vectors_power_method(
-    X, y, mode="A", max_iter=500, tol=1e-06, norm_y_weights=False
-):
+def _get_first_singular_vectors_power_method(X, y, mode="A", max_iter=500, tol=1e-06, norm_y_weights=False):
     """Return the first left and right singular vectors of X'y.
 
     Provides an alternative to the svd(X'y) and uses the power method instead.
@@ -252,9 +250,7 @@ class _PLS(
         # With PLSRegression n_components is bounded by the rank of (X.T X) see
         # Wegelin page 25. With CCA and PLSCanonical, n_components is bounded
         # by the rank of X and the rank of y: see Wegelin page 12
-        rank_upper_bound = (
-            min(n, p) if self.deflation_mode == "regression" else min(n, p, q)
-        )
+        rank_upper_bound = min(n, p) if self.deflation_mode == "regression" else min(n, p, q)
         if n_components > rank_upper_bound:
             raise ValueError(
                 f"`n_components` upper bound is {rank_upper_bound}. "
@@ -265,9 +261,7 @@ class _PLS(
         norm_y_weights = self._norm_y_weights
 
         # Scale (in place)
-        Xk, yk, self._x_mean, self._y_mean, self._x_std, self._y_std = _center_scale_xy(
-            X, y, self.scale
-        )
+        Xk, yk, self._x_mean, self._y_mean, self._x_std, self._y_std = _center_scale_xy(X, y, self.scale)
 
         self.x_weights_ = np.zeros((p, n_components))  # U
         self.y_weights_ = np.zeros((q, n_components))  # V
@@ -392,9 +386,7 @@ class _PLS(
         # Apply rotation
         x_scores = np.dot(X, self.x_rotations_)
         if y is not None:
-            y = check_array(
-                y, input_name="y", ensure_2d=False, copy=copy, dtype=FLOAT_DTYPES
-            )
+            y = check_array(y, input_name="y", ensure_2d=False, copy=copy, dtype=FLOAT_DTYPES)
             if y.ndim == 1:
                 y = y.reshape(-1, 1)
             y -= self._y_mean
@@ -618,9 +610,7 @@ class PLSRegression(_PLS):
     #     - "plspm " with function plsreg2(X, y)
     #     - "pls" with function oscorespls.fit(X, y)
 
-    def __init__(
-        self, n_components=2, *, scale=True, max_iter=500, tol=1e-06, copy=True
-    ):
+    def __init__(self, n_components=2, *, scale=True, max_iter=500, tol=1e-06, copy=True):
         super().__init__(
             n_components=n_components,
             scale=scale,
@@ -885,9 +875,7 @@ class CCA(_PLS):
     for param in ("deflation_mode", "mode", "algorithm"):
         _parameter_constraints.pop(param)
 
-    def __init__(
-        self, n_components=2, *, scale=True, max_iter=500, tol=1e-06, copy=True
-    ):
+    def __init__(self, n_components=2, *, scale=True, max_iter=500, tol=1e-06, copy=True):
         super().__init__(
             n_components=n_components,
             scale=scale,
@@ -1027,9 +1015,7 @@ class PLSSVD(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
                 f"Got {n_components} instead. Reduce `n_components`."
             )
 
-        X, y, self._x_mean, self._y_mean, self._x_std, self._y_std = _center_scale_xy(
-            X, y, self.scale
-        )
+        X, y, self._x_mean, self._y_mean, self._x_std, self._y_std = _center_scale_xy(X, y, self.scale)
 
         # Compute SVD of cross-covariance matrix
         C = np.dot(X.T, y)

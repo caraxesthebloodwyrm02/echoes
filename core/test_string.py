@@ -13,6 +13,7 @@ classes (if they are relevant for the extension interface for all dtypes), or
 be added to the array-specific tests in `pandas/tests/arrays/`.
 
 """
+
 from __future__ import annotations
 
 import string
@@ -44,9 +45,7 @@ def maybe_split_array(arr, chunked):
 
     arrow_array = arr._pa_array
     split = len(arrow_array) // 2
-    arrow_array = pa.chunked_array(
-        [*arrow_array[:split].chunks, *arrow_array[split:].chunks]
-    )
+    arrow_array = pa.chunked_array([*arrow_array[:split].chunks, *arrow_array[split:].chunks])
     assert arrow_array.num_chunks == 2
     return type(arr)(arrow_array)
 
@@ -93,9 +92,7 @@ def data_missing_for_sorting(dtype, chunked):
 
 @pytest.fixture
 def data_for_grouping(dtype, chunked):
-    arr = dtype.construct_array_type()._from_sequence(
-        ["B", "B", pd.NA, pd.NA, "A", "A", "B", "C"], dtype=dtype
-    )
+    arr = dtype.construct_array_type()._from_sequence(["B", "B", pd.NA, pd.NA, "A", "A", "B", "C"], dtype=dtype)
     return maybe_split_array(arr, chunked)
 
 
@@ -165,9 +162,7 @@ class TestStringArray(base.ExtensionTests):
         assert result is not data
         tm.assert_extension_array_equal(result, data)
 
-    def _get_expected_exception(
-        self, op_name: str, obj, other
-    ) -> type[Exception] | tuple[type[Exception], ...] | None:
+    def _get_expected_exception(self, op_name: str, obj, other) -> type[Exception] | tuple[type[Exception], ...] | None:
         if op_name in [
             "__mod__",
             "__rmod__",
@@ -224,9 +219,7 @@ class TestStringArray(base.ExtensionTests):
 
     def test_combine_add(self, data_repeated, using_infer_string, request):
         dtype = next(data_repeated(1)).dtype
-        if using_infer_string and (
-            (dtype.na_value is pd.NA) and dtype.storage == "python"
-        ):
+        if using_infer_string and ((dtype.na_value is pd.NA) and dtype.storage == "python"):
             mark = pytest.mark.xfail(
                 reason="The pointwise operation result will be inferred to "
                 "string[nan, pyarrow], which does not match the input dtype"
@@ -234,9 +227,7 @@ class TestStringArray(base.ExtensionTests):
             request.applymarker(mark)
         super().test_combine_add(data_repeated)
 
-    def test_arith_series_with_array(
-        self, data, all_arithmetic_operators, using_infer_string, request
-    ):
+    def test_arith_series_with_array(self, data, all_arithmetic_operators, using_infer_string, request):
         dtype = data.dtype
         if (
             using_infer_string
@@ -269,10 +260,7 @@ def test_searchsorted_with_na_raises(data_for_sorting, as_series):
     if as_series:
         arr = pd.Series(arr)
 
-    msg = (
-        "searchsorted requires array to be sorted, "
-        "which is impossible with NAs present."
-    )
+    msg = "searchsorted requires array to be sorted, " "which is impossible with NAs present."
     with pytest.raises(ValueError, match=msg):
         arr.searchsorted(b)
 

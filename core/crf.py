@@ -152,9 +152,7 @@ class CRFTagger(TaggerI):
         :rtype: list(list(tuple(str,str)))
         """
         if self._model_file == "":
-            raise Exception(
-                " No model file is found !! Please use train or set_model_file function"
-            )
+            raise Exception(" No model file is found !! Please use train or set_model_file function")
 
         # We need the list of sentences instead of the list generator for matching the input and output
         result = []

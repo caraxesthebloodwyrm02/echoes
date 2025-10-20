@@ -144,8 +144,7 @@ class ResourceTracker(_ResourceTracker):
         self._pid = None
 
         warnings.warn(
-            "resource_tracker: process died unexpectedly, relaunching. "
-            "Some folders/semaphores might leak."
+            "resource_tracker: process died unexpectedly, relaunching. " "Some folders/semaphores might leak."
         )
 
     def _launch(self):
@@ -185,9 +184,7 @@ class ResourceTracker(_ResourceTracker):
                 pid = spawnv_passfds(exe, args, fds_to_pass)
             finally:
                 if _HAVE_SIGMASK:
-                    signal.pthread_sigmask(
-                        signal.SIG_UNBLOCK, _IGNORED_SIGNALS
-                    )
+                    signal.pthread_sigmask(signal.SIG_UNBLOCK, _IGNORED_SIGNALS)
         except BaseException:
             os.close(w)
             raise
@@ -210,9 +207,7 @@ class ResourceTracker(_ResourceTracker):
         This function is added for compatibility with python version before 3.13.7.
         """
         with self._lock:
-            if (
-                self._fd is not None
-            ):  # resource tracker was launched before, is it still running?
+            if self._fd is not None:  # resource tracker was launched before, is it still running?
                 if msg is None:
                     to_send = b"PROBE:0:noop\n"
                 else:
@@ -318,10 +313,7 @@ def main(fd, verbose=0):
                     elif cmd == "UNREGISTER":
                         del registry[rtype][name]
                         if verbose:
-                            util.debug(
-                                f"[ResourceTracker] unregister {name} {rtype}: "
-                                f"registry({len(registry)})"
-                            )
+                            util.debug(f"[ResourceTracker] unregister {name} {rtype}: " f"registry({len(registry)})")
                     elif cmd == "MAYBE_UNLINK":
                         registry[rtype][name] -= 1
                         if verbose:
@@ -335,14 +327,10 @@ def main(fd, verbose=0):
                             del registry[rtype][name]
                             try:
                                 if verbose:
-                                    util.debug(
-                                        f"[ResourceTracker] unlink {name}"
-                                    )
+                                    util.debug(f"[ResourceTracker] unlink {name}")
                                 _CLEANUP_FUNCS[rtype](name)
                             except Exception as e:
-                                warnings.warn(
-                                    f"resource_tracker: {name}: {e!r}"
-                                )
+                                warnings.warn(f"resource_tracker: {name}: {e!r}")
 
                     else:
                         raise RuntimeError(f"unrecognized command {cmd!r}")
@@ -402,9 +390,7 @@ def spawnv_passfds(path, args, passfds):
         passfds = sorted(passfds)
         cmd = " ".join(f'"{x}"' for x in args)
         try:
-            _, ht, pid, _ = _winapi.CreateProcess(
-                path, cmd, None, None, True, 0, None, None, None
-            )
+            _, ht, pid, _ = _winapi.CreateProcess(path, cmd, None, None, True, 0, None, None, None)
             _winapi.CloseHandle(ht)
         except BaseException:
             pass

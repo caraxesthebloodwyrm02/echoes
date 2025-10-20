@@ -360,16 +360,12 @@ def test_memmap_load(tmpdir):
 
     numpy_pickle.dump([le_array, be_array], fname)
 
-    le_array_native_load, be_array_native_load = numpy_pickle.load(
-        fname, ensure_native_byte_order=True
-    )
+    le_array_native_load, be_array_native_load = numpy_pickle.load(fname, ensure_native_byte_order=True)
 
     assert le_array_native_load.dtype == be_array_native_load.dtype
     assert le_array_native_load.dtype in all_dtypes
 
-    le_array_nonnative_load, be_array_nonnative_load = numpy_pickle.load(
-        fname, ensure_native_byte_order=False
-    )
+    le_array_nonnative_load, be_array_nonnative_load = numpy_pickle.load(fname, ensure_native_byte_order=False)
 
     assert le_array_nonnative_load.dtype == le_array.dtype
     assert be_array_nonnative_load.dtype == be_array.dtype
@@ -382,9 +378,7 @@ def test_invalid_parameters_raise():
     )
 
     with raises(ValueError, match=re.escape(expected_msg)):
-        numpy_pickle.load(
-            "/path/to/some/dump.pkl", ensure_native_byte_order=True, mmap_mode="r+"
-        )
+        numpy_pickle.load("/path/to/some/dump.pkl", ensure_native_byte_order=True, mmap_mode="r+")
 
 
 def _check_pickle(filename, expected_list, mmap_mode=None):
@@ -398,50 +392,35 @@ def _check_pickle(filename, expected_list, mmap_mode=None):
 
     py_version_to_default_pickle_protocol = {2: 2, 3: 3}
     pickle_reading_protocol = py_version_to_default_pickle_protocol.get(3, 4)
-    pickle_writing_protocol = py_version_to_default_pickle_protocol.get(
-        py_version_used_for_writing, 4
-    )
+    pickle_writing_protocol = py_version_to_default_pickle_protocol.get(py_version_used_for_writing, 4)
     if pickle_reading_protocol >= pickle_writing_protocol:
         try:
             with warnings.catch_warnings(record=True) as warninfo:
                 warnings.simplefilter("always")
                 result_list = numpy_pickle.load(filename, mmap_mode=mmap_mode)
             filename_base = os.path.basename(filename)
-            expected_nb_deprecation_warnings = (
-                1 if ("_0.9" in filename_base or "_0.8.4" in filename_base) else 0
-            )
+            expected_nb_deprecation_warnings = 1 if ("_0.9" in filename_base or "_0.8.4" in filename_base) else 0
 
-            expected_nb_user_warnings = (
-                3
-                if (re.search("_0.1.+.pkl$", filename_base) and mmap_mode is not None)
-                else 0
-            )
-            expected_nb_warnings = (
-                expected_nb_deprecation_warnings + expected_nb_user_warnings
-            )
+            expected_nb_user_warnings = 3 if (re.search("_0.1.+.pkl$", filename_base) and mmap_mode is not None) else 0
+            expected_nb_warnings = expected_nb_deprecation_warnings + expected_nb_user_warnings
             assert len(warninfo) == expected_nb_warnings, (
                 "Did not get the expected number of warnings. Expected "
                 f"{expected_nb_warnings} but got warnings: "
                 f"{[w.message for w in warninfo]}"
             )
 
-            deprecation_warnings = [
-                w for w in warninfo if issubclass(w.category, DeprecationWarning)
-            ]
+            deprecation_warnings = [w for w in warninfo if issubclass(w.category, DeprecationWarning)]
             user_warnings = [w for w in warninfo if issubclass(w.category, UserWarning)]
             for w in deprecation_warnings:
                 assert (
-                    str(w.message)
-                    == "The file '{0}' has been generated with a joblib "
+                    str(w.message) == "The file '{0}' has been generated with a joblib "
                     "version less than 0.10. Please regenerate this "
                     "pickle file.".format(filename)
                 )
 
             for w in user_warnings:
                 escaped_filename = re.escape(filename)
-                assert re.search(
-                    f"memmapped.+{escaped_filename}.+segmentation fault", str(w.message)
-                )
+                assert re.search(f"memmapped.+{escaped_filename}.+segmentation fault", str(w.message))
 
             for result, expected in zip(result_list, expected_list):
                 if isinstance(expected, np.ndarray):
@@ -455,10 +434,7 @@ def _check_pickle(filename, expected_list, mmap_mode=None):
             # with python 2 we expect a user-friendly error
             if py_version_used_for_writing == 2:
                 assert isinstance(exc, ValueError)
-                message = (
-                    "You may be trying to read with "
-                    "python 3 a joblib pickle generated with python 2."
-                )
+                message = "You may be trying to read with " "python 3 a joblib pickle generated with python 2."
                 assert message in str(exc)
             elif filename.endswith(".lz4") and with_lz4.args[0]:
                 assert isinstance(exc, ValueError)
@@ -470,9 +446,7 @@ def _check_pickle(filename, expected_list, mmap_mode=None):
         # "unsupported pickle protocol" error message
         try:
             numpy_pickle.load(filename)
-            raise AssertionError(
-                "Numpy pickle loading should have raised a ValueError exception"
-            )
+            raise AssertionError("Numpy pickle loading should have raised a ValueError exception")
         except ValueError as e:
             message = "unsupported pickle protocol: {0}".format(pickle_writing_protocol)
             assert message in str(e.args)
@@ -531,11 +505,7 @@ def test_joblib_pickle_across_python_versions_with_mmap():
 
     test_data_dir = os.path.dirname(os.path.abspath(data.__file__))
 
-    pickle_filenames = [
-        os.path.join(test_data_dir, fn)
-        for fn in os.listdir(test_data_dir)
-        if fn.endswith(".pkl")
-    ]
+    pickle_filenames = [os.path.join(test_data_dir, fn) for fn in os.listdir(test_data_dir) if fn.endswith(".pkl")]
     for fname in pickle_filenames:
         _check_pickle(fname, expected_list, mmap_mode="r")
 
@@ -809,11 +779,12 @@ def test_file_handle_persistence_compressed_mmap(tmpdir):
         with warns(UserWarning) as warninfo:
             numpy_pickle.load(f, mmap_mode="r+")
         assert len(warninfo) == 1
-        assert (
-            str(warninfo[0].message)
-            == '"%(fileobj)r" is not a raw file, mmap_mode "%(mmap_mode)s" '
-            "flag will be ignored." % {"fileobj": f, "mmap_mode": "r+"}
-        )
+        assert str(
+            warninfo[0].message
+        ) == '"%(fileobj)r" is not a raw file, mmap_mode "%(mmap_mode)s" ' "flag will be ignored." % {
+            "fileobj": f,
+            "mmap_mode": "r+",
+        }
 
 
 @with_numpy
@@ -827,8 +798,7 @@ def test_file_handle_persistence_in_memory_mmap():
         numpy_pickle.load(buf, mmap_mode="r+")
     assert len(warninfo) == 1
     assert (
-        str(warninfo[0].message)
-        == "In memory persistence is not compatible with mmap_mode "
+        str(warninfo[0].message) == "In memory persistence is not compatible with mmap_mode "
         '"%(mmap_mode)s" flag passed. mmap_mode option will be '
         "ignored." % {"mmap_mode": "r+"}
     )
@@ -900,8 +870,7 @@ def test_binary_zlibfile_bad_compression_levels(tmpdir, bad_value):
     with raises(ValueError) as excinfo:
         BinaryZlibFile(filename, "wb", compresslevel=bad_value)
     pattern = re.escape(
-        "'compresslevel' must be an integer between 1 and 9. "
-        "You provided 'compresslevel={}'".format(bad_value)
+        "'compresslevel' must be an integer between 1 and 9. " "You provided 'compresslevel={}'".format(bad_value)
     )
     excinfo.match(pattern)
 
@@ -1053,9 +1022,7 @@ def test_register_compressor(tmpdir):
 
     class BinaryCompressorTestWrapper(CompressorWrapper):
         def __init__(self):
-            CompressorWrapper.__init__(
-                self, obj=BinaryCompressorTestFile, prefix=compressor_prefix
-            )
+            CompressorWrapper.__init__(self, obj=BinaryCompressorTestFile, prefix=compressor_prefix)
 
     register_compressor(compressor_name, BinaryCompressorTestWrapper())
 
@@ -1088,10 +1055,7 @@ def test_register_compressor_invalid_fileobj():
     with raises(ValueError) as excinfo:
         register_compressor("invalid", InvalidFileObjectWrapper())
 
-    excinfo.match(
-        "Compressor 'fileobj_factory' attribute should implement "
-        "the file object interface"
-    )
+    excinfo.match("Compressor 'fileobj_factory' attribute should implement " "the file object interface")
 
 
 class AnotherZlibCompressorWrapper(CompressorWrapper):

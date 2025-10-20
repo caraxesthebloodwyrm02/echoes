@@ -3,6 +3,7 @@ Tests that the specified index column (a.k.a "index_col")
 is properly handled or inferred during parsing for all of
 the parsers defined in parsers.py
 """
+
 from io import StringIO
 
 import numpy as np
@@ -15,9 +16,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
@@ -176,9 +175,7 @@ def test_multi_index_naming(all_parsers, index_names, request):
     data = ",".join(index_names + ["col\na,c,1\na,d,2\nb,c,3\nb,d,4"])
     result = parser.read_csv(StringIO(data), index_col=[0, 1])
 
-    expected = DataFrame(
-        {"col": [1, 2, 3, 4]}, index=MultiIndex.from_product([["a", "b"], ["c", "d"]])
-    )
+    expected = DataFrame({"col": [1, 2, 3, 4]}, index=MultiIndex.from_product([["a", "b"], ["c", "d"]]))
     expected.index.names = [name if name else None for name in index_names]
     tm.assert_frame_equal(result, expected)
 
@@ -191,9 +188,7 @@ def test_multi_index_naming_not_all_at_beginning(all_parsers):
 
     expected = DataFrame(
         {"Unnamed: 2": ["c", "d", "c", "d"]},
-        index=MultiIndex(
-            levels=[["a", "b"], [1, 2, 3, 4]], codes=[[0, 0, 1, 1], [0, 1, 2, 3]]
-        ),
+        index=MultiIndex(levels=[["a", "b"], [1, 2, 3, 4]], codes=[[0, 0, 1, 1], [0, 1, 2, 3]]),
     )
     tm.assert_frame_equal(result, expected)
 
@@ -264,15 +259,11 @@ def test_index_col_large_csv(all_parsers, monkeypatch):
 def test_index_col_multiindex_columns_no_data(all_parsers):
     # GH#38292
     parser = all_parsers
-    result = parser.read_csv(
-        StringIO("a0,a1,a2\nb0,b1,b2\n"), header=[0, 1], index_col=0
-    )
+    result = parser.read_csv(StringIO("a0,a1,a2\nb0,b1,b2\n"), header=[0, 1], index_col=0)
     expected = DataFrame(
         [],
         index=Index([]),
-        columns=MultiIndex.from_arrays(
-            [["a1", "a2"], ["b1", "b2"]], names=["a0", "b0"]
-        ),
+        columns=MultiIndex.from_arrays([["a1", "a2"], ["b1", "b2"]], names=["a0", "b0"]),
     )
     tm.assert_frame_equal(result, expected)
 
@@ -295,9 +286,7 @@ def test_multiindex_columns_no_data(all_parsers):
     # GH#38292
     parser = all_parsers
     result = parser.read_csv(StringIO("a0,a1,a2\nb0,b1,b2\n"), header=[0, 1])
-    expected = DataFrame(
-        [], columns=MultiIndex.from_arrays([["a0", "a1", "a2"], ["b0", "b1", "b2"]])
-    )
+    expected = DataFrame([], columns=MultiIndex.from_arrays([["a0", "a1", "a2"], ["b0", "b1", "b2"]]))
     tm.assert_frame_equal(result, expected)
 
 
@@ -305,14 +294,10 @@ def test_multiindex_columns_no_data(all_parsers):
 def test_multiindex_columns_index_col_with_data(all_parsers):
     # GH#38292
     parser = all_parsers
-    result = parser.read_csv(
-        StringIO("a0,a1,a2\nb0,b1,b2\ndata,data,data"), header=[0, 1], index_col=0
-    )
+    result = parser.read_csv(StringIO("a0,a1,a2\nb0,b1,b2\ndata,data,data"), header=[0, 1], index_col=0)
     expected = DataFrame(
         [["data", "data"]],
-        columns=MultiIndex.from_arrays(
-            [["a1", "a2"], ["b1", "b2"]], names=["a0", "b0"]
-        ),
+        columns=MultiIndex.from_arrays([["a1", "a2"], ["b1", "b2"]], names=["a0", "b0"]),
         index=Index(["data"]),
     )
     tm.assert_frame_equal(result, expected)
@@ -348,9 +333,7 @@ def test_specify_dtype_for_index_col(all_parsers, dtype, val, request):
     data = "a,b\n01,2"
     parser = all_parsers
     if dtype == object and parser.engine == "pyarrow":
-        request.applymarker(
-            pytest.mark.xfail(reason="Cannot disable type-inference for pyarrow engine")
-        )
+        request.applymarker(pytest.mark.xfail(reason="Cannot disable type-inference for pyarrow engine"))
     result = parser.read_csv(StringIO(data), index_col="a", dtype={"a": dtype})
     expected = DataFrame({"b": [2]}, index=Index([val], name="a", dtype=dtype))
     tm.assert_frame_equal(result, expected)
@@ -369,8 +352,6 @@ x,y,1,2
         header=[0, 1],
         index_col=1,
     )
-    cols = MultiIndex.from_tuples(
-        [("a", "e"), ("c", "g"), ("d", "h")], names=["b", "f"]
-    )
+    cols = MultiIndex.from_tuples([("a", "e"), ("c", "g"), ("d", "h")], names=["b", "f"])
     expected = DataFrame([["x", 1, 2]], columns=cols, index=["y"])
     tm.assert_frame_equal(result, expected)

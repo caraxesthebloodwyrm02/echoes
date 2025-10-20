@@ -210,11 +210,7 @@ class PorterStemmer(StemmerI):
 
         Returns True if word ends with a double consonant
         """
-        return (
-            len(word) >= 2
-            and word[-1] == word[-2]
-            and self._is_consonant(word, len(word) - 1)
-        )
+        return len(word) >= 2 and word[-1] == word[-2] and self._is_consonant(word, len(word) - 1)
 
     def _ends_cvc(self, word):
         """Implements condition *o from the paper
@@ -425,11 +421,7 @@ class PorterStemmer(StemmerI):
                 (
                     "y",
                     "i",
-                    (
-                        nltk_condition
-                        if self.mode == self.NLTK_EXTENSIONS
-                        else original_condition
-                    ),
+                    (nltk_condition if self.mode == self.NLTK_EXTENSIONS else original_condition),
                 )
             ],
         )
@@ -468,9 +460,7 @@ class PorterStemmer(StemmerI):
             # Instead of applying the ALLI -> AL rule after '(a)bli' per
             # the published algorithm, instead we apply it first, and,
             # if it succeeds, run the result through step2 again.
-            if word.endswith("alli") and self._has_positive_measure(
-                self._replace_suffix(word, "alli", "")
-            ):
+            if word.endswith("alli") and self._has_positive_measure(self._replace_suffix(word, "alli", "")):
                 return self._step2(self._replace_suffix(word, "alli", "al"))
 
         bli_rule = ("bli", "ble", self._has_positive_measure)
@@ -505,9 +495,7 @@ class PorterStemmer(StemmerI):
             # The 'l' of the 'logi' -> 'log' rule is put with the stem,
             # so that short stems like 'geo' 'theo' etc work like
             # 'archaeo' 'philo' etc.
-            rules.append(
-                ("logi", "log", lambda stem: self._has_positive_measure(word[:-3]))
-            )
+            rules.append(("logi", "log", lambda stem: self._has_positive_measure(word[:-3])))
 
         if self.mode == self.MARTIN_EXTENSIONS:
             rules.append(("logi", "log", self._has_positive_measure))
@@ -649,9 +637,7 @@ class PorterStemmer(StemmerI):
                                     controll       ->  control
                                     roll           ->  roll
         """
-        return self._apply_rule_list(
-            word, [("ll", "l", lambda stem: self._measure(word[:-1]) > 1)]
-        )
+        return self._apply_rule_list(word, [("ll", "l", lambda stem: self._measure(word[:-1]) > 1)])
 
     def stem(self, word, to_lowercase=True):
         """

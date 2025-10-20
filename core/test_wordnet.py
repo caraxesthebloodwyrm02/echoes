@@ -18,9 +18,7 @@ class WordnNetDemo(unittest.TestCase):
         move_synset = S("go.v.21")
         self.assertEqual(move_synset.name(), "move.v.15")
         self.assertEqual(move_synset.lemma_names(), ["move", "go"])
-        self.assertEqual(
-            move_synset.definition(), "have a turn; make one's move in a game"
-        )
+        self.assertEqual(move_synset.definition(), "have a turn; make one's move in a game")
         self.assertEqual(move_synset.examples(), ["Can I go now?"])
 
     def test_retrieve_synsets(self):
@@ -54,16 +52,12 @@ class WordnNetDemo(unittest.TestCase):
             S("bartok.n.01"),
             S("beethoven.n.01"),
         ]
-        self.assertEqual(
-            sorted(S("composer.n.1").instance_hyponyms())[:5], first_five_composer_hypo
-        )
+        self.assertEqual(sorted(S("composer.n.1").instance_hyponyms())[:5], first_five_composer_hypo)
 
         # Test root hyper-/hyponyms
         self.assertEqual(S("person.n.01").root_hypernyms(), [S("entity.n.01")])
         self.assertEqual(S("sail.v.01").root_hypernyms(), [S("travel.v.01")])
-        self.assertEqual(
-            sorted(S("fall.v.12").root_hypernyms()), [S("act.v.01"), S("fall.v.17")]
-        )
+        self.assertEqual(sorted(S("fall.v.12").root_hypernyms()), [S("act.v.01"), S("fall.v.17")])
 
     def test_derivationally_related_forms(self):
         # Test `derivationally_related_forms()`
@@ -83,9 +77,7 @@ class WordnNetDemo(unittest.TestCase):
 
     def test_meronyms_holonyms(self):
         # Test meronyms, holonyms.
-        self.assertEqual(
-            sorted(S("dog.n.01").member_holonyms()), [S("canis.n.01"), S("pack.n.06")]
-        )
+        self.assertEqual(sorted(S("dog.n.01").member_holonyms()), [S("canis.n.01"), S("pack.n.06")])
         self.assertEqual(S("dog.n.01").part_meronyms(), [S("flag.n.07")])
 
         self.assertEqual(S("faculty.n.2").member_meronyms(), [S("professor.n.01")])
@@ -113,12 +105,8 @@ class WordnNetDemo(unittest.TestCase):
 
     def test_antonyms(self):
         # Test antonyms.
-        self.assertEqual(
-            L("leader.n.1.leader").antonyms(), [L("follower.n.01.follower")]
-        )
-        self.assertEqual(
-            L("increase.v.1.increase").antonyms(), [L("decrease.v.01.decrease")]
-        )
+        self.assertEqual(L("leader.n.1.leader").antonyms(), [L("follower.n.01.follower")])
+        self.assertEqual(L("increase.v.1.increase").antonyms(), [L("decrease.v.01.decrease")])
 
     def test_misc_relations(self):
         # Test misc relations.
@@ -139,9 +127,7 @@ class WordnNetDemo(unittest.TestCase):
         self.assertEqual(S("heavy.a.1").attributes(), [S("weight.n.01")])
 
         # Test pertainyms.
-        self.assertEqual(
-            L("English.a.1.English").pertainyms(), [L("england.n.01.England")]
-        )
+        self.assertEqual(L("English.a.1.English").pertainyms(), [L("england.n.01.England")])
 
     def test_lch(self):
         # Test LCH.
@@ -162,15 +148,9 @@ class WordnNetDemo(unittest.TestCase):
 
     def test_in_topic_domains(self):
         # Test in domains.
-        self.assertEqual(
-            sorted(S("computer_science.n.01").in_topic_domains())[0], S("access.n.05")
-        )
-        self.assertEqual(
-            sorted(S("germany.n.01").in_region_domains())[23], S("trillion.n.02")
-        )
-        self.assertEqual(
-            sorted(S("slang.n.02").in_usage_domains())[1], S("airhead.n.01")
-        )
+        self.assertEqual(sorted(S("computer_science.n.01").in_topic_domains())[0], S("access.n.05"))
+        self.assertEqual(sorted(S("germany.n.01").in_region_domains())[23], S("trillion.n.02"))
+        self.assertEqual(sorted(S("slang.n.02").in_usage_domains())[1], S("airhead.n.01"))
 
     def test_wordnet_similarities(self):
         # Path based similarities.
@@ -188,12 +168,8 @@ class WordnNetDemo(unittest.TestCase):
             S("big.a.01").path_similarity(S("long.a.01")),
             S("long.a.01").path_similarity(S("big.a.01")),
         )
-        self.assertAlmostEqual(
-            S("dog.n.01").lch_similarity(S("cat.n.01")), 2.028, places=3
-        )
-        self.assertAlmostEqual(
-            S("dog.n.01").wup_similarity(S("cat.n.01")), 0.8571, places=3
-        )
+        self.assertAlmostEqual(S("dog.n.01").lch_similarity(S("cat.n.01")), 2.028, places=3)
+        self.assertAlmostEqual(S("dog.n.01").wup_similarity(S("cat.n.01")), 0.8571, places=3)
         self.assertAlmostEqual(
             S("car.n.01").wup_similarity(S("automobile.v.01")),
             S("automobile.v.01").wup_similarity(S("car.n.01")),
@@ -212,13 +188,9 @@ class WordnNetDemo(unittest.TestCase):
         )
         # Information Content similarities.
         brown_ic = wnic.ic("ic-brown.dat")
-        self.assertAlmostEqual(
-            S("dog.n.01").jcn_similarity(S("cat.n.01"), brown_ic), 0.4497, places=3
-        )
+        self.assertAlmostEqual(S("dog.n.01").jcn_similarity(S("cat.n.01"), brown_ic), 0.4497, places=3)
         semcor_ic = wnic.ic("ic-semcor.dat")
-        self.assertAlmostEqual(
-            S("dog.n.01").lin_similarity(S("cat.n.01"), semcor_ic), 0.8863, places=3
-        )
+        self.assertAlmostEqual(S("dog.n.01").lin_similarity(S("cat.n.01"), semcor_ic), 0.8863, places=3)
 
     def test_omw_lemma_no_trailing_underscore(self):
         expected = sorted(
@@ -255,9 +227,7 @@ class WordnNetDemo(unittest.TestCase):
         # PTB-specific tags (mapped in PTB, not in Brown)
         self.assertEqual(wn.tag2pos("NNS"), "n")  # plural noun (PTB only)
         self.assertEqual(wn.tag2pos("VBD"), "v")  # verb, past tense (PTB only)
-        self.assertEqual(
-            wn.tag2pos("VBG"), "v"
-        )  # verb, gerund/present participle (PTB only)
+        self.assertEqual(wn.tag2pos("VBG"), "v")  # verb, gerund/present participle (PTB only)
         self.assertEqual(wn.tag2pos("JJR"), "a")  # adjective, comparative (PTB only)
         self.assertEqual(wn.tag2pos("RBR"), "r")  # adverb, comparative (PTB only)
 
@@ -277,9 +247,7 @@ class WordnNetDemo(unittest.TestCase):
         self.assertEqual(wn.tag2pos("RB", tagset="en-brown"), "r")  # adverb
 
         # Brown-specific tags (mapped in Brown, not in PTB)
-        self.assertEqual(
-            wn.tag2pos("HV", tagset="en-brown"), "v"
-        )  # 'have' auxiliary (Brown only)
+        self.assertEqual(wn.tag2pos("HV", tagset="en-brown"), "v")  # 'have' auxiliary (Brown only)
         self.assertEqual(
             wn.tag2pos("BEZ", tagset="en-brown"), "v"
         )  # 'be' auxiliary, 3rd person singular present (Brown only)

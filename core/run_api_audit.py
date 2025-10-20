@@ -31,9 +31,7 @@ api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY_ECHOES")
 project_name = os.getenv("PROJECT", "ECHOES")
 
 if not api_key:
-    raise EnvironmentError(
-        "❌ No valid API key found. Please set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES in .env"
-    )
+    raise EnvironmentError("❌ No valid API key found. Please set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES in .env")
 
 client = OpenAI(api_key=api_key)
 
@@ -108,9 +106,7 @@ def run_audit(client, project_name, cache_duration=3600):  # Cache for 1 hour by
 
     # Check for cached results
     if cache_duration:
-        cached_result = cache_mgr.get_cached_result(
-            cache_file, max_age=timedelta(seconds=cache_duration)
-        )
+        cached_result = cache_mgr.get_cached_result(cache_file, max_age=timedelta(seconds=cache_duration))
         if cached_result:
             print("📚 Using cached audit results\n")
             return cached_result

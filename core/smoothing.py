@@ -22,15 +22,9 @@ def _count_values_gt_zero(distribution):
     Assumes distribution is either a mapping with counts as values or
     an instance of `nltk.ConditionalFreqDist`.
     """
-    as_count = (
-        methodcaller("N")
-        if isinstance(distribution, ConditionalFreqDist)
-        else lambda count: count
-    )
+    as_count = methodcaller("N") if isinstance(distribution, ConditionalFreqDist) else lambda count: count
     # We explicitly check that values are > 0 to guard against negative counts.
-    return sum(
-        1 for dist_or_count in distribution.values() if as_count(dist_or_count) > 0
-    )
+    return sum(1 for dist_or_count in distribution.values() if as_count(dist_or_count) > 0)
 
 
 class WittenBell(Smoothing):
@@ -60,10 +54,7 @@ class AbsoluteDiscounting(Smoothing):
         self.discount = discount
 
     def alpha_gamma(self, word, context):
-        alpha = (
-            max(self.counts[context][word] - self.discount, 0)
-            / self.counts[context].N()
-        )
+        alpha = max(self.counts[context][word] - self.discount, 0) / self.counts[context].N()
         gamma = self._gamma(context)
         return alpha, gamma
 
@@ -116,9 +107,7 @@ class KneserNey(Smoothing):
         This is different than raw ngram counts which track number of instances.
         """
         higher_order_ngrams_with_context = (
-            counts
-            for prefix_ngram, counts in self.counts[len(context) + 2].items()
-            if prefix_ngram[1:] == context
+            counts for prefix_ngram, counts in self.counts[len(context) + 2].items() if prefix_ngram[1:] == context
         )
         higher_order_ngrams_with_word_count, total = 0, 0
         for counts in higher_order_ngrams_with_context:

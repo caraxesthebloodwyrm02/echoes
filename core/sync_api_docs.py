@@ -80,12 +80,8 @@ def sync_api_docs(context):
     docs_dir = Path("docs")
     docs_dir.mkdir(parents=True, exist_ok=True)
 
-    openapi_path = Path(
-        context.extra_data.get("output_json", docs_dir / "openapi.json")
-    )
-    api_md_path = Path(
-        context.extra_data.get("output_md", docs_dir / "API_REFERENCE.md")
-    )
+    openapi_path = Path(context.extra_data.get("output_json", docs_dir / "openapi.json"))
+    api_md_path = Path(context.extra_data.get("output_md", docs_dir / "API_REFERENCE.md"))
 
     # Generate OpenAPI
     schema = app.openapi()

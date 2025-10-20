@@ -244,9 +244,7 @@ INIT_PARAMS = {
         dict(
             cv=2,
             error_score="raise",
-            estimator=Pipeline(
-                steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]
-            ),
+            estimator=Pipeline(steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]),
             param_grid={"logisticregression__C": [0.1, 1.0]},
         ),
     ],
@@ -278,9 +276,7 @@ INIT_PARAMS = {
         dict(
             cv=2,
             error_score="raise",
-            estimator=Pipeline(
-                steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]
-            ),
+            estimator=Pipeline(steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]),
             min_resources="smallest",
             param_grid={"logisticregression__C": [0.1, 1.0]},
             random_state=0,
@@ -311,9 +307,7 @@ INIT_PARAMS = {
         dict(
             cv=2,
             error_score="raise",
-            estimator=Pipeline(
-                steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]
-            ),
+            estimator=Pipeline(steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]),
             param_distributions={"logisticregression__C": [0.1, 1.0]},
             random_state=0,
         ),
@@ -415,9 +409,7 @@ INIT_PARAMS = {
         dict(
             cv=2,
             error_score="raise",
-            estimator=Pipeline(
-                steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]
-            ),
+            estimator=Pipeline(steps=[("pca", PCA()), ("logisticregression", LogisticRegression())]),
             param_distributions={"logisticregression__C": [0.1, 1.0]},
             random_state=0,
         ),
@@ -530,11 +522,7 @@ PER_ESTIMATOR_CHECK_PARAMS: dict = {
             dict(criterion="entropy"),
         ],
     },
-    DictionaryLearning: {
-        "check_dict_unchanged": dict(
-            max_iter=20, n_components=1, transform_algorithm="lasso_lars"
-        )
-    },
+    DictionaryLearning: {"check_dict_unchanged": dict(max_iter=20, n_components=1, transform_algorithm="lasso_lars")},
     FactorAnalysis: {"check_dict_unchanged": dict(max_iter=5, n_components=1)},
     FastICA: {"check_dict_unchanged": dict(max_iter=5, n_components=1)},
     FeatureAgglomeration: {"check_dict_unchanged": dict(n_clusters=1)},
@@ -576,27 +564,15 @@ PER_ESTIMATOR_CHECK_PARAMS: dict = {
             # The "kmeans" strategy leads to a stochastic fit that is not
             # handled by the check_sample_weight_equivalence test.
         ],
-        "check_sample_weights_list": dict(
-            strategy="quantile", quantile_method="averaged_inverted_cdf"
-        ),
-        "check_sample_weights_pandas_series": dict(
-            strategy="quantile", quantile_method="averaged_inverted_cdf"
-        ),
-        "check_sample_weights_shape": dict(
-            strategy="quantile", quantile_method="averaged_inverted_cdf"
-        ),
-        "check_sample_weights_not_an_array": dict(
-            strategy="quantile", quantile_method="averaged_inverted_cdf"
-        ),
-        "check_sample_weights_not_overwritten": dict(
-            strategy="quantile", quantile_method="averaged_inverted_cdf"
-        ),
+        "check_sample_weights_list": dict(strategy="quantile", quantile_method="averaged_inverted_cdf"),
+        "check_sample_weights_pandas_series": dict(strategy="quantile", quantile_method="averaged_inverted_cdf"),
+        "check_sample_weights_shape": dict(strategy="quantile", quantile_method="averaged_inverted_cdf"),
+        "check_sample_weights_not_an_array": dict(strategy="quantile", quantile_method="averaged_inverted_cdf"),
+        "check_sample_weights_not_overwritten": dict(strategy="quantile", quantile_method="averaged_inverted_cdf"),
     },
     KernelPCA: {"check_dict_unchanged": dict(n_components=1)},
     LassoLars: {"check_non_transformer_estimators_n_iter": dict(alpha=0.0)},
-    LatentDirichletAllocation: {
-        "check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)
-    },
+    LatentDirichletAllocation: {"check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)},
     LinearDiscriminantAnalysis: {"check_dict_unchanged": dict(n_components=1)},
     LinearSVC: {
         "check_sample_weight_equivalence": [
@@ -648,24 +624,12 @@ PER_ESTIMATOR_CHECK_PARAMS: dict = {
             dict(solver="sgd", tol=1e-2, random_state=42),
         ]
     },
-    MiniBatchDictionaryLearning: {
-        "check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)
-    },
-    MiniBatchKMeans: {
-        "check_dict_unchanged": dict(batch_size=10, max_iter=5, n_clusters=1, n_init=2)
-    },
-    MiniBatchNMF: {
-        "check_dict_unchanged": dict(
-            batch_size=10, fresh_restarts=True, max_iter=20, n_components=1
-        )
-    },
-    MiniBatchSparsePCA: {
-        "check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)
-    },
+    MiniBatchDictionaryLearning: {"check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)},
+    MiniBatchKMeans: {"check_dict_unchanged": dict(batch_size=10, max_iter=5, n_clusters=1, n_init=2)},
+    MiniBatchNMF: {"check_dict_unchanged": dict(batch_size=10, fresh_restarts=True, max_iter=20, n_components=1)},
+    MiniBatchSparsePCA: {"check_dict_unchanged": dict(batch_size=10, max_iter=5, n_components=1)},
     NMF: {"check_dict_unchanged": dict(max_iter=500, n_components=1)},
-    NeighborhoodComponentsAnalysis: {
-        "check_dict_unchanged": dict(max_iter=5, n_components=1)
-    },
+    NeighborhoodComponentsAnalysis: {"check_dict_unchanged": dict(max_iter=5, n_components=1)},
     Nystroem: {"check_dict_unchanged": dict(n_components=1)},
     PCA: {"check_dict_unchanged": dict(n_components=1)},
     PLSCanonical: {"check_dict_unchanged": dict(max_iter=5, n_components=1)},
@@ -715,12 +679,8 @@ PER_ESTIMATOR_CHECK_PARAMS: dict = {
     SkewedChi2Sampler: {"check_dict_unchanged": dict(n_components=1)},
     SparsePCA: {"check_dict_unchanged": dict(max_iter=5, n_components=1)},
     SparseRandomProjection: {"check_dict_unchanged": dict(n_components=1)},
-    SpectralBiclustering: {
-        "check_dict_unchanged": dict(n_best=1, n_clusters=1, n_components=1, n_init=2)
-    },
-    SpectralClustering: {
-        "check_dict_unchanged": dict(n_clusters=1, n_components=1, n_init=2)
-    },
+    SpectralBiclustering: {"check_dict_unchanged": dict(n_best=1, n_clusters=1, n_components=1, n_init=2)},
+    SpectralClustering: {"check_dict_unchanged": dict(n_clusters=1, n_components=1, n_init=2)},
     SpectralCoclustering: {"check_dict_unchanged": dict(n_clusters=1, n_init=2)},
     SpectralEmbedding: {"check_dict_unchanged": dict(eigen_tol=1e-05, n_components=1)},
     StandardScaler: {
@@ -950,9 +910,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
         "check_requires_y_none": "Doesn't fail gracefully",
     },
     HalvingGridSearchCV: {
-        "check_fit2d_1sample": (
-            "Fail during parameter check since min/max resources requires more samples"
-        ),
+        "check_fit2d_1sample": ("Fail during parameter check since min/max resources requires more samples"),
         "check_estimators_nan_inf": "FIXME",
         "check_classifiers_one_label_sample_weights": "FIXME",
         "check_fit2d_1feature": "FIXME",
@@ -960,9 +918,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
         "check_requires_y_none": "Doesn't fail gracefully",
     },
     HalvingRandomSearchCV: {
-        "check_fit2d_1sample": (
-            "Fail during parameter check since min/max resources requires more samples"
-        ),
+        "check_fit2d_1sample": ("Fail during parameter check since min/max resources requires more samples"),
         "check_estimators_nan_inf": "FIXME",
         "check_classifiers_one_label_sample_weights": "FIXME",
         "check_fit2d_1feature": "FIXME",
@@ -997,9 +953,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
         ),
     },
     KernelDensity: {
-        "check_sample_weight_equivalence_on_dense_data": (
-            "sample_weight must have positive values"
-        ),
+        "check_sample_weight_equivalence_on_dense_data": ("sample_weight must have positive values"),
     },
     KMeans: {
         # TODO: replace by a statistical test, see meta-issue #16298
@@ -1010,9 +964,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
             "sample_weight is not equivalent to removing/repeating samples."
         ),
     },
-    KNeighborsTransformer: {
-        "check_methods_sample_order_invariance": "check is not applicable."
-    },
+    KNeighborsTransformer: {"check_methods_sample_order_invariance": "check is not applicable."},
     LinearSVC: {
         # TODO: replace by a statistical test when _dual=True, see meta-issue #16298
         "check_sample_weight_equivalence_on_dense_data": (
@@ -1021,9 +973,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
         "check_sample_weight_equivalence_on_sparse_data": (
             "sample_weight is not equivalent to removing/repeating samples."
         ),
-        "check_non_transformer_estimators_n_iter": (
-            "n_iter_ cannot be easily accessed."
-        ),
+        "check_non_transformer_estimators_n_iter": ("n_iter_ cannot be easily accessed."),
     },
     LinearSVR: {
         # TODO: replace by a statistical test, see meta-issue #16298
@@ -1063,9 +1013,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
         "check_sample_weight_equivalence_on_sparse_data": (
             "sample_weight is not equivalent to removing/repeating samples."
         ),
-        "check_classifiers_one_label_sample_weights": (
-            "specified nu is infeasible for the fit."
-        ),
+        "check_classifiers_one_label_sample_weights": ("specified nu is infeasible for the fit."),
     },
     NuSVR: {
         # TODO: fix sample_weight handling of this estimator, see meta-issue #16298
@@ -1076,11 +1024,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
             "sample_weight is not equivalent to removing/repeating samples."
         ),
     },
-    Nystroem: {
-        "check_transformer_preserves_dtypes": (
-            "dtypes are preserved but not at a close enough precision"
-        )
-    },
+    Nystroem: {"check_transformer_preserves_dtypes": ("dtypes are preserved but not at a close enough precision")},
     OneClassSVM: {
         # TODO: fix sample_weight handling of this estimator, see meta-issue #16298
         "check_sample_weight_equivalence_on_dense_data": (
@@ -1109,9 +1053,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
             "Therefore this test is x-fail until we fix this."
         ),
     },
-    RadiusNeighborsTransformer: {
-        "check_methods_sample_order_invariance": "check is not applicable."
-    },
+    RadiusNeighborsTransformer: {"check_methods_sample_order_invariance": "check is not applicable."},
     RandomForestClassifier: {
         # TODO: replace by a statistical test, see meta-issue #16298
         "check_sample_weight_equivalence_on_dense_data": (
@@ -1152,19 +1094,9 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
             "sample_weight is not equivalent to removing/repeating samples."
         ),
     },
-    Ridge: {
-        "check_non_transformer_estimators_n_iter": (
-            "n_iter_ cannot be easily accessed."
-        )
-    },
-    RidgeClassifier: {
-        "check_non_transformer_estimators_n_iter": (
-            "n_iter_ cannot be easily accessed."
-        )
-    },
-    SelfTrainingClassifier: {
-        "check_non_transformer_estimators_n_iter": "n_iter_ can be 0."
-    },
+    Ridge: {"check_non_transformer_estimators_n_iter": ("n_iter_ cannot be easily accessed.")},
+    RidgeClassifier: {"check_non_transformer_estimators_n_iter": ("n_iter_ cannot be easily accessed.")},
+    SelfTrainingClassifier: {"check_non_transformer_estimators_n_iter": "n_iter_ can be 0."},
     SGDClassifier: {
         # TODO: replace by a statistical test, see meta-issue #16298
         "check_sample_weight_equivalence_on_dense_data": (
@@ -1248,10 +1180,7 @@ PER_ESTIMATOR_XFAIL_CHECKS = {
 # TODO: remove when scipy min version >= 1.11
 if sp_base_version < parse_version("1.11"):
     PER_ESTIMATOR_XFAIL_CHECKS[SplineTransformer] = {
-        "check_estimators_pickle": (
-            "scipy < 1.11 implementation of _bsplines does not"
-            "support const memory views."
-        ),
+        "check_estimators_pickle": ("scipy < 1.11 implementation of _bsplines does not" "support const memory views."),
     }
 
 
@@ -1275,10 +1204,7 @@ def _get_expected_failed_checks(estimator):
         # TODO: remove when scipy min version >= 1.16
         # Regression introduced in scipy 1.15 and fixed in 1.16, see
         # https://github.com/scipy/scipy/issues/22791
-        if (
-            parse_version("1.15.0") <= sp_base_version < parse_version("1.16")
-            and _IS_32BIT
-        ):
+        if parse_version("1.15.0") <= sp_base_version < parse_version("1.16") and _IS_32BIT:
             failed_checks.update(
                 {
                     "check_sample_weight_equivalence_on_dense_data": (

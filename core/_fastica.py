@@ -125,10 +125,7 @@ def _ica_par(X, tol, g, fun_args, max_iter, w_init):
             break
     else:
         warnings.warn(
-            (
-                "FastICA did not converge. Consider increasing "
-                "tolerance or the maximum number of iterations."
-            ),
+            ("FastICA did not converge. Consider increasing " "tolerance or the maximum number of iterations."),
             ConvergenceWarning,
         )
 
@@ -595,9 +592,7 @@ class FastICA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
             n_components = min(n_samples, n_features)
         if n_components > min(n_samples, n_features):
             n_components = min(n_samples, n_features)
-            warnings.warn(
-                "n_components is too large: it will be set to %s" % n_components
-            )
+            warnings.warn("n_components is too large: it will be set to %s" % n_components)
 
         if self.whiten:
             # Centering the features of X
@@ -639,16 +634,13 @@ class FastICA(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
 
         w_init = self.w_init
         if w_init is None:
-            w_init = np.asarray(
-                random_state.normal(size=(n_components, n_components)), dtype=X1.dtype
-            )
+            w_init = np.asarray(random_state.normal(size=(n_components, n_components)), dtype=X1.dtype)
 
         else:
             w_init = np.asarray(w_init)
             if w_init.shape != (n_components, n_components):
                 raise ValueError(
-                    "w_init has invalid shape -- should be %(shape)s"
-                    % {"shape": (n_components, n_components)}
+                    "w_init has invalid shape -- should be %(shape)s" % {"shape": (n_components, n_components)}
                 )
 
         kwargs = {

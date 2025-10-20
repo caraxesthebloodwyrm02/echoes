@@ -55,9 +55,7 @@ class PyxlsbReader(BaseExcelReader["Workbook"]):
 
         return Workbook
 
-    def load_workbook(
-        self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs
-    ) -> Workbook:
+    def load_workbook(self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs) -> Workbook:
         from pyxlsb import open_workbook
 
         # TODO: hack in buffer capability
@@ -120,8 +118,5 @@ class PyxlsbReader(BaseExcelReader["Workbook"]):
             max_width = max(len(data_row) for data_row in data)
             if min(len(data_row) for data_row in data) < max_width:
                 empty_cell: list[Scalar] = [""]
-                data = [
-                    data_row + (max_width - len(data_row)) * empty_cell
-                    for data_row in data
-                ]
+                data = [data_row + (max_width - len(data_row)) * empty_cell for data_row in data]
         return data

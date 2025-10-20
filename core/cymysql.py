@@ -44,9 +44,7 @@ if TYPE_CHECKING:
 
 
 class _cymysqlBIT(BIT):
-    def result_processor(
-        self, dialect: Dialect, coltype: object
-    ) -> Optional[_ResultProcessorType[Any]]:
+    def result_processor(self, dialect: Dialect, coltype: object) -> Optional[_ResultProcessorType[Any]]:
         """Convert MySQL's 64 bit, variable length binary string to a long."""
 
         def process(value: Optional[Iterable[int]]) -> Optional[int]:

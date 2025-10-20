@@ -107,9 +107,7 @@ def run_tool(command: List[str], output_file: Optional[Path] = None) -> bool:
                     encoding="utf-8",
                 )
         else:
-            result = subprocess.run(
-                command, check=False, capture_output=True, text=True, encoding="utf-8"
-            )
+            result = subprocess.run(command, check=False, capture_output=True, text=True, encoding="utf-8")
 
         # Handle special exit codes
         if result.returncode != 0:
@@ -165,9 +163,7 @@ def generate_reports() -> bool:
     # Handle flake8 output
     flake8_command = ["flake8", "--max-line-length=120", "."]
     print(f"Running {flake8_command[0]}...")
-    result = subprocess.run(
-        flake8_command, check=False, capture_output=True, text=True, encoding="utf-8"
-    )
+    result = subprocess.run(flake8_command, check=False, capture_output=True, text=True, encoding="utf-8")
     if result.returncode not in [0, 1]:
         print("[FAILED] flake8")
         success = False
@@ -283,9 +279,7 @@ def analyze_robustness() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Coverage: {avg_cov:.1f}% | "
-            f"Avg Issues: {avg_issues:.1f} | "
-            f"Files: {len(x)}",
+            f"Avg Coverage: {avg_cov:.1f}% | " f"Avg Issues: {avg_issues:.1f} | " f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -299,9 +293,7 @@ def analyze_robustness() -> bool:
 
     except ImportError:
         print("Installing required visualization packages...")
-        subprocess.run(
-            [sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True
-        )
+        subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True)
         return analyze_robustness()
     except Exception as e:
         print(f"[ERROR] In robustness analysis: {e}")
@@ -359,12 +351,8 @@ def analyze_practicality() -> bool:
         plt.scatter(x, y, c=colors, alpha=0.6, edgecolors="w")
 
         # Add reference lines
-        plt.axhline(
-            y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability"
-        )
-        plt.axhline(
-            y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability"
-        )
+        plt.axhline(y=20, color="green", linestyle="--", alpha=0.5, label="Good Maintainability")
+        plt.axhline(y=10, color="red", linestyle="--", alpha=0.5, label="Low Maintainability")
 
         plt.title("Codebase Practicality: Complexity vs. Maintainability")
         plt.xlabel("Average Cyclomatic Complexity (Lower is Better)")
@@ -378,9 +366,7 @@ def analyze_practicality() -> bool:
         plt.figtext(
             0.15,
             0.02,
-            f"Avg Complexity: {avg_comp:.1f} | "
-            f"Avg Maintainability: {avg_mi:.1f} | "
-            f"Files: {len(x)}",
+            f"Avg Complexity: {avg_comp:.1f} | " f"Avg Maintainability: {avg_mi:.1f} | " f"Files: {len(x)}",
             fontsize=9,
         )
 
@@ -394,9 +380,7 @@ def analyze_practicality() -> bool:
 
     except ImportError:
         print("Installing required visualization packages...")
-        subprocess.run(
-            [sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True
-        )
+        subprocess.run([sys.executable, "-m", "pip", "install", "matplotlib", "numpy"], check=True)
         return analyze_practicality()
     except Exception as e:
         print(f"[ERROR] In practicality analysis: {e}")
@@ -428,9 +412,7 @@ def main() -> int:
         success = False
 
     if success:
-        print(
-            "\n[SUCCESS] Analysis complete! Check the 'metrics/plots' directory for results."
-        )
+        print("\n[SUCCESS] Analysis complete! Check the 'metrics/plots' directory for results.")
         return 0
 
     print("\n[WARNING] Some analyses failed. Check the output for details.")

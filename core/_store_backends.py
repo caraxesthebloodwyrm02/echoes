@@ -164,16 +164,10 @@ class StoreBackendMixin(object):
         full_path = os.path.join(self.location, *call_id)
 
         if verbose > 1:
-            ts_string = (
-                "{: <16}".format(format_time(time.time() - timestamp))
-                if timestamp is not None
-                else ""
-            )
+            ts_string = "{: <16}".format(format_time(time.time() - timestamp)) if timestamp is not None else ""
             signature = os.path.basename(call_id[0])
             if metadata is not None and "input_args" in metadata:
-                kwargs = ", ".join(
-                    "{}={}".format(*item) for item in metadata["input_args"].items()
-                )
+                kwargs = ", ".join("{}={}".format(*item) for item in metadata["input_args"].items())
                 signature += "({})".format(kwargs)
             msg = "[Memory]{}: Loading {}".format(ts_string, signature)
             if verbose < 10:
@@ -185,10 +179,7 @@ class StoreBackendMixin(object):
 
         filename = os.path.join(full_path, "output.pkl")
         if not self._item_exists(filename):
-            raise KeyError(
-                "Non-existing item (may have been "
-                "cleared).\nFile %s does not exist" % filename
-            )
+            raise KeyError("Non-existing item (may have been " "cleared).\nFile %s does not exist" % filename)
 
         # file-like object cannot be used when mmap_mode is set
         if mmap_mode is None:
@@ -359,11 +350,7 @@ class StoreBackendMixin(object):
         else:
             deadline = None
 
-        if (
-            to_delete_size <= 0
-            and to_delete_items <= 0
-            and (deadline is None or older_item > deadline)
-        ):
+        if to_delete_size <= 0 and to_delete_items <= 0 and (deadline is None or older_item > deadline):
             return []
 
         # We want to delete first the cache items that were accessed a
@@ -395,9 +382,7 @@ class StoreBackendMixin(object):
 
     def __repr__(self):
         """Printable representation of the store location."""
-        return '{class_name}(location="{location}")'.format(
-            class_name=self.__class__.__name__, location=self.location
-        )
+        return '{class_name}(location="{location}")'.format(class_name=self.__class__.__name__, location=self.location)
 
 
 class FileSystemStoreBackend(StoreBackendBase, StoreBackendMixin):
@@ -486,8 +471,7 @@ class FileSystemStoreBackend(StoreBackendBase, StoreBackendMixin):
         mmap_mode = backend_options.get("mmap_mode")
         if self.compress and mmap_mode is not None:
             warnings.warn(
-                "Compressed items cannot be memmapped in a "
-                "filesystem store. Option will be ignored.",
+                "Compressed items cannot be memmapped in a " "filesystem store. Option will be ignored.",
                 stacklevel=2,
             )
 

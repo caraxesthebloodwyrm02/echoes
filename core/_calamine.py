@@ -69,9 +69,7 @@ class CalamineReader(BaseExcelReader["CalamineWorkbook"]):
 
         return CalamineWorkbook
 
-    def load_workbook(
-        self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs: Any
-    ) -> CalamineWorkbook:
+    def load_workbook(self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs: Any) -> CalamineWorkbook:
         from python_calamine import load_workbook
 
         return load_workbook(filepath_or_buffer, **engine_kwargs)
@@ -80,11 +78,7 @@ class CalamineReader(BaseExcelReader["CalamineWorkbook"]):
     def sheet_names(self) -> list[str]:
         from python_calamine import SheetTypeEnum
 
-        return [
-            sheet.name
-            for sheet in self.book.sheets_metadata
-            if sheet.typ == SheetTypeEnum.WorkSheet
-        ]
+        return [sheet.name for sheet in self.book.sheets_metadata if sheet.typ == SheetTypeEnum.WorkSheet]
 
     def get_sheet_by_name(self, name: str) -> CalamineSheet:
         self.raise_if_bad_sheet_by_name(name)
@@ -113,9 +107,7 @@ class CalamineReader(BaseExcelReader["CalamineWorkbook"]):
 
             return value
 
-        rows: list[list[_CellValue]] = sheet.to_python(
-            skip_empty_area=False, nrows=file_rows_needed
-        )
+        rows: list[list[_CellValue]] = sheet.to_python(skip_empty_area=False, nrows=file_rows_needed)
         data = [[_convert_cell(cell) for cell in row] for row in rows]
 
         return data

@@ -229,9 +229,7 @@ class IRTransform(OpVisitor[Optional[Value]]):
 
 
 class PatchVisitor(OpVisitor[None]):
-    def __init__(
-        self, op_map: dict[Value, Value | None], block_map: dict[BasicBlock, BasicBlock]
-    ) -> None:
+    def __init__(self, op_map: dict[Value, Value | None], block_map: dict[BasicBlock, BasicBlock]) -> None:
         self.op_map: Final = op_map
         self.block_map: Final = block_map
 

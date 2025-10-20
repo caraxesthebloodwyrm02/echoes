@@ -109,10 +109,7 @@ class LazyModule:
         if self.__lazymodule_loaded:
             raise AttributeError(name)
         if _debug:
-            print(
-                "LazyModule: "
-                "Module load triggered by attribute %r read access" % name
-            )
+            print("LazyModule: " "Module load triggered by attribute %r read access" % name)
         module = self.__lazymodule_import()
         return getattr(module, name)
 
@@ -126,10 +123,7 @@ class LazyModule:
             self.__dict__[name] = value
             return
         if _debug:
-            print(
-                "LazyModule: "
-                "Module load triggered by attribute %r write access" % name
-            )
+            print("LazyModule: " "Module load triggered by attribute %r write access" % name)
         module = self.__lazymodule_import()
         setattr(module, name, value)
 

@@ -9,40 +9,40 @@ from pydantic_core import ErrorDetails, ErrorTypeInfo, InitErrorDetails, MultiHo
 from pydantic_core.core_schema import CoreConfig, CoreSchema, ErrorType, ExtraBehavior
 
 __all__ = [
-    '__version__',
-    'build_profile',
-    'build_info',
-    '_recursion_limit',
-    'ArgsKwargs',
-    'SchemaValidator',
-    'SchemaSerializer',
-    'Url',
-    'MultiHostUrl',
-    'SchemaError',
-    'ValidationError',
-    'PydanticCustomError',
-    'PydanticKnownError',
-    'PydanticOmit',
-    'PydanticUseDefault',
-    'PydanticSerializationError',
-    'PydanticSerializationUnexpectedValue',
-    'PydanticUndefined',
-    'PydanticUndefinedType',
-    'Some',
-    'to_json',
-    'from_json',
-    'to_jsonable_python',
-    'list_all_errors',
-    'TzInfo',
+    "__version__",
+    "build_profile",
+    "build_info",
+    "_recursion_limit",
+    "ArgsKwargs",
+    "SchemaValidator",
+    "SchemaSerializer",
+    "Url",
+    "MultiHostUrl",
+    "SchemaError",
+    "ValidationError",
+    "PydanticCustomError",
+    "PydanticKnownError",
+    "PydanticOmit",
+    "PydanticUseDefault",
+    "PydanticSerializationError",
+    "PydanticSerializationUnexpectedValue",
+    "PydanticUndefined",
+    "PydanticUndefinedType",
+    "Some",
+    "to_json",
+    "from_json",
+    "to_jsonable_python",
+    "list_all_errors",
+    "TzInfo",
 ]
 __version__: str
 build_profile: str
 build_info: str
 _recursion_limit: int
 
-_T = TypeVar('_T', default=Any, covariant=True)
+_T = TypeVar("_T", default=Any, covariant=True)
 
-_StringInput: TypeAlias = 'dict[str, _StringInput]'
+_StringInput: TypeAlias = dict[str, _StringInput]
 
 @final
 class Some(Generic[_T]):
@@ -53,13 +53,14 @@ class Some(Generic[_T]):
     Generally used in a union with `None` to different between "some value which could be None" and no value.
     """
 
-    __match_args__ = ('value',)
+    __match_args__ = ("value",)
 
     @property
     def value(self) -> _T:
         """
         Returns the value wrapped by `Some`.
         """
+
     @classmethod
     def __class_getitem__(cls, item: Any, /) -> type[Self]: ...
 
@@ -87,6 +88,7 @@ class SchemaValidator:
         """
         The title of the schema, as used in the heading of [`ValidationError.__str__()`][pydantic_core.ValidationError].
         """
+
     def validate_python(
         self,
         input: Any,
@@ -96,7 +98,7 @@ class SchemaValidator:
         from_attributes: bool | None = None,
         context: Any | None = None,
         self_instance: Any | None = None,
-        allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        allow_partial: bool | Literal["off", "on", "trailing-strings"] = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> Any:
@@ -128,6 +130,7 @@ class SchemaValidator:
         Returns:
             The validated object.
         """
+
     def isinstance_python(
         self,
         input: Any,
@@ -149,6 +152,7 @@ class SchemaValidator:
         Returns:
             `True` if validation succeeds, `False` if validation fails.
         """
+
     def validate_json(
         self,
         input: str | bytes | bytearray,
@@ -157,7 +161,7 @@ class SchemaValidator:
         extra: ExtraBehavior | None = None,
         context: Any | None = None,
         self_instance: Any | None = None,
-        allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        allow_partial: bool | Literal["off", "on", "trailing-strings"] = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> Any:
@@ -192,6 +196,7 @@ class SchemaValidator:
         Returns:
             The validated Python object.
         """
+
     def validate_strings(
         self,
         input: _StringInput,
@@ -199,7 +204,7 @@ class SchemaValidator:
         strict: bool | None = None,
         extra: ExtraBehavior | None = None,
         context: Any | None = None,
-        allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+        allow_partial: bool | Literal["off", "on", "trailing-strings"] = False,
         by_alias: bool | None = None,
         by_name: bool | None = None,
     ) -> Any:
@@ -230,6 +235,7 @@ class SchemaValidator:
         Returns:
             The validated Python object.
         """
+
     def validate_assignment(
         self,
         obj: Any,
@@ -268,6 +274,7 @@ class SchemaValidator:
         Returns:
             Either the model dict or a tuple of `(model_data, model_extra, fields_set)`
         """
+
     def get_default_value(self, *, strict: bool | None = None, context: Any = None) -> Some | None:
         """
         Get the default value for the schema, including running default value validation.
@@ -319,7 +326,7 @@ class SchemaSerializer:
         exclude_none: bool = False,
         exclude_computed_fields: bool = False,
         round_trip: bool = False,
-        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        warnings: bool | Literal["none", "warn", "error"] = True,
         fallback: Callable[[Any], Any] | None = None,
         serialize_as_any: bool = False,
         context: Any | None = None,
@@ -354,6 +361,7 @@ class SchemaSerializer:
         Returns:
             The serialized Python object.
         """
+
     def to_json(
         self,
         value: Any,
@@ -368,7 +376,7 @@ class SchemaSerializer:
         exclude_none: bool = False,
         exclude_computed_fields: bool = False,
         round_trip: bool = False,
-        warnings: bool | Literal['none', 'warn', 'error'] = True,
+        warnings: bool | Literal["none", "warn", "error"] = True,
         fallback: Callable[[Any], Any] | None = None,
         serialize_as_any: bool = False,
         context: Any | None = None,
@@ -418,10 +426,10 @@ def to_json(
     by_alias: bool = True,
     exclude_none: bool = False,
     round_trip: bool = False,
-    timedelta_mode: Literal['iso8601', 'float'] = 'iso8601',
-    temporal_mode: Literal['iso8601', 'seconds', 'milliseconds'] = 'iso8601',
-    bytes_mode: Literal['utf8', 'base64', 'hex'] = 'utf8',
-    inf_nan_mode: Literal['null', 'constants', 'strings'] = 'constants',
+    timedelta_mode: Literal["iso8601", "float"] = "iso8601",
+    temporal_mode: Literal["iso8601", "seconds", "milliseconds"] = "iso8601",
+    bytes_mode: Literal["utf8", "base64", "hex"] = "utf8",
+    inf_nan_mode: Literal["null", "constants", "strings"] = "constants",
     serialize_unknown: bool = False,
     fallback: Callable[[Any], Any] | None = None,
     serialize_as_any: bool = False,
@@ -467,8 +475,8 @@ def from_json(
     data: str | bytes | bytearray,
     *,
     allow_inf_nan: bool = True,
-    cache_strings: bool | Literal['all', 'keys', 'none'] = True,
-    allow_partial: bool | Literal['off', 'on', 'trailing-strings'] = False,
+    cache_strings: bool | Literal["all", "keys", "none"] = True,
+    allow_partial: bool | Literal["off", "on", "trailing-strings"] = False,
 ) -> Any:
     """
     Deserialize JSON data to a Python object.
@@ -503,10 +511,10 @@ def to_jsonable_python(
     by_alias: bool = True,
     exclude_none: bool = False,
     round_trip: bool = False,
-    timedelta_mode: Literal['iso8601', 'float'] = 'iso8601',
-    temporal_mode: Literal['iso8601', 'seconds', 'milliseconds'] = 'iso8601',
-    bytes_mode: Literal['utf8', 'base64', 'hex'] = 'utf8',
-    inf_nan_mode: Literal['null', 'constants', 'strings'] = 'constants',
+    timedelta_mode: Literal["iso8601", "float"] = "iso8601",
+    temporal_mode: Literal["iso8601", "seconds", "milliseconds"] = "iso8601",
+    bytes_mode: Literal["utf8", "base64", "hex"] = "utf8",
+    inf_nan_mode: Literal["null", "constants", "strings"] = "constants",
     serialize_unknown: bool = False,
     fallback: Callable[[Any], Any] | None = None,
     serialize_as_any: bool = False,
@@ -573,8 +581,6 @@ class Url(SupportsAllComparisons):
     @property
     def fragment(self) -> str | None: ...
     def unicode_string(self) -> str: ...
-    def __repr__(self) -> str: ...
-    def __str__(self) -> str: ...
     def __deepcopy__(self, memo: dict) -> str: ...
     @classmethod
     def build(
@@ -611,8 +617,6 @@ class MultiHostUrl(SupportsAllComparisons):
     def fragment(self) -> str | None: ...
     def hosts(self) -> list[MultiHostHost]: ...
     def unicode_string(self) -> str: ...
-    def __repr__(self) -> str: ...
-    def __str__(self) -> str: ...
     def __deepcopy__(self, memo: dict) -> Self: ...
     @classmethod
     def build(
@@ -641,6 +645,7 @@ class SchemaError(Exception):
         Returns:
             The number of errors in the schema.
         """
+
     def errors(self) -> list[ErrorDetails]:
         """
         Returns:
@@ -652,12 +657,13 @@ class ValidationError(ValueError):
     `ValidationError` is the exception raised by `pydantic-core` when validation fails, it contains a list of errors
     which detail why validation failed.
     """
+
     @classmethod
     def from_exception_data(
         cls,
         title: str,
         line_errors: list[InitErrorDetails],
-        input_type: Literal['python', 'json'] = 'python',
+        input_type: Literal["python", "json"] = "python",
         hide_input: bool = False,
     ) -> Self:
         """
@@ -670,16 +676,19 @@ class ValidationError(ValueError):
             input_type: Whether the error is for a Python object or JSON.
             hide_input: Whether to hide the input value in the error message.
         """
+
     @property
     def title(self) -> str:
         """
         The title of the error, as used in the heading of `str(validation_error)`.
         """
+
     def error_count(self) -> int:
         """
         Returns:
             The number of errors in the validation error.
         """
+
     def errors(
         self, *, include_url: bool = True, include_context: bool = True, include_input: bool = True
     ) -> list[ErrorDetails]:
@@ -694,6 +703,7 @@ class ValidationError(ValueError):
         Returns:
             A list of [`ErrorDetails`][pydantic_core.ErrorDetails] for each error in the validation error.
         """
+
     def json(
         self,
         *,
@@ -713,18 +723,6 @@ class ValidationError(ValueError):
 
         Returns:
             a JSON string.
-        """
-
-    def __repr__(self) -> str:
-        """
-        A string representation of the validation error.
-
-        Whether or not documentation URLs are included in the repr is controlled by the
-        environment variable `PYDANTIC_ERRORS_INCLUDE_URL` being set to `1` or
-        `true`; by default, URLs are shown.
-
-        Due to implementation details, this environment variable can only be set once,
-        before the first validation error is created.
         """
 
 class PydanticCustomError(ValueError):
@@ -1006,6 +1004,7 @@ def list_all_errors() -> list[ErrorTypeInfo]:
     Returns:
         A list of `ErrorTypeInfo` typed dicts.
     """
+
 @final
 class TzInfo(datetime.tzinfo):
     """An `pydantic-core` implementation of the abstract [`datetime.tzinfo`][] class."""

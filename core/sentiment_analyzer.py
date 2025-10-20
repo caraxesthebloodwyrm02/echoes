@@ -84,15 +84,9 @@ class SentimentAnalyzer:
         """
         # Stopwords are not removed
         unigram_feats_freqs = FreqDist(word for word in words)
-        return [
-            w
-            for w, f in unigram_feats_freqs.most_common(top_n)
-            if unigram_feats_freqs[w] > min_freq
-        ]
+        return [w for w, f in unigram_feats_freqs.most_common(top_n) if unigram_feats_freqs[w] > min_freq]
 
-    def bigram_collocation_feats(
-        self, documents, top_n=None, min_freq=3, assoc_measure=BigramAssocMeasures.pmi
-    ):
+    def bigram_collocation_feats(self, documents, top_n=None, min_freq=3, assoc_measure=BigramAssocMeasures.pmi):
         """
         Return `top_n` bigram features (using `assoc_measure`).
         Note that this method is based on bigram collocations measures, and not
@@ -234,17 +228,13 @@ class SentimentAnalyzer:
 
         for label in labels:
             if precision:
-                precision_score = eval_precision(
-                    gold_results[label], test_results[label]
-                )
+                precision_score = eval_precision(gold_results[label], test_results[label])
                 metrics_results[f"Precision [{label}]"] = precision_score
             if recall:
                 recall_score = eval_recall(gold_results[label], test_results[label])
                 metrics_results[f"Recall [{label}]"] = recall_score
             if f_measure:
-                f_measure_score = eval_f_measure(
-                    gold_results[label], test_results[label]
-                )
+                f_measure_score = eval_f_measure(gold_results[label], test_results[label])
                 metrics_results[f"F-measure [{label}]"] = f_measure_score
 
         # Print evaluation results (in alphabetical order)

@@ -154,9 +154,7 @@ def test_mean_variance_axis1(csc_container, csr_container, lil_container):
 )
 @pytest.mark.parametrize("sparse_constructor", CSC_CONTAINERS + CSR_CONTAINERS)
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
-def test_incr_mean_variance_axis_weighted_axis1(
-    Xw, X, weights, sparse_constructor, dtype
-):
+def test_incr_mean_variance_axis_weighted_axis1(Xw, X, weights, sparse_constructor, dtype):
     axis = 1
     Xw_sparse = sparse_constructor(Xw).astype(dtype)
     X_sparse = sparse_constructor(X).astype(dtype)
@@ -251,9 +249,7 @@ def test_incr_mean_variance_axis_weighted_axis1(
 )
 @pytest.mark.parametrize("sparse_constructor", CSC_CONTAINERS + CSR_CONTAINERS)
 @pytest.mark.parametrize("dtype", [np.float32, np.float64])
-def test_incr_mean_variance_axis_weighted_axis0(
-    Xw, X, weights, sparse_constructor, dtype
-):
+def test_incr_mean_variance_axis_weighted_axis0(Xw, X, weights, sparse_constructor, dtype):
     axis = 0
     Xw_sparse = sparse_constructor(Xw).astype(dtype)
     X_sparse = sparse_constructor(X).astype(dtype)
@@ -345,13 +341,9 @@ def test_incr_mean_variance_axis(csc_container, csr_container, lil_container):
         X_csr = csr_container(X_lil)
 
         with pytest.raises(TypeError):
-            incr_mean_variance_axis(
-                X=axis, axis=last_mean, last_mean=last_var, last_var=last_n
-            )
+            incr_mean_variance_axis(X=axis, axis=last_mean, last_mean=last_var, last_var=last_n)
         with pytest.raises(TypeError):
-            incr_mean_variance_axis(
-                X_lil, axis=axis, last_mean=last_mean, last_var=last_var, last_n=last_n
-            )
+            incr_mean_variance_axis(X_lil, axis=axis, last_mean=last_mean, last_var=last_var, last_n=last_n)
 
         # Test _incr_mean_and_var with a 1 row input
         X_means, X_vars = mean_variance_axis(X_csr, axis)
@@ -499,9 +491,7 @@ def test_incr_mean_variance_n_float():
     X = sp.random(5, 2, density=0.8, random_state=0).tocsr()
     last_mean, last_var = np.zeros(X.shape[1]), np.zeros(X.shape[1])
     last_n = 0
-    _, _, new_n = incr_mean_variance_axis(
-        X, axis=axis, last_mean=last_mean, last_var=last_var, last_n=last_n
-    )
+    _, _, new_n = incr_mean_variance_axis(X, axis=axis, last_mean=last_mean, last_var=last_var, last_n=last_n)
     assert_allclose(new_n, np.full(X.shape[1], X.shape[0]))
 
 
@@ -512,9 +502,7 @@ def test_incr_mean_variance_axis_ignore_nan(axis, sparse_constructor):
     old_variances = np.array([4225.0, 4225.0, 4225.0, 4225.0])
     old_sample_count = np.array([2, 2, 2, 2], dtype=np.int64)
 
-    X = sparse_constructor(
-        np.array([[170, 170, 170, 170], [430, 430, 430, 430], [300, 300, 300, 300]])
-    )
+    X = sparse_constructor(np.array([[170, 170, 170, 170], [430, 430, 430, 430], [300, 300, 300, 300]]))
 
     X_nan = sparse_constructor(
         np.array(
@@ -570,27 +558,19 @@ def test_mean_variance_illegal_axis(csr_container):
         mean_variance_axis(X_csr, axis=-1)
 
     with pytest.raises(ValueError):
-        incr_mean_variance_axis(
-            X_csr, axis=-3, last_mean=None, last_var=None, last_n=None
-        )
+        incr_mean_variance_axis(X_csr, axis=-3, last_mean=None, last_var=None, last_n=None)
 
     with pytest.raises(ValueError):
-        incr_mean_variance_axis(
-            X_csr, axis=2, last_mean=None, last_var=None, last_n=None
-        )
+        incr_mean_variance_axis(X_csr, axis=2, last_mean=None, last_var=None, last_n=None)
 
     with pytest.raises(ValueError):
-        incr_mean_variance_axis(
-            X_csr, axis=-1, last_mean=None, last_var=None, last_n=None
-        )
+        incr_mean_variance_axis(X_csr, axis=-1, last_mean=None, last_var=None, last_n=None)
 
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_densify_rows(csr_container):
     for dtype in (np.float32, np.float64):
-        X = csr_container(
-            [[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=dtype
-        )
+        X = csr_container([[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=dtype)
         X_rows = np.array([0, 2, 3], dtype=np.intp)
         out = np.ones((6, X.shape[1]), dtype=dtype)
         out_rows = np.array([1, 3, 4], dtype=np.intp)
@@ -669,9 +649,7 @@ def test_inplace_row_scale():
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_inplace_swap_row(csc_container, csr_container):
-    X = np.array(
-        [[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64
-    )
+    X = np.array([[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
 
@@ -693,9 +671,7 @@ def test_inplace_swap_row(csc_container, csr_container):
     with pytest.raises(TypeError):
         inplace_swap_row(X_csr.tolil())
 
-    X = np.array(
-        [[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float32
-    )
+    X = np.array([[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float32)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
     swap = linalg.get_blas_funcs(("swap",), (X,))
@@ -719,9 +695,7 @@ def test_inplace_swap_row(csc_container, csr_container):
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_inplace_swap_column(csc_container, csr_container):
-    X = np.array(
-        [[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64
-    )
+    X = np.array([[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
 
@@ -743,9 +717,7 @@ def test_inplace_swap_column(csc_container, csr_container):
     with pytest.raises(TypeError):
         inplace_swap_column(X_csr.tolil())
 
-    X = np.array(
-        [[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float32
-    )
+    X = np.array([[0, 3, 0], [2, 4, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float32)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
     swap = linalg.get_blas_funcs(("swap",), (X,))
@@ -808,9 +780,7 @@ def test_min_max(
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_min_max_axis_errors(csc_container, csr_container):
-    X = np.array(
-        [[0, 3, 0], [2, -1, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64
-    )
+    X = np.array([[0, 3, 0], [2, -1, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
     with pytest.raises(TypeError):
@@ -824,9 +794,7 @@ def test_min_max_axis_errors(csc_container, csr_container):
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_count_nonzero(csc_container, csr_container):
-    X = np.array(
-        [[0, 3, 0], [2, -1, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64
-    )
+    X = np.array([[0, 3, 0], [2, -1, 0], [0, 0, 0], [9, 8, 7], [4, 0, 5]], dtype=np.float64)
     X_csr = csr_container(X)
     X_csc = csc_container(X)
     X_nonzero = X != 0
@@ -834,9 +802,7 @@ def test_count_nonzero(csc_container, csr_container):
     X_nonzero_weighted = X_nonzero * np.array(sample_weight)[:, None]
 
     for axis in [0, 1, -1, -2, None]:
-        assert_array_almost_equal(
-            count_nonzero(X_csr, axis=axis), X_nonzero.sum(axis=axis)
-        )
+        assert_array_almost_equal(count_nonzero(X_csr, axis=axis), X_nonzero.sum(axis=axis))
         assert_array_almost_equal(
             count_nonzero(X_csr, axis=axis, sample_weight=sample_weight),
             X_nonzero_weighted.sum(axis=axis),
@@ -954,9 +920,7 @@ def centered_matrices(request):
 
     random_state = np.random.default_rng(42)
 
-    X_sparse = sparse_container(
-        sp.random(500, 100, density=0.1, format="csr", random_state=random_state)
-    )
+    X_sparse = sparse_container(sp.random(500, 100, density=0.1, format="csr", random_state=random_state))
     X_dense = X_sparse.toarray()
     mu = np.asarray(X_sparse.mean(axis=0)).ravel()
 

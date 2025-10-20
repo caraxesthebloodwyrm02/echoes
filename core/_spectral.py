@@ -52,9 +52,7 @@ def cluster_qr(vectors):
     return vectors.argmax(axis=1)
 
 
-def discretize(
-    vectors, *, copy=True, max_svd_restarts=30, n_iter_max=20, random_state=None
-):
+def discretize(vectors, *, copy=True, max_svd_restarts=30, n_iter_max=20, random_state=None):
     """Search for a partition matrix which is closest to the eigenvector embedding.
 
     This implementation was proposed in [1]_.
@@ -615,10 +613,7 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
         "gamma": [Interval(Real, 0, None, closed="left")],
         "affinity": [
             callable,
-            StrOptions(
-                set(KERNEL_PARAMS)
-                | {"nearest_neighbors", "precomputed", "precomputed_nearest_neighbors"}
-            ),
+            StrOptions(set(KERNEL_PARAMS) | {"nearest_neighbors", "precomputed", "precomputed_nearest_neighbors"}),
         ],
         "n_neighbors": [Interval(Integral, 1, None, closed="left")],
         "eigen_tol": [
@@ -711,14 +706,10 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
             )
 
         if self.affinity == "nearest_neighbors":
-            connectivity = kneighbors_graph(
-                X, n_neighbors=self.n_neighbors, include_self=True, n_jobs=self.n_jobs
-            )
+            connectivity = kneighbors_graph(X, n_neighbors=self.n_neighbors, include_self=True, n_jobs=self.n_jobs)
             self.affinity_matrix_ = 0.5 * (connectivity + connectivity.T)
         elif self.affinity == "precomputed_nearest_neighbors":
-            estimator = NearestNeighbors(
-                n_neighbors=self.n_neighbors, n_jobs=self.n_jobs, metric="precomputed"
-            ).fit(X)
+            estimator = NearestNeighbors(n_neighbors=self.n_neighbors, n_jobs=self.n_jobs, metric="precomputed").fit(X)
             connectivity = estimator.kneighbors_graph(X=X, mode="connectivity")
             self.affinity_matrix_ = 0.5 * (connectivity + connectivity.T)
         elif self.affinity == "precomputed":
@@ -731,14 +722,10 @@ class SpectralClustering(ClusterMixin, BaseEstimator):
                 params["gamma"] = self.gamma
                 params["degree"] = self.degree
                 params["coef0"] = self.coef0
-            self.affinity_matrix_ = pairwise_kernels(
-                X, metric=self.affinity, filter_params=True, **params
-            )
+            self.affinity_matrix_ = pairwise_kernels(X, metric=self.affinity, filter_params=True, **params)
 
         random_state = check_random_state(self.random_state)
-        n_components = (
-            self.n_clusters if self.n_components is None else self.n_components
-        )
+        n_components = self.n_clusters if self.n_components is None else self.n_components
         # We now obtain the real valued solution matrix to the
         # relaxed Ncut problem, solving the eigenvalue problem
         # L_sym x = lambda x  and recovering u = D^-1/2 x.

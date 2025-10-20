@@ -44,9 +44,7 @@ def test_graphical_lassos(random_state=1):
         covs = dict()
         icovs = dict()
         for method in ("cd", "lars"):
-            cov_, icov_, costs = graphical_lasso(
-                emp_cov, return_costs=True, alpha=alpha, mode=method
-            )
+            cov_, icov_, costs = graphical_lasso(emp_cov, return_costs=True, alpha=alpha, mode=method)
             covs[method] = cov_
             icovs[method] = icov_
             costs, dual_gap = np.array(costs).T
@@ -91,9 +89,7 @@ def test_graphical_lasso_n_iter(mode):
     X, _ = datasets.make_classification(n_samples=5_000, n_features=20, random_state=0)
     emp_cov = empirical_covariance(X)
 
-    _, _, n_iter = graphical_lasso(
-        emp_cov, 0.2, mode=mode, max_iter=2, return_n_iter=True
-    )
+    _, _, n_iter = graphical_lasso(emp_cov, 0.2, mode=mode, max_iter=2, return_n_iter=True)
     assert n_iter == 2
 
 
@@ -163,9 +159,7 @@ def test_graphical_lasso_iris_singular():
     X = datasets.load_iris().data[indices, :]
     emp_cov = empirical_covariance(X)
     for method in ("cd", "lars"):
-        cov, icov = graphical_lasso(
-            emp_cov, alpha=0.01, return_costs=False, mode=method
-        )
+        cov, icov = graphical_lasso(emp_cov, alpha=0.01, return_costs=False, mode=method)
         assert_array_almost_equal(cov, cov_R, decimal=5)
         assert_array_almost_equal(icov, icov_R, decimal=5)
 
@@ -251,9 +245,7 @@ def test_graphical_lasso_cv_scores():
     )
     rng = np.random.RandomState(0)
     X = rng.multivariate_normal(mean=[0, 0, 0, 0], cov=true_cov, size=200)
-    cov = GraphicalLassoCV(cv=splits, alphas=n_alphas, n_refinements=n_refinements).fit(
-        X
-    )
+    cov = GraphicalLassoCV(cv=splits, alphas=n_alphas, n_refinements=n_refinements).fit(X)
 
     _assert_graphical_lasso_cv_scores(
         cov=cov,
@@ -287,9 +279,7 @@ def test_graphical_lasso_cv_scores_with_routing(global_random_seed):
     cv = GroupKFold(n_splits=splits)
     cv.set_split_request(groups=True)
 
-    cov = GraphicalLassoCV(cv=cv, alphas=n_alphas, n_refinements=n_refinements).fit(
-        X, **params
-    )
+    cov = GraphicalLassoCV(cv=cv, alphas=n_alphas, n_refinements=n_refinements).fit(X, **params)
 
     _assert_graphical_lasso_cv_scores(
         cov=cov,

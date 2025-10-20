@@ -1,4 +1,5 @@
 """ parquet compat """
+
 from __future__ import annotations
 
 import io
@@ -89,9 +90,7 @@ def _get_path_or_handle(
     storage_options: StorageOptions | None = None,
     mode: str = "rb",
     is_dir: bool = False,
-) -> tuple[
-    FilePath | ReadBuffer[bytes] | WriteBuffer[bytes], IOHandles[bytes] | None, Any
-]:
+) -> tuple[FilePath | ReadBuffer[bytes] | WriteBuffer[bytes], IOHandles[bytes] | None, Any]:
     """File handling for PyArrow."""
     path_or_handle = stringify_path(path)
     if fs is not None:
@@ -99,16 +98,11 @@ def _get_path_or_handle(
         fsspec = import_optional_dependency("fsspec", errors="ignore")
         if pa_fs is not None and isinstance(fs, pa_fs.FileSystem):
             if storage_options:
-                raise NotImplementedError(
-                    "storage_options not supported with a pyarrow FileSystem."
-                )
+                raise NotImplementedError("storage_options not supported with a pyarrow FileSystem.")
         elif fsspec is not None and isinstance(fs, fsspec.spec.AbstractFileSystem):
             pass
         else:
-            raise ValueError(
-                f"filesystem must be a pyarrow or fsspec FileSystem, "
-                f"not a {type(fs).__name__}"
-            )
+            raise ValueError(f"filesystem must be a pyarrow or fsspec FileSystem, " f"not a {type(fs).__name__}")
     if is_fsspec_url(path_or_handle) and fs is None:
         if storage_options is None:
             pa = import_optional_dependency("pyarrow")
@@ -120,27 +114,18 @@ def _get_path_or_handle(
                 pass
         if fs is None:
             fsspec = import_optional_dependency("fsspec")
-            fs, path_or_handle = fsspec.core.url_to_fs(
-                path_or_handle, **(storage_options or {})
-            )
+            fs, path_or_handle = fsspec.core.url_to_fs(path_or_handle, **(storage_options or {}))
     elif storage_options and (not is_url(path_or_handle) or mode != "rb"):
         # can't write to a remote url
         # without making use of fsspec at the moment
         raise ValueError("storage_options passed with buffer, or non-supported URL")
 
     handles = None
-    if (
-        not fs
-        and not is_dir
-        and isinstance(path_or_handle, str)
-        and not os.path.isdir(path_or_handle)
-    ):
+    if not fs and not is_dir and isinstance(path_or_handle, str) and not os.path.isdir(path_or_handle):
         # use get_handle only when we are very certain that it is not a directory
         # fsspec resources can also point to directories
         # this branch is used for example when reading from non-fsspec URLs
-        handles = get_handle(
-            path_or_handle, mode, is_text=False, storage_options=storage_options
-        )
+        handles = get_handle(path_or_handle, mode, is_text=False, storage_options=storage_options)
         fs = None
         path_or_handle = handles.handle
     return path_or_handle, handles, fs
@@ -161,9 +146,7 @@ class BaseImpl:
 
 class PyArrowImpl(BaseImpl):
     def __init__(self) -> None:
-        import_optional_dependency(
-            "pyarrow", extra="pyarrow is required for parquet support."
-        )
+        import_optional_dependency("pyarrow", extra="pyarrow is required for parquet support.")
         import pyarrow.parquet
 
         # import utils to register the pyarrow extension types
@@ -299,9 +282,7 @@ class FastParquetImpl(BaseImpl):
     def __init__(self) -> None:
         # since pandas is a dependency of fastparquet
         # we need to import on first use
-        fastparquet = import_optional_dependency(
-            "fastparquet", extra="fastparquet is required for parquet support."
-        )
+        fastparquet = import_optional_dependency("fastparquet", extra="fastparquet is required for parquet support.")
         self.api = fastparquet
 
     def write(
@@ -319,8 +300,7 @@ class FastParquetImpl(BaseImpl):
 
         if "partition_on" in kwargs and partition_cols is not None:
             raise ValueError(
-                "Cannot use both partition_on and "
-                "partition_cols. Use partition_cols for partitioning data"
+                "Cannot use both partition_on and " "partition_cols. Use partition_cols for partitioning data"
             )
         if "partition_on" in kwargs:
             partition_cols = kwargs.pop("partition_on")
@@ -329,9 +309,7 @@ class FastParquetImpl(BaseImpl):
             kwargs["file_scheme"] = "hive"
 
         if filesystem is not None:
-            raise NotImplementedError(
-                "filesystem is not implemented for the fastparquet engine."
-            )
+            raise NotImplementedError("filesystem is not implemented for the fastparquet engine.")
 
         # cannot use get_handle as write() does not accept file buffers
         path = stringify_path(path)
@@ -339,13 +317,9 @@ class FastParquetImpl(BaseImpl):
             fsspec = import_optional_dependency("fsspec")
 
             # if filesystem is provided by fsspec, file must be opened in 'wb' mode.
-            kwargs["open_with"] = lambda path, _: fsspec.open(
-                path, "wb", **(storage_options or {})
-            ).open()
+            kwargs["open_with"] = lambda path, _: fsspec.open(path, "wb", **(storage_options or {})).open()
         elif storage_options:
-            raise ValueError(
-                "storage_options passed with file object or non-fsspec file path"
-            )
+            raise ValueError("storage_options passed with file object or non-fsspec file path")
 
         with catch_warnings(record=True):
             self.api.write(
@@ -372,19 +346,11 @@ class FastParquetImpl(BaseImpl):
         # We are disabling nullable dtypes for fastparquet pending discussion
         parquet_kwargs["pandas_nulls"] = False
         if use_nullable_dtypes:
-            raise ValueError(
-                "The 'use_nullable_dtypes' argument is not supported for the "
-                "fastparquet engine"
-            )
+            raise ValueError("The 'use_nullable_dtypes' argument is not supported for the " "fastparquet engine")
         if dtype_backend is not lib.no_default:
-            raise ValueError(
-                "The 'dtype_backend' argument is not supported for the "
-                "fastparquet engine"
-            )
+            raise ValueError("The 'dtype_backend' argument is not supported for the " "fastparquet engine")
         if filesystem is not None:
-            raise NotImplementedError(
-                "filesystem is not implemented for the fastparquet engine."
-            )
+            raise NotImplementedError("filesystem is not implemented for the fastparquet engine.")
         path = stringify_path(path)
         handles = None
         if is_fsspec_url(path):
@@ -395,9 +361,7 @@ class FastParquetImpl(BaseImpl):
             # use get_handle only when we are very certain that it is not a directory
             # fsspec resources can also point to directories
             # this branch is used for example when reading from non-fsspec URLs
-            handles = get_handle(
-                path, "rb", is_text=False, storage_options=storage_options
-            )
+            handles = get_handle(path, "rb", is_text=False, storage_options=storage_options)
             path = handles.handle
 
         try:
@@ -653,14 +617,9 @@ def read_parquet(
     impl = get_engine(engine)
 
     if use_nullable_dtypes is not lib.no_default:
-        msg = (
-            "The argument 'use_nullable_dtypes' is deprecated and will be removed "
-            "in a future version."
-        )
+        msg = "The argument 'use_nullable_dtypes' is deprecated and will be removed " "in a future version."
         if use_nullable_dtypes is True:
-            msg += (
-                "Use dtype_backend='numpy_nullable' instead of use_nullable_dtype=True."
-            )
+            msg += "Use dtype_backend='numpy_nullable' instead of use_nullable_dtype=True."
         warnings.warn(msg, FutureWarning, stacklevel=find_stack_level())
     else:
         use_nullable_dtypes = False

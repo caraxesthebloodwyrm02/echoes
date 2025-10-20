@@ -2,6 +2,7 @@
 Tests that work on both the Python and C engines but do not have a
 specific classification into the other test modules.
 """
+
 from io import StringIO
 
 import pytest
@@ -12,9 +13,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 def test_iterator(all_parsers):
@@ -97,19 +96,14 @@ baz,7,8,9
     tm.assert_frame_equal(concat(result), expected)
 
 
-@pytest.mark.parametrize(
-    "kwargs", [{"iterator": True, "chunksize": 1}, {"iterator": True}, {"chunksize": 1}]
-)
+@pytest.mark.parametrize("kwargs", [{"iterator": True, "chunksize": 1}, {"iterator": True}, {"chunksize": 1}])
 def test_iterator_skipfooter_errors(all_parsers, kwargs):
     msg = "'skipfooter' not supported for iteration"
     parser = all_parsers
     data = "a\n1\n2"
 
     if parser.engine == "pyarrow":
-        msg = (
-            "The '(chunksize|iterator)' option is not supported with the "
-            "'pyarrow' engine"
-        )
+        msg = "The '(chunksize|iterator)' option is not supported with the " "'pyarrow' engine"
 
     with pytest.raises(ValueError, match=msg):
         with parser.read_csv(StringIO(data), skipfooter=1, **kwargs) as _:

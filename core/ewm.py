@@ -370,10 +370,7 @@ class ExponentialMovingWindow(BaseWindow):
             if not self.adjust:
                 raise NotImplementedError("times is not supported with adjust=False.")
             times_dtype = getattr(self.times, "dtype", None)
-            if not (
-                is_datetime64_dtype(times_dtype)
-                or isinstance(times_dtype, DatetimeTZDtype)
-            ):
+            if not (is_datetime64_dtype(times_dtype) or isinstance(times_dtype, DatetimeTZDtype)):
                 raise ValueError("times must be datetime64 dtype.")
             if len(self.times) != len(obj):
                 raise ValueError("times must be the same length as the object.")
@@ -389,17 +386,10 @@ class ExponentialMovingWindow(BaseWindow):
             else:
                 self._com = 1.0
         else:
-            if self.halflife is not None and isinstance(
-                self.halflife, (str, datetime.timedelta, np.timedelta64)
-            ):
-                raise ValueError(
-                    "halflife can only be a timedelta convertible argument if "
-                    "times is not None."
-                )
+            if self.halflife is not None and isinstance(self.halflife, (str, datetime.timedelta, np.timedelta64)):
+                raise ValueError("halflife can only be a timedelta convertible argument if " "times is not None.")
             # Without times, points are equally spaced
-            self._deltas = np.ones(
-                max(self.obj.shape[self.axis] - 1, 0), dtype=np.float64
-            )
+            self._deltas = np.ones(max(self.obj.shape[self.axis] - 1, 0), dtype=np.float64)
             self._com = get_center_of_mass(
                 # error: Argument 3 to "get_center_of_mass" has incompatible type
                 # "Union[float, Any, None, timedelta64, signedinteger[_64Bit]]";
@@ -410,9 +400,7 @@ class ExponentialMovingWindow(BaseWindow):
                 self.alpha,
             )
 
-    def _check_window_bounds(
-        self, start: np.ndarray, end: np.ndarray, num_vals: int
-    ) -> None:
+    def _check_window_bounds(self, start: np.ndarray, end: np.ndarray, num_vals: int) -> None:
         # emw algorithms are iterative with each point
         # ExponentialMovingWindowIndexer "bounds" are the entire window
         pass
@@ -423,9 +411,7 @@ class ExponentialMovingWindow(BaseWindow):
         """
         return ExponentialMovingWindowIndexer()
 
-    def online(
-        self, engine: str = "numba", engine_kwargs=None
-    ) -> OnlineExponentialMovingWindow:
+    def online(self, engine: str = "numba", engine_kwargs=None) -> OnlineExponentialMovingWindow:
         """
         Return an ``OnlineExponentialMovingWindow`` object to calculate
         exponentially moving window aggregations in an online method.
@@ -663,15 +649,9 @@ class ExponentialMovingWindow(BaseWindow):
         agg_method="std",
     )
     def std(self, bias: bool = False, numeric_only: bool = False):
-        if (
-            numeric_only
-            and self._selected_obj.ndim == 1
-            and not is_numeric_dtype(self._selected_obj.dtype)
-        ):
+        if numeric_only and self._selected_obj.ndim == 1 and not is_numeric_dtype(self._selected_obj.dtype):
             # Raise directly so error message says std instead of var
-            raise NotImplementedError(
-                f"{type(self).__name__}.std does not implement numeric_only"
-            )
+            raise NotImplementedError(f"{type(self).__name__}.std does not implement numeric_only")
         return zsqrt(self.var(bias=bias, numeric_only=numeric_only))
 
     @doc(
@@ -775,11 +755,7 @@ class ExponentialMovingWindow(BaseWindow):
             x_array = self._prep_values(x)
             y_array = self._prep_values(y)
             window_indexer = self._get_window_indexer()
-            min_periods = (
-                self.min_periods
-                if self.min_periods is not None
-                else window_indexer.window_size
-            )
+            min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
             start, end = window_indexer.get_window_bounds(
                 num_values=len(x_array),
                 min_periods=min_periods,
@@ -802,9 +778,7 @@ class ExponentialMovingWindow(BaseWindow):
             )
             return Series(result, index=x.index, name=x.name, copy=False)
 
-        return self._apply_pairwise(
-            self._selected_obj, other, pairwise, cov_func, numeric_only
-        )
+        return self._apply_pairwise(self._selected_obj, other, pairwise, cov_func, numeric_only)
 
     @doc(
         template_header,
@@ -859,11 +833,7 @@ class ExponentialMovingWindow(BaseWindow):
             x_array = self._prep_values(x)
             y_array = self._prep_values(y)
             window_indexer = self._get_window_indexer()
-            min_periods = (
-                self.min_periods
-                if self.min_periods is not None
-                else window_indexer.window_size
-            )
+            min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
             start, end = window_indexer.get_window_bounds(
                 num_values=len(x_array),
                 min_periods=min_periods,
@@ -892,9 +862,7 @@ class ExponentialMovingWindow(BaseWindow):
                 result = cov / zsqrt(x_var * y_var)
             return Series(result, index=x.index, name=x.name, copy=False)
 
-        return self._apply_pairwise(
-            self._selected_obj, other, pairwise, cov_func, numeric_only
-        )
+        return self._apply_pairwise(self._selected_obj, other, pairwise, cov_func, numeric_only)
 
 
 class ExponentialMovingWindowGroupby(BaseWindowGroupby, ExponentialMovingWindow):
@@ -949,9 +917,7 @@ class OnlineExponentialMovingWindow(ExponentialMovingWindow):
         selection=None,
     ) -> None:
         if times is not None:
-            raise NotImplementedError(
-                "times is not implemented with online operations."
-            )
+            raise NotImplementedError("times is not implemented with online operations.")
         super().__init__(
             obj=obj,
             com=com,
@@ -965,9 +931,7 @@ class OnlineExponentialMovingWindow(ExponentialMovingWindow):
             times=times,
             selection=selection,
         )
-        self._mean = EWMMeanState(
-            self._com, self.adjust, self.ignore_na, self.axis, obj.shape
-        )
+        self._mean = EWMMeanState(self._com, self.adjust, self.ignore_na, self.axis, obj.shape)
         if maybe_use_numba(engine):
             self.engine = engine
             self.engine_kwargs = engine_kwargs
@@ -1054,14 +1018,10 @@ class OnlineExponentialMovingWindow(ExponentialMovingWindow):
         is_frame = self._selected_obj.ndim == 2
         if update_times is not None:
             raise NotImplementedError("update_times is not implemented.")
-        update_deltas = np.ones(
-            max(self._selected_obj.shape[self.axis - 1] - 1, 0), dtype=np.float64
-        )
+        update_deltas = np.ones(max(self._selected_obj.shape[self.axis - 1] - 1, 0), dtype=np.float64)
         if update is not None:
             if self._mean.last_ewm is None:
-                raise ValueError(
-                    "Must call mean with update=None first before passing update"
-                )
+                raise ValueError("Must call mean with update=None first before passing update")
             result_from = 1
             result_kwargs["index"] = update.index
             if is_frame:
@@ -1079,9 +1039,7 @@ class OnlineExponentialMovingWindow(ExponentialMovingWindow):
             else:
                 result_kwargs["name"] = self._selected_obj.name
             np_array = self._selected_obj.astype(np.float64, copy=False).to_numpy()
-        ewma_func = generate_online_numba_ewma_func(
-            **get_jit_arguments(self.engine_kwargs)
-        )
+        ewma_func = generate_online_numba_ewma_func(**get_jit_arguments(self.engine_kwargs))
         result = self._mean.run_ewm(
             np_array if is_frame else np_array[:, np.newaxis],
             update_deltas,

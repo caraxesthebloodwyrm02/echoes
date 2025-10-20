@@ -257,9 +257,7 @@ def snapshot_definition(node: SymbolNode | None, common: SymbolSnapshot) -> Symb
         if isinstance(node, FuncDef):
             deprecated = node.deprecated
         elif isinstance(node, OverloadedFuncDef):
-            deprecated = [node.deprecated] + [
-                i.func.deprecated for i in node.items if isinstance(i, Decorator)
-            ]
+            deprecated = [node.deprecated] + [i.func.deprecated for i in node.items if isinstance(i, Decorator)]
 
         return (
             "Func",

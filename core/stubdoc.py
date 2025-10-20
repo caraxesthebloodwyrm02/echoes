@@ -58,9 +58,7 @@ class ArgSig:
         return self.name.startswith("**")
 
     def __repr__(self) -> str:
-        return "ArgSig(name={}, type={}, default={})".format(
-            repr(self.name), repr(self.type), repr(self.default)
-        )
+        return "ArgSig(name={}, type={}, default={})".format(repr(self.name), repr(self.type), repr(self.default))
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, ArgSig):
@@ -187,18 +185,10 @@ class DocStringParser:
 
     def add_token(self, token: tokenize.TokenInfo) -> None:
         """Process next token from the token stream."""
-        if (
-            token.type == tokenize.NAME
-            and token.string == self.function_name
-            and self.state[-1] == STATE_INIT
-        ):
+        if token.type == tokenize.NAME and token.string == self.function_name and self.state[-1] == STATE_INIT:
             self.state.append(STATE_FUNCTION_NAME)
 
-        elif (
-            token.type == tokenize.OP
-            and token.string == "("
-            and self.state[-1] == STATE_FUNCTION_NAME
-        ):
+        elif token.type == tokenize.OP and token.string == "(" and self.state[-1] == STATE_FUNCTION_NAME:
             self.state.pop()
             self.accumulator = ""
             self.found = True
@@ -208,27 +198,15 @@ class DocStringParser:
             # Reset state, function name not followed by '('.
             self.state.pop()
 
-        elif (
-            token.type == tokenize.OP
-            and token.string in ("[", "(", "{")
-            and self.state[-1] != STATE_INIT
-        ):
+        elif token.type == tokenize.OP and token.string in ("[", "(", "{") and self.state[-1] != STATE_INIT:
             self.accumulator += token.string
             self.state.append(STATE_OPEN_BRACKET)
 
-        elif (
-            token.type == tokenize.OP
-            and token.string in ("]", ")", "}")
-            and self.state[-1] == STATE_OPEN_BRACKET
-        ):
+        elif token.type == tokenize.OP and token.string in ("]", ")", "}") and self.state[-1] == STATE_OPEN_BRACKET:
             self.accumulator += token.string
             self.state.pop()
 
-        elif (
-            token.type == tokenize.OP
-            and token.string == ":"
-            and self.state[-1] == STATE_ARGUMENT_LIST
-        ):
+        elif token.type == tokenize.OP and token.string == ":" and self.state[-1] == STATE_ARGUMENT_LIST:
             self.arg_name = self.accumulator
             self.accumulator = ""
             self.state.append(STATE_ARGUMENT_TYPE)
@@ -249,8 +227,7 @@ class DocStringParser:
         elif (
             token.type == tokenize.OP
             and token.string in (",", ")")
-            and self.state[-1]
-            in (STATE_ARGUMENT_LIST, STATE_ARGUMENT_DEFAULT, STATE_ARGUMENT_TYPE)
+            and self.state[-1] in (STATE_ARGUMENT_LIST, STATE_ARGUMENT_DEFAULT, STATE_ARGUMENT_TYPE)
         ):
             if self.state[-1] == STATE_ARGUMENT_DEFAULT:
                 self.arg_default = self.accumulator
@@ -270,9 +247,9 @@ class DocStringParser:
                     if self.accumulator.startswith("*"):
                         self.keyword_only = len(self.args) + 1
                     self.arg_name = self.accumulator
-                    if not (
-                        token.string == ")" and self.accumulator.strip() == ""
-                    ) and not _ARG_NAME_RE.match(self.arg_name):
+                    if not (token.string == ")" and self.accumulator.strip() == "") and not _ARG_NAME_RE.match(
+                        self.arg_name
+                    ):
                         # Invalid argument name.
                         self.reset()
                         return
@@ -293,24 +270,14 @@ class DocStringParser:
             if self.arg_name:
                 if self.arg_type and not is_valid_type(self.arg_type):
                     # wrong type, use Any
-                    self.args.append(
-                        ArgSig(name=self.arg_name, type=None, default=bool(self.arg_default))
-                    )
+                    self.args.append(ArgSig(name=self.arg_name, type=None, default=bool(self.arg_default)))
                 else:
-                    self.args.append(
-                        ArgSig(
-                            name=self.arg_name, type=self.arg_type, default=bool(self.arg_default)
-                        )
-                    )
+                    self.args.append(ArgSig(name=self.arg_name, type=self.arg_type, default=bool(self.arg_default)))
             self.arg_name = ""
             self.arg_type = None
             self.arg_default = None
             self.accumulator = ""
-        elif (
-            token.type == tokenize.OP
-            and token.string == "/"
-            and self.state[-1] == STATE_ARGUMENT_LIST
-        ):
+        elif token.type == tokenize.OP and token.string == "/" and self.state[-1] == STATE_ARGUMENT_LIST:
             if token.string == "/":
                 if self.pos_only is not None or self.keyword_only is not None or not self.args:
                     # Error cases:
@@ -341,9 +308,7 @@ class DocStringParser:
                 self.state.pop()
 
             if self.found:
-                self.signatures.append(
-                    FunctionSig(name=self.function_name, args=self.args, ret_type=self.ret_type)
-                )
+                self.signatures.append(FunctionSig(name=self.function_name, args=self.args, ret_type=self.ret_type))
                 self.found = False
             self.args = []
             self.ret_type = "Any"

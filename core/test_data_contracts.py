@@ -163,9 +163,7 @@ def test_audit_logger_handles_various_data(user, prompt, response):
         audit = AuditLogger(log_file)
 
         # Should handle various data without crashing
-        audit.log_evaluation(
-            user_id=user, prompt=prompt, response=response, safety_status="success"
-        )
+        audit.log_evaluation(user_id=user, prompt=prompt, response=response, safety_status="success")
 
         # File should exist and contain valid JSON
         assert os.path.exists(log_file)
@@ -247,9 +245,7 @@ def test_audit_logger_data_integrity(user, prompt, response):
         log_file = os.path.join(tmpdir, "audit.ndjson")
         audit = AuditLogger(log_file)
 
-        audit.log_evaluation(
-            user_id=user, prompt=prompt, response=response, safety_status="success"
-        )
+        audit.log_evaluation(user_id=user, prompt=prompt, response=response, safety_status="success")
 
         with open(log_file, "r") as f:
             import json

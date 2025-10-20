@@ -80,9 +80,7 @@ The thought should be:"""
                             "type": "shower",
                             "timestamp": datetime.now().isoformat(),
                             "safety_score": safety_score,
-                            "emotional_impact": self._calculate_emotional_impact(
-                                response
-                            ),
+                            "emotional_impact": self._calculate_emotional_impact(response),
                         }
                         self.thoughts.append(thought)
                         return thought
@@ -127,9 +125,7 @@ The random thought:"""
                             "type": "random",
                             "timestamp": datetime.now().isoformat(),
                             "safety_score": safety_score,
-                            "emotional_impact": self._calculate_emotional_impact(
-                                response
-                            ),
+                            "emotional_impact": self._calculate_emotional_impact(response),
                         }
                         self.thoughts.append(thought)
                         return thought
@@ -197,9 +193,7 @@ The random thought:"""
             return max(-1.0, negative_count * -0.2)
         return 0.0
 
-    def _generate_fallback_thought(
-        self, thought_type: str, context: Optional[str] = None
-    ) -> Dict:
+    def _generate_fallback_thought(self, thought_type: str, context: Optional[str] = None) -> Dict:
         shower_thoughts = [
             "If you try to fail and succeed, what have you done?",
             "We're all just collections of atoms pretending to be solid.",

@@ -14,10 +14,7 @@ from time import perf_counter
 
 from nltk.featstruct import TYPE, FeatStruct, find_variables, unify
 from nltk.grammar import (
-    CFG,
     FeatStructNonterminal,
-    Nonterminal,
-    Production,
     is_nonterminal,
     is_terminal,
 )
@@ -92,9 +89,7 @@ class FeatureTreeEdge(TreeEdge):
             ``(index,index)``; and its dot position will be ``0``.
         :rtype: TreeEdge
         """
-        return FeatureTreeEdge(
-            span=(index, index), lhs=production.lhs(), rhs=production.rhs(), dot=0
-        )
+        return FeatureTreeEdge(span=(index, index), lhs=production.lhs(), rhs=production.rhs(), dot=0)
 
     def move_dot_forward(self, new_end, bindings=None):
         """
@@ -135,10 +130,7 @@ class FeatureTreeEdge(TreeEdge):
         :rtype: set(Variable)
         """
         return find_variables(
-            [self._lhs]
-            + list(self._rhs)
-            + list(self._bindings.keys())
-            + list(self._bindings.values()),
+            [self._lhs] + list(self._rhs) + list(self._bindings.keys()) + list(self._bindings.values()),
             fs_class=FeatStruct,
         )
 
@@ -146,9 +138,7 @@ class FeatureTreeEdge(TreeEdge):
         if self.is_complete():
             return super().__str__()
         else:
-            bindings = "{%s}" % ", ".join(
-                "%s: %r" % item for item in sorted(self._bindings.items())
-            )
+            bindings = "{%s}" % ", ".join("%s: %r" % item for item in sorted(self._bindings.items()))
             return f"{super().__str__()} {bindings}"
 
 
@@ -183,9 +173,7 @@ class FeatureChart(Chart):
         if restr_keys not in self._indexes:
             self._add_index(restr_keys)
 
-        vals = tuple(
-            self._get_type_if_possible(restrictions[key]) for key in restr_keys
-        )
+        vals = tuple(self._get_type_if_possible(restrictions[key]) for key in restr_keys)
         return iter(self._indexes[restr_keys].get(vals, []))
 
     def _add_index(self, restr_keys):
@@ -203,9 +191,7 @@ class FeatureChart(Chart):
 
         # Add all existing edges to the index.
         for edge in self._edges:
-            vals = tuple(
-                self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys
-            )
+            vals = tuple(self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys)
             index.setdefault(vals, []).append(edge)
 
     def _register_with_indexes(self, edge):
@@ -214,9 +200,7 @@ class FeatureChart(Chart):
         edge with all existing indexes.
         """
         for restr_keys, index in self._indexes.items():
-            vals = tuple(
-                self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys
-            )
+            vals = tuple(self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys)
             index.setdefault(vals, []).append(edge)
 
     def _get_type_if_possible(self, item):
@@ -318,16 +302,12 @@ class FeatureSingleEdgeFundamentalRule(SingleEdgeFundamentalRule):
 
     def _apply_complete(self, chart, grammar, right_edge):
         fr = self._fundamental_rule
-        for left_edge in chart.select(
-            end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()
-        ):
+        for left_edge in chart.select(end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()):
             yield from fr.apply(chart, grammar, left_edge, right_edge)
 
     def _apply_incomplete(self, chart, grammar, left_edge):
         fr = self._fundamental_rule
-        for right_edge in chart.select(
-            start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()
-        ):
+        for right_edge in chart.select(start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()):
             yield from fr.apply(chart, grammar, left_edge, right_edge)
 
 
@@ -434,18 +414,14 @@ class FeatureBottomUpPredictCombineRule(BottomUpPredictCombineRule):
 
                 # We rename vars here, because we don't want variables
                 # from the two different productions to match.
-                used_vars = find_variables(
-                    (prod.lhs(),) + prod.rhs(), fs_class=FeatStruct
-                )
+                used_vars = find_variables((prod.lhs(),) + prod.rhs(), fs_class=FeatStruct)
                 found = found.rename_variables(used_vars=used_vars)
 
                 result = unify(_next, found, bindings, rename_vars=False)
                 if result is None:
                     continue
 
-            new_edge = FeatureTreeEdge.from_production(
-                prod, edge.start()
-            ).move_dot_forward(edge.end(), bindings)
+            new_edge = FeatureTreeEdge.from_production(prod, edge.start()).move_dot_forward(edge.end(), bindings)
             if chart.insert(new_edge, (edge,)):
                 yield new_edge
 
@@ -514,9 +490,7 @@ class FeatureBottomUpChartParser(FeatureChartParser):
 
 class FeatureBottomUpLeftCornerChartParser(FeatureChartParser):
     def __init__(self, grammar, **parser_args):
-        FeatureChartParser.__init__(
-            self, grammar, BU_LC_FEATURE_STRATEGY, **parser_args
-        )
+        FeatureChartParser.__init__(self, grammar, BU_LC_FEATURE_STRATEGY, **parser_args)
 
 
 # ////////////////////////////////////////////////////////////
@@ -576,11 +550,7 @@ class InstantiateVarsChart(FeatureChart):
         edge._lhs = edge.lhs().substitute_bindings(inst_vars)
 
     def inst_vars(self, edge):
-        return {
-            var: logic.unique_variable()
-            for var in edge.lhs().variables()
-            if var.name.startswith("@")
-        }
+        return {var: logic.unique_variable() for var in edge.lhs().variables() if var.name.startswith("@")}
 
 
 # ////////////////////////////////////////////////////////////
@@ -624,8 +594,6 @@ def demo(
     parser=FeatureChartParser,
     sent="I saw John with a dog with my cookie",
 ):
-    import sys
-    import time
 
     print()
     grammar = demo_grammar()

@@ -170,9 +170,7 @@ def fetch_california_housing(
         if not download_if_missing:
             raise OSError("Data not found and `download_if_missing` is False")
 
-        logger.info(
-            "Downloading Cal. housing from {} to {}".format(ARCHIVE.url, data_home)
-        )
+        logger.info("Downloading Cal. housing from {} to {}".format(ARCHIVE.url, data_home))
 
         archive_path = _fetch_remote(
             ARCHIVE,
@@ -182,9 +180,7 @@ def fetch_california_housing(
         )
 
         with tarfile.open(mode="r:gz", name=archive_path) as f:
-            cal_housing = np.loadtxt(
-                f.extractfile("CaliforniaHousing/cal_housing.data"), delimiter=","
-            )
+            cal_housing = np.loadtxt(f.extractfile("CaliforniaHousing/cal_housing.data"), delimiter=",")
             # Columns are not in the same order compared to the previous
             # URL resource on lib.stat.cmu.edu
             columns_index = [8, 7, 2, 3, 4, 5, 6, 1, 0]
@@ -231,9 +227,7 @@ def fetch_california_housing(
         "MedHouseVal",
     ]
     if as_frame:
-        frame, X, y = _convert_data_dataframe(
-            "fetch_california_housing", data, target, feature_names, target_names
-        )
+        frame, X, y = _convert_data_dataframe("fetch_california_housing", data, target, feature_names, target_names)
 
     if return_X_y:
         return X, y

@@ -17,7 +17,6 @@ an Old English prose text. Tags used within each text complies
 to the YCOE standard: https://www-users.york.ac.uk/~lang22/YCOE/YcoeHome.htm
 """
 
-import os
 import re
 
 from nltk.corpus.reader.api import *
@@ -37,9 +36,7 @@ class YCOECorpusReader(CorpusReader):
     def __init__(self, root, encoding="utf8"):
         CorpusReader.__init__(self, root, [], encoding)
 
-        self._psd_reader = YCOEParseCorpusReader(
-            self.root.join("psd"), ".*", ".psd", encoding=encoding
-        )
+        self._psd_reader = YCOEParseCorpusReader(self.root.join("psd"), ".*", ".psd", encoding=encoding)
         self._pos_reader = YCOETaggedCorpusReader(self.root.join("pos"), ".*", ".pos")
 
         # Make sure we have a consistent set of items:
@@ -47,10 +44,7 @@ class YCOECorpusReader(CorpusReader):
         if {f[:-4] for f in self._pos_reader.fileids()} != documents:
             raise ValueError('Items in "psd" and "pos" ' "subdirectories do not match.")
 
-        fileids = sorted(
-            ["%s.psd" % doc for doc in documents]
-            + ["%s.pos" % doc for doc in documents]
-        )
+        fileids = sorted(["%s.psd" % doc for doc in documents] + ["%s.pos" % doc for doc in documents])
         CorpusReader.__init__(self, root, fileids, encoding)
         self._documents = sorted(documents)
 
@@ -79,12 +73,7 @@ class YCOECorpusReader(CorpusReader):
             return self._fileids
         elif isinstance(documents, str):
             documents = [documents]
-        return sorted(
-            set(
-                ["%s.pos" % doc for doc in documents]
-                + ["%s.psd" % doc for doc in documents]
-            )
-        )
+        return sorted(set(["%s.pos" % doc for doc in documents] + ["%s.psd" % doc for doc in documents]))
 
     def _getfileids(self, documents, subcorpus):
         """
@@ -146,9 +135,7 @@ class YCOETaggedCorpusReader(TaggedCorpusReader):
     def __init__(self, root, items, encoding="utf8"):
         gaps_re = r"(?u)(?<=/\.)\s+|\s*\S*_CODE\s*|\s*\S*_ID\s*"
         sent_tokenizer = RegexpTokenizer(gaps_re, gaps=True)
-        TaggedCorpusReader.__init__(
-            self, root, items, sep="_", sent_tokenizer=sent_tokenizer
-        )
+        TaggedCorpusReader.__init__(self, root, items, sep="_", sent_tokenizer=sent_tokenizer)
 
 
 #: A list of all documents and their titles in ycoe.

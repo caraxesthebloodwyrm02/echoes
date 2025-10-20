@@ -137,9 +137,7 @@ try:
             )
         )
 
-        mm = np.memmap(
-            filename, dtype=dtype, mode=mode, offset=offset, shape=shape, order=order
-        )
+        mm = np.memmap(filename, dtype=dtype, mode=mode, offset=offset, shape=shape, order=order)
         if LooseVersion(np.__version__) < "1.13":
             mm.offset = offset
         if unlink_on_gc_collect:
@@ -147,6 +145,7 @@ try:
 
             add_maybe_unlink_finalizer(mm)
         return mm
+
 except ImportError:
 
     def make_memmap(
@@ -158,10 +157,7 @@ except ImportError:
         order="C",
         unlink_on_gc_collect=False,
     ):
-        raise NotImplementedError(
-            "'joblib.backports.make_memmap' should not be used "
-            "if numpy is not installed."
-        )
+        raise NotImplementedError("'joblib.backports.make_memmap' should not be used " "if numpy is not installed.")
 
 
 if os.name == "nt":
@@ -191,5 +187,6 @@ if os.name == "nt":
                     raise
         else:
             raise
+
 else:
     from os import replace as concurrency_safe_rename  # noqa

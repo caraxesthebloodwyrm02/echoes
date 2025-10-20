@@ -71,9 +71,7 @@ def process_file(path, task, dry_run=False):
 
     # Update budget with real usage
     data, cost = update_budget(tokens_used, model=used_model)
-    print(
-        f"[DONE] tokens_used: {tokens_used} | cost: ${cost:.5f} | total_spent: ${data['spent']:.3f}"
-    )
+    print(f"[DONE] tokens_used: {tokens_used} | cost: ${cost:.5f} | total_spent: ${data['spent']:.3f}")
 
     # Write output file
     out_name = os.path.splitext(os.path.basename(path))[0] + f"_{task}.txt"
@@ -87,9 +85,7 @@ def process_file(path, task, dry_run=False):
 
 
 def main(task, dry_run=False):
-    files = [
-        os.path.join(INPUT_DIR, f) for f in os.listdir(INPUT_DIR) if f.endswith(".txt")
-    ]
+    files = [os.path.join(INPUT_DIR, f) for f in os.listdir(INPUT_DIR) if f.endswith(".txt")]
     if not files:
         print("[WARN] No input .txt files found in", INPUT_DIR)
         return
@@ -103,17 +99,13 @@ def main(task, dry_run=False):
 
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(
-        description="Batch process input_samples through transformer"
-    )
+    parser = argparse.ArgumentParser(description="Batch process input_samples through transformer")
     parser.add_argument(
         "--task",
         type=str,
         default="summarize",
         choices=["summarize", "rephrase", "extract_actions"],
     )
-    parser.add_argument(
-        "--dry-run", action="store_true", help="Don't call API; simulate steps"
-    )
+    parser.add_argument("--dry-run", action="store_true", help="Don't call API; simulate steps")
     args = parser.parse_args()
     main(task=args.task, dry_run=args.dry_run)

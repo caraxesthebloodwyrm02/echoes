@@ -217,9 +217,7 @@ class LeaveOneOut(_UnsupportedGroupCVMixin, BaseCrossValidator):
     def _iter_test_indices(self, X, y=None, groups=None):
         n_samples = _num_samples(X)
         if n_samples <= 1:
-            raise ValueError(
-                "Cannot perform LeaveOneOut with n_samples={}.".format(n_samples)
-            )
+            raise ValueError("Cannot perform LeaveOneOut with n_samples={}.".format(n_samples))
         return range(n_samples)
 
     def get_n_splits(self, X, y=None, groups=None):
@@ -311,11 +309,7 @@ class LeavePOut(_UnsupportedGroupCVMixin, BaseCrossValidator):
     def _iter_test_indices(self, X, y=None, groups=None):
         n_samples = _num_samples(X)
         if n_samples <= self.p:
-            raise ValueError(
-                "p={} must be strictly less than the number of samples={}".format(
-                    self.p, n_samples
-                )
-            )
+            raise ValueError("p={} must be strictly less than the number of samples={}".format(self.p, n_samples))
         for combination in combinations(range(n_samples), self.p):
             yield np.array(combination)
 
@@ -403,8 +397,7 @@ class _BaseKFold(BaseCrossValidator, metaclass=ABCMeta):
         if self.n_splits > n_samples:
             raise ValueError(
                 (
-                    "Cannot have number of splits n_splits={0} greater"
-                    " than the number of samples: n_samples={1}."
+                    "Cannot have number of splits n_splits={0} greater" " than the number of samples: n_samples={1}."
                 ).format(self.n_splits, n_samples)
             )
 
@@ -785,9 +778,7 @@ class StratifiedKFold(_BaseKFold):
         allowed_target_types = ("binary", "multiclass")
         if type_of_target_y not in allowed_target_types:
             raise ValueError(
-                "Supported target types are: {}. Got {!r} instead.".format(
-                    allowed_target_types, type_of_target_y
-                )
+                "Supported target types are: {}. Got {!r} instead.".format(allowed_target_types, type_of_target_y)
             )
 
         y = column_or_1d(y)
@@ -804,14 +795,12 @@ class StratifiedKFold(_BaseKFold):
         min_groups = np.min(y_counts)
         if np.all(self.n_splits > y_counts):
             raise ValueError(
-                "n_splits=%d cannot be greater than the"
-                " number of members in each class." % (self.n_splits)
+                "n_splits=%d cannot be greater than the" " number of members in each class." % (self.n_splits)
             )
         if self.n_splits > min_groups:
             warnings.warn(
                 "The least populated class in y has only %d"
-                " members, which is less than n_splits=%d."
-                % (min_groups, self.n_splits),
+                " members, which is less than n_splits=%d." % (min_groups, self.n_splits),
                 UserWarning,
             )
 
@@ -820,10 +809,7 @@ class StratifiedKFold(_BaseKFold):
         # counts, but that code is unreadable.)
         y_order = np.sort(y_encoded)
         allocation = np.asarray(
-            [
-                np.bincount(y_order[i :: self.n_splits], minlength=n_classes)
-                for i in range(self.n_splits)
-            ]
+            [np.bincount(y_order[i :: self.n_splits], minlength=n_classes) for i in range(self.n_splits)]
         )
 
         # To maintain the data order dependencies as best as possible within
@@ -1018,31 +1004,25 @@ class StratifiedGroupKFold(GroupsConsumerMixin, _BaseKFold):
         allowed_target_types = ("binary", "multiclass")
         if type_of_target_y not in allowed_target_types:
             raise ValueError(
-                "Supported target types are: {}. Got {!r} instead.".format(
-                    allowed_target_types, type_of_target_y
-                )
+                "Supported target types are: {}. Got {!r} instead.".format(allowed_target_types, type_of_target_y)
             )
 
         y = column_or_1d(y)
         _, y_inv, y_cnt = np.unique(y, return_inverse=True, return_counts=True)
         if np.all(self.n_splits > y_cnt):
             raise ValueError(
-                "n_splits=%d cannot be greater than the"
-                " number of members in each class." % (self.n_splits)
+                "n_splits=%d cannot be greater than the" " number of members in each class." % (self.n_splits)
             )
         n_smallest_class = np.min(y_cnt)
         if self.n_splits > n_smallest_class:
             warnings.warn(
                 "The least populated class in y has only %d"
-                " members, which is less than n_splits=%d."
-                % (n_smallest_class, self.n_splits),
+                " members, which is less than n_splits=%d." % (n_smallest_class, self.n_splits),
                 UserWarning,
             )
         n_classes = len(y_cnt)
 
-        _, groups_inv, groups_cnt = np.unique(
-            groups, return_inverse=True, return_counts=True
-        )
+        _, groups_inv, groups_cnt = np.unique(groups, return_inverse=True, return_counts=True)
         y_counts_per_group = np.zeros((len(groups_cnt), n_classes))
         for class_idx, group_idx in zip(y_inv, groups_inv):
             y_counts_per_group[group_idx, class_idx] += 1
@@ -1055,9 +1035,7 @@ class StratifiedGroupKFold(GroupsConsumerMixin, _BaseKFold):
 
         # Stable sort to keep shuffled order for groups with the same
         # class distribution variance
-        sorted_groups_idx = np.argsort(
-            -np.std(y_counts_per_group, axis=1), kind="mergesort"
-        )
+        sorted_groups_idx = np.argsort(-np.std(y_counts_per_group, axis=1), kind="mergesort")
 
         for group_idx in sorted_groups_idx:
             group_y_counts = y_counts_per_group[group_idx]
@@ -1070,11 +1048,7 @@ class StratifiedGroupKFold(GroupsConsumerMixin, _BaseKFold):
             groups_per_fold[best_fold].add(group_idx)
 
         for i in range(self.n_splits):
-            test_indices = [
-                idx
-                for idx, group_idx in enumerate(groups_inv)
-                if group_idx in groups_per_fold[i]
-            ]
+            test_indices = [idx for idx, group_idx in enumerate(groups_inv) if group_idx in groups_per_fold[i]]
             yield test_indices
 
     def _find_best_fold(self, y_counts_per_fold, y_cnt, group_y_counts):
@@ -1089,8 +1063,7 @@ class StratifiedGroupKFold(GroupsConsumerMixin, _BaseKFold):
             fold_eval = np.mean(std_per_class)
             samples_in_fold = np.sum(y_counts_per_fold[i])
             is_current_fold_better = fold_eval < min_eval or (
-                np.isclose(fold_eval, min_eval)
-                and samples_in_fold < min_samples_in_fold
+                np.isclose(fold_eval, min_eval) and samples_in_fold < min_samples_in_fold
             )
             if is_current_fold_better:
                 min_eval = fold_eval
@@ -1280,15 +1253,12 @@ class TimeSeriesSplit(_BaseKFold):
         n_splits = self.n_splits
         n_folds = n_splits + 1
         gap = self.gap
-        test_size = (
-            self.test_size if self.test_size is not None else n_samples // n_folds
-        )
+        test_size = self.test_size if self.test_size is not None else n_samples // n_folds
 
         # Make sure we have enough samples for the given split parameters
         if n_folds > n_samples:
             raise ValueError(
-                f"Cannot have number of folds={n_folds} greater"
-                f" than the number of samples={n_samples}."
+                f"Cannot have number of folds={n_folds} greater" f" than the number of samples={n_samples}."
             )
         if n_samples - gap - (test_size * n_splits) <= 0:
             raise ValueError(
@@ -1366,9 +1336,7 @@ class LeaveOneGroupOut(GroupsConsumerMixin, BaseCrossValidator):
         if groups is None:
             raise ValueError("The 'groups' parameter should not be None.")
         # We make a copy of groups to avoid side-effects during iteration
-        groups = check_array(
-            groups, input_name="groups", copy=True, ensure_2d=False, dtype=None
-        )
+        groups = check_array(groups, input_name="groups", copy=True, ensure_2d=False, dtype=None)
         unique_groups = np.unique(groups)
         if len(unique_groups) <= 1:
             raise ValueError(
@@ -1493,9 +1461,7 @@ class LeavePGroupsOut(GroupsConsumerMixin, BaseCrossValidator):
     def _iter_test_masks(self, X, y, groups):
         if groups is None:
             raise ValueError("The 'groups' parameter should not be None.")
-        groups = check_array(
-            groups, input_name="groups", copy=True, ensure_2d=False, dtype=None
-        )
+        groups = check_array(groups, input_name="groups", copy=True, ensure_2d=False, dtype=None)
         unique_groups = np.unique(groups)
         if self.n_groups >= len(unique_groups):
             raise ValueError(
@@ -1733,9 +1699,7 @@ class RepeatedKFold(_UnsupportedGroupCVMixin, _RepeatedSplits):
     """
 
     def __init__(self, *, n_splits=5, n_repeats=10, random_state=None):
-        super().__init__(
-            KFold, n_repeats=n_repeats, random_state=random_state, n_splits=n_splits
-        )
+        super().__init__(KFold, n_repeats=n_repeats, random_state=random_state, n_splits=n_splits)
 
 
 class RepeatedStratifiedKFold(_UnsupportedGroupCVMixin, _RepeatedSplits):
@@ -1884,9 +1848,7 @@ class BaseShuffleSplit(_MetadataRequester, metaclass=ABCMeta):
     # which don't support ``groups``.
     __metadata_request__split = {"groups": metadata_routing.UNUSED}
 
-    def __init__(
-        self, n_splits=10, *, test_size=None, train_size=None, random_state=None
-    ):
+    def __init__(self, n_splits=10, *, test_size=None, train_size=None, random_state=None):
         self.n_splits = n_splits
         self.test_size = test_size
         self.train_size = train_size
@@ -2063,9 +2025,7 @@ class ShuffleSplit(_UnsupportedGroupCVMixin, BaseShuffleSplit):
       Test:  index=[2 4]
     """
 
-    def __init__(
-        self, n_splits=10, *, test_size=None, train_size=None, random_state=None
-    ):
+    def __init__(self, n_splits=10, *, test_size=None, train_size=None, random_state=None):
         super().__init__(
             n_splits=n_splits,
             test_size=test_size,
@@ -2163,9 +2123,7 @@ class GroupShuffleSplit(GroupsConsumerMixin, BaseShuffleSplit):
     LeavePGroupsOut : Train set leaves out all possible subsets of `p` groups.
     """
 
-    def __init__(
-        self, n_splits=5, *, test_size=None, train_size=None, random_state=None
-    ):
+    def __init__(self, n_splits=5, *, test_size=None, train_size=None, random_state=None):
         super().__init__(
             n_splits=n_splits,
             test_size=test_size,
@@ -2302,9 +2260,7 @@ class StratifiedShuffleSplit(BaseShuffleSplit):
       Test:  index=[3 4 2]
     """
 
-    def __init__(
-        self, n_splits=10, *, test_size=None, train_size=None, random_state=None
-    ):
+    def __init__(self, n_splits=10, *, test_size=None, train_size=None, random_state=None):
         super().__init__(
             n_splits=n_splits,
             test_size=test_size,
@@ -2348,20 +2304,16 @@ class StratifiedShuffleSplit(BaseShuffleSplit):
 
         if n_train < n_classes:
             raise ValueError(
-                "The train_size = %d should be greater or "
-                "equal to the number of classes = %d" % (n_train, n_classes)
+                "The train_size = %d should be greater or " "equal to the number of classes = %d" % (n_train, n_classes)
             )
         if n_test < n_classes:
             raise ValueError(
-                "The test_size = %d should be greater or "
-                "equal to the number of classes = %d" % (n_test, n_classes)
+                "The test_size = %d should be greater or " "equal to the number of classes = %d" % (n_test, n_classes)
             )
 
         # Find the sorted list of instances for each class:
         # (np.unique above performs a sort, so code is O(n logn) already)
-        class_indices = np.split(
-            np.argsort(y_indices, kind="mergesort"), np.cumsum(class_counts)[:-1]
-        )
+        class_indices = np.split(np.argsort(y_indices, kind="mergesort"), np.cumsum(class_counts)[:-1])
 
         rng = check_random_state(self.random_state)
 
@@ -2728,11 +2680,7 @@ def check_cv(cv=5, y=None, *, classifier=False):
     """
     cv = 5 if cv is None else cv
     if isinstance(cv, numbers.Integral):
-        if (
-            classifier
-            and (y is not None)
-            and (type_of_target(y, input_name="y") in ("binary", "multiclass"))
-        ):
+        if classifier and (y is not None) and (type_of_target(y, input_name="y") in ("binary", "multiclass")):
             return StratifiedKFold(cv)
         else:
             return KFold(cv)
@@ -2916,15 +2864,11 @@ def train_test_split(
     arrays = indexable(*arrays)
 
     n_samples = _num_samples(arrays[0])
-    n_train, n_test = _validate_shuffle_split(
-        n_samples, test_size, train_size, default_test_size=0.25
-    )
+    n_train, n_test = _validate_shuffle_split(n_samples, test_size, train_size, default_test_size=0.25)
 
     if shuffle is False:
         if stratify is not None:
-            raise ValueError(
-                "Stratified train/test split is not implemented for shuffle=False"
-            )
+            raise ValueError("Stratified train/test split is not implemented for shuffle=False")
 
         train = np.arange(n_train)
         test = np.arange(n_train, n_train + n_test)
@@ -2941,11 +2885,7 @@ def train_test_split(
 
     train, test = ensure_common_namespace_device(arrays[0], train, test)
 
-    return list(
-        chain.from_iterable(
-            (_safe_indexing(a, train), _safe_indexing(a, test)) for a in arrays
-        )
-    )
+    return list(chain.from_iterable((_safe_indexing(a, train), _safe_indexing(a, test)) for a in arrays))
 
 
 # Tell nose that train_test_split is not a test.
@@ -3015,11 +2955,7 @@ def _build_repr(self):
         args = []
     else:
         args = sorted(
-            [
-                p.name
-                for p in init_signature.parameters.values()
-                if p.name != "self" and p.kind != p.VAR_KEYWORD
-            ]
+            [p.name for p in init_signature.parameters.values() if p.name != "self" and p.kind != p.VAR_KEYWORD]
         )
     class_name = self.__class__.__name__
     params = dict()

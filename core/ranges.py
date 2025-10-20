@@ -164,27 +164,13 @@ class Range(Generic[_T]):
             return False
 
         if self.lower is None:
-            return self.upper is None or (
-                value < self.upper
-                if self.bounds[1] == ")"
-                else value <= self.upper
-            )
+            return self.upper is None or (value < self.upper if self.bounds[1] == ")" else value <= self.upper)
 
         if self.upper is None:
-            return (  # type: ignore
-                value > self.lower
-                if self.bounds[0] == "("
-                else value >= self.lower
-            )
+            return value > self.lower if self.bounds[0] == "(" else value >= self.lower  # type: ignore
 
-        return (  # type: ignore
-            value > self.lower
-            if self.bounds[0] == "("
-            else value >= self.lower
-        ) and (
-            value < self.upper
-            if self.bounds[1] == ")"
-            else value <= self.upper
+        return (value > self.lower if self.bounds[0] == "(" else value >= self.lower) and (  # type: ignore
+            value < self.upper if self.bounds[1] == ")" else value <= self.upper
         )
 
     def _get_discrete_step(self) -> Any:
@@ -196,9 +182,7 @@ class Range(Generic[_T]):
 
         if isinstance(self.lower, int) or isinstance(self.upper, int):
             return 1
-        elif isinstance(self.lower, datetime) or isinstance(
-            self.upper, datetime
-        ):
+        elif isinstance(self.lower, datetime) or isinstance(self.upper, datetime):
             # This is required, because a `isinstance(datetime.now(), date)`
             # is True
             return None
@@ -487,21 +471,11 @@ class Range(Generic[_T]):
                     return value1 == value2 - step  # type: ignore
         elif res == 0:
             # Cover cases like [0,0] -|- [1,] and [0,2) -|- (1,3]
-            if (
-                bound1 == "]"
-                and bound2 == "["
-                or bound1 == ")"
-                and bound2 == "("
-            ):
+            if bound1 == "]" and bound2 == "[" or bound1 == ")" and bound2 == "(":
                 step = self._get_discrete_step()
                 if step is not None:
                     return True
-            return (
-                bound1 == ")"
-                and bound2 == "["
-                or bound1 == "]"
-                and bound2 == "("
-            )
+            return bound1 == ")" and bound2 == "[" or bound1 == "]" and bound2 == "("
         else:
             return False
 
@@ -523,9 +497,7 @@ class Range(Generic[_T]):
 
         return self._upper_edge_adjacent_to_lower(
             supper, supper_b, olower, olower_b
-        ) or self._upper_edge_adjacent_to_lower(
-            oupper, oupper_b, slower, slower_b
-        )
+        ) or self._upper_edge_adjacent_to_lower(oupper, oupper_b, slower, slower_b)
 
     def union(self, other: Range[_T]) -> Range[_T]:
         """Compute the union of this range with the `other`.
@@ -541,10 +513,7 @@ class Range(Generic[_T]):
             return self
 
         if not self.overlaps(other) and not self.adjacent_to(other):
-            raise ValueError(
-                "Adding non-overlapping and non-adjacent"
-                " ranges is not implemented"
-            )
+            raise ValueError("Adding non-overlapping and non-adjacent" " ranges is not implemented")
 
         slower = self.lower
         slower_b = self.bounds[0]
@@ -569,9 +538,7 @@ class Range(Generic[_T]):
             rupper = oupper
             rupper_b = oupper_b
 
-        return Range(
-            rlower, rupper, bounds=cast(_BoundsType, rlower_b + rupper_b)
-        )
+        return Range(rlower, rupper, bounds=cast(_BoundsType, rlower_b + rupper_b))
 
     def __add__(self, other: Range[_T]) -> Range[_T]:
         return self.union(other)
@@ -599,9 +566,7 @@ class Range(Generic[_T]):
         sl_vs_ol = self._compare_edges(slower, slower_b, olower, olower_b)
         su_vs_ou = self._compare_edges(supper, supper_b, oupper, oupper_b)
         if sl_vs_ol < 0 and su_vs_ou > 0:
-            raise ValueError(
-                "Subtracting a strictly inner range is not implemented"
-            )
+            raise ValueError("Subtracting a strictly inner range is not implemented")
 
         sl_vs_ou = self._compare_edges(slower, slower_b, oupper, oupper_b)
         su_vs_ol = self._compare_edges(supper, supper_b, olower, olower_b)
@@ -618,12 +583,7 @@ class Range(Generic[_T]):
         # middle
         if sl_vs_ol <= 0 and su_vs_ol >= 0 and su_vs_ou <= 0:
             rupper_b = ")" if olower_b == "[" else "]"
-            if (
-                slower_b != "["
-                and rupper_b != "]"
-                and self._compare_edges(slower, slower_b, olower, rupper_b)
-                == 0
-            ):
+            if slower_b != "[" and rupper_b != "]" and self._compare_edges(slower, slower_b, olower, rupper_b) == 0:
                 return Range(None, None, empty=True)
             else:
                 return Range(
@@ -636,12 +596,7 @@ class Range(Generic[_T]):
         # right
         if sl_vs_ol >= 0 and su_vs_ou >= 0 and sl_vs_ou <= 0:
             rlower_b = "(" if oupper_b == "]" else "["
-            if (
-                rlower_b != "["
-                and supper_b != "]"
-                and self._compare_edges(oupper, rlower_b, supper, supper_b)
-                == 0
-            ):
+            if rlower_b != "[" and supper_b != "]" and self._compare_edges(oupper, rlower_b, supper, supper_b) == 0:
                 return Range(None, None, empty=True)
             else:
                 return Range(
@@ -749,9 +704,7 @@ class AbstractRange(sqltypes.TypeEngine[_T]):
     def adapt(self, cls: Type[_TE], **kw: Any) -> _TE: ...
 
     @overload
-    def adapt(
-        self, cls: Type[TypeEngineMixin], **kw: Any
-    ) -> TypeEngine[Any]: ...
+    def adapt(self, cls: Type[TypeEngineMixin], **kw: Any) -> TypeEngine[Any]: ...
 
     def adapt(
         self,
@@ -765,10 +718,7 @@ class AbstractRange(sqltypes.TypeEngine[_T]):
         and also render as ``INT4RANGE`` in SQL and DDL.
 
         """
-        if (
-            issubclass(cls, (AbstractSingleRangeImpl, AbstractMultiRangeImpl))
-            and cls is not self.__class__
-        ):
+        if issubclass(cls, (AbstractSingleRangeImpl, AbstractMultiRangeImpl)) and cls is not self.__class__:
             # two ways to do this are:  1. create a new type on the fly
             # or 2. have AbstractRangeImpl(visit_name) constructor and a
             # visit_abstract_range_impl() method in the PG compiler.

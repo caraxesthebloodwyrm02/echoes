@@ -71,32 +71,20 @@ class SimpleAutoML:
 
         # Available models
         self.classification_models = {
-            "random_forest": RandomForestClassifier(
-                n_estimators=100, random_state=self.config.random_state
-            ),
-            "logistic_regression": LogisticRegression(
-                random_state=self.config.random_state, max_iter=1000
-            ),
+            "random_forest": RandomForestClassifier(n_estimators=100, random_state=self.config.random_state),
+            "logistic_regression": LogisticRegression(random_state=self.config.random_state, max_iter=1000),
             "svm": SVC(random_state=self.config.random_state),
-            "decision_tree": DecisionTreeClassifier(
-                random_state=self.config.random_state
-            ),
+            "decision_tree": DecisionTreeClassifier(random_state=self.config.random_state),
         }
 
         self.regression_models = {
-            "random_forest": RandomForestRegressor(
-                n_estimators=100, random_state=self.config.random_state
-            ),
+            "random_forest": RandomForestRegressor(n_estimators=100, random_state=self.config.random_state),
             "linear_regression": LinearRegression(),
             "svm": SVR(),
-            "decision_tree": DecisionTreeRegressor(
-                random_state=self.config.random_state
-            ),
+            "decision_tree": DecisionTreeRegressor(random_state=self.config.random_state),
         }
 
-    def fit(
-        self, X: np.ndarray, y: np.ndarray, feature_names: Optional[List[str]] = None
-    ) -> Dict[str, Any]:
+    def fit(self, X: np.ndarray, y: np.ndarray, feature_names: Optional[List[str]] = None) -> Dict[str, Any]:
         """
         Run simplified AutoML pipeline.
 
@@ -113,14 +101,10 @@ class SimpleAutoML:
 
         # Select appropriate models
         if self.config.task_type == "classification":
-            models_to_try = list(self.classification_models.items())[
-                : self.config.max_models
-            ]
+            models_to_try = list(self.classification_models.items())[: self.config.max_models]
             scorer = "accuracy"
         else:
-            models_to_try = list(self.regression_models.items())[
-                : self.config.max_models
-            ]
+            models_to_try = list(self.regression_models.items())[: self.config.max_models]
             scorer = "r2"
 
         # Evaluate each model
@@ -130,9 +114,7 @@ class SimpleAutoML:
                 self.logger.info(f"Evaluating {name}...")
 
                 # Cross-validation
-                cv_scores = cross_val_score(
-                    model, X, y, cv=self.config.cv_folds, scoring=scorer, n_jobs=1
-                )
+                cv_scores = cross_val_score(model, X, y, cv=self.config.cv_folds, scoring=scorer, n_jobs=1)
 
                 mean_score = np.mean(cv_scores)
                 std_score = np.std(cv_scores)
@@ -181,9 +163,7 @@ class SimpleAutoML:
             "models_evaluated": len(results),
         }
 
-    def _get_feature_importance(
-        self, model, feature_names: Optional[List[str]]
-    ) -> Optional[Dict[str, float]]:
+    def _get_feature_importance(self, model, feature_names: Optional[List[str]]) -> Optional[Dict[str, float]]:
         """Extract feature importance if available."""
         try:
             if hasattr(model, "feature_importances_"):
@@ -196,9 +176,7 @@ class SimpleAutoML:
             if feature_names and len(importances) == len(feature_names):
                 return dict(zip(feature_names, importances.tolist()))
             else:
-                return {
-                    f"feature_{i}": imp for i, imp in enumerate(importances.tolist())
-                }
+                return {f"feature_{i}": imp for i, imp in enumerate(importances.tolist())}
 
         except Exception:
             return None
@@ -207,9 +185,7 @@ class SimpleAutoML:
         """Make predictions using the best model."""
         return model_result["best_model"].predict(X)
 
-    def evaluate_predictions(
-        self, y_true: np.ndarray, y_pred: np.ndarray, task_type: str
-    ) -> Dict[str, float]:
+    def evaluate_predictions(self, y_true: np.ndarray, y_pred: np.ndarray, task_type: str) -> Dict[str, float]:
         """Evaluate predictions."""
         if task_type == "classification":
             return {"accuracy": accuracy_score(y_true, y_pred)}
@@ -225,9 +201,7 @@ def quick_automl_demo():
     print("=" * 40)
 
     # Create sample dataset
-    X, y = make_classification(
-        n_samples=500, n_features=10, n_informative=5, random_state=42
-    )
+    X, y = make_classification(n_samples=500, n_features=10, n_informative=5, random_state=42)
 
     feature_names = [f"feature_{i}" for i in range(X.shape[1])]
 

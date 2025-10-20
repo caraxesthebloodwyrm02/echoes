@@ -25,9 +25,7 @@ from sklearn.utils.fixes import CSC_CONTAINERS, CSR_CONTAINERS
     [[NMF, {"solver": "cd"}], [NMF, {"solver": "mu"}], [MiniBatchNMF, {}]],
 )
 def test_convergence_warning(Estimator, solver):
-    convergence_warning = (
-        "Maximum number of iterations 1 reached. Increase it to improve convergence."
-    )
+    convergence_warning = "Maximum number of iterations 1 reached. Increase it to improve convergence."
     A = np.ones((2, 2))
     with pytest.warns(ConvergenceWarning, match=convergence_warning):
         Estimator(max_iter=1, n_components="auto", **solver).fit(A)
@@ -43,8 +41,7 @@ def test_initialize_nn_output():
 
 
 @pytest.mark.filterwarnings(
-    r"ignore:The multiplicative update \('mu'\) solver cannot update zeros present in"
-    r" the initialization",
+    r"ignore:The multiplicative update \('mu'\) solver cannot update zeros present in" r" the initialization",
 )
 def test_parameter_checking():
     # Here we only check for invalid parameter values that are not already
@@ -65,10 +62,7 @@ def test_parameter_checking():
         nmf._initialize_nmf(-A, 2, "nndsvd")
 
     for init in ["nndsvd", "nndsvda", "nndsvdar"]:
-        msg = re.escape(
-            "init = '{}' can only be used when "
-            "n_components <= min(n_samples, n_features)".format(init)
-        )
+        msg = re.escape("init = '{}' can only be used when " "n_components <= min(n_samples, n_features)".format(init))
         with pytest.raises(ValueError, match=msg):
             NMF(3, init=init).fit(A)
         with pytest.raises(ValueError, match=msg):
@@ -105,8 +99,7 @@ def test_initialize_variants():
 
 # ignore UserWarning raised when both solver='mu' and init='nndsvd'
 @pytest.mark.filterwarnings(
-    r"ignore:The multiplicative update \('mu'\) solver cannot update zeros present in"
-    r" the initialization"
+    r"ignore:The multiplicative update \('mu'\) solver cannot update zeros present in" r" the initialization"
 )
 @pytest.mark.parametrize(
     ["Estimator", "solver"],
@@ -243,9 +236,7 @@ def test_nmf_transform_custom_init(Estimator, solver):
     H_init = np.abs(avg * random_state.randn(n_components, 5))
     W_init = np.abs(avg * random_state.randn(6, n_components))
 
-    m = Estimator(
-        n_components=n_components, init="custom", random_state=0, tol=1e-3, **solver
-    )
+    m = Estimator(n_components=n_components, init="custom", random_state=0, tol=1e-3, **solver)
     m.fit_transform(A, W=W_init, H=H_init)
     m.transform(A)
 
@@ -696,9 +687,9 @@ def test_nmf_regularization(Estimator, solver):
     H_regul = regul.components_
     H_model = model.components_
 
-    assert (linalg.norm(W_model)) ** 2.0 + (linalg.norm(H_model)) ** 2.0 > (
-        linalg.norm(W_regul)
-    ) ** 2.0 + (linalg.norm(H_regul)) ** 2.0
+    assert (linalg.norm(W_model)) ** 2.0 + (linalg.norm(H_model)) ** 2.0 > (linalg.norm(W_regul)) ** 2.0 + (
+        linalg.norm(H_regul)
+    ) ** 2.0
 
 
 @pytest.mark.filterwarnings("ignore::sklearn.exceptions.ConvergenceWarning")
@@ -883,9 +874,7 @@ def test_minibatch_nmf_partial_fit():
     mbnmf2 = MiniBatchNMF(n_components=n_components, init="custom", random_state=0)
 
     # Force the same init of H (W is recomputed anyway) to be able to compare results.
-    W, H = nmf._initialize_nmf(
-        X, n_components=n_components, init="random", random_state=0
-    )
+    W, H = nmf._initialize_nmf(X, n_components=n_components, init="random", random_state=0)
 
     mbnmf1.fit(X, W=W, H=H)
     for i in range(max_iter):
@@ -943,9 +932,7 @@ def test_nmf_non_negative_factorization_n_components_auto():
     X = rng.random_sample((6, 5))
     W_init = rng.random_sample((6, 2))
     H_init = rng.random_sample((2, 5))
-    W, H, _ = non_negative_factorization(
-        X, W=W_init, H=H_init, init="custom", n_components="auto"
-    )
+    W, H, _ = non_negative_factorization(X, W=W_init, H=H_init, init="custom", n_components="auto")
     assert H.shape == H_init.shape
     assert W.shape == W_init.shape
 
@@ -957,9 +944,7 @@ def test_nmf_n_components_auto_no_h_update():
     rng = np.random.RandomState(0)
     X = rng.random_sample((6, 5))
     H_true = rng.random_sample((2, 5))
-    W, H, _ = non_negative_factorization(
-        X, H=H_true, n_components="auto", update_H=False
-    )  # should not fail
+    W, H, _ = non_negative_factorization(X, H=H_true, n_components="auto", update_H=False)  # should not fail
     assert_allclose(H, H_true)
     assert W.shape == (X.shape[0], H_true.shape[0])
 
@@ -981,18 +966,12 @@ def test_nmf_w_h_not_used_warning():
         RuntimeWarning,
         match="When init!='custom', provided W or H are ignored",
     ):
-        non_negative_factorization(
-            X, W=W_init, H=H_init, update_H=True, n_components="auto"
-        )
+        non_negative_factorization(X, W=W_init, H=H_init, update_H=True, n_components="auto")
 
-    with pytest.warns(
-        RuntimeWarning, match="When update_H=False, the provided initial W is not used."
-    ):
+    with pytest.warns(RuntimeWarning, match="When update_H=False, the provided initial W is not used."):
         # When update_H is False, W is ignored regardless of init
         # TODO: use the provided W when init="custom".
-        non_negative_factorization(
-            X, W=W_init, H=H_init, update_H=False, n_components="auto"
-        )
+        non_negative_factorization(X, W=W_init, H=H_init, update_H=False, n_components="auto")
 
 
 def test_nmf_custom_init_shape_error():

@@ -11,7 +11,6 @@
 A reader for corpora that consist of plaintext documents.
 """
 
-import nltk.data
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.util import *
 from nltk.tokenize import *
@@ -126,23 +125,13 @@ class PlaintextCorpusReader(CorpusReader):
     def _read_sent_block(self, stream):
         sents = []
         for para in self._para_block_reader(stream):
-            sents.extend(
-                [
-                    self._word_tokenizer.tokenize(sent)
-                    for sent in self._sent_tokenizer.tokenize(para)
-                ]
-            )
+            sents.extend([self._word_tokenizer.tokenize(sent) for sent in self._sent_tokenizer.tokenize(para)])
         return sents
 
     def _read_para_block(self, stream):
         paras = []
         for para in self._para_block_reader(stream):
-            paras.append(
-                [
-                    self._word_tokenizer.tokenize(sent)
-                    for sent in self._sent_tokenizer.tokenize(para)
-                ]
-            )
+            paras.append([self._word_tokenizer.tokenize(sent) for sent in self._sent_tokenizer.tokenize(para)])
         return paras
 
 

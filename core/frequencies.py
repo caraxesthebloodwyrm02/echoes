@@ -120,14 +120,9 @@ def infer_freq(
     if isinstance(index, ABCSeries):
         values = index._values
         if not (
-            lib.is_np_dtype(values.dtype, "mM")
-            or isinstance(values.dtype, DatetimeTZDtype)
-            or values.dtype == object
+            lib.is_np_dtype(values.dtype, "mM") or isinstance(values.dtype, DatetimeTZDtype) or values.dtype == object
         ):
-            raise TypeError(
-                "cannot infer freq from a non-convertible dtype "
-                f"on a Series of {index.dtype}"
-            )
+            raise TypeError("cannot infer freq from a non-convertible dtype " f"on a Series of {index.dtype}")
         index = values
 
     inferer: _FrequencyInferer
@@ -135,19 +130,14 @@ def infer_freq(
     if not hasattr(index, "dtype"):
         pass
     elif isinstance(index.dtype, PeriodDtype):
-        raise TypeError(
-            "PeriodIndex given. Check the `freq` attribute "
-            "instead of using infer_freq."
-        )
+        raise TypeError("PeriodIndex given. Check the `freq` attribute " "instead of using infer_freq.")
     elif lib.is_np_dtype(index.dtype, "m"):
         # Allow TimedeltaIndex and TimedeltaArray
         inferer = _TimedeltaFrequencyInferer(index)
         return inferer.get_freq()
 
     elif is_numeric_dtype(index.dtype):
-        raise TypeError(
-            f"cannot infer freq from a non-convertible index of dtype {index.dtype}"
-        )
+        raise TypeError(f"cannot infer freq from a non-convertible index of dtype {index.dtype}")
 
     if not isinstance(index, DatetimeIndex):
         index = DatetimeIndex(index)
@@ -170,9 +160,7 @@ class _FrequencyInferer:
         if isinstance(index, ABCIndex):
             # error: Item "ndarray[Any, Any]" of "Union[ExtensionArray,
             # ndarray[Any, Any]]" has no attribute "_ndarray"
-            self._creso = get_unit_from_dtype(
-                index._data._ndarray.dtype  # type: ignore[union-attr]
-            )
+            self._creso = get_unit_from_dtype(index._data._ndarray.dtype)  # type: ignore[union-attr]
         else:
             # otherwise we have DTA/TDA
             self._creso = get_unit_from_dtype(index._ndarray.dtype)
@@ -181,16 +169,12 @@ class _FrequencyInferer:
         # the timezone so they are in local time
         if hasattr(index, "tz"):
             if index.tz is not None:
-                self.i8values = tz_convert_from_utc(
-                    self.i8values, index.tz, reso=self._creso
-                )
+                self.i8values = tz_convert_from_utc(self.i8values, index.tz, reso=self._creso)
 
         if len(index) < 3:
             raise ValueError("Need at least 3 dates to infer frequency")
 
-        self.is_monotonic = (
-            self.index._is_monotonic_increasing or self.index._is_monotonic_decreasing
-        )
+        self.is_monotonic = self.index._is_monotonic_increasing or self.index._is_monotonic_decreasing
 
     @cache_readonly
     def deltas(self) -> npt.NDArray[np.int64]:
@@ -383,12 +367,7 @@ class _FrequencyInferer:
         shifts = np.floor_divide(shifts, ppd)
         weekdays = np.mod(first_weekday + np.cumsum(shifts), 7)
 
-        return bool(
-            np.all(
-                ((weekdays == 0) & (shifts == 3))
-                | ((weekdays > 0) & (weekdays <= 4) & (shifts == 1))
-            )
-        )
+        return bool(np.all(((weekdays == 0) & (shifts == 3)) | ((weekdays > 0) & (weekdays <= 4) & (shifts == 1))))
 
     def _get_wom_rule(self) -> str | None:
         weekdays = unique(self.index.weekday)
@@ -454,9 +433,7 @@ def is_subperiod(source, target) -> bool:
 
     if _is_annual(target):
         if _is_quarterly(source):
-            return _quarter_months_conform(
-                get_rule_month(source), get_rule_month(target)
-            )
+            return _quarter_months_conform(get_rule_month(source), get_rule_month(target))
         return source in {"D", "C", "B", "M", "h", "min", "s", "ms", "us", "ns"}
     elif _is_quarterly(target):
         return source in {"D", "C", "B", "M", "h", "min", "s", "ms", "us", "ns"}

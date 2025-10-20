@@ -101,9 +101,7 @@ def write_megam_file(train_toks, encoding, stream, bernoulli=True, explicit=True
     for featureset, label in train_toks:
         # First, the instance number (or, in the weighted multiclass case, the cost of each label).
         if hasattr(encoding, "cost"):
-            stream.write(
-                ":".join(str(encoding.cost(featureset, label, l)) for l in labels)
-            )
+            stream.write(":".join(str(encoding.cost(featureset, label, l)) for l in labels))
         else:
             stream.write("%d" % labelnum[label])
 
@@ -143,17 +141,13 @@ def parse_megam_weights(s, features_count, explicit=True):
 
 def _write_megam_features(vector, stream, bernoulli):
     if not vector:
-        raise ValueError(
-            "MEGAM classifier requires the use of an " "always-on feature."
-        )
+        raise ValueError("MEGAM classifier requires the use of an " "always-on feature.")
     for fid, fval in vector:
         if bernoulli:
             if fval == 1:
                 stream.write(" %s" % fid)
             elif fval != 0:
-                raise ValueError(
-                    "If bernoulli=True, then all" "features must be binary."
-                )
+                raise ValueError("If bernoulli=True, then all" "features must be binary.")
         else:
             stream.write(f" {fid} {fval}")
 

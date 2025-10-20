@@ -64,9 +64,7 @@ class ECKey(AsymmetricKey):
             base64_to_int(self._dict_data["y"]),
             curve,
         )
-        private_numbers = EllipticCurvePrivateNumbers(
-            base64_to_int(self.tokens["d"]), public_numbers
-        )
+        private_numbers = EllipticCurvePrivateNumbers(base64_to_int(self.tokens["d"]), public_numbers)
         return private_numbers.private_key(default_backend())
 
     def load_public_key(self):

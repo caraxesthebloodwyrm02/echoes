@@ -139,9 +139,7 @@ class FeatureIncrementalChart(IncrementalChart, FeatureChart):
         if restr_keys not in self._indexes:
             self._add_index(restr_keys)
 
-        vals = tuple(
-            self._get_type_if_possible(restrictions[key]) for key in restr_keys
-        )
+        vals = tuple(self._get_type_if_possible(restrictions[key]) for key in restr_keys)
         return iter(self._indexes[restr_keys][end].get(vals, []))
 
     def _add_index(self, restr_keys):
@@ -157,18 +155,13 @@ class FeatureIncrementalChart(IncrementalChart, FeatureChart):
         for end, edgelist in enumerate(self._edgelists):
             this_index = index[end]
             for edge in edgelist:
-                vals = tuple(
-                    self._get_type_if_possible(getattr(edge, key)())
-                    for key in restr_keys
-                )
+                vals = tuple(self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys)
                 this_index.setdefault(vals, []).append(edge)
 
     def _register_with_indexes(self, edge):
         end = edge.end()
         for restr_keys, index in self._indexes.items():
-            vals = tuple(
-                self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys
-            )
+            vals = tuple(self._get_type_if_possible(getattr(edge, key)()) for key in restr_keys)
             index[end].setdefault(vals, []).append(edge)
 
 
@@ -182,9 +175,7 @@ class CompleteFundamentalRule(SingleEdgeFundamentalRule):
         end = left_edge.end()
         # When the chart is incremental, we only have to look for
         # empty complete edges here.
-        for right_edge in chart.select(
-            start=end, end=end, is_complete=True, lhs=left_edge.nextsym()
-        ):
+        for right_edge in chart.select(start=end, end=end, is_complete=True, lhs=left_edge.nextsym()):
             new_edge = left_edge.move_dot_forward(right_edge.end())
             if chart.insert_with_backpointer(new_edge, left_edge, right_edge):
                 yield new_edge
@@ -229,9 +220,7 @@ class FeatureCompleteFundamentalRule(FeatureSingleEdgeFundamentalRule):
         end = left_edge.end()
         # When the chart is incremental, we only have to look for
         # empty complete edges here.
-        for right_edge in chart.select(
-            start=end, end=end, is_complete=True, lhs=left_edge.nextsym()
-        ):
+        for right_edge in chart.select(start=end, end=end, is_complete=True, lhs=left_edge.nextsym()):
             yield from fr.apply(chart, grammar, left_edge, right_edge)
 
 
@@ -339,9 +328,7 @@ class IncrementalChartParser(ChartParser):
             elif rule.NUM_EDGES == 1:
                 self._inference_rules.append(rule)
             else:
-                raise ValueError(
-                    "Incremental inference rules must have " "NUM_EDGES == 0 or 1"
-                )
+                raise ValueError("Incremental inference rules must have " "NUM_EDGES == 0 or 1")
 
     def chart_parse(self, tokens, trace=None):
         if trace is None:
@@ -386,35 +373,24 @@ class EarleyChartParser(IncrementalChartParser):
 
 class IncrementalTopDownChartParser(IncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        IncrementalChartParser.__init__(
-            self, grammar, TD_INCREMENTAL_STRATEGY, **parser_args
-        )
+        IncrementalChartParser.__init__(self, grammar, TD_INCREMENTAL_STRATEGY, **parser_args)
 
 
 class IncrementalBottomUpChartParser(IncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        IncrementalChartParser.__init__(
-            self, grammar, BU_INCREMENTAL_STRATEGY, **parser_args
-        )
+        IncrementalChartParser.__init__(self, grammar, BU_INCREMENTAL_STRATEGY, **parser_args)
 
 
 class IncrementalBottomUpLeftCornerChartParser(IncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        IncrementalChartParser.__init__(
-            self, grammar, BU_LC_INCREMENTAL_STRATEGY, **parser_args
-        )
+        IncrementalChartParser.__init__(self, grammar, BU_LC_INCREMENTAL_STRATEGY, **parser_args)
 
 
 class IncrementalLeftCornerChartParser(IncrementalChartParser):
     def __init__(self, grammar, **parser_args):
         if not grammar.is_nonempty():
-            raise ValueError(
-                "IncrementalLeftCornerParser only works for grammars "
-                "without empty productions."
-            )
-        IncrementalChartParser.__init__(
-            self, grammar, LC_INCREMENTAL_STRATEGY, **parser_args
-        )
+            raise ValueError("IncrementalLeftCornerParser only works for grammars " "without empty productions.")
+        IncrementalChartParser.__init__(self, grammar, LC_INCREMENTAL_STRATEGY, **parser_args)
 
 
 # ////////////////////////////////////////////////////////////
@@ -469,30 +445,22 @@ class FeatureIncrementalChartParser(IncrementalChartParser, FeatureChartParser):
 
 class FeatureEarleyChartParser(FeatureIncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        FeatureIncrementalChartParser.__init__(
-            self, grammar, EARLEY_FEATURE_STRATEGY, **parser_args
-        )
+        FeatureIncrementalChartParser.__init__(self, grammar, EARLEY_FEATURE_STRATEGY, **parser_args)
 
 
 class FeatureIncrementalTopDownChartParser(FeatureIncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        FeatureIncrementalChartParser.__init__(
-            self, grammar, TD_INCREMENTAL_FEATURE_STRATEGY, **parser_args
-        )
+        FeatureIncrementalChartParser.__init__(self, grammar, TD_INCREMENTAL_FEATURE_STRATEGY, **parser_args)
 
 
 class FeatureIncrementalBottomUpChartParser(FeatureIncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        FeatureIncrementalChartParser.__init__(
-            self, grammar, BU_INCREMENTAL_FEATURE_STRATEGY, **parser_args
-        )
+        FeatureIncrementalChartParser.__init__(self, grammar, BU_INCREMENTAL_FEATURE_STRATEGY, **parser_args)
 
 
 class FeatureIncrementalBottomUpLeftCornerChartParser(FeatureIncrementalChartParser):
     def __init__(self, grammar, **parser_args):
-        FeatureIncrementalChartParser.__init__(
-            self, grammar, BU_LC_INCREMENTAL_FEATURE_STRATEGY, **parser_args
-        )
+        FeatureIncrementalChartParser.__init__(self, grammar, BU_LC_INCREMENTAL_FEATURE_STRATEGY, **parser_args)
 
 
 # ////////////////////////////////////////////////////////////
@@ -511,8 +479,6 @@ def demo(
     """
     A demonstration of the Earley parsers.
     """
-    import sys
-    import time
 
     from nltk.parse.chart import demo_grammar
 

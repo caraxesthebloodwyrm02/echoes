@@ -115,8 +115,7 @@ class AnnotationTask:
     def __str__(self):
         return "\r\n".join(
             map(
-                lambda x: "%s\t%s\t%s"
-                % (x["coder"], x["item"].replace("_", "\t"), ",".join(x["labels"])),
+                lambda x: "%s\t%s\t%s" % (x["coder"], x["item"].replace("_", "\t"), ",".join(x["labels"])),
                 self.data,
             )
         )
@@ -147,9 +146,7 @@ class AnnotationTask:
 
         ret = 1.0 - float(self.distance(k1["labels"], k2["labels"]))
         log.debug("Observed agreement between %s and %s on %s: %f", cA, cB, i, ret)
-        log.debug(
-            'Distance between "%r" and "%r": %f', k1["labels"], k2["labels"], 1.0 - ret
-        )
+        log.debug('Distance between "%r" and "%r": %f', k1["labels"], k2["labels"], 1.0 - ret)
         return ret
 
     def Nk(self, k):
@@ -171,9 +168,7 @@ class AnnotationTask:
         elif k is not None and c is not None and i is None:
             ret = self.Nck(c, k)
         else:
-            raise ValueError(
-                f"You must pass either i or c, not both! (k={k!r},i={i!r},c={c!r})"
-            )
+            raise ValueError(f"You must pass either i or c, not both! (k={k!r},i={i!r},c={c!r})")
         log.debug("Count on N[%s,%s,%s]: %d", k, i, c, ret)
         return ret
 
@@ -183,12 +178,8 @@ class AnnotationTask:
 
     def Ao(self, cA, cB):
         """Observed agreement between two coders on all items."""
-        data = self._grouped_data(
-            "item", (x for x in self.data if x["coder"] in (cA, cB))
-        )
-        ret = sum(self.agr(cA, cB, item, item_data) for item, item_data in data) / len(
-            self.I
-        )
+        data = self._grouped_data("item", (x for x in self.data if x["coder"] in (cA, cB)))
+        ret = sum(self.agr(cA, cB, item, item_data) for item, item_data in data) / len(self.I)
         log.debug("Observed agreement between %s and %s: %f", cA, cB, ret)
         return ret
 
@@ -227,9 +218,7 @@ class AnnotationTask:
 
     def Do_Kw(self, max_distance=1.0):
         """Averaged over all labelers"""
-        ret = self._pairwise_average(
-            lambda cA, cB: self.Do_Kw_pairwise(cA, cB, max_distance)
-        )
+        ret = self._pairwise_average(lambda cA, cB: self.Do_Kw_pairwise(cA, cB, max_distance))
         log.debug("Observed disagreement: %f", ret)
         return ret
 
@@ -328,9 +317,7 @@ class AnnotationTask:
     def weighted_kappa_pairwise(self, cA, cB, max_distance=1.0):
         """Cohen 1968"""
         total = 0.0
-        label_freqs = ConditionalFreqDist(
-            (x["coder"], x["labels"]) for x in self.data if x["coder"] in (cA, cB)
-        )
+        label_freqs = ConditionalFreqDist((x["coder"], x["labels"]) for x in self.data if x["coder"] in (cA, cB))
         for j in self.K:
             for l in self.K:
                 total += label_freqs[cA][j] * label_freqs[cB][l] * self.distance(j, l)
@@ -342,14 +329,11 @@ class AnnotationTask:
 
     def weighted_kappa(self, max_distance=1.0):
         """Cohen 1968"""
-        return self._pairwise_average(
-            lambda cA, cB: self.weighted_kappa_pairwise(cA, cB, max_distance)
-        )
+        return self._pairwise_average(lambda cA, cB: self.weighted_kappa_pairwise(cA, cB, max_distance))
 
 
 if __name__ == "__main__":
     import optparse
-    import re
 
     from nltk.metrics import distance
 
@@ -453,9 +437,7 @@ if __name__ == "__main__":
                 data.append((coder, object_, labels))
 
     if options.presence:
-        task = AnnotationTask(
-            data, getattr(distance, options.distance)(options.presence)
-        )
+        task = AnnotationTask(data, getattr(distance, options.distance)(options.presence))
     else:
         task = AnnotationTask(data, getattr(distance, options.distance))
 

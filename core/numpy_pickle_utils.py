@@ -198,8 +198,7 @@ def _validate_fileobject_and_memmap(fileobj, filename, mmap_mode=None):
                 )
             elif not _is_raw_file(fileobj):
                 warnings.warn(
-                    '"%(fileobj)r" is not a raw file, mmap_mode '
-                    '"%(mmap_mode)s" flag will be ignored.' % locals(),
+                    '"%(fileobj)r" is not a raw file, mmap_mode ' '"%(mmap_mode)s" flag will be ignored.' % locals(),
                     stacklevel=2,
                 )
             else:
@@ -214,14 +213,10 @@ def _write_fileobject(filename, compress=("zlib", 3)):
     compresslevel = compress[1]
 
     if compressmethod in _COMPRESSORS.keys():
-        file_instance = _COMPRESSORS[compressmethod].compressor_file(
-            filename, compresslevel=compresslevel
-        )
+        file_instance = _COMPRESSORS[compressmethod].compressor_file(filename, compresslevel=compresslevel)
         return _buffered_write_file(file_instance)
     else:
-        file_instance = _COMPRESSORS["zlib"].compressor_file(
-            filename, compresslevel=compresslevel
-        )
+        file_instance = _COMPRESSORS["zlib"].compressor_file(filename, compresslevel=compresslevel)
         return _buffered_write_file(file_instance)
 
 

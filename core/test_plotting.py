@@ -15,9 +15,7 @@ from sklearn.utils._testing import assert_allclose
 
 
 @pytest.mark.parametrize("ax", [None, "Ax"])
-@pytest.mark.parametrize(
-    "name, expected_name_out", [(None, "TestEstimator"), ("CustomName", "CustomName")]
-)
+@pytest.mark.parametrize("name, expected_name_out", [(None, "TestEstimator"), ("CustomName", "CustomName")])
 def test_validate_plot_params(pyplot, ax, name, expected_name_out):
     """Check `_validate_plot_params` returns the correct values."""
     display = _BinaryClassifierCurveDisplayMixin()
@@ -34,24 +32,20 @@ def test_validate_plot_params(pyplot, ax, name, expected_name_out):
 
 @pytest.mark.parametrize("pos_label", [None, 0])
 @pytest.mark.parametrize("name", [None, "CustomName"])
-@pytest.mark.parametrize(
-    "response_method", ["auto", "predict_proba", "decision_function"]
-)
+@pytest.mark.parametrize("response_method", ["auto", "predict_proba", "decision_function"])
 def test_validate_and_get_response_values(pyplot, pos_label, name, response_method):
     """Check `_validate_and_get_response_values` returns the correct values."""
     X = np.array([[0, 0], [1, 1], [2, 2], [3, 3]])
     y = np.array([0, 0, 2, 2])
     estimator = LogisticRegression().fit(X, y)
 
-    y_pred, pos_label, name_out = (
-        _BinaryClassifierCurveDisplayMixin._validate_and_get_response_values(
-            estimator,
-            X,
-            y,
-            response_method=response_method,
-            pos_label=pos_label,
-            name=name,
-        )
+    y_pred, pos_label, name_out = _BinaryClassifierCurveDisplayMixin._validate_and_get_response_values(
+        estimator,
+        X,
+        y,
+        response_method=response_method,
+        pos_label=pos_label,
+        name=name,
     )
 
     expected_y_pred, expected_pos_label = _get_response_values_binary(
@@ -99,14 +93,12 @@ def test_validate_from_predictions_params_errors(pyplot, y_true, error_message):
 def test_validate_from_predictions_params_returns(pyplot, name, pos_label, y_true):
     """Check `_validate_from_predictions_params` returns the correct values."""
     y_pred = np.array([0.1, 0.2, 0.3, 0.4])
-    pos_label_out, name_out = (
-        _BinaryClassifierCurveDisplayMixin._validate_from_predictions_params(
-            y_true=y_true,
-            y_pred=y_pred,
-            sample_weight=None,
-            pos_label=pos_label,
-            name=name,
-        )
+    pos_label_out, name_out = _BinaryClassifierCurveDisplayMixin._validate_from_predictions_params(
+        y_true=y_true,
+        y_pred=y_pred,
+        sample_weight=None,
+        pos_label=pos_label,
+        name=name,
     )
 
     # Check name is handled correctly
@@ -208,9 +200,7 @@ def test_validate_from_cv_results_params(pyplot, params, err_msg):
 def test_get_legend_label(curve_legend_metric, curve_name, expected_label):
     """Check `_get_legend_label` returns the correct label."""
     legend_metric_name = "AUC"
-    label = _BinaryClassifierCurveDisplayMixin._get_legend_label(
-        curve_legend_metric, curve_name, legend_metric_name
-    )
+    label = _BinaryClassifierCurveDisplayMixin._get_legend_label(curve_legend_metric, curve_name, legend_metric_name)
     assert label == expected_label
 
 
@@ -298,9 +288,7 @@ def test_validate_curve_kwargs_error():
         {"color": "red"},
     ],
 )
-def test_validate_curve_kwargs_single_legend(
-    name, legend_metric, legend_metric_name, curve_kwargs
-):
+def test_validate_curve_kwargs_single_legend(name, legend_metric, legend_metric_name, curve_kwargs):
     """Check `_validate_curve_kwargs` returns correct kwargs for single legend entry."""
     n_curves = 3
     curve_kwargs_out = _BinaryClassifierCurveDisplayMixin._validate_curve_kwargs(
@@ -342,9 +330,7 @@ def test_validate_curve_kwargs_single_legend(
 
 
 @pytest.mark.parametrize("name", [None, "curve_name", ["one", "two", "three"]])
-@pytest.mark.parametrize(
-    "legend_metric", [{"metric": [1.0, 1.0, 1.0]}, {"metric": [None, None, None]}]
-)
+@pytest.mark.parametrize("legend_metric", [{"metric": [1.0, 1.0, 1.0]}, {"metric": [None, None, None]}])
 @pytest.mark.parametrize("legend_metric_name", ["AUC", "AP"])
 def test_validate_curve_kwargs_multi_legend(name, legend_metric, legend_metric_name):
     """Check `_validate_curve_kwargs` returns correct kwargs for multi legend entry."""
@@ -370,9 +356,7 @@ def test_validate_curve_kwargs_multi_legend(name, legend_metric, legend_metric_n
     elif isinstance(name, list) and legend_metric["metric"][0] is None:
         expected_labels = name
     elif isinstance(name, list) and legend_metric["metric"][0] is not None:
-        expected_labels = [
-            f"{name_single} ({legend_metric_name} = 1.00)" for name_single in name
-        ]
+        expected_labels = [f"{name_single} ({legend_metric_name} = 1.00)" for name_single in name]
     # `name` is None
     elif legend_metric["metric"][0] is not None:
         expected_labels = [f"{legend_metric_name} = 1.00"] * n_curves
@@ -416,9 +400,7 @@ def neg_metric():
 )
 def test_validate_score_name(score_name, scoring, negate_score, expected_score_name):
     """Check that we return the right score name."""
-    assert (
-        _validate_score_name(score_name, scoring, negate_score) == expected_score_name
-    )
+    assert _validate_score_name(score_name, scoring, negate_score) == expected_score_name
 
 
 # In the following test, we check the value of the max to min ratio

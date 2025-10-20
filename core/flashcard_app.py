@@ -139,9 +139,7 @@ class FlashcardApp:
     def run(self):
         """Main application loop"""
         print("Welcome to Python Development Flashcards!")
-        print(
-            "Press 's' to show answer, 'c' for correct, 'w' for wrong, 'n' for next, 'q' to quit"
-        )
+        print("Press 's' to show answer, 'c' for correct, 'w' for wrong, 'n' for next, 'q' to quit")
 
         while True:
             self.show_card()

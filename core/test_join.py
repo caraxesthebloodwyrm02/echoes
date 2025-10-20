@@ -73,9 +73,7 @@ class TestJoin:
 
         # Join on string value
 
-        source = DataFrame(
-            {"MergedA": data["A"], "MergedD": data["D"]}, index=data["C"]
-        )
+        source = DataFrame({"MergedA": data["A"], "MergedD": data["D"]}, index=data["C"])
         return target, source
 
     def test_left_outer_join(self, df, df2):
@@ -123,9 +121,7 @@ class TestJoin:
         assert "key1.foo" in joined
         assert "key2.bar" in joined
 
-    @pytest.mark.parametrize(
-        "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-    )
+    @pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
     def test_join_on(self, target_source, infer_string):
         target, source = target_source
 
@@ -137,9 +133,7 @@ class TestJoin:
         df = DataFrame({"key": ["a", "a", "b", "b", "c"]})
         df2 = DataFrame({"value": [0, 1, 2]}, index=["a", "b", "c"])
         joined = df.join(df2, on="key")
-        expected = DataFrame(
-            {"key": ["a", "a", "b", "b", "c"], "value": [0, 0, 1, 1, 2]}
-        )
+        expected = DataFrame({"key": ["a", "a", "b", "b", "c"], "value": [0, 0, 1, 1, 2]})
         tm.assert_frame_equal(joined, expected)
 
         # Test when some are missing
@@ -226,10 +220,7 @@ class TestJoin:
         # Edited test to remove the Series object from test parameters
 
         df = DataFrame({"a": [1, 1]})
-        msg = (
-            "Can only merge Series or DataFrame objects, "
-            f"a {type(wrong_type)} was passed"
-        )
+        msg = "Can only merge Series or DataFrame objects, " f"a {type(wrong_type)} was passed"
         with pytest.raises(TypeError, match=msg):
             merge(wrong_type, df, left_on="a", right_on="a")
         with pytest.raises(TypeError, match=msg):
@@ -352,9 +343,7 @@ class TestJoin:
 
     def test_join_unconsolidated(self):
         # GH #331
-        a = DataFrame(
-            np.random.default_rng(2).standard_normal((30, 2)), columns=["a", "b"]
-        )
+        a = DataFrame(np.random.default_rng(2).standard_normal((30, 2)), columns=["a", "b"])
         c = Series(np.random.default_rng(2).standard_normal(30))
         a["c"] = c
         d = DataFrame(np.random.default_rng(2).standard_normal((30, 1)), columns=["q"])
@@ -476,9 +465,7 @@ class TestJoin:
         other_df = DataFrame([(1, 2, 3), (7, 10, 6)], columns=["a", "b", "d"])
         other_df.set_index("a", inplace=True)
         # GH 9455, 12219
-        with pytest.raises(
-            pd.errors.MergeError, match="Not allowed to merge between different levels"
-        ):
+        with pytest.raises(pd.errors.MergeError, match="Not allowed to merge between different levels"):
             merge(new_df, other_df, left_index=True, right_index=True)
 
     def test_join_float64_float32(self):
@@ -502,9 +489,7 @@ class TestJoin:
         c = np.random.default_rng(2).random(100).astype("float32")
         df = DataFrame({"a": a, "b": b, "c": c})
         xpdf = DataFrame({"a": a, "b": b, "c": c})
-        s = DataFrame(
-            np.random.default_rng(2).random(5).astype("float32"), columns=["md"]
-        )
+        s = DataFrame(np.random.default_rng(2).random(5).astype("float32"), columns=["md"])
         rs = df.merge(s, left_on="a", right_index=True)
         assert rs.dtypes["a"] == "int64"
         assert rs.dtypes["b"] == "float64"
@@ -557,9 +542,7 @@ class TestJoin:
                 "D": np.random.default_rng(2).standard_normal(8),
             }
         )
-        s = Series(
-            np.repeat(np.arange(8), 2), index=np.repeat(np.arange(8), 2), name="TEST"
-        )
+        s = Series(np.repeat(np.arange(8), 2), index=np.repeat(np.arange(8), 2), name="TEST")
         inner = df.join(s, how="inner")
         outer = df.join(s, how="outer")
         left = df.join(s, how="left")
@@ -568,14 +551,10 @@ class TestJoin:
         tm.assert_frame_equal(inner, left)
         tm.assert_frame_equal(inner, right)
 
-    @pytest.mark.parametrize(
-        "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-    )
+    @pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
     def test_join_sort(self, infer_string):
         with option_context("future.infer_string", infer_string):
-            left = DataFrame(
-                {"key": ["foo", "bar", "baz", "foo"], "value": [1, 2, 3, 4]}
-            )
+            left = DataFrame({"key": ["foo", "bar", "baz", "foo"], "value": [1, 2, 3, 4]})
             right = DataFrame({"value2": ["a", "b", "c"]}, index=["bar", "baz", "foo"])
 
             joined = left.join(right, on="key", sort=True)
@@ -607,9 +586,7 @@ class TestJoin:
         df3 = DataFrame({"a": [1, 2, 3, 4]}, index=[1, 2, 2, "a"])
         df4 = DataFrame({"b": [5, 6, 7, 8]}, index=[1, 2, 3, 4])
         result = df3.join(df4)
-        expected = DataFrame(
-            {"a": [1, 2, 3, 4], "b": [5, 6, 6, np.nan]}, index=[1, 2, 2, "a"]
-        )
+        expected = DataFrame({"a": [1, 2, 3, 4], "b": [5, 6, 6, np.nan]}, index=[1, 2, 2, "a"])
         tm.assert_frame_equal(result, expected)
 
     def test_join_non_unique_period_index(self):
@@ -647,9 +624,7 @@ class TestJoin:
         mn.join(cn, rsuffix="_right")
 
     def test_join_many(self):
-        df = DataFrame(
-            np.random.default_rng(2).standard_normal((10, 6)), columns=list("abcdef")
-        )
+        df = DataFrame(np.random.default_rng(2).standard_normal((10, 6)), columns=list("abcdef"))
         df_list = [df[["a", "b"]], df[["c", "d"]], df[["e", "f"]]]
 
         joined = df_list[0].join(df_list[1:])
@@ -711,22 +686,12 @@ class TestJoin:
         tm.assert_frame_equal(result, expected)
 
         # GH 4975, invalid join on dups
-        w = DataFrame(
-            np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"]
-        )
-        x = DataFrame(
-            np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"]
-        )
-        y = DataFrame(
-            np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"]
-        )
-        z = DataFrame(
-            np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"]
-        )
+        w = DataFrame(np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"])
+        x = DataFrame(np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"])
+        y = DataFrame(np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"])
+        z = DataFrame(np.random.default_rng(2).standard_normal((4, 2)), columns=["x", "y"])
 
-        dta = x.merge(y, left_index=True, right_index=True).merge(
-            z, left_index=True, right_index=True, how="outer"
-        )
+        dta = x.merge(y, left_index=True, right_index=True).merge(z, left_index=True, right_index=True, how="outer")
         # GH 40991: As of 2.0 causes duplicate columns
         with pytest.raises(
             pd.errors.MergeError,
@@ -736,14 +701,10 @@ class TestJoin:
 
     def test_join_multi_to_multi(self, join_type):
         # GH 20475
-        leftindex = MultiIndex.from_product(
-            [list("abc"), list("xy"), [1, 2]], names=["abc", "xy", "num"]
-        )
+        leftindex = MultiIndex.from_product([list("abc"), list("xy"), [1, 2]], names=["abc", "xy", "num"])
         left = DataFrame({"v1": range(12)}, index=leftindex)
 
-        rightindex = MultiIndex.from_product(
-            [list("abc"), list("xy")], names=["abc", "xy"]
-        )
+        rightindex = MultiIndex.from_product([list("abc"), list("xy")], names=["abc", "xy"])
         right = DataFrame({"v2": [100 * i for i in range(1, 7)]}, index=rightindex)
 
         result = left.join(right, on=["abc", "xy"], how=join_type)
@@ -765,18 +726,14 @@ class TestJoin:
         # GH 23931, 26335
         df1 = DataFrame(
             {
-                "date": pd.date_range(
-                    start="2018-01-01", periods=5, tz="America/Chicago"
-                ),
+                "date": pd.date_range(start="2018-01-01", periods=5, tz="America/Chicago"),
                 "vals": list("abcde"),
             }
         )
 
         df2 = DataFrame(
             {
-                "date": pd.date_range(
-                    start="2018-01-03", periods=5, tz="America/Chicago"
-                ),
+                "date": pd.date_range(start="2018-01-03", periods=5, tz="America/Chicago"),
                 "vals_2": list("tuvwx"),
             }
         )
@@ -847,9 +804,7 @@ def _check_join(left, right, result, join_col, how="left", lsuffix="_x", rsuffix
             lgroup = left_grouped.get_group(group_key)
         except KeyError as err:
             if how in ("left", "inner"):
-                raise AssertionError(
-                    f"key {group_key} should not have been in the join"
-                ) from err
+                raise AssertionError(f"key {group_key} should not have been in the join") from err
 
             _assert_all_na(l_joined, left.columns, join_col)
         else:
@@ -859,9 +814,7 @@ def _check_join(left, right, result, join_col, how="left", lsuffix="_x", rsuffix
             rgroup = right_grouped.get_group(group_key)
         except KeyError as err:
             if how in ("right", "inner"):
-                raise AssertionError(
-                    f"key {group_key} should not have been in the join"
-                ) from err
+                raise AssertionError(f"key {group_key} should not have been in the join") from err
 
             _assert_all_na(r_joined, right.columns, join_col)
         else:
@@ -869,9 +822,7 @@ def _check_join(left, right, result, join_col, how="left", lsuffix="_x", rsuffix
 
 
 def _restrict_to_columns(group, columns, suffix):
-    found = [
-        c for c in group.columns if c in columns or c.replace(suffix, "") in columns
-    ]
+    found = [c for c in group.columns if c in columns or c.replace(suffix, "") in columns]
 
     # filter
     group = group.loc[:, found]
@@ -922,9 +873,7 @@ def test_join_inner_multiindex_deterministic_order():
         data={"e": 5},
         index=MultiIndex.from_tuples([(1, 2, 4)], names=("a", "b", "d")),
     )
-    right = DataFrame(
-        data={"f": 6}, index=MultiIndex.from_tuples([(2, 3)], names=("b", "c"))
-    )
+    right = DataFrame(data={"f": 6}, index=MultiIndex.from_tuples([(2, 3)], names=("b", "c")))
     result = left.join(right, how="inner")
     expected = DataFrame(
         {"e": [5], "f": [6]},
@@ -933,9 +882,7 @@ def test_join_inner_multiindex_deterministic_order():
     tm.assert_frame_equal(result, expected)
 
 
-@pytest.mark.parametrize(
-    ("input_col", "output_cols"), [("b", ["a", "b"]), ("a", ["a_x", "a_y"])]
-)
+@pytest.mark.parametrize(("input_col", "output_cols"), [("b", ["a", "b"]), ("a", ["a_x", "a_y"])])
 def test_join_cross(input_col, output_cols):
     # GH#5401
     left = DataFrame({"a": [1, 3]})
@@ -947,9 +894,7 @@ def test_join_cross(input_col, output_cols):
 
 def test_join_multiindex_one_level(join_type):
     # GH#36909
-    left = DataFrame(
-        data={"c": 3}, index=MultiIndex.from_tuples([(1, 2)], names=("a", "b"))
-    )
+    left = DataFrame(data={"c": 3}, index=MultiIndex.from_tuples([(1, 2)], names=("a", "b")))
     right = DataFrame(data={"d": 4}, index=MultiIndex.from_tuples([(2,)], names=("b",)))
     result = left.join(right, how=join_type)
     if join_type == "right":

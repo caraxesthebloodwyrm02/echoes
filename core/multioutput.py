@@ -68,9 +68,7 @@ def _fit_estimator(estimator, X, y, sample_weight=None, **fit_params):
     return estimator
 
 
-def _partial_fit_estimator(
-    estimator, X, y, classes=None, partial_fit_params=None, first_time=True
-):
+def _partial_fit_estimator(estimator, X, y, classes=None, partial_fit_params=None, first_time=True):
     partial_fit_params = {} if partial_fit_params is None else partial_fit_params
     if first_time:
         estimator = clone(estimator)
@@ -162,10 +160,7 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
         y = validate_data(self, X="no_validation", y=y, multi_output=True)
 
         if y.ndim == 1:
-            raise ValueError(
-                "y must have at least two dimensions for "
-                "multi-output regression but has only one."
-            )
+            raise ValueError("y must have at least two dimensions for " "multi-output regression but has only one.")
 
         if _routing_enabled():
             if sample_weight is not None:
@@ -176,17 +171,11 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
                 **partial_fit_params,
             )
         else:
-            if sample_weight is not None and not has_fit_parameter(
-                self.estimator, "sample_weight"
-            ):
-                raise ValueError(
-                    "Underlying estimator does not support sample weights."
-                )
+            if sample_weight is not None and not has_fit_parameter(self.estimator, "sample_weight"):
+                raise ValueError("Underlying estimator does not support sample weights.")
 
             if sample_weight is not None:
-                routed_params = Bunch(
-                    estimator=Bunch(partial_fit=Bunch(sample_weight=sample_weight))
-                )
+                routed_params = Bunch(estimator=Bunch(partial_fit=Bunch(sample_weight=sample_weight)))
             else:
                 routed_params = Bunch(estimator=Bunch(partial_fit=Bunch()))
 
@@ -249,10 +238,7 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
             check_classification_targets(y)
 
         if y.ndim == 1:
-            raise ValueError(
-                "y must have at least two dimensions for "
-                "multi-output regression but has only one."
-            )
+            raise ValueError("y must have at least two dimensions for " "multi-output regression but has only one.")
 
         if _routing_enabled():
             if sample_weight is not None:
@@ -263,12 +249,8 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
                 **fit_params,
             )
         else:
-            if sample_weight is not None and not has_fit_parameter(
-                self.estimator, "sample_weight"
-            ):
-                raise ValueError(
-                    "Underlying estimator does not support sample weights."
-                )
+            if sample_weight is not None and not has_fit_parameter(self.estimator, "sample_weight"):
+                raise ValueError("Underlying estimator does not support sample weights.")
 
             fit_params_validated = _check_method_params(X, params=fit_params)
             routed_params = Bunch(estimator=Bunch(fit=fit_params_validated))
@@ -276,9 +258,7 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
                 routed_params.estimator.fit["sample_weight"] = sample_weight
 
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(
-            delayed(_fit_estimator)(
-                self.estimator, X, y[:, i], **routed_params.estimator.fit
-            )
+            delayed(_fit_estimator)(self.estimator, X, y[:, i], **routed_params.estimator.fit)
             for i in range(y.shape[1])
         )
 
@@ -307,9 +287,7 @@ class _MultiOutputEstimator(MetaEstimatorMixin, BaseEstimator, metaclass=ABCMeta
         if not hasattr(self.estimators_[0], "predict"):
             raise ValueError("The base estimator should implement a predict method")
 
-        y = Parallel(n_jobs=self.n_jobs)(
-            delayed(e.predict)(X) for e in self.estimators_
-        )
+        y = Parallel(n_jobs=self.n_jobs)(delayed(e.predict)(X) for e in self.estimators_)
 
         return np.asarray(y).T
 
@@ -606,14 +584,10 @@ class MultiOutputClassifier(ClassifierMixin, _MultiOutputEstimator):
         check_is_fitted(self)
         n_outputs_ = len(self.estimators_)
         if y.ndim == 1:
-            raise ValueError(
-                "y must have at least two dimensions for "
-                "multi target classification but has only one"
-            )
+            raise ValueError("y must have at least two dimensions for " "multi target classification but has only one")
         if y.shape[1] != n_outputs_:
             raise ValueError(
-                "The number of outputs of Y for fit {0} and"
-                " score {1} should be same".format(n_outputs_, y.shape[1])
+                "The number of outputs of Y for fit {0} and" " score {1} should be same".format(n_outputs_, y.shape[1])
             )
         y_pred = self.predict(X)
         return np.mean(np.all(y == y_pred, axis=1))
@@ -632,9 +606,7 @@ def _available_if_base_estimator_has(attr):
     """
 
     def _check(self):
-        return hasattr(self._get_estimator(), attr) or all(
-            hasattr(est, attr) for est in self.estimators_
-        )
+        return hasattr(self._get_estimator(), attr) or all(hasattr(est, attr) for est in self.estimators_)
 
     return available_if(_check)
 
@@ -1028,9 +1000,7 @@ class ClassifierChain(MetaEstimatorMixin, ClassifierMixin, _BaseChain):
         "chain_method": [
             list,
             tuple,
-            StrOptions(
-                {"predict", "predict_proba", "predict_log_proba", "decision_function"}
-            ),
+            StrOptions({"predict", "predict_proba", "predict_log_proba", "decision_function"}),
         ],
     }
 

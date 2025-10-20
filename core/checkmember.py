@@ -226,19 +226,13 @@ def analyze_member_access(
     )
     result = _analyze_member_access(name, typ, mx, override_info)
     possible_literal = get_proper_type(result)
-    if (
-        in_literal_context
-        and isinstance(possible_literal, Instance)
-        and possible_literal.last_known_value is not None
-    ):
+    if in_literal_context and isinstance(possible_literal, Instance) and possible_literal.last_known_value is not None:
         return possible_literal.last_known_value
     else:
         return result
 
 
-def _analyze_member_access(
-    name: str, typ: Type, mx: MemberContext, override_info: TypeInfo | None = None
-) -> Type:
+def _analyze_member_access(name: str, typ: Type, mx: MemberContext, override_info: TypeInfo | None = None) -> Type:
     typ = get_proper_type(typ)
     if isinstance(typ, Instance):
         return analyze_instance_member_access(name, typ, mx, override_info)
@@ -263,9 +257,7 @@ def _analyze_member_access(
         return analyze_none_member_access(name, typ, mx)
     elif isinstance(typ, TypeVarLikeType):
         if isinstance(typ, TypeVarType) and typ.values:
-            return _analyze_member_access(
-                name, make_simplified_union(typ.values), mx, override_info
-            )
+            return _analyze_member_access(name, make_simplified_union(typ.values), mx, override_info)
         return _analyze_member_access(name, typ.upper_bound, mx, override_info)
     elif isinstance(typ, DeletedType):
         if not mx.suppress_errors:
@@ -278,9 +270,7 @@ def _analyze_member_access(
     return report_missing_attribute(mx.original_type, typ, name, mx)
 
 
-def may_be_awaitable_attribute(
-    name: str, typ: Type, mx: MemberContext, override_info: TypeInfo | None = None
-) -> bool:
+def may_be_awaitable_attribute(name: str, typ: Type, mx: MemberContext, override_info: TypeInfo | None = None) -> bool:
     """Check if the given type has the attribute when awaited."""
     if mx.chk.checking_missing_await:
         # Avoid infinite recursion.
@@ -289,9 +279,7 @@ def may_be_awaitable_attribute(
         aw_type = mx.chk.get_precise_awaitable_type(typ, local_errors)
         if aw_type is None:
             return False
-        _ = _analyze_member_access(
-            name, aw_type, mx.copy_modified(self_type=aw_type), override_info
-        )
+        _ = _analyze_member_access(name, aw_type, mx.copy_modified(self_type=aw_type), override_info)
         return not local_errors.has_new_errors()
 
 
@@ -315,9 +303,7 @@ def report_missing_attribute(
 # types and aren't documented individually.
 
 
-def analyze_instance_member_access(
-    name: str, typ: Instance, mx: MemberContext, override_info: TypeInfo | None
-) -> Type:
+def analyze_instance_member_access(name: str, typ: Instance, mx: MemberContext, override_info: TypeInfo | None) -> Type:
     info = typ.type
     if override_info:
         info = override_info
@@ -373,9 +359,7 @@ def analyze_instance_member_access(
             if isinstance(method, (FuncDef, OverloadedFuncDef)) and method.is_trivial_self:
                 signature = bind_self_fast(signature, mx.self_type)
             else:
-                signature = check_self_arg(
-                    signature, mx.self_type, method.is_class, mx.context, name, mx.msg
-                )
+                signature = check_self_arg(signature, mx.self_type, method.is_class, mx.context, name, mx.msg)
                 signature = bind_self(signature, mx.self_type, is_classmethod=method.is_class)
         typ = map_instance_to_supertype(typ, method.info)
         member_type = expand_type_by_instance(signature, typ)
@@ -479,9 +463,7 @@ def analyze_type_type_member_access(
 
     if item and not mx.is_operator:
         # See comment above for why operators are skipped
-        result = analyze_class_attribute_access(
-            item, name, mx, mcs_fallback=fallback, override_info=override_info
-        )
+        result = analyze_class_attribute_access(item, name, mx, mcs_fallback=fallback, override_info=override_info)
         if result:
             if not (isinstance(get_proper_type(result), AnyType) and item.type.fallback_to_any):
                 return result
@@ -517,9 +499,7 @@ def analyze_none_member_access(name: str, typ: NoneType, mx: MemberContext) -> T
         return _analyze_member_access(name, mx.named_type("builtins.object"), mx)
 
 
-def analyze_member_var_access(
-    name: str, itype: Instance, info: TypeInfo, mx: MemberContext
-) -> Type:
+def analyze_member_var_access(name: str, itype: Instance, info: TypeInfo, mx: MemberContext) -> Type:
     """Analyse attribute access that does not target a method.
 
     This is logically part of analyze_member_access and the arguments are similar.
@@ -673,9 +653,7 @@ def analyze_descriptor_access(descriptor_type: Type, mx: MemberContext) -> Type:
 
     if isinstance(descriptor_type, UnionType):
         # Map the access over union types
-        return make_simplified_union(
-            [analyze_descriptor_access(typ, mx) for typ in descriptor_type.items]
-        )
+        return make_simplified_union([analyze_descriptor_access(typ, mx) for typ in descriptor_type.items])
     elif not isinstance(descriptor_type, Instance):
         return orig_descriptor_type
 
@@ -696,11 +674,7 @@ def analyze_descriptor_access(descriptor_type: Type, mx: MemberContext) -> Type:
 
     dunder_get = descriptor_type.type.get_method("__get__")
     if dunder_get is None:
-        mx.fail(
-            message_registry.DESCRIPTOR_GET_NOT_CALLABLE.format(
-                descriptor_type.str_with_options(mx.msg.options)
-            )
-        )
+        mx.fail(message_registry.DESCRIPTOR_GET_NOT_CALLABLE.format(descriptor_type.str_with_options(mx.msg.options)))
         return AnyType(TypeOfAny.from_error)
 
     bound_method = analyze_decorator_or_funcbase_access(
@@ -756,11 +730,7 @@ def analyze_descriptor_access(descriptor_type: Type, mx: MemberContext) -> Type:
         return inferred_dunder_get_type
 
     if not isinstance(inferred_dunder_get_type, CallableType):
-        mx.fail(
-            message_registry.DESCRIPTOR_GET_NOT_CALLABLE.format(
-                descriptor_type.str_with_options(mx.msg.options)
-            )
-        )
+        mx.fail(message_registry.DESCRIPTOR_GET_NOT_CALLABLE.format(descriptor_type.str_with_options(mx.msg.options)))
         return AnyType(TypeOfAny.from_error)
 
     return inferred_dunder_get_type.ret_type
@@ -771,9 +741,7 @@ def analyze_descriptor_assign(descriptor_type: Instance, mx: MemberContext) -> T
     dunder_set = descriptor_type.type.get_method("__set__")
     if dunder_set is None:
         mx.fail(
-            message_registry.DESCRIPTOR_SET_NOT_CALLABLE.format(
-                descriptor_type.str_with_options(mx.msg.options)
-            ).value
+            message_registry.DESCRIPTOR_SET_NOT_CALLABLE.format(descriptor_type.str_with_options(mx.msg.options)).value
         )
         return AnyType(TypeOfAny.from_error)
 
@@ -828,9 +796,7 @@ def analyze_descriptor_assign(descriptor_type: Instance, mx: MemberContext) -> T
     mx.chk.warn_deprecated(dunder_set, mx.context)
 
     # In the following cases, a message already will have been recorded in check_call.
-    if (not isinstance(inferred_dunder_set_type, CallableType)) or (
-        len(inferred_dunder_set_type.arg_types) < 2
-    ):
+    if (not isinstance(inferred_dunder_set_type, CallableType)) or (len(inferred_dunder_set_type.arg_types) < 2):
         return AnyType(TypeOfAny.from_error)
     return inferred_dunder_set_type.arg_types[1]
 
@@ -936,17 +902,11 @@ def analyze_var(
     if result and not (implicit or var.info.is_protocol and is_instance_var(var)):
         result = analyze_descriptor_access(result, mx)
     if hook:
-        result = hook(
-            AttributeContext(
-                get_proper_type(mx.original_type), result, mx.is_lvalue, mx.context, mx.chk
-            )
-        )
+        result = hook(AttributeContext(get_proper_type(mx.original_type), result, mx.is_lvalue, mx.context, mx.chk))
     return result
 
 
-def expand_without_binding(
-    typ: Type, var: Var, itype: Instance, original_itype: Instance, mx: MemberContext
-) -> Type:
+def expand_without_binding(typ: Type, var: Var, itype: Instance, original_itype: Instance, mx: MemberContext) -> Type:
     if not mx.preserve_type_var_ids:
         typ = freshen_all_functions_type_vars(typ)
     typ = expand_self_type_if_needed(typ, mx, var, original_itype)
@@ -988,9 +948,7 @@ def expand_and_bind_callable(
     if var.is_settable_property and mx.is_lvalue and var.setter_type is not None:
         if expanded.variables:
             type_ctx = mx.rvalue or TempNode(AnyType(TypeOfAny.special_form), context=mx.context)
-            _, inferred_expanded = mx.chk.expr_checker.check_call(
-                expanded, [type_ctx], [ARG_POS], mx.context
-            )
+            _, inferred_expanded = mx.chk.expr_checker.check_call(expanded, [type_ctx], [ARG_POS], mx.context)
             expanded = get_proper_type(inferred_expanded)
             assert isinstance(expanded, CallableType)
         if not expanded.arg_types:
@@ -1002,9 +960,7 @@ def expand_and_bind_callable(
         return expanded.ret_type
 
 
-def expand_self_type_if_needed(
-    t: Type, mx: MemberContext, var: Var, itype: Instance, is_class: bool = False
-) -> Type:
+def expand_self_type_if_needed(t: Type, mx: MemberContext, var: Var, itype: Instance, is_class: bool = False) -> Type:
     """Expand special Self type in a backwards compatible manner.
 
     This should ensure that mixing old-style and new-style self-types work
@@ -1103,9 +1059,7 @@ def check_self_arg(
             erase_typevars(erase_to_bound(selfarg)),
             # This is to work around the fact that erased ParamSpec and TypeVarTuple
             # callables are not always compatible with non-erased ones both ways.
-            always_covariant=any(
-                not isinstance(tv, TypeVarType) for tv in get_all_type_vars(selfarg)
-            ),
+            always_covariant=any(not isinstance(tv, TypeVarType) for tv in get_all_type_vars(selfarg)),
             ignore_pos_arg_names=True,
         ):
             new_items.append(item)
@@ -1116,9 +1070,7 @@ def check_self_arg(
             raise NotImplementedError
     if not new_items:
         # Choose first item for the message (it may be not very helpful for overloads).
-        msg.incompatible_self_argument(
-            name, dispatched_arg_type, items[0], is_classmethod, context
-        )
+        msg.incompatible_self_argument(name, dispatched_arg_type, items[0], is_classmethod, context)
         return functype
     if len(new_items) == 1:
         return new_items[0]
@@ -1157,12 +1109,7 @@ def analyze_class_attribute_access(
             return apply_class_attr_hook(mx, hook, AnyType(TypeOfAny.special_form))
         return None
 
-    if (
-        isinstance(node.node, Var)
-        and not node.node.is_classvar
-        and not hook
-        and mcs_fallback.type.get(name)
-    ):
+    if isinstance(node.node, Var) and not node.node.is_classvar and not hook and mcs_fallback.type.get(name):
         # If the same attribute is declared on the metaclass and the class but with different types,
         # and the attribute on the class is not a ClassVar,
         # the type of the attribute on the metaclass should take priority
@@ -1207,9 +1154,7 @@ def analyze_class_attribute_access(
         if isinstance(t, PartialType):
             symnode = node.node
             assert isinstance(symnode, Var)
-            return apply_class_attr_hook(
-                mx, hook, mx.chk.handle_partial_var_type(t, mx.is_lvalue, symnode, mx.context)
-            )
+            return apply_class_attr_hook(mx, hook, mx.chk.handle_partial_var_type(t, mx.is_lvalue, symnode, mx.context))
 
         # Find the class where method/variable was defined.
         if isinstance(node.node, Decorator):
@@ -1275,12 +1220,7 @@ def analyze_class_attribute_access(
             is_trivial_self = node.node.func.is_trivial_self and not node.node.decorators
         elif isinstance(node.node, (FuncDef, OverloadedFuncDef)):
             is_trivial_self = node.node.is_trivial_self
-        if (
-            isinstance(t, FunctionLike)
-            and is_classmethod
-            and not is_trivial_self
-            and not t.bound()
-        ):
+        if isinstance(t, FunctionLike) and is_classmethod and not is_trivial_self and not t.bound():
             t = check_self_arg(t, mx.self_type, False, mx.context, name, mx.msg)
         t = add_class_tvars(
             t,
@@ -1291,9 +1231,7 @@ def analyze_class_attribute_access(
             is_trivial_self=is_trivial_self,
         )
         if is_decorated:
-            t = expand_self_type_if_needed(
-                t, mx, cast(Decorator, node.node).var, itype, is_class=is_classmethod
-            )
+            t = expand_self_type_if_needed(t, mx, cast(Decorator, node.node).var, itype, is_class=is_classmethod)
 
         result = t
         # __set__ is not called on class objects.
@@ -1331,17 +1269,11 @@ def apply_class_attr_hook(
     mx: MemberContext, hook: Callable[[AttributeContext], Type] | None, result: Type
 ) -> Type | None:
     if hook:
-        result = hook(
-            AttributeContext(
-                get_proper_type(mx.original_type), result, mx.is_lvalue, mx.context, mx.chk
-            )
-        )
+        result = hook(AttributeContext(get_proper_type(mx.original_type), result, mx.is_lvalue, mx.context, mx.chk))
     return result
 
 
-def analyze_enum_class_attribute_access(
-    itype: Instance, name: str, mx: MemberContext
-) -> Type | None:
+def analyze_enum_class_attribute_access(itype: Instance, name: str, mx: MemberContext) -> Type | None:
     # Skip these since Enum will remove it
     if name in EXCLUDED_ENUM_ATTRIBUTES:
         return report_missing_attribute(mx.original_type, itype, name, mx)
@@ -1353,27 +1285,19 @@ def analyze_enum_class_attribute_access(
     if node and node.type:
         proper = get_proper_type(node.type)
         # Support `A = nonmember(1)` function call and decorator.
-        if (
-            isinstance(proper, Instance)
-            and proper.type.fullname == "enum.nonmember"
-            and proper.args
-        ):
+        if isinstance(proper, Instance) and proper.type.fullname == "enum.nonmember" and proper.args:
             return proper.args[0]
 
     enum_literal = LiteralType(name, fallback=itype)
     return itype.copy_modified(last_known_value=enum_literal)
 
 
-def analyze_typeddict_access(
-    name: str, typ: TypedDictType, mx: MemberContext, override_info: TypeInfo | None
-) -> Type:
+def analyze_typeddict_access(name: str, typ: TypedDictType, mx: MemberContext, override_info: TypeInfo | None) -> Type:
     if name == "__setitem__":
         if isinstance(mx.context, IndexExpr):
             # Since we can get this during `a['key'] = ...`
             # it is safe to assume that the context is `IndexExpr`.
-            item_type, key_names = mx.chk.expr_checker.visit_typeddict_index_expr(
-                typ, mx.context.index, setitem=True
-            )
+            item_type, key_names = mx.chk.expr_checker.visit_typeddict_index_expr(typ, mx.context.index, setitem=True)
             assigned_readonly_keys = typ.readonly_keys & key_names
             if assigned_readonly_keys and not mx.suppress_errors:
                 mx.msg.readonly_keys_mutated(assigned_readonly_keys, context=mx.context)

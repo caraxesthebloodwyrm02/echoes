@@ -123,9 +123,7 @@ class TestDataFramePlotsSubplots:
             _check_visible(ax.get_yticklabels())
             _check_ticks_props(ax, xlabelsize=7, xrot=45, ylabelsize=7)
 
-    @pytest.mark.parametrize(
-        "col", ["numeric", "timedelta", "datetime_no_tz", "datetime_all_tz"]
-    )
+    @pytest.mark.parametrize("col", ["numeric", "timedelta", "datetime_no_tz", "datetime_all_tz"])
     def test_subplots_timeseries_y_axis(self, col):
         # GH16953
         data = {
@@ -191,9 +189,7 @@ class TestDataFramePlotsSubplots:
                 pd.Period("2017-08-01 02:00", freq="H"),
                 pd.Period("2017-08-02 00:00:00", freq="H"),
             ],
-            "categorical": pd.Categorical(
-                ["c", "b", "a"], categories=["a", "b", "c"], ordered=False
-            ),
+            "categorical": pd.Categorical(["c", "b", "a"], categories=["a", "b", "c"], ordered=False),
             "datetime_mixed_tz": [
                 pd.to_datetime("2017-08-01 00:00:00", utc=True),
                 pd.to_datetime("2017-08-01 02:00:00"),
@@ -202,19 +198,11 @@ class TestDataFramePlotsSubplots:
         }
         testdata = DataFrame(data)
         ax_period = testdata.plot(x="numeric", y="period")
-        assert (
-            ax_period.get_lines()[0].get_data()[1] == testdata["period"].values
-        ).all()
+        assert (ax_period.get_lines()[0].get_data()[1] == testdata["period"].values).all()
         ax_categorical = testdata.plot(x="numeric", y="categorical")
-        assert (
-            ax_categorical.get_lines()[0].get_data()[1]
-            == testdata["categorical"].values
-        ).all()
+        assert (ax_categorical.get_lines()[0].get_data()[1] == testdata["categorical"].values).all()
         ax_datetime_mixed_tz = testdata.plot(x="numeric", y="datetime_mixed_tz")
-        assert (
-            ax_datetime_mixed_tz.get_lines()[0].get_data()[1]
-            == testdata["datetime_mixed_tz"].values
-        ).all()
+        assert (ax_datetime_mixed_tz.get_lines()[0].get_data()[1] == testdata["datetime_mixed_tz"].values).all()
 
     @pytest.mark.parametrize(
         "layout, exp_layout",
@@ -260,9 +248,7 @@ class TestDataFramePlotsSubplots:
             ({"layout": (3, 3)}, 1, (3, 3), (3, 3)),
         ],
     )
-    def test_subplots_layout_single_column(
-        self, kwargs, expected_axes_num, expected_layout, expected_shape
-    ):
+    def test_subplots_layout_single_column(self, kwargs, expected_axes_num, expected_layout, expected_shape):
         # GH 6667
         df = DataFrame(
             np.random.default_rng(2).random((10, 1)),
@@ -336,9 +322,7 @@ class TestDataFramePlotsSubplots:
             index=list(string.ascii_letters[:10]),
         )
         with tm.assert_produces_warning(UserWarning):
-            returned = df.plot(
-                subplots=True, ax=axes, layout=layout, sharex=False, sharey=False
-            )
+            returned = df.plot(subplots=True, ax=axes, layout=layout, sharex=False, sharey=False)
             _check_axes_shape(returned, axes_num=4, layout=exp_layout)
             assert returned.shape == (4,)
 
@@ -445,9 +429,7 @@ class TestDataFramePlotsSubplots:
     def test_bar_log_subplots(self):
         expected = np.array([0.1, 1.0, 10.0, 100.0, 1000.0, 1e4])
 
-        ax = DataFrame([Series([200, 300]), Series([300, 500])]).plot.bar(
-            log=True, subplots=True
-        )
+        ax = DataFrame([Series([200, 300]), Series([300, 500])]).plot.bar(log=True, subplots=True)
 
         tm.assert_numpy_array_equal(ax[0].yaxis.get_ticklocs(), expected)
         tm.assert_numpy_array_equal(ax[1].yaxis.get_ticklocs(), expected)
@@ -458,9 +440,7 @@ class TestDataFramePlotsSubplots:
         # normal style: return_type=None
         result = df.plot.box(subplots=True)
         assert isinstance(result, Series)
-        _check_box_return_type(
-            result, None, expected_keys=["height", "weight", "category"]
-        )
+        _check_box_return_type(result, None, expected_keys=["height", "weight", "category"])
 
     @pytest.mark.parametrize("rt", ["dict", "axes", "both"])
     def test_boxplot_subplots_return_type(self, hist_df, rt):
@@ -568,9 +548,7 @@ class TestDataFramePlotsSubplots:
         ],
     )
     @pytest.mark.parametrize("kind", ["line", "area", "bar"])
-    def test_xlabel_ylabel_dataframe_subplots(
-        self, kind, index_name, old_label, new_label
-    ):
+    def test_xlabel_ylabel_dataframe_subplots(self, kind, index_name, old_label, new_label):
         # GH 9093
         df = DataFrame([[1, 2], [2, 5]], columns=["Type A", "Type B"])
         df.index.name = index_name

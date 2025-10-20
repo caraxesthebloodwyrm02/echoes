@@ -62,8 +62,7 @@ def write_test_pickle(to_pickle, args):
         # With old python version (=< 3.3.), we can arrive there when
         # dumping compressed pickle with LzmaFile.
         print(
-            "Error: cannot generate file '{}' with arguments '{}'. "
-            "Error was: {}".format(pickle_filename, kwargs, e)
+            "Error: cannot generate file '{}' with arguments '{}'. " "Error was: {}".format(pickle_filename, kwargs, e)
         )
     else:
         print("File '{}' generated successfully.".format(pickle_filename))
@@ -78,9 +77,7 @@ if __name__ == "__main__":
         action="store_true",
         help="Force creation of companion numpy files for pickled arrays.",
     )
-    parser.add_argument(
-        "--compress", action="store_true", help="Generate compress pickles."
-    )
+    parser.add_argument("--compress", action="store_true", help="Generate compress pickles.")
     parser.add_argument(
         "--method",
         type=str,

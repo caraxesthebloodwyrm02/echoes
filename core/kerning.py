@@ -88,9 +88,7 @@ def lookupKerningValue(
         return kerning[pair]
     # ensure both or no glyph-to-group mappings are provided
     if (glyphToFirstGroup is None) != (glyphToSecondGroup is None):
-        raise ValueError(
-            "Must provide both 'glyphToFirstGroup' and 'glyphToSecondGroup', or neither."
-        )
+        raise ValueError("Must provide both 'glyphToFirstGroup' and 'glyphToSecondGroup', or neither.")
     # create glyph to group mapping
     if glyphToFirstGroup is None:
         glyphToFirstGroup = {}
@@ -122,10 +120,7 @@ def lookupKerningValue(
         secondGlyph = second
     # make an ordered list of pairs to look up
     pairs = [
-        (a, b)
-        for a in (firstGlyph, firstGroup)
-        for b in (secondGlyph, secondGroup)
-        if a is not None and b is not None
+        (a, b) for a in (firstGlyph, firstGroup) for b in (secondGlyph, secondGroup) if a is not None and b is not None
     ]
     # look up the pairs and return any matches
     for pair in pairs:

@@ -29,9 +29,7 @@ from . import Image
 
 
 class Stat:
-    def __init__(
-        self, image_or_list: Image.Image | list[int], mask: Image.Image | None = None
-    ) -> None:
+    def __init__(self, image_or_list: Image.Image | list[int], mask: Image.Image | None = None) -> None:
         """
         Calculate statistics for the given image. If a mask is included,
         only the regions covered by that mask are included in the
@@ -141,20 +139,13 @@ class Stat:
     @cached_property
     def rms(self) -> list[float]:
         """RMS (root-mean-square) for each band in the image."""
-        return [
-            math.sqrt(self.sum2[i] / self.count[i]) if self.count[i] else 0
-            for i in self.bands
-        ]
+        return [math.sqrt(self.sum2[i] / self.count[i]) if self.count[i] else 0 for i in self.bands]
 
     @cached_property
     def var(self) -> list[float]:
         """Variance for each band in the image."""
         return [
-            (
-                (self.sum2[i] - (self.sum[i] ** 2.0) / self.count[i]) / self.count[i]
-                if self.count[i]
-                else 0
-            )
+            ((self.sum2[i] - (self.sum[i] ** 2.0) / self.count[i]) / self.count[i] if self.count[i] else 0)
             for i in self.bands
         ]
 

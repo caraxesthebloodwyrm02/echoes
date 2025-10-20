@@ -54,9 +54,7 @@ class TestSeriesFlexArithmetic:
             ),
         ],
     )
-    @pytest.mark.parametrize(
-        "opname", ["add", "sub", "mul", "floordiv", "truediv", "pow"]
-    )
+    @pytest.mark.parametrize("opname", ["add", "sub", "mul", "floordiv", "truediv", "pow"])
     def test_flex_method_equivalence(self, opname, ts):
         # check that Series.{opname} behaves like Series.__{opname}__,
         tser = Series(
@@ -226,9 +224,7 @@ class TestSeriesArithmetic:
         tm.assert_series_equal(result, expected)
 
     def test_add_na_handling(self):
-        ser = Series(
-            [Decimal("1.3"), Decimal("2.3")], index=[date(2012, 1, 1), date(2012, 1, 2)]
-        )
+        ser = Series([Decimal("1.3"), Decimal("2.3")], index=[date(2012, 1, 1), date(2012, 1, 2)])
 
         result = ser + ser.shift(1)
         result2 = ser.shift(1) + ser
@@ -353,11 +349,7 @@ class TestSeriesArithmetic:
 
     def test_add_list_to_masked_array_boolean(self, request):
         # GH#22962
-        warning = (
-            UserWarning
-            if request.node.callspec.id == "numexpr" and NUMEXPR_INSTALLED
-            else None
-        )
+        warning = UserWarning if request.node.callspec.id == "numexpr" and NUMEXPR_INSTALLED else None
         ser = Series([True, None, False], dtype="boolean")
         with tm.assert_produces_warning(warning):
             result = ser + [True, None, True]
@@ -459,9 +451,7 @@ class TestSeriesComparison:
         expected = np.dtype("bool")
         assert result == expected
 
-    @pytest.mark.parametrize(
-        "names", [(None, None, None), ("foo", "bar", None), ("baz", "baz", "baz")]
-    )
+    @pytest.mark.parametrize("names", [(None, None, None), ("foo", "bar", None), ("baz", "baz", "baz")])
     def test_ser_cmp_result_names(self, names, comparison_op):
         # datetime64 dtype
         op = comparison_op
@@ -685,10 +675,7 @@ class TestSeriesComparison:
             left = left.to_frame()
             right = right.to_frame()
         else:
-            msg = (
-                f"Can only compare identically-labeled {frame_or_series.__name__} "
-                f"objects"
-            )
+            msg = f"Can only compare identically-labeled {frame_or_series.__name__} " f"objects"
 
         with pytest.raises(ValueError, match=msg):
             left == right
@@ -767,9 +754,7 @@ class TestTimeSeriesArithmetic:
         series = Series(date_range("2012-01-01", periods=3, unit=unit))
         offset = pd.offsets.DateOffset(days=6)
         result = series - offset
-        exp_dti = pd.to_datetime(["2011-12-26", "2011-12-27", "2011-12-28"]).as_unit(
-            unit
-        )
+        exp_dti = pd.to_datetime(["2011-12-26", "2011-12-27", "2011-12-28"]).as_unit(unit)
         expected = Series(exp_dti)
         tm.assert_series_equal(result, expected)
 
@@ -802,10 +787,7 @@ class TestNamePreservation:
         name = op.__name__.strip("_")
         is_logical = name in ["and", "rand", "xor", "rxor", "or", "ror"]
 
-        msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
         warn = None
         if box in [list, tuple] and is_logical:
             warn = FutureWarning
@@ -896,9 +878,7 @@ def test_none_comparison(request, series_with_simple_index):
     series = series_with_simple_index
 
     if len(series) < 1:
-        request.applymarker(
-            pytest.mark.xfail(reason="Test doesn't make sense on empty data")
-        )
+        request.applymarker(pytest.mark.xfail(reason="Test doesn't make sense on empty data"))
 
     # bug brought up by #1079
     # changed from TypeError in 0.17.0
@@ -944,9 +924,7 @@ def test_series_varied_multiindex_alignment():
     # GH 20414
     s1 = Series(
         range(8),
-        index=pd.MultiIndex.from_product(
-            [list("ab"), list("xy"), [1, 2]], names=["ab", "xy", "num"]
-        ),
+        index=pd.MultiIndex.from_product([list("ab"), list("xy"), [1, 2]], names=["ab", "xy", "num"]),
     )
     s2 = Series(
         [1000 * i for i in range(1, 5)],

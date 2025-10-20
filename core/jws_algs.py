@@ -124,9 +124,7 @@ class ECAlgorithm(JWSAlgorithm):
     def prepare_key(self, raw_data):
         key = ECKey.import_key(raw_data)
         if key["crv"] != self.curve:
-            raise ValueError(
-                f'Key for "{self.name}" not supported, only "{self.curve}" allowed'
-            )
+            raise ValueError(f'Key for "{self.name}" not supported, only "{self.curve}" allowed')
         return key
 
     def sign(self, msg, key):
@@ -180,9 +178,7 @@ class RSAPSSAlgorithm(JWSAlgorithm):
         op_key = key.get_op_key("sign")
         return op_key.sign(
             msg,
-            padding.PSS(
-                mgf=padding.MGF1(self.hash_alg()), salt_length=self.hash_alg.digest_size
-            ),
+            padding.PSS(mgf=padding.MGF1(self.hash_alg()), salt_length=self.hash_alg.digest_size),
             self.hash_alg(),
         )
 

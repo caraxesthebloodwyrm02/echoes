@@ -1,6 +1,7 @@
 """
 Methods used by Block.replace and related methods.
 """
+
 from __future__ import annotations
 
 import operator
@@ -42,9 +43,7 @@ def should_use_regex(regex: bool, to_replace: Any) -> bool:
     return regex
 
 
-def compare_or_regex_search(
-    a: ArrayLike, b: Scalar | Pattern, regex: bool, mask: npt.NDArray[np.bool_]
-) -> ArrayLike:
+def compare_or_regex_search(a: ArrayLike, b: Scalar | Pattern, regex: bool, mask: npt.NDArray[np.bool_]) -> ArrayLike:
     """
     Compare two array-like inputs of the same shape or two scalar values
 
@@ -65,9 +64,7 @@ def compare_or_regex_search(
     if isna(b):
         return ~mask
 
-    def _check_comparison_types(
-        result: ArrayLike | bool, a: ArrayLike, b: Scalar | Pattern
-    ):
+    def _check_comparison_types(result: ArrayLike | bool, a: ArrayLike, b: Scalar | Pattern):
         """
         Raises an error if the two arrays (a,b) cannot be compared.
         Otherwise, returns the comparison result as expected.
@@ -77,18 +74,14 @@ def compare_or_regex_search(
 
             type_names[0] = f"ndarray(dtype={a.dtype})"
 
-            raise TypeError(
-                f"Cannot compare types {repr(type_names[0])} and {repr(type_names[1])}"
-            )
+            raise TypeError(f"Cannot compare types {repr(type_names[0])} and {repr(type_names[1])}")
 
     if not regex or not should_use_regex(regex, b):
         # TODO: should use missing.mask_missing?
         op = lambda x: operator.eq(x, b)
     else:
         op = np.vectorize(
-            lambda x: bool(re.search(b, x))
-            if isinstance(x, str) and isinstance(b, (str, Pattern))
-            else False
+            lambda x: bool(re.search(b, x)) if isinstance(x, str) and isinstance(b, (str, Pattern)) else False
         )
 
     # GH#32621 use mask to avoid comparing to NAs
@@ -109,9 +102,7 @@ def compare_or_regex_search(
     return result
 
 
-def replace_regex(
-    values: ArrayLike, rx: re.Pattern, value, mask: npt.NDArray[np.bool_] | None
-) -> None:
+def replace_regex(values: ArrayLike, rx: re.Pattern, value, mask: npt.NDArray[np.bool_] | None) -> None:
     """
     Parameters
     ----------

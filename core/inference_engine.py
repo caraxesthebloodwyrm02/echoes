@@ -115,9 +115,7 @@ class InferenceEngine:
             "documentation": "Document all APIs, include usage examples, maintain changelog for iterative improvements.",
         }
 
-    def process_prompt(
-        self, routing_info: Dict[str, Any], context: Dict[str, Any] = None
-    ) -> Dict[str, Any]:
+    def process_prompt(self, routing_info: Dict[str, Any], context: Dict[str, Any] = None) -> Dict[str, Any]:
         """
         Process prompt using mode-specific reasoning
 
@@ -128,17 +126,11 @@ class InferenceEngine:
         Returns:
             Processed response with reasoning chain
         """
-        mode = (
-            routing_info["mode"].value
-            if hasattr(routing_info["mode"], "value")
-            else routing_info["mode"]
-        )
+        mode = routing_info["mode"].value if hasattr(routing_info["mode"], "value") else routing_info["mode"]
         prompt = routing_info["prompt"]
 
         # Get reasoning template for mode
-        template = self.reasoning_templates.get(
-            mode, self.reasoning_templates["conversational"]
-        )
+        template = self.reasoning_templates.get(mode, self.reasoning_templates["conversational"])
 
         # Build reasoning chain
         reasoning_chain = self._build_reasoning_chain(prompt, template, context or {})
@@ -204,9 +196,7 @@ class InferenceEngine:
 
         # Check alignment with focus areas
         for area in focus_areas:
-            analysis["focus_alignment"][area] = self._check_focus_alignment(
-                prompt, area
-            )
+            analysis["focus_alignment"][area] = self._check_focus_alignment(prompt, area)
 
         return analysis
 
@@ -313,10 +303,7 @@ class InferenceEngine:
         }
 
         # Extract relevant context based on analysis
-        if (
-            analysis["domain"] == "software_engineering"
-            and "codebase_structure" in context
-        ):
+        if analysis["domain"] == "software_engineering" and "codebase_structure" in context:
             integration["relevant_context"]["codebase"] = context["codebase_structure"]
 
         if "project_root" in context and context["project_root"]:
@@ -327,10 +314,7 @@ class InferenceEngine:
 
         # Assess how context influences the response
         for focus_area in template["focus_areas"]:
-            if (
-                focus_area == "implementation"
-                and "codebase" in integration["relevant_context"]
-            ):
+            if focus_area == "implementation" and "codebase" in integration["relevant_context"]:
                 integration["context_influence"][focus_area] = "high"
             elif focus_area == "clarity" and "recent_conversation" in context:
                 integration["context_influence"][focus_area] = "medium"
@@ -383,9 +367,7 @@ class InferenceEngine:
             },
         ]
 
-    def _generate_compressed_reasoning(
-        self, analysis: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _generate_compressed_reasoning(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate compressed reasoning (Concise mode)"""
         return [
             {
@@ -395,9 +377,7 @@ class InferenceEngine:
             }
         ]
 
-    def _generate_narrative_reasoning(
-        self, analysis: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _generate_narrative_reasoning(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate narrative reasoning (Conversational mode)"""
         return [
             {
@@ -412,9 +392,7 @@ class InferenceEngine:
             },
         ]
 
-    def _generate_expanded_reasoning(
-        self, analysis: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _generate_expanded_reasoning(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate expanded reasoning (Star Stuff mode)"""
         return [
             {
@@ -429,9 +407,7 @@ class InferenceEngine:
             },
         ]
 
-    def _generate_analytical_reasoning(
-        self, analysis: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _generate_analytical_reasoning(self, analysis: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Generate analytical reasoning (Business mode)"""
         return [
             {
@@ -454,16 +430,12 @@ class InferenceEngine:
             "structure": template["output_structure"],
             "content": {},
             "reasoning_summary": self._summarize_reasoning(reasoning_chain),
-            "mode_specific_elements": self._add_mode_specific_elements(
-                mode, reasoning_chain
-            ),
+            "mode_specific_elements": self._add_mode_specific_elements(mode, reasoning_chain),
         }
 
         # Generate content for each structure element
         for element in template["output_structure"]:
-            response["content"][element] = self._generate_content_for_element(
-                element, reasoning_chain, mode
-            )
+            response["content"][element] = self._generate_content_for_element(element, reasoning_chain, mode)
 
         return response
 
@@ -475,9 +447,7 @@ class InferenceEngine:
         steps = [step["step"] for step in reasoning_chain]
         return f"Reasoning process: {' → '.join(steps)}"
 
-    def _add_mode_specific_elements(
-        self, mode: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def _add_mode_specific_elements(self, mode: str, reasoning_chain: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Add mode-specific elements to response"""
         elements = {}
 
@@ -528,9 +498,7 @@ class InferenceEngine:
             print(f"[InferenceEngine] Cache error for mode '{mode}': {e}")
             return self._fallback_content("core_concept", mode)
 
-    def _generate_content_for_element(
-        self, element: str, reasoning_chain: List[Dict[str, Any]], mode: str
-    ) -> str:
+    def _generate_content_for_element(self, element: str, reasoning_chain: List[Dict[str, Any]], mode: str) -> str:
         """Generate content for a specific response element"""
         # Mode-specific content generation
         content_generators = {
@@ -553,22 +521,20 @@ class InferenceEngine:
             print(f"Error generating content for {element} in {mode} mode: {e}")
             return self._fallback_content(element, mode)
 
-    def _generate_concise_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_concise_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate concise, compressed content"""
         if element == "core_concept":
             return "Data loop ecosystem: self-improving intelligence through recursive knowledge synthesis."
         elif element == "key_insights":
-            return "Codebase scans itself—learns structure—searches web—filters resonance—reloops with enhanced context."
+            return (
+                "Codebase scans itself—learns structure—searches web—filters resonance—reloops with enhanced context."
+            )
         elif element == "action_items":
             return "Initialize recursive feedback—validate inputs—measure improvements—iterate."
         else:
             return self._fallback_content(element, "concise")
 
-    def _generate_ide_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_ide_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate technical, step-by-step content via LLM with graceful fallback."""
 
         cache_key = self._build_ide_cache_key(reasoning_chain)
@@ -608,9 +574,7 @@ class InferenceEngine:
             parts.append(f"{step_name}:{content}")
         return " | ".join(parts)
 
-    def _build_ide_llm_prompt(
-        self, reasoning_chain: List[Dict[str, Any]]
-    ) -> Optional[str]:
+    def _build_ide_llm_prompt(self, reasoning_chain: List[Dict[str, Any]]) -> Optional[str]:
         if not reasoning_chain:
             return None
 
@@ -642,9 +606,7 @@ class InferenceEngine:
             return "; ".join(str(item) for item in value)
         return str(value)
 
-    def _generate_conversational_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_conversational_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate friendly, conversational content"""
         if element == "context":
             return "I understand you want to create a smart data loop that learns from your codebase and the web."
@@ -657,9 +619,7 @@ class InferenceEngine:
         else:
             return self._fallback_content(element, "conversational")
 
-    def _generate_star_stuff_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_star_stuff_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate poetic, expansive content"""
         if element == "vision":
             return "Imagine a constellation of code and data, each star a node of intelligence, connected in eternal dance of learning and creation."
@@ -672,9 +632,7 @@ class InferenceEngine:
         else:
             return self._fallback_content(element, "star_stuff")
 
-    def _generate_business_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_business_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate business-focused content"""
         if element == "objectives":
             return "Implement automated data loop system for continuous codebase enhancement and knowledge integration."
@@ -687,9 +645,7 @@ class InferenceEngine:
         else:
             return self._fallback_content(element, "business")
 
-    def _generate_default_content(
-        self, element: str, reasoning_chain: List[Dict[str, Any]]
-    ) -> str:
+    def _generate_default_content(self, element: str, reasoning_chain: List[Dict[str, Any]]) -> str:
         """Generate default content when mode-specific generator fails"""
         return f"Processing {element} through intelligent analysis pipeline."
 

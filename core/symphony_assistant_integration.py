@@ -76,9 +76,7 @@ class SymphonyAssistantClient:
         except IOError:
             pass  # Cache write failures are non-critical
 
-    async def query_with_cache(
-        self, prompt: str, use_cache: bool = True, **kwargs
-    ) -> Dict[str, Any]:
+    async def query_with_cache(self, prompt: str, use_cache: bool = True, **kwargs) -> Dict[str, Any]:
         """Query assistant with intelligent caching"""
         cache_key = self._cache_key(prompt, **kwargs)
 
@@ -241,9 +239,7 @@ class MasterChannelIntegration:
             )
 
             if "content" in summary:
-                enhanced_result = (
-                    f"{result}\n\n--- AI-Enhanced Analysis ---\n{summary['content']}"
-                )
+                enhanced_result = f"{result}\n\n--- AI-Enhanced Analysis ---\n{summary['content']}"
                 if summary.get("cached"):
                     enhanced_result += "\n[Analysis from cache]"
                 return enhanced_result

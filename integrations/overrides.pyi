@@ -20,8 +20,6 @@ class ArgSpec(NamedTuple):
 
 def get_array_function_like_doc(public_api: Callable[..., Any], docstring_template: str = "") -> str: ...
 def finalize_array_function_like(public_api: _FuncT) -> _FuncT: ...
-
-#
 def verify_matching_signatures(
     implementation: Callable[_Tss, object],
     dispatcher: Callable[_Tss, Iterable[_SupportsArrayFunc]],
@@ -38,8 +36,6 @@ def array_function_dispatch(
     verify: bool = True,
     docs_from_dispatcher: bool = False,
 ) -> Callable[[_FuncT], _FuncT]: ...
-
-#
 def array_function_from_dispatcher(
     implementation: Callable[_Tss, _T],
     module: str | None = None,

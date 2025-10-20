@@ -38,7 +38,6 @@ from blib2to3.pgen2.token import (
     COMMENT,
     DEDENT,
     ENDMARKER,
-    ERRORTOKEN,
     FSTRING_END,
     FSTRING_MIDDLE,
     FSTRING_START,
@@ -98,9 +97,7 @@ TOKEN_TYPE_MAP = {
 class TokenError(Exception): ...
 
 
-def transform_whitespace(
-    token: pytokens.Token, source: str, prev_token: Optional[pytokens.Token]
-) -> pytokens.Token:
+def transform_whitespace(token: pytokens.Token, source: str, prev_token: Optional[pytokens.Token]) -> pytokens.Token:
     r"""
     Black treats `\\\n` at the end of a line as a 'NL' token, while it
     is ignored as whitespace in the regular Python parser.
@@ -201,9 +198,7 @@ def tokenize(source: str, grammar: Optional[Grammar] = None) -> Iterator[TokenIn
         raise TokenError(f"Failed to parse: {type(exc).__name__}", (line, column))
 
 
-def printtoken(
-    type: int, token: str, srow_col: Coord, erow_col: Coord, line: str
-) -> None:  # for testing
+def printtoken(type: int, token: str, srow_col: Coord, erow_col: Coord, line: str) -> None:  # for testing
     (srow, scol) = srow_col
     (erow, ecol) = erow_col
     print(f"{srow},{scol}-{erow},{ecol}:\t{tok_name[type]}\t{token!r}")

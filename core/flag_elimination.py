@@ -50,9 +50,7 @@ def do_flag_elimination(fn: FuncIR, options: CompilerOptions) -> None:
                 labels[op.value] = block
 
     # Based on these we can find the candidate registers.
-    candidates: set[Register] = {
-        r for r in branches if counts.get(r, 0) == 1 and r not in fn.arg_regs
-    }
+    candidates: set[Register] = {r for r in branches if counts.get(r, 0) == 1 and r not in fn.arg_regs}
 
     # Remove candidates with invalid assignments.
     for block in fn.blocks:
@@ -64,9 +62,7 @@ def do_flag_elimination(fn: FuncIR, options: CompilerOptions) -> None:
                     candidates.remove(op.dest)
 
     builder = LowLevelIRBuilder(None, options)
-    transform = FlagEliminationTransform(
-        builder, {x: y for x, y in branches.items() if x in candidates}
-    )
+    transform = FlagEliminationTransform(builder, {x: y for x, y in branches.items() if x in candidates})
     transform.transform_blocks(fn.blocks)
     fn.blocks = builder.blocks
 

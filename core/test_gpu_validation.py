@@ -13,12 +13,13 @@ sys.stderr.reconfigure(line_buffering=True)
 
 from run_gpu_tests import GPUModelConfig
 
+
 def test_gpu_validation():
     print("Testing GPU Model Validation")
     print("=" * 40)
     sys.stdout.flush()
 
-    config = GPUModelConfig('gpt-oss:20b-cloud', search_enabled=True)
+    config = GPUModelConfig("gpt-oss:20b-cloud", search_enabled=True)
     print(f"Created config for model: {config.model_name}")
     print(f"Search enabled: {config.search_enabled}")
     print(f"GPU memory: {config.gpu_memory_gb}GB")
@@ -36,6 +37,7 @@ def test_gpu_validation():
 
     sys.stdout.flush()
     return result
+
 
 if __name__ == "__main__":
     test_gpu_validation()

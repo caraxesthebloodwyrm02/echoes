@@ -63,10 +63,10 @@ def test_[specific_case]:
     """Clear description of what we're testing"""
     # Arrange
     setup_data = ...
-    
+
     # Act
     result = function_under_test(setup_data)
-    
+
     # Assert
     assert result == expected_value
 ```

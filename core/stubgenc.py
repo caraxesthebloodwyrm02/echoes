@@ -42,9 +42,7 @@ from mypy.util import quote_docstring
 
 
 class ExternalSignatureGenerator(SignatureGenerator):
-    def __init__(
-        self, func_sigs: dict[str, str] | None = None, class_sigs: dict[str, str] | None = None
-    ) -> None:
+    def __init__(self, func_sigs: dict[str, str] | None = None, class_sigs: dict[str, str] | None = None) -> None:
         """
         Takes a mapping of function/method names to signatures and class name to
         class signatures (usually corresponds to __init__).
@@ -66,9 +64,7 @@ class ExternalSignatureGenerator(SignatureGenerator):
         class_sigs = dict(find_unique_signatures(all_class_sigs))
         return ExternalSignatureGenerator(sigs, class_sigs)
 
-    def get_function_sig(
-        self, default_sig: FunctionSig, ctx: FunctionContext
-    ) -> list[FunctionSig] | None:
+    def get_function_sig(self, default_sig: FunctionSig, ctx: FunctionContext) -> list[FunctionSig] | None:
         # method:
         if (
             ctx.class_info
@@ -105,9 +101,7 @@ class ExternalSignatureGenerator(SignatureGenerator):
 
 
 class DocstringSignatureGenerator(SignatureGenerator):
-    def get_function_sig(
-        self, default_sig: FunctionSig, ctx: FunctionContext
-    ) -> list[FunctionSig] | None:
+    def get_function_sig(self, default_sig: FunctionSig, ctx: FunctionContext) -> list[FunctionSig] | None:
         inferred = infer_sig_from_docstring(ctx.docstring, ctx.name)
         if inferred:
             assert ctx.docstring is not None
@@ -201,9 +195,7 @@ class CFunctionStub:
 
     @classmethod
     def _from_sigs(cls, sigs: list[FunctionSig], is_abstract: bool = False) -> CFunctionStub:
-        return CFunctionStub(
-            sigs[0].name, "\n".join(sig.format_sig()[:-4] for sig in sigs), is_abstract
-        )
+        return CFunctionStub(sigs[0].name, "\n".join(sig.format_sig()[:-4] for sig in sigs), is_abstract)
 
     def __get__(self) -> None:  # noqa: PLE0302
         """
@@ -314,9 +306,7 @@ class InspectionStubGenerator(BaseStubGenerator):
         arglist: list[ArgSig] = []
 
         # Add the arguments to the signature
-        def add_args(
-            args: list[str], get_default_value: Callable[[int, str], object | _Missing]
-        ) -> None:
+        def add_args(args: list[str], get_default_value: Callable[[int, str], object | _Missing]) -> None:
             for i, arg in enumerate(args):
                 # Check if the argument has a default value
                 default_value = get_default_value(i, arg)
@@ -363,9 +353,7 @@ class InspectionStubGenerator(BaseStubGenerator):
             arglist.append(ArgSig(f"**{kwargs}", get_annotation(kwargs)))
 
         # add types for known special methods
-        if ctx.class_info is not None and all(
-            arg.type is None and arg.default is False for arg in arglist
-        ):
+        if ctx.class_info is not None and all(arg.type is None and arg.default is False for arg in arglist):
             new_args = infer_method_arg_types(
                 ctx.name, ctx.class_info.self_var, [arg.name for arg in arglist if arg.name]
             )
@@ -477,11 +465,7 @@ class InspectionStubGenerator(BaseStubGenerator):
                         not self._output[-1].startswith("class")
                         or (len(output) > i + 1 and output[i + 1].startswith("    "))
                     )
-                ) or (
-                    self._output
-                    and self._output[-1].startswith("def")
-                    and not line.startswith("def")
-                ):
+                ) or (self._output and self._output[-1].startswith("def") and not line.startswith("def")):
                     self._output.append("\n")
                 self._output.append(line + "\n")
         self.check_undefined_names()
@@ -672,9 +656,7 @@ class InspectionStubGenerator(BaseStubGenerator):
                 lines[-1] = lines[-1][:-1]
         return "".join(lines)
 
-    def _fix_iter(
-        self, ctx: FunctionContext, inferred: list[FunctionSig], output: list[str]
-    ) -> None:
+    def _fix_iter(self, ctx: FunctionContext, inferred: list[FunctionSig], output: list[str]) -> None:
         """Ensure that objects which implement old-style iteration via __getitem__
         are considered iterable.
         """
@@ -691,9 +673,7 @@ class InspectionStubGenerator(BaseStubGenerator):
                     break
             if item_type is None:
                 return
-            obj = CFunctionStub(
-                "__iter__", f"def __iter__(self) -> typing.Iterator[{item_type}]\n"
-            )
+            obj = CFunctionStub("__iter__", f"def __iter__(self) -> typing.Iterator[{item_type}]\n")
             self.generate_function_stub("__iter__", obj, output=output, class_info=ctx.class_info)
 
     def generate_property_stub(
@@ -723,9 +703,7 @@ class InspectionStubGenerator(BaseStubGenerator):
             elif alt_docstr:
                 docstring = alt_docstr
 
-        ctx = FunctionContext(
-            self.module_name, name, docstring=docstring, is_abstract=False, class_info=class_info
-        )
+        ctx = FunctionContext(self.module_name, name, docstring=docstring, is_abstract=False, class_info=class_info)
 
         if self.is_private_name(name, ctx.fullname) or self.is_not_in_all(name):
             return
@@ -749,19 +727,13 @@ class InspectionStubGenerator(BaseStubGenerator):
             if inferred_type is None:
                 inferred_type = self.add_name("_typeshed.Incomplete")
 
-            static_properties.append(
-                f"{self._indent}{name}: {classvar}[{inferred_type}] = ...{trailing_comment}"
-            )
+            static_properties.append(f"{self._indent}{name}: {classvar}[{inferred_type}] = ...{trailing_comment}")
         else:  # regular property
             if readonly:
                 docstring = self._indent_docstring(ctx.docstring) if ctx.docstring else None
                 ro_properties.append(f"{self._indent}@property")
                 sig = FunctionSig(name, [ArgSig("self")], inferred_type, docstring=docstring)
-                ro_properties.append(
-                    sig.format_sig(
-                        indent=self._indent, include_docstrings=self._include_docstrings
-                    )
-                )
+                ro_properties.append(sig.format_sig(indent=self._indent, include_docstrings=self._include_docstrings))
             else:
                 if inferred_type is None:
                     inferred_type = self.add_name("_typeshed.Incomplete")
@@ -824,16 +796,12 @@ class InspectionStubGenerator(BaseStubGenerator):
         self.record_name(class_name)
         self.indent()
 
-        class_info = ClassInfo(
-            class_name, "", getattr(cls, "__doc__", None), cls, parent=parent_class
-        )
+        class_info = ClassInfo(class_name, "", getattr(cls, "__doc__", None), cls, parent=parent_class)
 
         for attr, value in items:
             # use unevaluated descriptors when dealing with property inspection
             raw_value = raw_lookup.get(attr, value)
-            if self.is_method(class_info, attr, value) or self.is_classmethod(
-                class_info, attr, value
-            ):
+            if self.is_method(class_info, attr, value) or self.is_classmethod(class_info, attr, value):
                 if attr == "__new__":
                     # TODO: We should support __new__.
                     if "__init__" in names:
@@ -936,9 +904,7 @@ def is_pybind_skipped_attribute(attr: str) -> bool:
     return attr.startswith("__pybind11_module_local_")
 
 
-def infer_c_method_args(
-    name: str, self_var: str = "self", arg_names: list[str] | None = None
-) -> list[ArgSig]:
+def infer_c_method_args(name: str, self_var: str = "self", arg_names: list[str] | None = None) -> list[ArgSig]:
     args: list[ArgSig] | None = None
     if name.startswith("__") and name.endswith("__"):
         name = name[2:-2]

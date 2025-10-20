@@ -318,9 +318,7 @@ class ExpandTypeVisitor(TrivialSyntheticTypeTranslator):
         if isinstance(repl, TupleType):
             return repl.items
         elif (
-            isinstance(repl, Instance)
-            and repl.type.fullname == "builtins.tuple"
-            or isinstance(repl, TypeVarTupleType)
+            isinstance(repl, Instance) and repl.type.fullname == "builtins.tuple" or isinstance(repl, TypeVarTupleType)
         ):
             return [UnpackType(typ=repl)]
         elif isinstance(repl, (AnyType, UninhabitedType)):
@@ -499,9 +497,7 @@ class ExpandTypeVisitor(TrivialSyntheticTypeTranslator):
         # After substituting for type variables in t.items, some resulting types
         # might be subtypes of others, however calling  make_simplified_union()
         # can cause recursion, so we just remove strict duplicates.
-        simplified = UnionType.make_union(
-            remove_trivial(flatten_nested_unions(expanded)), t.line, t.column
-        )
+        simplified = UnionType.make_union(remove_trivial(flatten_nested_unions(expanded)), t.line, t.column)
         # This call to get_proper_type() is unfortunate but is required to preserve
         # the invariant that ProperType will stay ProperType after applying expand_type(),
         # otherwise a single item union of a type alias will break it. Note this should not

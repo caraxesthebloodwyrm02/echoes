@@ -11,13 +11,9 @@ A reader for corpora that contain chunked (and optionally tagged)
 documents.
 """
 
-import codecs
-import os.path
 
-import nltk
 from nltk.chunk import tagstr2tree
 from nltk.corpus.reader.api import *
-from nltk.corpus.reader.bracket_parse import BracketParseCorpusReader
 from nltk.corpus.reader.util import *
 from nltk.tokenize import *
 from nltk.tree import Tree
@@ -62,10 +58,7 @@ class ChunkedCorpusReader(CorpusReader):
         :rtype: list(str)
         """
         return concat(
-            [
-                ChunkedCorpusView(f, enc, 0, 0, 0, 0, *self._cv_args)
-                for (f, enc) in self.abspaths(fileids, True)
-            ]
+            [ChunkedCorpusView(f, enc, 0, 0, 0, 0, *self._cv_args) for (f, enc) in self.abspaths(fileids, True)]
         )
 
     def sents(self, fileids=None):
@@ -76,10 +69,7 @@ class ChunkedCorpusReader(CorpusReader):
         :rtype: list(list(str))
         """
         return concat(
-            [
-                ChunkedCorpusView(f, enc, 0, 1, 0, 0, *self._cv_args)
-                for (f, enc) in self.abspaths(fileids, True)
-            ]
+            [ChunkedCorpusView(f, enc, 0, 1, 0, 0, *self._cv_args) for (f, enc) in self.abspaths(fileids, True)]
         )
 
     def paras(self, fileids=None):
@@ -90,10 +80,7 @@ class ChunkedCorpusReader(CorpusReader):
         :rtype: list(list(list(str)))
         """
         return concat(
-            [
-                ChunkedCorpusView(f, enc, 0, 1, 1, 0, *self._cv_args)
-                for (f, enc) in self.abspaths(fileids, True)
-            ]
+            [ChunkedCorpusView(f, enc, 0, 1, 1, 0, *self._cv_args) for (f, enc) in self.abspaths(fileids, True)]
         )
 
     def tagged_words(self, fileids=None, tagset=None):
@@ -105,9 +92,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 0, 0, 0, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 0, 0, 0, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )
@@ -121,9 +106,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 1, 0, 0, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 1, 0, 0, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )
@@ -137,9 +120,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 1, 1, 0, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 1, 1, 0, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )
@@ -155,9 +136,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 0, 0, 1, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 0, 0, 1, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )
@@ -173,9 +152,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 1, 0, 1, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 1, 0, 1, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )
@@ -191,9 +168,7 @@ class ChunkedCorpusReader(CorpusReader):
         """
         return concat(
             [
-                ChunkedCorpusView(
-                    f, enc, 1, 1, 1, 1, *self._cv_args, target_tagset=tagset
-                )
+                ChunkedCorpusView(f, enc, 1, 1, 1, 1, *self._cv_args, target_tagset=tagset)
                 for (f, enc) in self.abspaths(fileids, True)
             ]
         )

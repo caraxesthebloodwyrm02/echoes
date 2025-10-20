@@ -496,9 +496,7 @@ def f_regression(X, y, *, center=True, force_finite=True):
     >>> p_values
     array([0.276, 1.54e-283, 0.11])
     """
-    correlation_coefficient = r_regression(
-        X, y, center=center, force_finite=force_finite
-    )
+    correlation_coefficient = r_regression(X, y, center=center, force_finite=force_finite)
     deg_of_freedom = y.size - (2 if center else 1)
 
     corr_coef_squared = correlation_coefficient**2
@@ -560,9 +558,7 @@ class _BaseFilter(SelectorMixin, BaseEstimator):
         if y is None:
             X = validate_data(self, X, accept_sparse=["csr", "csc"])
         else:
-            X, y = validate_data(
-                self, X, y, accept_sparse=["csr", "csc"], multi_output=True
-            )
+            X, y = validate_data(self, X, y, accept_sparse=["csr", "csc"], multi_output=True)
 
         self._check_params(X, y)
         score_func_ret = self.score_func(X, y)
@@ -779,10 +775,7 @@ class SelectKBest(_BaseFilter):
 
     def _check_params(self, X, y):
         if not isinstance(self.k, str) and self.k > X.shape[1]:
-            warnings.warn(
-                f"k={self.k} is greater than n_features={X.shape[1]}. "
-                "All the features will be returned."
-            )
+            warnings.warn(f"k={self.k} is greater than n_features={X.shape[1]}. " "All the features will be returned.")
 
     def _get_support_mask(self):
         check_is_fitted(self)
@@ -969,9 +962,7 @@ class SelectFdr(_BaseFilter):
 
         n_features = len(self.pvalues_)
         sv = np.sort(self.pvalues_)
-        selected = sv[
-            sv <= float(self.alpha) / n_features * np.arange(1, n_features + 1)
-        ]
+        selected = sv[sv <= float(self.alpha) / n_features * np.arange(1, n_features + 1)]
         if selected.size == 0:
             return np.zeros_like(self.pvalues_, dtype=bool)
         return self.pvalues_ <= selected.max()

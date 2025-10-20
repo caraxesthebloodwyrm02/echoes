@@ -84,9 +84,7 @@ def extract_bullets_for_section(sections: Dict[str, List[str]], name: str) -> Li
     return []
 
 
-def compute_inspiration_vector(
-    gaps: List[str], breakthroughs: List[str]
-) -> Dict[str, float]:
+def compute_inspiration_vector(gaps: List[str], breakthroughs: List[str]) -> Dict[str, float]:
     """Compute an inspiration-vector using semantic embeddings for better matching.
 
     Scoring heuristic:
@@ -118,9 +116,7 @@ def summarize_plan(path: Path | str = DEFAULT_PLAN) -> Dict[str, object]:
     breakthroughs = extract_bullets_for_section(sections, "Recent Breakthroughs")
     # fallback: try alternate heading names
     if not breakthroughs:
-        breakthroughs = extract_bullets_for_section(
-            sections, "Recent Breakthroughs and Innovations"
-        )
+        breakthroughs = extract_bullets_for_section(sections, "Recent Breakthroughs and Innovations")
     vector = compute_inspiration_vector(gaps, breakthroughs)
     return {
         "gaps": gaps,
@@ -129,9 +125,7 @@ def summarize_plan(path: Path | str = DEFAULT_PLAN) -> Dict[str, object]:
     }
 
 
-def export_solar_summary_as_json(
-    parsed_data, inspiration_vectors, semantic_scores, output_file=None
-):
+def export_solar_summary_as_json(parsed_data, inspiration_vectors, semantic_scores, output_file=None):
     """
     Export solar summary as a JSON object.
 
@@ -195,9 +189,7 @@ if __name__ == "__main__":
         help="Semantic scores as JSON string",
     )
     export_parser.add_argument("--output_file", type=str, help="Output file path")
-    export_parser.add_argument(
-        "--add_field", type=str, help="Additional field as key:value"
-    )
+    export_parser.add_argument("--add_field", type=str, help="Additional field as key:value")
 
     args = parser.parse_args()
 
@@ -211,15 +203,9 @@ if __name__ == "__main__":
         # Add custom field if provided
         if args.add_field:
             key, value = args.add_field.split(":", 1)
-            parsed_data[key] = (
-                json.loads(value)
-                if value.startswith("[") or value.startswith("{")
-                else value
-            )
+            parsed_data[key] = json.loads(value) if value.startswith("[") or value.startswith("{") else value
 
-        result = export_solar_summary_as_json(
-            parsed_data, inspiration_vectors, semantic_scores, args.output_file
-        )
+        result = export_solar_summary_as_json(parsed_data, inspiration_vectors, semantic_scores, args.output_file)
         print(result)
     else:
         cli_print()

@@ -311,9 +311,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
         for iter_ in range(self.max_iter):
             # update posterior mean coef_ based on alpha_ and lambda_ and
             # compute corresponding sse (sum of squared errors)
-            coef_, sse_ = self._update_coef_(
-                X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_
-            )
+            coef_, sse_ = self._update_coef_(X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_)
             if self.compute_score:
                 # compute the log marginal likelihood
                 s = self._log_marginal_likelihood(
@@ -346,9 +344,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
         # log marginal likelihood and posterior covariance
         self.alpha_ = alpha_
         self.lambda_ = lambda_
-        self.coef_, sse_ = self._update_coef_(
-            X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_
-        )
+        self.coef_, sse_ = self._update_coef_(X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_)
         if self.compute_score:
             # compute the log marginal likelihood
             s = self._log_marginal_likelihood(
@@ -365,9 +361,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
             self.scores_ = np.array(self.scores_)
 
         # posterior covariance
-        self.sigma_ = np.dot(
-            Vh_full.T, Vh_full / (alpha_ * eigen_vals_full + lambda_)[:, np.newaxis]
-        )
+        self.sigma_ = np.dot(Vh_full.T, Vh_full / (alpha_ * eigen_vals_full + lambda_)[:, np.newaxis])
 
         self._set_intercept(X_offset_, y_offset_, X_scale_)
 
@@ -403,9 +397,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
             y_std = np.sqrt(sigmas_squared_data + (1.0 / self.alpha_))
             return y_mean, y_std
 
-    def _update_coef_(
-        self, X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_
-    ):
+    def _update_coef_(self, X, y, n_samples, n_features, XT_y, U, Vh, eigen_vals_, alpha_, lambda_):
         """Update posterior mean and compute corresponding sse (sum of squared errors).
 
         Posterior mean is given by coef_ = scaled_sigma_ * X.T * y where
@@ -414,13 +406,9 @@ class BayesianRidge(RegressorMixin, LinearModel):
         """
 
         if n_samples > n_features:
-            coef_ = np.linalg.multi_dot(
-                [Vh.T, Vh / (eigen_vals_ + lambda_ / alpha_)[:, np.newaxis], XT_y]
-            )
+            coef_ = np.linalg.multi_dot([Vh.T, Vh / (eigen_vals_ + lambda_ / alpha_)[:, np.newaxis], XT_y])
         else:
-            coef_ = np.linalg.multi_dot(
-                [X.T, U / (eigen_vals_ + lambda_ / alpha_)[None, :], U.T, y]
-            )
+            coef_ = np.linalg.multi_dot([X.T, U / (eigen_vals_ + lambda_ / alpha_)[None, :], U.T, y])
 
         # Note: we do not need to explicitly use the weights in this sum because
         # y and X were preprocessed by _rescale_data to handle the weights.
@@ -428,9 +416,7 @@ class BayesianRidge(RegressorMixin, LinearModel):
 
         return coef_, sse_
 
-    def _log_marginal_likelihood(
-        self, n_samples, n_features, sw_sum, eigen_vals, alpha_, lambda_, coef, sse
-    ):
+    def _log_marginal_likelihood(self, n_samples, n_features, sw_sum, eigen_vals, alpha_, lambda_, coef, sse):
         """Log marginal likelihood."""
         alpha_1 = self.alpha_1
         alpha_2 = self.alpha_2
@@ -699,16 +685,10 @@ class ARDRegression(RegressorMixin, LinearModel):
         coef_old_ = None
 
         def update_coeff(X, y, coef_, alpha_, keep_lambda, sigma_):
-            coef_[keep_lambda] = alpha_ * np.linalg.multi_dot(
-                [sigma_, X[:, keep_lambda].T, y]
-            )
+            coef_[keep_lambda] = alpha_ * np.linalg.multi_dot([sigma_, X[:, keep_lambda].T, y])
             return coef_
 
-        update_sigma = (
-            self._update_sigma
-            if n_samples >= n_features
-            else self._update_sigma_woodbury
-        )
+        update_sigma = self._update_sigma if n_samples >= n_features else self._update_sigma_woodbury
         # Iterative procedure of ARDRegression
         for iter_ in range(self.max_iter):
             sigma_ = update_sigma(X, alpha_, lambda_, keep_lambda)
@@ -717,9 +697,7 @@ class ARDRegression(RegressorMixin, LinearModel):
             # Update alpha and lambda
             sse_ = np.sum((y - np.dot(X, coef_)) ** 2)
             gamma_ = 1.0 - lambda_[keep_lambda] * np.diag(sigma_)
-            lambda_[keep_lambda] = (gamma_ + 2.0 * lambda_1) / (
-                (coef_[keep_lambda]) ** 2 + 2.0 * lambda_2
-            )
+            lambda_[keep_lambda] = (gamma_ + 2.0 * lambda_1) / ((coef_[keep_lambda]) ** 2 + 2.0 * lambda_2)
             alpha_ = (n_samples - gamma_.sum() + 2.0 * alpha_1) / (sse_ + 2.0 * alpha_2)
 
             # Prune the weights with a precision over a threshold
@@ -730,11 +708,7 @@ class ARDRegression(RegressorMixin, LinearModel):
             if self.compute_score:
                 s = (lambda_1 * np.log(lambda_) - lambda_2 * lambda_).sum()
                 s += alpha_1 * log(alpha_) - alpha_2 * alpha_
-                s += 0.5 * (
-                    fast_logdet(sigma_)
-                    + n_samples * log(alpha_)
-                    + np.sum(np.log(lambda_))
-                )
+                s += 0.5 * (fast_logdet(sigma_) + n_samples * log(alpha_) + np.sum(np.log(lambda_)))
                 s -= 0.5 * (alpha_ * sse_ + (lambda_ * coef_**2).sum())
                 self.scores_.append(s)
 
@@ -773,10 +747,7 @@ class ARDRegression(RegressorMixin, LinearModel):
         n_samples = X.shape[0]
         X_keep = X[:, keep_lambda]
         inv_lambda = 1 / lambda_[keep_lambda].reshape(1, -1)
-        sigma_ = pinvh(
-            np.eye(n_samples, dtype=X.dtype) / alpha_
-            + np.dot(X_keep * inv_lambda, X_keep.T)
-        )
+        sigma_ = pinvh(np.eye(n_samples, dtype=X.dtype) / alpha_ + np.dot(X_keep * inv_lambda, X_keep.T))
         sigma_ = np.dot(sigma_, X_keep * inv_lambda)
         sigma_ = -np.dot(inv_lambda.reshape(-1, 1) * X_keep.T, sigma_)
         sigma_[np.diag_indices(sigma_.shape[1])] += 1.0 / lambda_[keep_lambda]

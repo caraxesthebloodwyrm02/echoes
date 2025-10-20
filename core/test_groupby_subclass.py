@@ -11,9 +11,7 @@ from pandas import (
 import pandas._testing as tm
 from pandas.tests.groupby import get_groupby_method_args
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning")
 
 
 @pytest.mark.parametrize(

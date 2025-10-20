@@ -33,7 +33,7 @@ if TYPE_CHECKING:
 
 def _tobool(val: str) -> bool:
     if isinstance(val, str):
-        return val.lower() in {'true', '1', 'yes', 'on'}
+        return val.lower() in {"true", "1", "yes", "on"}
     return bool(val)
 
 
@@ -55,15 +55,13 @@ def _todim(val: int | str) -> str:
     Everything else is returned unchanged.
     """
     if val is None:
-        return 'initial'
+        return "initial"
     elif str(val).isdigit():
-        return '0' if int(val) == 0 else '%spx' % val
+        return "0" if int(val) == 0 else "%spx" % val
     return val  # type: ignore[return-value]
 
 
-def _slice_index(
-    values: _RealIndexEntries, slices: int
-) -> Iterator[list[_RealIndexEntry]]:
+def _slice_index(values: _RealIndexEntries, slices: int) -> Iterator[list[_RealIndexEntry]]:
     seq = values.copy()
     length = 0
     for value in values:
@@ -86,12 +84,12 @@ def _slice_index(
 
 def accesskey(context: Any, key: str) -> str:
     """Helper to output each access key only once."""
-    if '_accesskeys' not in context:
-        context.vars['_accesskeys'] = {}
-    if key and key not in context.vars['_accesskeys']:
-        context.vars['_accesskeys'][key] = 1
+    if "_accesskeys" not in context:
+        context.vars["_accesskeys"] = {}
+    if key and key not in context.vars["_accesskeys"]:
+        context.vars["_accesskeys"][key] = 1
         return 'accesskey="%s"' % key
-    return ''
+    return ""
 
 
 class idgen:
@@ -110,12 +108,12 @@ class idgen:
 
 @pass_context
 def warning(context: dict[str, Any], message: str, *args: Any, **kwargs: Any) -> str:
-    if 'pagename' in context:
-        filename = context.get('pagename') + context.get('file_suffix', '')
-        message = f'in rendering {filename}: {message}'
-    logger = logging.getLogger('sphinx.themes')
+    if "pagename" in context:
+        filename = context.get("pagename") + context.get("file_suffix", "")
+        message = f"in rendering {filename}: {message}"
+    logger = logging.getLogger("sphinx.themes")
     logger.warning(message, *args, **kwargs)
-    return ''  # return empty string not to output any values
+    return ""  # return empty string not to output any values
 
 
 class SphinxFileSystemLoader(FileSystemLoader):
@@ -123,12 +121,10 @@ class SphinxFileSystemLoader(FileSystemLoader):
     template names.
     """
 
-    def get_source(
-        self, environment: Environment, template: str
-    ) -> tuple[str, str, Callable[[], bool]]:
-        if template.endswith('.jinja'):
-            legacy_suffix = '_t'
-            legacy_template = template.removesuffix('.jinja') + legacy_suffix
+    def get_source(self, environment: Environment, template: str) -> tuple[str, str, Callable[[], bool]]:
+        if template.endswith(".jinja"):
+            legacy_suffix = "_t"
+            legacy_template = template.removesuffix(".jinja") + legacy_suffix
         else:
             legacy_template = None
 
@@ -186,9 +182,7 @@ class BuiltinTemplateLoader(TemplateBridge, BaseLoader):
         # prepend explicit template paths
         self.templatepathlen = len(builder.config.templates_path)
         if builder.config.templates_path:
-            cfg_templates_path = [
-                builder.confdir / tp for tp in builder.config.templates_path
-            ]
+            cfg_templates_path = [builder.confdir / tp for tp in builder.config.templates_path]
             pathchain[0:0] = cfg_templates_path
             loaderchain[0:0] = cfg_templates_path
 
@@ -199,16 +193,16 @@ class BuiltinTemplateLoader(TemplateBridge, BaseLoader):
         self.loaders = [SphinxFileSystemLoader(x) for x in loaderchain]
 
         use_i18n = builder._translator is not None
-        extensions = ['jinja2.ext.i18n'] if use_i18n else []
+        extensions = ["jinja2.ext.i18n"] if use_i18n else []
         self.environment = SandboxedEnvironment(loader=self, extensions=extensions)
-        self.environment.filters['tobool'] = _tobool
-        self.environment.filters['toint'] = _toint
-        self.environment.filters['todim'] = _todim
-        self.environment.filters['slice_index'] = _slice_index
-        self.environment.globals['debug'] = pass_context(pformat)
-        self.environment.globals['warning'] = warning
-        self.environment.globals['accesskey'] = pass_context(accesskey)
-        self.environment.globals['idgen'] = idgen
+        self.environment.filters["tobool"] = _tobool
+        self.environment.filters["toint"] = _toint
+        self.environment.filters["todim"] = _todim
+        self.environment.filters["slice_index"] = _slice_index
+        self.environment.globals["debug"] = pass_context(pformat)
+        self.environment.globals["warning"] = warning
+        self.environment.globals["accesskey"] = pass_context(accesskey)
+        self.environment.globals["idgen"] = idgen
         if use_i18n:
             # ``install_gettext_translations`` is injected by the ``jinja2.ext.i18n`` extension
             self.environment.install_gettext_translations(builder._translator)  # type: ignore[attr-defined]
@@ -231,17 +225,15 @@ class BuiltinTemplateLoader(TemplateBridge, BaseLoader):
             for dirname in self.pathchain
             for root, _dirs, files in os.walk(dirname)
             for sfile in files
-            if sfile.endswith('.html')
+            if sfile.endswith(".html")
         )
 
     # Loader interface
 
-    def get_source(
-        self, environment: Environment, template: str
-    ) -> tuple[str, str, Callable[[], bool]]:
+    def get_source(self, environment: Environment, template: str) -> tuple[str, str, Callable[[], bool]]:
         loaders = self.loaders
         # exclamation mark starts search from theme
-        if template.startswith('!'):
+        if template.startswith("!"):
             loaders = loaders[self.templatepathlen :]
             template = template[1:]
         for loader in loaders:
@@ -249,5 +241,5 @@ class BuiltinTemplateLoader(TemplateBridge, BaseLoader):
                 return loader.get_source(environment, template)
             except TemplateNotFound:
                 pass
-        msg = f'{template!r} not found in {self.environment.loader.pathchain}'  # type: ignore[union-attr]
+        msg = f"{template!r} not found in {self.environment.loader.pathchain}"  # type: ignore[union-attr]
         raise TemplateNotFound(msg)

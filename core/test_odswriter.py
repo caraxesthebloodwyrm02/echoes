@@ -39,9 +39,7 @@ def test_engine_kwargs(ext, engine_kwargs):
     # test for error: OpenDocumentSpreadsheet does not accept any arguments
     with tm.ensure_clean(ext) as f:
         if engine_kwargs is not None:
-            error = re.escape(
-                "OpenDocumentSpreadsheet() got an unexpected keyword argument 'kwarg'"
-            )
+            error = re.escape("OpenDocumentSpreadsheet() got an unexpected keyword argument 'kwarg'")
             with pytest.raises(
                 TypeError,
                 match=error,
@@ -95,11 +93,7 @@ def test_cell_value_type(ext, value, cell_value_type, cell_value_attribute, cell
         with pd.ExcelFile(f) as wb:
             sheet = wb._reader.get_sheet_by_index(0)
             sheet_rows = sheet.getElementsByType(TableRow)
-            sheet_cells = [
-                x
-                for x in sheet_rows[0].childNodes
-                if hasattr(x, "qname") and x.qname == table_cell_name
-            ]
+            sheet_cells = [x for x in sheet_rows[0].childNodes if hasattr(x, "qname") and x.qname == table_cell_name]
 
             cell = sheet_cells[0]
             assert cell.attributes.get((OFFICENS, "value-type")) == cell_value_type

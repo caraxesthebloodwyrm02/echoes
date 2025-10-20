@@ -61,22 +61,20 @@ logger = logging.getLogger(__name__)
 
 
 class CatalogInfo:
-    __slots__ = 'base_dir', 'domain', 'charset'
+    __slots__ = "base_dir", "domain", "charset"
 
-    def __init__(
-        self, base_dir: str | os.PathLike[str], domain: str, charset: str
-    ) -> None:
+    def __init__(self, base_dir: str | os.PathLike[str], domain: str, charset: str) -> None:
         self.base_dir = _StrPath(base_dir)
         self.domain = domain
         self.charset = charset
 
     @property
     def po_file(self) -> str:
-        return f'{self.domain}.po'
+        return f"{self.domain}.po"
 
     @property
     def mo_file(self) -> str:
-        return f'{self.domain}.mo'
+        return f"{self.domain}.mo"
 
     @property
     def po_path(self) -> _StrPath:
@@ -87,9 +85,7 @@ class CatalogInfo:
         return self.base_dir / self.mo_file
 
     def is_outdated(self) -> bool:
-        return not self.mo_path.exists() or (
-            _last_modified_time(self.mo_path) < _last_modified_time(self.po_path)
-        )
+        return not self.mo_path.exists() or (_last_modified_time(self.mo_path) < _last_modified_time(self.po_path))
 
     def write_mo(self, locale: str, use_fuzzy: bool = False) -> None:
         with open(self.po_path, encoding=self.charset) as file_po:
@@ -97,24 +93,24 @@ class CatalogInfo:
                 po = read_po(file_po, locale)
             except Exception as exc:
                 logger.warning(
-                    __('reading error: %s, %s'),
+                    __("reading error: %s, %s"),
                     self.po_path,
                     exc,
-                    type='i18n',
-                    subtype='not_readable',
+                    type="i18n",
+                    subtype="not_readable",
                 )
                 return
 
-        with open(self.mo_path, 'wb') as file_mo:
+        with open(self.mo_path, "wb") as file_mo:
             try:
                 write_mo(file_mo, po, use_fuzzy)
             except Exception as exc:
                 logger.warning(
-                    __('writing error: %s, %s'),
+                    __("writing error: %s, %s"),
                     self.mo_path,
                     exc,
-                    type='i18n',
-                    subtype='not_writeable',
+                    type="i18n",
+                    subtype="not_writeable",
                 )
 
 
@@ -139,27 +135,27 @@ class CatalogRepository:
             return
 
         for locale_dir in self._locale_dirs:
-            locale_path = self.basedir / locale_dir / self.language / 'LC_MESSAGES'
+            locale_path = self.basedir / locale_dir / self.language / "LC_MESSAGES"
             if locale_path.exists():
                 yield self.basedir / locale_dir
             else:
-                logger.verbose(__('locale_dir %s does not exist'), locale_path)
+                logger.verbose(__("locale_dir %s does not exist"), locale_path)
 
     @property
     def pofiles(self) -> Iterator[tuple[_StrPath, _StrPath]]:
         for locale_dir in self.locale_dirs:
-            locale_path = locale_dir / self.language / 'LC_MESSAGES'
-            for abs_path in locale_path.rglob('*.po'):
+            locale_path = locale_dir / self.language / "LC_MESSAGES"
+            for abs_path in locale_path.rglob("*.po"):
                 rel_path = abs_path.relative_to(locale_path)
                 # skip dot-directories
-                if any(part.startswith('.') for part in rel_path.parts[:-1]):
+                if any(part.startswith(".") for part in rel_path.parts[:-1]):
                     continue
                 yield locale_path, rel_path
 
     @property
     def catalogs(self) -> Iterator[CatalogInfo]:
         for basedir, filename in self.pofiles:
-            domain = filename.with_suffix('').as_posix()
+            domain = filename.with_suffix("").as_posix()
             yield CatalogInfo(basedir, domain, self.encoding)
 
 
@@ -214,7 +210,7 @@ date_format_mappings = {
     '%%':  '%',
 }  # fmt: skip
 
-date_format_re = re.compile('(%s)' % '|'.join(date_format_mappings))
+date_format_re = re.compile("(%s)" % "|".join(date_format_mappings))
 
 
 def babel_format_date(
@@ -225,7 +221,7 @@ def babel_format_date(
 ) -> str:
     # Check if we have the tzinfo attribute. If not we cannot do any time
     # related formats.
-    if not hasattr(date, 'tzinfo'):
+    if not hasattr(date, "tzinfo"):
         formatter = babel.dates.format_date
 
     try:
@@ -233,21 +229,18 @@ def babel_format_date(
     except (ValueError, babel.core.UnknownLocaleError):
         # fallback to English
         logger.warning(
-            __('Invalid Babel locale: %r.'),
+            __("Invalid Babel locale: %r."),
             locale,
-            type='i18n',
-            subtype='babel',
+            type="i18n",
+            subtype="babel",
         )
-        return formatter(date, format, locale='en')
+        return formatter(date, format, locale="en")
     except AttributeError:
         logger.warning(
-            __(
-                'Invalid date format. Quote the string by single quote '
-                'if you want to output it directly: %s'
-            ),
+            __("Invalid date format. Quote the string by single quote " "if you want to output it directly: %s"),
             format,
-            type='i18n',
-            subtype='babel',
+            type="i18n",
+            subtype="babel",
         )
         return format
 
@@ -262,7 +255,7 @@ def format_date(
     if date is None:
         # If time is not specified, try to use $SOURCE_DATE_EPOCH variable
         # See https://wiki.debian.org/ReproducibleBuilds/TimestampsProposal
-        source_date_epoch = os.getenv('SOURCE_DATE_EPOCH')
+        source_date_epoch = os.getenv("SOURCE_DATE_EPOCH")
         if source_date_epoch is not None:
             date = datetime.fromtimestamp(float(source_date_epoch), tz=UTC)
             # If SOURCE_DATE_EPOCH is set, users likely want a reproducible result,
@@ -281,28 +274,24 @@ def format_date(
     tokens = date_format_re.split(format)
     for token in tokens:
         if token in date_format_mappings:
-            babel_format = date_format_mappings.get(token, '')
+            babel_format = date_format_mappings.get(token, "")
 
             # Check if we have to use a different babel formatter then
             # format_datetime, because we only want to format a date
             # or a time.
             function: Formatter
-            if token == '%x':
+            if token == "%x":
                 function = babel.dates.format_date
-            elif token == '%X':
+            elif token == "%X":
                 function = babel.dates.format_time
             else:
                 function = babel.dates.format_datetime
 
-            result.append(
-                babel_format_date(
-                    date, babel_format, locale=language, formatter=function
-                )
-            )
+            result.append(babel_format_date(date, babel_format, locale=language, formatter=function))
         else:
             result.append(token)
 
-    return ''.join(result)
+    return "".join(result)
 
 
 def get_image_filename_for_language(
@@ -322,7 +311,7 @@ def get_image_filename_for_language(
             language=env.config.language,
         )
     except KeyError as exc:
-        msg = f'Invalid figure_language_filename: {exc!r}'
+        msg = f"Invalid figure_language_filename: {exc!r}"
         raise SphinxError(msg) from exc
 
 

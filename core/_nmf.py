@@ -69,13 +69,11 @@ def _check_init(A, shape, whom):
     A = check_array(A)
     if shape[0] != "auto" and A.shape[0] != shape[0]:
         raise ValueError(
-            f"Array with wrong first dimension passed to {whom}. Expected {shape[0]}, "
-            f"but got {A.shape[0]}."
+            f"Array with wrong first dimension passed to {whom}. Expected {shape[0]}, " f"but got {A.shape[0]}."
         )
     if shape[1] != "auto" and A.shape[1] != shape[1]:
         raise ValueError(
-            f"Array with wrong second dimension passed to {whom}. Expected {shape[1]}, "
-            f"but got {A.shape[1]}."
+            f"Array with wrong second dimension passed to {whom}. Expected {shape[1]}, " f"but got {A.shape[1]}."
         )
     check_non_negative(A, whom)
     if np.max(A) == 0:
@@ -200,9 +198,7 @@ def _special_sparse_dot(W, H, X):
         batch_size = max(n_components, n_vals // n_components)
         for start in range(0, n_vals, batch_size):
             batch = slice(start, start + batch_size)
-            dot_vals[batch] = np.multiply(W[ii[batch], :], H.T[jj[batch], :]).sum(
-                axis=1
-            )
+            dot_vals[batch] = np.multiply(W[ii[batch], :], H.T[jj[batch], :]).sum(axis=1)
 
         WH = sp.coo_matrix((dot_vals, (ii, jj)), shape=X.shape)
         return WH.tocsr()
@@ -283,15 +279,8 @@ def _initialize_nmf(X, n_components, init=None, eps=1e-6, random_state=None):
     check_non_negative(X, "NMF initialization")
     n_samples, n_features = X.shape
 
-    if (
-        init is not None
-        and init != "random"
-        and n_components > min(n_samples, n_features)
-    ):
-        raise ValueError(
-            "init = '{}' can only be used when "
-            "n_components <= min(n_samples, n_features)".format(init)
-        )
+    if init is not None and init != "random" and n_components > min(n_samples, n_features):
+        raise ValueError("init = '{}' can only be used when " "n_components <= min(n_samples, n_features)".format(init))
 
     if init is None:
         if n_components <= min(n_samples, n_features):
@@ -303,12 +292,8 @@ def _initialize_nmf(X, n_components, init=None, eps=1e-6, random_state=None):
     if init == "random":
         avg = np.sqrt(X.mean() / n_components)
         rng = check_random_state(random_state)
-        H = avg * rng.standard_normal(size=(n_components, n_features)).astype(
-            X.dtype, copy=False
-        )
-        W = avg * rng.standard_normal(size=(n_samples, n_components)).astype(
-            X.dtype, copy=False
-        )
+        H = avg * rng.standard_normal(size=(n_components, n_features)).astype(X.dtype, copy=False)
+        W = avg * rng.standard_normal(size=(n_samples, n_components)).astype(X.dtype, copy=False)
         np.abs(H, out=H)
         np.abs(W, out=W)
         return W, H
@@ -497,14 +482,10 @@ def _fit_coordinate_descent(
         violation = 0.0
 
         # Update W
-        violation += _update_coordinate_descent(
-            X, W, Ht, l1_reg_W, l2_reg_W, shuffle, rng
-        )
+        violation += _update_coordinate_descent(X, W, Ht, l1_reg_W, l2_reg_W, shuffle, rng)
         # Update H
         if update_H:
-            violation += _update_coordinate_descent(
-                X.T, Ht, W, l1_reg_H, l2_reg_H, shuffle, rng
-            )
+            violation += _update_coordinate_descent(X.T, Ht, W, l1_reg_H, l2_reg_H, shuffle, rng)
 
         if n_iter == 1:
             violation_init = violation
@@ -631,9 +612,7 @@ def _multiplicative_update_w(
     return W, H_sum, HHt, XHt
 
 
-def _multiplicative_update_h(
-    X, W, H, beta_loss, l1_reg_H, l2_reg_H, gamma, A=None, B=None, rho=None
-):
+def _multiplicative_update_h(X, W, H, beta_loss, l1_reg_H, l2_reg_H, gamma, A=None, B=None, rho=None):
     """update H in Multiplicative Update NMF."""
     if beta_loss == 2:
         numerator = safe_sparse_dot(W.T, X)
@@ -874,10 +853,7 @@ def _fit_multiplicative_update(
 
             if verbose:
                 iter_time = time.time()
-                print(
-                    "Epoch %02d reached after %.3f seconds, error: %f"
-                    % (n_iter, iter_time - start_time, error)
-                )
+                print("Epoch %02d reached after %.3f seconds, error: %f" % (n_iter, iter_time - start_time, error))
 
             if (previous_error - error) / error_at_init < tol:
                 break
@@ -886,9 +862,7 @@ def _fit_multiplicative_update(
     # do not print if we have already printed in the convergence test
     if verbose and (tol == 0 or n_iter % 10 != 0):
         end_time = time.time()
-        print(
-            "Epoch %02d reached after %.3f seconds." % (n_iter, end_time - start_time)
-        )
+        print("Epoch %02d reached after %.3f seconds." % (n_iter, end_time - start_time))
 
     return W, H, n_iter
 
@@ -1219,11 +1193,7 @@ class _BaseNMF(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator,
                 self._n_components = H.shape[0]
 
             if H.dtype != X.dtype:
-                raise TypeError(
-                    "H should have the same dtype as X. Got H.dtype = {}.".format(
-                        H.dtype
-                    )
-                )
+                raise TypeError("H should have the same dtype as X. Got H.dtype = {}.".format(H.dtype))
 
             # 'mu' solver should not be initialized by zeros
             if self.solver == "mu":
@@ -1245,9 +1215,7 @@ class _BaseNMF(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator,
             if self._n_components == "auto":
                 self._n_components = X.shape[1]
 
-            W, H = _initialize_nmf(
-                X, self._n_components, init=self.init, random_state=self.random_state
-            )
+            W, H = _initialize_nmf(X, self._n_components, init=self.init, random_state=self.random_state)
 
         return W, H
 
@@ -1618,16 +1586,12 @@ class NMF(_BaseNMF):
         W : ndarray of shape (n_samples, n_components)
             Transformed data.
         """
-        X = validate_data(
-            self, X, accept_sparse=("csr", "csc"), dtype=[np.float64, np.float32]
-        )
+        X = validate_data(self, X, accept_sparse=("csr", "csc"), dtype=[np.float64, np.float32])
 
         with config_context(assume_finite=True):
             W, H, n_iter = self._fit_transform(X, W=W, H=H)
 
-        self.reconstruction_err_ = _beta_divergence(
-            X, W, H, self._beta_loss, square_root=True
-        )
+        self.reconstruction_err_ = _beta_divergence(X, W, H, self._beta_loss, square_root=True)
 
         self.n_components_ = H.shape[0]
         self.components_ = H
@@ -1726,8 +1690,7 @@ class NMF(_BaseNMF):
 
         if n_iter == self.max_iter and self.tol > 0:
             warnings.warn(
-                "Maximum number of iterations %d reached. Increase "
-                "it to improve convergence." % self.max_iter,
+                "Maximum number of iterations %d reached. Increase " "it to improve convergence." % self.max_iter,
                 ConvergenceWarning,
             )
 
@@ -2035,11 +1998,7 @@ class MiniBatchNMF(_BaseNMF):
             self._gamma = 1.0
 
         # transform_max_iter
-        self._transform_max_iter = (
-            self.max_iter
-            if self.transform_max_iter is None
-            else self.transform_max_iter
-        )
+        self._transform_max_iter = self.max_iter if self.transform_max_iter is None else self.transform_max_iter
 
         return self
 
@@ -2058,9 +2017,7 @@ class MiniBatchNMF(_BaseNMF):
         l1_reg_W, _, l2_reg_W, _ = self._compute_regularization(X)
 
         for _ in range(max_iter):
-            W, *_ = _multiplicative_update_w(
-                X, W, H, self._beta_loss, l1_reg_W, l2_reg_W, self._gamma
-            )
+            W, *_ = _multiplicative_update_w(X, W, H, self._beta_loss, l1_reg_W, l2_reg_W, self._gamma)
 
             W_diff = linalg.norm(W - W_buffer) / linalg.norm(W)
             if self.tol > 0 and W_diff <= self.tol:
@@ -2082,9 +2039,7 @@ class MiniBatchNMF(_BaseNMF):
         if self.fresh_restarts or W is None:
             W = self._solve_W(X, H, self.fresh_restarts_max_iter)
         else:
-            W, *_ = _multiplicative_update_w(
-                X, W, H, self._beta_loss, l1_reg_W, l2_reg_W, self._gamma
-            )
+            W, *_ = _multiplicative_update_w(X, W, H, self._beta_loss, l1_reg_W, l2_reg_W, self._gamma)
 
         # necessary for stability with beta_loss < 1
         if self._beta_loss < 1:
@@ -2119,9 +2074,7 @@ class MiniBatchNMF(_BaseNMF):
 
         return batch_cost
 
-    def _minibatch_convergence(
-        self, X, batch_cost, H, H_buffer, n_samples, step, n_steps
-    ):
+    def _minibatch_convergence(self, X, batch_cost, H, H_buffer, n_samples, step, n_steps):
         """Helper function to encapsulate the early stopping logic"""
         batch_size = X.shape[0]
 
@@ -2146,10 +2099,7 @@ class MiniBatchNMF(_BaseNMF):
 
         # Log progress to be able to monitor convergence
         if self.verbose:
-            print(
-                f"Minibatch step {step}/{n_steps}: mean batch cost: "
-                f"{batch_cost}, ewa cost: {self._ewa_cost}"
-            )
+            print(f"Minibatch step {step}/{n_steps}: mean batch cost: " f"{batch_cost}, ewa cost: {self._ewa_cost}")
 
         # Early stopping based on change of H
         H_diff = linalg.norm(H - H_buffer) / linalg.norm(H)
@@ -2166,15 +2116,9 @@ class MiniBatchNMF(_BaseNMF):
         else:
             self._no_improvement += 1
 
-        if (
-            self.max_no_improvement is not None
-            and self._no_improvement >= self.max_no_improvement
-        ):
+        if self.max_no_improvement is not None and self._no_improvement >= self.max_no_improvement:
             if self.verbose:
-                print(
-                    "Converged (lack of improvement in objective function) "
-                    f"at step {step}/{n_steps}"
-                )
+                print("Converged (lack of improvement in objective function) " f"at step {step}/{n_steps}")
             return True
 
         return False
@@ -2206,16 +2150,12 @@ class MiniBatchNMF(_BaseNMF):
         W : ndarray of shape (n_samples, n_components)
             Transformed data.
         """
-        X = validate_data(
-            self, X, accept_sparse=("csr", "csc"), dtype=[np.float64, np.float32]
-        )
+        X = validate_data(self, X, accept_sparse=("csr", "csc"), dtype=[np.float64, np.float32])
 
         with config_context(assume_finite=True):
             W, H, n_iter, n_steps = self._fit_transform(X, W=W, H=H)
 
-        self.reconstruction_err_ = _beta_divergence(
-            X, W, H, self._beta_loss, square_root=True
-        )
+        self.reconstruction_err_ = _beta_divergence(X, W, H, self._beta_loss, square_root=True)
 
         self.n_components_ = H.shape[0]
         self.components_ = H
@@ -2297,9 +2237,7 @@ class MiniBatchNMF(_BaseNMF):
         for i, batch in zip(range(n_steps), batches):
             batch_cost = self._minibatch_step(X[batch], W[batch], H, update_H)
 
-            if update_H and self._minibatch_convergence(
-                X[batch], batch_cost, H, H_buffer, n_samples, i, n_steps
-            ):
+            if update_H and self._minibatch_convergence(X[batch], batch_cost, H, H_buffer, n_samples, i, n_steps):
                 break
 
             H_buffer[:] = H
@@ -2312,10 +2250,7 @@ class MiniBatchNMF(_BaseNMF):
 
         if n_iter == self.max_iter and self.tol > 0:
             warnings.warn(
-                (
-                    f"Maximum number of iterations {self.max_iter} reached. "
-                    "Increase it to improve convergence."
-                ),
+                (f"Maximum number of iterations {self.max_iter} reached. " "Increase it to improve convergence."),
                 ConvergenceWarning,
             )
 

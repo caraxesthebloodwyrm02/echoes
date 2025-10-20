@@ -20,9 +20,7 @@ class table_T_S_I__1(LogMixin, DefaultTable.DefaultTable):
     def decompile(self, data, ttFont):
         totalLength = len(data)
         indextable = ttFont[self.indextable]
-        for indices, isExtra in zip(
-            (indextable.indices, indextable.extra_indices), (False, True)
-        ):
+        for indices, isExtra in zip((indextable.indices, indextable.extra_indices), (False, True)):
             programs = {}
             for i, (glyphID, textLength, textOffset) in enumerate(indices):
                 if isExtra:
@@ -61,17 +59,13 @@ class table_T_S_I__1(LogMixin, DefaultTable.DefaultTable):
                         nextTextOffset = indices[i + 1][2]
                     assert nextTextOffset >= textOffset, "entries not sorted by offset"
                     if nextTextOffset > totalLength:
-                        self.log.warning(
-                            "nextTextOffset > totalLength; %r truncated" % name
-                        )
+                        self.log.warning("nextTextOffset > totalLength; %r truncated" % name)
                         nextTextOffset = totalLength
                     textLength = nextTextOffset - textOffset
                 else:
                     from fontTools import ttLib
 
-                    raise ttLib.TTLibError(
-                        "%r textLength (%d) must not be > 32768" % (name, textLength)
-                    )
+                    raise ttLib.TTLibError("%r textLength (%d) must not be > 32768" % (name, textLength))
                 text = data[textOffset : textOffset + textLength]
                 assert len(text) == textLength
                 text = tostr(text, encoding="utf-8")
@@ -93,9 +87,7 @@ class table_T_S_I__1(LogMixin, DefaultTable.DefaultTable):
         indices = []
         for i, name in enumerate(glyphNames):
             if len(data) % 2:
-                data = (
-                    data + b"\015"
-                )  # align on 2-byte boundaries, fill with return chars. Yum.
+                data = data + b"\015"  # align on 2-byte boundaries, fill with return chars. Yum.
             if name in self.glyphPrograms:
                 text = tobytes(self.glyphPrograms[name], encoding="utf-8")
             else:
@@ -109,9 +101,7 @@ class table_T_S_I__1(LogMixin, DefaultTable.DefaultTable):
         extra_indices = []
         for code, name in sorted(self.extras.items()):
             if len(data) % 2:
-                data = (
-                    data + b"\015"
-                )  # align on 2-byte boundaries, fill with return chars.
+                data = data + b"\015"  # align on 2-byte boundaries, fill with return chars.
             if name in self.extraPrograms:
                 text = tobytes(self.extraPrograms[name], encoding="utf-8")
             else:

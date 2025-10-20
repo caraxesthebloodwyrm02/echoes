@@ -95,16 +95,11 @@ class SemcorCorpusReader(XMLCorpusReader):
         if unit == "word" and not bracket_sent:
             # the result of the SemcorWordView may be a multiword unit, so the
             # LazyConcatenation will make sure the sentence is flattened
-            _ = lambda *args: LazyConcatenation(
-                (SemcorWordView if self._lazy else self._words)(*args)
-            )
+            _ = lambda *args: LazyConcatenation((SemcorWordView if self._lazy else self._words)(*args))
         else:
             _ = SemcorWordView if self._lazy else self._words
         return concat(
-            [
-                _(fileid, unit, bracket_sent, pos_tag, sem_tag, self._wordnet)
-                for fileid in self.abspaths(fileids)
-            ]
+            [_(fileid, unit, bracket_sent, pos_tag, sem_tag, self._wordnet) for fileid in self.abspaths(fileids)]
         )
 
     def _words(self, fileid, unit, bracket_sent, pos_tag, sem_tag):
@@ -128,9 +123,7 @@ class SemcorCorpusReader(XMLCorpusReader):
         for xmlsent in xmldoc.findall(".//s"):
             sent = []
             for xmlword in _all_xmlwords_in(xmlsent):
-                itm = SemcorCorpusReader._word(
-                    xmlword, unit, pos_tag, sem_tag, self._wordnet
-                )
+                itm = SemcorCorpusReader._word(xmlword, unit, pos_tag, sem_tag, self._wordnet)
                 if unit == "word":
                     sent.extend(itm)
                 else:
@@ -159,28 +152,20 @@ class SemcorCorpusReader(XMLCorpusReader):
             ]  # see http://wordnet.princeton.edu/man/senseidx.5WN.html
         else:
             sense_key = wnpos = None
-        redef = xmlword.get(
-            "rdf", tkn
-        )  # redefinition--this indicates the lookup string
+        redef = xmlword.get("rdf", tkn)  # redefinition--this indicates the lookup string
         # does not exactly match the enclosed string, e.g. due to typographical adjustments
         # or discontinuity of a multiword expression. If a redefinition has occurred,
         # the "rdf" attribute holds its inflected form and "lemma" holds its lemma.
         # For NEs, "rdf", "lemma", and "pn" all hold the same value (the NE class).
         sensenum = xmlword.get("wnsn")  # WordNet sense number
         isOOVEntity = "pn" in xmlword.keys()  # a "personal name" (NE) not in WordNet
-        pos = xmlword.get(
-            "pos"
-        )  # part of speech for the whole chunk (None for punctuation)
+        pos = xmlword.get("pos")  # part of speech for the whole chunk (None for punctuation)
 
         if unit == "token":
             if not pos_tag and not sem_tag:
                 itm = tkn
             else:
-                itm = (
-                    (tkn,)
-                    + ((pos,) if pos_tag else ())
-                    + ((lemma, wnpos, sensenum, isOOVEntity) if sem_tag else ())
-                )
+                itm = (tkn,) + ((pos,) if pos_tag else ()) + ((lemma, wnpos, sensenum, isOOVEntity) if sem_tag else ())
             return itm
         else:
             ww = tkn.split("_")  # TODO: case where punctuation intervenes in MWE
@@ -203,9 +188,7 @@ class SemcorCorpusReader(XMLCorpusReader):
                                 int(sensenum),
                             )  # e.g.: reach.v.02
                         except ValueError:
-                            sense = (
-                                lemma + "." + wnpos + "." + sensenum
-                            )  # e.g. the sense number may be "2;1"
+                            sense = lemma + "." + wnpos + "." + sensenum  # e.g. the sense number may be "2;1"
 
                 bottom = [Tree(pos, ww)] if pos_tag else ww
 
@@ -278,9 +261,7 @@ class SemcorWordView(XMLCorpusView):
             return self.handle_word(elt)
 
     def handle_word(self, elt):
-        return SemcorCorpusReader._word(
-            elt, self._unit, self._pos_tag, self._sem_tag, self._wordnet
-        )
+        return SemcorCorpusReader._word(elt, self._unit, self._pos_tag, self._sem_tag, self._wordnet)
 
     def handle_sent(self, elt):
         sent = []

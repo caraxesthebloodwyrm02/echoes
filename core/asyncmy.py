@@ -61,22 +61,14 @@ class AsyncAdapt_asyncmy_cursor(AsyncAdapt_dbapi_cursor):
     __slots__ = ()
 
 
-class AsyncAdapt_asyncmy_ss_cursor(
-    AsyncAdapt_dbapi_ss_cursor, AsyncAdapt_asyncmy_cursor
-):
+class AsyncAdapt_asyncmy_ss_cursor(AsyncAdapt_dbapi_ss_cursor, AsyncAdapt_asyncmy_cursor):
     __slots__ = ()
 
-    def _make_new_cursor(
-        self, connection: AsyncIODBAPIConnection
-    ) -> AsyncIODBAPICursor:
-        return connection.cursor(
-            self._adapt_connection.dbapi.asyncmy.cursors.SSCursor
-        )
+    def _make_new_cursor(self, connection: AsyncIODBAPIConnection) -> AsyncIODBAPICursor:
+        return connection.cursor(self._adapt_connection.dbapi.asyncmy.cursors.SSCursor)
 
 
-class AsyncAdapt_asyncmy_connection(
-    AsyncAdapt_terminate, AsyncAdapt_dbapi_connection
-):
+class AsyncAdapt_asyncmy_connection(AsyncAdapt_terminate, AsyncAdapt_dbapi_connection):
     __slots__ = ()
 
     _cursor_cls = AsyncAdapt_asyncmy_cursor
@@ -84,9 +76,7 @@ class AsyncAdapt_asyncmy_connection(
 
     def _handle_exception(self, error: Exception) -> NoReturn:
         if isinstance(error, AttributeError):
-            raise self.dbapi.InternalError(
-                "network operation failed due to asyncmy attribute error"
-            )
+            raise self.dbapi.InternalError("network operation failed due to asyncmy attribute error")
 
         raise error
 
@@ -199,9 +189,7 @@ class MySQLDialect_asyncmy(MySQLDialect_pymysql):
         dbapi_connection.terminate()
 
     def create_connect_args(self, url: URL) -> ConnectArgsType:  # type: ignore[override]  # noqa: E501
-        return super().create_connect_args(
-            url, _translate_args=dict(username="user", database="db")
-        )
+        return super().create_connect_args(url, _translate_args=dict(username="user", database="db"))
 
     def is_disconnect(
         self,
@@ -213,18 +201,14 @@ class MySQLDialect_asyncmy(MySQLDialect_pymysql):
             return True
         else:
             str_e = str(e).lower()
-            return (
-                "not connected" in str_e or "network operation failed" in str_e
-            )
+            return "not connected" in str_e or "network operation failed" in str_e
 
     def _found_rows_client_flag(self) -> int:
         from asyncmy.constants import CLIENT  # type: ignore
 
         return CLIENT.FOUND_ROWS  # type: ignore[no-any-return]
 
-    def get_driver_connection(
-        self, connection: DBAPIConnection
-    ) -> AsyncIODBAPIConnection:
+    def get_driver_connection(self, connection: DBAPIConnection) -> AsyncIODBAPIConnection:
         return connection._connection  # type: ignore[no-any-return]
 
 

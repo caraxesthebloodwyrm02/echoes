@@ -105,11 +105,7 @@ async def demo_workflow_analysis(lumina):
 
     print(f"\n✅ Status: {result['status']}")
     print("📊 Workflow Analysis:\n")
-    print(
-        result["analysis"][:500] + "..."
-        if len(result["analysis"]) > 500
-        else result["analysis"]
-    )
+    print(result["analysis"][:500] + "..." if len(result["analysis"]) > 500 else result["analysis"])
 
 
 async def demo_codebase_upgrade(lumina):
@@ -148,11 +144,7 @@ async def demo_interactive_chat(lumina):
     for i, question in enumerate(questions, 1):
         print(f"\n[Q{i}] {question}")
         response = lumina.chat(question)
-        print(
-            f"[Lumina] {response[:300]}..."
-            if len(response) > 300
-            else f"[Lumina] {response}"
-        )
+        print(f"[Lumina] {response[:300]}..." if len(response) > 300 else f"[Lumina] {response}")
 
 
 async def demo_smart_refactor(lumina):
@@ -174,11 +166,7 @@ async def demo_smart_refactor(lumina):
 
         print(f"\n✅ Status: {result['status']}")
         print("📝 Refactoring Result:\n")
-        print(
-            result["result"][:400] + "..."
-            if len(result["result"]) > 400
-            else result["result"]
-        )
+        print(result["result"][:400] + "..." if len(result["result"]) > 400 else result["result"])
     else:
         print("Test file not found, skipping refactoring demo")
 

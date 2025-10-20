@@ -202,9 +202,7 @@ def is_pv1_scalar_field(field: ModelField) -> bool:
 
 
 def is_pv1_scalar_sequence_field(field: ModelField) -> bool:
-    if (field.shape in sequence_shapes) and not lenient_issubclass(
-        field.type_, BaseModel
-    ):
+    if (field.shape in sequence_shapes) and not lenient_issubclass(field.type_, BaseModel):
         if field.sub_fields is not None:
             for sub_field in field.sub_fields:
                 if not is_pv1_scalar_field(sub_field):
@@ -219,9 +217,7 @@ def _normalize_errors(errors: Sequence[Any]) -> List[Dict[str, Any]]:
     use_errors: List[Any] = []
     for error in errors:
         if isinstance(error, ErrorWrapper):
-            new_errors = ValidationError(  # type: ignore[call-arg]
-                errors=[error], model=RequestErrorModel
-            ).errors()
+            new_errors = ValidationError(errors=[error], model=RequestErrorModel).errors()  # type: ignore[call-arg]
             use_errors.extend(new_errors)
         elif isinstance(error, list):
             use_errors.extend(_normalize_errors(error))
@@ -234,8 +230,7 @@ def _regenerate_error_with_loc(
     *, errors: Sequence[Any], loc_prefix: Tuple[Union[str, int], ...]
 ) -> List[Dict[str, Any]]:
     updated_loc_errors: List[Any] = [
-        {**err, "loc": loc_prefix + err.get("loc", ())}
-        for err in _normalize_errors(errors)
+        {**err, "loc": loc_prefix + err.get("loc", ())} for err in _normalize_errors(errors)
     ]
 
     return updated_loc_errors
@@ -245,9 +240,7 @@ def _model_rebuild(model: Type[BaseModel]) -> None:
     model.update_forward_refs()
 
 
-def _model_dump(
-    model: BaseModel, mode: Literal["json", "python"] = "json", **kwargs: Any
-) -> Any:
+def _model_dump(model: BaseModel, mode: Literal["json", "python"] = "json", **kwargs: Any) -> Any:
     return model.dict(**kwargs)
 
 
@@ -259,14 +252,10 @@ def get_schema_from_model_field(
     *,
     field: ModelField,
     model_name_map: ModelNameMap,
-    field_mapping: Dict[
-        Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue
-    ],
+    field_mapping: Dict[Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue],
     separate_input_output_schemas: bool = True,
 ) -> Dict[str, Any]:
-    return field_schema(  # type: ignore[no-any-return]
-        field, model_name_map=model_name_map, ref_prefix=REF_PREFIX
-    )[0]
+    return field_schema(field, model_name_map=model_name_map, ref_prefix=REF_PREFIX)[0]  # type: ignore[no-any-return]
 
 
 # def get_compat_model_name_map(fields: List[ModelField]) -> ModelNameMap:
@@ -321,9 +310,7 @@ def get_missing_field_error(loc: Tuple[str, ...]) -> Dict[str, Any]:
     return new_error.errors()[0]  # type: ignore[return-value]
 
 
-def create_body_model(
-    *, fields: Sequence[ModelField], model_name: str
-) -> Type[BaseModel]:
+def create_body_model(*, fields: Sequence[ModelField], model_name: str) -> Type[BaseModel]:
     BodyModel = create_model(model_name)
     for f in fields:
         BodyModel.__fields__[f.name] = f  # type: ignore[index]

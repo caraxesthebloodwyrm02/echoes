@@ -10,7 +10,7 @@ QUICK START (3 steps)
 ================================================================================
 
 1. Open PowerShell
-   
+
 2. Navigate to the directory:
    cd D:\realtime
 
@@ -78,26 +78,26 @@ QUICK EXAMPLE
 Python code to get started:
 
     from realtime_preview import create_preview_system
-    
+
     # Create and start system
     system = create_preview_system(mode="timeline")
     system.start()
-    
+
     # Process input
     result = system.process_input(
-        action="insert", 
-        position=0, 
+        action="insert",
+        position=0,
         text="Hello world"
     )
-    
+
     # See what's happening
     print(f"Direction: {result['trajectory']['current_direction']}")
     print(f"Confidence: {result['trajectory']['confidence']}")
-    
+
     # Get visual preview
     preview = system.get_current_preview()
     print(preview)
-    
+
     # Stop
     system.stop()
 

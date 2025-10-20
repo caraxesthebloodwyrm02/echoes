@@ -108,9 +108,7 @@ class ContextManager:
 
         # Keep only last 100 entries to manage memory
         if len(self.session_context["conversation_history"]) > 100:
-            self.session_context["conversation_history"] = self.session_context[
-                "conversation_history"
-            ][-100:]
+            self.session_context["conversation_history"] = self.session_context["conversation_history"][-100:]
 
     def get_context_for_mode(self, mode: str) -> Dict[str, Any]:
         """Get relevant context for a specific mode"""
@@ -142,9 +140,7 @@ class ContextManager:
         elif mode == "conversational":
             base_context.update(
                 {
-                    "recent_conversation": self.session_context["conversation_history"][
-                        -5:
-                    ],
+                    "recent_conversation": self.session_context["conversation_history"][-5:],
                     "user_preferences": self.session_context["user_profile"],
                 }
             )
@@ -178,12 +174,7 @@ class ContextManager:
         try:
             for root, dirs, files in os.walk(project_root):
                 # Skip common ignore directories
-                dirs[:] = [
-                    d
-                    for d in dirs
-                    if not d.startswith(".")
-                    and d not in ["__pycache__", "node_modules"]
-                ]
+                dirs[:] = [d for d in dirs if not d.startswith(".") and d not in ["__pycache__", "node_modules"]]
 
                 rel_root = os.path.relpath(root, project_root)
                 if rel_root == ".":
@@ -263,9 +254,7 @@ class ContextManager:
         except Exception as e:
             print(f"Error saving memory: {e}")
 
-    def add_insight(
-        self, insight: str, category: str = "general", confidence: float = 1.0
-    ):
+    def add_insight(self, insight: str, category: str = "general", confidence: float = 1.0):
         """Add a learned insight to memory"""
         insight_entry = {
             "content": insight,
@@ -289,9 +278,7 @@ class ContextManager:
                 # Don't fail on KG sync errors
                 pass
 
-    def get_relevant_insights(
-        self, query: str, category: str = None, limit: int = 5
-    ) -> List[Dict[str, Any]]:
+    def get_relevant_insights(self, query: str, category: str = None, limit: int = 5) -> List[Dict[str, Any]]:
         """Get insights relevant to a query using semantic search if available"""
         # Try semantic search via knowledge graph first
         if self.kg_bridge and self.kg_bridge.enabled:
@@ -329,18 +316,12 @@ class ContextManager:
         """Get summary of current session"""
         summary = {
             "session_id": self.session_context["session_id"],
-            "duration": (
-                datetime.now() - self.session_context["start_time"]
-            ).total_seconds(),
+            "duration": (datetime.now() - self.session_context["start_time"]).total_seconds(),
             "conversation_entries": len(self.session_context["conversation_history"]),
             "active_tasks": len(self.session_context["active_tasks"]),
             "project_context": bool(self.session_context["project_root"]),
             "insights_generated": len(
-                [
-                    i
-                    for i in self.memory["insights"]
-                    if i["session_id"] == self.session_context["session_id"]
-                ]
+                [i for i in self.memory["insights"] if i["session_id"] == self.session_context["session_id"]]
             ),
         }
 

@@ -60,33 +60,25 @@ class RowFetchTest(fixtures.TablesTest):
         )
 
     def test_via_attr(self, connection):
-        row = connection.execute(
-            self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)
-        ).first()
+        row = connection.execute(self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)).first()
 
         eq_(row.id, 1)
         eq_(row.data, "d1")
 
     def test_via_string(self, connection):
-        row = connection.execute(
-            self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)
-        ).first()
+        row = connection.execute(self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)).first()
 
         eq_(row._mapping["id"], 1)
         eq_(row._mapping["data"], "d1")
 
     def test_via_int(self, connection):
-        row = connection.execute(
-            self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)
-        ).first()
+        row = connection.execute(self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)).first()
 
         eq_(row[0], 1)
         eq_(row[1], "d1")
 
     def test_via_col_object(self, connection):
-        row = connection.execute(
-            self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)
-        ).first()
+        row = connection.execute(self.tables.plain_pk.select().order_by(self.tables.plain_pk.c.id)).first()
 
         eq_(row._mapping[self.tables.plain_pk.c.id], 1)
         eq_(row._mapping[self.tables.plain_pk.c.data], "d1")
@@ -158,9 +150,7 @@ class PercentSchemaNamesTest(fixtures.TablesTest):
 
     def test_executemany_roundtrip(self, connection):
         percent_table = self.tables.percent_table
-        connection.execute(
-            percent_table.insert(), {"percent%": 5, "spaces % more spaces": 12}
-        )
+        connection.execute(percent_table.insert(), {"percent%": 5, "spaces % more spaces": 12})
         connection.execute(
             percent_table.insert(),
             [
@@ -174,9 +164,7 @@ class PercentSchemaNamesTest(fixtures.TablesTest):
     @requirements.insert_executemany_returning
     def test_executemany_returning_roundtrip(self, connection):
         percent_table = self.tables.percent_table
-        connection.execute(
-            percent_table.insert(), {"percent%": 5, "spaces % more spaces": 12}
-        )
+        connection.execute(percent_table.insert(), {"percent%": 5, "spaces % more spaces": 12})
         result = connection.execute(
             percent_table.insert().returning(
                 percent_table.c["percent%"],
@@ -202,53 +190,35 @@ class PercentSchemaNamesTest(fixtures.TablesTest):
             lightweight_percent_table.alias(),
         ):
             eq_(
-                list(
-                    conn.execute(table.select().order_by(table.c["percent%"]))
-                ),
+                list(conn.execute(table.select().order_by(table.c["percent%"]))),
                 [(5, 12), (7, 11), (9, 10), (11, 9)],
             )
 
             eq_(
                 list(
                     conn.execute(
-                        table.select()
-                        .where(table.c["spaces % more spaces"].in_([9, 10]))
-                        .order_by(table.c["percent%"])
+                        table.select().where(table.c["spaces % more spaces"].in_([9, 10])).order_by(table.c["percent%"])
                     )
                 ),
                 [(9, 10), (11, 9)],
             )
 
-            row = conn.execute(
-                table.select().order_by(table.c["percent%"])
-            ).first()
+            row = conn.execute(table.select().order_by(table.c["percent%"])).first()
             eq_(row._mapping["percent%"], 5)
             eq_(row._mapping["spaces % more spaces"], 12)
 
             eq_(row._mapping[table.c["percent%"]], 5)
             eq_(row._mapping[table.c["spaces % more spaces"]], 12)
 
-        conn.execute(
-            percent_table.update().values(
-                {percent_table.c["spaces % more spaces"]: 15}
-            )
-        )
+        conn.execute(percent_table.update().values({percent_table.c["spaces % more spaces"]: 15}))
 
         eq_(
-            list(
-                conn.execute(
-                    percent_table.select().order_by(
-                        percent_table.c["percent%"]
-                    )
-                )
-            ),
+            list(conn.execute(percent_table.select().order_by(percent_table.c["percent%"]))),
             [(5, 15), (7, 15), (9, 15), (11, 15)],
         )
 
 
-class ServerSideCursorsTest(
-    fixtures.TestBase, testing.AssertsExecutionResults
-):
+class ServerSideCursorsTest(fixtures.TestBase, testing.AssertsExecutionResults):
     __requires__ = ("server_side_cursors",)
 
     __backend__ = True
@@ -289,19 +259,13 @@ class ServerSideCursorsTest(
                 "Please use the Connection.execution_options.stream_results "
                 "parameter."
             ):
-                self.engine = engines.testing_engine(
-                    options={"server_side_cursors": server_side_cursors}
-                )
+                self.engine = engines.testing_engine(options={"server_side_cursors": server_side_cursors})
         else:
-            self.engine = engines.testing_engine(
-                options={"server_side_cursors": server_side_cursors}
-            )
+            self.engine = engines.testing_engine(options={"server_side_cursors": server_side_cursors})
         return self.engine
 
     def stringify(self, str_):
-        return re.compile(r"SELECT (\d+)", re.I).sub(
-            lambda m: str(select(int(m.group(1))).compile(testing.db)), str_
-        )
+        return re.compile(r"SELECT (\d+)", re.I).sub(lambda m: str(select(int(m.group(1))).compile(testing.db)), str_)
 
     @testing.combinations(
         ("global_string", True, lambda stringify: stringify("select 1"), True),
@@ -348,23 +312,17 @@ class ServerSideCursorsTest(
         (
             "text_ss_option",
             False,
-            lambda stringify: text(stringify("select 42")).execution_options(
-                stream_results=True
-            ),
+            lambda stringify: text(stringify("select 42")).execution_options(stream_results=True),
             True,
         ),
         id_="iaaa",
         argnames="engine_ss_arg, statement, cursor_ss_status",
     )
-    def test_ss_cursor_status(
-        self, engine_ss_arg, statement, cursor_ss_status
-    ):
+    def test_ss_cursor_status(self, engine_ss_arg, statement, cursor_ss_status):
         engine = self._fixture(engine_ss_arg)
         with engine.begin() as conn:
             if callable(statement):
-                statement = testing.resolve_lambda(
-                    statement, stringify=self.stringify
-                )
+                statement = testing.resolve_lambda(statement, stringify=self.stringify)
 
             if isinstance(statement, str):
                 result = conn.exec_driver_sql(statement)
@@ -378,9 +336,7 @@ class ServerSideCursorsTest(
 
         with engine.connect() as conn:
             # should be enabled for this one
-            result = conn.execution_options(
-                stream_results=True
-            ).exec_driver_sql(self.stringify("select 1"))
+            result = conn.execution_options(stream_results=True).exec_driver_sql(self.stringify("select 1"))
             assert self._is_server_side(result.cursor)
 
             # the connection has autobegun, which means at the end of the
@@ -409,11 +365,7 @@ class ServerSideCursorsTest(
 
     def test_aliases_and_ss(self):
         engine = self._fixture(False)
-        s1 = (
-            select(sql.literal_column("1").label("x"))
-            .execution_options(stream_results=True)
-            .subquery()
-        )
+        s1 = select(sql.literal_column("1").label("x")).execution_options(stream_results=True).subquery()
 
         # options don't propagate out when subquery is used as a FROM clause
         with engine.begin() as conn:
@@ -434,9 +386,7 @@ class ServerSideCursorsTest(
         test_table = Table(
             "test_table",
             md,
-            Column(
-                "id", Integer, primary_key=True, test_needs_autoincrement=True
-            ),
+            Column("id", Integer, primary_key=True, test_needs_autoincrement=True),
             Column("data", String(50)),
         )
 
@@ -445,27 +395,19 @@ class ServerSideCursorsTest(
             connection.execute(test_table.insert(), dict(data="data1"))
             connection.execute(test_table.insert(), dict(data="data2"))
             eq_(
-                connection.execute(
-                    test_table.select().order_by(test_table.c.id)
-                ).fetchall(),
+                connection.execute(test_table.select().order_by(test_table.c.id)).fetchall(),
                 [(1, "data1"), (2, "data2")],
             )
             connection.execute(
-                test_table.update()
-                .where(test_table.c.id == 2)
-                .values(data=test_table.c.data + " updated")
+                test_table.update().where(test_table.c.id == 2).values(data=test_table.c.data + " updated")
             )
             eq_(
-                connection.execute(
-                    test_table.select().order_by(test_table.c.id)
-                ).fetchall(),
+                connection.execute(test_table.select().order_by(test_table.c.id)).fetchall(),
                 [(1, "data1"), (2, "data2 updated")],
             )
             connection.execute(test_table.delete())
             eq_(
-                connection.scalar(
-                    select(func.count("*")).select_from(test_table)
-                ),
+                connection.scalar(select(func.count("*")).select_from(test_table)),
                 0,
             )
 
@@ -476,9 +418,7 @@ class ServerSideCursorsTest(
         test_table = Table(
             "test_table",
             md,
-            Column(
-                "id", Integer, primary_key=True, test_needs_autoincrement=True
-            ),
+            Column("id", Integer, primary_key=True, test_needs_autoincrement=True),
             Column("data", String(50)),
         )
 
@@ -489,9 +429,7 @@ class ServerSideCursorsTest(
                 [dict(data="data%d" % i) for i in range(1, 20)],
             )
 
-            result = connection.execute(
-                test_table.select().order_by(test_table.c.id)
-            )
+            result = connection.execute(test_table.select().order_by(test_table.c.id))
 
             eq_(
                 result.fetchmany(5),

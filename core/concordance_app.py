@@ -56,62 +56,36 @@ POLL_INTERVAL = 50
 
 _DEFAULT = "English: Brown Corpus (Humor, simplified)"
 _CORPORA = {
-    "Catalan: CESS-CAT Corpus (simplified)": lambda: cess_cat.tagged_sents(
-        tagset="universal"
-    ),
+    "Catalan: CESS-CAT Corpus (simplified)": lambda: cess_cat.tagged_sents(tagset="universal"),
     "English: Brown Corpus": lambda: brown.tagged_sents(),
-    "English: Brown Corpus (simplified)": lambda: brown.tagged_sents(
-        tagset="universal"
-    ),
+    "English: Brown Corpus (simplified)": lambda: brown.tagged_sents(tagset="universal"),
     "English: Brown Corpus (Press, simplified)": lambda: brown.tagged_sents(
         categories=["news", "editorial", "reviews"], tagset="universal"
     ),
     "English: Brown Corpus (Religion, simplified)": lambda: brown.tagged_sents(
         categories="religion", tagset="universal"
     ),
-    "English: Brown Corpus (Learned, simplified)": lambda: brown.tagged_sents(
-        categories="learned", tagset="universal"
-    ),
+    "English: Brown Corpus (Learned, simplified)": lambda: brown.tagged_sents(categories="learned", tagset="universal"),
     "English: Brown Corpus (Science Fiction, simplified)": lambda: brown.tagged_sents(
         categories="science_fiction", tagset="universal"
     ),
-    "English: Brown Corpus (Romance, simplified)": lambda: brown.tagged_sents(
-        categories="romance", tagset="universal"
-    ),
-    "English: Brown Corpus (Humor, simplified)": lambda: brown.tagged_sents(
-        categories="humor", tagset="universal"
-    ),
+    "English: Brown Corpus (Romance, simplified)": lambda: brown.tagged_sents(categories="romance", tagset="universal"),
+    "English: Brown Corpus (Humor, simplified)": lambda: brown.tagged_sents(categories="humor", tagset="universal"),
     "English: NPS Chat Corpus": lambda: nps_chat.tagged_posts(),
-    "English: NPS Chat Corpus (simplified)": lambda: nps_chat.tagged_posts(
-        tagset="universal"
-    ),
+    "English: NPS Chat Corpus (simplified)": lambda: nps_chat.tagged_posts(tagset="universal"),
     "English: Wall Street Journal Corpus": lambda: treebank.tagged_sents(),
-    "English: Wall Street Journal Corpus (simplified)": lambda: treebank.tagged_sents(
-        tagset="universal"
-    ),
+    "English: Wall Street Journal Corpus (simplified)": lambda: treebank.tagged_sents(tagset="universal"),
     "Chinese: Sinica Corpus": lambda: sinica_treebank.tagged_sents(),
-    "Chinese: Sinica Corpus (simplified)": lambda: sinica_treebank.tagged_sents(
-        tagset="universal"
-    ),
+    "Chinese: Sinica Corpus (simplified)": lambda: sinica_treebank.tagged_sents(tagset="universal"),
     "Dutch: Alpino Corpus": lambda: alpino.tagged_sents(),
-    "Dutch: Alpino Corpus (simplified)": lambda: alpino.tagged_sents(
-        tagset="universal"
-    ),
+    "Dutch: Alpino Corpus (simplified)": lambda: alpino.tagged_sents(tagset="universal"),
     "Hindi: Indian Languages Corpus": lambda: indian.tagged_sents(files="hindi.pos"),
-    "Hindi: Indian Languages Corpus (simplified)": lambda: indian.tagged_sents(
-        files="hindi.pos", tagset="universal"
-    ),
+    "Hindi: Indian Languages Corpus (simplified)": lambda: indian.tagged_sents(files="hindi.pos", tagset="universal"),
     "Portuguese: Floresta Corpus (Portugal)": lambda: floresta.tagged_sents(),
-    "Portuguese: Floresta Corpus (Portugal, simplified)": lambda: floresta.tagged_sents(
-        tagset="universal"
-    ),
+    "Portuguese: Floresta Corpus (Portugal, simplified)": lambda: floresta.tagged_sents(tagset="universal"),
     "Portuguese: MAC-MORPHO Corpus (Brazil)": lambda: mac_morpho.tagged_sents(),
-    "Portuguese: MAC-MORPHO Corpus (Brazil, simplified)": lambda: mac_morpho.tagged_sents(
-        tagset="universal"
-    ),
-    "Spanish: CESS-ESP Corpus (simplified)": lambda: cess_esp.tagged_sents(
-        tagset="universal"
-    ),
+    "Portuguese: MAC-MORPHO Corpus (Brazil, simplified)": lambda: mac_morpho.tagged_sents(tagset="universal"),
+    "Spanish: CESS-ESP Corpus (simplified)": lambda: cess_esp.tagged_sents(tagset="universal"),
 }
 
 
@@ -146,9 +120,7 @@ class ConcordanceSearchView:
         top.minsize(950, 680)
 
     def _init_widgets(self, parent):
-        self.main_frame = Frame(
-            parent, dict(background=self._BACKGROUND_COLOUR, padx=1, pady=1, border=1)
-        )
+        self.main_frame = Frame(parent, dict(background=self._BACKGROUND_COLOUR, padx=1, pady=1, border=1))
         self._init_corpus_select(self.main_frame)
         self._init_query_box(self.main_frame)
         self._init_results_box(self.main_frame)
@@ -163,9 +135,7 @@ class ConcordanceSearchView:
         menubar = Menu(self.top)
 
         filemenu = Menu(menubar, tearoff=0, borderwidth=0)
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-q"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-q")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         editmenu = Menu(menubar, tearoff=0)
@@ -274,9 +244,7 @@ class ConcordanceSearchView:
             border=0,
         ).pack(side="left")
 
-        other_corpora = list(self.model.CORPORA.keys()).remove(
-            self.model.DEFAULT_CORPUS
-        )
+        other_corpora = list(self.model.CORPORA.keys()).remove(self.model.DEFAULT_CORPUS)
         om = OptionMenu(
             innerframe,
             self.var,
@@ -340,20 +308,14 @@ class ConcordanceSearchView:
             exportselection=1,
         )
         self.results_box.pack(side="left", fill="both", expand=True)
-        self.results_box.tag_config(
-            self._HIGHLIGHT_WORD_TAG, foreground=self._HIGHLIGHT_WORD_COLOUR
-        )
-        self.results_box.tag_config(
-            self._HIGHLIGHT_LABEL_TAG, foreground=self._HIGHLIGHT_LABEL_COLOUR
-        )
+        self.results_box.tag_config(self._HIGHLIGHT_WORD_TAG, foreground=self._HIGHLIGHT_WORD_COLOUR)
+        self.results_box.tag_config(self._HIGHLIGHT_LABEL_TAG, foreground=self._HIGHLIGHT_LABEL_COLOUR)
         vscrollbar.pack(side="left", fill="y", anchor="e")
         vscrollbar.config(command=self.results_box.yview)
         hscrollbar.pack(side="left", fill="x", expand=True, anchor="w")
         hscrollbar.config(command=self.results_box.xview)
         # there is no other way of avoiding the overlap of scrollbars while using pack layout manager!!!
-        Label(i2, text="   ", background=self._BACKGROUND_COLOUR).pack(
-            side="left", anchor="e"
-        )
+        Label(i2, text="   ", background=self._BACKGROUND_COLOUR).pack(side="left", anchor="e")
         i1.pack(side="top", fill="both", expand=True, anchor="n")
         i2.pack(side="bottom", fill="x", anchor="s")
         innerframe.pack(side="top", fill="both", expand=True)
@@ -512,13 +474,9 @@ class ConcordanceSearchView:
                 index += 1
             else:
                 word, label = each.split("/")
-                words.append(
-                    (self._char_before + index, self._char_before + index + len(word))
-                )
+                words.append((self._char_before + index, self._char_before + index + len(word)))
                 index += len(word) + 1
-                labels.append(
-                    (self._char_before + index, self._char_before + index + len(label))
-                )
+                labels.append((self._char_before + index, self._char_before + index + len(label)))
                 index += len(label)
             index += 1
         return words, labels
@@ -647,9 +605,7 @@ class ConcordanceSearchModel:
         def run(self):
             try:
                 ts = self.model.CORPORA[self.name]()
-                self.model.tagged_sents = [
-                    " ".join(w + "/" + t for (w, t) in sent) for sent in ts
-                ]
+                self.model.tagged_sents = [" ".join(w + "/" + t for (w, t) in sent) for sent in ts]
                 self.model.queue.put(CORPUS_LOADED_EVENT)
             except Exception as e:
                 print(e)

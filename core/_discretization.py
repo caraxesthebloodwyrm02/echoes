@@ -331,9 +331,7 @@ class KBinsDiscretizer(TransformerMixin, BaseEstimator):
             col_max = column[nnz_weight_mask].max()
 
             if col_min == col_max:
-                warnings.warn(
-                    "Feature %d is constant and will be replaced with 0." % jj
-                )
+                warnings.warn("Feature %d is constant and will be replaced with 0." % jj)
                 n_bins[jj] = 1
                 bin_edges[jj] = np.array([-np.inf, np.inf])
                 continue
@@ -366,10 +364,7 @@ class KBinsDiscretizer(TransformerMixin, BaseEstimator):
                         "averaged_inverted_cdf": _averaged_weighted_percentile,
                     }[quantile_method]
                     bin_edges[jj] = np.asarray(
-                        [
-                            percentile_func(column, sample_weight, percentile_rank=p)
-                            for p in percentile_levels
-                        ],
+                        [percentile_func(column, sample_weight, percentile_rank=p) for p in percentile_levels],
                         dtype=np.float64,
                     )
             elif self.strategy == "kmeans":
@@ -381,9 +376,7 @@ class KBinsDiscretizer(TransformerMixin, BaseEstimator):
 
                 # 1D k-means procedure
                 km = KMeans(n_clusters=n_bins[jj], init=init, n_init=1)
-                centers = km.fit(
-                    column[:, None], sample_weight=sample_weight
-                ).cluster_centers_[:, 0]
+                centers = km.fit(column[:, None], sample_weight=sample_weight).cluster_centers_[:, 0]
                 # Must sort, centers may be unsorted even with sorted init
                 centers.sort()
                 bin_edges[jj] = (centers[1:] + centers[:-1]) * 0.5
@@ -435,9 +428,7 @@ class KBinsDiscretizer(TransformerMixin, BaseEstimator):
             raise ValueError(
                 "{} received an invalid number "
                 "of bins at indices {}. Number of bins "
-                "must be at least 2, and must be an int.".format(
-                    KBinsDiscretizer.__name__, indices
-                )
+                "must be at least 2, and must be an int.".format(KBinsDiscretizer.__name__, indices)
             )
         return n_bins
 
@@ -507,9 +498,7 @@ class KBinsDiscretizer(TransformerMixin, BaseEstimator):
         n_features = self.n_bins_.shape[0]
         if Xinv.shape[1] != n_features:
             raise ValueError(
-                "Incorrect number of features. Expecting {}, received {}.".format(
-                    n_features, Xinv.shape[1]
-                )
+                "Incorrect number of features. Expecting {}, received {}.".format(n_features, Xinv.shape[1])
             )
 
         for jj in range(n_features):

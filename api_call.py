@@ -1,6 +1,6 @@
 # responses_quickstart.py
 # Requirements: pip install openai
-import os, json
+import json
 from datetime import datetime, timezone
 from openai import OpenAI
 
@@ -11,16 +11,13 @@ GUIDELINE_PROMPT = (
     "You are an assistant. Before answering, if the user's request is ambiguous, "
     "ask one concise clarifying question. If you need external data, output a single "
     "line starting with TOOL_CALL: followed by one JSON object, e.g. "
-    "TOOL_CALL: {\"tool\":\"get_time\",\"args\":{}}. Otherwise reply concisely."
+    'TOOL_CALL: {"tool":"get_time","args":{}}. Otherwise reply concisely.'
 )
 
 user_query = "What's the local time in Dhaka and a 2-line summary of the weather?"
 
 # 1) Initial call
-resp = client.responses.create(
-    model=MODEL,
-    input=f"USER: {user_query}\n\n{GUIDELINE_PROMPT}"
-)
+resp = client.responses.create(model=MODEL, input=f"USER: {user_query}\n\n{GUIDELINE_PROMPT}")
 
 # 2) Read model text safely
 text = getattr(resp, "output_text", None)
@@ -46,8 +43,7 @@ if "TOOL_CALL:" in text:
 
     # 4) Feed the tool result back to the model and ask it to continue
     followup = client.responses.create(
-        model=MODEL,
-        input=f"TOOL_RESULT: {json.dumps(result_value)}\nPlease continue and finish the user's answer."
+        model=MODEL, input=f"TOOL_RESULT: {json.dumps(result_value)}\nPlease continue and finish the user's answer."
     )
     final = getattr(followup, "output_text", str(followup))
     print("FINAL ANSWER:\n", final)

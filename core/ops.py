@@ -18,9 +18,7 @@ class BaseOpsUtil:
     series_array_exc: type[Exception] | None = TypeError
     divmod_exc: type[Exception] | None = TypeError
 
-    def _get_expected_exception(
-        self, op_name: str, obj, other
-    ) -> type[Exception] | tuple[type[Exception], ...] | None:
+    def _get_expected_exception(self, op_name: str, obj, other) -> type[Exception] | tuple[type[Exception], ...] | None:
         # Find the Exception, if any we expect to raise calling
         #  obj.__op_name__(other)
 
@@ -75,9 +73,7 @@ class BaseOpsUtil:
 
     # see comment on check_opname
     @final
-    def _check_op(
-        self, ser: pd.Series, op, other, op_name: str, exc=NotImplementedError
-    ):
+    def _check_op(self, ser: pd.Series, op, other, op_name: str, exc=NotImplementedError):
         # Check that the Series/DataFrame arithmetic/comparison method matches
         #  the pointwise result from _combine.
 
@@ -189,15 +185,9 @@ class BaseArithmeticOpsTests(BaseOpsUtil):
     @pytest.mark.parametrize("box", [pd.Series, pd.DataFrame, pd.Index])
     @pytest.mark.parametrize(
         "op_name",
-        [
-            x
-            for x in tm.arithmetic_dunder_methods + tm.comparison_dunder_methods
-            if not x.startswith("__r")
-        ],
+        [x for x in tm.arithmetic_dunder_methods + tm.comparison_dunder_methods if not x.startswith("__r")],
     )
-    def test_direct_arith_with_ndframe_returns_not_implemented(
-        self, data, box, op_name
-    ):
+    def test_direct_arith_with_ndframe_returns_not_implemented(self, data, box, op_name):
         # EAs should return NotImplemented for ops with Series/DataFrame/Index
         # Pandas takes care of unboxing the series and calling the EA's op.
         other = box(data)
@@ -228,9 +218,7 @@ class BaseComparisonOpsTests(BaseOpsUtil):
             if exc is None:
                 # Didn't error, then should match pointwise behavior
                 expected = ser.combine(other, op)
-                expected = self._cast_pointwise_result(
-                    op.__name__, ser, other, expected
-                )
+                expected = self._cast_pointwise_result(op.__name__, ser, other, expected)
                 tm.assert_series_equal(result, expected)
             else:
                 with pytest.raises(type(exc)):
@@ -271,9 +259,7 @@ class BaseUnaryOpsTests(BaseOpsUtil):
     def test_unary_ufunc_dunder_equivalence(self, data, ufunc):
         # the dunder __pos__ works if and only if np.positive works,
         #  same for __neg__/np.negative and __abs__/np.abs
-        attr = {np.positive: "__pos__", np.negative: "__neg__", np.abs: "__abs__"}[
-            ufunc
-        ]
+        attr = {np.positive: "__pos__", np.negative: "__neg__", np.abs: "__abs__"}[ufunc]
 
         exc = None
         try:

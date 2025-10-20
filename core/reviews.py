@@ -67,9 +67,7 @@ from nltk.corpus.reader.api import *
 from nltk.tokenize import *
 
 TITLE = re.compile(r"^\[t\](.*)$")  # [t] Title
-FEATURES = re.compile(
-    r"((?:(?:\w+\s)+)?\w+)\[((?:\+|\-)\d)\]"
-)  # find 'feature' in feature[+3]
+FEATURES = re.compile(r"((?:(?:\w+\s)+)?\w+)\[((?:\+|\-)\d)\]")  # find 'feature' in feature[+3]
 NOTES = re.compile(r"\[(?!t)(p|u|s|cc|cs)\]")  # find 'p' in camera[+2][p]
 SENT = re.compile(r"##(.*)$")  # find tokenized sentence
 
@@ -122,9 +120,7 @@ class Review:
         return [review_line.sent for review_line in self.review_lines]
 
     def __repr__(self):
-        return 'Review(title="{}", review_lines={})'.format(
-            self.title, self.review_lines
-        )
+        return 'Review(title="{}", review_lines={})'.format(self.title, self.review_lines)
 
 
 class ReviewLine:
@@ -146,9 +142,7 @@ class ReviewLine:
             self.notes = notes
 
     def __repr__(self):
-        return "ReviewLine(features={}, notes={}, sent={})".format(
-            self.features, self.notes, self.sent
-        )
+        return "ReviewLine(features={}, notes={}, sent={})".format(self.features, self.notes, self.sent)
 
 
 class ReviewsCorpusReader(CorpusReader):
@@ -185,9 +179,7 @@ class ReviewsCorpusReader(CorpusReader):
 
     CorpusView = StreamBackedCorpusView
 
-    def __init__(
-        self, root, fileids, word_tokenizer=WordPunctTokenizer(), encoding="utf8"
-    ):
+    def __init__(self, root, fileids, word_tokenizer=WordPunctTokenizer(), encoding="utf8"):
         """
         :param root: The root directory for the corpus.
         :param fileids: a list or regexp specifying the fileids in the corpus.
@@ -289,9 +281,7 @@ class ReviewsCorpusReader(CorpusReader):
                 return []  # end of file.
             title_match = re.match(TITLE, line)
             if title_match:
-                review = Review(
-                    title=title_match.group(1).strip()
-                )  # We create a new review
+                review = Review(title=title_match.group(1).strip())  # We create a new review
                 break
 
         # Scan until we find another line matching the regexp, or EOF.

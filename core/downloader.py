@@ -161,7 +161,6 @@ default: unzip or not?
 import functools
 import itertools
 import os
-import shutil
 import subprocess
 import sys
 import textwrap
@@ -548,9 +547,7 @@ class Downloader:
                     self.PARTIAL: "P",
                     self.NOT_INSTALLED: " ",
                 }[status]
-                name = textwrap.fill(
-                    "-" * 27 + (info.name or info.id), 75, subsequent_indent=27 * " "
-                )[27:]
+                name = textwrap.fill("-" * 27 + (info.name or info.id), 75, subsequent_indent=27 * " ")[27:]
                 print("  [{}] {} {}".format(prefix, info.id.ljust(20, "."), name))
                 lines += len(name.split("\n"))  # for more_prompt
                 if more_prompt and lines > 20:
@@ -796,19 +793,13 @@ class Downloader:
                         print_to(prefix)
                         prefix = prefix[:-4]
                         if self._errors:
-                            show(
-                                "Downloaded collection %r with errors"
-                                % msg.collection.id
-                            )
+                            show("Downloaded collection %r with errors" % msg.collection.id)
                         else:
                             show("Done downloading collection %s" % msg.collection.id)
 
                     # Package downloading messages:
                     elif isinstance(msg, StartPackageMessage):
-                        show(
-                            "Downloading package %s to %s..."
-                            % (msg.package.id, download_dir)
-                        )
+                        show("Downloading package %s to %s..." % (msg.package.id, download_dir))
                     elif isinstance(msg, UpToDateMessage):
                         show("Package %s is already up-to-date!" % msg.package.id, "  ")
                     # elif isinstance(msg, StaleMessage):
@@ -893,11 +884,7 @@ class Downloader:
             if not os.path.isdir(unzipdir):
                 return self.STALE
 
-            unzipped_size = sum(
-                os.stat(os.path.join(d, f)).st_size
-                for d, _, files in os.walk(unzipdir)
-                for f in files
-            )
+            unzipped_size = sum(os.stat(os.path.join(d, f)).st_size for d, _, files in os.walk(unzipdir) for f in files)
             if unzipped_size != info.unzipped_size:
                 return self.STALE
 
@@ -922,20 +909,14 @@ class Downloader:
         up-to-date.  If the index is older than self.INDEX_TIMEOUT,
         then download it again."""
         # Check if the index is already up-to-date.  If so, do nothing.
-        if not (
-            self._index is None
-            or url is not None
-            or time.time() - self._index_timestamp > self.INDEX_TIMEOUT
-        ):
+        if not (self._index is None or url is not None or time.time() - self._index_timestamp > self.INDEX_TIMEOUT):
             return
 
         # If a URL was specified, then update our URL.
         self._url = url or self._url
 
         # Download the index file.
-        self._index = nltk.internals.ElementWrapper(
-            ElementTree.parse(urlopen(self._url)).getroot()
-        )
+        self._index = nltk.internals.ElementWrapper(ElementTree.parse(urlopen(self._url)).getroot())
         self._index_timestamp = time.time()
 
         # Build a dictionary of packages.
@@ -943,9 +924,7 @@ class Downloader:
         self._packages = {p.id: p for p in packages}
 
         # Build a dictionary of collections.
-        collections = [
-            Collection.fromxml(c) for c in self._index.findall("collections/collection")
-        ]
+        collections = [Collection.fromxml(c) for c in self._index.findall("collections/collection")]
         self._collections = {c.id: c for c in collections}
 
         # Replace identifiers with actual children in collection.children.
@@ -956,11 +935,7 @@ class Downloader:
                 elif child_id in self._collections:
                     collection.children[i] = self._collections[child_id]
                 else:
-                    print(
-                        "removing collection member with no package: {}".format(
-                            child_id
-                        )
-                    )
+                    print("removing collection member with no package: {}".format(child_id))
                     del collection.children[i]
 
         # Fill in collection.packages for each collection.
@@ -1093,10 +1068,7 @@ class Downloader:
     def _interactive_download(self):
         # Only import tkinter if the user has indicated that they
         # want to draw a UI. See issue #2949 for more info.
-        if (
-            os.environ.get("NLTK_DOWNLOADER_FORCE_INTERACTIVE_SHELL", "false").lower()
-            == "true"
-        ):
+        if os.environ.get("NLTK_DOWNLOADER_FORCE_INTERACTIVE_SHELL", "false").lower() == "true":
             DownloaderShell(self).run()
             return
 
@@ -1207,9 +1179,7 @@ class DownloaderShell:
             if stale_packages:
                 print("Will update following packages (o=ok; x=cancel)")
                 for pid, pname in stale_packages:
-                    name = textwrap.fill(
-                        "-" * 27 + (pname), 75, subsequent_indent=27 * " "
-                    )[27:]
+                    name = textwrap.fill("-" * 27 + (pname), 75, subsequent_indent=27 * " ")[27:]
                     print("  [ ] {} {}".format(pid.ljust(20, "."), name))
                 print()
 
@@ -1230,9 +1200,7 @@ class DownloaderShell:
     def _simple_interactive_help(self):
         print()
         print("Commands:")
-        print(
-            "  d) Download a package or collection     u) Update out of date packages"
-        )
+        print("  d) Download a package or collection     u) Update out of date packages")
         print("  l) List packages & collections          h) Help")
         print("  c) View & Modify Configuration          q) Quit")
 
@@ -1250,9 +1218,7 @@ class DownloaderShell:
         self._show_config()
         while True:
             print()
-            self._simple_interactive_menu(
-                "s) Show Config", "u) Set Server URL", "d) Set Data Dir", "m) Main Menu"
-            )
+            self._simple_interactive_menu("s) Show Config", "u) Set Server URL", "d) Set Data Dir", "m) Main Menu")
             user_input = input("Config> ").strip().lower()
             if user_input == "s":
                 self._show_config()
@@ -1424,9 +1390,7 @@ class DownloaderGUI:
         self._table.bind("<Destroy>", self._destroy)
 
     def _log(self, msg):
-        self._log_messages.append(
-            "{} {}{}".format(time.ctime(), " | " * self._log_indent, msg)
-        )
+        self._log_messages.append("{} {}{}".format(time.ctime(), " | " * self._log_indent, msg))
 
     # /////////////////////////////////////////////////////////////////
     # Internals
@@ -1455,9 +1419,7 @@ class DownloaderGUI:
         infoframe = tkinter.Frame(f1)
         infoframe.grid(column=0, row=5, sticky="news")
         tkinter.Frame(f1, height=8).grid(column=0, row=6)  # spacer
-        progressframe = tkinter.Frame(
-            self.top, padx=3, pady=3, background=self._BACKDROP_COLOR[1]
-        )
+        progressframe = tkinter.Frame(self.top, padx=3, pady=3, background=self._BACKDROP_COLOR[1])
         progressframe.pack(side="bottom", fill="x")
         self.top["border"] = 0
         self.top["highlightthickness"] = 0
@@ -1521,13 +1483,9 @@ class DownloaderGUI:
         self.top.bind("<Button-1>", self._info_save)
 
         # Create Download & Refresh buttons.
-        self._download_button = tkinter.Button(
-            buttonframe, text="Download", command=self._download, width=8
-        )
+        self._download_button = tkinter.Button(buttonframe, text="Download", command=self._download, width=8)
         self._download_button.pack(side="left")
-        self._refresh_button = tkinter.Button(
-            buttonframe, text="Refresh", command=self._refresh, width=8
-        )
+        self._refresh_button = tkinter.Button(buttonframe, text="Refresh", command=self._refresh, width=8)
         self._refresh_button.pack(side="right")
 
         # Create Progress bar
@@ -1555,9 +1513,7 @@ class DownloaderGUI:
         menubar = tkinter.Menu(self.top)
 
         filemenu = tkinter.Menu(menubar, tearoff=0)
-        filemenu.add_command(
-            label="Download", underline=0, command=self._download, accelerator="Return"
-        )
+        filemenu.add_command(label="Download", underline=0, command=self._download, accelerator="Return")
         filemenu.add_separator()
         filemenu.add_command(
             label="Change Server Index",
@@ -1572,9 +1528,7 @@ class DownloaderGUI:
         filemenu.add_separator()
         filemenu.add_command(label="Show Log", underline=5, command=self._show_log)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         # Create a menu to control which columns of the table are
@@ -1587,9 +1541,7 @@ class DownloaderGUI:
             self._column_vars[column] = var
             if column in self.INITIAL_COLUMNS:
                 var.set(1)
-            viewmenu.add_checkbutton(
-                label=column, underline=0, variable=var, command=self._select_columns
-            )
+            viewmenu.add_checkbutton(label=column, underline=0, variable=var, command=self._select_columns)
         menubar.add_cascade(label="View", underline=0, menu=viewmenu)
 
         # Create a sort menu
@@ -1612,9 +1564,7 @@ class DownloaderGUI:
 
         helpmenu = tkinter.Menu(menubar, tearoff=0)
         helpmenu.add_command(label="About", underline=0, command=self.about)
-        helpmenu.add_command(
-            label="Instructions", underline=0, command=self.help, accelerator="F1"
-        )
+        helpmenu.add_command(label="Instructions", underline=0, command=self.help, accelerator="F1")
         menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
         self.top.bind("<F1>", self.help)
 
@@ -1808,11 +1758,7 @@ class DownloaderGUI:
         if self._use_threads:
             return self._download_threaded(*e)
 
-        marked = [
-            self._table[row, "Identifier"]
-            for row in range(len(self._table))
-            if self._table[row, 0] != ""
-        ]
+        marked = [self._table[row, "Identifier"] for row in range(len(self._table)) if self._table[row, 0] != ""]
         selection = self._table.selected_row()
         if not marked and selection is not None:
             marked = [self._table[selection, "Identifier"]]
@@ -1886,9 +1832,7 @@ class DownloaderGUI:
                 selectbackground=sbg,
             )
             # Color the marked column
-            self._table.itemconfigure(
-                row, 0, foreground=self._MARK_COLOR[0], background=self._MARK_COLOR[1]
-            )
+            self._table.itemconfigure(row, 0, foreground=self._MARK_COLOR[0], background=self._MARK_COLOR[1])
 
     def _clear_mark(self, id):
         for row in range(len(self._table)):
@@ -2041,9 +1985,7 @@ class DownloaderGUI:
         c.itemconfig("gradient", state="hidden")
 
         # This is used to display progress
-        c.addtag_withtag(
-            "redbox", c.create_rectangle(0, 0, 0, 0, fill=self._PROGRESS_COLOR[0])
-        )
+        c.addtag_withtag("redbox", c.create_rectangle(0, 0, 0, 0, fill=self._PROGRESS_COLOR[0]))
 
     def _show_progress(self, percent):
         c = self._progressbar
@@ -2083,11 +2025,7 @@ class DownloaderGUI:
         # Change the 'download' button to an 'abort' button.
         self._download_button["text"] = "Cancel"
 
-        marked = [
-            self._table[row, "Identifier"]
-            for row in range(len(self._table))
-            if self._table[row, 0] != ""
-        ]
+        marked = [self._table[row, "Identifier"] for row in range(len(self._table)) if self._table[row, 0] != ""]
         selection = self._table.selected_row()
         if not marked and selection is not None:
             marked = [self._table[selection, "Identifier"]]
@@ -2406,16 +2344,11 @@ def _check_package(pkg_xml, zipfilename, zf):
     # The filename must patch the id given in the XML file.
     uid = os.path.splitext(os.path.split(zipfilename)[1])[0]
     if pkg_xml.get("id") != uid:
-        raise ValueError(
-            "package identifier mismatch ({} vs {})".format(pkg_xml.get("id"), uid)
-        )
+        raise ValueError("package identifier mismatch ({} vs {})".format(pkg_xml.get("id"), uid))
 
     # Zip file must expand to a subdir whose name matches uid.
     if sum((name != uid and not name.startswith(uid + "/")) for name in zf.namelist()):
-        raise ValueError(
-            "Zipfile %s.zip does not expand to a single "
-            "subdirectory %s/" % (uid, uid)
-        )
+        raise ValueError("Zipfile %s.zip does not expand to a single " "subdirectory %s/" % (uid, uid))
 
 
 # update for git?
@@ -2432,8 +2365,7 @@ def _svn_revision(filename):
     (stdout, stderr) = p.communicate()
     if p.returncode != 0 or stderr or not stdout:
         raise ValueError(
-            "Error determining svn_revision for %s: %s"
-            % (os.path.split(filename)[1], textwrap.fill(stderr))
+            "Error determining svn_revision for %s: %s" % (os.path.split(filename)[1], textwrap.fill(stderr))
         )
     return stdout.split()[2]
 
@@ -2482,21 +2414,12 @@ def _find_packages(root):
                 # Check that the UID matches the filename
                 uid = os.path.split(xmlfilename[:-4])[1]
                 if pkg_xml.get("id") != uid:
-                    raise ValueError(
-                        "package identifier mismatch (%s "
-                        "vs %s)" % (pkg_xml.get("id"), uid)
-                    )
+                    raise ValueError("package identifier mismatch (%s " "vs %s)" % (pkg_xml.get("id"), uid))
 
                 # Check that the zipfile expands to a subdir whose
                 # name matches the uid.
-                if sum(
-                    (name != uid and not name.startswith(uid + "/"))
-                    for name in zf.namelist()
-                ):
-                    raise ValueError(
-                        "Zipfile %s.zip does not expand to a "
-                        "single subdirectory %s/" % (uid, uid)
-                    )
+                if sum((name != uid and not name.startswith(uid + "/")) for name in zf.namelist()):
+                    raise ValueError("Zipfile %s.zip does not expand to a " "single subdirectory %s/" % (uid, uid))
 
                 yield pkg_xml, zf, relpath
 

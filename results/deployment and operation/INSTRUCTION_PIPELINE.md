@@ -8,7 +8,7 @@ This document details how user instructions flow through the Glimpse system from
 ## Pipeline Stages
 
 ### 1. Input Reception (`server_sse.py`)
-**Endpoint:** `POST /input`  
+**Endpoint:** `POST /input`
 **Payload:**
 ```json
 {

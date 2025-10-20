@@ -24,9 +24,7 @@ class OAuth2Auth(AuthBase, TokenAuth):
     def __call__(self, req):
         self.ensure_active_token()
         try:
-            req.url, req.headers, req.body = self.prepare(
-                req.url, req.headers, req.body
-            )
+            req.url, req.headers, req.body = self.prepare(req.url, req.headers, req.body)
         except KeyError as error:
             description = f"Unsupported token_type: {str(error)}"
             raise UnsupportedTokenTypeError(description=description) from error
@@ -37,9 +35,7 @@ class OAuth2ClientAuth(AuthBase, ClientAuth):
     """Attaches OAuth Client Authentication to the given Request object."""
 
     def __call__(self, req):
-        req.url, req.headers, req.body = self.prepare(
-            req.method, req.url, req.headers, req.body
-        )
+        req.url, req.headers, req.body = self.prepare(req.method, req.url, req.headers, req.body)
         return req
 
 

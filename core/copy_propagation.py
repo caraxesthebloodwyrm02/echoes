@@ -42,11 +42,7 @@ def do_copy_propagation(fn: FuncIR, options: CompilerOptions) -> None:
                 counts[op.dest] = c + 1
                 # Does this look like a supported assignment?
                 # TODO: Something needs LoadErrorValue assignments to be preserved?
-                if (
-                    c == 0
-                    and is_same_type(op.dest.type, op.src.type)
-                    and not isinstance(op.src, LoadErrorValue)
-                ):
+                if c == 0 and is_same_type(op.dest.type, op.src.type) and not isinstance(op.src, LoadErrorValue):
                     replacements[op.dest] = op.src
                 elif c == 1:
                     # Too many assignments -- don't replace this one

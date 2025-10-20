@@ -137,9 +137,7 @@ class PyTracer(Tracer):
             f.write(" {}".format(" ".join(map(str, args))))
             if 0:  # if you want callers..
                 f.write(" | ")  # type: ignore[unreachable]
-                stack = " / ".join(
-                    (fname or "???").rpartition("/")[-1] for _, fname, _, _ in self.data_stack
-                )
+                stack = " / ".join((fname or "???").rpartition("/")[-1] for _, fname, _, _ in self.data_stack)
                 f.write(stack)
             f.write("\n")
 
@@ -158,7 +156,9 @@ class PyTracer(Tracer):
         # f = frame; code = f.f_code
         # self.log(":", f"{code.co_filename} {f.f_lineno} {code.co_name}()", event)
 
-        if self.stopped and sys.gettrace() == self._cached_bound_method_trace:  # pylint: disable=comparison-with-callable
+        if (
+            self.stopped and sys.gettrace() == self._cached_bound_method_trace
+        ):  # pylint: disable=comparison-with-callable
             # The PyTrace.stop() method has been called, possibly by another
             # thread, let's deactivate ourselves now.
             if 0:
@@ -169,9 +169,7 @@ class PyTracer(Tracer):
                     f = f.f_back
             sys.settrace(None)
             try:
-                self.cur_file_data, self.cur_file_name, self.last_line, self.started_context = (
-                    self.data_stack.pop()
-                )
+                self.cur_file_data, self.cur_file_name, self.last_line, self.started_context = self.data_stack.pop()
             except IndexError:
                 self.log(
                     "Empty stack!",
@@ -298,9 +296,7 @@ class PyTracer(Tracer):
                     cast(set_TArc, self.cur_file_data).add((self.last_line, -first))
 
             # Leaving this function, pop the filename stack.
-            self.cur_file_data, self.cur_file_name, self.last_line, self.started_context = (
-                self.data_stack.pop()
-            )
+            self.cur_file_data, self.cur_file_name, self.last_line, self.started_context = self.data_stack.pop()
             # Leaving a context?
             if self.started_context:
                 assert self.switch_context is not None
@@ -351,8 +347,7 @@ class PyTracer(Tracer):
         if self.warn and not suppress_warning:
             if tf != self._cached_bound_method_trace:  # pylint: disable=comparison-with-callable
                 self.warn(
-                    "Trace function changed, data is likely wrong: "
-                    + f"{tf!r} != {self._cached_bound_method_trace!r}",
+                    "Trace function changed, data is likely wrong: " + f"{tf!r} != {self._cached_bound_method_trace!r}",
                     slug="trace-changed",
                 )
 

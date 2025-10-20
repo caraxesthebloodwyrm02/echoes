@@ -24,7 +24,7 @@ def stable_hash(obj: Any) -> str:
     elif isinstance(obj, type | types.FunctionType):
         # The default repr() of functions includes the ID, which is not ideal.
         # We use the fully qualified name instead.
-        obj = f'{obj.__module__}.{obj.__qualname__}'
+        obj = f"{obj.__module__}.{obj.__qualname__}"
     return hashlib.md5(str(obj).encode(), usedforsecurity=False).hexdigest()
 
 
@@ -48,6 +48,6 @@ def _stable_str_prep(obj: Any) -> dict[str, Any] | list[Any] | str:
     if isinstance(obj, type | types.FunctionType):
         # The default repr() of functions includes the ID, which is not ideal.
         # We use the fully qualified name instead.
-        return f'{obj.__module__}.{obj.__qualname__}'
+        return f"{obj.__module__}.{obj.__qualname__}"
     # We can't do any better, just use the string representation
     return str(obj)

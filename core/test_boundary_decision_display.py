@@ -105,15 +105,11 @@ def test_check_boundary_response_method_error():
         ),
     ],
 )
-def test_check_boundary_response_method(
-    estimator, response_method, class_of_interest, expected_prediction_method
-):
+def test_check_boundary_response_method(estimator, response_method, class_of_interest, expected_prediction_method):
     """Check the behaviour of `_check_boundary_response_method` for the supported
     cases.
     """
-    prediction_method = _check_boundary_response_method(
-        estimator, response_method, class_of_interest
-    )
+    prediction_method = _check_boundary_response_method(estimator, response_method, class_of_interest)
     assert prediction_method == expected_prediction_method
 
 
@@ -146,8 +142,7 @@ def test_multiclass_predict(pyplot):
     [
         (
             {"plot_method": "hello_world"},
-            r"plot_method must be one of contourf, contour, pcolormesh. Got hello_world"
-            r" instead.",
+            r"plot_method must be one of contourf, contour, pcolormesh. Got hello_world" r" instead.",
         ),
         (
             {"grid_resolution": 1},
@@ -197,13 +192,9 @@ def test_display_plot_input_error(pyplot, fitted_clf):
         disp.plot(plot_method="hello_world")
 
 
-@pytest.mark.parametrize(
-    "response_method", ["auto", "predict", "predict_proba", "decision_function"]
-)
+@pytest.mark.parametrize("response_method", ["auto", "predict", "predict_proba", "decision_function"])
 @pytest.mark.parametrize("plot_method", ["contourf", "contour"])
-def test_decision_boundary_display_classifier(
-    pyplot, fitted_clf, response_method, plot_method
-):
+def test_decision_boundary_display_classifier(pyplot, fitted_clf, response_method, plot_method):
     """Check that decision boundary is correct."""
     fig, ax = pyplot.subplots()
     eps = 2.0
@@ -240,9 +231,7 @@ def test_decision_boundary_display_classifier(
 
 @pytest.mark.parametrize("response_method", ["auto", "predict", "decision_function"])
 @pytest.mark.parametrize("plot_method", ["contourf", "contour"])
-def test_decision_boundary_display_outlier_detector(
-    pyplot, response_method, plot_method
-):
+def test_decision_boundary_display_outlier_detector(pyplot, response_method, plot_method):
     """Check that decision boundary is correct for outlier detector."""
     fig, ax = pyplot.subplots()
     eps = 2.0
@@ -323,10 +312,7 @@ def test_decision_boundary_display_regressor(pyplot, response_method, plot_metho
         ),
         (
             "auto",
-            (
-                "MyClassifier has none of the following attributes: decision_function, "
-                "predict_proba, predict"
-            ),
+            ("MyClassifier has none of the following attributes: decision_function, " "predict_proba, predict"),
         ),
         (
             "bad_method",
@@ -440,9 +426,7 @@ def test_dataframe_labels_used(pyplot, fitted_clf):
 
     # labels do not get inferred if provided to `from_estimator`
     _, ax = pyplot.subplots()
-    disp = DecisionBoundaryDisplay.from_estimator(
-        fitted_clf, df, ax=ax, xlabel="overwritten_x", ylabel="overwritten_y"
-    )
+    disp = DecisionBoundaryDisplay.from_estimator(fitted_clf, df, ax=ax, xlabel="overwritten_x", ylabel="overwritten_y")
     assert ax.get_xlabel() == "overwritten_x"
     assert ax.get_ylabel() == "overwritten_y"
 
@@ -474,9 +458,7 @@ def test_dataframe_support(pyplot, constructor_name):
     * https://github.com/scikit-learn/scikit-learn/issues/23311
     * https://github.com/scikit-learn/scikit-learn/issues/28717
     """
-    df = _convert_container(
-        X, constructor_name=constructor_name, columns_name=["col_x", "col_y"]
-    )
+    df = _convert_container(X, constructor_name=constructor_name, columns_name=["col_x", "col_y"])
     estimator = LogisticRegression().fit(df, y)
 
     with warnings.catch_warnings():
@@ -631,9 +613,7 @@ def test_multiclass_colors_cmap(pyplot, plot_method, multiclass_colors):
     import matplotlib as mpl
 
     if parse_version(mpl.__version__) < parse_version("3.5"):
-        pytest.skip(
-            "Matplotlib >= 3.5 is needed for `==` to check equivalence of colormaps"
-        )
+        pytest.skip("Matplotlib >= 3.5 is needed for `==` to check equivalence of colormaps")
 
     X, y = load_iris_2d_scaled()
     clf = LogisticRegression().fit(X, y)

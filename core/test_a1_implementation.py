@@ -106,9 +106,7 @@ def test_mode_handler_formatting():
             if formatted_output and len(formatted_output.strip()) > 50:
                 formatting_success += 1
                 print(f"    ✅ Formatted output: {len(formatted_output)} chars")
-                print(
-                    f"      Sample: {formatted_output[:100].replace(chr(10), ' ')}..."
-                )
+                print(f"      Sample: {formatted_output[:100].replace(chr(10), ' ')}...")
             else:
                 print(
                     f"    ❌ Formatted output too short or empty: {len(formatted_output) if formatted_output else 0} chars"
@@ -116,9 +114,7 @@ def test_mode_handler_formatting():
         except Exception as e:
             print(f"    ❌ Formatting error: {e}")
 
-    print(
-        f"\n📊 Mode Handler Results: {formatting_success}/{handlers_tested} handlers formatting successfully"
-    )
+    print(f"\n📊 Mode Handler Results: {formatting_success}/{handlers_tested} handlers formatting successfully")
     return formatting_success == handlers_tested
 
 

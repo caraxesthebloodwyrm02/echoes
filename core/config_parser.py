@@ -22,9 +22,7 @@ from typing_extensions import Never, TypeAlias
 from mypy import defaults
 from mypy.options import PER_MODULE_OPTIONS, Options
 
-_CONFIG_VALUE_TYPES: TypeAlias = Union[
-    str, bool, int, float, dict[str, str], list[str], tuple[int, int]
-]
+_CONFIG_VALUE_TYPES: TypeAlias = Union[str, bool, int, float, dict[str, str], list[str], tuple[int, int]]
 _INI_PARSER_CALLABLE: TypeAlias = Callable[[Any], _CONFIG_VALUE_TYPES]
 
 
@@ -45,18 +43,14 @@ def parse_version(v: str | float) -> tuple[int, int]:
         pass  # Error raised elsewhere
     elif major == 3:
         if minor < defaults.PYTHON3_VERSION_MIN[1]:
-            msg = "Python 3.{} is not supported (must be {}.{} or higher)".format(
-                minor, *defaults.PYTHON3_VERSION_MIN
-            )
+            msg = "Python 3.{} is not supported (must be {}.{} or higher)".format(minor, *defaults.PYTHON3_VERSION_MIN)
 
             if isinstance(v, float):
                 msg += ". You may need to put quotes around your Python version"
 
             raise VersionTypeError(msg, fallback=defaults.PYTHON3_VERSION_MIN)
     else:
-        raise argparse.ArgumentTypeError(
-            f"Python major version '{major}' out of range (must be 3)"
-        )
+        raise argparse.ArgumentTypeError(f"Python major version '{major}' out of range (must be 3)")
     return major, minor
 
 
@@ -76,11 +70,7 @@ def try_split(v: str | Sequence[str] | object, split_regex: str = ",") -> list[s
         return items
     elif isinstance(v, Sequence):
         return [
-            (
-                p.strip()
-                if isinstance(p, str)
-                else complain(p, additional_info=" (As an element of the list.)")
-            )
+            (p.strip() if isinstance(p, str) else complain(p, additional_info=" (As an element of the list.)"))
             for p in v
         ]
     else:
@@ -90,9 +80,7 @@ def try_split(v: str | Sequence[str] | object, split_regex: str = ",") -> list[s
 def validate_codes(codes: list[str]) -> list[str]:
     invalid_codes = set(codes) - set(error_codes.keys())
     if invalid_codes:
-        raise argparse.ArgumentTypeError(
-            f"Invalid error code(s): {', '.join(sorted(invalid_codes))}"
-        )
+        raise argparse.ArgumentTypeError(f"Invalid error code(s): {', '.join(sorted(invalid_codes))}")
     return codes
 
 
@@ -100,13 +88,9 @@ def validate_package_allow_list(allow_list: list[str]) -> list[str]:
     for p in allow_list:
         msg = f"Invalid allow list entry: {p}"
         if "*" in p:
-            raise argparse.ArgumentTypeError(
-                f"{msg} (entries are already prefixes so must not contain *)"
-            )
+            raise argparse.ArgumentTypeError(f"{msg} (entries are already prefixes so must not contain *)")
         if "\\" in p or "/" in p:
-            raise argparse.ArgumentTypeError(
-                f"{msg} (entries must be packages like foo.bar not directories or files)"
-            )
+            raise argparse.ArgumentTypeError(f"{msg} (entries must be packages like foo.bar not directories or files)")
     return allow_list
 
 
@@ -160,9 +144,7 @@ def check_follow_imports(choice: str) -> str:
     choices = ["normal", "silent", "skip", "error"]
     if choice not in choices:
         raise argparse.ArgumentTypeError(
-            "invalid choice '{}' (choose from {})".format(
-                choice, ", ".join(f"'{x}'" for x in choices)
-            )
+            "invalid choice '{}' (choose from {})".format(choice, ", ".join(f"'{x}'" for x in choices))
         )
     return choice
 
@@ -171,9 +153,7 @@ def check_junit_format(choice: str) -> str:
     choices = ["global", "per_file"]
     if choice not in choices:
         raise argparse.ArgumentTypeError(
-            "invalid choice '{}' (choose from {})".format(
-                choice, ", ".join(f"'{x}'" for x in choices)
-            )
+            "invalid choice '{}' (choose from {})".format(choice, ", ".join(f"'{x}'" for x in choices))
         )
     return choice
 
@@ -205,9 +185,7 @@ ini_config_types: Final[dict[str, _INI_PARSER_CALLABLE]] = {
     "plugins": lambda s: [p.strip() for p in split_commas(s)],
     "always_true": lambda s: [p.strip() for p in split_commas(s)],
     "always_false": lambda s: [p.strip() for p in split_commas(s)],
-    "untyped_calls_exclude": lambda s: validate_package_allow_list(
-        [p.strip() for p in split_commas(s)]
-    ),
+    "untyped_calls_exclude": lambda s: validate_package_allow_list([p.strip() for p in split_commas(s)]),
     "enable_incomplete_feature": lambda s: [p.strip() for p in split_commas(s)],
     "disable_error_code": lambda s: validate_codes([p.strip() for p in split_commas(s)]),
     "enable_error_code": lambda s: validate_codes([p.strip() for p in split_commas(s)]),
@@ -292,9 +270,7 @@ def _find_config_file(
                 continue
             return ret
 
-        if any(
-            os.path.exists(os.path.join(current_dir, cvs_root)) for cvs_root in (".git", ".hg")
-        ):
+        if any(os.path.exists(os.path.join(current_dir, cvs_root)) for cvs_root in (".git", ".hg")):
             break
         parent_dir = os.path.dirname(current_dir)
         if parent_dir == current_dir:
@@ -326,11 +302,7 @@ def parse_config_file(
     stdout = stdout or sys.stdout
     stderr = stderr or sys.stderr
 
-    ret = (
-        _parse_individual_file(filename, stderr)
-        if filename is not None
-        else _find_config_file(stderr)
-    )
+    ret = _parse_individual_file(filename, stderr) if filename is not None else _find_config_file(stderr)
     if ret is None:
         return
     parser, config_types, file_read = ret
@@ -344,9 +316,7 @@ def parse_config_file(
     else:
         section = parser["mypy"]
         prefix = f"{file_read}: [mypy]: "
-        updates, report_dirs = parse_section(
-            prefix, options, set_strict_flags, section, config_types, stderr
-        )
+        updates, report_dirs = parse_section(prefix, options, set_strict_flags, section, config_types, stderr)
         for k, v in updates.items():
             setattr(options, k, v)
         options.report_dirs.update(report_dirs)
@@ -354,9 +324,7 @@ def parse_config_file(
     for name, section in parser.items():
         if name.startswith("mypy-"):
             prefix = get_prefix(file_read, name)
-            updates, report_dirs = parse_section(
-                prefix, options, set_strict_flags, section, config_types, stderr
-            )
+            updates, report_dirs = parse_section(prefix, options, set_strict_flags, section, config_types, stderr)
             if report_dirs:
                 print(
                     prefix,
@@ -382,9 +350,7 @@ def parse_config_file(
                 if os.altsep:
                     glob = glob.replace(os.altsep, ".")
 
-                if any(c in glob for c in "?[]!") or any(
-                    "*" in x and x != "*" for x in glob.split(".")
-                ):
+                if any(c in glob for c in "?[]!") or any("*" in x and x != "*" for x in glob.split(".")):
                     print(
                         prefix,
                         "Patterns must be fully-qualified module names, optionally "
@@ -476,10 +442,7 @@ def destructure_overrides(toml_data: dict[str, Any]) -> dict[str, Any]:
                 result[old_config_name] = module_overrides
             else:
                 for new_key, new_value in module_overrides.items():
-                    if (
-                        new_key in result[old_config_name]
-                        and result[old_config_name][new_key] != new_value
-                    ):
+                    if new_key in result[old_config_name] and result[old_config_name][new_key] != new_value:
                         raise ConfigTOMLValueError(
                             "toml config file contains "
                             "[[tool.mypy.overrides]] sections with conflicting "
@@ -520,8 +483,7 @@ def parse_section(
             ct = config_types[key]
         elif key in invalid_options:
             print(
-                f"{prefix}Unrecognized option: {key} = {section[key]}"
-                f" (did you mean {invalid_options[key]}?)",
+                f"{prefix}Unrecognized option: {key} = {section[key]}" f" (did you mean {invalid_options[key]}?)",
                 file=stderr,
             )
             continue

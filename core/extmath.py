@@ -35,10 +35,7 @@ def squared_norm(x):
     x = np.ravel(x, order="K")
     if np.issubdtype(x.dtype, np.integer):
         warnings.warn(
-            (
-                "Array type is integer, np.dot may overflow. "
-                "Data should be float type to avoid this issue"
-            ),
+            ("Array type is integer, np.dot may overflow. " "Data should be float type to avoid this issue"),
             UserWarning,
         )
     return np.dot(x, x)
@@ -202,19 +199,12 @@ def safe_sparse_dot(a, b, *, dense_output=False):
     else:
         ret = a @ b
 
-    if (
-        sparse.issparse(a)
-        and sparse.issparse(b)
-        and dense_output
-        and hasattr(ret, "toarray")
-    ):
+    if sparse.issparse(a) and sparse.issparse(b) and dense_output and hasattr(ret, "toarray"):
         return ret.toarray()
     return ret
 
 
-def randomized_range_finder(
-    A, *, size, n_iter, power_iteration_normalizer="auto", random_state=None
-):
+def randomized_range_finder(A, *, size, n_iter, power_iteration_normalizer="auto", random_state=None):
     """Compute an orthonormal matrix whose range approximates the range of A.
 
     Parameters
@@ -284,9 +274,7 @@ def randomized_range_finder(
     )
 
 
-def _randomized_range_finder(
-    A, *, size, n_iter, power_iteration_normalizer="auto", random_state=None
-):
+def _randomized_range_finder(A, *, size, n_iter, power_iteration_normalizer="auto", random_state=None):
     """Body of randomized_range_finder without input validation."""
     xp, is_array_api_compliant = get_namespace(A)
     random_state = check_random_state(random_state)
@@ -326,8 +314,7 @@ def _randomized_range_finder(
             power_iteration_normalizer = "LU"
     elif power_iteration_normalizer == "LU" and is_array_api_compliant:
         raise ValueError(
-            "Array API does not support LU factorization. Set "
-            "`power_iteration_normalizer='QR'` instead."
+            "Array API does not support LU factorization. Set " "`power_iteration_normalizer='QR'` instead."
         )
 
     if is_array_api_compliant:
@@ -545,8 +532,7 @@ def _randomized_svd(
 
     if sparse.issparse(M) and M.format in ("lil", "dok"):
         warnings.warn(
-            "Calculating SVD of a {} is expensive. "
-            "csr_matrix is more efficient.".format(type(M).__name__),
+            "Calculating SVD of a {} is expensive. " "csr_matrix is more efficient.".format(type(M).__name__),
             sparse.SparseEfficiencyWarning,
         )
 
@@ -583,9 +569,7 @@ def _randomized_svd(
         # When array_api_dispatch is disabled, rely on scipy.linalg
         # instead of numpy.linalg to avoid introducing a behavior change w.r.t.
         # previous versions of scikit-learn.
-        Uhat, s, Vt = linalg.svd(
-            B, full_matrices=False, lapack_driver=svd_lapack_driver
-        )
+        Uhat, s, Vt = linalg.svd(B, full_matrices=False, lapack_driver=svd_lapack_driver)
     del B
     U = Q @ Uhat
 
@@ -1061,9 +1045,7 @@ def _safe_accumulator_op(op, x, *args, **kwargs):
     return result
 
 
-def _incremental_mean_and_var(
-    X, last_mean, last_variance, last_sample_count, sample_weight=None
-):
+def _incremental_mean_and_var(X, last_mean, last_variance, last_sample_count, sample_weight=None):
     """Calculate mean update and a Youngs and Cramer variance update.
 
     If sample_weight is given, the weighted mean and variance is computed.
@@ -1128,12 +1110,8 @@ def _incremental_mean_and_var(
     if sample_weight is not None:
         # equivalent to np.nansum(X * sample_weight, axis=0)
         # safer because np.float64(X*W) != np.float64(X)*np.float64(W)
-        new_sum = _safe_accumulator_op(
-            np.matmul, sample_weight, np.where(X_nan_mask, 0, X)
-        )
-        new_sample_count = _safe_accumulator_op(
-            np.sum, sample_weight[:, None] * (~X_nan_mask), axis=0
-        )
+        new_sum = _safe_accumulator_op(np.matmul, sample_weight, np.where(X_nan_mask, 0, X))
+        new_sample_count = _safe_accumulator_op(np.sum, sample_weight[:, None] * (~X_nan_mask), axis=0)
     else:
         new_sum = _safe_accumulator_op(sum_op, X, axis=0)
         n_samples = X.shape[0]
@@ -1151,13 +1129,9 @@ def _incremental_mean_and_var(
         if sample_weight is not None:
             # equivalent to np.nansum((X-T)**2 * sample_weight, axis=0)
             # safer because np.float64(X*W) != np.float64(X)*np.float64(W)
-            correction = _safe_accumulator_op(
-                np.matmul, sample_weight, np.where(X_nan_mask, 0, temp)
-            )
+            correction = _safe_accumulator_op(np.matmul, sample_weight, np.where(X_nan_mask, 0, temp))
             temp **= 2
-            new_unnormalized_variance = _safe_accumulator_op(
-                np.matmul, sample_weight, np.where(X_nan_mask, 0, temp)
-            )
+            new_unnormalized_variance = _safe_accumulator_op(np.matmul, sample_weight, np.where(X_nan_mask, 0, temp))
         else:
             correction = _safe_accumulator_op(sum_op, temp, axis=0)
             temp **= 2
@@ -1175,9 +1149,7 @@ def _incremental_mean_and_var(
             updated_unnormalized_variance = (
                 last_unnormalized_variance
                 + new_unnormalized_variance
-                + last_over_new_count
-                / updated_sample_count
-                * (last_sum / last_over_new_count - new_sum) ** 2
+                + last_over_new_count / updated_sample_count * (last_sum / last_over_new_count - new_sum) ** 2
             )
 
         zeros = last_sample_count == 0
@@ -1234,14 +1206,9 @@ def stable_cumsum(arr, axis=None, rtol=1e-05, atol=1e-08):
     """
     out = np.cumsum(arr, axis=axis, dtype=np.float64)
     expected = np.sum(arr, axis=axis, dtype=np.float64)
-    if not np.allclose(
-        out.take(-1, axis=axis), expected, rtol=rtol, atol=atol, equal_nan=True
-    ):
+    if not np.allclose(out.take(-1, axis=axis), expected, rtol=rtol, atol=atol, equal_nan=True):
         warnings.warn(
-            (
-                "cumsum was found to be unstable: "
-                "its last element does not correspond to sum"
-            ),
+            ("cumsum was found to be unstable: " "its last element does not correspond to sum"),
             RuntimeWarning,
         )
     return out

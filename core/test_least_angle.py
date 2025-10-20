@@ -92,9 +92,7 @@ def _assert_same_lars_path_result(output1, output2):
 @pytest.mark.parametrize("return_path", [True, False])
 def test_lars_path_gram_equivalent(method, return_path):
     _assert_same_lars_path_result(
-        linear_model.lars_path_gram(
-            Xy=Xy, Gram=G, n_samples=n_samples, method=method, return_path=return_path
-        ),
+        linear_model.lars_path_gram(Xy=Xy, Gram=G, n_samples=n_samples, method=method, return_path=return_path),
         linear_model.lars_path(X, y, Gram=G, method=method, return_path=return_path),
     )
 
@@ -180,9 +178,7 @@ def test_no_path():
 def test_no_path_precomputed():
     # Test that the ``return_path=False`` option with Gram remains correct
     alphas_, _, coef_path_ = linear_model.lars_path(X, y, method="lar", Gram=G)
-    alpha_, _, coef = linear_model.lars_path(
-        X, y, method="lar", Gram=G, return_path=False
-    )
+    alpha_, _, coef = linear_model.lars_path(X, y, method="lar", Gram=G, return_path=False)
 
     assert_array_almost_equal(coef, coef_path_[:, -1])
     assert alpha_ == alphas_[-1]
@@ -194,20 +190,14 @@ def test_no_path_all_precomputed():
     X, y = 3 * diabetes.data, diabetes.target
     G = np.dot(X.T, X)
     Xy = np.dot(X.T, y)
-    alphas_, _, coef_path_ = linear_model.lars_path(
-        X, y, method="lasso", Xy=Xy, Gram=G, alpha_min=0.9
-    )
-    alpha_, _, coef = linear_model.lars_path(
-        X, y, method="lasso", Gram=G, Xy=Xy, alpha_min=0.9, return_path=False
-    )
+    alphas_, _, coef_path_ = linear_model.lars_path(X, y, method="lasso", Xy=Xy, Gram=G, alpha_min=0.9)
+    alpha_, _, coef = linear_model.lars_path(X, y, method="lasso", Gram=G, Xy=Xy, alpha_min=0.9, return_path=False)
 
     assert_array_almost_equal(coef, coef_path_[:, -1])
     assert alpha_ == alphas_[-1]
 
 
-@pytest.mark.parametrize(
-    "classifier", [linear_model.Lars, linear_model.LarsCV, linear_model.LassoLarsIC]
-)
+@pytest.mark.parametrize("classifier", [linear_model.Lars, linear_model.LarsCV, linear_model.LassoLarsIC])
 def test_lars_precompute(classifier):
     # Check for different values of precompute
     G = np.dot(X.T, X)
@@ -238,14 +228,10 @@ def test_rank_deficient_design():
         # we need to turn off normalization
         lars = linear_model.LassoLars(0.1)
         coef_lars_ = lars.fit(X, y).coef_
-        obj_lars = 1.0 / (2.0 * 3.0) * linalg.norm(
-            y - np.dot(X, coef_lars_)
-        ) ** 2 + 0.1 * linalg.norm(coef_lars_, 1)
+        obj_lars = 1.0 / (2.0 * 3.0) * linalg.norm(y - np.dot(X, coef_lars_)) ** 2 + 0.1 * linalg.norm(coef_lars_, 1)
         coord_descent = linear_model.Lasso(0.1, tol=1e-6)
         coef_cd_ = coord_descent.fit(X, y).coef_
-        obj_cd = (1.0 / (2.0 * 3.0)) * linalg.norm(
-            y - np.dot(X, coef_cd_)
-        ) ** 2 + 0.1 * linalg.norm(coef_cd_, 1)
+        obj_cd = (1.0 / (2.0 * 3.0)) * linalg.norm(y - np.dot(X, coef_cd_)) ** 2 + 0.1 * linalg.norm(coef_cd_, 1)
         assert obj_lars < obj_cd * (1.0 + 1e-8)
 
 
@@ -295,9 +281,7 @@ def test_lasso_lars_vs_lasso_cd_early_stopping():
     X = diabetes.data
 
     for alpha_min in alphas_min:
-        alphas, _, lasso_path = linear_model.lars_path(
-            X, y, method="lasso", alpha_min=alpha_min
-        )
+        alphas, _, lasso_path = linear_model.lars_path(X, y, method="lasso", alpha_min=alpha_min)
         lasso_cd = linear_model.Lasso(fit_intercept=False, tol=1e-8)
         lasso_cd.alpha = alphas[-1]
         lasso_cd.fit(X, y)
@@ -309,9 +293,7 @@ def test_lasso_lars_vs_lasso_cd_early_stopping():
     X /= np.linalg.norm(X, axis=0)
 
     for alpha_min in alphas_min:
-        alphas, _, lasso_path = linear_model.lars_path(
-            X, y, method="lasso", alpha_min=alpha_min
-        )
+        alphas, _, lasso_path = linear_model.lars_path(X, y, method="lasso", alpha_min=alpha_min)
         lasso_cd = linear_model.Lasso(tol=1e-8)
         lasso_cd.alpha = alphas[-1]
         lasso_cd.fit(X, y)
@@ -371,9 +353,7 @@ def test_lasso_lars_vs_lasso_cd_ill_conditioned2():
     alpha = 0.0001
 
     def objective_function(coef):
-        return 1.0 / (2.0 * len(X)) * linalg.norm(
-            y - np.dot(X, coef)
-        ) ** 2 + alpha * linalg.norm(coef, 1)
+        return 1.0 / (2.0 * len(X)) * linalg.norm(y - np.dot(X, coef)) ** 2 + alpha * linalg.norm(coef, 1)
 
     lars = linear_model.LassoLars(alpha=alpha)
     warning_message = "Regressors in active set degenerate."
@@ -519,19 +499,13 @@ def test_lars_path_positive_constraint():
 
     err_msg = "Positive constraint not supported for 'lar' coding method."
     with pytest.raises(ValueError, match=err_msg):
-        linear_model.lars_path(
-            diabetes["data"], diabetes["target"], method="lar", positive=True
-        )
+        linear_model.lars_path(diabetes["data"], diabetes["target"], method="lar", positive=True)
 
     method = "lasso"
-    _, _, coefs = linear_model.lars_path(
-        X, y, return_path=True, method=method, positive=False
-    )
+    _, _, coefs = linear_model.lars_path(X, y, return_path=True, method=method, positive=False)
     assert coefs.min() < 0
 
-    _, _, coefs = linear_model.lars_path(
-        X, y, return_path=True, method=method, positive=True
-    )
+    _, _, coefs = linear_model.lars_path(X, y, return_path=True, method=method, positive=True)
     assert coefs.min() >= 0
 
 
@@ -598,12 +572,8 @@ def test_lasso_lars_vs_lasso_cd_positive():
     # https://gist.github.com/michigraber/7e7d7c75eca694c7a6ff
 
     for alpha in np.linspace(6e-1, 1 - 1e-2, 20):
-        clf1 = linear_model.LassoLars(
-            fit_intercept=False, alpha=alpha, positive=True
-        ).fit(X, y)
-        clf2 = linear_model.Lasso(
-            fit_intercept=False, alpha=alpha, tol=1e-8, positive=True
-        ).fit(X, y)
+        clf1 = linear_model.LassoLars(fit_intercept=False, alpha=alpha, positive=True).fit(X, y)
+        clf2 = linear_model.Lasso(fit_intercept=False, alpha=alpha, tol=1e-8, positive=True).fit(X, y)
         err = linalg.norm(clf1.coef_ - clf2.coef_)
         assert err < 1e-3
 
@@ -852,15 +822,12 @@ def test_lassolarsic_noise_variance(fit_intercept):
     """Check the behaviour when `n_samples` < `n_features` and that one needs
     to provide the noise variance."""
     rng = np.random.RandomState(0)
-    X, y = datasets.make_regression(
-        n_samples=10, n_features=11 - fit_intercept, random_state=rng
-    )
+    X, y = datasets.make_regression(n_samples=10, n_features=11 - fit_intercept, random_state=rng)
 
     model = make_pipeline(StandardScaler(), LassoLarsIC(fit_intercept=fit_intercept))
 
     err_msg = (
-        "You are using LassoLarsIC in the case where the number of samples is smaller"
-        " than the number of features"
+        "You are using LassoLarsIC in the case where the number of samples is smaller" " than the number of features"
     )
     with pytest.raises(ValueError, match=err_msg):
         model.fit(X, y)

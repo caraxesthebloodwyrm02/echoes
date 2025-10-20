@@ -18,9 +18,7 @@ class TestLikelihoodRatio(unittest.TestCase):
             2.4142743368419755,
             delta=_DELTA,
         )
-        self.assertAlmostEqual(
-            BigramAssocMeasures.likelihood_ratio(1, (1, 1), 1), 0.0, delta=_DELTA
-        )
+        self.assertAlmostEqual(BigramAssocMeasures.likelihood_ratio(1, (1, 1), 1), 0.0, delta=_DELTA)
         self.assertRaises(
             ValueError,
             BigramAssocMeasures.likelihood_ratio,
@@ -46,16 +44,12 @@ class TestLikelihoodRatio(unittest.TestCase):
 
     def test_lr_quadgram(self):
         self.assertAlmostEqual(
-            QuadgramAssocMeasures.likelihood_ratio(
-                1, (1, 1, 1, 1), (1, 1, 1, 1, 1, 1), (1, 1, 1, 1), 2
-            ),
+            QuadgramAssocMeasures.likelihood_ratio(1, (1, 1, 1, 1), (1, 1, 1, 1, 1, 1), (1, 1, 1, 1), 2),
             8.317766166719343,
             delta=_DELTA,
         )
         self.assertAlmostEqual(
-            QuadgramAssocMeasures.likelihood_ratio(
-                1, (1, 1, 1, 1), (1, 1, 1, 1, 1, 1), (1, 1, 1, 1), 1
-            ),
+            QuadgramAssocMeasures.likelihood_ratio(1, (1, 1, 1, 1), (1, 1, 1, 1, 1, 1), (1, 1, 1, 1), 1),
             0.0,
             delta=_DELTA,
         )

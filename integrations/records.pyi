@@ -103,8 +103,6 @@ class recarray(np.ndarray[_ShapeT_co, _DTypeT_co]):
     def __array_finalize__(self, /, obj: object) -> None: ...
     def __getattribute__(self, attr: str, /) -> Any: ...
     def __setattr__(self, attr: str, val: ArrayLike, /) -> None: ...
-
-    #
     @overload
     def field(self, /, attr: int | str, val: ArrayLike) -> None: ...
     @overload
@@ -147,7 +145,6 @@ def fromarrays(
     aligned: bool = False,
     byteorder: _ByteOrder | None = None,
 ) -> _RecArray[record]: ...
-
 @overload
 def fromrecords(
     recList: _ArrayLikeVoid_co | tuple[object, ...] | _NestedSequence[tuple[object, ...]],

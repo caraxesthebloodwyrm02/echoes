@@ -21,43 +21,43 @@ def _translate_pattern(pat: str) -> str:
     match slashes.
     """
     i, n = 0, len(pat)
-    res = ''
+    res = ""
     while i < n:
         c = pat[i]
         i += 1
-        if c == '*':
-            if i < n and pat[i] == '*':
+        if c == "*":
+            if i < n and pat[i] == "*":
                 # double star matches slashes too
                 i += 1
-                res = res + '.*'
+                res = res + ".*"
             else:
                 # single star doesn't match slashes
-                res = res + '[^/]*'
-        elif c == '?':
+                res = res + "[^/]*"
+        elif c == "?":
             # question mark doesn't match slashes too
-            res = res + '[^/]'
-        elif c == '[':
+            res = res + "[^/]"
+        elif c == "[":
             j = i
-            if j < n and pat[j] == '!':
+            if j < n and pat[j] == "!":
                 j += 1
-            if j < n and pat[j] == ']':
+            if j < n and pat[j] == "]":
                 j += 1
-            while j < n and pat[j] != ']':
+            while j < n and pat[j] != "]":
                 j += 1
             if j >= n:
-                res = res + '\\['
+                res = res + "\\["
             else:
-                stuff = pat[i:j].replace('\\', '\\\\')
+                stuff = pat[i:j].replace("\\", "\\\\")
                 i = j + 1
-                if stuff[0] == '!':
+                if stuff[0] == "!":
                     # negative pattern mustn't match slashes too
-                    stuff = '^/' + stuff[1:]
-                elif stuff[0] == '^':
-                    stuff = '\\' + stuff
-                res = f'{res}[{stuff}]'
+                    stuff = "^/" + stuff[1:]
+                elif stuff[0] == "^":
+                    stuff = "\\" + stuff
+                res = f"{res}[{stuff}]"
         else:
             res += re.escape(c)
-    return res + '$'
+    return res + "$"
 
 
 def compile_matchers(
@@ -74,7 +74,7 @@ class Matcher:
     """
 
     def __init__(self, exclude_patterns: Iterable[str]) -> None:
-        expanded = [pat[3:] for pat in exclude_patterns if pat.startswith('**/')]
+        expanded = [pat[3:] for pat in exclude_patterns if pat.startswith("**/")]
         self.patterns = compile_matchers(list(exclude_patterns) + expanded)
 
     def __call__(self, string: str) -> bool:
@@ -85,7 +85,7 @@ class Matcher:
         return any(pat(string) for pat in self.patterns)
 
 
-DOTFILES = Matcher(['**/.*'])
+DOTFILES = Matcher(["**/.*"])
 
 
 _pat_cache: dict[str, re.Pattern[str]] = {}
@@ -114,7 +114,7 @@ def patfilter(names: Iterable[str], pat: str) -> list[str]:
 
 def get_matching_files(
     dirname: str | os.PathLike[str],
-    include_patterns: Iterable[str] = ('**',),
+    include_patterns: Iterable[str] = ("**",),
     exclude_patterns: Iterable[str] = (),
 ) -> Iterator[str]:
     """Get all file names in a directory, recursively.
@@ -134,8 +134,8 @@ def get_matching_files(
 
     for root, dirs, files in os.walk(dirname, followlinks=True):
         relative_root = os.path.relpath(root, dirname)
-        if relative_root == '.':
-            relative_root = ''  # suppress dirname for files on the target dir
+        if relative_root == ".":
+            relative_root = ""  # suppress dirname for files on the target dir
         relative_root_path = Path(relative_root)
 
         # Filter files
@@ -175,4 +175,4 @@ def get_matching_files(
 
 def _unicode_nfc(s: str, /) -> str:
     """Normalise the string to NFC form."""
-    return unicodedata.normalize('NFC', s)
+    return unicodedata.normalize("NFC", s)

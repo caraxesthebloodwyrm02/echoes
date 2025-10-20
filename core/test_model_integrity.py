@@ -106,13 +106,8 @@ def test_provider_routing() -> bool:
 
         try:
             client = LLMClient()
-            if (
-                client.provider == config["expected_provider"]
-                and client.model == config["expected_model"]
-            ):
-                print(
-                    f"✓ {config['LLM_PROVIDER']}: provider={client.provider}, model={client.model}"
-                )
+            if client.provider == config["expected_provider"] and client.model == config["expected_model"]:
+                print(f"✓ {config['LLM_PROVIDER']}: provider={client.provider}, model={client.model}")
             else:
                 print(
                     f"✗ {config['LLM_PROVIDER']}: Expected provider={config['expected_provider']} model={config['expected_model']}, "

@@ -6,11 +6,11 @@ def parse_line_num_spec(spec: str, total: int) -> list[int]:
     wanted line numbers.
     """
     items = []
-    parts = spec.split(',')
+    parts = spec.split(",")
     for part in parts:
         try:
-            begend = part.strip().split('-')
-            if begend == ['', '']:
+            begend = part.strip().split("-")
+            if begend == ["", ""]:
                 raise ValueError  # NoQA: TRY301
             if len(begend) == 1:
                 items.append(int(begend[0]) - 1)
@@ -23,7 +23,7 @@ def parse_line_num_spec(spec: str, total: int) -> list[int]:
             else:
                 raise ValueError  # NoQA: TRY301
         except ValueError as exc:
-            msg = f'invalid line number spec: {spec!r}'
+            msg = f"invalid line number spec: {spec!r}"
             raise ValueError(msg) from exc
 
     return items

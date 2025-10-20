@@ -143,13 +143,8 @@ class NaiveBayesClassifier(ClassifierI):
             if cpdist[l0, fname].prob(fval) == 0:
                 ratio = "INF"
             else:
-                ratio = "%8.1f" % (
-                    cpdist[l1, fname].prob(fval) / cpdist[l0, fname].prob(fval)
-                )
-            print(
-                "%24s = %-14r %6s : %-6s = %s : 1.0"
-                % (fname, fval, ("%s" % l1)[:6], ("%s" % l0)[:6], ratio)
-            )
+                ratio = "%8.1f" % (cpdist[l1, fname].prob(fval) / cpdist[l0, fname].prob(fval))
+            print("%24s = %-14r %6s : %-6s = %s : 1.0" % (fname, fval, ("%s" % l1)[:6], ("%s" % l0)[:6], ratio))
 
     def most_informative_features(self, n=100):
         """

@@ -36,9 +36,7 @@ def test_export_function():
     inspiration_vectors = ["test"]
     semantic_scores = {"score": 0.5}
 
-    result = export_solar_summary_as_json(
-        parsed_data, inspiration_vectors, semantic_scores
-    )
+    result = export_solar_summary_as_json(parsed_data, inspiration_vectors, semantic_scores)
     data = json.loads(result)
     assert data["parsed_data"]["location"] == "Test"
 

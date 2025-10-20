@@ -232,46 +232,30 @@ class PromptRegenerator:
             return f"{base_objective} {', '.join(details)}"
         return base_objective
 
-    def _generate_constraints(
-        self, result: AnalysisResult, relationships: Dict[str, str]
-    ) -> List[str]:
+    def _generate_constraints(self, result: AnalysisResult, relationships: Dict[str, str]) -> List[str]:
         """Generate constraints based on result metrics."""
         constraints = []
 
         # Efficiency score constraint
         if result.efficiency_score >= 0.7:
-            constraints.append(
-                f"Target efficiency score: >= 0.7 (achieved: {result.efficiency_score:.3f})"
-            )
+            constraints.append(f"Target efficiency score: >= 0.7 (achieved: {result.efficiency_score:.3f})")
         elif result.efficiency_score >= 0.3:
-            constraints.append(
-                f"Target efficiency score: 0.3-0.7 (achieved: {result.efficiency_score:.3f})"
-            )
+            constraints.append(f"Target efficiency score: 0.3-0.7 (achieved: {result.efficiency_score:.3f})")
         else:
-            constraints.append(
-                f"Efficiency score: < 0.3 (achieved: {result.efficiency_score:.3f})"
-            )
+            constraints.append(f"Efficiency score: < 0.3 (achieved: {result.efficiency_score:.3f})")
 
         # Balance angle constraint
         if result.balance_angle < 90:
-            constraints.append(
-                f"Balance angle: < 90° (synergy) (achieved: {result.balance_angle:.1f}°)"
-            )
+            constraints.append(f"Balance angle: < 90° (synergy) (achieved: {result.balance_angle:.1f}°)")
         elif result.balance_angle <= 120:
-            constraints.append(
-                f"Balance angle: 90-120° (moderate) (achieved: {result.balance_angle:.1f}°)"
-            )
+            constraints.append(f"Balance angle: 90-120° (moderate) (achieved: {result.balance_angle:.1f}°)")
         else:
-            constraints.append(
-                f"Balance angle: > 120° (antagonistic) (achieved: {result.balance_angle:.1f}°)"
-            )
+            constraints.append(f"Balance angle: > 120° (antagonistic) (achieved: {result.balance_angle:.1f}°)")
 
         # Relationship constraints
         for pair, relationship in relationships.items():
             if relationship in ["opposition", "complete_opposition"]:
-                constraints.append(
-                    f"{pair.replace('_', '-')} shows {relationship.replace('_', ' ')}"
-                )
+                constraints.append(f"{pair.replace('_', '-')} shows {relationship.replace('_', ' ')}")
 
         # Vector magnitude constraints
         constraints.append("All input vectors must be 3-dimensional and normalizable")
@@ -307,9 +291,7 @@ class PromptRegenerator:
 
         return min(confidence, 1.0)
 
-    def _generate_reasoning(
-        self, result: AnalysisResult, relationships: Dict[str, str]
-    ) -> str:
+    def _generate_reasoning(self, result: AnalysisResult, relationships: Dict[str, str]) -> str:
         """Generate explanation of regeneration logic."""
         reasoning_parts = []
 
@@ -329,45 +311,33 @@ class PromptRegenerator:
 
         # Explain vector reconstruction
         reasoning_parts.append(
-            "Input vectors were directly extracted from result metadata, "
-            "ensuring exact reproducibility."
+            "Input vectors were directly extracted from result metadata, " "ensuring exact reproducibility."
         )
 
         return " ".join(reasoning_parts)
 
-    def _generate_alternatives(
-        self, result: AnalysisResult, template: Dict[str, Any]
-    ) -> List[str]:
+    def _generate_alternatives(self, result: AnalysisResult, template: Dict[str, Any]) -> List[str]:
         """Generate alternative prompt interpretations."""
         alternatives = []
 
         # Alternative 1: Focus on use case
         alternatives.append(
-            f"Analyze {template['typical_use_case']} with "
-            f"efficiency score ~{result.efficiency_score:.1f}"
+            f"Analyze {template['typical_use_case']} with " f"efficiency score ~{result.efficiency_score:.1f}"
         )
 
         # Alternative 2: Focus on intervention
         if result.classification == "Fragmented":
-            alternatives.append(
-                "Design intervention strategy for critically misaligned system"
-            )
+            alternatives.append("Design intervention strategy for critically misaligned system")
         elif result.classification == "Imbalanced":
-            alternatives.append(
-                "Identify optimization opportunities in moderately functional system"
-            )
+            alternatives.append("Identify optimization opportunities in moderately functional system")
         else:
             alternatives.append("Document best practices from high-performing system")
 
         # Alternative 3: Focus on specific dimension
         if result.productivity_creativity_angle > 135:
-            alternatives.append(
-                "Resolve productivity-creativity conflict in system dynamics"
-            )
+            alternatives.append("Resolve productivity-creativity conflict in system dynamics")
         elif result.influence_productivity_angle < 45:
-            alternatives.append(
-                "Leverage strong influence-productivity alignment for growth"
-            )
+            alternatives.append("Leverage strong influence-productivity alignment for growth")
 
         return alternatives
 
@@ -382,10 +352,7 @@ class PromptRegenerator:
         - Metric deviation
         """
         validation = {
-            "classification_match": (
-                original_result.classification
-                == regenerated_prompt.expected_classification
-            ),
+            "classification_match": (original_result.classification == regenerated_prompt.expected_classification),
             "vector_match": {},
             "confidence": regenerated_prompt.confidence,
             "is_valid": True,

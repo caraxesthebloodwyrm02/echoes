@@ -91,12 +91,8 @@ def generate_echoes_snapshot():
                                 "content": content,
                                 "lines": len(content.splitlines()),
                                 "size": len(content),
-                                "classes": len(
-                                    re.findall(r"^class\s+\w+", content, re.MULTILINE)
-                                ),
-                                "functions": len(
-                                    re.findall(r"^def\s+\w+", content, re.MULTILINE)
-                                ),
+                                "classes": len(re.findall(r"^class\s+\w+", content, re.MULTILINE)),
+                                "functions": len(re.findall(r"^def\s+\w+", content, re.MULTILINE)),
                                 "imports": len(
                                     re.findall(
                                         r"^import\s+|^from\s+.*import",
@@ -180,9 +176,7 @@ def generate_echoes_snapshot():
         content = file_info.get("content", "")
         if content:
             # Key imports
-            imports = re.findall(
-                r"^(?:import|from)\s+(.+?)(?:\s+import|$)", content, re.MULTILINE
-            )
+            imports = re.findall(r"^(?:import|from)\s+(.+?)(?:\s+import|$)", content, re.MULTILINE)
             file_data["key_imports"] = list(set(imports))[:10]  # Top 10 unique imports
 
             # Key classes/functions (first few)
@@ -204,9 +198,7 @@ def generate_echoes_snapshot():
     for file_info in python_files:
         content = file_info.get("content", "")
         if content:
-            imports = re.findall(
-                r"^(?:import|from)\s+(.+?)(?:\s+import|$)", content, re.MULTILINE
-            )
+            imports = re.findall(r"^(?:import|from)\s+(.+?)(?:\s+import|$)", content, re.MULTILINE)
             all_imports.extend(imports)
 
     dependency_counts = Counter(all_imports)
@@ -214,9 +206,7 @@ def generate_echoes_snapshot():
 
     snapshot["dependency_analysis"] = {
         "total_unique_imports": len(set(all_imports)),
-        "top_dependencies": [
-            {"package": pkg, "count": count} for pkg, count in top_dependencies
-        ],
+        "top_dependencies": [{"package": pkg, "count": count} for pkg, count in top_dependencies],
         "external_vs_stdlib": {
             "likely_external": [
                 pkg
@@ -314,9 +304,7 @@ def generate_echoes_snapshot():
 
         for term in unique_terms:
             if term in content:
-                innovation_patterns["unique_terminology"].append(
-                    {"term": term, "file": file_info["path"]}
-                )
+                innovation_patterns["unique_terminology"].append({"term": term, "file": file_info["path"]})
 
     snapshot["innovation_patterns"] = innovation_patterns
 
@@ -326,9 +314,7 @@ def generate_echoes_snapshot():
         json.dump(snapshot, f, indent=2, ensure_ascii=False)
 
     print("ECHOES snapshot generated and saved to reports/echoes_snapshot.json")
-    print(
-        f"Analyzed {len(python_files)} Python files with {snapshot['codebase_metrics']['total_lines']} total lines"
-    )
+    print(f"Analyzed {len(python_files)} Python files with {snapshot['codebase_metrics']['total_lines']} total lines")
 
     return snapshot
 

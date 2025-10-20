@@ -6,6 +6,7 @@ Numba 1D mean kernels that can be shared by
 
 Mirrors pandas/_libs/window/aggregation.pyx
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -49,9 +50,7 @@ def add_mean(
 
 
 @numba.jit(nopython=True, nogil=True, parallel=False)
-def remove_mean(
-    val: float, nobs: int, sum_x: float, neg_ct: int, compensation: float
-) -> tuple[int, float, int, float]:
+def remove_mean(val: float, nobs: int, sum_x: float, neg_ct: int, compensation: float) -> tuple[int, float, int, float]:
     if not np.isnan(val):
         nobs -= 1
         y = -val - compensation
@@ -78,9 +77,7 @@ def sliding_mean(
     compensation_add = 0.0
     compensation_remove = 0.0
 
-    is_monotonic_increasing_bounds = is_monotonic_increasing(
-        start
-    ) and is_monotonic_increasing(end)
+    is_monotonic_increasing_bounds = is_monotonic_increasing(start) and is_monotonic_increasing(end)
 
     output = np.empty(N, dtype=result_dtype)
 
@@ -112,9 +109,7 @@ def sliding_mean(
         else:
             for j in range(start[i - 1], s):
                 val = values[j]
-                nobs, sum_x, neg_ct, compensation_remove = remove_mean(
-                    val, nobs, sum_x, neg_ct, compensation_remove
-                )
+                nobs, sum_x, neg_ct, compensation_remove = remove_mean(val, nobs, sum_x, neg_ct, compensation_remove)
 
             for j in range(end[i - 1], e):
                 val = values[j]
@@ -169,9 +164,7 @@ def grouped_mean(
     ngroups: int,
     min_periods: int,
 ) -> tuple[np.ndarray, list[int]]:
-    output, nobs_arr, comp_arr, consecutive_counts, prev_vals = grouped_kahan_sum(
-        values, result_dtype, labels, ngroups
-    )
+    output, nobs_arr, comp_arr, consecutive_counts, prev_vals = grouped_kahan_sum(values, result_dtype, labels, ngroups)
 
     # Post-processing, replace sums that don't satisfy min_periods
     for lab in range(ngroups):

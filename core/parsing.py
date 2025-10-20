@@ -1,6 +1,7 @@
 """
 :func:`~pandas.eval` source string parsing functions
 """
+
 from __future__ import annotations
 
 from io import StringIO
@@ -42,8 +43,7 @@ def create_valid_python_identifier(name: str) -> str:
     # EXACT_TOKEN_TYPES contains these special characters
     # token.tok_name contains a readable description of the replacement string.
     special_characters_replacements = {
-        char: f"_{token.tok_name[tokval]}_"
-        for char, tokval in (tokenize.EXACT_TOKEN_TYPES.items())
+        char: f"_{token.tok_name[tokval]}_" for char, tokval in (tokenize.EXACT_TOKEN_TYPES.items())
     }
     special_characters_replacements.update(
         {
@@ -189,9 +189,7 @@ def tokenize_string(source: str) -> Iterator[tuple[int, str]]:
     for toknum, tokval, start, _, _ in token_generator:
         if tokval == "`":
             try:
-                yield tokenize_backtick_quoted_string(
-                    token_generator, source, string_start=start[1] + 1
-                )
+                yield tokenize_backtick_quoted_string(token_generator, source, string_start=start[1] + 1)
             except Exception as err:
                 raise SyntaxError(f"Failed to parse backticks in '{source}'.") from err
         else:

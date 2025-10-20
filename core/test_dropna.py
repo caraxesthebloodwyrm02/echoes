@@ -88,9 +88,7 @@ class TestDropna:
         tm.assert_series_equal(result, expected)
 
         # DatetimeTZBlock
-        idx = DatetimeIndex(
-            ["2011-01-01 10:00", NaT, "2011-01-03 10:00", NaT], tz="Asia/Tokyo"
-        ).as_unit(unit)
+        idx = DatetimeIndex(["2011-01-01 10:00", NaT, "2011-01-03 10:00", NaT], tz="Asia/Tokyo").as_unit(unit)
         ser = Series(idx)
         assert ser.dtype == f"datetime64[{unit}, Asia/Tokyo]"
         result = ser.dropna()

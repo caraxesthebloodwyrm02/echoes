@@ -204,9 +204,7 @@ class Block(PandasObject, libinternals.Block):
         means numpy dtypes or DatetimeTZDtype.
         """
         dtype = self.dtype
-        return not isinstance(dtype, ExtensionDtype) or isinstance(
-            dtype, DatetimeTZDtype
-        )
+        return not isinstance(dtype, ExtensionDtype) or isinstance(dtype, DatetimeTZDtype)
 
     @final
     @cache_readonly
@@ -350,9 +348,7 @@ class Block(PandasObject, libinternals.Block):
         return type(self)(new_values, new_mgr_locs, self.ndim, refs=None)
 
     @final
-    def getitem_block_columns(
-        self, slicer: slice, new_mgr_locs: BlockPlacement, ref_inplace_op: bool = False
-    ) -> Self:
+    def getitem_block_columns(self, slicer: slice, new_mgr_locs: BlockPlacement, ref_inplace_op: bool = False) -> Self:
         """
         Perform __getitem__-like, return result as block.
 
@@ -478,9 +474,7 @@ class Block(PandasObject, libinternals.Block):
     # Up/Down-casting
 
     @final
-    def coerce_to_target_dtype(
-        self, other, warn_on_upcast: bool = False, using_cow: bool = False
-    ) -> Block:
+    def coerce_to_target_dtype(self, other, warn_on_upcast: bool = False, using_cow: bool = False) -> Block:
         """
         coerce the current block to a dtype compat for other
         we will return a block, possibly object, and not raise
@@ -492,8 +486,7 @@ class Block(PandasObject, libinternals.Block):
         if new_dtype == self.dtype:
             # GH#52927 avoid RecursionError
             raise AssertionError(
-                "Something has gone wrong, please report a bug at "
-                "https://github.com/pandas-dev/pandas/issues"
+                "Something has gone wrong, please report a bug at " "https://github.com/pandas-dev/pandas/issues"
             )
 
         # In a future version of pandas, the default will be that
@@ -503,9 +496,7 @@ class Block(PandasObject, libinternals.Block):
             and is_integer_dtype(self.values.dtype)
             and isna(other)
             and other is not NaT
-            and not (
-                isinstance(other, (np.datetime64, np.timedelta64)) and np.isnat(other)
-            )
+            and not (isinstance(other, (np.datetime64, np.timedelta64)) and np.isnat(other))
         ):
             warn_on_upcast = False
         elif (
@@ -533,11 +524,7 @@ class Block(PandasObject, libinternals.Block):
                 "https://github.com/pandas-dev/pandas/issues."
             )
         copy = False
-        if (
-            not using_cow
-            and isinstance(self.dtype, StringDtype)
-            and self.dtype.storage == "python"
-        ):
+        if not using_cow and isinstance(self.dtype, StringDtype) and self.dtype.storage == "python":
             copy = True
         return self.astype(new_dtype, copy=copy, using_cow=using_cow)
 
@@ -563,17 +550,10 @@ class Block(PandasObject, libinternals.Block):
                 return blocks
 
             nbs = extend_blocks(
-                [
-                    blk.convert(
-                        using_cow=using_cow, copy=not using_cow, convert_string=False
-                    )
-                    for blk in blocks
-                ]
+                [blk.convert(using_cow=using_cow, copy=not using_cow, convert_string=False) for blk in blocks]
             )
             if caller == "fillna":
-                if len(nbs) != len(blocks) or not all(
-                    x.dtype == y.dtype for x, y in zip(nbs, blocks)
-                ):
+                if len(nbs) != len(blocks) or not all(x.dtype == y.dtype for x, y in zip(nbs, blocks)):
                     # GH#54261
                     warnings.warn(
                         "Downcasting object dtype arrays on .fillna, .ffill, .bfill "
@@ -602,9 +582,7 @@ class Block(PandasObject, libinternals.Block):
         #  so we issue a warning if and only if some inference occurred.
         if caller == "where":
             # GH#53656
-            if len(blocks) != len(nbs) or any(
-                left.dtype != right.dtype for left, right in zip(blocks, nbs)
-            ):
+            if len(blocks) != len(nbs) or any(left.dtype != right.dtype for left, right in zip(blocks, nbs)):
                 # In this case _maybe_downcast was _not_ a no-op, so the behavior
                 #  will change, so we issue a warning.
                 warnings.warn(
@@ -708,9 +686,7 @@ class Block(PandasObject, libinternals.Block):
         else:
             blks = [self]
 
-        if not any(
-            [convert_floating, convert_integer, convert_boolean, convert_string]
-        ):
+        if not any([convert_floating, convert_integer, convert_boolean, convert_string]):
             return [b.copy(deep=copy) for b in blks]
 
         rbs = []
@@ -799,9 +775,7 @@ class Block(PandasObject, libinternals.Block):
         return newb
 
     @final
-    def get_values_for_csv(
-        self, *, float_format, date_format, decimal, na_rep: str = "nan", quoting=None
-    ) -> Block:
+    def get_values_for_csv(self, *, float_format, date_format, decimal, na_rep: str = "nan", quoting=None) -> Block:
         """convert to our native types format"""
         result = get_values_for_csv(
             self.values,
@@ -906,12 +880,7 @@ class Block(PandasObject, libinternals.Block):
             # and rest?
             blk = self._maybe_copy(using_cow, inplace)
             putmask_inplace(blk.values, mask, value)
-            if (
-                inplace
-                and warn_copy_on_write()
-                and already_warned is not None
-                and not already_warned.warned_already
-            ):
+            if inplace and warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
                 if self.refs.has_reference():
                     warnings.warn(
                         COW_WARNING_GENERAL_MSG,
@@ -1022,9 +991,7 @@ class Block(PandasObject, libinternals.Block):
             # will only match strings
             return [self.copy(deep=False)]
 
-        if not (
-            self._can_hold_element(value) or (self.dtype == "string" and is_re(value))
-        ):
+        if not (self._can_hold_element(value) or (self.dtype == "string" and is_re(value))):
             block = self.astype(np.dtype(object))
         else:
             block = self._maybe_copy(using_cow, inplace)
@@ -1033,12 +1000,7 @@ class Block(PandasObject, libinternals.Block):
 
         replace_regex(block.values, rx, value, mask)
 
-        if (
-            inplace
-            and warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if inplace and warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -1054,11 +1016,7 @@ class Block(PandasObject, libinternals.Block):
         )
         opt = get_option("future.no_silent_downcasting")
         if (
-            len(nbs) > 1
-            or (
-                nbs[0].dtype != block.dtype
-                and not (self.dtype == "string" and nbs[0].dtype == "string")
-            )
+            len(nbs) > 1 or (nbs[0].dtype != block.dtype and not (self.dtype == "string" and nbs[0].dtype == "string"))
         ) and not opt:
             warnings.warn(
                 # GH#54710
@@ -1120,9 +1078,7 @@ class Block(PandasObject, libinternals.Block):
                 extract_bool_array(
                     cast(
                         ArrayLike,
-                        compare_or_regex_search(
-                            values, s[0], regex=regex, mask=na_mask
-                        ),
+                        compare_or_regex_search(values, s[0], regex=regex, mask=na_mask),
                     )
                 )
                 for s in pairs
@@ -1142,12 +1098,7 @@ class Block(PandasObject, libinternals.Block):
         else:
             rb = [self if inplace else self.copy()]
 
-        if (
-            inplace
-            and warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if inplace and warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -1191,16 +1142,9 @@ class Block(PandasObject, libinternals.Block):
                     # many unnecessary copies
                     for b in result:
                         ref = weakref.ref(b)
-                        b.refs.referenced_blocks.pop(
-                            b.refs.referenced_blocks.index(ref)
-                        )
+                        b.refs.referenced_blocks.pop(b.refs.referenced_blocks.index(ref))
 
-                if (
-                    not opt
-                    and convert
-                    and blk.is_object
-                    and not all(x is None for x in dest_list)
-                ):
+                if not opt and convert and blk.is_object and not all(x is None for x in dest_list):
                     # GH#44498 avoid unwanted cast-back
                     nbs = []
                     for res_blk in result:
@@ -1325,9 +1269,7 @@ class Block(PandasObject, libinternals.Block):
         # "Union[int, integer[Any]]"
         return self.values[i]  # type: ignore[index]
 
-    def _slice(
-        self, slicer: slice | npt.NDArray[np.bool_] | npt.NDArray[np.intp]
-    ) -> ArrayLike:
+    def _slice(self, slicer: slice | npt.NDArray[np.bool_] | npt.NDArray[np.intp]) -> ArrayLike:
         """return a slice of my values"""
 
         return self.values[slicer]
@@ -1370,9 +1312,7 @@ class Block(PandasObject, libinternals.Block):
             allow_fill = True
 
         # Note: algos.take_nd has upcast logic similar to coerce_to_target_dtype
-        new_values = algos.take_nd(
-            values, indexer, axis=axis, allow_fill=allow_fill, fill_value=fill_value
-        )
+        new_values = algos.take_nd(values, indexer, axis=axis, allow_fill=allow_fill, fill_value=fill_value)
 
         # Called from three places in managers, all of which satisfy
         #  these assertions
@@ -1416,9 +1356,7 @@ class Block(PandasObject, libinternals.Block):
         mask : array-like of bool
             The mask of columns of `blocks` we should keep.
         """
-        new_values, mask = unstacker.get_new_values(
-            self.values.T, fill_value=fill_value
-        )
+        new_values, mask = unstacker.get_new_values(self.values.T, fill_value=fill_value)
 
         mask = mask.any(0)
         # TODO: in all tests we have mask.all(); can we rely on that?
@@ -1495,15 +1433,11 @@ class Block(PandasObject, libinternals.Block):
                 values[indexer] = casted
             except (TypeError, ValueError) as err:
                 if is_list_like(casted):
-                    raise ValueError(
-                        "setting an array element with a sequence."
-                    ) from err
+                    raise ValueError("setting an array element with a sequence.") from err
                 raise
         return self
 
-    def putmask(
-        self, mask, new, using_cow: bool = False, already_warned=None
-    ) -> list[Block]:
+    def putmask(self, mask, new, using_cow: bool = False, already_warned=None) -> list[Block]:
         """
         putmask the data to the block; it is possible that we may create a
         new dtype of block
@@ -1536,11 +1470,7 @@ class Block(PandasObject, libinternals.Block):
                 return [self.copy(deep=False)]
             return [self]
 
-        if (
-            warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -1563,9 +1493,7 @@ class Block(PandasObject, libinternals.Block):
 
                 if not is_list_like(new):
                     # using just new[indexer] can't save us the need to cast
-                    return self.coerce_to_target_dtype(
-                        new, warn_on_upcast=True
-                    ).putmask(mask, new)
+                    return self.coerce_to_target_dtype(new, warn_on_upcast=True).putmask(mask, new)
                 else:
                     indexer = mask.nonzero()[0]
                     nb = self.setitem(indexer, new[indexer], using_cow=using_cow)
@@ -1587,9 +1515,7 @@ class Block(PandasObject, libinternals.Block):
                     res_blocks.extend(rbs)
                 return res_blocks
 
-    def where(
-        self, other, cond, _downcast: str | bool = "infer", using_cow: bool = False
-    ) -> list[Block]:
+    def where(self, other, cond, _downcast: str | bool = "infer", using_cow: bool = False) -> list[Block]:
         """
         evaluate the block; return result block(s) from the result
 
@@ -1642,9 +1568,7 @@ class Block(PandasObject, libinternals.Block):
 
                 block = self.coerce_to_target_dtype(other)
                 blocks = block.where(orig_other, cond, using_cow=using_cow)
-                return self._maybe_downcast(
-                    blocks, downcast=_downcast, using_cow=using_cow, caller="where"
-                )
+                return self._maybe_downcast(blocks, downcast=_downcast, using_cow=using_cow, caller="where")
 
             else:
                 # since _maybe_downcast would split blocks anyway, we
@@ -1661,9 +1585,7 @@ class Block(PandasObject, libinternals.Block):
                         oth = other[:, i : i + 1]
 
                     submask = cond[:, i : i + 1]
-                    rbs = nb.where(
-                        oth, submask, _downcast=_downcast, using_cow=using_cow
-                    )
+                    rbs = nb.where(oth, submask, _downcast=_downcast, using_cow=using_cow)
                     res_blocks.extend(rbs)
                 return res_blocks
 
@@ -1684,11 +1606,7 @@ class Block(PandasObject, libinternals.Block):
             else:
                 # By the time we get here, we should have all Series/Index
                 #  args extracted to ndarray
-                if (
-                    is_list_like(other)
-                    and not isinstance(other, np.ndarray)
-                    and len(other) == self.shape[-1]
-                ):
+                if is_list_like(other) and not isinstance(other, np.ndarray) and len(other) == self.shape[-1]:
                     # If we don't do this broadcasting here, then expressions.where
                     #  will broadcast a 1D other to be row-like instead of
                     #  column-like.
@@ -1740,18 +1658,14 @@ class Block(PandasObject, libinternals.Block):
             else:
                 # GH#45423 consistent downcasting on no-ops.
                 nb = self.copy(deep=not using_cow)
-                nbs = nb._maybe_downcast(
-                    [nb], downcast=downcast, using_cow=using_cow, caller="fillna"
-                )
+                nbs = nb._maybe_downcast([nb], downcast=downcast, using_cow=using_cow, caller="fillna")
                 return nbs
 
         if limit is not None:
             mask[mask.cumsum(self.values.ndim - 1) > limit] = False
 
         if inplace:
-            nbs = self.putmask(
-                mask.T, value, using_cow=using_cow, already_warned=already_warned
-            )
+            nbs = self.putmask(mask.T, value, using_cow=using_cow, already_warned=already_warned)
         else:
             # without _downcast, we would break
             #  test_fillna_dtype_conversion_equiv_replace
@@ -1761,12 +1675,7 @@ class Block(PandasObject, libinternals.Block):
         #  makes a difference bc blk may have object dtype, which has
         #  different behavior in _maybe_downcast.
         return extend_blocks(
-            [
-                blk._maybe_downcast(
-                    [blk], downcast=downcast, using_cow=using_cow, caller="fillna"
-                )
-                for blk in nbs
-            ]
+            [blk._maybe_downcast([blk], downcast=downcast, using_cow=using_cow, caller="fillna") for blk in nbs]
         )
 
     def pad_or_backfill(
@@ -1800,12 +1709,7 @@ class Block(PandasObject, libinternals.Block):
             limit_area=limit_area,
             copy=copy,
         )
-        if (
-            not copy
-            and warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if not copy and warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -1872,12 +1776,7 @@ class Block(PandasObject, libinternals.Block):
         )
         data = extract_array(new_values, extract_numpy=True)
 
-        if (
-            not copy
-            and warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if not copy and warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -1918,9 +1817,7 @@ class Block(PandasObject, libinternals.Block):
         try:
             # error: Argument 1 to "np_can_hold_element" has incompatible type
             # "Union[dtype[Any], ExtensionDtype]"; expected "dtype[Any]"
-            casted = np_can_hold_element(
-                self.dtype, fill_value  # type: ignore[arg-type]
-            )
+            casted = np_can_hold_element(self.dtype, fill_value)  # type: ignore[arg-type]
         except LossySetitemError:
             nb = self.coerce_to_target_dtype(fill_value)
             return nb.shift(periods, fill_value=fill_value)
@@ -2037,9 +1934,7 @@ class Block(PandasObject, libinternals.Block):
                 # argument type "Tuple[slice, slice]"
                 values = self.values[previous_loc + 1 : idx, :]  # type: ignore[call-overload]
                 locs = mgr_locs_arr[previous_loc + 1 : idx]
-                nb = type(self)(
-                    values, placement=BlockPlacement(locs), ndim=self.ndim, refs=refs
-                )
+                nb = type(self)(values, placement=BlockPlacement(locs), ndim=self.ndim, refs=refs)
                 new_blocks.append(nb)
 
             previous_loc = idx
@@ -2144,9 +2039,7 @@ class EABackedBlock(Block):
             return self
 
     @final
-    def where(
-        self, other, cond, _downcast: str | bool = "infer", using_cow: bool = False
-    ) -> list[Block]:
+    def where(self, other, cond, _downcast: str | bool = "infer", using_cow: bool = False) -> list[Block]:
         # _downcast private bc we only specify it when calling from fillna
         arr = self.values.T
 
@@ -2183,18 +2076,14 @@ class EABackedBlock(Block):
                     ):
                         orig_cond = orig_cond[:, None]
                     nbs = blk.where(orig_other, orig_cond, using_cow=using_cow)
-                    return self._maybe_downcast(
-                        nbs, downcast=_downcast, using_cow=using_cow, caller="where"
-                    )
+                    return self._maybe_downcast(nbs, downcast=_downcast, using_cow=using_cow, caller="where")
 
                 elif isinstance(self, NDArrayBackedExtensionBlock):
                     # NB: not (yet) the same as
                     #  isinstance(values, NDArrayBackedExtensionArray)
                     blk = self.coerce_to_target_dtype(orig_other)
                     nbs = blk.where(orig_other, orig_cond, using_cow=using_cow)
-                    return self._maybe_downcast(
-                        nbs, downcast=_downcast, using_cow=using_cow, caller="where"
-                    )
+                    return self._maybe_downcast(nbs, downcast=_downcast, using_cow=using_cow, caller="where")
 
                 else:
                     raise
@@ -2220,9 +2109,7 @@ class EABackedBlock(Block):
         return [nb]
 
     @final
-    def putmask(
-        self, mask, new, using_cow: bool = False, already_warned=None
-    ) -> list[Block]:
+    def putmask(self, mask, new, using_cow: bool = False, already_warned=None) -> list[Block]:
         """
         See Block.putmask.__doc__
         """
@@ -2240,11 +2127,7 @@ class EABackedBlock(Block):
                 return [self.copy(deep=False)]
             return [self]
 
-        if (
-            warn_copy_on_write()
-            and already_warned is not None
-            and not already_warned.warned_already
-        ):
+        if warn_copy_on_write() and already_warned is not None and not already_warned.warned_already:
             if self.refs.has_reference():
                 warnings.warn(
                     COW_WARNING_GENERAL_MSG,
@@ -2398,9 +2281,7 @@ class ExtensionBlock(EABackedBlock):
             copy, refs = self._get_refs_and_copy(using_cow, inplace)
 
             try:
-                new_values = self.values.fillna(
-                    value=value, method=None, limit=limit, copy=copy
-                )
+                new_values = self.values.fillna(value=value, method=None, limit=limit, copy=copy)
             except TypeError:
                 # 3rd party EA that has not implemented copy keyword yet
                 refs = None
@@ -2482,10 +2363,7 @@ class ExtensionBlock(EABackedBlock):
         If necessary, squeeze a (N, 1) ndarray to (N,)
         """
         # e.g. if we are passed a 2D mask for putmask
-        if (
-            isinstance(arg, (np.ndarray, ExtensionArray))
-            and arg.ndim == self.values.ndim + 1
-        ):
+        if isinstance(arg, (np.ndarray, ExtensionArray)) and arg.ndim == self.values.ndim + 1:
             # TODO(EA2D): unnecessary with 2D EAs
             assert arg.shape[1] == 1
             # error: No overload variant of "__getitem__" of "ExtensionArray"
@@ -2515,12 +2393,9 @@ class ExtensionBlock(EABackedBlock):
             if all(isinstance(x, np.ndarray) and x.ndim == 2 for x in indexer):
                 # GH#44703 went through indexing.maybe_convert_ix
                 first, second = indexer
-                if not (
-                    second.size == 1 and (second == 0).all() and first.shape[1] == 1
-                ):
+                if not (second.size == 1 and (second == 0).all() and first.shape[1] == 1):
                     raise NotImplementedError(
-                        "This should not be reached. Please report a bug at "
-                        "github.com/pandas-dev/pandas/"
+                        "This should not be reached. Please report a bug at " "github.com/pandas-dev/pandas/"
                     )
                 indexer = first[:, 0]
 
@@ -2536,8 +2411,7 @@ class ExtensionBlock(EABackedBlock):
 
             else:
                 raise NotImplementedError(
-                    "This should not be reached. Please report a bug at "
-                    "github.com/pandas-dev/pandas/"
+                    "This should not be reached. Please report a bug at " "github.com/pandas-dev/pandas/"
                 )
         return indexer
 
@@ -2551,9 +2425,7 @@ class ExtensionBlock(EABackedBlock):
     def is_numeric(self) -> bool:  # type: ignore[override]
         return self.values.dtype._is_numeric
 
-    def _slice(
-        self, slicer: slice | npt.NDArray[np.bool_] | npt.NDArray[np.intp]
-    ) -> ExtensionArray:
+    def _slice(self, slicer: slice | npt.NDArray[np.bool_] | npt.NDArray[np.intp]) -> ExtensionArray:
         """
         Return a slice of my values.
 
@@ -2575,18 +2447,14 @@ class ExtensionBlock(EABackedBlock):
             # TODO(EA2D): won't be necessary with 2D EAs
 
             if not isinstance(slicer, slice):
-                raise AssertionError(
-                    "invalid slicing for a 1-ndim ExtensionArray", slicer
-                )
+                raise AssertionError("invalid slicing for a 1-ndim ExtensionArray", slicer)
             # GH#32959 only full-slicers along fake-dim0 are valid
             # TODO(EA2D): won't be necessary with 2D EAs
             # range(1) instead of self._mgr_locs to avoid exception on [::-1]
             #  see test_iloc_getitem_slice_negative_step_ea_block
             new_locs = range(1)[slicer]
             if not len(new_locs):
-                raise AssertionError(
-                    "invalid slicing for a 1-ndim ExtensionArray", slicer
-                )
+                raise AssertionError("invalid slicing for a 1-ndim ExtensionArray", slicer)
             slicer = slice(None)
 
         return self.values[slicer]
@@ -2632,9 +2500,7 @@ class ExtensionBlock(EABackedBlock):
         blocks = [
             # TODO: could cast to object depending on fill_value?
             type(self)(
-                self.values.take(
-                    indices, allow_fill=needs_masking[i], fill_value=fill_value
-                ),
+                self.values.take(indices, allow_fill=needs_masking[i], fill_value=fill_value),
                 BlockPlacement(place),
                 ndim=2,
             )
@@ -2773,9 +2639,7 @@ def get_block_type(dtype: DtypeObj) -> type[Block]:
     return NumpyBlock
 
 
-def new_block_2d(
-    values: ArrayLike, placement: BlockPlacement, refs: BlockValuesRefs | None = None
-):
+def new_block_2d(values: ArrayLike, placement: BlockPlacement, refs: BlockValuesRefs | None = None):
     # new_block specialized to case with
     #  ndim=2
     #  isinstance(placement, BlockPlacement)
@@ -2821,31 +2685,20 @@ def check_ndim(values, placement: BlockPlacement, ndim: int) -> None:
 
     if values.ndim > ndim:
         # Check for both np.ndarray and ExtensionArray
-        raise ValueError(
-            "Wrong number of dimensions. "
-            f"values.ndim > ndim [{values.ndim} > {ndim}]"
-        )
+        raise ValueError("Wrong number of dimensions. " f"values.ndim > ndim [{values.ndim} > {ndim}]")
 
     if not is_1d_only_ea_dtype(values.dtype):
         # TODO(EA2D): special case not needed with 2D EAs
         if values.ndim != ndim:
-            raise ValueError(
-                "Wrong number of dimensions. "
-                f"values.ndim != ndim [{values.ndim} != {ndim}]"
-            )
+            raise ValueError("Wrong number of dimensions. " f"values.ndim != ndim [{values.ndim} != {ndim}]")
         if len(placement) != len(values):
-            raise ValueError(
-                f"Wrong number of items passed {len(values)}, "
-                f"placement implies {len(placement)}"
-            )
+            raise ValueError(f"Wrong number of items passed {len(values)}, " f"placement implies {len(placement)}")
     elif ndim == 2 and len(placement) != 1:
         # TODO(EA2D): special case unnecessary with 2D EAs
         raise ValueError("need to split")
 
 
-def extract_pandas_array(
-    values: ArrayLike, dtype: DtypeObj | None, ndim: int
-) -> tuple[ArrayLike, DtypeObj | None]:
+def extract_pandas_array(values: ArrayLike, dtype: DtypeObj | None, ndim: int) -> tuple[ArrayLike, DtypeObj | None]:
     """
     Ensure that we don't allow NumpyExtensionArray / NumpyEADtype in internals.
     """

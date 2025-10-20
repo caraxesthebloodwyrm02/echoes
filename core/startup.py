@@ -49,9 +49,7 @@ def main():
         openai = get_openai_integration()
 
         print("Echoes development environment ready!")
-        print(
-            f"Knowledge Graph: {'Available' if kg_bridge.enabled else 'Fallback mode'}"
-        )
+        print(f"Knowledge Graph: {'Available' if kg_bridge.enabled else 'Fallback mode'}")
         print(f"Agent Layer: {'Available' if akl.enabled else 'Fallback mode'}")
         print(f"OpenAI: {'Configured' if openai.is_configured else 'Not configured'}")
 

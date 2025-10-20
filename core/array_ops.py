@@ -2,6 +2,7 @@
 Functions for arithmetic and comparison operations on NumPy arrays and
 ExtensionArrays.
 """
+
 from __future__ import annotations
 
 import datetime
@@ -164,9 +165,7 @@ def _masked_arith_op(x: np.ndarray, y, op):
 
     else:
         if not is_scalar(y):
-            raise TypeError(
-                f"Cannot broadcast np.ndarray with operand of type { type(y) }"
-            )
+            raise TypeError(f"Cannot broadcast np.ndarray with operand of type { type(y) }")
 
         # mask is only meaningful for x
         result = np.empty(x.size, dtype=x.dtype)
@@ -217,9 +216,7 @@ def _na_arithmetic_op(left: np.ndarray, right, op, is_cmp: bool = False):
     try:
         result = func(left, right)
     except TypeError:
-        if not is_cmp and (
-            left.dtype == object or getattr(right, "dtype", None) == object
-        ):
+        if not is_cmp and (left.dtype == object or getattr(right, "dtype", None) == object):
             # For object dtype, fallback to a masked operation (only operating
             #  on the non-missing values)
             # Don't do this for comparisons, as that will handle complex numbers
@@ -263,11 +260,7 @@ def arithmetic_op(left: ArrayLike, right: Any, op):
     # We need to special-case datetime64/timedelta64 dtypes (e.g. because numpy
     # casts integer dtypes to timedelta64 when operating with timedelta64 - GH#22390)
 
-    if (
-        should_extension_dispatch(left, right)
-        or isinstance(right, (Timedelta, BaseOffset, Timestamp))
-        or right is NaT
-    ):
+    if should_extension_dispatch(left, right) or isinstance(right, (Timedelta, BaseOffset, Timestamp)) or right is NaT:
         # Timedelta/Timestamp and other custom scalars are included in the check
         # because numexpr will fail on it, see GH#31457
         res_values = op(left, right)
@@ -318,13 +311,10 @@ def comparison_op(left: ArrayLike, right: Any, op) -> ArrayLike:
         #  We are not catching all listlikes here (e.g. frozenset, tuple)
         #  The ambiguous case is object-dtype.  See GH#27803
         if len(lvalues) != len(rvalues):
-            raise ValueError(
-                "Lengths must match to compare", lvalues.shape, rvalues.shape
-            )
+            raise ValueError("Lengths must match to compare", lvalues.shape, rvalues.shape)
 
     if should_extension_dispatch(lvalues, rvalues) or (
-        (isinstance(rvalues, (Timedelta, BaseOffset, Timestamp)) or right is NaT)
-        and lvalues.dtype != object
+        (isinstance(rvalues, (Timedelta, BaseOffset, Timestamp)) or right is NaT) and lvalues.dtype != object
     ):
         # Call the method on lvalues
         res_values = op(lvalues, rvalues)
@@ -383,8 +373,7 @@ def na_logical_op(x: np.ndarray, y, op):
             ) as err:
                 typ = type(y).__name__
                 raise TypeError(
-                    f"Cannot perform '{op.__name__}' with a dtyped [{x.dtype}] array "
-                    f"and scalar of type [{typ}]"
+                    f"Cannot perform '{op.__name__}' with a dtyped [{x.dtype}] array " f"and scalar of type [{typ}]"
                 ) from err
 
     return result.reshape(x.shape)
@@ -599,6 +588,4 @@ def _bool_arith_check(op, a: np.ndarray, b):
     if op in _BOOL_OP_NOT_ALLOWED:
         if a.dtype.kind == "b" and (is_bool_dtype(b) or lib.is_bool(b)):
             op_name = op.__name__.strip("_").lstrip("r")
-            raise NotImplementedError(
-                f"operator '{op_name}' not implemented for bool dtypes"
-            )
+            raise NotImplementedError(f"operator '{op_name}' not implemented for bool dtypes")

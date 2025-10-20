@@ -1,4 +1,5 @@
 """ test the scalar Timedelta """
+
 from datetime import timedelta
 import sys
 
@@ -425,12 +426,8 @@ class TestTimedeltas:
         assert Timedelta(10, unit="d") == np.timedelta64(10, "D")
 
     def test_timedelta_conversions(self):
-        assert Timedelta(timedelta(seconds=1)) == np.timedelta64(1, "s").astype(
-            "m8[ns]"
-        )
-        assert Timedelta(timedelta(microseconds=1)) == np.timedelta64(1, "us").astype(
-            "m8[ns]"
-        )
+        assert Timedelta(timedelta(seconds=1)) == np.timedelta64(1, "s").astype("m8[ns]")
+        assert Timedelta(timedelta(microseconds=1)) == np.timedelta64(1, "us").astype("m8[ns]")
         assert Timedelta(timedelta(days=1)) == np.timedelta64(1, "D").astype("m8[ns]")
 
     def test_to_numpy_alias(self):
@@ -513,17 +510,11 @@ class TestTimedeltas:
         assert Timedelta("00:00:01") == conv(np.timedelta64(1, "s"))
         assert Timedelta("06:00:01") == conv(np.timedelta64(6 * 3600 + 1, "s"))
         assert Timedelta("06:00:01.0") == conv(np.timedelta64(6 * 3600 + 1, "s"))
-        assert Timedelta("06:00:01.01") == conv(
-            np.timedelta64(1000 * (6 * 3600 + 1) + 10, "ms")
-        )
+        assert Timedelta("06:00:01.01") == conv(np.timedelta64(1000 * (6 * 3600 + 1) + 10, "ms"))
 
         assert Timedelta("- 1days, 00:00:01") == conv(-d1 + np.timedelta64(1, "s"))
-        assert Timedelta("1days, 06:00:01") == conv(
-            d1 + np.timedelta64(6 * 3600 + 1, "s")
-        )
-        assert Timedelta("1days, 06:00:01.01") == conv(
-            d1 + np.timedelta64(1000 * (6 * 3600 + 1) + 10, "ms")
-        )
+        assert Timedelta("1days, 06:00:01") == conv(d1 + np.timedelta64(6 * 3600 + 1, "s"))
+        assert Timedelta("1days, 06:00:01.01") == conv(d1 + np.timedelta64(1000 * (6 * 3600 + 1) + 10, "ms"))
 
         # invalid
         msg = "have leftover units"
@@ -571,9 +562,7 @@ class TestTimedeltas:
 
         # See: https://docs.python.org/3/glossary.html#term-hashable
         # Hashable objects which compare equal must have the same hash value.
-        assert pandas_timedelta != numpy_timedelta or hash(pandas_timedelta) == hash(
-            numpy_timedelta
-        )
+        assert pandas_timedelta != numpy_timedelta or hash(pandas_timedelta) == hash(numpy_timedelta)
 
     def test_implementation_limits(self):
         min_td = Timedelta(Timedelta.min)

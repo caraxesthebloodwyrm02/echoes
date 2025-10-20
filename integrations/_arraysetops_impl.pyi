@@ -66,7 +66,6 @@ class UniqueInverseResult(NamedTuple, Generic[_ScalarT]):
     values: NDArray[_ScalarT]
     inverse_indices: _IntArray
 
-#
 @overload
 def ediff1d(
     ary: _ArrayLikeBool_co,
@@ -91,8 +90,6 @@ def ediff1d(
     to_end: ArrayLike | None = None,
     to_begin: ArrayLike | None = None,
 ) -> _AnyArray: ...
-
-#
 @overload  # known scalar-type, FFF
 def unique(
     ar: _ArrayLike[_ScalarT],
@@ -357,32 +354,22 @@ def unique(
     equal_nan: bool = True,
     sorted: bool = True,
 ) -> tuple[_AnyArray, _IntArray, _IntArray, _IntArray]: ...
-
-#
 @overload
 def unique_all(x: _ArrayLike[_ScalarT]) -> UniqueAllResult[_ScalarT]: ...
 @overload
 def unique_all(x: ArrayLike) -> UniqueAllResult[Any]: ...
-
-#
 @overload
 def unique_counts(x: _ArrayLike[_ScalarT]) -> UniqueCountsResult[_ScalarT]: ...
 @overload
 def unique_counts(x: ArrayLike) -> UniqueCountsResult[Any]: ...
-
-#
 @overload
 def unique_inverse(x: _ArrayLike[_ScalarT]) -> UniqueInverseResult[_ScalarT]: ...
 @overload
 def unique_inverse(x: ArrayLike) -> UniqueInverseResult[Any]: ...
-
-#
 @overload
 def unique_values(x: _ArrayLike[_ScalarT]) -> NDArray[_ScalarT]: ...
 @overload
 def unique_values(x: ArrayLike) -> _AnyArray: ...
-
-#
 @overload  # known scalar-type, return_indices=False (default)
 def intersect1d(
     ar1: _ArrayLike[_EitherSCT],
@@ -427,26 +414,22 @@ def intersect1d(
     *,
     return_indices: L[True],
 ) -> tuple[_AnyArray, _IntArray, _IntArray]: ...
-
-#
 @overload
-def setxor1d(ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False) -> NDArray[_EitherSCT]: ...
+def setxor1d(
+    ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False
+) -> NDArray[_EitherSCT]: ...
 @overload
 def setxor1d(ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False) -> _AnyArray: ...
-
-#
 @overload
 def union1d(ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT]) -> NDArray[_EitherSCT]: ...
 @overload
 def union1d(ar1: ArrayLike, ar2: ArrayLike) -> _AnyArray: ...
-
-#
 @overload
-def setdiff1d(ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False) -> NDArray[_EitherSCT]: ...
+def setdiff1d(
+    ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False
+) -> NDArray[_EitherSCT]: ...
 @overload
 def setdiff1d(ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False) -> _AnyArray: ...
-
-#
 def isin(
     element: ArrayLike,
     test_elements: ArrayLike,
@@ -455,8 +438,6 @@ def isin(
     *,
     kind: L["sort", "table"] | None = None,
 ) -> NDArray[np.bool]: ...
-
-#
 @deprecated("Use 'isin' instead")
 def in1d(
     element: ArrayLike,

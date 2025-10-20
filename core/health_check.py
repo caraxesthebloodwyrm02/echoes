@@ -53,27 +53,21 @@ async def run_health_check() -> Dict[str, Any]:
         root_response = client.get("/")
         results["checks"]["root"] = {
             "status": "ok" if root_response.status_code == 200 else "error",
-            "automation_status": root_response.json()
-            .get("automation", {})
-            .get("status"),
+            "automation_status": root_response.json().get("automation", {}).get("status"),
         }
 
         # Tasks list check
         tasks_response = client.get("/api/automation/tasks")
         results["checks"]["tasks_endpoint"] = {
             "status": "ok" if tasks_response.status_code == 200 else "error",
-            "available_tasks": len(
-                tasks_response.json() if tasks_response.status_code == 200 else []
-            ),
+            "available_tasks": len(tasks_response.json() if tasks_response.status_code == 200 else []),
         }
 
         # Health endpoint check
         health_response = client.get("/api/automation/health")
         results["checks"]["health_endpoint"] = {
             "status": "ok" if health_response.status_code == 200 else "error",
-            "details": (
-                health_response.json() if health_response.status_code == 200 else None
-            ),
+            "details": (health_response.json() if health_response.status_code == 200 else None),
         }
 
         # Test task execution

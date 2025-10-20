@@ -218,9 +218,7 @@ class NewtonSolver(ABC):
         # gradient_times_newton = self.gradient @ self.coef_newton
         # was computed in inner_solve.
         armijo_term = sigma * self.gradient_times_newton
-        _, _, raw_prediction_newton = self.linear_loss.weight_intercept_raw(
-            self.coef_newton, X
-        )
+        _, _, raw_prediction_newton = self.linear_loss.weight_intercept_raw(self.coef_newton, X)
 
         self.coef_old = self.coef
         self.loss_value_old = self.loss_value
@@ -301,10 +299,7 @@ class NewtonSolver(ABC):
 
         self.raw_prediction = raw
         if is_verbose:
-            print(
-                f"    line search successful after {i + 1} iterations with "
-                f"loss={self.loss_value}."
-            )
+            print(f"    line search successful after {i + 1} iterations with " f"loss={self.loss_value}.")
 
     def check_convergence(self, X, y, sample_weight):
         """Check for convergence.
@@ -431,10 +426,7 @@ class NewtonSolver(ABC):
                 self.fallback_lbfgs_solve(X=X, y=y, sample_weight=sample_weight)
             else:
                 warnings.warn(
-                    (
-                        f"Newton solver did not converge after {self.iteration - 1} "
-                        "iterations."
-                    ),
+                    (f"Newton solver did not converge after {self.iteration - 1} " "iterations."),
                     ConvergenceWarning,
                 )
 
@@ -463,12 +455,8 @@ class NewtonCholeskySolver(NewtonSolver):
         n = self.coef.size
         self.hessian = np.empty_like(self.coef, shape=(n, n))
         # To help case distinctions.
-        self.is_multinomial_with_intercept = (
-            self.linear_loss.base_loss.is_multiclass and self.linear_loss.fit_intercept
-        )
-        self.is_multinomial_no_penalty = (
-            self.linear_loss.base_loss.is_multiclass and self.l2_reg_strength == 0
-        )
+        self.is_multinomial_with_intercept = self.linear_loss.base_loss.is_multiclass and self.linear_loss.fit_intercept
+        self.is_multinomial_no_penalty = self.linear_loss.base_loss.is_multiclass and self.l2_reg_strength == 0
         if self.is_multinomial_no_penalty:
             # See inner_solve. The provided coef might not adhere to the convention
             # that the last class is set to zero.
@@ -551,9 +539,7 @@ class NewtonCholeskySolver(NewtonSolver):
             #             [x,  x, x,  x, x,  x]
             # The following slicing triggers copies of gradient and hessian.
             gradient = self.gradient.reshape(-1, n_classes)[:, :-1].flatten()
-            hessian = self.hessian.reshape(n_dof, n_classes, n_dof, n_classes)[
-                :, :-1, :, :-1
-            ].reshape(n, n)
+            hessian = self.hessian.reshape(n_dof, n_classes, n_dof, n_classes)[:, :-1, :, :-1].reshape(n, n)
         elif self.is_multinomial_with_intercept:
             # Here, only intercepts are unpenalized. We again choose the last class and
             # set its intercept to zero.
@@ -568,13 +554,11 @@ class NewtonCholeskySolver(NewtonSolver):
         try:
             with warnings.catch_warnings():
                 warnings.simplefilter("error", scipy.linalg.LinAlgWarning)
-                self.coef_newton = scipy.linalg.solve(
-                    hessian, -gradient, check_finite=False, assume_a="sym"
-                )
+                self.coef_newton = scipy.linalg.solve(hessian, -gradient, check_finite=False, assume_a="sym")
                 if self.is_multinomial_no_penalty:
-                    self.coef_newton = np.c_[
-                        self.coef_newton.reshape(n_dof, n_classes - 1), np.zeros(n_dof)
-                    ].reshape(-1)
+                    self.coef_newton = np.c_[self.coef_newton.reshape(n_dof, n_classes - 1), np.zeros(n_dof)].reshape(
+                        -1
+                    )
                     assert self.coef_newton.flags.f_contiguous
                 elif self.is_multinomial_with_intercept:
                     self.coef_newton = np.r_[self.coef_newton, 0]

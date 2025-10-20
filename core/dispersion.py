@@ -28,14 +28,10 @@ def dispersion_plot(text, words, ignore_case=False, title="Lexical Dispersion Pl
         import matplotlib.pyplot as plt
     except ImportError as e:
         raise ImportError(
-            "The plot function requires matplotlib to be installed. "
-            "See https://matplotlib.org/"
+            "The plot function requires matplotlib to be installed. " "See https://matplotlib.org/"
         ) from e
 
-    word2y = {
-        word.casefold() if ignore_case else word: y
-        for y, word in enumerate(reversed(words))
-    }
+    word2y = {word.casefold() if ignore_case else word: y for y, word in enumerate(reversed(words))}
     xs, ys = [], []
     for x, token in enumerate(text):
         token = token.casefold() if ignore_case else token

@@ -1,9 +1,7 @@
 from matplotlib import cbook, colorbar, colors, artist
 
-from typing import overload
 import numpy as np
 from numpy.typing import ArrayLike
-
 
 class Colorizer:
     colorbar: colorbar.Colorbar | None
@@ -46,7 +44,6 @@ class Colorizer:
     @clip.setter
     def clip(self, value: bool) -> None: ...
 
-
 class _ColorizerInterface:
     cmap: colors.Colormap
     colorbar: colorbar.Colorbar | None
@@ -71,7 +68,6 @@ class _ColorizerInterface:
     def autoscale(self) -> None: ...
     def autoscale_None(self) -> None: ...
 
-
 class _ScalarMappable(_ColorizerInterface):
     def __init__(
         self,
@@ -85,14 +81,9 @@ class _ScalarMappable(_ColorizerInterface):
     def get_array(self) -> np.ndarray | None: ...
     def changed(self) -> None: ...
 
-
 class ColorizingArtist(_ScalarMappable, artist.Artist):
     callbacks: cbook.CallbackRegistry
-    def __init__(
-        self,
-        colorizer: Colorizer,
-        **kwargs
-    ) -> None: ...
+    def __init__(self, colorizer: Colorizer, **kwargs) -> None: ...
     def set_array(self, A: ArrayLike | None) -> None: ...
     def get_array(self) -> np.ndarray | None: ...
     def changed(self) -> None: ...

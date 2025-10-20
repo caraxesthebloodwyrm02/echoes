@@ -93,11 +93,7 @@ class ArrowIntervalType(pyarrow.ExtensionType):
 
     def __eq__(self, other):
         if isinstance(other, pyarrow.BaseExtensionType):
-            return (
-                type(self) == type(other)
-                and self.subtype == other.subtype
-                and self.closed == other.closed
-            )
+            return type(self) == type(other) and self.subtype == other.subtype and self.closed == other.closed
         else:
             return NotImplemented
 
@@ -164,9 +160,7 @@ def patch_pyarrow():
             )
 
     pyarrow.unregister_extension_type("arrow.py_extension_type")
-    pyarrow.register_extension_type(
-        ForbiddenExtensionType(pyarrow.null(), "arrow.py_extension_type")
-    )
+    pyarrow.register_extension_type(ForbiddenExtensionType(pyarrow.null(), "arrow.py_extension_type"))
 
     pyarrow._hotfix_installed = True
 

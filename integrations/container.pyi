@@ -49,8 +49,4 @@ class StemContainer(Container):
     markerline: Line2D
     stemlines: LineCollection
     baseline: Line2D
-    def __init__(
-        self,
-        markerline_stemlines_baseline: tuple[Line2D, LineCollection, Line2D],
-        **kwargs
-    ) -> None: ...
+    def __init__(self, markerline_stemlines_baseline: tuple[Line2D, LineCollection, Line2D], **kwargs) -> None: ...

@@ -67,9 +67,7 @@ def smoke_test_endpoints(context):
 
     checks = {
         "health": _get("/api/health"),
-        "science": _post(
-            "/api/science/biomedical/search", {"query": "cancer", "max_results": 2}
-        ),
+        "science": _post("/api/science/biomedical/search", {"query": "cancer", "max_results": 2}),
         "commerce": _post("/api/commerce/ubi/simulate", {}),
         "arts": _post(
             "/api/arts/create",

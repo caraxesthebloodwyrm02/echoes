@@ -1,0 +1,18 @@
+{
+  "summary": {
+    "total_tests": 5,
+    "passed": 5,
+    "failed": 0,
+    "success_rate": "100.0%"
+  },
+  "tests": {
+    "pytorch_import": true,
+    "security_tools": true,
+    "binary_only": true,
+    "audit_results": true,
+    "sbom_exists": true
+  },
+  "environment": {
+    "python_version": "3.13.9"
+  }
+}

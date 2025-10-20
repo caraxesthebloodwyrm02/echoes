@@ -71,9 +71,7 @@ def transcribe_audio(audio_path: Path) -> dict:
     return result
 
 
-def create_podcast_data(
-    transcript_result: dict, video_title: str, url: str
-) -> PodcastData:
+def create_podcast_data(transcript_result: dict, video_title: str, url: str) -> PodcastData:
     """Convert transcript to PodcastData format."""
     segments = transcript_result.get("segments", [])
 

@@ -63,17 +63,13 @@ class SwitchboardCorpusReader(CorpusReader):
         return StreamBackedCorpusView(self.abspath("tagged"), tagged_turns_block_reader)
 
     def discourses(self):
-        return StreamBackedCorpusView(
-            self.abspath("tagged"), self._discourses_block_reader
-        )
+        return StreamBackedCorpusView(self.abspath("tagged"), self._discourses_block_reader)
 
     def tagged_discourses(self, tagset=False):
         def tagged_discourses_block_reader(stream):
             return self._tagged_discourses_block_reader(stream, tagset)
 
-        return StreamBackedCorpusView(
-            self.abspath("tagged"), tagged_discourses_block_reader
-        )
+        return StreamBackedCorpusView(self.abspath("tagged"), tagged_discourses_block_reader)
 
     def _discourses_block_reader(self, stream):
         # returns at most 1 discourse.  (The other methods depend on this.)

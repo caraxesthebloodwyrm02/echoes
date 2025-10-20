@@ -132,16 +132,12 @@ class _PGNumeric(sqltypes.Numeric):
     def result_processor(self, dialect, coltype):
         if self.asdecimal:
             if coltype in _FLOAT_TYPES:
-                return processors.to_decimal_processor_factory(
-                    decimal.Decimal, self._effective_decimal_return_scale
-                )
+                return processors.to_decimal_processor_factory(decimal.Decimal, self._effective_decimal_return_scale)
             elif coltype in _DECIMAL_TYPES or coltype in _INT_TYPES:
                 # pg8000 returns Decimal natively for 1700
                 return None
             else:
-                raise exc.InvalidRequestError(
-                    "Unknown PG numeric type: %d" % coltype
-                )
+                raise exc.InvalidRequestError("Unknown PG numeric type: %d" % coltype)
         else:
             if coltype in _FLOAT_TYPES:
                 # pg8000 returns float natively for 701
@@ -149,9 +145,7 @@ class _PGNumeric(sqltypes.Numeric):
             elif coltype in _DECIMAL_TYPES or coltype in _INT_TYPES:
                 return processors.to_float
             else:
-                raise exc.InvalidRequestError(
-                    "Unknown PG numeric type: %d" % coltype
-                )
+                raise exc.InvalidRequestError("Unknown PG numeric type: %d" % coltype)
 
 
 class _PGFloat(_PGNumeric, sqltypes.Float):
@@ -263,9 +257,7 @@ class _Pg8000Range(ranges.AbstractSingleRangeImpl):
 
         def to_range(value):
             if isinstance(value, ranges.Range):
-                value = pg8000_Range(
-                    value.lower, value.upper, value.bounds, value.empty
-                )
+                value = pg8000_Range(value.lower, value.upper, value.bounds, value.empty)
             return value
 
         return to_range
@@ -293,9 +285,7 @@ class _Pg8000MultiRange(ranges.AbstractMultiRangeImpl):
                 mr = []
                 for v in value:
                     if isinstance(v, ranges.Range):
-                        mr.append(
-                            pg8000_Range(v.lower, v.upper, v.bounds, v.empty)
-                        )
+                        mr.append(pg8000_Range(v.lower, v.upper, v.bounds, v.empty))
                     else:
                         mr.append(v)
                 return mr
@@ -310,10 +300,7 @@ class _Pg8000MultiRange(ranges.AbstractMultiRangeImpl):
                 return None
             else:
                 return ranges.MultiRange(
-                    ranges.Range(
-                        v.lower, v.upper, bounds=v.bounds, empty=v.is_empty
-                    )
-                    for v in value
+                    ranges.Range(v.lower, v.upper, bounds=v.bounds, empty=v.is_empty) for v in value
                 )
 
         return to_multirange
@@ -368,9 +355,7 @@ class ServerSideCursor:
         if num is None:
             return self.fetchall()
         else:
-            self.cursor.execute(
-                "FETCH FORWARD " + str(int(num)) + " FROM " + self.ident
-            )
+            self.cursor.execute("FETCH FORWARD " + str(int(num)) + " FROM " + self.ident)
             return self.cursor.fetchall()
 
     def fetchall(self):
@@ -390,11 +375,7 @@ class ServerSideCursor:
 
 class PGCompiler_pg8000(PGCompiler):
     def visit_mod_binary(self, binary, operator, **kw):
-        return (
-            self.process(binary.left, **kw)
-            + " %% "
-            + self.process(binary.right, **kw)
-        )
+        return self.process(binary.left, **kw) + " %% " + self.process(binary.right, **kw)
 
 
 class PGIdentifierPreparer_pg8000(PGIdentifierPreparer):
@@ -484,14 +465,7 @@ class PGDialect_pg8000(PGDialect):
     @util.memoized_property
     def _dbapi_version(self):
         if self.dbapi and hasattr(self.dbapi, "__version__"):
-            return tuple(
-                [
-                    int(x)
-                    for x in re.findall(
-                        r"(\d+)(?:[-\.]?|$)", self.dbapi.__version__
-                    )
-                ]
-            )
+            return tuple([int(x) for x in re.findall(r"(\d+)(?:[-\.]?|$)", self.dbapi.__version__)])
         else:
             return (99, 99, 99)
 
@@ -507,9 +481,7 @@ class PGDialect_pg8000(PGDialect):
         return ([], opts)
 
     def is_disconnect(self, e, connection, cursor):
-        if isinstance(e, self.dbapi.InterfaceError) and "network error" in str(
-            e
-        ):
+        if isinstance(e, self.dbapi.InterfaceError) and "network error" in str(e):
             # new as of pg8000 1.19.0 for broken connections
             return True
 
@@ -533,10 +505,7 @@ class PGDialect_pg8000(PGDialect):
         else:
             dbapi_connection.autocommit = False
             cursor = dbapi_connection.cursor()
-            cursor.execute(
-                "SET SESSION CHARACTERISTICS AS TRANSACTION "
-                f"ISOLATION LEVEL {level}"
-            )
+            cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION " f"ISOLATION LEVEL {level}")
             cursor.execute("COMMIT")
             cursor.close()
 
@@ -546,10 +515,7 @@ class PGDialect_pg8000(PGDialect):
     def set_readonly(self, connection, value):
         cursor = connection.cursor()
         try:
-            cursor.execute(
-                "SET SESSION CHARACTERISTICS AS TRANSACTION %s"
-                % ("READ ONLY" if value else "READ WRITE")
-            )
+            cursor.execute("SET SESSION CHARACTERISTICS AS TRANSACTION %s" % ("READ ONLY" if value else "READ WRITE"))
             cursor.execute("COMMIT")
         finally:
             cursor.close()
@@ -568,8 +534,7 @@ class PGDialect_pg8000(PGDialect):
         cursor = connection.cursor()
         try:
             cursor.execute(
-                "SET SESSION CHARACTERISTICS AS TRANSACTION %s"
-                % ("DEFERRABLE" if value else "NOT DEFERRABLE")
+                "SET SESSION CHARACTERISTICS AS TRANSACTION %s" % ("DEFERRABLE" if value else "NOT DEFERRABLE")
             )
             cursor.execute("COMMIT")
         finally:
@@ -601,14 +566,10 @@ class PGDialect_pg8000(PGDialect):
     def do_prepare_twophase(self, connection, xid):
         connection.connection.tpc_prepare()
 
-    def do_rollback_twophase(
-        self, connection, xid, is_prepared=True, recover=False
-    ):
+    def do_rollback_twophase(self, connection, xid, is_prepared=True, recover=False):
         connection.connection.tpc_rollback((0, xid, ""))
 
-    def do_commit_twophase(
-        self, connection, xid, is_prepared=True, recover=False
-    ):
+    def do_commit_twophase(self, connection, xid, is_prepared=True, recover=False):
         connection.connection.tpc_commit((0, xid, ""))
 
     def do_recover_twophase(self, connection):

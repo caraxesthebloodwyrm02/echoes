@@ -144,9 +144,7 @@ class Attribute:
                     converter_vars = get_type_vars(self.converter.ret_type)
                     init_vars = get_type_vars(self.init_type)
                     if converter_vars and len(converter_vars) == len(init_vars):
-                        variables = {
-                            binder.id: arg for binder, arg in zip(converter_vars, init_vars)
-                        }
+                        variables = {binder.id: arg for binder, arg in zip(converter_vars, init_vars)}
                         init_type = expand_type(init_type, variables)
             else:
                 ctx.api.fail("Cannot determine __init__ type from converter", self.context)
@@ -193,9 +191,7 @@ class Attribute:
             "kw_only": self.kw_only,
             "has_converter": self.converter is not None,
             "converter_init_type": (
-                self.converter.init_type.serialize()
-                if self.converter and self.converter.init_type
-                else None
+                self.converter.init_type.serialize() if self.converter and self.converter.init_type else None
             ),
             "context_line": self.context.line,
             "context_column": self.context.column,
@@ -203,17 +199,13 @@ class Attribute:
         }
 
     @classmethod
-    def deserialize(
-        cls, info: TypeInfo, data: JsonDict, api: SemanticAnalyzerPluginInterface
-    ) -> Attribute:
+    def deserialize(cls, info: TypeInfo, data: JsonDict, api: SemanticAnalyzerPluginInterface) -> Attribute:
         """Return the Attribute that was serialized."""
         raw_init_type = data["init_type"]
         init_type = deserialize_and_fixup_type(raw_init_type, api) if raw_init_type else None
         raw_converter_init_type = data["converter_init_type"]
         converter_init_type = (
-            deserialize_and_fixup_type(raw_converter_init_type, api)
-            if raw_converter_init_type
-            else None
+            deserialize_and_fixup_type(raw_converter_init_type, api) if raw_converter_init_type else None
         )
 
         return Attribute(
@@ -329,9 +321,7 @@ def attr_class_maker_callback(
     with state.strict_optional_set(ctx.api.options.strict_optional):
         # This hook is called during semantic analysis, but it uses a bunch of
         # type-checking ops, so it needs the strict optional set properly.
-        return attr_class_maker_callback_impl(
-            ctx, auto_attribs_default, frozen_default, slots_default
-        )
+        return attr_class_maker_callback_impl(ctx, auto_attribs_default, frozen_default, slots_default)
 
 
 def attr_class_maker_callback_impl(
@@ -390,9 +380,9 @@ def attr_class_maker_callback_impl(
     if frozen:
         _make_frozen(ctx, attributes)
         # Frozen classes are hashable by default, even if inheriting from non-frozen ones.
-        hashable: bool | None = _get_decorator_bool_argument(
-            ctx, "hash", True
-        ) and _get_decorator_bool_argument(ctx, "unsafe_hash", True)
+        hashable: bool | None = _get_decorator_bool_argument(ctx, "hash", True) and _get_decorator_bool_argument(
+            ctx, "unsafe_hash", True
+        )
     else:
         hashable = _get_decorator_optional_bool_argument(ctx, "unsafe_hash")
         if hashable is None:  # unspecified
@@ -423,9 +413,7 @@ def _get_frozen(ctx: mypy.plugin.ClassDefContext, frozen_default: bool) -> bool:
     return False
 
 
-def _analyze_class(
-    ctx: mypy.plugin.ClassDefContext, auto_attribs: bool | None, kw_only: bool
-) -> list[Attribute]:
+def _analyze_class(ctx: mypy.plugin.ClassDefContext, auto_attribs: bool | None, kw_only: bool) -> list[Attribute]:
     """Analyze the class body of an attr maker, its parents, and return the Attributes found.
 
     auto_attribs=True means we'll generate attributes from type annotations also.
@@ -691,14 +679,10 @@ def _attribute_from_attrib_maker(
                 code=LITERAL_REQ,
             )
     name = unmangle(lhs.name)
-    return Attribute(
-        name, alias, ctx.cls.info, attr_has_default, init, kw_only, converter_info, stmt, init_type
-    )
+    return Attribute(name, alias, ctx.cls.info, attr_has_default, init, kw_only, converter_info, stmt, init_type)
 
 
-def _parse_converter(
-    ctx: mypy.plugin.ClassDefContext, converter_expr: Expression | None
-) -> Converter | None:
+def _parse_converter(ctx: mypy.plugin.ClassDefContext, converter_expr: Expression | None) -> Converter | None:
     """Return the Converter object from an Expression."""
     # TODO: Support complex converters, e.g. lambdas, calls, etc.
     if not converter_expr:
@@ -726,9 +710,7 @@ def _parse_converter(
             else:  # The converter is an unannotated function.
                 converter_info.init_type = AnyType(TypeOfAny.unannotated)
                 return converter_info
-        elif isinstance(converter_expr.node, OverloadedFuncDef) and is_valid_overloaded_converter(
-            converter_expr.node
-        ):
+        elif isinstance(converter_expr.node, OverloadedFuncDef) and is_valid_overloaded_converter(converter_expr.node):
             converter_type = converter_expr.node.type
         elif isinstance(converter_expr.node, TypeInfo):
             converter_type = type_object_type(converter_expr.node, ctx.api.named_type)
@@ -758,8 +740,7 @@ def _parse_converter(
     if not converter_type:
         # Signal that we have an unsupported converter.
         ctx.api.fail(
-            "Unsupported converter, only named functions, types and lambdas are currently "
-            "supported",
+            "Unsupported converter, only named functions, types and lambdas are currently " "supported",
             converter_expr,
         )
         converter_info.init_type = AnyType(TypeOfAny.from_error)
@@ -793,15 +774,10 @@ def _parse_converter(
 
 
 def is_valid_overloaded_converter(defn: OverloadedFuncDef) -> bool:
-    return all(
-        (not isinstance(item, Decorator) or isinstance(item.func.type, FunctionLike))
-        for item in defn.items
-    )
+    return all((not isinstance(item, Decorator) or isinstance(item.func.type, FunctionLike)) for item in defn.items)
 
 
-def _parse_assignments(
-    lvalue: Expression, stmt: AssignmentStmt
-) -> tuple[list[NameExpr], list[Expression]]:
+def _parse_assignments(lvalue: Expression, stmt: AssignmentStmt) -> tuple[list[NameExpr], list[Expression]]:
     """Convert a possibly complex assignment expression into lists of lvalues and rvalues."""
     lvalues: list[NameExpr] = []
     rvalues: list[Expression] = []
@@ -834,9 +810,7 @@ def _add_order(ctx: mypy.plugin.ClassDefContext, adder: MethodAdder) -> None:
         upper_bound=object_type,
         default=AnyType(TypeOfAny.from_omitted_generics),
     )
-    self_tvar_expr = TypeVarExpr(
-        SELF_TVAR_NAME, fullname, [], object_type, AnyType(TypeOfAny.from_omitted_generics)
-    )
+    self_tvar_expr = TypeVarExpr(SELF_TVAR_NAME, fullname, [], object_type, AnyType(TypeOfAny.from_omitted_generics))
     ctx.cls.info.names[SELF_TVAR_NAME] = SymbolTableNode(MDEF, self_tvar_expr)
 
     for method in ["__lt__", "__le__", "__gt__", "__ge__"]:
@@ -911,13 +885,10 @@ def _add_init(
     adder.add_method(method_name, args, NoneType())
 
 
-def _add_attrs_magic_attribute(
-    ctx: mypy.plugin.ClassDefContext, attrs: list[tuple[str, Type | None]]
-) -> None:
+def _add_attrs_magic_attribute(ctx: mypy.plugin.ClassDefContext, attrs: list[tuple[str, Type | None]]) -> None:
     any_type = AnyType(TypeOfAny.explicit)
     attributes_types: list[Type] = [
-        ctx.api.named_type_or_none("attr.Attribute", [attr_type or any_type]) or any_type
-        for _, attr_type in attrs
+        ctx.api.named_type_or_none("attr.Attribute", [attr_type or any_type]) or any_type for _, attr_type in attrs
     ]
     fallback_type = ctx.api.named_type(
         "builtins.tuple", [ctx.api.named_type_or_none("attr.Attribute", [any_type]) or any_type]
@@ -968,10 +939,7 @@ def _add_slots(ctx: mypy.plugin.ClassDefContext, attributes: list[Attribute]) ->
 
 
 def _add_match_args(ctx: mypy.plugin.ClassDefContext, attributes: list[Attribute]) -> None:
-    if (
-        "__match_args__" not in ctx.cls.info.names
-        or ctx.cls.info.names["__match_args__"].plugin_generated
-    ):
+    if "__match_args__" not in ctx.cls.info.names or ctx.cls.info.names["__match_args__"].plugin_generated:
         str_type = ctx.api.named_type("builtins.str")
         match_args = TupleType(
             [
@@ -986,9 +954,7 @@ def _add_match_args(ctx: mypy.plugin.ClassDefContext, attributes: list[Attribute
 
 def _remove_hashability(ctx: mypy.plugin.ClassDefContext) -> None:
     """Remove hashability from a class."""
-    add_attribute_to_class(
-        ctx.api, ctx.cls, "__hash__", NoneType(), is_classvar=True, overwrite_existing=True
-    )
+    add_attribute_to_class(ctx.api, ctx.cls, "__hash__", NoneType(), is_classvar=True, overwrite_existing=True)
 
 
 class MethodAdder:
@@ -1017,9 +983,7 @@ class MethodAdder:
         tvd: If the method is generic these should be the type variables.
         """
         self_type = self_type if self_type is not None else self.self_type
-        add_method_to_class(
-            self.ctx.api, self.ctx.cls, method_name, args, ret_type, self_type, tvd
-        )
+        add_method_to_class(self.ctx.api, self.ctx.cls, method_name, args, ret_type, self_type, tvd)
 
 
 def _get_attrs_init_type(typ: Instance) -> CallableType | None:
@@ -1078,9 +1042,7 @@ def _get_expanded_attr_types(
                 ret = None  # but keep iterating to emit all errors
         return ret
     elif isinstance(typ, TypeVarType):
-        return _get_expanded_attr_types(
-            ctx, get_proper_type(typ.upper_bound), display_typ, parent_typ
-        )
+        return _get_expanded_attr_types(ctx, get_proper_type(typ.upper_bound), display_typ, parent_typ)
     elif isinstance(typ, Instance):
         init_func = _get_attrs_init_type(typ)
         if init_func is None:
@@ -1106,11 +1068,7 @@ def _meet_fields(types: list[Mapping[str, Type]]) -> Mapping[str, Type]:
             field_to_types[name].append(typ)
 
     return {
-        name: (
-            get_proper_type(reduce(meet_types, f_types))
-            if len(f_types) == len(types)
-            else UninhabitedType()
-        )
+        name: (get_proper_type(reduce(meet_types, f_types)) if len(f_types) == len(types) else UninhabitedType())
         for name, f_types in field_to_types.items()
     }
 
@@ -1155,11 +1113,7 @@ def fields_function_sig_callback(ctx: mypy.plugin.FunctionSigContext) -> Callabl
     proper_type = get_proper_type(ctx.api.get_expression_type(ctx.args[0][0]))
 
     # fields(Any) -> Any, fields(type[Any]) -> Any
-    if (
-        isinstance(proper_type, AnyType)
-        or isinstance(proper_type, TypeType)
-        and isinstance(proper_type.item, AnyType)
-    ):
+    if isinstance(proper_type, AnyType) or isinstance(proper_type, TypeType) and isinstance(proper_type.item, AnyType):
         return ctx.default_signature
 
     cls = None

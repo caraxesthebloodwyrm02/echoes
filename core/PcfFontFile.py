@@ -109,9 +109,7 @@ class PcfFontFile(FontFile.FontFile):
                     bitmaps[ix],
                 )
 
-    def _getformat(
-        self, tag: int
-    ) -> tuple[BinaryIO, int, Callable[[bytes], int], Callable[[bytes], int]]:
+    def _getformat(self, tag: int) -> tuple[BinaryIO, int, Callable[[bytes], int], Callable[[bytes], int]]:
         format, size, offset = self.toc[tag]
 
         fp = self.fp
@@ -187,9 +185,7 @@ class PcfFontFile(FontFile.FontFile):
 
         return metrics
 
-    def _load_bitmaps(
-        self, metrics: list[tuple[int, int, int, int, int, int, int, int]]
-    ) -> list[Image.Image]:
+    def _load_bitmaps(self, metrics: list[tuple[int, int, int, int, int, int, int, int]]) -> list[Image.Image]:
         #
         # bitmap data
 
@@ -223,9 +219,7 @@ class PcfFontFile(FontFile.FontFile):
         for i in range(nbitmaps):
             xsize, ysize = metrics[i][:2]
             b, e = offsets[i : i + 2]
-            bitmaps.append(
-                Image.frombytes("1", (xsize, ysize), data[b:e], "raw", mode, pad(xsize))
-            )
+            bitmaps.append(Image.frombytes("1", (xsize, ysize), data[b:e], "raw", mode, pad(xsize)))
 
         return bitmaps
 
@@ -246,9 +240,7 @@ class PcfFontFile(FontFile.FontFile):
 
         for i in range(first_col, len(encoding)):
             try:
-                encoding_offset = encoding_offsets[
-                    ord(bytearray([i]).decode(self.charset_encoding))
-                ]
+                encoding_offset = encoding_offsets[ord(bytearray([i]).decode(self.charset_encoding))]
                 if encoding_offset != 0xFFFF:
                     encoding[i] = encoding_offset
             except UnicodeDecodeError:

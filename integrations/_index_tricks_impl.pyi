@@ -17,7 +17,7 @@ from numpy._typing import (
     _SupportsDType,
 )
 
-__all__ = [  # noqa: RUF022
+__all__ = [
     "ravel_multi_index",
     "unravel_index",
     "mgrid",
@@ -79,8 +79,6 @@ class ndenumerate(Generic[_ScalarT_co]):
     def __next__(self: ndenumerate[np.object_], /) -> tuple[_AnyShape, Incomplete]: ...
     @overload
     def __next__(self, /) -> tuple[_AnyShape, _ScalarT_co]: ...
-
-    #
     def __iter__(self) -> Self: ...
 
 class ndindex:
@@ -88,12 +86,8 @@ class ndindex:
     def __init__(self, shape: tuple[SupportsIndex, ...], /) -> None: ...
     @overload
     def __init__(self, /, *shape: SupportsIndex) -> None: ...
-
-    #
     def __iter__(self) -> Self: ...
     def __next__(self) -> _AnyShape: ...
-
-    #
     @deprecated("Deprecated since 1.20.0.")
     def ndincr(self, /) -> None: ...
 
@@ -129,7 +123,6 @@ class AxisConcatenator(Generic[_AxisT_co, _MatrixT_co, _NDMinT_co, _Trans1DT_co]
     ndmin: _NDMinT_co
     trans1d: _Trans1DT_co
 
-    #
     def __init__(
         self,
         /,
@@ -142,8 +135,6 @@ class AxisConcatenator(Generic[_AxisT_co, _MatrixT_co, _NDMinT_co, _Trans1DT_co]
     # TODO(jorenham): annotate this
     def __getitem__(self, key: Incomplete, /) -> Incomplete: ...
     def __len__(self, /) -> L[0]: ...
-
-    #
     @staticmethod
     @overload
     def concatenate(*a: ArrayLike, axis: SupportsIndex | None = 0, out: _ArrayT) -> _ArrayT: ...
@@ -189,15 +180,10 @@ def ix_(*args: int | _NestedSequence[int]) -> tuple[NDArray[np.intp], ...]: ...
 def ix_(*args: float | _NestedSequence[float]) -> tuple[NDArray[np.float64], ...]: ...
 @overload
 def ix_(*args: complex | _NestedSequence[complex]) -> tuple[NDArray[np.complex128], ...]: ...
-
-#
 def fill_diagonal(a: NDArray[Any], val: object, wrap: bool = ...) -> None: ...
-
-#
 def diag_indices(n: int, ndim: int = ...) -> tuple[NDArray[np.intp], ...]: ...
 def diag_indices_from(arr: ArrayLike) -> tuple[NDArray[np.intp], ...]: ...
 
-#
 mgrid: Final[MGridClass] = ...
 ogrid: Final[OGridClass] = ...
 

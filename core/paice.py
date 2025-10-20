@@ -87,12 +87,8 @@ def _count_intersection(l1, l2):
             # OI (y-axis) diminishes when we go along the truncation line.
             return (0.0, y4)
 
-    x = (
-        (x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)
-    ) / denominator
-    y = (
-        (x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)
-    ) / denominator
+    x = ((x1 * y2 - y1 * x2) * (x3 - x4) - (x1 - x2) * (x3 * y4 - y3 * x4)) / denominator
+    y = ((x1 * y2 - y1 * x2) * (y3 - y4) - (y1 - y2) * (x3 * y4 - y3 * x4)) / denominator
     return (x, y)
 
 
@@ -323,9 +319,7 @@ class Paice:
         # Count the intersection point
         # Note that (self.ui, self.oi) cannot be (0.0, 0.0) and self.coords has different coordinates
         # so we have actual line segments instead of a line segment and a point
-        intersection = _count_intersection(
-            ((0, 0), (self.ui, self.oi)), self.coords[-2:]
-        )
+        intersection = _count_intersection(((0, 0), (self.ui, self.oi)), self.coords[-2:])
         # Count OP (length of the line from origo to (ui, oi))
         op = sqrt(self.ui**2 + self.oi**2)
         # Count OT (length of the line from origo to truncation line that goes through (ui, oi))

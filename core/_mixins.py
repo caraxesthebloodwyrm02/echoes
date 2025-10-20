@@ -194,15 +194,11 @@ class NDArrayBackedExtensionArray(NDArrayBacked, ExtensionArray):
     def _values_for_factorize(self):
         return self._ndarray, self._internal_fill_value
 
-    def _hash_pandas_object(
-        self, *, encoding: str, hash_key: str, categorize: bool
-    ) -> npt.NDArray[np.uint64]:
+    def _hash_pandas_object(self, *, encoding: str, hash_key: str, categorize: bool) -> npt.NDArray[np.uint64]:
         from pandas.core.util.hashing import hash_array
 
         values = self._ndarray
-        return hash_array(
-            values, encoding=encoding, hash_key=hash_key, categorize=categorize
-        )
+        return hash_array(values, encoding=encoding, hash_key=hash_key, categorize=categorize)
 
     # Signature of "argmin" incompatible with supertype "ExtensionArray"
     def argmin(self, axis: AxisInt = 0, skipna: bool = True):  # type: ignore[override]
@@ -265,15 +261,13 @@ class NDArrayBackedExtensionArray(NDArrayBacked, ExtensionArray):
         return value
 
     @overload
-    def __getitem__(self, key: ScalarIndexer) -> Any:
-        ...
+    def __getitem__(self, key: ScalarIndexer) -> Any: ...
 
     @overload
     def __getitem__(
         self,
         key: SequenceIndexer | PositionalIndexerTuple,
-    ) -> Self:
-        ...
+    ) -> Self: ...
 
     def __getitem__(
         self,
@@ -297,9 +291,7 @@ class NDArrayBackedExtensionArray(NDArrayBacked, ExtensionArray):
         result = self._from_backing_data(result)
         return result
 
-    def _fill_mask_inplace(
-        self, method: str, limit: int | None, mask: npt.NDArray[np.bool_]
-    ) -> None:
+    def _fill_mask_inplace(self, method: str, limit: int | None, mask: npt.NDArray[np.bool_]) -> None:
         # (for now) when self.ndim == 2, we assume axis=0
         func = missing.get_fill_func(method, ndim=self.ndim)
         func(self._ndarray.T, limit=limit, mask=mask.T)
@@ -336,19 +328,13 @@ class NDArrayBackedExtensionArray(NDArrayBacked, ExtensionArray):
         return new_values
 
     @doc(ExtensionArray.fillna)
-    def fillna(
-        self, value=None, method=None, limit: int | None = None, copy: bool = True
-    ) -> Self:
-        value, method = validate_fillna_kwargs(
-            value, method, validate_scalar_dict_value=False
-        )
+    def fillna(self, value=None, method=None, limit: int | None = None, copy: bool = True) -> Self:
+        value, method = validate_fillna_kwargs(value, method, validate_scalar_dict_value=False)
 
         mask = self.isna()
         # error: Argument 2 to "check_value_size" has incompatible type
         # "ExtensionArray"; expected "ndarray"
-        value = missing.check_value_size(
-            value, mask, len(self)  # type: ignore[arg-type]
-        )
+        value = missing.check_value_size(value, mask, len(self))  # type: ignore[arg-type]
 
         if mask.any():
             if method is not None:

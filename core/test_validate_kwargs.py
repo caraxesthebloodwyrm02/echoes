@@ -27,10 +27,7 @@ def test_bad_kwarg(_fname):
 @pytest.mark.parametrize("i", range(1, 3))
 def test_not_all_none(i, _fname):
     bad_arg = "foo"
-    msg = (
-        rf"the '{bad_arg}' parameter is not supported "
-        rf"in the pandas implementation of {_fname}\(\)"
-    )
+    msg = rf"the '{bad_arg}' parameter is not supported " rf"in the pandas implementation of {_fname}\(\)"
 
     compat_args = {"foo": 1, "bar": "s", "baz": None}
 
@@ -54,10 +51,7 @@ def test_validation(_fname):
 @pytest.mark.parametrize("name", ["inplace", "copy"])
 @pytest.mark.parametrize("value", [1, "True", [1, 2, 3], 5.0])
 def test_validate_bool_kwarg_fail(name, value):
-    msg = (
-        f'For argument "{name}" expected type bool, '
-        f"received type {type(value).__name__}"
-    )
+    msg = f'For argument "{name}" expected type bool, ' f"received type {type(value).__name__}"
 
     with pytest.raises(ValueError, match=msg):
         validate_bool_kwarg(value, name)

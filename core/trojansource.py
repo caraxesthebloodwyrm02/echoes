@@ -63,10 +63,7 @@ def trojansource(context):
                     col_offset = line.index(char) + 1
                 except ValueError:
                     continue
-                text = (
-                    "A Python source file contains bidirectional"
-                    " control characters (%r)." % char
-                )
+                text = "A Python source file contains bidirectional" " control characters (%r)." % char
                 b_issue = bandit.Issue(
                     severity=bandit.HIGH,
                     confidence=bandit.MEDIUM,

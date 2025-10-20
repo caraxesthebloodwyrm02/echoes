@@ -2,6 +2,7 @@
 Helper functions to generate range-like data for DatetimeArray
 (and possibly TimedeltaArray/PeriodArray)
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -60,8 +61,7 @@ def generate_regular_range(
         td = td.as_unit(unit, round_ok=False)
     except ValueError as err:
         raise ValueError(
-            f"freq={freq} is incompatible with unit={unit}. "
-            "Use a lower freq or a higher unit instead."
+            f"freq={freq} is incompatible with unit={unit}. " "Use a lower freq or a higher unit instead."
         ) from err
     stride = int(td._value)
 
@@ -77,9 +77,7 @@ def generate_regular_range(
         e = iend + stride
         b = _generate_range_overflow_safe(e, periods, stride, side="end")
     else:
-        raise ValueError(
-            "at least 'start' or 'end' should be specified if a 'period' is given."
-        )
+        raise ValueError("at least 'start' or 'end' should be specified if a 'period' is given.")
 
     with np.errstate(over="raise"):
         # If the range is sufficiently large, np.arange may overflow
@@ -94,9 +92,7 @@ def generate_regular_range(
     return values
 
 
-def _generate_range_overflow_safe(
-    endpoint: int, periods: int, stride: int, side: str = "start"
-) -> int:
+def _generate_range_overflow_safe(endpoint: int, periods: int, stride: int, side: str = "start") -> int:
     """
     Calculate the second endpoint for passing to np.arange, checking
     to avoid an integer overflow.  Catch OverflowError and re-raise
@@ -139,18 +135,14 @@ def _generate_range_overflow_safe(
         # relatively easy case without casting concerns
         return _generate_range_overflow_safe_signed(endpoint, periods, stride, side)
 
-    elif (endpoint > 0 and side == "start" and stride > 0) or (
-        endpoint < 0 < stride and side == "end"
-    ):
+    elif (endpoint > 0 and side == "start" and stride > 0) or (endpoint < 0 < stride and side == "end"):
         # no chance of not-overflowing
         raise OutOfBoundsDatetime(msg)
 
     elif side == "end" and endpoint - stride <= i64max < endpoint:
         # in _generate_regular_range we added `stride` thereby overflowing
         #  the bounds.  Adjust to fix this.
-        return _generate_range_overflow_safe(
-            endpoint - stride, periods - 1, stride, side
-        )
+        return _generate_range_overflow_safe(endpoint - stride, periods - 1, stride, side)
 
     # split into smaller pieces
     mid_periods = periods // 2
@@ -161,9 +153,7 @@ def _generate_range_overflow_safe(
     return _generate_range_overflow_safe(midpoint, remaining, stride, side)
 
 
-def _generate_range_overflow_safe_signed(
-    endpoint: int, periods: int, stride: int, side: str
-) -> int:
+def _generate_range_overflow_safe_signed(endpoint: int, periods: int, stride: int, side: str) -> int:
     """
     A special case for _generate_range_overflow_safe where `periods * stride`
     can be calculated without overflowing int64 bounds.
@@ -202,6 +192,4 @@ def _generate_range_overflow_safe_signed(
             if uresult <= i64max + np.uint64(stride):
                 return int(uresult)
 
-    raise OutOfBoundsDatetime(
-        f"Cannot generate range with {side}={endpoint} and periods={periods}"
-    )
+    raise OutOfBoundsDatetime(f"Cannot generate range with {side}={endpoint} and periods={periods}")

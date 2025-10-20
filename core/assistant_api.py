@@ -118,9 +118,7 @@ async def assistant_query(
 
     loop = asyncio.get_event_loop()
     try:
-        response = await loop.run_in_executor(
-            None, lambda: client.responses.create(**kwargs)
-        )
+        response = await loop.run_in_executor(None, lambda: client.responses.create(**kwargs))
     except Exception as exc:  # pragma: no cover - actual API errors
         raise HTTPException(status_code=502, detail=str(exc)) from exc
 

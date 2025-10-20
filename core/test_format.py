@@ -2,6 +2,7 @@
 Tests for the file pandas.io.formats.format, *not* tests for general formatting
 of pandas objects.
 """
+
 from datetime import datetime
 from io import StringIO
 from pathlib import Path
@@ -59,9 +60,7 @@ def filepath_or_buffer(filepath_or_buffer_id, tmp_path):
 
 
 @pytest.fixture
-def assert_filepath_or_buffer_equals(
-    filepath_or_buffer, filepath_or_buffer_id, encoding
-):
+def assert_filepath_or_buffer_equals(filepath_or_buffer, filepath_or_buffer_id, encoding):
     """
     Assertion helper for checking filepath_or_buffer.
     """
@@ -148,11 +147,7 @@ class TestDataFrameFormatting:
             df = DataFrame(
                 {
                     "A": np.random.default_rng(2).standard_normal(10),
-                    "B": [
-                        "a"
-                        * np.random.default_rng(2).integers(max_len - 1, max_len + 1)
-                        for _ in range(10)
-                    ],
+                    "B": ["a" * np.random.default_rng(2).integers(max_len - 1, max_len + 1) for _ in range(10)],
                 }
             )
             r = repr(df)
@@ -181,9 +176,7 @@ class TestDataFrameFormatting:
     def test_max_colwidth_negative_int_raises(self):
         # Deprecation enforced from:
         # https://github.com/pandas-dev/pandas/issues/31532
-        with pytest.raises(
-            ValueError, match="Value must be a nonnegative integer or None"
-        ):
+        with pytest.raises(ValueError, match="Value must be a nonnegative integer or None"):
             with option_context("display.max_colwidth", -1):
                 pass
 
@@ -275,9 +268,7 @@ class TestDataFrameFormatting:
         # result of terminal auto size detection
         df = DataFrame("hello", index=range(1000), columns=range(5))
 
-        with option_context(
-            "mode.sim_interactive", False, "display.width", 0, "display.max_rows", 5000
-        ):
+        with option_context("mode.sim_interactive", False, "display.width", 0, "display.max_rows", 5000):
             assert not has_truncated_repr(df)
             assert not has_expanded_repr(df)
 
@@ -285,9 +276,7 @@ class TestDataFrameFormatting:
         # see gh-21180
 
         terminal_size = (118, 96)
-        monkeypatch.setattr(
-            "pandas.io.formats.format.get_terminal_size", lambda: terminal_size
-        )
+        monkeypatch.setattr("pandas.io.formats.format.get_terminal_size", lambda: terminal_size)
 
         index = range(5)
         columns = MultiIndex.from_tuples(
@@ -317,9 +306,7 @@ class TestDataFrameFormatting:
         terminal_size = (80, 24)
         df = DataFrame(np.random.default_rng(2).random((1, 7)))
 
-        monkeypatch.setattr(
-            "pandas.io.formats.format.get_terminal_size", lambda: terminal_size
-        )
+        monkeypatch.setattr("pandas.io.formats.format.get_terminal_size", lambda: terminal_size)
         assert "..." not in str(df)
 
     def test_repr_truncation_column_size(self):
@@ -594,9 +581,7 @@ class TestDataFrameFormatting:
         assert repr(df) == expected
 
         # MultiIndex
-        idx = MultiIndex.from_tuples(
-            [("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")]
-        )
+        idx = MultiIndex.from_tuples([("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")])
         df = DataFrame(
             {
                 "a": ["あああああ", "い", "う", "えええ"],
@@ -755,9 +740,7 @@ class TestDataFrameFormatting:
             assert repr(df) == expected
 
             # MultiIndex
-            idx = MultiIndex.from_tuples(
-                [("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")]
-            )
+            idx = MultiIndex.from_tuples([("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")])
             df = DataFrame(
                 {
                     "a": ["あああああ", "い", "う", "えええ"],
@@ -847,9 +830,7 @@ class TestDataFrameFormatting:
     @pytest.mark.parametrize("w", [10, 20])
     def test_to_string_truncate_indices(self, index_scalar, h, w):
         with option_context("display.expand_frame_repr", False):
-            df = DataFrame(
-                index=[index_scalar] * h, columns=[str(i) * 10 for i in range(w)]
-            )
+            df = DataFrame(index=[index_scalar] * h, columns=[str(i) * 10 for i in range(w)])
             with option_context("display.max_rows", 15):
                 if h == 20:
                     assert has_vertically_truncated_repr(df)
@@ -882,9 +863,7 @@ class TestDataFrameFormatting:
 
         # 11594
         ser = Series(
-            [datetime(2012, 1, 1)] * 10
-            + [datetime(1012, 1, 2)]
-            + [datetime(2012, 1, 3)] * 10,
+            [datetime(2012, 1, 1)] * 10 + [datetime(1012, 1, 2)] + [datetime(2012, 1, 3)] * 10,
             dtype=dtype,
         )
 
@@ -949,9 +928,7 @@ class TestDataFrameFormatting:
             )
             assert repr(df) == expected
 
-        dts = [Timestamp("2011-01-01", tz="Asia/Tokyo")] * 5 + [
-            Timestamp("2011-01-01", tz="US/Eastern")
-        ] * 5
+        dts = [Timestamp("2011-01-01", tz="Asia/Tokyo")] * 5 + [Timestamp("2011-01-01", tz="US/Eastern")] * 5
         df = DataFrame({"dt": dts, "x": [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]})
         with option_context("display.max_rows", 5):
             expected = (
@@ -1082,9 +1059,7 @@ class TestDataFrameFormatting:
             max_cols = get_option("display.max_columns")
             midx = MultiIndex.from_arrays([["a" * 5] * 10] * 2)
             mcols = MultiIndex.from_arrays([["b" * 3] * (max_cols - 1)] * 2)
-            df = DataFrame(
-                [["c" * 25] * (max_cols - 1)] * 10, index=midx, columns=mcols
-            )
+            df = DataFrame([["c" * 25] * (max_cols - 1)] * 10, index=midx, columns=mcols)
             df.index.names = ["Level 0", "Level 1"]
             with option_context("display.expand_frame_repr", False):
                 rep_str = repr(df)
@@ -1222,9 +1197,7 @@ class TestDataFrameFormatting:
         h, w = max_rows - 1, max_cols + 1
         df = DataFrame({k: np.arange(1, 1 + h) for k in np.arange(w)})
         assert has_horizontally_truncated_repr(df)
-        with option_context(
-            "display.large_repr", "info", "display.max_columns", max_cols
-        ):
+        with option_context("display.large_repr", "info", "display.max_columns", max_cols):
             assert has_info_repr(df)
 
     def test_info_repr_max_cols(self):
@@ -1456,9 +1429,7 @@ class TestSeriesFormatting:
         assert repr(s) == expected
 
         # MultiIndex
-        idx = MultiIndex.from_tuples(
-            [("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")]
-        )
+        idx = MultiIndex.from_tuples([("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")])
         s = Series([1, 22, 3333, 44444], index=idx)
         expected = (
             "あ    いい          1\n"
@@ -1470,15 +1441,11 @@ class TestSeriesFormatting:
 
         # object dtype, shorter than unicode repr
         s = Series([1, 22, 3333, 44444], index=[1, "AB", np.nan, "あああ"])
-        expected = (
-            "1          1\nAB        22\nNaN     3333\nあああ    44444\ndtype: int64"
-        )
+        expected = "1          1\nAB        22\nNaN     3333\nあああ    44444\ndtype: int64"
         assert repr(s) == expected
 
         # object dtype, longer than unicode repr
-        s = Series(
-            [1, 22, 3333, 44444], index=[1, "AB", Timestamp("2011-01-01"), "あああ"]
-        )
+        s = Series([1, 22, 3333, 44444], index=[1, "AB", Timestamp("2011-01-01"), "あああ"])
         expected = (
             "1                          1\n"
             "AB                        22\n"
@@ -1491,18 +1458,12 @@ class TestSeriesFormatting:
         with option_context("display.max_rows", 3):
             s = Series(["あ", "いい", "ううう", "ええええ"], name="おおおおおおお")
 
-            expected = (
-                "0       あ\n     ... \n"
-                "3    ええええ\n"
-                "Name: おおおおおおお, Length: 4, dtype: object"
-            )
+            expected = "0       あ\n     ... \n" "3    ええええ\n" "Name: おおおおおおお, Length: 4, dtype: object"
             assert repr(s) == expected
 
             s.index = ["ああ", "いいいい", "う", "えええ"]
             expected = (
-                "ああ        あ\n       ... \n"
-                "えええ    ええええ\n"
-                "Name: おおおおおおお, Length: 4, dtype: object"
+                "ああ        あ\n       ... \n" "えええ    ええええ\n" "Name: おおおおおおお, Length: 4, dtype: object"
             )
             assert repr(s) == expected
 
@@ -1513,10 +1474,7 @@ class TestSeriesFormatting:
                 ["a", "bb", "CCC", "D"],
                 index=["あ", "いい", "ううう", "ええええ"],
             )
-            expected = (
-                "あ            a\nいい         bb\nううう      CCC\n"
-                "ええええ      D\ndtype: object"
-            )
+            expected = "あ            a\nいい         bb\nううう      CCC\n" "ええええ      D\ndtype: object"
             assert repr(s) == expected
 
             # unicode values
@@ -1524,10 +1482,7 @@ class TestSeriesFormatting:
                 ["あ", "いい", "ううう", "ええええ"],
                 index=["a", "bb", "c", "ddd"],
             )
-            expected = (
-                "a            あ\nbb         いい\nc        ううう\n"
-                "ddd    ええええ\ndtype: object"
-            )
+            expected = "a            あ\nbb         いい\nc        ううう\n" "ddd    ええええ\ndtype: object"
             assert repr(s) == expected
             # both
             s = Series(
@@ -1558,9 +1513,7 @@ class TestSeriesFormatting:
             assert repr(s) == expected
 
             # MultiIndex
-            idx = MultiIndex.from_tuples(
-                [("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")]
-            )
+            idx = MultiIndex.from_tuples([("あ", "いい"), ("う", "え"), ("おおお", "かかかか"), ("き", "くく")])
             s = Series([1, 22, 3333, 44444], index=idx)
             expected = (
                 "あ      いい            1\n"
@@ -1573,10 +1526,7 @@ class TestSeriesFormatting:
 
             # object dtype, shorter than unicode repr
             s = Series([1, 22, 3333, 44444], index=[1, "AB", np.nan, "あああ"])
-            expected = (
-                "1             1\nAB           22\nNaN        3333\n"
-                "あああ    44444\ndtype: int64"
-            )
+            expected = "1             1\nAB           22\nNaN        3333\n" "あああ    44444\ndtype: int64"
             assert repr(s) == expected
 
             # object dtype, longer than unicode repr
@@ -1596,9 +1546,7 @@ class TestSeriesFormatting:
             with option_context("display.max_rows", 3):
                 s = Series(["あ", "いい", "ううう", "ええええ"], name="おおおおおおお")
                 expected = (
-                    "0          あ\n       ...   \n"
-                    "3    ええええ\n"
-                    "Name: おおおおおおお, Length: 4, dtype: object"
+                    "0          あ\n       ...   \n" "3    ええええ\n" "Name: おおおおおおお, Length: 4, dtype: object"
                 )
                 assert repr(s) == expected
 
@@ -1706,10 +1654,7 @@ class TestSeriesFormatting:
                 pd.Period("2011-03-01 09:00", freq="h"),
             ]
         )
-        exp = (
-            "0             2011-01\n1          2011-02-01\n"
-            "2    2011-03-01 09:00\ndtype: object"
-        )
+        exp = "0             2011-01\n1          2011-02-01\n" "2    2011-03-01 09:00\ndtype: object"
         assert str(s) == exp
 
     def test_max_multi_index_display(self):
@@ -1765,9 +1710,7 @@ class TestSeriesFormatting:
         assert res == exp
 
     def chck_ncols(self, s):
-        lines = [
-            line for line in repr(s).split("\n") if not re.match(r"[^\.]*\.+", line)
-        ][:-1]
+        lines = [line for line in repr(s).split("\n") if not re.match(r"[^\.]*\.+", line)][:-1]
         ncolsizes = len({len(line.strip()) for line in lines})
         assert ncolsizes == 1
 
@@ -1782,16 +1725,10 @@ class TestSeriesFormatting:
             exp = "0     ab\n1     ab\n      ..\n98    ab\n99    ab\ndtype: object"
             assert exp == res
             res = repr(test_sers["asc"])
-            exp = (
-                "0         a\n1        ab\n      ...  \n4     abcde\n5    "
-                "abcdef\ndtype: object"
-            )
+            exp = "0         a\n1        ab\n      ...  \n4     abcde\n5    " "abcdef\ndtype: object"
             assert exp == res
             res = repr(test_sers["desc"])
-            exp = (
-                "5    abcdef\n4     abcde\n      ...  \n1        ab\n0         "
-                "a\ndtype: object"
-            )
+            exp = "5    abcdef\n4     abcde\n      ...  \n1        ab\n0         " "a\ndtype: object"
             assert exp == res
 
     def test_ncols(self):
@@ -1887,9 +1824,7 @@ class TestGenericArrayFormatter:
         assert res[1] == " [False, True]"
 
     def test_3d_array(self):
-        obj = fmt._GenericArrayFormatter(
-            np.array([[[True, True], [False, False]], [[False, True], [True, False]]])
-        )
+        obj = fmt._GenericArrayFormatter(np.array([[[True, True], [False, False]], [[False, True], [True, False]]]))
         res = obj.get_result()
         assert len(res) == 2
         assert res[0] == " [[True, True], [False, False]]"
@@ -1921,9 +1856,7 @@ class TestGenericArrayFormatter:
 
         series = Series(ExtTypeStub(), copy=False)
         res = repr(series)  # This line crashed before #33770 was fixed.
-        expected = "\n".join(
-            ["0    [False True]", "1    [True False]", "dtype: DtypeStub"]
-        )
+        expected = "\n".join(["0    [False True]", "1    [True False]", "dtype: DtypeStub"])
         assert res == expected
 
 
@@ -2168,9 +2101,7 @@ class TestDatetime64Formatter:
         assert result == ["2016-01", "2016-02"]
 
     def test_datetime64formatter_hoursecond(self):
-        x = Series(
-            pd.to_datetime(["10:10:10.100", "12:12:12.120"], format="%H:%M:%S.%f")
-        )._values
+        x = Series(pd.to_datetime(["10:10:10.100", "12:12:12.120"], format="%H:%M:%S.%f"))._values
 
         def format_func(x):
             return x.strftime("%H:%M")
@@ -2181,9 +2112,7 @@ class TestDatetime64Formatter:
 
     def test_datetime64formatter_tz_ms(self):
         x = (
-            Series(
-                np.array(["2999-01-01", "2999-01-02", "NaT"], dtype="datetime64[ms]")
-            )
+            Series(np.array(["2999-01-01", "2999-01-02", "NaT"], dtype="datetime64[ms]"))
             .dt.tz_localize("US/Pacific")
             ._values
         )
@@ -2267,9 +2196,7 @@ def test_filepath_or_buffer_arg(
         pytest.importorskip("jinja2")
 
     if filepath_or_buffer_id not in ["string", "pathlike"] and encoding is not None:
-        with pytest.raises(
-            ValueError, match="buf is not a file name and encoding is specified."
-        ):
+        with pytest.raises(ValueError, match="buf is not a file name and encoding is specified."):
             getattr(df, method)(buf=filepath_or_buffer, encoding=encoding)
     elif encoding == "foo":
         with pytest.raises(LookupError, match="unknown encoding"):

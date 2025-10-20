@@ -60,16 +60,12 @@ def _invoke(
     try:
         hook = _registry[name]
     except KeyError as ke:
-        raise util.CommandError(
-            f"No formatter with name '{name}' registered"
-        ) from ke
+        raise util.CommandError(f"No formatter with name '{name}' registered") from ke
     else:
         return hook(revision_path, options)
 
 
-def _run_hooks(
-    path: str | os.PathLike[str], hooks: list[PostWriteHookConfig]
-) -> None:
+def _run_hooks(path: str | os.PathLike[str], hooks: list[PostWriteHookConfig]) -> None:
     """Invoke hooks for a generated revision."""
 
     for hook in hooks:
@@ -78,13 +74,10 @@ def _run_hooks(
             type_ = hook["type"]
         except KeyError as ke:
             raise util.CommandError(
-                f"Key '{name}.type' (or 'type' in toml) is required "
-                f"for post write hook {name!r}"
+                f"Key '{name}.type' (or 'type' in toml) is required " f"for post write hook {name!r}"
             ) from ke
         else:
-            with util.status(
-                f"Running post write hook {name!r}", newline=True
-            ):
+            with util.status(f"Running post write hook {name!r}", newline=True):
                 _invoke(type_, path, hook)
 
 
@@ -99,13 +92,8 @@ def _parse_cmdline_options(cmdline_options_str: str, path: str) -> list[str]:
     """
     if REVISION_SCRIPT_TOKEN not in cmdline_options_str:
         cmdline_options_str = REVISION_SCRIPT_TOKEN + " " + cmdline_options_str
-    cmdline_options_list = shlex.split(
-        cmdline_options_str, posix=compat.is_posix
-    )
-    cmdline_options_list = [
-        option.replace(REVISION_SCRIPT_TOKEN, path)
-        for option in cmdline_options_list
-    ]
+    cmdline_options_list = shlex.split(cmdline_options_str, posix=compat.is_posix)
+    cmdline_options_list = [option.replace(REVISION_SCRIPT_TOKEN, path) for option in cmdline_options_list]
     return cmdline_options_list
 
 
@@ -114,14 +102,11 @@ def _get_required_option(options: dict, name: str) -> str:
         return options[name]
     except KeyError as ke:
         raise util.CommandError(
-            f"Key {options['_hook_name']}.{name} is required for post "
-            f"write hook {options['_hook_name']!r}"
+            f"Key {options['_hook_name']}.{name} is required for post " f"write hook {options['_hook_name']!r}"
         ) from ke
 
 
-def _run_hook(
-    path: str, options: dict, ignore_output: bool, command: list[str]
-) -> None:
+def _run_hook(path: str, options: dict, ignore_output: bool, command: list[str]) -> None:
     cwd: str | None = options.get("cwd", None)
     cmdline_options_str = options.get("options", "")
     cmdline_options_list = _parse_cmdline_options(cmdline_options_str, path)
@@ -134,18 +119,14 @@ def _run_hook(
 
 
 @register("console_scripts")
-def console_scripts(
-    path: str, options: dict, ignore_output: bool = False
-) -> None:
+def console_scripts(path: str, options: dict, ignore_output: bool = False) -> None:
     entrypoint_name = _get_required_option(options, "entrypoint")
     for entry in compat.importlib_metadata_get("console_scripts"):
         if entry.name == entrypoint_name:
             impl: Any = entry
             break
     else:
-        raise util.CommandError(
-            f"Could not find entrypoint console_scripts.{entrypoint_name}"
-        )
+        raise util.CommandError(f"Could not find entrypoint console_scripts.{entrypoint_name}")
 
     command = [
         sys.executable,

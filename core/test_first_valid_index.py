@@ -1,6 +1,7 @@
 """
 Includes test for last_valid_index.
 """
+
 import numpy as np
 import pytest
 
@@ -20,9 +21,7 @@ class TestFirstValidIndex:
         assert obj.first_valid_index() is None
         assert obj.iloc[:0].first_valid_index() is None
 
-    @pytest.mark.parametrize(
-        "empty", [DataFrame(), Series(dtype=object), Series([], index=[], dtype=object)]
-    )
+    @pytest.mark.parametrize("empty", [DataFrame(), Series(dtype=object), Series([], index=[], dtype=object)])
     def test_first_valid_index_empty(self, empty):
         # GH#12800
         assert empty.last_valid_index() is None

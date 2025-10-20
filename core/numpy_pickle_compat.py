@@ -57,8 +57,7 @@ def read_zfile(file_handle):
     # buffer to allocate.
     data = zlib.decompress(file_handle.read(), 15, length)
     assert len(data) == length, (
-        "Incorrect data length while decompressing %s."
-        "The file could be corrupted." % file_handle
+        "Incorrect data length while decompressing %s." "The file could be corrupted." % file_handle
     )
     return data
 
@@ -191,9 +190,7 @@ class ZipNumpyUnpickler(Unpickler):
         Unpickler.load_build(self)
         if isinstance(self.stack[-1], NDArrayWrapper):
             if self.np is None:
-                raise ImportError(
-                    "Trying to unpickle an ndarray, but numpy didn't import correctly"
-                )
+                raise ImportError("Trying to unpickle an ndarray, but numpy didn't import correctly")
             nd_array_wrapper = self.stack.pop()
             array = nd_array_wrapper.read(self)
             self.stack.append(array)

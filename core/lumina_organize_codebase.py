@@ -150,9 +150,7 @@ def _analyze_structure(
                 {
                     "file": str(file.name),
                     "current": "root",
-                    "suggested": (
-                        "scripts/" if "script" in file.name.lower() else "app/"
-                    ),
+                    "suggested": ("scripts/" if "script" in file.name.lower() else "app/"),
                     "reason": "Python modules should be in organized directories",
                 }
             )

@@ -67,9 +67,7 @@ class WeeklyPlan:
         """Create a new weekly plan template."""
         return {
             "created_at": datetime.utcnow().isoformat(),
-            "week_start": (
-                datetime.now() - timedelta(days=datetime.now().weekday())
-            ).strftime("%Y-%m-%d"),
+            "week_start": (datetime.now() - timedelta(days=datetime.now().weekday())).strftime("%Y-%m-%d"),
             "focus_areas": [],
             "completed_items": [],
             "constraints": [],
@@ -96,9 +94,7 @@ class WeeklyPlan:
 
     def add_constraint(self, constraint: str) -> None:
         """Add a constraint to work within."""
-        self.plan["constraints"].append(
-            {"constraint": constraint, "added_at": datetime.utcnow().isoformat()}
-        )
+        self.plan["constraints"].append({"constraint": constraint, "added_at": datetime.utcnow().isoformat()})
         self._save_plan()
 
     def mark_complete(self, item_id: int, notes: str = "") -> None:
@@ -111,9 +107,7 @@ class WeeklyPlan:
 
                 # Move to completed
                 self.plan["completed_items"].append(item)
-                self.plan["focus_areas"] = [
-                    i for i in self.plan["focus_areas"] if i["id"] != item_id
-                ]
+                self.plan["focus_areas"] = [i for i in self.plan["focus_areas"] if i["id"] != item_id]
 
                 # Send completion notification
                 Notifier.notify("Task Completed", f"✓ {item['area']} - {notes}")
@@ -123,9 +117,7 @@ class WeeklyPlan:
     def weekly_review(self) -> str:
         """Generate a weekly review and prepare for next week."""
         completed = len(self.plan["completed_items"])
-        pending = len(
-            [i for i in self.plan["focus_areas"] if i["status"] != PlanStatus.COMPLETED]
-        )
+        pending = len([i for i in self.plan["focus_areas"] if i["status"] != PlanStatus.COMPLETED])
 
         review = (
             f"Weekly Review - {self.plan['week_start']}\n"

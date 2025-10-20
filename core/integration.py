@@ -69,11 +69,9 @@ class EthicsIntegratedBiasDetector:
         # Enhance results with ethical insights
         detection_results["ethical_compliance"] = principle_compliance
         detection_results["societal_inspirations"] = societal_applications
-        detection_results["evolution_phase"] = (
-            get_current_phase().name if get_current_phase() else "Unknown"
-        )
-        detection_results["transparency_report"] = (
-            self.transparency_report.generate_bias_detection_report(detection_results)
+        detection_results["evolution_phase"] = get_current_phase().name if get_current_phase() else "Unknown"
+        detection_results["transparency_report"] = self.transparency_report.generate_bias_detection_report(
+            detection_results
         )
 
         return detection_results

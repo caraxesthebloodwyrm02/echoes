@@ -38,9 +38,7 @@ class TestTrajectoryOptimizer:
     def test_data_driven_characteristics(self):
         """Test that data-driven method has expected characteristics."""
         optimizer = TrajectoryOptimizer(seed=42)
-        result = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=20
-        )
+        result = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=20)
 
         # High attention
         avg_attention = np.mean([d.attention_spent for d in result.decisions])
@@ -58,9 +56,7 @@ class TestTrajectoryOptimizer:
     def test_fast_compound_characteristics(self):
         """Test that fast compounding has expected characteristics."""
         optimizer = TrajectoryOptimizer(seed=42)
-        result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=20
-        )
+        result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=20)
 
         # Low attention
         avg_attention = np.mean([d.attention_spent for d in result.decisions])
@@ -76,9 +72,7 @@ class TestTrajectoryOptimizer:
     def test_compounding_effect(self):
         """Test that fast compounding shows exponential improvement."""
         optimizer = TrajectoryOptimizer(seed=42)
-        result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=30
-        )
+        result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=30)
 
         # Early vs late quality
         early_quality = np.mean([d.quality for d in result.decisions[:10]])
@@ -94,12 +88,8 @@ class TestTrajectoryOptimizer:
         """Test that fast compounding is faster."""
         optimizer = TrajectoryOptimizer(seed=42)
 
-        dda_result = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=20
-        )
-        fc_result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=20
-        )
+        dda_result = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=20)
+        fc_result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=20)
 
         # Fast compound should be significantly faster
         time_saved = dda_result.total_time - fc_result.total_time
@@ -113,29 +103,19 @@ class TestTrajectoryOptimizer:
         optimizer = TrajectoryOptimizer(seed=42)
 
         # Short trajectory
-        short_dda = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=10
-        )
-        short_fc = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=10
-        )
+        short_dda = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=10)
+        short_fc = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=10)
 
         # Long trajectory
-        long_dda = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=50
-        )
-        long_fc = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=50
-        )
+        long_dda = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=50)
+        long_fc = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=50)
 
         # Calculate quality advantage
         short_advantage = short_fc.final_quality - short_dda.final_quality
         long_advantage = long_fc.final_quality - long_dda.final_quality
 
         # Long trajectory should show greater advantage for FC
-        assert long_advantage > short_advantage, (
-            "Fast compound advantage should increase with trajectory length"
-        )
+        assert long_advantage > short_advantage, "Fast compound advantage should increase with trajectory length"
 
     def test_compare_methods(self):
         """Test method comparison across multiple trials."""
@@ -169,9 +149,7 @@ class TestTrajectoryOptimizer:
         fc_steps = results["fast_compound"].total_steps
         dda_steps = results["data_driven"].total_steps
 
-        assert fc_steps > dda_steps, (
-            "Fast compound should complete more steps in same time"
-        )
+        assert fc_steps > dda_steps, "Fast compound should complete more steps in same time"
 
         # Both should respect time budget
         assert results["data_driven"].total_time <= 30.0
@@ -182,12 +160,8 @@ class TestTrajectoryOptimizer:
         optimizer1 = TrajectoryOptimizer(seed=42)
         optimizer2 = TrajectoryOptimizer(seed=42)
 
-        result1 = optimizer1.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=15
-        )
-        result2 = optimizer2.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=15
-        )
+        result1 = optimizer1.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=15)
+        result2 = optimizer2.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=15)
 
         # Should be identical
         assert result1.average_quality == result2.average_quality
@@ -197,9 +171,7 @@ class TestTrajectoryOptimizer:
     def test_decision_metrics_validation(self):
         """Test that decision metrics are within valid ranges."""
         optimizer = TrajectoryOptimizer(seed=42)
-        result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=20
-        )
+        result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=20)
 
         for decision in result.decisions:
             # All metrics should be in [0, 1] range
@@ -221,20 +193,14 @@ class TestConceptualScenarios:
         optimizer = TrajectoryOptimizer(seed=42)
 
         # Simulate 50 decision points (hiring, process changes, etc.)
-        dda_result = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=50
-        )
-        fc_result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=50
-        )
+        dda_result = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=50)
+        fc_result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=50)
 
         print("\n=== Startup Scaling Scenario ===")
         print(f"Data-Driven: {dda_result}")
         print(f"Fast Compound: {fc_result}")
         print(f"Time saved: {dda_result.total_time - fc_result.total_time:.1f}s")
-        print(
-            f"Quality difference: {fc_result.final_quality - dda_result.final_quality:.3f}"
-        )
+        print(f"Quality difference: {fc_result.final_quality - dda_result.final_quality:.3f}")
 
         # Fast compound should excel in long-term scaling
         assert fc_result.final_quality >= dda_result.final_quality * 0.95
@@ -245,12 +211,8 @@ class TestConceptualScenarios:
         optimizer = TrajectoryOptimizer(seed=42)
 
         # Simulate 5 critical decisions under pressure
-        dda_result = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=5
-        )
-        fc_result = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=5
-        )
+        dda_result = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=5)
+        fc_result = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=5)
 
         print("\n=== Crisis Response Scenario ===")
         print(f"Data-Driven: {dda_result}")

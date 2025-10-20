@@ -81,13 +81,9 @@ class KnownPatternFinder(BaseFinder):
         for placement in reversed(config.sections):
             known_placement = KNOWN_SECTION_MAPPING.get(placement, placement).lower()
             config_key = f"known_{known_placement}"
-            known_patterns = list(
-                getattr(self.config, config_key, self.config.known_other.get(known_placement, []))
-            )
+            known_patterns = list(getattr(self.config, config_key, self.config.known_other.get(known_placement, [])))
             known_patterns = [
-                pattern
-                for known_pattern in known_patterns
-                for pattern in self._parse_known_pattern(known_pattern)
+                pattern for known_pattern in known_patterns for pattern in self._parse_known_pattern(known_pattern)
             ]
             for known_pattern in known_patterns:
                 regexp = "^" + known_pattern.replace("*", ".*").replace("?", ".?") + "$"
@@ -309,9 +305,7 @@ class RequirementsFinder(ReqsBaseFinder):
             if os.path.isdir(full_path):
                 for subfile_name in os.listdir(full_path):
                     results.extend(
-                        os.path.join(full_path, subfile_name)
-                        for ext in cls.exts
-                        if subfile_name.endswith(ext)
+                        os.path.join(full_path, subfile_name) for ext in cls.exts if subfile_name.endswith(ext)
                     )
                 continue
 
@@ -355,9 +349,7 @@ class FindersManager:
         DefaultFinder,
     )
 
-    def __init__(
-        self, config: Config, finder_classes: Iterable[type[BaseFinder]] | None = None
-    ) -> None:
+    def __init__(self, config: Config, finder_classes: Iterable[type[BaseFinder]] | None = None) -> None:
         self.verbose: bool = config.verbose
 
         if finder_classes is None:

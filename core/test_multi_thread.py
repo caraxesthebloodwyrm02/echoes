@@ -2,6 +2,7 @@
 Tests multithreading behaviour for reading and
 parsing files for each parser defined in parsers.py
 """
+
 from contextlib import ExitStack
 from io import BytesIO
 from multiprocessing.pool import ThreadPool
@@ -31,16 +32,11 @@ def test_multi_thread_string_io_read_csv(all_parsers, request):
     if parser.engine == "pyarrow":
         pa = pytest.importorskip("pyarrow")
         if Version(pa.__version__) < Version("16.0"):
-            request.applymarker(
-                pytest.mark.xfail(reason="# ValueError: Found non-unique column index")
-            )
+            request.applymarker(pytest.mark.xfail(reason="# ValueError: Found non-unique column index"))
     max_row_range = 100
     num_files = 10
 
-    bytes_to_df = (
-        "\n".join([f"{i:d},{i:d},{i:d}" for i in range(max_row_range)]).encode()
-        for _ in range(num_files)
-    )
+    bytes_to_df = ("\n".join([f"{i:d},{i:d},{i:d}" for i in range(max_row_range)]).encode() for _ in range(num_files))
 
     # Read all files in many threads.
     with ExitStack() as stack:
@@ -96,9 +92,7 @@ def _generate_multi_thread_dataframe(parser, path, num_rows, num_tasks):
         start, nrows = arg
 
         if not start:
-            return parser.read_csv(
-                path, index_col=0, header=0, nrows=nrows, parse_dates=["date"]
-            )
+            return parser.read_csv(path, index_col=0, header=0, nrows=nrows, parse_dates=["date"])
 
         return parser.read_csv(
             path,
@@ -109,9 +103,7 @@ def _generate_multi_thread_dataframe(parser, path, num_rows, num_tasks):
             parse_dates=[9],
         )
 
-    tasks = [
-        (num_rows * i // num_tasks, num_rows // num_tasks) for i in range(num_tasks)
-    ]
+    tasks = [(num_rows * i // num_tasks, num_rows // num_tasks) for i in range(num_tasks)]
 
     with ThreadPool(processes=num_tasks) as pool:
         results = pool.map(reader, tasks)
@@ -151,7 +143,5 @@ def test_multi_thread_path_multipart_read_csv(all_parsers):
     with tm.ensure_clean(file_name) as path:
         df.to_csv(path)
 
-        final_dataframe = _generate_multi_thread_dataframe(
-            parser, path, num_rows, num_tasks
-        )
+        final_dataframe = _generate_multi_thread_dataframe(parser, path, num_rows, num_tasks)
         tm.assert_frame_equal(df, final_dataframe)

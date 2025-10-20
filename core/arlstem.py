@@ -295,18 +295,10 @@ class ARLSTem(StemmerI):
             if token.startswith(self.verb_pr2[1]) and token.endswith(self.pl_si2[2]):
                 return token[2:-2]
         # ^Siin Taa, Noon$
-        if (
-            len(token) > 5
-            and token.startswith(self.verb_pr2[0])
-            and token.endswith("\u0646")
-        ):
+        if len(token) > 5 and token.startswith(self.verb_pr2[0]) and token.endswith("\u0646"):
             return token[2:-1]
         # ^Siin Yaa, Noon$
-        if (
-            len(token) > 5
-            and token.startswith(self.verb_pr2[1])
-            and token.endswith("\u0646")
-        ):
+        if len(token) > 5 and token.startswith(self.verb_pr2[1]) and token.endswith("\u0646"):
             return token[2:-1]
 
     def verb_t3(self, token):

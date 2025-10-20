@@ -112,9 +112,7 @@ def for_loop_helper(
     # Determine where we want to exit, if our condition check fails.
     normal_loop_exit = else_block if else_insts is not None else exit_block
 
-    for_gen = make_for_loop_generator(
-        builder, index, expr, body_block, normal_loop_exit, line, is_async=is_async
-    )
+    for_gen = make_for_loop_generator(builder, index, expr, body_block, normal_loop_exit, line, is_async=is_async)
 
     builder.push_loop_stack(step_block, exit_block)
     condition_block = BasicBlock()
@@ -234,9 +232,7 @@ def sequence_from_generator_preallocate_helper(
                 e = builder.accept(gen.left_expr)
                 builder.call_c(set_item_op, [target_op, item_index, e], gen.line)
 
-            for_loop_helper_with_index(
-                builder, gen.indices[0], gen.sequences[0], sequence, set_item, gen.line
-            )
+            for_loop_helper_with_index(builder, gen.indices[0], gen.sequences[0], sequence, set_item, gen.line)
 
             return target_op
     return None
@@ -268,9 +264,7 @@ def translate_list_comprehension(builder: IRBuilder, gen: GeneratorExpr) -> Valu
     return builder.read(list_ops)
 
 
-def raise_error_if_contains_unreachable_names(
-    builder: IRBuilder, gen: GeneratorExpr | DictionaryComprehension
-) -> bool:
+def raise_error_if_contains_unreachable_names(builder: IRBuilder, gen: GeneratorExpr | DictionaryComprehension) -> bool:
     """Raise a runtime error and return True if generator contains unreachable names.
 
     False is returned if the generator can be safely transformed without crashing.
@@ -371,11 +365,7 @@ def comprehension_helper(
 
 
 def is_range_ref(expr: RefExpr) -> bool:
-    return (
-        expr.fullname == "builtins.range"
-        or isinstance(expr.node, TypeAlias)
-        and expr.fullname == "six.moves.xrange"
-    )
+    return expr.fullname == "builtins.range" or isinstance(expr.node, TypeAlias) and expr.fullname == "six.moves.xrange"
 
 
 def make_for_loop_generator(
@@ -424,10 +414,7 @@ def make_for_loop_generator(
     if isinstance(expr, CallExpr) and isinstance(expr.callee, RefExpr):
         if (
             is_range_ref(expr.callee)
-            and (
-                len(expr.args) <= 2
-                or (len(expr.args) == 3 and builder.extract_int(expr.args[2]) is not None)
-            )
+            and (len(expr.args) <= 2 or (len(expr.args) == 3 and builder.extract_int(expr.args[2]) is not None))
             and set(expr.arg_kinds) == {ARG_POS}
         ):
             # Special case "for x in range(...)".
@@ -590,9 +577,7 @@ class ForGenerator:
 
     def load_len(self, expr: Value | AssignmentTarget) -> Value:
         """A helper to get collection length, used by several subclasses."""
-        return self.builder.builder.builtin_len(
-            self.builder.read(expr, self.line), self.line, use_pyssize_t=True
-        )
+        return self.builder.builder.builtin_len(self.builder.read(expr, self.line), self.line, use_pyssize_t=True)
 
 
 class ForIterable(ForGenerator):
@@ -672,9 +657,7 @@ class ForNativeGenerator(ForGenerator):
         # and catching StopIteration, which is the non-native way of doing this.
         ptr = builder.add(LoadAddress(object_pointer_rprimitive, self.return_value))
         nn = builder.none_object()
-        helper_call = MethodCall(
-            builder.read(self.iter_target), GENERATOR_HELPER_NAME, [nn, nn, nn, nn, ptr], line
-        )
+        helper_call = MethodCall(builder.read(self.iter_target), GENERATOR_HELPER_NAME, [nn, nn, nn, nn, ptr], line)
         # We provide custom handling for error values.
         helper_call.error_kind = ERR_NEVER
 
@@ -744,9 +727,7 @@ class ForAsyncIterable(ForGenerator):
         def except_body() -> None:
             builder.assign(self.stop_reg, builder.true(), line)
 
-        transform_try_except(
-            builder, try_body, [((except_match, line), None, except_body)], None, line
-        )
+        transform_try_except(builder, try_body, [((except_match, line), None, except_body)], None, line)
 
         builder.add(Branch(self.stop_reg, self.loop_exit, self.body_block, Branch.BOOL))
 
@@ -823,9 +804,7 @@ class ForSequence(ForGenerator):
             # to check that the index is still positive. Somewhat less
             # obviously we still need to check against the length,
             # since it could shrink out from under us.
-            comparison = builder.binary_op(
-                builder.read(self.index_target, line), Integer(0), ">=", line
-            )
+            comparison = builder.binary_op(builder.read(self.index_target, line), Integer(0), ">=", line)
             second_check = BasicBlock()
             builder.add_bool_branch(comparison, second_check, self.loop_exit)
             builder.activate_block(second_check)
@@ -1048,9 +1027,7 @@ class ForRange(ForGenerator):
 
         # Increment index register. If the range is known to fit in short ints, use
         # short ints.
-        if is_short_int_rprimitive(self.start_reg.type) and is_short_int_rprimitive(
-            self.end_reg.type
-        ):
+        if is_short_int_rprimitive(self.start_reg.type) and is_short_int_rprimitive(self.end_reg.type):
             new_val = builder.int_op(
                 short_int_rprimitive,
                 builder.read(self.index_reg, line),
@@ -1060,9 +1037,7 @@ class ForRange(ForGenerator):
             )
 
         else:
-            new_val = builder.binary_op(
-                builder.read(self.index_reg, line), Integer(self.step), "+", line
-            )
+            new_val = builder.binary_op(builder.read(self.index_reg, line), Integer(self.step), "+", line)
         builder.assign(self.index_reg, new_val, line)
         builder.assign(self.index_target, new_val, line)
 
@@ -1084,9 +1059,7 @@ class ForInfiniteCounter(ForGenerator):
         # We can safely assume that the integer is short, since we are not going to wrap
         # around a 63-bit integer.
         # NOTE: This would be questionable if short ints could be 32 bits.
-        new_val = builder.int_op(
-            short_int_rprimitive, builder.read(self.index_reg, line), Integer(1), IntOp.ADD, line
-        )
+        new_val = builder.int_op(short_int_rprimitive, builder.read(self.index_reg, line), Integer(1), IntOp.ADD, line)
         builder.assign(self.index_reg, new_val, line)
 
     def begin_body(self) -> None:
@@ -1144,9 +1117,7 @@ class ForZip(ForGenerator):
         self.cond_blocks = [BasicBlock() for _ in range(len(indexes) - 1)] + [self.body_block]
         self.gens: list[ForGenerator] = []
         for index, expr, next_block in zip(indexes, exprs, self.cond_blocks):
-            gen = make_for_loop_generator(
-                self.builder, index, expr, next_block, self.loop_exit, self.line, nested=True
-            )
+            gen = make_for_loop_generator(self.builder, index, expr, next_block, self.loop_exit, self.line, nested=True)
             self.gens.append(gen)
 
     def gen_condition(self) -> None:

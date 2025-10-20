@@ -1,13 +1,13 @@
 from warnings import warn
 
 import numpy as np
-import scipy.optimize._highspy._core as _h # type: ignore[import-not-found]
+import scipy.optimize._highspy._core as _h  # type: ignore[import-not-found]
 from scipy.optimize._highspy import _highs_options as hopt  # type: ignore[attr-defined]
 from scipy.optimize import OptimizeWarning
 
 
 def _highs_wrapper(c, indptr, indices, data, lhs, rhs, lb, ub, integrality, options):
-    '''Solve linear programs using HiGHS [1]_.
+    """Solve linear programs using HiGHS [1]_.
 
     Assume problems of the form:
 
@@ -102,7 +102,7 @@ def _highs_wrapper(c, indptr, indices, data, lhs, rhs, lb, ub, integrality, opti
     ----------
     .. [1] https://highs.dev/
     .. [2] https://www.maths.ed.ac.uk/hall/HiGHS/HighsOptions.html
-    '''
+    """
     numcol = c.size
     numrow = rhs.size
     isMip = integrality is not None and np.sum(integrality) > 0
@@ -156,8 +156,7 @@ def _highs_wrapper(c, indptr, indices, data, lhs, rhs, lb, ub, integrality, opti
                     val = "on" if val else "off"
                 else:
                     warn(
-                        f'Option f"{key}" is "{val}", but only True or False is '
-                        f"allowed. Using default.",
+                        f'Option f"{key}" is "{val}", but only True or False is ' f"allowed. Using default.",
                         OptimizeWarning,
                         stacklevel=2,
                     )
@@ -167,8 +166,7 @@ def _highs_wrapper(c, indptr, indices, data, lhs, rhs, lb, ub, integrality, opti
             if opt_type == _h.HighsOptionType.kBool:
                 if not isinstance(val, bool):
                     warn(
-                        f'Option f"{key}" is "{val}", but only True or False is '
-                        f"allowed. Using default.",
+                        f'Option f"{key}" is "{val}", but only True or False is ' f"allowed. Using default.",
                         OptimizeWarning,
                         stacklevel=2,
                     )

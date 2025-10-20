@@ -1,6 +1,7 @@
 """
 Read SAS sas7bdat or xport files.
 """
+
 from __future__ import annotations
 
 from abc import (
@@ -38,12 +39,10 @@ class ReaderBase(ABC):
     """
 
     @abstractmethod
-    def read(self, nrows: int | None = None) -> DataFrame:
-        ...
+    def read(self, nrows: int | None = None) -> DataFrame: ...
 
     @abstractmethod
-    def close(self) -> None:
-        ...
+    def close(self) -> None: ...
 
     def __enter__(self) -> Self:
         return self
@@ -67,8 +66,7 @@ def read_sas(
     chunksize: int = ...,
     iterator: bool = ...,
     compression: CompressionOptions = ...,
-) -> ReaderBase:
-    ...
+) -> ReaderBase: ...
 
 
 @overload
@@ -81,8 +79,7 @@ def read_sas(
     chunksize: None = ...,
     iterator: bool = ...,
     compression: CompressionOptions = ...,
-) -> DataFrame | ReaderBase:
-    ...
+) -> DataFrame | ReaderBase: ...
 
 
 @doc(decompression_options=_shared_docs["decompression_options"] % "filepath_or_buffer")
@@ -130,10 +127,7 @@ def read_sas(
     >>> df = pd.read_sas("sas_data.sas7bdat")  # doctest: +SKIP
     """
     if format is None:
-        buffer_error_msg = (
-            "If this is a buffer object rather "
-            "than a string name, you must specify a format string"
-        )
+        buffer_error_msg = "If this is a buffer object rather " "than a string name, you must specify a format string"
         filepath_or_buffer = stringify_path(filepath_or_buffer)
         if not isinstance(filepath_or_buffer, str):
             raise ValueError(buffer_error_msg)
@@ -143,9 +137,7 @@ def read_sas(
         elif ".sas7bdat" in fname:
             format = "sas7bdat"
         else:
-            raise ValueError(
-                f"unable to infer format of SAS file from filename: {repr(fname)}"
-            )
+            raise ValueError(f"unable to infer format of SAS file from filename: {repr(fname)}")
 
     reader: ReaderBase
     if format.lower() == "xport":

@@ -36,9 +36,7 @@ class BCP47CorpusReader(CorpusReader):
         with self.open("iana/language-subtag-registry.txt") as fp:
             self.db = self.data_dict(fp.read().split("%%\n"))
         with self.open("cldr/common-subdivisions-en.xml") as fp:
-            self.subdiv = self.subdiv_dict(
-                et.parse(fp).iterfind("localeDisplayNames/subdivisions/subdivision")
-            )
+            self.subdiv = self.subdiv_dict(et.parse(fp).iterfind("localeDisplayNames/subdivisions/subdivision"))
         self.morphology()
 
     def load_wiki_q(self):
@@ -48,10 +46,7 @@ class BCP47CorpusReader(CorpusReader):
 
     def wiki_dict(self, lines):
         """Convert Wikidata list of Q-codes to a BCP-47 dictionary"""
-        return {
-            pair[1]: pair[0].split("/")[-1]
-            for pair in [line.strip().split("\t") for line in lines]
-        }
+        return {pair[1]: pair[0].split("/")[-1] for pair in [line.strip().split("\t") for line in lines]}
 
     def subdiv_dict(self, subdivs):
         """Convert the CLDR subdivisions list to a dictionary"""
@@ -109,11 +104,7 @@ class BCP47CorpusReader(CorpusReader):
                         subfields[key].append(val)
                 else:  # multiline field
                     subfields[key][-1] += " " + field[0].strip()
-                if (
-                    "Deprecated" not in record
-                    and typ == "language"
-                    and key == "Description"
-                ):
+                if "Deprecated" not in record and typ == "language" and key == "Description":
                     self.langcode[subfields[key][-1]] = tag
             for key in subfields:
                 if len(subfields[key]) == 1:  # single value
@@ -163,13 +154,9 @@ class BCP47CorpusReader(CorpusReader):
                         found = True
                         note = f"The {subtag!r} {label} code is deprecated"
                         if "Preferred-Value" in self.db["deprecated"][label][subtag]:
-                            prefer = self.db["deprecated"][label][subtag][
-                                "Preferred-Value"
-                            ]
+                            prefer = self.db["deprecated"][label][subtag]["Preferred-Value"]
                             note += f"', prefer '{self.val2str(prefer)}'"
-                        lang[label] = self.val2str(
-                            self.db["deprecated"][label][subtag]["Description"]
-                        )
+                        lang[label] = self.val2str(self.db["deprecated"][label][subtag]["Description"])
                         warn(note)
                         break
             if not found:

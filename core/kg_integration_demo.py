@@ -73,9 +73,7 @@ def demo_keyword_vs_semantic():
 
     # Create ContextManager without KG for comparison
     print("2. Initializing ContextManager without KG (keyword search only)...")
-    cm_without_kg = ContextManager(
-        storage_path="data/demo_context_no_kg", enable_kg=False
-    )
+    cm_without_kg = ContextManager(storage_path="data/demo_context_no_kg", enable_kg=False)
 
     print()
 
@@ -128,9 +126,7 @@ def demo_keyword_vs_semantic():
         keyword_results = cm_without_kg.get_relevant_insights(query, category, limit=3)
         if keyword_results:
             for i, result in enumerate(keyword_results, 1):
-                print(
-                    f"    {i}. [{result.get('category', 'N/A')}] {result['content'][:70]}..."
-                )
+                print(f"    {i}. [{result.get('category', 'N/A')}] {result['content'][:70]}...")
                 print(f"       Confidence: {result.get('confidence', 0):.2f}")
         else:
             print("    No results found")
@@ -149,9 +145,7 @@ def demo_keyword_vs_semantic():
                 score = result.get("combined_score", 0)
 
                 print(f"    {i}. [{cat}] {content[:70]}...")
-                print(
-                    f"       Confidence: {conf:.2f} | Similarity: {sim:.2f} | Combined: {score:.2f}"
-                )
+                print(f"       Confidence: {conf:.2f} | Similarity: {sim:.2f} | Combined: {score:.2f}")
         else:
             print("    No results found (falling back to keyword search)")
 
@@ -171,9 +165,7 @@ def demo_keyword_vs_semantic():
         kg_stats = summary_kg["kg_stats"]
         print(f"  KG Status: {'Enabled' if kg_stats['enabled'] else 'Disabled'}")
         print(f"  Insights in KG: {kg_stats.get('insights_in_kg', 0)}")
-        print(
-            f"  Cache Size: {kg_stats.get('cache_size', 0)}/{kg_stats.get('cache_capacity', 0)}"
-        )
+        print(f"  Cache Size: {kg_stats.get('cache_size', 0)}/{kg_stats.get('cache_capacity', 0)}")
 
     print()
 

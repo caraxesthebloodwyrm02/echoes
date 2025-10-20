@@ -19,7 +19,6 @@ import textwrap
 import types
 from collections import OrderedDict, defaultdict
 from itertools import zip_longest
-from operator import itemgetter
 from pprint import pprint
 
 from nltk.corpus.reader import XMLCorpusReader, XMLCorpusView
@@ -59,9 +58,7 @@ def _pretty_longstring(defstr, prefix="", wrap_at=65):
     :return: A nicely formatted string representation of the long string.
     :rtype: str
     """
-    return "\n".join(
-        [prefix + line for line in textwrap.fill(defstr, wrap_at).split("\n")]
-    )
+    return "\n".join([prefix + line for line in textwrap.fill(defstr, wrap_at).split("\n")])
 
 
 def _pretty_any(obj):
@@ -113,11 +110,7 @@ def _pretty_semtype(st):
     else:
         outstr += f"[superType] {st.superType.name}({st.superType.ID})\n"
     outstr += f"[subTypes] {len(st.subTypes)} subtypes\n"
-    outstr += (
-        "  "
-        + ", ".join(f"{x.name}({x.ID})" for x in st.subTypes)
-        + "\n" * (len(st.subTypes) > 0)
-    )
+    outstr += "  " + ", ".join(f"{x.name}({x.ID})" for x in st.subTypes) + "\n" * (len(st.subTypes) > 0)
     return outstr
 
 
@@ -130,9 +123,7 @@ def _pretty_frame_relation_type(freltyp):
     :return: A nicely formatted string representation of the frame relation type.
     :rtype: str
     """
-    outstr = "<frame relation type ({0.ID}): {0.superFrameName} -- {0.name} -> {0.subFrameName}>".format(
-        freltyp
-    )
+    outstr = "<frame relation type ({0.ID}): {0.superFrameName} -- {0.name} -> {0.subFrameName}>".format(freltyp)
     return outstr
 
 
@@ -193,9 +184,7 @@ def _pretty_lu(lu):
     if "totalAnnotated" in lukeys:
         outstr += f"\n[totalAnnotated] {lu.totalAnnotated} annotated examples\n"
     if "lexemes" in lukeys:
-        outstr += "\n[lexemes] {}\n".format(
-            " ".join(f"{lex.name}/{lex.POS}" for lex in lu.lexemes)
-        )
+        outstr += "\n[lexemes] {}\n".format(" ".join(f"{lex.name}/{lex.POS}" for lex in lu.lexemes))
     if "semTypes" in lukeys:
         outstr += f"\n[semTypes] {len(lu.semTypes)} semantic types\n"
         outstr += (
@@ -211,9 +200,7 @@ def _pretty_lu(lu):
         for line in textwrap.fill(", ".join(sorted(subc)), 60).split("\n"):
             outstr += f"  {line}\n"
     if "exemplars" in lukeys:
-        outstr += "\n[exemplars] {} sentences across all subcorpora\n".format(
-            len(lu.exemplars)
-        )
+        outstr += "\n[exemplars] {} sentences across all subcorpora\n".format(len(lu.exemplars))
 
     return outstr
 
@@ -251,7 +238,7 @@ def _pretty_fulltext_sentences(sents):
     outstr += "[corpid] {0.corpid}\n[corpname] {0.corpname}\n[description] {0.description}\n[URL] {0.URL}\n\n".format(
         sents
     )
-    outstr += f"[sentence]\n"
+    outstr += "[sentence]\n"
     for i, sent in enumerate(sents.sentence):
         outstr += f"[{i}] {sent.text}\n"
     outstr += "\n"
@@ -269,9 +256,7 @@ def _pretty_fulltext_sentence(sent):
     """
 
     outstr = ""
-    outstr += "full-text sentence ({0.ID}) in {1}:\n\n".format(
-        sent, sent.doc.get("name", sent.doc.description)
-    )
+    outstr += "full-text sentence ({0.ID}) in {1}:\n\n".format(sent, sent.doc.get("name", sent.doc.description))
     outstr += f"\n[POS] {len(sent.POS)} tags\n"
     outstr += f"\n[POS_tagset] {sent.POS_tagset}\n\n"
     outstr += "[text] + [annotationSet]\n\n"
@@ -291,9 +276,7 @@ def _pretty_pos(aset):
     """
 
     outstr = ""
-    outstr += "POS annotation set ({0.ID}) {0.POS_tagset} in sentence {0.sent.ID}:\n\n".format(
-        aset
-    )
+    outstr += "POS annotation set ({0.ID}) {0.POS_tagset} in sentence {0.sent.ID}:\n\n".format(aset)
 
     # list the target spans and their associated aset index
     overt = sorted(aset.POS)
@@ -310,9 +293,7 @@ def _pretty_pos(aset):
         if len(lbl) > (k - j):
             # add space in the sentence to make room for the annotation index
             amt = len(lbl) - (k - j)
-            s0 = (
-                s0[: k + adjust] + "~" * amt + s0[k + adjust :]
-            )  # '~' to prevent line wrapping
+            s0 = s0[: k + adjust] + "~" * amt + s0[k + adjust :]  # '~' to prevent line wrapping
             s1 = s1[: k + adjust] + " " * amt + s1[k + adjust :]
             adjust += amt
         s2 += " " * (j - i) + lbl.ljust(k - j)
@@ -320,9 +301,7 @@ def _pretty_pos(aset):
 
     long_lines = [s0, s1, s2]
 
-    outstr += "\n\n".join(
-        map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" "))
-    ).replace("~", " ")
+    outstr += "\n\n".join(map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" "))).replace("~", " ")
     outstr += "\n"
     return outstr
 
@@ -347,26 +326,14 @@ def _pretty_annotation(sent, aset_level=False):
     for k in ("corpID", "docID", "paragNo", "sentNo", "aPos"):
         if k in sentkeys:
             outstr += f"[{k}] {sent[k]}\n"
-    outstr += (
-        "\n[LU] ({0.ID}) {0.name} in {0.frame.name}\n".format(sent.LU)
-        if sent.LU
-        else "\n[LU] Not found!"
-    )
-    outstr += "\n[frame] ({0.ID}) {0.name}\n".format(
-        sent.frame
-    )  # redundant with above, but .frame is convenient
+    outstr += "\n[LU] ({0.ID}) {0.name} in {0.frame.name}\n".format(sent.LU) if sent.LU else "\n[LU] Not found!"
+    outstr += "\n[frame] ({0.ID}) {0.name}\n".format(sent.frame)  # redundant with above, but .frame is convenient
     if not aset_level:
-        outstr += "\n[annotationSet] {} annotation sets\n".format(
-            len(sent.annotationSet)
-        )
+        outstr += "\n[annotationSet] {} annotation sets\n".format(len(sent.annotationSet))
         outstr += f"\n[POS] {len(sent.POS)} tags\n"
         outstr += f"\n[POS_tagset] {sent.POS_tagset}\n"
-    outstr += "\n[GF] {} relation{}\n".format(
-        len(sent.GF), "s" if len(sent.GF) != 1 else ""
-    )
-    outstr += "\n[PT] {} phrase{}\n".format(
-        len(sent.PT), "s" if len(sent.PT) != 1 else ""
-    )
+    outstr += "\n[GF] {} relation{}\n".format(len(sent.GF), "s" if len(sent.GF) != 1 else "")
+    outstr += "\n[PT] {} phrase{}\n".format(len(sent.PT), "s" if len(sent.PT) != 1 else "")
     """
     Special Layers
     --------------
@@ -408,9 +375,7 @@ def _pretty_annotation(sent, aset_level=False):
     """
     for lyr in ("NER", "WSL", "Other", "Sent"):
         if lyr in sent and sent[lyr]:
-            outstr += "\n[{}] {} entr{}\n".format(
-                lyr, len(sent[lyr]), "ies" if len(sent[lyr]) != 1 else "y"
-            )
+            outstr += "\n[{}] {} entr{}\n".format(lyr, len(sent[lyr]), "ies" if len(sent[lyr]) != 1 else "y")
     outstr += "\n[text] + [Target] + [FE]"
     # POS-specific layers: syntactically important words that are neither the target
     # nor the FEs. Include these along with the first FE layer but with '^' underlining.
@@ -436,9 +401,7 @@ def _annotation_ascii(sent):
     This will be attached as a method to appropriate AttrDict instances
     and called in the full pretty-printing of the instance.
     """
-    if sent._type == "fulltext_sentence" or (
-        "annotationSet" in sent and len(sent.annotationSet) > 2
-    ):
+    if sent._type == "fulltext_sentence" or ("annotationSet" in sent and len(sent.annotationSet) > 2):
         # a full-text sentence OR sentence with multiple targets.
         # (multiple targets = >2 annotation sets, because the first annotation set is POS.)
         return _annotation_ascii_frames(sent)
@@ -472,13 +435,9 @@ def _annotation_ascii_frames(sent):
         if o > 0 and j <= overt[o - 1][1]:
             # multiple annotation sets on the same target
             # (e.g. due to a coordination construction or multiple annotators)
-            if (
-                overt[o - 1][:2] == (j, k) and overt[o - 1][2] == fname
-            ):  # same target, same frame
+            if overt[o - 1][:2] == (j, k) and overt[o - 1][2] == fname:  # same target, same frame
                 # splice indices together
-                combinedIndex = (
-                    overt[o - 1][3] + asetIndex
-                )  # e.g., '[1][2]', '[1]! [2]'
+                combinedIndex = overt[o - 1][3] + asetIndex  # e.g., '[1][2]', '[1]! [2]'
                 combinedIndex = combinedIndex.replace(" !", "! ").replace(" ?", "? ")
                 overt[o - 1] = overt[o - 1][:3] + (combinedIndex,)
                 duplicates.add(o)
@@ -502,11 +461,7 @@ def _annotation_ascii_frames(sent):
         if not j >= i:
             assert j >= i, (
                 "Overlapping targets?"
-                + (
-                    " UNANN"
-                    if any(aset.status == "UNANN" for aset in sent.annotationSet[1:])
-                    else ""
-                ),
+                + (" UNANN" if any(aset.status == "UNANN" for aset in sent.annotationSet[1:]) else ""),
                 (j, k, asetIndex),
             )
         s1 += " " * (j - i) + "*" * (k - j)
@@ -524,9 +479,7 @@ def _annotation_ascii_frames(sent):
         if len(asetIndex) > (k - j):
             # add space in the sentence to make room for the annotation index
             amt = len(asetIndex) - (k - j)
-            s0 = (
-                s0[: k + adjust] + "~" * amt + s0[k + adjust :]
-            )  # '~' to prevent line wrapping
+            s0 = s0[: k + adjust] + "~" * amt + s0[k + adjust :]  # '~' to prevent line wrapping
             s1 = s1[: k + adjust] + " " * amt + s1[k + adjust :]
             s11 = s11[: k + adjust] + " " * amt + s11[k + adjust :]
             adjust += amt
@@ -535,9 +488,7 @@ def _annotation_ascii_frames(sent):
 
     long_lines = [s0, s1, s11, s2]
 
-    outstr = "\n\n".join(
-        map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" "))
-    ).replace("~", " ")
+    outstr = "\n\n".join(map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" "))).replace("~", " ")
     outstr += "\n"
     if fAbbrevs:
         outstr += " (" + ", ".join("=".join(pair) for pair in fAbbrevs.items()) + ")"
@@ -592,9 +543,7 @@ def _annotation_ascii_FEs(sent):
                     continue
                 if any(1 for x, y, felbl in sent.FE[0] if x <= a < y or a <= x < b):
                     # overlap between one of the POS-specific layers and first FE layer
-                    posspec_separate = (
-                        True  # show POS-specific layers on a separate line
-                    )
+                    posspec_separate = True  # show POS-specific layers on a separate line
                 posspec.append(
                     (a, b, lbl.lower().replace("-", ""))
                 )  # lowercase Cop=>cop, Non-Asp=>nonasp, etc. to distinguish from FE names
@@ -618,9 +567,7 @@ def _annotation_ascii_FEs(sent):
         if len(FE1name) < j:
             FE1name += " " * (j - len(FE1name))
             FE1[1] = FE1name
-        FE1[0] = (
-            FE1span[:i] + FE1span[i:j].replace(" ", "*").replace("-", "=") + FE1span[j:]
-        )
+        FE1[0] = FE1span[:i] + FE1span[i:j].replace(" ", "*").replace("-", "=") + FE1span[j:]
     long_lines = [sent.text]
     if posspec_separate:
         long_lines.extend(POSSPEC[:2])
@@ -630,9 +577,7 @@ def _annotation_ascii_FEs(sent):
         if FE3:
             long_lines.extend([FE3[0], FE3[1] + FE3[2]])
     long_lines.append("")
-    outstr = "\n".join(
-        map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" "))
-    )
+    outstr = "\n".join(map("\n".join, zip_longest(*mimic_wrap(long_lines), fillvalue=" ")))
     if feAbbrevs:
         outstr += "(" + ", ".join("=".join(pair) for pair in feAbbrevs.items()) + ")"
         assert len(feAbbrevs) == len(dict(feAbbrevs)), "Abbreviation clash"
@@ -652,9 +597,7 @@ def _pretty_fe(fe):
     """
     fekeys = fe.keys()
     outstr = ""
-    outstr += "frame element ({0.ID}): {0.name}\n    of {1.name}({1.ID})\n".format(
-        fe, fe.frame
-    )
+    outstr += "frame element ({0.ID}): {0.name}\n    of {1.name}({1.ID})\n".format(fe, fe.frame)
     if "definition" in fekeys:
         outstr += "[definition]\n"
         outstr += _pretty_longstring(fe.definition, "  ")
@@ -707,9 +650,7 @@ def _pretty_frame(frame):
         + "\n" * (len(frame.semTypes) > 0)
     )
 
-    outstr += "\n[frameRelations] {} frame relations\n".format(
-        len(frame.frameRelations)
-    )
+    outstr += "\n[frameRelations] {} frame relations\n".format(len(frame.frameRelations))
     outstr += "  " + "\n  ".join(repr(frel) for frel in frame.frameRelations) + "\n"
 
     outstr += f"\n[lexUnit] {len(frame.lexUnit)} lexical units\n"
@@ -738,16 +679,8 @@ def _pretty_frame(frame):
     ):
         outstr += "{:>16}: {}\n".format(ct, ", ".join(sorted(fes[ct])))
 
-    outstr += "\n[FEcoreSets] {} frame element core sets\n".format(
-        len(frame.FEcoreSets)
-    )
-    outstr += (
-        "  "
-        + "\n  ".join(
-            ", ".join([x.name for x in coreSet]) for coreSet in frame.FEcoreSets
-        )
-        + "\n"
-    )
+    outstr += "\n[FEcoreSets] {} frame element core sets\n".format(len(frame.FEcoreSets))
+    outstr += "  " + "\n  ".join(", ".join([x.name for x in coreSet]) for coreSet in frame.FEcoreSets) + "\n"
 
     return outstr
 
@@ -795,9 +728,7 @@ class AttrDict(dict):
             if self["_type"].endswith("relation"):
                 return self.__repr__()
             try:
-                return "<{} ID={} name={}>".format(
-                    self["_type"], self["ID"], self["name"]
-                )
+                return "<{} ID={} name={}>".format(self["_type"], self["ID"], self["name"])
             except KeyError:
                 try:  # no ID--e.g., for _type=lusubcorpus
                     return "<{} name={}>".format(self["_type"], self["name"])
@@ -819,9 +750,7 @@ class AttrDict(dict):
             outstr = _pretty_lu(self)
         elif self["_type"] == "luexemplars":  # list of ALL exemplars for LU
             outstr = _pretty_exemplars(self, self[0].LU)
-        elif (
-            self["_type"] == "fulltext_annotation"
-        ):  # list of all sentences for full-text doc
+        elif self["_type"] == "fulltext_annotation":  # list of all sentences for full-text doc
             outstr = _pretty_fulltext_sentences(self)
         elif self["_type"] == "lusentence":
             outstr = _pretty_annotation(self)
@@ -973,14 +902,10 @@ class PrettyList(list):
         length = 5
 
         for elt in self:
-            pieces.append(
-                elt._short_repr()
-            )  # key difference from inherited version: call to _short_repr()
+            pieces.append(elt._short_repr())  # key difference from inherited version: call to _short_repr()
             length += len(pieces[-1]) + 2
             if self._MAX_REPR_SIZE and length > self._MAX_REPR_SIZE and len(pieces) > 2:
-                return "[%s, ...]" % str(",\n " if self._BREAK_LINES else ", ").join(
-                    pieces[:-1]
-                )
+                return "[%s, ...]" % str(",\n " if self._BREAK_LINES else ", ").join(pieces[:-1])
         return "[%s]" % str(",\n " if self._BREAK_LINES else ", ").join(pieces)
 
 
@@ -1001,9 +926,7 @@ class PrettyLazyMap(LazyMap):
         pieces = []
         length = 5
         for elt in self:
-            pieces.append(
-                elt._short_repr()
-            )  # key difference from inherited version: call to _short_repr()
+            pieces.append(elt._short_repr())  # key difference from inherited version: call to _short_repr()
             length += len(pieces[-1]) + 2
             if length > self._MAX_REPR_SIZE and len(pieces) > 2:
                 return "[%s, ...]" % ", ".join(pieces[:-1])
@@ -1027,9 +950,7 @@ class PrettyLazyIteratorList(LazyIteratorList):
         pieces = []
         length = 5
         for elt in self:
-            pieces.append(
-                elt._short_repr()
-            )  # key difference from inherited version: call to _short_repr()
+            pieces.append(elt._short_repr())  # key difference from inherited version: call to _short_repr()
             length += len(pieces[-1]) + 2
             if length > self._MAX_REPR_SIZE and len(pieces) > 2:
                 return "[%s, ...]" % ", ".join(pieces[:-1])
@@ -1053,9 +974,7 @@ class PrettyLazyConcatenation(LazyConcatenation):
         pieces = []
         length = 5
         for elt in self:
-            pieces.append(
-                elt._short_repr()
-            )  # key difference from inherited version: call to _short_repr()
+            pieces.append(elt._short_repr())  # key difference from inherited version: call to _short_repr()
             length += len(pieces[-1]) + 2
             if length > self._MAX_REPR_SIZE and len(pieces) > 2:
                 return "[%s, ...]" % ", ".join(pieces[:-1])
@@ -1219,9 +1138,7 @@ warnings(True) to display corpus consistency warnings when loading data
             self._buildrelationindex()  # always load frame relations before frames,
             # otherwise weird ordering effects might result in incomplete information
         self._frame_idx = {}
-        with XMLCorpusView(
-            self.abspath("frameIndex.xml"), "frameIndex/frame", self._handle_elt
-        ) as view:
+        with XMLCorpusView(self.abspath("frameIndex.xml"), "frameIndex/frame", self._handle_elt) as view:
             for f in view:
                 self._frame_idx[f["ID"]] = f
 
@@ -1242,13 +1159,9 @@ warnings(True) to display corpus consistency warnings when loading data
         # The number of LUs in Framenet is about 13,000 so this index
         # should not be very large
         self._lu_idx = {}
-        with XMLCorpusView(
-            self.abspath("luIndex.xml"), "luIndex/lu", self._handle_elt
-        ) as view:
+        with XMLCorpusView(self.abspath("luIndex.xml"), "luIndex/lu", self._handle_elt) as view:
             for lu in view:
-                self._lu_idx[lu["ID"]] = (
-                    lu  # populate with LU index entries. if any of these
-                )
+                self._lu_idx[lu["ID"]] = lu  # populate with LU index entries. if any of these
                 # are looked up they will be replaced by full LU objects.
 
     def _buildrelationindex(self):
@@ -1278,14 +1191,8 @@ warnings(True) to display corpus consistency warnings when loading data
                     for ferel in frel.feRelations:
                         ferel.superFrame = supF
                         ferel.subFrame = subF
-                        ferel.superFE = Future(
-                            (lambda fer: lambda: fer.superFrame.FE[fer.superFEName])(
-                                ferel
-                            )
-                        )
-                        ferel.subFE = Future(
-                            (lambda fer: lambda: fer.subFrame.FE[fer.subFEName])(ferel)
-                        )
+                        ferel.superFE = Future((lambda fer: lambda: fer.superFrame.FE[fer.superFEName])(ferel))
+                        ferel.subFE = Future((lambda fer: lambda: fer.subFrame.FE[fer.subFEName])(ferel))
                         self._ferel_idx[ferel.ID] = ferel
         # print('...done building relation index', file=sys.stderr)
 
@@ -1471,9 +1378,7 @@ warnings(True) to display corpus consistency warnings when loading data
         for st in fentry.semTypes:
             if st.rootType.name == "Lexical_type":
                 for lu in fentry.lexUnit.values():
-                    if not any(
-                        x is st for x in lu.semTypes
-                    ):  # identity containment check
+                    if not any(x is st for x in lu.semTypes):  # identity containment check
                         lu.semTypes.append(st)
 
         self._frame_idx[fentry.ID] = fentry
@@ -1585,11 +1490,7 @@ warnings(True) to display corpus consistency warnings when loading data
         :return: A list of frame objects.
         :rtype: list(AttrDict)
         """
-        return PrettyList(
-            f
-            for f in self.frames()
-            if any(re.search(pat, luName) for luName in f.lexUnit)
-        )
+        return PrettyList(f for f in self.frames() if any(re.search(pat, luName) for luName in f.lexUnit))
 
     def lu_basic(self, fn_luid):
         """
@@ -1766,11 +1667,7 @@ warnings(True) to display corpus consistency warnings when loading data
             # LU not in the index. We create a placeholder by falling back to
             # luName, frameID, and frameName. However, this will not be listed
             # among the LUs for its frame.
-            self._warn(
-                "LU ID not found: {} ({}) in {} ({})".format(
-                    luName, fn_luid, frameName, frameID
-                )
-            )
+            self._warn("LU ID not found: {} ({}) in {} ({})".format(luName, fn_luid, frameName, frameID))
             luinfo = AttrDict(
                 {
                     "_type": "lu",
@@ -1815,9 +1712,7 @@ warnings(True) to display corpus consistency warnings when loading data
         lu2 = self._handle_lexunit_elt(elt, ignorekeys)
         lu.URL = self._fnweb_url + "/" + self._lu_dir + "/" + fname
         lu.subCorpus = lu2.subCorpus
-        lu.exemplars = SpecialList(
-            "luexemplars", [sent for subc in lu.subCorpus for sent in subc.sentence]
-        )
+        lu.exemplars = SpecialList("luexemplars", [sent for subc in lu.subCorpus for sent in subc.sentence])
         for sent in lu.exemplars:
             sent["LU"] = lu
             sent["frame"] = lu.frame
@@ -1904,17 +1799,13 @@ warnings(True) to display corpus consistency warnings when loading data
                             ferel.subFE.semType = subST = superST
                             changed = True
                             nPropagations += 1
-                    if (
-                        ferel.type.name in ["Perspective_on", "Subframe", "Precedes"]
-                        and subST
-                        and subST is not superST
-                    ):
+                    if ferel.type.name in ["Perspective_on", "Subframe", "Precedes"] and subST and subST is not superST:
                         # propagate upward
                         assert superST is None, (superST.name, ferel, subST.name)
                         ferel.superFE.semType = superST = subST
                         changed = True
                         nPropagations += 1
-                except AssertionError as ex:
+                except AssertionError:
                     # bug in the data! ignore
                     # print(ex, file=sys.stderr)
                     continue
@@ -2032,9 +1923,7 @@ warnings(True) to display corpus consistency warnings when loading data
             fIDs = list(self._frame_idx.keys())
 
         if name is not None:
-            return PrettyList(
-                self.frame(fID) for fID, finfo in self.frame_ids_and_names(name).items()
-            )
+            return PrettyList(self.frame(fID) for fID, finfo in self.frame_ids_and_names(name).items())
         else:
             return PrettyLazyMap(self.frame, fIDs)
 
@@ -2097,10 +1986,7 @@ warnings(True) to display corpus consistency warnings when loading data
             frames = self.frames()
 
         return PrettyList(
-            fe
-            for f in frames
-            for fename, fe in f.FE.items()
-            if name is None or re.search(name, fename, re.I)
+            fe for f in frames for fename, fe in f.FE.items() if name is None or re.search(name, fename, re.I)
         )
 
     def lus(self, name=None, frame=None):
@@ -2212,9 +2098,7 @@ warnings(True) to display corpus consistency warnings when loading data
             self._buildluindex()
 
         if name is not None:  # match LUs, then restrict by frame
-            result = PrettyList(
-                self.lu(luID) for luID, luName in self.lu_ids_and_names(name).items()
-            )
+            result = PrettyList(self.lu(luID) for luID, luName in self.lu_ids_and_names(name).items())
             if frame is not None:
                 if isinstance(frame, int):
                     frameIDs = {frame}
@@ -2230,15 +2114,9 @@ warnings(True) to display corpus consistency warnings when loading data
                 frames = self.frames(frame)
             else:
                 frames = [frame]
-            result = PrettyLazyIteratorList(
-                iter(LazyConcatenation(list(f.lexUnit.values()) for f in frames))
-            )
+            result = PrettyLazyIteratorList(iter(LazyConcatenation(list(f.lexUnit.values()) for f in frames)))
         else:  # all LUs
-            luIDs = [
-                luID
-                for luID, lu in self._lu_idx.items()
-                if lu.status not in self._bad_statuses
-            ]
+            luIDs = [luID for luID, lu in self._lu_idx.items() if lu.status not in self._bad_statuses]
             result = PrettyLazyMap(self.lu, luIDs)
         return result
 
@@ -2252,8 +2130,7 @@ warnings(True) to display corpus consistency warnings when loading data
         return {
             luID: luinfo.name
             for luID, luinfo in self._lu_idx.items()
-            if luinfo.status not in self._bad_statuses
-            and (name is None or re.search(name, luinfo.name) is not None)
+            if luinfo.status not in self._bad_statuses and (name is None or re.search(name, luinfo.name) is not None)
         }
 
     def docs_metadata(self, name=None):
@@ -2299,9 +2176,7 @@ warnings(True) to display corpus consistency warnings when loading data
         if name is None:
             return ftlist
         else:
-            return PrettyList(
-                x for x in ftlist if re.search(name, x["filename"]) is not None
-            )
+            return PrettyList(x for x in ftlist if re.search(name, x["filename"]) is not None)
 
     def docs(self, name=None):
         """
@@ -2328,9 +2203,7 @@ warnings(True) to display corpus consistency warnings when loading data
         """
 
         if exemplars:
-            epart = PrettyLazyIteratorList(
-                sent.frameAnnotation for sent in self.exemplars(luNamePattern)
-            )
+            epart = PrettyLazyIteratorList(sent.frameAnnotation for sent in self.exemplars(luNamePattern))
         else:
             epart = []
 
@@ -2377,9 +2250,7 @@ warnings(True) to display corpus consistency warnings when loading data
 
         # narrow down to frames matching criteria
 
-        lusByFrame = defaultdict(
-            list
-        )  # frame name -> matching LUs, if luNamePattern is specified
+        lusByFrame = defaultdict(list)  # frame name -> matching LUs, if luNamePattern is specified
         if frame is not None or luNamePattern is not None:
             if frame is None or isinstance(frame, str):
                 if luNamePattern is not None:
@@ -2402,25 +2273,17 @@ warnings(True) to display corpus consistency warnings when loading data
             if fe is not None:  # narrow to frames that define this FE
                 if isinstance(fe, str):
                     frames = PrettyLazyIteratorList(
-                        f
-                        for f in frames
-                        if fe in f.FE
-                        or any(re.search(fe, ffe, re.I) for ffe in f.FE.keys())
+                        f for f in frames if fe in f.FE or any(re.search(fe, ffe, re.I) for ffe in f.FE.keys())
                     )
                 else:
                     if fe.frame not in frames:
-                        raise FramenetError(
-                            "exemplars() call with inconsistent `frame` and `fe` specification"
-                        )
+                        raise FramenetError("exemplars() call with inconsistent `frame` and `fe` specification")
                     frames = [fe.frame]
 
                 if fe2 is not None:  # narrow to frames that ALSO define this FE
                     if isinstance(fe2, str):
                         frames = PrettyLazyIteratorList(
-                            f
-                            for f in frames
-                            if fe2 in f.FE
-                            or any(re.search(fe2, ffe, re.I) for ffe in f.FE.keys())
+                            f for f in frames if fe2 in f.FE or any(re.search(fe2, ffe, re.I) for ffe in f.FE.keys())
                         )
                     # else we already narrowed it to a single frame
         else:  # frame, luNamePattern are None. fe, fe2 are None or strings
@@ -2440,11 +2303,7 @@ warnings(True) to display corpus consistency warnings when loading data
             for f in frames:
                 fes = fes2 = None  # FEs of interest
                 if fe is not None:
-                    fes = (
-                        {ffe for ffe in f.FE.keys() if re.search(fe, ffe, re.I)}
-                        if isinstance(fe, str)
-                        else {fe.name}
-                    )
+                    fes = {ffe for ffe in f.FE.keys() if re.search(fe, ffe, re.I)} if isinstance(fe, str) else {fe.name}
                     if fe2 is not None:
                         fes2 = (
                             {ffe for ffe in f.FE.keys() if re.search(fe2, ffe, re.I)}
@@ -2452,11 +2311,7 @@ warnings(True) to display corpus consistency warnings when loading data
                             else {fe2.name}
                         )
 
-                for lu in (
-                    lusByFrame[f.name]
-                    if luNamePattern is not None
-                    else f.lexUnit.values()
-                ):
+                for lu in lusByFrame[f.name] if luNamePattern is not None else f.lexUnit.values():
                     for ex in lu.exemplars:
                         if (fes is None or self._exemplar_of_fes(ex, fes)) and (
                             fes2 is None or self._exemplar_of_fes(ex, fes2)
@@ -2483,9 +2338,7 @@ warnings(True) to display corpus consistency warnings when loading data
         """
         Full-text annotation sentences, optionally filtered by document name.
         """
-        return PrettyLazyIteratorList(
-            sent for d in self.docs(docNamePattern) for sent in d.sentence
-        )
+        return PrettyLazyIteratorList(sent for d in self.docs(docNamePattern) for sent in d.sentence)
 
     def frame_relation_types(self):
         """
@@ -2582,23 +2435,15 @@ warnings(True) to display corpus consistency warnings when loading data
         # filter by 'frame2'
         if frame2 is not None:
             if frame is None:
-                raise FramenetError(
-                    "frame_relations(frame=None, frame2=<value>) is not allowed"
-                )
+                raise FramenetError("frame_relations(frame=None, frame2=<value>) is not allowed")
             if not isinstance(frame2, int):
                 if isinstance(frame2, dict):
                     frame2 = frame2.ID
                 else:
                     frame2 = self.frame_by_name(frame2).ID
             if frame == frame2:
-                raise FramenetError(
-                    "The two frame arguments to frame_relations() must be different frames"
-                )
-            rels = [
-                rel
-                for rel in rels
-                if rel.superFrame.ID == frame2 or rel.subFrame.ID == frame2
-            ]
+                raise FramenetError("The two frame arguments to frame_relations() must be different frames")
+            rels = [rel for rel in rels if rel.superFrame.ID == frame2 or rel.subFrame.ID == frame2]
 
         return PrettyList(
             sorted(
@@ -2665,9 +2510,7 @@ warnings(True) to display corpus consistency warnings when loading data
         """
         if not self._semtypes:
             self._loadsemtypes()
-        return PrettyList(
-            self._semtypes[i] for i in self._semtypes if isinstance(i, int)
-        )
+        return PrettyList(self._semtypes[i] for i in self._semtypes if isinstance(i, int))
 
     def _load_xml_attributes(self, d, elt):
         """
@@ -2784,9 +2627,7 @@ warnings(True) to display corpus consistency warnings when loading data
                 else:
                     docname = doc.description
                 doc.filename = f"{corpname}__{docname}.xml"
-                doc.URL = (
-                    self._fnweb_url + "/" + self._fulltext_dir + "/" + doc.filename
-                )
+                doc.URL = self._fnweb_url + "/" + self._fulltext_dir + "/" + doc.filename
                 doc.corpname = corpname
                 doc.corpid = corpid
                 retlist.append(doc)
@@ -2819,28 +2660,16 @@ warnings(True) to display corpus consistency warnings when loading data
             elif sub.tag.endswith("FEcoreSet") and "FEcoreSet" not in ignorekeys:
                 coreset = self._handle_fecoreset_elt(sub)
                 # assumes all FEs have been loaded before coresets
-                frinfo["FEcoreSets"].append(
-                    PrettyList(frinfo["FE"][fe.name] for fe in coreset)
-                )
+                frinfo["FEcoreSets"].append(PrettyList(frinfo["FE"][fe.name] for fe in coreset))
             elif sub.tag.endswith("lexUnit") and "lexUnit" not in ignorekeys:
                 luentry = self._handle_framelexunit_elt(sub)
                 if luentry["status"] in self._bad_statuses:
                     # problematic LU entry; ignore it
                     continue
                 luentry["frame"] = frinfo
-                luentry["URL"] = (
-                    self._fnweb_url
-                    + "/"
-                    + self._lu_dir
-                    + "/"
-                    + "lu{}.xml".format(luentry["ID"])
-                )
-                luentry["subCorpus"] = Future(
-                    (lambda lu: lambda: self._lu_file(lu).subCorpus)(luentry)
-                )
-                luentry["exemplars"] = Future(
-                    (lambda lu: lambda: self._lu_file(lu).exemplars)(luentry)
-                )
+                luentry["URL"] = self._fnweb_url + "/" + self._lu_dir + "/" + "lu{}.xml".format(luentry["ID"])
+                luentry["subCorpus"] = Future((lambda lu: lambda: self._lu_file(lu).subCorpus)(luentry))
+                luentry["exemplars"] = Future((lambda lu: lambda: self._lu_file(lu).exemplars)(luentry))
                 frinfo["lexUnit"][luentry.name] = luentry
                 if not self._lu_idx:
                     self._buildluindex()
@@ -2933,18 +2762,14 @@ warnings(True) to display corpus consistency warnings when loading data
         info["annotationSet"] = []
         info["targets"] = []
         target_spans = set()
-        info["_ascii"] = types.MethodType(
-            _annotation_ascii, info
-        )  # attach a method for this instance
+        info["_ascii"] = types.MethodType(_annotation_ascii, info)  # attach a method for this instance
         info["text"] = ""
 
         for sub in elt:
             if sub.tag.endswith("text"):
                 info["text"] = self._strip_tags(sub.text)
             elif sub.tag.endswith("annotationSet"):
-                a = self._handle_fulltextannotationset_elt(
-                    sub, is_pos=(len(info["annotationSet"]) == 0)
-                )
+                a = self._handle_fulltextannotationset_elt(sub, is_pos=(len(info["annotationSet"]) == 0))
                 if "cxnID" in a:  # ignoring construction annotations for now
                     continue
                 a.sent = info
@@ -2954,9 +2779,7 @@ warnings(True) to display corpus consistency warnings when loading data
                     for tspan in a.Target:
                         if tspan in target_spans:
                             self._warn(
-                                'Duplicate target span "{}"'.format(
-                                    info.text[slice(*tspan)]
-                                ),
+                                'Duplicate target span "{}"'.format(info.text[slice(*tspan)]),
                                 tspan,
                                 "in sentence",
                                 info["ID"],
@@ -3098,16 +2921,12 @@ warnings(True) to display corpus consistency warnings when loading data
         info = self._load_xml_attributes(AttrDict(), elt)
         info["_type"] = "lusentence"
         info["annotationSet"] = []
-        info["_ascii"] = types.MethodType(
-            _annotation_ascii, info
-        )  # attach a method for this instance
+        info["_ascii"] = types.MethodType(_annotation_ascii, info)  # attach a method for this instance
         for sub in elt:
             if sub.tag.endswith("text"):
                 info["text"] = self._strip_tags(sub.text)
             elif sub.tag.endswith("annotationSet"):
-                annset = self._handle_luannotationset_elt(
-                    sub, is_pos=(len(info["annotationSet"]) == 0)
-                )
+                annset = self._handle_luannotationset_elt(sub, is_pos=(len(info["annotationSet"]) == 0))
                 if annset is not None:
                     assert annset.status == "UNANN" or "FE" in annset, annset
                     if annset.status != "UNANN":
@@ -3144,9 +2963,7 @@ warnings(True) to display corpus consistency warnings when loading data
         info = self._load_xml_attributes(AttrDict(), elt)
         info["_type"] = "posannotationset" if is_pos else "luannotationset"
         info["layer"] = []
-        info["_ascii"] = types.MethodType(
-            _annotation_ascii, info
-        )  # attach a method for this instance
+        info["_ascii"] = types.MethodType(_annotation_ascii, info)  # attach a method for this instance
 
         if "cxnID" in info:  # ignoring construction annotations for now.
             return info
@@ -3182,19 +2999,11 @@ warnings(True) to display corpus consistency warnings when loading data
 
                     if l.name == "Target":
                         if not overt:
-                            self._warn(
-                                "Skipping empty Target layer in annotation set ID={}".format(
-                                    info.ID
-                                )
-                            )
+                            self._warn("Skipping empty Target layer in annotation set ID={}".format(info.ID))
                             continue
                         assert all(lblname == "Target" for i, j, lblname in overt)
                         if "Target" in info:
-                            self._warn(
-                                "Annotation set {} has multiple Target layers".format(
-                                    info.ID
-                                )
-                            )
+                            self._warn("Annotation set {} has multiple Target layers".format(info.ID))
                         else:
                             info["Target"] = [(i, j) for (i, j, _) in overt]
                     elif l.name == "FE":
@@ -3234,9 +3043,7 @@ warnings(True) to display corpus consistency warnings when loading data
                                 "Art",
                                 "Other",
                             ):
-                                self._warn(
-                                    "Unexpected layer in frame annotationset:", l.name
-                                )
+                                self._warn("Unexpected layer in frame annotationset:", l.name)
                         info[l.name] = overt
         if not is_pos and "cxnID" not in info:
             if "Target" not in info:
@@ -3324,9 +3131,7 @@ def demo():
     #
     # Frames
     #
-    print(
-        'getting frames whose name matches the (case insensitive) regex: "(?i)medical"'
-    )
+    print('getting frames whose name matches the (case insensitive) regex: "(?i)medical"')
     medframes = fn.frames(r"(?i)medical")
     print(f'Found {len(medframes)} Frames whose name matches "(?i)medical":')
     print([(f.name, f.ID) for f in medframes])
@@ -3341,9 +3146,7 @@ def demo():
     # get the frame relations
     #
     print(
-        '\nNumber of frame relations for the "{}" ({}) frame:'.format(
-            m_frame.name, m_frame.ID
-        ),
+        '\nNumber of frame relations for the "{}" ({}) frame:'.format(m_frame.name, m_frame.ID),
         len(m_frame.frameRelations),
     )
     for fr in m_frame.frameRelations:
@@ -3370,11 +3173,7 @@ def demo():
     #
     print('\nAll Lexical Units that are incorporated in the "Ailment" FE:')
     m_frame = fn.frame(239)
-    ailment_lus = [
-        x
-        for x in m_frame.lexUnit.values()
-        if "incorporatedFE" in x and x.incorporatedFE == "Ailment"
-    ]
+    ailment_lus = [x for x in m_frame.lexUnit.values() if "incorporatedFE" in x and x.incorporatedFE == "Ailment"]
     print("   ", [x.name for x in ailment_lus])
 
     #
@@ -3418,9 +3217,7 @@ def demo():
     #       lemmas to frames because each time frames_by_lemma() is
     #       called, it has to search through ALL of the frame XML files
     #       in the db.
-    print(
-        '\nSearching for all Frames that have a lemma that matches the regexp: "^run.v$":'
-    )
+    print('\nSearching for all Frames that have a lemma that matches the regexp: "^run.v$":')
     pprint(fn.frames_by_lemma(r"^run.v$"))
 
 

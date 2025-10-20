@@ -82,8 +82,7 @@ def jinja2_autoescape_false(context):
                 if isinstance(node, ast.keyword):
                     # definite autoescape = False
                     if getattr(node, "arg", None) == "autoescape" and (
-                        getattr(node.value, "id", None) == "False"
-                        or getattr(node.value, "value", None) is False
+                        getattr(node.value, "id", None) == "False" or getattr(node.value, "value", None) is False
                     ):
                         return bandit.Issue(
                             severity=bandit.HIGH,
@@ -98,17 +97,12 @@ def jinja2_autoescape_false(context):
                     # found autoescape
                     if getattr(node, "arg", None) == "autoescape":
                         value = getattr(node, "value", None)
-                        if (
-                            getattr(value, "id", None) == "True"
-                            or getattr(value, "value", None) is True
-                        ):
+                        if getattr(value, "id", None) == "True" or getattr(value, "value", None) is True:
                             return
                         # Check if select_autoescape function is used.
                         elif isinstance(value, ast.Call) and (
-                            getattr(value.func, "attr", None)
-                            == "select_autoescape"
-                            or getattr(value.func, "id", None)
-                            == "select_autoescape"
+                            getattr(value.func, "attr", None) == "select_autoescape"
+                            or getattr(value.func, "id", None) == "select_autoescape"
                         ):
                             return
                         else:

@@ -17,9 +17,7 @@ class BoundWalker:
     def __init__(self, fs: FS):
         self._fs = fs
 
-    def _iter_walk(
-        self, path: str, namespaces: Collection[str] | None = None
-    ) -> Iterator[tuple[str, Info | None]]:
+    def _iter_walk(self, path: str, namespaces: Collection[str] | None = None) -> Iterator[tuple[str, Info | None]]:
         """Walk files using a *breadth first* search."""
         queue = deque([path])
         push = queue.appendleft

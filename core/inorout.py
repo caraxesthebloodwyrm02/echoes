@@ -566,10 +566,7 @@ class InOrOut:
         Yield the file path, and the plugin name that handles the file.
 
         """
-        py_files = (
-            (py_file, None)
-            for py_file in find_python_files(src_dir, self.include_namespace_packages)
-        )
+        py_files = ((py_file, None) for py_file in find_python_files(src_dir, self.include_namespace_packages))
         plugin_files = self._find_plugin_files(src_dir)
 
         for file_path, plugin_name in itertools.chain(py_files, plugin_files):

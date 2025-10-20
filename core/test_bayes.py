@@ -63,9 +63,7 @@ def test_bayesian_ridge_score_values():
     score += alpha_1 * log(alpha_) - alpha_2 * alpha_
     M = 1.0 / alpha_ * np.eye(n_samples) + 1.0 / lambda_ * np.dot(X, X.T)
     M_inv_dot_y = np.linalg.solve(M, y)
-    score += -0.5 * (
-        fast_logdet(M) + np.dot(y.T, M_inv_dot_y) + n_samples * log(2 * np.pi)
-    )
+    score += -0.5 * (fast_logdet(M) + np.dot(y.T, M_inv_dot_y) + n_samples * log(2 * np.pi))
 
     # compute score with BayesianRidge
     clf = BayesianRidge(
@@ -101,13 +99,9 @@ def test_bayesian_covariance_matrix(n_samples, n_features, global_random_seed):
 
     Non-regression test for https://github.com/scikit-learn/scikit-learn/issues/31093
     """
-    X, y = datasets.make_regression(
-        n_samples, n_features, random_state=global_random_seed
-    )
+    X, y = datasets.make_regression(n_samples, n_features, random_state=global_random_seed)
     reg = BayesianRidge(fit_intercept=False).fit(X, y)
-    covariance_matrix = np.linalg.inv(
-        reg.lambda_ * np.identity(n_features) + reg.alpha_ * np.dot(X.T, X)
-    )
+    covariance_matrix = np.linalg.inv(reg.lambda_ * np.identity(n_features) + reg.alpha_ * np.dot(X.T, X))
     assert_allclose(reg.sigma_, covariance_matrix, rtol=1e-6)
 
 
@@ -120,9 +114,7 @@ def test_bayesian_sample_weights():
     # A Ridge regression model using an alpha value equal to the ratio of
     # lambda_ and alpha_ from the Bayesian Ridge model must be identical
     br_model = BayesianRidge(compute_score=True).fit(X, y, sample_weight=w)
-    rr_model = Ridge(alpha=br_model.lambda_ / br_model.alpha_).fit(
-        X, y, sample_weight=w
-    )
+    rr_model = Ridge(alpha=br_model.lambda_ / br_model.alpha_).fit(X, y, sample_weight=w)
     assert_array_almost_equal(rr_model.coef_, br_model.coef_)
     assert_almost_equal(rr_model.intercept_, br_model.intercept_)
 

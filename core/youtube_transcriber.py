@@ -97,9 +97,7 @@ def _format_timestamp(seconds: Any) -> str:
 
 def _download_audio(url: str, temp_dir: Path) -> Tuple[Path, Dict[str, Any]]:
     if yt_dlp is None:
-        raise ImportError(
-            "yt-dlp is required for YouTube transcription. Install with 'pip install yt-dlp'."
-        )
+        raise ImportError("yt-dlp is required for YouTube transcription. Install with 'pip install yt-dlp'.")
     opts = {
         "format": "bestaudio/best",
         "outtmpl": str(temp_dir / "%(id)s.%(ext)s"),
@@ -128,16 +126,12 @@ def _download_audio(url: str, temp_dir: Path) -> Tuple[Path, Dict[str, Any]]:
 
 def _transcribe(audio_path: Path, model_name: str) -> Dict[str, Any]:
     if whisper is None:
-        raise ImportError(
-            "openai-whisper is required for transcription. Install with 'pip install openai-whisper'."
-        )
+        raise ImportError("openai-whisper is required for transcription. Install with 'pip install openai-whisper'.")
     model = whisper.load_model(model_name)
     return model.transcribe(str(audio_path), fp16=False)
 
 
-def _build_youtube_report(
-    info: Dict[str, Any], transcript: Dict[str, Any], url: str, model_name: str
-) -> str:
+def _build_youtube_report(info: Dict[str, Any], transcript: Dict[str, Any], url: str, model_name: str) -> str:
     timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     upload_date = info.get("upload_date")
     if upload_date and len(str(upload_date)) == 8:
@@ -223,10 +217,7 @@ def _build_website_report(metadata: Dict[str, Any], url: str) -> str:
 def main() -> None:
     print("Content Reporting Tool")
     mode = (
-        input(
-            "Select source type: [1] YouTube video (transcribe audio), "
-            "[2] Website (extract text) [1]: "
-        ).strip()
+        input("Select source type: [1] YouTube video (transcribe audio), " "[2] Website (extract text) [1]: ").strip()
         or "1"
     )
 
@@ -248,8 +239,7 @@ def main() -> None:
 
     if yt_dlp is None or whisper is None:
         print(
-            "YouTube transcription requires yt-dlp and openai-whisper. "
-            "Install the missing packages before retrying."
+            "YouTube transcription requires yt-dlp and openai-whisper. " "Install the missing packages before retrying."
         )
         sys.exit(1)
 
@@ -257,21 +247,14 @@ def main() -> None:
         print("ffmpeg is required but not found on PATH. Install ffmpeg and try again.")
         sys.exit(1)
 
-    model_name = (
-        input(
-            "Choose Whisper model (tiny, base, small, medium, large) [base]: "
-        ).strip()
-        or DEFAULT_MODEL
-    )
+    model_name = input("Choose Whisper model (tiny, base, small, medium, large) [base]: ").strip() or DEFAULT_MODEL
 
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
             temp_dir = Path(tmpdir)
             print("Downloading audio...")
             audio_path, info = _download_audio(url, temp_dir)
-            print(
-                "Transcribing audio... this can take a few minutes depending on the model."
-            )
+            print("Transcribing audio... this can take a few minutes depending on the model.")
             transcript = _transcribe(audio_path, model_name)
     except Exception as err:  # noqa: BLE001
         # Provide more specific guidance when possible

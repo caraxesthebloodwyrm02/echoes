@@ -99,10 +99,7 @@ class TestPosTag(unittest.TestCase):
             ("бумажку", "NOUN"),
             (".", "."),
         ]
-        assert (
-            pos_tag(word_tokenize(text), tagset="universal", lang="rus")
-            == expected_tagged
-        )
+        assert pos_tag(word_tokenize(text), tagset="universal", lang="rus") == expected_tagged
 
     def test_pos_tag_unknown_lang(self):
         text = "모르겠 습니 다"

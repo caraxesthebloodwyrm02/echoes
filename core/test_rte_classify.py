@@ -60,9 +60,7 @@ class TestRTEClassifier:
     def test_rte_feature_extraction(self):
         pairs = rte_corpus.pairs(["rte1_dev.xml"])[:6]
         test_output = [
-            f"{key:<15} => {rte_features(pair)[key]}"
-            for pair in pairs
-            for key in sorted(rte_features(pair))
+            f"{key:<15} => {rte_features(pair)[key]}" for pair in pairs for key in sorted(rte_features(pair))
         ]
         expected_output = expected_from_rte_feature_extration.strip().split("\n")
         # Remove null strings.
@@ -89,6 +87,6 @@ class TestRTEClassifier:
     def test_rte_classification_with_megam(self):
         try:
             config_megam()
-        except (LookupError, AttributeError) as e:
+        except (LookupError, AttributeError):
             pytest.skip("Skipping tests with dependencies on MEGAM")
         clf = rte_classifier("megam", sample_N=100)

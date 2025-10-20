@@ -40,9 +40,7 @@ class GaussLegendreQuadrature(FixedRule):
 
     def __init__(self, npoints, xp=None):
         if npoints < 2:
-            raise ValueError(
-                "At least 2 nodes required for Gauss-Legendre cubature"
-            )
+            raise ValueError("At least 2 nodes required for Gauss-Legendre cubature")
 
         self.npoints = npoints
 
@@ -56,7 +54,4 @@ class GaussLegendreQuadrature(FixedRule):
         # TODO: current converting to/from numpy
         nodes, weights = roots_legendre(self.npoints)
 
-        return (
-            self.xp.asarray(nodes, dtype=self.xp.float64),
-            self.xp.asarray(weights, dtype=self.xp.float64)
-        )
+        return (self.xp.asarray(nodes, dtype=self.xp.float64), self.xp.asarray(weights, dtype=self.xp.float64))

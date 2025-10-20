@@ -132,9 +132,7 @@ class TestCatAccessor:
         # GH#18862 (let Series.cat.rename_categories take callables)
         ser = Series(Categorical(["a", "b", "c", "a"], ordered=True))
         result = ser.cat.rename_categories(lambda x: x.upper())
-        expected = Series(
-            Categorical(["A", "B", "C", "A"], categories=["A", "B", "C"], ordered=True)
-        )
+        expected = Series(Categorical(["A", "B", "C", "A"], categories=["A", "B", "C"], ordered=True))
         tm.assert_series_equal(result, expected)
 
     @pytest.mark.parametrize(
@@ -183,17 +181,12 @@ class TestCatAccessor:
             fname
             for fname in dir(ser.dt)
             if not (
-                fname.startswith("_")
-                or fname in attr_names
-                or fname in _special_func_names
-                or fname in _ignore_names
+                fname.startswith("_") or fname in attr_names or fname in _special_func_names or fname in _ignore_names
             )
         ]
 
         func_defs = [(fname, (), {}) for fname in func_names]
-        func_defs.extend(
-            f_def for f_def in special_func_defs if f_def[0] in dir(ser.dt)
-        )
+        func_defs.extend(f_def for f_def in special_func_defs if f_def[0] in dir(ser.dt))
 
         for func, args, kwargs in func_defs:
             warn_cls = []
@@ -240,9 +233,7 @@ class TestCatAccessor:
         assert list(df["Survived"]) == ["Yes", "No", "Yes"]
 
         df["Sex"] = Categorical(df["Sex"], categories=["female", "male"], ordered=False)
-        df["Survived"] = Categorical(
-            df["Survived"], categories=["No", "Yes"], ordered=False
-        )
+        df["Survived"] = Categorical(df["Survived"], categories=["No", "Yes"], ordered=False)
 
         # values should not be coerced to NaN
         assert list(df["Sex"]) == ["female", "male", "male"]
@@ -250,9 +241,7 @@ class TestCatAccessor:
 
     def test_categorical_of_booleans_is_boolean(self):
         # https://github.com/pandas-dev/pandas/issues/46313
-        df = DataFrame(
-            {"int_cat": [1, 2, 3], "bool_cat": [True, False, False]}, dtype="category"
-        )
+        df = DataFrame({"int_cat": [1, 2, 3], "bool_cat": [True, False, False]}, dtype="category")
         value = df["bool_cat"].cat.categories.dtype
         expected = np.dtype(np.bool_)
         assert value is expected

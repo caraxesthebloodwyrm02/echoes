@@ -48,9 +48,7 @@ class Streamer(TwythonStreamer):
     def __init__(self, app_key, app_secret, oauth_token, oauth_token_secret):
         self.handler = None
         self.do_continue = True
-        TwythonStreamer.__init__(
-            self, app_key, app_secret, oauth_token, oauth_token_secret
-        )
+        TwythonStreamer.__init__(self, app_key, app_secret, oauth_token, oauth_token_secret)
 
     def register(self, handler):
         """
@@ -182,9 +180,7 @@ class Query(Twython):
         :param str lang: language
         """
         while True:
-            tweets = self.search_tweets(
-                keywords=keywords, limit=limit, lang=lang, max_id=self.handler.max_id
-            )
+            tweets = self.search_tweets(keywords=keywords, limit=limit, lang=lang, max_id=self.handler.max_id)
             for tweet in tweets:
                 self.handler.handle(tweet)
             if not (self.handler.do_continue() and self.handler.repeat):
@@ -223,9 +219,7 @@ class Query(Twython):
         if max_id:
             self.handler.max_id = max_id
         else:
-            results = self.search(
-                q=keywords, count=min(100, limit), lang=lang, result_type="recent"
-            )
+            results = self.search(q=keywords, count=min(100, limit), lang=lang, result_type="recent")
             count = len(results["statuses"])
             if count == 0:
                 print("No Tweets available through REST API for those keywords")
@@ -300,9 +294,7 @@ class Query(Twython):
         :param str include_rts: Whether to include statuses which have been\
         retweeted by the user; possible values are 'true' and 'false'
         """
-        data = self.get_user_timeline(
-            screen_name=screen_name, count=limit, include_rts=include_rts
-        )
+        data = self.get_user_timeline(screen_name=screen_name, count=limit, include_rts=include_rts)
         for item in data:
             self.handler.handle(item)
 

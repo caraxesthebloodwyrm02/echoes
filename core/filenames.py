@@ -112,9 +112,7 @@ class NameTranslationError(Exception):
     pass
 
 
-def userNameToFileName(
-    userName: str, existing: Iterable[str] = (), prefix: str = "", suffix: str = ""
-) -> str:
+def userNameToFileName(userName: str, existing: Iterable[str] = (), prefix: str = "", suffix: str = "") -> str:
     """Converts from a user name to a file name.
 
     Takes care to avoid illegal characters, reserved file names, ambiguity between
@@ -218,9 +216,7 @@ def userNameToFileName(
     return fullName
 
 
-def handleClash1(
-    userName: str, existing: Iterable[str] = [], prefix: str = "", suffix: str = ""
-) -> str:
+def handleClash1(userName: str, existing: Iterable[str] = [], prefix: str = "", suffix: str = "") -> str:
     """A helper function that resolves collisions with existing names when choosing a filename.
 
     This function attempts to append an unused integer counter to the filename.
@@ -286,9 +282,7 @@ def handleClash1(
     return finalName
 
 
-def handleClash2(
-    existing: Iterable[str] = [], prefix: str = "", suffix: str = ""
-) -> str:
+def handleClash2(existing: Iterable[str] = [], prefix: str = "", suffix: str = "") -> str:
     """A helper function that resolves collisions with existing names when choosing a filename.
 
     This function is a fallback to :func:`handleClash1`. It attempts to append an unused integer counter to the filename.

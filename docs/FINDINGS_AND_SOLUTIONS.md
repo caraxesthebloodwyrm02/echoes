@@ -64,17 +64,17 @@ from pathlib import Path
 
 def update_all_dependencies():
     """Update all project dependencies in a unified manner"""
-    
+
     # Update root requirements
     print("Updating root dependencies...")
     subprocess.run([sys.executable, "-m", "pip", "install", "-r", "requirements.txt", "--upgrade"])
-    
+
     # Update backend Poetry dependencies
     print("Updating backend dependencies...")
     backend_path = Path("backend")
     if backend_path.exists():
         subprocess.run(["poetry", "update"], cwd=backend_path)
-    
+
     # Generate updated lock files
     print("Generating lock files...")
     subprocess.run([sys.executable, "-m", "pip", "freeze", ">", "requirements-lock.txt"], shell=True)

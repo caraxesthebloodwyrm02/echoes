@@ -35,9 +35,7 @@ def test_backend_is_correct(monkeypatch, restore_backend, dummy_backend):
 
     pandas.set_option("plotting.backend", "pandas_dummy_backend")
     assert pandas.get_option("plotting.backend") == "pandas_dummy_backend"
-    assert (
-        pandas.plotting._core._get_plot_backend("pandas_dummy_backend") is dummy_backend
-    )
+    assert pandas.plotting._core._get_plot_backend("pandas_dummy_backend") is dummy_backend
 
 
 def test_backend_can_be_set_in_plot_call(monkeypatch, restore_backend, dummy_backend):
@@ -56,9 +54,7 @@ def test_register_entrypoint(restore_backend, tmp_path, monkeypatch, dummy_backe
     dist_info.mkdir()
     # entry_point name should not match module name - otherwise pandas will
     # fall back to backend lookup by module name
-    (dist_info / "entry_points.txt").write_bytes(
-        b"[pandas_plotting_backends]\nmy_ep_backend = pandas_dummy_backend\n"
-    )
+    (dist_info / "entry_points.txt").write_bytes(b"[pandas_plotting_backends]\nmy_ep_backend = pandas_dummy_backend\n")
 
     assert pandas.plotting._core._get_plot_backend("my_ep_backend") is dummy_backend
 
@@ -72,9 +68,7 @@ def test_setting_backend_without_plot_raises(monkeypatch):
     monkeypatch.setitem(sys.modules, "pandas_plot_backend", module)
 
     assert pandas.options.plotting.backend == "matplotlib"
-    with pytest.raises(
-        ValueError, match="Could not find plotting backend 'pandas_plot_backend'."
-    ):
+    with pytest.raises(ValueError, match="Could not find plotting backend 'pandas_plot_backend'."):
         pandas.set_option("plotting.backend", "pandas_plot_backend")
 
     assert pandas.options.plotting.backend == "matplotlib"
@@ -82,10 +76,7 @@ def test_setting_backend_without_plot_raises(monkeypatch):
 
 @td.skip_if_installed("matplotlib")
 def test_no_matplotlib_ok():
-    msg = (
-        'matplotlib is required for plotting when the default backend "matplotlib" is '
-        "selected."
-    )
+    msg = 'matplotlib is required for plotting when the default backend "matplotlib" is ' "selected."
     with pytest.raises(ImportError, match=msg):
         pandas.plotting._core._get_plot_backend("matplotlib")
 

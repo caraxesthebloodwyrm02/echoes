@@ -81,9 +81,7 @@ def test_transcribe_provides_placeholder_speaker_when_diarizer_missing(
         "segments": [{"start": 0.0, "end": 1.0, "text": "hello world"}],
         "language": "en",
     }
-    pipe._whisper_model = SimpleNamespace(
-        transcribe=lambda *args, **kwargs: dummy_result
-    )
+    pipe._whisper_model = SimpleNamespace(transcribe=lambda *args, **kwargs: dummy_result)
 
     audio_path = base_config.temp_dir / "sample.mp3"
     audio_path.write_text("dummy")
@@ -112,9 +110,7 @@ def test_transcribe_uses_mocked_diarizer_labels(
             return DummyDiarization()
 
     fake_module = types.SimpleNamespace(Pipeline=DummyPipeline)
-    monkeypatch.setitem(
-        sys.modules, "pyannote", types.SimpleNamespace(audio=fake_module)
-    )
+    monkeypatch.setitem(sys.modules, "pyannote", types.SimpleNamespace(audio=fake_module))
     monkeypatch.setitem(sys.modules, "pyannote.audio", fake_module)
 
     base_config.diarization_model = "dummy/model"
@@ -132,9 +128,7 @@ def test_transcribe_uses_mocked_diarizer_labels(
         "segments": [{"start": 0.0, "end": 1.0, "text": "hello world"}],
         "language": "en",
     }
-    pipe._whisper_model = SimpleNamespace(
-        transcribe=lambda *args, **kwargs: dummy_result
-    )
+    pipe._whisper_model = SimpleNamespace(transcribe=lambda *args, **kwargs: dummy_result)
 
     audio_path = base_config.temp_dir / "sample.mp3"
     audio_path.write_text("dummy")

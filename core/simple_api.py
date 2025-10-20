@@ -91,14 +91,10 @@ async def run_simple_automl(
             )
 
         if max_models < 1 or max_models > 10:
-            raise HTTPException(
-                status_code=400, detail="max_models must be between 1 and 10"
-            )
+            raise HTTPException(status_code=400, detail="max_models must be between 1 and 10")
 
         if cv_folds < 2 or cv_folds > 10:
-            raise HTTPException(
-                status_code=400, detail="cv_folds must be between 2 and 10"
-            )
+            raise HTTPException(status_code=400, detail="cv_folds must be between 2 and 10")
 
         # Read dataset
         contents = await file.read()
@@ -112,9 +108,7 @@ async def run_simple_automl(
             raise HTTPException(status_code=400, detail="Dataset is empty")
 
         if len(dataset.columns) < 2:
-            raise HTTPException(
-                status_code=400, detail="Dataset must have at least 2 columns"
-            )
+            raise HTTPException(status_code=400, detail="Dataset must have at least 2 columns")
 
         # Prepare data
         feature_cols = [col for col in dataset.columns if col != dataset.columns[-1]]
@@ -124,9 +118,7 @@ async def run_simple_automl(
         y = dataset[target_col].values
 
         # Run AutoML
-        config = AutoMLConfig(
-            task_type=task_type, max_models=max_models, cv_folds=cv_folds
-        )
+        config = AutoMLConfig(task_type=task_type, max_models=max_models, cv_folds=cv_folds)
 
         automl = SimpleAutoML(config)
         results = automl.fit(X, y, feature_names=feature_cols)

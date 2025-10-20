@@ -1,6 +1,7 @@
 """
 Base and utility classes for tseries type pandas objects.
 """
+
 from __future__ import annotations
 
 from abc import (
@@ -114,9 +115,7 @@ class DatetimeIndexOpsMixin(NDArrayBackedExtensionIndex, ABC):
     def freqstr(self) -> str:
         from pandas import PeriodIndex
 
-        if self._data.freqstr is not None and isinstance(
-            self._data, (PeriodArray, PeriodIndex)
-        ):
+        if self._data.freqstr is not None and isinstance(self._data, (PeriodArray, PeriodIndex)):
             freq = freq_to_period_freqstr(self._data.freq.n, self._data.freq.name)
             return freq
         else:
@@ -124,8 +123,7 @@ class DatetimeIndexOpsMixin(NDArrayBackedExtensionIndex, ABC):
 
     @cache_readonly
     @abstractmethod
-    def _resolution_obj(self) -> Resolution:
-        ...
+    def _resolution_obj(self) -> Resolution: ...
 
     @cache_readonly
     @doc(DatetimeLikeArrayMixin.resolution)
@@ -212,26 +210,18 @@ class DatetimeIndexOpsMixin(NDArrayBackedExtensionIndex, ABC):
         header = []
         if name:
             header.append(
-                ibase.pprint_thing(self.name, escape_chars=("\t", "\r", "\n"))
-                if self.name is not None
-                else ""
+                ibase.pprint_thing(self.name, escape_chars=("\t", "\r", "\n")) if self.name is not None else ""
             )
 
         if formatter is not None:
             return header + list(self.map(formatter))
 
-        return self._format_with_header(
-            header=header, na_rep=na_rep, date_format=date_format
-        )
+        return self._format_with_header(header=header, na_rep=na_rep, date_format=date_format)
 
-    def _format_with_header(
-        self, *, header: list[str], na_rep: str, date_format: str | None = None
-    ) -> list[str]:
+    def _format_with_header(self, *, header: list[str], na_rep: str, date_format: str | None = None) -> list[str]:
         # TODO: not reached in tests 2023-10-11
         # matches base class except for whitespace padding and date_format
-        return header + list(
-            self._get_values_for_csv(na_rep=na_rep, date_format=date_format)
-        )
+        return header + list(self._get_values_for_csv(na_rep=na_rep, date_format=date_format))
 
     @property
     def _formatter_func(self):
@@ -326,9 +316,7 @@ class DatetimeIndexOpsMixin(NDArrayBackedExtensionIndex, ABC):
         unbox = self._data._unbox
 
         if self.is_monotonic_increasing:
-            if len(self) and (
-                (t1 < self[0] and t2 < self[0]) or (t1 > self[-1] and t2 > self[-1])
-            ):
+            if len(self) and ((t1 < self[0] and t2 < self[0]) or (t1 > self[-1] and t2 > self[-1])):
                 # we are out of range
                 raise KeyError
 
@@ -515,9 +503,7 @@ class DatetimeTimedeltaMixin(DatetimeIndexOpsMixin, ABC):
         # Note: in the DatetimeTZ case, _generate_range will infer the
         #  appropriate timezone from `start` and `end`, so tz does not need
         #  to be passed explicitly.
-        result = self._data._generate_range(
-            start=start, end=end, periods=None, freq=self.freq, unit=self.unit
-        )
+        result = self._data._generate_range(start=start, end=end, periods=None, freq=self.freq, unit=self.unit)
         return type(self)._simple_new(result, name=self.name)
 
     @cache_readonly
@@ -734,9 +720,7 @@ class DatetimeTimedeltaMixin(DatetimeIndexOpsMixin, ABC):
             freq = self.freq
         return freq
 
-    def _wrap_joined_index(
-        self, joined, other, lidx: npt.NDArray[np.intp], ridx: npt.NDArray[np.intp]
-    ):
+    def _wrap_joined_index(self, joined, other, lidx: npt.NDArray[np.intp], ridx: npt.NDArray[np.intp]):
         assert other.dtype == self.dtype, (other.dtype, self.dtype)
         result = super()._wrap_joined_index(joined, other, lidx, ridx)
         result._data._freq = self._get_join_freq(other)
@@ -832,9 +816,7 @@ class DatetimeTimedeltaMixin(DatetimeIndexOpsMixin, ABC):
         nv.validate_take((), kwargs)
         indices = np.asarray(indices, dtype=np.intp)
 
-        result = NDArrayBackedExtensionIndex.take(
-            self, indices, axis, allow_fill, fill_value, **kwargs
-        )
+        result = NDArrayBackedExtensionIndex.take(self, indices, axis, allow_fill, fill_value, **kwargs)
 
         maybe_slice = lib.maybe_indices_to_slice(indices, len(self))
         if isinstance(maybe_slice, slice):

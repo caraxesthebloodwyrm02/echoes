@@ -27,20 +27,15 @@ if TYPE_CHECKING:
 _STR_METHODS = frozenset(str.__dict__)
 _PATH_NAME = Path().__class__.__name__
 
-_MSG = (
-    'Sphinx 9 will drop support for representing paths as strings. '
-    'Use "pathlib.Path" or "os.fspath" instead.'
-)
+_MSG = "Sphinx 9 will drop support for representing paths as strings. " 'Use "pathlib.Path" or "os.fspath" instead.'
 
 # https://docs.python.org/3/library/stdtypes.html#typesseq-common
 # https://docs.python.org/3/library/stdtypes.html#string-methods
 
-if sys.platform == 'win32':
+if sys.platform == "win32":
 
     class _StrPath(WindowsPath):
-        def replace(  # type: ignore[override]
-            self, old: str, new: str, count: int = -1, /
-        ) -> str:
+        def replace(self, old: str, new: str, count: int = -1, /) -> str:  # type: ignore[override]
             # replace exists in both Path and str;
             # in Path it makes filesystem changes, so we use the safer str version
             warnings.warn(_MSG, RemovedInSphinx90Warning, stacklevel=2)
@@ -50,7 +45,7 @@ if sys.platform == 'win32':
             if item in _STR_METHODS:
                 warnings.warn(_MSG, RemovedInSphinx90Warning, stacklevel=2)
                 return getattr(self.__str__(), item)
-            msg = f'{_PATH_NAME!r} has no attribute {item!r}'
+            msg = f"{_PATH_NAME!r} has no attribute {item!r}"
             raise AttributeError(msg)
 
         def __add__(self, other: str) -> str:
@@ -93,9 +88,7 @@ if sys.platform == 'win32':
 else:
 
     class _StrPath(PosixPath):
-        def replace(  # type: ignore[override]
-            self, old: str, new: str, count: int = -1, /
-        ) -> str:
+        def replace(self, old: str, new: str, count: int = -1, /) -> str:  # type: ignore[override]
             # replace exists in both Path and str;
             # in Path it makes filesystem changes, so we use the safer str version
             warnings.warn(_MSG, RemovedInSphinx90Warning, stacklevel=2)
@@ -105,7 +98,7 @@ else:
             if item in _STR_METHODS:
                 warnings.warn(_MSG, RemovedInSphinx90Warning, stacklevel=2)
                 return getattr(self.__str__(), item)
-            msg = f'{_PATH_NAME!r} has no attribute {item!r}'
+            msg = f"{_PATH_NAME!r} has no attribute {item!r}"
             raise AttributeError(msg)
 
         def __add__(self, other: str) -> str:
@@ -148,10 +141,10 @@ else:
 
 class _StrPathProperty:
     def __init__(self) -> None:
-        self.instance_attr: str = ''
+        self.instance_attr: str = ""
 
     def __set_name__(self, owner: object, name: str) -> None:
-        self.instance_attr = f'_{name}'  # i.e. '_srcdir'
+        self.instance_attr = f"_{name}"  # i.e. '_srcdir'
 
     @overload
     def __get__(self, obj: None, objtype: None) -> _StrPathProperty: ...
@@ -159,9 +152,7 @@ class _StrPathProperty:
     @overload
     def __get__(self, obj: object, objtype: type[object]) -> _StrPath: ...
 
-    def __get__(
-        self, obj: object | None, objtype: type[object] | None = None
-    ) -> _StrPathProperty | _StrPath:
+    def __get__(self, obj: object | None, objtype: type[object] | None = None) -> _StrPathProperty | _StrPath:
         if obj is None:
             return self
         if not self.instance_attr:
@@ -173,8 +164,8 @@ class _StrPathProperty:
             setattr(obj, self.instance_attr, _StrPath(value))
         except TypeError as err:
             cls_name = type(obj).__qualname__
-            name = self.instance_attr.removeprefix('_')
-            msg = f'{cls_name}.{name} may only be set to path-like objects'
+            name = self.instance_attr.removeprefix("_")
+            msg = f"{cls_name}.{name} may only be set to path-like objects"
             raise TypeError(msg) from err
 
     def __delete__(self, obj: Any) -> None:

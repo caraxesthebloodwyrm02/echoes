@@ -103,9 +103,7 @@ _TT = TypeVar("_TT", bound=Any)
 _TypeAnnotationMapType = Mapping[Any, "_TypeEngineArgument[Any]"]
 _MutableTypeAnnotationMapType = Dict[Any, "_TypeEngineArgument[Any]"]
 
-_DeclaredAttrDecorated = Callable[
-    ..., Union[Mapped[_T], ORMDescriptor[_T], SQLCoreOperations[_T]]
-]
+_DeclaredAttrDecorated = Callable[..., Union[Mapped[_T], ORMDescriptor[_T], SQLCoreOperations[_T]]]
 
 
 def has_inherited_table(cls: Type[_O]) -> bool:
@@ -174,9 +172,7 @@ class DeclarativeMeta(DeclarativeAttributeIntercept):
     metadata: MetaData
     registry: RegistryType
 
-    def __init__(
-        cls, classname: Any, bases: Any, dict_: Any, **kw: Any
-    ) -> None:
+    def __init__(cls, classname: Any, bases: Any, dict_: Any, **kw: Any) -> None:
         # use cls.__dict__, which can be modified by an
         # __init_subclass__() method (#7900)
         dict_ = cls.__dict__
@@ -200,9 +196,7 @@ class DeclarativeMeta(DeclarativeAttributeIntercept):
         type.__init__(cls, classname, bases, dict_)
 
 
-def synonym_for(
-    name: str, map_column: bool = False
-) -> Callable[[Callable[..., Any]], Synonym[Any]]:
+def synonym_for(name: str, map_column: bool = False) -> Callable[[Callable[..., Any]], Synonym[Any]]:
     """Decorator that produces an :func:`_orm.synonym`
     attribute in conjunction with a Python descriptor.
 
@@ -439,16 +433,12 @@ class declared_attr(interfaces._MappedAttribute[_T], _declared_attr_common):
         # callable function prior to mapping in fact calls the given
         # declarative function that does not return InstrumentedAttribute
         @overload
-        def __get__(
-            self, instance: None, owner: Any
-        ) -> InstrumentedAttribute[_T]: ...
+        def __get__(self, instance: None, owner: Any) -> InstrumentedAttribute[_T]: ...
 
         @overload
         def __get__(self, instance: object, owner: Any) -> _T: ...
 
-        def __get__(
-            self, instance: Optional[object], owner: Any
-        ) -> Union[InstrumentedAttribute[_T], _T]: ...
+        def __get__(self, instance: Optional[object], owner: Any) -> Union[InstrumentedAttribute[_T], _T]: ...
 
     @hybridmethod
     def _stateful(cls, **kw: Any) -> _stateful_declared_attr[_T]:
@@ -555,9 +545,7 @@ def _setup_declarative_base(cls: Type[Any]) -> None:
             )
 
     else:
-        reg = registry(
-            metadata=metadata, type_annotation_map=type_annotation_map
-        )
+        reg = registry(metadata=metadata, type_annotation_map=type_annotation_map)
         cls.registry = reg
 
     cls._sa_registry = reg
@@ -591,9 +579,7 @@ class MappedAsDataclass(metaclass=DCTransformDeclarative):
         unsafe_hash: Union[_NoArg, bool] = _NoArg.NO_ARG,
         match_args: Union[_NoArg, bool] = _NoArg.NO_ARG,
         kw_only: Union[_NoArg, bool] = _NoArg.NO_ARG,
-        dataclass_callable: Union[
-            _NoArg, Callable[..., Type[Any]]
-        ] = _NoArg.NO_ARG,
+        dataclass_callable: Union[_NoArg, Callable[..., Type[Any]]] = _NoArg.NO_ARG,
         **kw: Any,
     ) -> None:
         apply_dc_transforms: _DataclassArguments = {
@@ -615,23 +601,16 @@ class MappedAsDataclass(metaclass=DCTransformDeclarative):
             _ClassScanMapperConfig._assert_dc_arguments(current)
 
             cls._sa_apply_dc_transforms = current_transforms = {  # type: ignore  # noqa: E501
-                k: current.get(k, _NoArg.NO_ARG) if v is _NoArg.NO_ARG else v
-                for k, v in apply_dc_transforms.items()
+                k: current.get(k, _NoArg.NO_ARG) if v is _NoArg.NO_ARG else v for k, v in apply_dc_transforms.items()
             }
         else:
-            cls._sa_apply_dc_transforms = current_transforms = (
-                apply_dc_transforms
-            )
+            cls._sa_apply_dc_transforms = current_transforms = apply_dc_transforms
 
         super().__init_subclass__(**kw)
 
         if not _is_mapped_class(cls):
-            new_anno = (
-                _ClassScanMapperConfig._update_annotations_for_non_mapped_class
-            )(cls)
-            _ClassScanMapperConfig._apply_dataclasses_to_any_class(
-                current_transforms, cls, new_anno
-            )
+            new_anno = (_ClassScanMapperConfig._update_annotations_for_non_mapped_class)(cls)
+            _ClassScanMapperConfig._apply_dataclasses_to_any_class(current_transforms, cls, new_anno)
 
 
 class DeclarativeBase(
@@ -850,11 +829,7 @@ class DeclarativeBase(
 def _check_not_declarative(cls: Type[Any], base: Type[Any]) -> None:
     cls_dict = cls.__dict__
     if (
-        "__table__" in cls_dict
-        and not (
-            callable(cls_dict["__table__"])
-            or hasattr(cls_dict["__table__"], "__get__")
-        )
+        "__table__" in cls_dict and not (callable(cls_dict["__table__"]) or hasattr(cls_dict["__table__"], "__get__"))
     ) or isinstance(cls_dict.get("__tablename__", None), str):
         raise exc.InvalidRequestError(
             f"Cannot use {base.__name__!r} directly as a declarative base "
@@ -969,9 +944,7 @@ class DeclarativeBaseNoMeta(
         super().__init_subclass__(**kw)
 
 
-def add_mapped_attribute(
-    target: Type[_O], key: str, attr: MapperProperty[Any]
-) -> None:
+def add_mapped_attribute(target: Type[_O], key: str, attr: MapperProperty[Any]) -> None:
     """Add a new mapped attribute to an ORM mapped class.
 
     E.g.::
@@ -1230,10 +1203,7 @@ class registry:
         values."""
 
         self.type_annotation_map.update(
-            {
-                de_optionalize_union_types(typ): sqltype
-                for typ, sqltype in type_annotation_map.items()
-            }
+            {de_optionalize_union_types(typ): sqltype for typ, sqltype in type_annotation_map.items()}
         )
 
     def _resolve_type(
@@ -1289,22 +1259,16 @@ class registry:
             if is_pep695(python_type):
                 # NOTE: assume there aren't type alias types of new types.
                 python_type_to_check = python_type
-                while is_pep695(python_type_to_check) and not is_pep593(
-                    python_type_to_check
-                ):
+                while is_pep695(python_type_to_check) and not is_pep593(python_type_to_check):
                     python_type_to_check = python_type_to_check.__value__
-                python_type_to_check = de_optionalize_union_types(
-                    python_type_to_check
-                )
+                python_type_to_check = de_optionalize_union_types(python_type_to_check)
                 kind = "pep-695 type"
             if is_newtype(python_type):
                 python_type_to_check = flatten_newtype(python_type)
                 kind = "NewType"
 
             if python_type_to_check is not None:
-                res_after_fallback = self._resolve_type(
-                    python_type_to_check, False
-                )
+                res_after_fallback = self._resolve_type(python_type_to_check, False)
                 if res_after_fallback is not None:
                     assert kind is not None
                     if kind == "pep-695 type":
@@ -1336,9 +1300,7 @@ class registry:
     def mappers(self) -> FrozenSet[Mapper[Any]]:
         """read only collection of all :class:`_orm.Mapper` objects."""
 
-        return frozenset(manager.mapper for manager in self._managers).union(
-            self._non_primary_mappers
-        )
+        return frozenset(manager.mapper for manager in self._managers).union(self._non_primary_mappers)
 
     def _set_depends_on(self, registry: RegistryType) -> None:
         if registry is self:
@@ -1355,9 +1317,7 @@ class registry:
             reg._new_mappers = True
 
     @classmethod
-    def _recurse_with_dependents(
-        cls, registries: Set[RegistryType]
-    ) -> Iterator[RegistryType]:
+    def _recurse_with_dependents(cls, registries: Set[RegistryType]) -> Iterator[RegistryType]:
         todo = registries
         done = set()
         while todo:
@@ -1374,9 +1334,7 @@ class registry:
             todo.update(reg._dependents.difference(done))
 
     @classmethod
-    def _recurse_with_dependencies(
-        cls, registries: Set[RegistryType]
-    ) -> Iterator[RegistryType]:
+    def _recurse_with_dependencies(cls, registries: Set[RegistryType]) -> Iterator[RegistryType]:
         todo = registries
         done = set()
         while todo:
@@ -1398,15 +1356,9 @@ class registry:
             (
                 manager.mapper
                 for manager in list(self._managers)
-                if manager.is_mapped
-                and not manager.mapper.configured
-                and manager.mapper._ready_for_configure
+                if manager.is_mapped and not manager.mapper.configured and manager.mapper._ready_for_configure
             ),
-            (
-                npm
-                for npm in list(self._non_primary_mappers)
-                if not npm.configured and npm._ready_for_configure
-            ),
+            (npm for npm in list(self._non_primary_mappers) if not npm.configured and npm._ready_for_configure),
         )
 
     def _add_non_primary_mapper(self, np_mapper: Mapper[Any]) -> None:
@@ -1418,10 +1370,7 @@ class registry:
     def _add_manager(self, manager: ClassManager[Any]) -> None:
         self._managers[manager] = True
         if manager.is_mapped:
-            raise exc.ArgumentError(
-                "Class '%s' already has a primary mapper defined. "
-                % manager.class_
-            )
+            raise exc.ArgumentError("Class '%s' already has a primary mapper defined. " % manager.class_)
         assert manager.registry is None
         manager.registry = self
 
@@ -1649,9 +1598,7 @@ class registry:
         unsafe_hash: Union[_NoArg, bool] = _NoArg.NO_ARG,
         match_args: Union[_NoArg, bool] = _NoArg.NO_ARG,
         kw_only: Union[_NoArg, bool] = _NoArg.NO_ARG,
-        dataclass_callable: Union[
-            _NoArg, Callable[..., Type[Any]]
-        ] = _NoArg.NO_ARG,
+        dataclass_callable: Union[_NoArg, Callable[..., Type[Any]]] = _NoArg.NO_ARG,
     ) -> Union[Type[_O], Callable[[Type[_O]], Type[_O]]]:
         """Class decorator that will apply the Declarative mapping process
         to a given class, and additionally convert the class to be a
@@ -1922,9 +1869,7 @@ def as_declarative(**kw: Any) -> Callable[[Type[_T]], Type[_T]]:
         kw.pop("class_registry", None),
     )
 
-    return registry(
-        metadata=metadata, class_registry=class_registry
-    ).as_declarative_base(**kw)
+    return registry(metadata=metadata, class_registry=class_registry).as_declarative_base(**kw)
 
 
 @compat_typing.dataclass_transform(
@@ -1950,9 +1895,7 @@ def mapped_as_dataclass(
     unsafe_hash: Union[_NoArg, bool] = _NoArg.NO_ARG,
     match_args: Union[_NoArg, bool] = _NoArg.NO_ARG,
     kw_only: Union[_NoArg, bool] = _NoArg.NO_ARG,
-    dataclass_callable: Union[
-        _NoArg, Callable[..., Type[Any]]
-    ] = _NoArg.NO_ARG,
+    dataclass_callable: Union[_NoArg, Callable[..., Type[Any]]] = _NoArg.NO_ARG,
 ) -> Callable[[Type[_O]], Type[_O]]:
     """Standalone function form of :meth:`_orm.registry.mapped_as_dataclass`
     which may have better compatibility with mypy.
@@ -1993,9 +1936,7 @@ def mapped_as_dataclass(
     )
 
 
-@inspection._inspects(
-    DeclarativeMeta, DeclarativeBase, DeclarativeAttributeIntercept
-)
+@inspection._inspects(DeclarativeMeta, DeclarativeBase, DeclarativeAttributeIntercept)
 def _inspect_decl_meta(cls: Type[Any]) -> Optional[Mapper[Any]]:
     mp: Optional[Mapper[Any]] = _inspect_mapped_class(cls)
     if mp is None:

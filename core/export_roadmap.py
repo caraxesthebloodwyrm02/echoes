@@ -74,21 +74,15 @@ def export_roadmap_to_excel():
         summary_df.to_excel(writer, sheet_name="Summary", index=False)
 
         # Status breakdown
-        status_breakdown = (
-            df.groupby(["phase", "status"]).size().reset_index(name="count")
-        )
+        status_breakdown = df.groupby(["phase", "status"]).size().reset_index(name="count")
         status_breakdown.to_excel(writer, sheet_name="Status_Breakdown", index=False)
 
         # Priority analysis
-        priority_analysis = (
-            df.groupby(["priority", "status"]).size().reset_index(name="count")
-        )
+        priority_analysis = df.groupby(["priority", "status"]).size().reset_index(name="count")
         priority_analysis.to_excel(writer, sheet_name="Priority_Analysis", index=False)
 
     print(f"✅ Exported {len(df)} roadmap items to roadmap_export_updated.xlsx")
-    print(
-        f"📊 Status: {completed_count}/{total_count} completed ({completed_count / total_count * 100:.1f}%)"
-    )
+    print(f"📊 Status: {completed_count}/{total_count} completed ({completed_count / total_count * 100:.1f}%)")
 
     return df
 

@@ -69,17 +69,13 @@ class TestIBMModel5(unittest.TestCase):
             [[3], [1], [4], [], [2], [5, 6]],
         )
 
-        head_vacancy_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(float))
-        )
+        head_vacancy_table = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
         head_vacancy_table[1 - 0][6][3] = 0.97  # ich -> i
         head_vacancy_table[3 - 0][5][4] = 0.97  # esse -> eat
         head_vacancy_table[1 - 2][4][4] = 0.97  # gern -> love
         head_vacancy_table[2 - 0][2][1] = 0.97  # räucherschinken -> smoked
 
-        non_head_vacancy_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(float))
-        )
+        non_head_vacancy_table = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
         non_head_vacancy_table[1 - 0][1][0] = 0.96  # räucherschinken -> ham
 
         translation_table = defaultdict(lambda: defaultdict(float))
@@ -119,9 +115,7 @@ class TestIBMModel5(unittest.TestCase):
         fertility = 1 * 0.99 * 1 * 0.99 * 1 * 0.99 * 1 * 0.99 * 2 * 0.999
         lexical_translation = 0.98 * 0.98 * 0.98 * 0.98 * 0.98 * 0.98
         vacancy = 0.97 * 0.97 * 1 * 0.97 * 0.97 * 0.96
-        expected_probability = (
-            null_generation * fertility * lexical_translation * vacancy
-        )
+        expected_probability = null_generation * fertility * lexical_translation * vacancy
         self.assertEqual(round(probability, 4), round(expected_probability, 4))
 
     def test_prune(self):
@@ -145,9 +139,7 @@ class TestIBMModel5(unittest.TestCase):
         corpus = [AlignedSent(["a"], ["b"])]
         original_prob_function = IBMModel4.model4_prob_t_a_given_s
         # mock static method
-        IBMModel4.model4_prob_t_a_given_s = staticmethod(
-            lambda a, model: scores[a.alignment]
-        )
+        IBMModel4.model4_prob_t_a_given_s = staticmethod(lambda a, model: scores[a.alignment])
         model5 = IBMModel5(corpus, 0, None, None)
 
         # act

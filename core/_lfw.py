@@ -74,9 +74,7 @@ TARGETS = (
 #
 
 
-def _check_fetch_lfw(
-    data_home=None, funneled=True, download_if_missing=True, n_retries=3, delay=1.0
-):
+def _check_fetch_lfw(data_home=None, funneled=True, download_if_missing=True, n_retries=3, delay=1.0):
     """Helper function to download any missing LFW data"""
 
     data_home = get_data_home(data_home=data_home)
@@ -90,9 +88,7 @@ def _check_fetch_lfw(
         if not exists(target_filepath):
             if download_if_missing:
                 logger.info("Downloading LFW metadata: %s", target.url)
-                _fetch_remote(
-                    target, dirname=lfw_home, n_retries=n_retries, delay=delay
-                )
+                _fetch_remote(target, dirname=lfw_home, n_retries=n_retries, delay=delay)
             else:
                 raise OSError("%s is missing" % target_filepath)
 
@@ -108,9 +104,7 @@ def _check_fetch_lfw(
         if not exists(archive_path):
             if download_if_missing:
                 logger.info("Downloading LFW data (~200MB): %s", archive.url)
-                _fetch_remote(
-                    archive, dirname=lfw_home, n_retries=n_retries, delay=delay
-                )
+                _fetch_remote(archive, dirname=lfw_home, n_retries=n_retries, delay=delay)
             else:
                 raise OSError("%s is missing" % archive_path)
 
@@ -170,17 +164,14 @@ def _load_imgs(file_paths, slice_, color, resize):
         # Checks if jpeg reading worked. Refer to issue #3594 for more
         # details.
         pil_img = Image.open(file_path)
-        pil_img = pil_img.crop(
-            (w_slice.start, h_slice.start, w_slice.stop, h_slice.stop)
-        )
+        pil_img = pil_img.crop((w_slice.start, h_slice.start, w_slice.stop, h_slice.stop))
         if resize is not None:
             pil_img = pil_img.resize((w, h))
         face = np.asarray(pil_img, dtype=np.float32)
 
         if face.ndim == 0:
             raise RuntimeError(
-                "Failed to read the image file %s, "
-                "Please make sure that libjpeg is installed" % file_path
+                "Failed to read the image file %s, " "Please make sure that libjpeg is installed" % file_path
             )
 
         face /= 255.0  # scale uint8 coded colors to the [0.0, 1.0] floats
@@ -199,9 +190,7 @@ def _load_imgs(file_paths, slice_, color, resize):
 #
 
 
-def _fetch_lfw_people(
-    data_folder_path, slice_=None, color=False, resize=None, min_faces_per_person=0
-):
+def _fetch_lfw_people(data_folder_path, slice_=None, color=False, resize=None, min_faces_per_person=0):
     """Perform the actual data loading for the lfw people dataset
 
     This operation is meant to be cached by a joblib wrapper.
@@ -222,9 +211,7 @@ def _fetch_lfw_people(
 
     n_faces = len(file_paths)
     if n_faces == 0:
-        raise ValueError(
-            "min_faces_per_person=%d is too restrictive" % min_faces_per_person
-        )
+        raise ValueError("min_faces_per_person=%d is too restrictive" % min_faces_per_person)
 
     target_names = np.unique(person_names)
     target = np.searchsorted(target_names, person_names)
@@ -413,9 +400,7 @@ def fetch_lfw_people(
         return X, target
 
     # pack the results as a Bunch instance
-    return Bunch(
-        data=X, images=faces, target=target, target_names=target_names, DESCR=fdescr
-    )
+    return Bunch(data=X, images=faces, target=target, target_names=target_names, DESCR=fdescr)
 
 
 #
@@ -423,9 +408,7 @@ def fetch_lfw_people(
 #
 
 
-def _fetch_lfw_pairs(
-    index_file_path, data_folder_path, slice_=None, color=False, resize=None
-):
+def _fetch_lfw_pairs(index_file_path, data_folder_path, slice_=None, color=False, resize=None):
     """Perform the actual data loading for the LFW pairs dataset
 
     This operation is meant to be cached by a joblib wrapper.
@@ -625,10 +608,7 @@ def fetch_lfw_pairs(
         "10_folds": "pairs.txt",
     }
     if subset not in label_filenames:
-        raise ValueError(
-            "subset='%s' is invalid: should be one of %r"
-            % (subset, list(sorted(label_filenames.keys())))
-        )
+        raise ValueError("subset='%s' is invalid: should be one of %r" % (subset, list(sorted(label_filenames.keys()))))
     index_file_path = join(lfw_home, label_filenames[subset])
 
     # load and memoize the pairs as np arrays

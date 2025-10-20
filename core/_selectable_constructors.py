@@ -55,9 +55,7 @@ if TYPE_CHECKING:
     from .selectable import SelectBase
 
 
-def alias(
-    selectable: FromClause, name: Optional[str] = None, flat: bool = False
-) -> NamedFromClause:
+def alias(selectable: FromClause, name: Optional[str] = None, flat: bool = False) -> NamedFromClause:
     """Return a named alias of the given :class:`.FromClause`.
 
     For :class:`.Table` and :class:`.Join` objects, the return type is the
@@ -89,18 +87,14 @@ def alias(
     return Alias._factory(selectable, name=name, flat=flat)
 
 
-def cte(
-    selectable: HasCTE, name: Optional[str] = None, recursive: bool = False
-) -> CTE:
+def cte(selectable: HasCTE, name: Optional[str] = None, recursive: bool = False) -> CTE:
     r"""Return a new :class:`_expression.CTE`,
     or Common Table Expression instance.
 
     Please see :meth:`_expression.HasCTE.cte` for detail on CTE usage.
 
     """
-    return coercions.expect(roles.HasCTERole, selectable).cte(
-        name=name, recursive=recursive
-    )
+    return coercions.expect(roles.HasCTERole, selectable).cte(name=name, recursive=recursive)
 
 
 # TODO: mypy requires the _TypedSelectable overloads in all compound select
@@ -165,9 +159,7 @@ def except_all(
 
 
 def exists(
-    __argument: Optional[
-        Union[_ColumnsClauseArgument[Any], SelectBase, ScalarSelect[Any]]
-    ] = None,
+    __argument: Optional[Union[_ColumnsClauseArgument[Any], SelectBase, ScalarSelect[Any]]] = None,
 ) -> Exists:
     """Construct a new :class:`_expression.Exists` construct.
 
@@ -389,15 +381,11 @@ def select(__ent0: _TCCA[_T0]) -> Select[Tuple[_T0]]: ...
 
 
 @overload
-def select(
-    __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]
-) -> Select[Tuple[_T0, _T1]]: ...
+def select(__ent0: _TCCA[_T0], __ent1: _TCCA[_T1]) -> Select[Tuple[_T0, _T1]]: ...
 
 
 @overload
-def select(
-    __ent0: _TCCA[_T0], __ent1: _TCCA[_T1], __ent2: _TCCA[_T2]
-) -> Select[Tuple[_T0, _T1, _T2]]: ...
+def select(__ent0: _TCCA[_T0], __ent1: _TCCA[_T1], __ent2: _TCCA[_T2]) -> Select[Tuple[_T0, _T1, _T2]]: ...
 
 
 @overload
@@ -488,9 +476,7 @@ def select(
 
 
 @overload
-def select(
-    *entities: _ColumnsClauseArgument[Any], **__kw: Any
-) -> Select[Any]: ...
+def select(*entities: _ColumnsClauseArgument[Any], **__kw: Any) -> Select[Any]: ...
 
 
 def select(*entities: _ColumnsClauseArgument[Any], **__kw: Any) -> Select[Any]:

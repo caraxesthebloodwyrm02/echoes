@@ -27,9 +27,7 @@ from openai import OpenAI
 # Load API key from environment
 api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY_ECHOES")
 if not api_key:
-    print(
-        "[ERROR] No API key found. Set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES in .env"
-    )
+    print("[ERROR] No API key found. Set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES in .env")
     exit(1)
 
 client = OpenAI(api_key=api_key)
@@ -81,9 +79,7 @@ def get_gpt4o_mini_analysis():
         for item in response.output or []:
             if item.type == "message":
                 for content in item.content:
-                    if getattr(content, "type", None) == "text" and getattr(
-                        content, "text", None
-                    ):
+                    if getattr(content, "type", None) == "text" and getattr(content, "text", None):
                         analysis_segments.append(content.text)
 
         analysis = "\n".join(analysis_segments).strip()

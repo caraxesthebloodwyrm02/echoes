@@ -3,6 +3,7 @@ Tests that duplicate columns are handled appropriately when parsed by the
 CSV engine. In general, the expected result is that they are either thoroughly
 de-duplicated (if mangling requested) or ignored otherwise.
 """
+
 from io import StringIO
 
 import pytest
@@ -16,9 +17,7 @@ import pandas._testing as tm
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 @xfail_pyarrow  # ValueError: Found non-unique column index
@@ -88,9 +87,7 @@ def test_thorough_mangle_columns(all_parsers, data, expected):
         (
             "a,b,b\n1,2,3",
             ["a.1", "a.1", "a.1.1"],
-            DataFrame(
-                [["a", "b", "b"], ["1", "2", "3"]], columns=["a.1", "a.1.1", "a.1.1.1"]
-            ),
+            DataFrame([["a", "b", "b"], ["1", "2", "3"]], columns=["a.1", "a.1.1", "a.1.1.1"]),
         ),
         (
             "a,b,c,d,e,f\n1,2,3,4,5,6",

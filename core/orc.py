@@ -1,4 +1,5 @@
 """ orc compat """
+
 from __future__ import annotations
 
 import io
@@ -111,9 +112,7 @@ def read_orc(
             except (TypeError, pa.ArrowInvalid):
                 pass
 
-        pa_table = orc.read_table(
-            source=source, columns=columns, filesystem=filesystem, **kwargs
-        )
+        pa_table = orc.read_table(source=source, columns=columns, filesystem=filesystem, **kwargs)
     return arrow_table_to_pandas(pa_table, dtype_backend=dtype_backend)
 
 
@@ -218,9 +217,7 @@ def to_orc(
                 **engine_kwargs,
             )
         except (TypeError, pa.ArrowNotImplementedError) as e:
-            raise NotImplementedError(
-                "The dtype of one or more columns is not supported yet."
-            ) from e
+            raise NotImplementedError("The dtype of one or more columns is not supported yet.") from e
 
     if was_none:
         assert isinstance(path, io.BytesIO)  # For mypy

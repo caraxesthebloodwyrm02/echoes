@@ -15,7 +15,6 @@ https://github.com/lium-lst/nmtpy/blob/master/nmtpy/metrics/mtevalbleu.py#L162
 """
 
 
-import io
 import re
 
 from nltk.corpus import perluniprops
@@ -155,9 +154,7 @@ class NISTTokenizer(TokenizerI):
         text = str(text.strip())
         return text if return_str else text.split()
 
-    def international_tokenize(
-        self, text, lowercase=False, split_non_ascii=True, return_str=False
-    ):
+    def international_tokenize(self, text, lowercase=False, split_non_ascii=True, return_str=False):
         text = str(text)
         # Different from the 'normal' tokenize(), STRIP_EOL_HYPHEN is applied
         # first before unescaping.

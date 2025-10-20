@@ -95,8 +95,7 @@ class SemanticMatchingDemo:
         )
 
         python_dev = SemanticVector(
-            vector=np.random.rand(384) * 0.9
-            + np.random.rand(384) * 0.1,  # Similar but not identical
+            vector=np.random.rand(384) * 0.9 + np.random.rand(384) * 0.1,  # Similar but not identical
             confidence=0.85,
             semantic_tags={"python", "development"},
             original_text="Python development",
@@ -107,9 +106,7 @@ class SemanticMatchingDemo:
 
         # Calculate similarity
         match = self.matcher.calculate_semantic_similarity(prog_context, dev_context)
-        similarity = cosine_similarity([prog_context.vector], [dev_context.vector])[0][
-            0
-        ]
+        similarity = cosine_similarity([prog_context.vector], [dev_context.vector])[0][0]
         print(f"   Semantic similarity: {similarity:.3f} (should be > 0.95)")
         print(f"   Explanation: {match.explanation}")
 
@@ -129,9 +126,7 @@ class SemanticMatchingDemo:
         python_ds = self.context_filter.apply_context(python_skill, "data_science")
         python_web = self.context_filter.apply_context(python_skill, "web_development")
 
-        print(
-            f"   DS relevance: {python_ds.relevance_score:.3f}, Web relevance: {python_web.relevance_score:.3f}"
-        )
+        print(f"   DS relevance: {python_ds.relevance_score:.3f}, Web relevance: {python_web.relevance_score:.3f}")
         # Show relevance scores
         print("   Difference shows context matters!")
 
@@ -139,35 +134,23 @@ class SemanticMatchingDemo:
         """Show that complementary skills are rewarded"""
         print("\n3. Relationship Understanding:")
 
-        candidate = CandidateProfile(
-            skills=["python", "sql", "data analysis"], experience="3 years data science"
-        )
+        candidate = CandidateProfile(skills=["python", "sql", "data analysis"], experience="3 years data science")
 
-        job1 = JobDescription(
-            skills=["python", "pandas", "machine learning"], domain="data_science"
-        )
+        job1 = JobDescription(skills=["python", "pandas", "machine learning"], domain="data_science")
 
-        job2 = JobDescription(
-            skills=["javascript", "react", "frontend"], domain="web_development"
-        )
+        job2 = JobDescription(skills=["javascript", "react", "frontend"], domain="web_development")
 
         # Embed and match
         candidate_embedding = self._embed_candidate(candidate)
         job1_embedding = self._embed_job(job1)
         job2_embedding = self._embed_job(job2)
 
-        match1 = self.matcher.calculate_semantic_similarity(
-            candidate_embedding, job1_embedding
-        )
-        match2 = self.matcher.calculate_semantic_similarity(
-            candidate_embedding, job2_embedding
-        )
+        match1 = self.matcher.calculate_semantic_similarity(candidate_embedding, job1_embedding)
+        match2 = self.matcher.calculate_semantic_similarity(candidate_embedding, job2_embedding)
 
         print(f"   Match with Data Science job: {match1.score:.3f}")
         print(f"   Match with Web Dev job: {match2.score:.3f}")
-        print(
-            f"   Difference: {match1.score - match2.score:.3f} (should be significant)"
-        )
+        print(f"   Difference: {match1.score - match2.score:.3f} (should be significant)")
 
     def _demo_intuitive_validation(self):
         """Show that matches align with human intuition"""
@@ -226,9 +209,7 @@ class OptimizedSemanticEngine:
         self.embedding_cache = {}  # Cache embeddings for common skills
         self.similarity_cache = {}  # Cache similarity calculations
 
-    def batch_process_skills(
-        self, skills: List[str], context: str
-    ) -> List[SemanticVector]:
+    def batch_process_skills(self, skills: List[str], context: str) -> List[SemanticVector]:
         """Process multiple skills efficiently"""
 
         # Check cache first
@@ -255,9 +236,7 @@ class OptimizedSemanticEngine:
 
         return cached_results
 
-    def _batch_embed_skills(
-        self, skills: List[str], context: str
-    ) -> List[SemanticVector]:
+    def _batch_embed_skills(self, skills: List[str], context: str) -> List[SemanticVector]:
         """Optimized batch processing"""
         # Use vectorized operations where possible
         base_embeddings = np.random.rand(len(skills), 384)  # Mock embeddings
@@ -270,9 +249,7 @@ class OptimizedSemanticEngine:
 
         return results
 
-    def _enhance_embedding(
-        self, embedding: np.array, skill: str, context: str
-    ) -> np.array:
+    def _enhance_embedding(self, embedding: np.array, skill: str, context: str) -> np.array:
         """Apply ontology and context enhancement"""
         # Simplified enhancement for demo
         return embedding

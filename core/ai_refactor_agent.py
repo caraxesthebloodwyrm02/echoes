@@ -118,9 +118,7 @@ Recent Commits: {recent_commits}
 This analysis helps the AI understand what has changed and focus refactoring efforts accordingly.
 """
 
-    def generate_iterative_refactor_prompt(
-        self, iteration: int, total_iterations: int
-    ) -> str:
+    def generate_iterative_refactor_prompt(self, iteration: int, total_iterations: int) -> str:
         """Generate prompt for iterative refactoring"""
 
         codebase_content = self.analyze_codebase()
@@ -287,9 +285,7 @@ This analysis helps the AI understand what has changed and focus refactoring eff
                 elif change_type == "delete_file":
                     if full_path.exists():
                         # Be careful with deletions - require explicit confirmation
-                        print(
-                            f"⚠️  Deletion suggested: {file_path} (manual review required)"
-                        )
+                        print(f"⚠️  Deletion suggested: {file_path} (manual review required)")
                     else:
                         print(f"⚠️  File not found for deletion: {file_path}")
 
@@ -419,13 +415,9 @@ CONTENT PREVIEW:
 
 def main():
     """Main entry point with CLI interface"""
-    parser = argparse.ArgumentParser(
-        description="AI Refactor Agent - Automated Codebase Refactoring"
-    )
+    parser = argparse.ArgumentParser(description="AI Refactor Agent - Automated Codebase Refactoring")
 
-    parser.add_argument(
-        "command", choices=["run", "analyze", "config"], help="Command to execute"
-    )
+    parser.add_argument("command", choices=["run", "analyze", "config"], help="Command to execute")
 
     parser.add_argument(
         "--iterations",
@@ -434,13 +426,9 @@ def main():
         help="Number of refactoring iterations (default: 3)",
     )
 
-    parser.add_argument(
-        "--no-commit", action="store_true", help="Don't auto-commit changes"
-    )
+    parser.add_argument("--no-commit", action="store_true", help="Don't auto-commit changes")
 
-    parser.add_argument(
-        "--no-test", action="store_true", help="Don't run tests after refactoring"
-    )
+    parser.add_argument("--no-test", action="store_true", help="Don't run tests after refactoring")
 
     args = parser.parse_args()
 

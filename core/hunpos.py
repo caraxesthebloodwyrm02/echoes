@@ -53,9 +53,7 @@ class HunposTagger(TaggerI):
         [('What', 'WP'), ('is', 'VBZ'), ('the', 'DT'), ('airspeed', 'NN'), ('of', 'IN'), ('an', 'DT'), ('unladen', 'NN'), ('swallow', 'VB'), ('?', '.')]
     """
 
-    def __init__(
-        self, path_to_model, path_to_bin=None, encoding=_hunpos_charset, verbose=False
-    ):
+    def __init__(self, path_to_model, path_to_bin=None, encoding=_hunpos_charset, verbose=False):
         """
         Starts the hunpos-tag executable and establishes a connection with it.
 
@@ -90,9 +88,7 @@ class HunposTagger(TaggerI):
             verbose=verbose,
         )
 
-        self._hunpos_model = find_file(
-            path_to_model, env_vars=("HUNPOS_TAGGER",), verbose=verbose
-        )
+        self._hunpos_model = find_file(path_to_model, env_vars=("HUNPOS_TAGGER",), verbose=verbose)
         self._encoding = encoding
         self._hunpos = Popen(
             [self._hunpos_bin, self._hunpos_model],

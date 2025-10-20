@@ -64,7 +64,6 @@ AR_LIKE_m: list[np.timedelta64]
 AR_LIKE_M: list[np.datetime64]
 AR_LIKE_O: list[np.object_]
 
-
 # Array subtraction
 
 assert_type(AR_number - AR_number, npt.NDArray[np.number])
@@ -662,7 +661,7 @@ assert_type(AR_Any + 2, npt.NDArray[Any])
 assert_type(AR_floating + f, npt.NDArray[np.floating])
 assert_type(AR_floating - f, npt.NDArray[np.floating])
 assert_type(AR_floating * f, npt.NDArray[np.floating])
-assert_type(AR_floating ** f, npt.NDArray[np.floating])
+assert_type(AR_floating**f, npt.NDArray[np.floating])
 assert_type(AR_floating / f, npt.NDArray[np.floating])
 assert_type(AR_floating // f, npt.NDArray[np.floating])
 assert_type(AR_floating % f, npt.NDArray[np.floating])
@@ -671,7 +670,7 @@ assert_type(divmod(AR_floating, f), tuple[npt.NDArray[np.floating], npt.NDArray[
 assert_type(f + AR_floating, npt.NDArray[np.floating])
 assert_type(f - AR_floating, npt.NDArray[np.floating])
 assert_type(f * AR_floating, npt.NDArray[np.floating])
-assert_type(f ** AR_floating, npt.NDArray[np.floating])
+assert_type(f**AR_floating, npt.NDArray[np.floating])
 assert_type(f / AR_floating, npt.NDArray[np.floating])
 assert_type(f // AR_floating, npt.NDArray[np.floating])
 assert_type(f % AR_floating, npt.NDArray[np.floating])

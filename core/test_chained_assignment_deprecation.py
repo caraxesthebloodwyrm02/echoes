@@ -46,9 +46,7 @@ def test_methods_iloc_warn(using_copy_on_write):
         ("ffill", ()),
     ],
 )
-def test_methods_iloc_getitem_item_cache(
-    func, args, using_copy_on_write, warn_copy_on_write
-):
+def test_methods_iloc_getitem_item_cache(func, args, using_copy_on_write, warn_copy_on_write):
     # ensure we don't incorrectly raise chained assignment warning because
     # of the item cache / iloc not setting the item cache
     df_orig = DataFrame({"a": [1, 2, 3], "b": 1})
@@ -95,9 +93,7 @@ def test_methods_iloc_getitem_item_cache(
             getattr(df["a"], func)(*args, inplace=True)
 
 
-def test_methods_iloc_getitem_item_cache_fillna(
-    using_copy_on_write, warn_copy_on_write
-):
+def test_methods_iloc_getitem_item_cache_fillna(using_copy_on_write, warn_copy_on_write):
     # ensure we don't incorrectly raise chained assignment warning because
     # of the item cache / iloc not setting the item cache
     df_orig = DataFrame({"a": [1, 2, 3], "b": 1})
@@ -143,9 +139,7 @@ def test_methods_iloc_getitem_item_cache_fillna(
 
 
 # TODO(CoW-warn) expand the cases
-@pytest.mark.parametrize(
-    "indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])])
 def test_series_setitem(indexer, using_copy_on_write, warn_copy_on_write):
     # ensure we only get a single warning for those typical cases of chained
     # assignment
@@ -167,9 +161,7 @@ def test_series_setitem(indexer, using_copy_on_write, warn_copy_on_write):
 
 
 @pytest.mark.filterwarnings("ignore::pandas.errors.SettingWithCopyWarning")
-@pytest.mark.parametrize(
-    "indexer", ["a", ["a", "b"], slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", ["a", ["a", "b"], slice(0, 2), np.array([True, False, True])])
 def test_frame_setitem(indexer, using_copy_on_write):
     df = DataFrame({"a": [1, 2, 3, 4, 5], "b": 1})
 
@@ -180,9 +172,7 @@ def test_frame_setitem(indexer, using_copy_on_write):
             df[0:3][indexer] = 10
 
 
-@pytest.mark.parametrize(
-    "indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])])
 def test_series_iloc_setitem(indexer):
     df = DataFrame({"a": [1, 2, 3], "b": 1})
 
@@ -191,9 +181,7 @@ def test_series_iloc_setitem(indexer):
             df["a"].iloc[indexer] = 0
 
 
-@pytest.mark.parametrize(
-    "indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])])
 def test_frame_iloc_setitem(indexer, using_copy_on_write):
     df = DataFrame({"a": [1, 2, 3, 4, 5], "b": 1})
 
@@ -204,9 +192,7 @@ def test_frame_iloc_setitem(indexer, using_copy_on_write):
             df[0:3].iloc[indexer] = 10
 
 
-@pytest.mark.parametrize(
-    "indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", [0, [0, 1], slice(0, 2), np.array([True, False, True])])
 def test_series_loc_setitem(indexer):
     df = DataFrame({"a": [1, 2, 3], "b": 1})
 
@@ -215,9 +201,7 @@ def test_series_loc_setitem(indexer):
             df["a"].loc[indexer] = 0
 
 
-@pytest.mark.parametrize(
-    "indexer", [0, [0, 1], (0, "a"), slice(0, 2), np.array([True, False, True])]
-)
+@pytest.mark.parametrize("indexer", [0, [0, 1], (0, "a"), slice(0, 2), np.array([True, False, True])])
 def test_frame_loc_setitem(indexer, using_copy_on_write):
     df = DataFrame({"a": [1, 2, 3, 4, 5], "b": 1})
 

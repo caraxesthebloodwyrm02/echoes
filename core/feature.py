@@ -82,11 +82,7 @@ class Feature(metaclass=ABCMeta):
                 self.positions = tuple(range(positions, end + 1))
             except TypeError as e:
                 # let any kind of erroneous spec raise ValueError
-                raise ValueError(
-                    "illegal interval specification: (start={}, end={})".format(
-                        positions, end
-                    )
-                ) from e
+                raise ValueError("illegal interval specification: (start={}, end={})".format(positions, end)) from e
 
         # set property name given in subclass, or otherwise name of subclass
         self.PROPERTY_NAME = self.__class__.PROPERTY_NAME or self.__class__.__name__
@@ -189,9 +185,7 @@ class Feature(metaclass=ABCMeta):
 
 
         """
-        return self.__class__ is other.__class__ and set(self.positions) >= set(
-            other.positions
-        )
+        return self.__class__ is other.__class__ and set(self.positions) >= set(other.positions)
 
     def intersects(self, other):
         """
@@ -222,10 +216,7 @@ class Feature(metaclass=ABCMeta):
         :rtype: bool
         """
 
-        return bool(
-            self.__class__ is other.__class__
-            and set(self.positions) & set(other.positions)
-        )
+        return bool(self.__class__ is other.__class__ and set(self.positions) & set(other.positions))
 
     # Rich comparisons for Features. With @functools.total_ordering (Python 2.7+),
     # it will be enough to define __lt__ and __eq__

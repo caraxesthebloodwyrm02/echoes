@@ -6,7 +6,7 @@ from __future__ import annotations
 import hashlib
 import os
 from textwrap import dedent
-from typing import IO, TYPE_CHECKING, Union
+from typing import IO, TYPE_CHECKING
 from pathlib import Path
 
 from pip._vendor.cachecontrol.cache import BaseCache, SeparateBodyBaseCache
@@ -111,9 +111,7 @@ class _FileCacheMixin:
         except FileNotFoundError:
             return None
 
-    def set(
-        self, key: str, value: bytes, expires: int | datetime | None = None
-    ) -> None:
+    def set(self, key: str, value: bytes, expires: int | datetime | None = None) -> None:
         name = self._fn(key)
         self._write(name, value)
 

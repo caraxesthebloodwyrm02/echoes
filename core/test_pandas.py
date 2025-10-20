@@ -91,10 +91,7 @@ def assert_json_roundtrip_equal(result, expected, orient):
 class TestPandasContainer:
     @pytest.fixture
     def categorical_frame(self):
-        data = {
-            c: np.random.default_rng(i).standard_normal(30)
-            for i, c in enumerate(list("ABCD"))
-        }
+        data = {c: np.random.default_rng(i).standard_normal(30) for i, c in enumerate(list("ABCD"))}
         cat = ["bah"] * 5 + ["bar"] * 5 + ["baz"] * 5 + ["foo"] * 15
         data["E"] = list(reversed(cat))
         data["sort"] = np.arange(30, dtype="int64")
@@ -165,9 +162,7 @@ class TestPandasContainer:
     def test_frame_non_unique_columns(self, orient, data):
         df = DataFrame(data, index=[1, 2], columns=["x", "x"])
 
-        result = read_json(
-            StringIO(df.to_json(orient=orient)), orient=orient, convert_dates=["x"]
-        )
+        result = read_json(StringIO(df.to_json(orient=orient)), orient=orient, convert_dates=["x"])
         if orient == "values":
             expected = DataFrame(data)
             if expected.iloc[:, 0].dtype == "datetime64[ns]":
@@ -244,24 +239,16 @@ class TestPandasContainer:
         assert_json_roundtrip_equal(result, expected, orient)
 
     @pytest.mark.parametrize("convert_axes", [True, False])
-    def test_roundtrip_categorical(
-        self, request, orient, categorical_frame, convert_axes, using_infer_string
-    ):
+    def test_roundtrip_categorical(self, request, orient, categorical_frame, convert_axes, using_infer_string):
         # TODO: create a better frame to test with and improve coverage
         if orient in ("index", "columns"):
-            request.applymarker(
-                pytest.mark.xfail(
-                    reason=f"Can't have duplicate index values for orient '{orient}')"
-                )
-            )
+            request.applymarker(pytest.mark.xfail(reason=f"Can't have duplicate index values for orient '{orient}')"))
 
         data = StringIO(categorical_frame.to_json(orient=orient))
         result = read_json(data, orient=orient, convert_axes=convert_axes)
 
         expected = categorical_frame.copy()
-        expected.index = expected.index.astype(
-            str if not using_infer_string else "str"
-        )  # Categorical not preserved
+        expected.index = expected.index.astype(str if not using_infer_string else "str")  # Categorical not preserved
         expected.index.name = None  # index names aren't preserved in JSON
         assert_json_roundtrip_equal(result, expected, orient)
 
@@ -344,9 +331,7 @@ class TestPandasContainer:
             ('{"key":b:a:d}', "Expected object or value", "columns"),
             # too few indices
             (
-                '{"columns":["A","B"],'
-                '"index":["2","3"],'
-                '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
+                '{"columns":["A","B"],' '"index":["2","3"],' '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
                 "|".join(
                     [
                         r"Length of values \(3\) does not match length of index \(2\)",
@@ -356,17 +341,13 @@ class TestPandasContainer:
             ),
             # too many columns
             (
-                '{"columns":["A","B","C"],'
-                '"index":["1","2","3"],'
-                '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
+                '{"columns":["A","B","C"],' '"index":["1","2","3"],' '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
                 "3 columns passed, passed data had 2 columns",
                 "split",
             ),
             # bad key
             (
-                '{"badkey":["A","B"],'
-                '"index":["2","3"],'
-                '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
+                '{"badkey":["A","B"],' '"index":["2","3"],' '"data":[[1.0,"1"],[2.0,"2"],[null,"3"]]}',
                 r"unexpected key\(s\): badkey",
                 "split",
             ),
@@ -477,9 +458,7 @@ class TestPandasContainer:
             [40, 4, "qux", 0.4, 0.04],
         ]
 
-        df = DataFrame(
-            vals, index=list("abcd"), columns=["1st", "2nd", "3rd", "4th", "5th"]
-        )
+        df = DataFrame(vals, index=list("abcd"), columns=["1st", "2nd", "3rd", "4th", "5th"])
 
         assert df._is_mixed_type
         right = df.copy()
@@ -613,9 +592,7 @@ class TestPandasContainer:
         )
 
         # JSON deserialisation always creates unicode strings
-        df_mixed.columns = df_mixed.columns.astype(
-            np.str_ if not using_infer_string else "str"
-        )
+        df_mixed.columns = df_mixed.columns.astype(np.str_ if not using_infer_string else "str")
         data = StringIO(df_mixed.to_json(orient="split"))
         df_roundtrip = read_json(data, orient="split")
         tm.assert_frame_equal(
@@ -660,10 +637,7 @@ class TestPandasContainer:
         result = df_nonprintable.to_json(default_handler=str)
         expected = f'{{"A":{{"0":"{hexed}"}}}}'
         assert result == expected
-        assert (
-            df_mixed.to_json(default_handler=str)
-            == f'{{"A":{{"0":"{hexed}"}},"B":{{"0":1}}}}'
-        )
+        assert df_mixed.to_json(default_handler=str) == f'{{"A":{{"0":"{hexed}"}},"B":{{"0":1}}}}'
 
     def test_label_overflow(self):
         # GH14256: buffer length not checked when writing label
@@ -680,13 +654,9 @@ class TestPandasContainer:
 
         tm.assert_series_equal(
             s,
-            read_json(
-                StringIO(s.to_json(orient="split")), orient="split", typ="series"
-            ),
+            read_json(StringIO(s.to_json(orient="split")), orient="split", typ="series"),
         )
-        unserialized = read_json(
-            StringIO(s.to_json(orient="records")), orient="records", typ="series"
-        )
+        unserialized = read_json(StringIO(s.to_json(orient="records")), orient="records", typ="series")
         tm.assert_equal(s.values, unserialized.values)
 
     def test_series_default_orient(self, string_series):
@@ -864,9 +834,7 @@ class TestPandasContainer:
         if date_format == "epoch":
             expected = '{"1577836800000":1577836800000,"null":null}'
         else:
-            expected = (
-                '{"2020-01-01T00:00:00.000":"2020-01-01T00:00:00.000","null":null}'
-            )
+            expected = '{"2020-01-01T00:00:00.000":"2020-01-01T00:00:00.000","null":null}'
 
         if as_object:
             expected = expected.replace("}", ',"a":"a"}')
@@ -889,9 +857,7 @@ class TestPandasContainer:
         # GH10747
 
         data = [{"id": 1, infer_word: 1036713600000}, {"id": 2}]
-        expected = DataFrame(
-            [[1, Timestamp("2002-11-08")], [2, pd.NaT]], columns=["id", infer_word]
-        )
+        expected = DataFrame([[1, Timestamp("2002-11-08")], [2, pd.NaT]], columns=["id", infer_word])
 
         result = read_json(StringIO(ujson_dumps(data)))[["id", infer_word]]
         tm.assert_frame_equal(result, expected)
@@ -1036,9 +1002,7 @@ class TestPandasContainer:
         read_json(StringIO(s))
 
     def test_doc_example(self):
-        dfj2 = DataFrame(
-            np.random.default_rng(2).standard_normal((5, 2)), columns=list("AB")
-        )
+        dfj2 = DataFrame(np.random.default_rng(2).standard_normal((5, 2)), columns=list("AB"))
         dfj2["date"] = Timestamp("20130101")
         dfj2["ints"] = range(5)
         dfj2["bools"] = True
@@ -1093,9 +1057,7 @@ class TestPandasContainer:
 
         frame = DataFrame([timedelta(23), timedelta(seconds=5)])
         assert frame[0].dtype == "timedelta64[ns]"
-        tm.assert_frame_equal(
-            frame, read_json(StringIO(frame.to_json())).apply(converter)
-        )
+        tm.assert_frame_equal(frame, read_json(StringIO(frame.to_json())).apply(converter))
 
     def test_timedelta2(self):
         frame = DataFrame(
@@ -1116,9 +1078,7 @@ class TestPandasContainer:
         ts = Timestamp("20130101")
         frame = DataFrame({"a": [td, ts]}, dtype=object)
 
-        expected = DataFrame(
-            {"a": [pd.Timedelta(td).as_unit("ns")._value, ts.as_unit("ns")._value]}
-        )
+        expected = DataFrame({"a": [pd.Timedelta(td).as_unit("ns")._value, ts.as_unit("ns")._value]})
         data = StringIO(frame.to_json(date_unit="ns"))
         result = read_json(data, dtype={"a": "int64"})
         tm.assert_frame_equal(result, expected, check_index_type=False)
@@ -1134,9 +1094,7 @@ class TestPandasContainer:
 
         ser = Series(data, index=data)
         if date_format == "iso":
-            expected = (
-                '{"P1DT0H0M0S":"P1DT0H0M0S","P2DT0H0M0S":"P2DT0H0M0S","null":null}'
-            )
+            expected = '{"P1DT0H0M0S":"P1DT0H0M0S","P2DT0H0M0S":"P2DT0H0M0S","null":null}'
         else:
             expected = '{"86400000":86400000,"172800000":172800000,"null":null}'
 
@@ -1178,13 +1136,8 @@ class TestPandasContainer:
                 columns=["a", "b"],
             ),
         ]
-        expected = (
-            '[9,[[1,null],["STR",null],[[["mathjs","Complex"],'
-            '["re",4.0],["im",-5.0]],"N\\/A"]]]'
-        )
-        assert (
-            ujson_dumps(df_list, default_handler=default, orient="values") == expected
-        )
+        expected = '[9,[[1,null],["STR",null],[[["mathjs","Complex"],' '["re",4.0],["im",-5.0]],"N\\/A"]]]'
+        assert ujson_dumps(df_list, default_handler=default, orient="values") == expected
 
     def test_default_handler_numpy_unsupported_dtype(self):
         # GH12554 to_json raises 'Unhandled numpy dtype 15'
@@ -1192,11 +1145,7 @@ class TestPandasContainer:
             {"a": [1, 2.3, complex(4, -5)], "b": [float("nan"), None, complex(1.2, 0)]},
             columns=["a", "b"],
         )
-        expected = (
-            '[["(1+0j)","(nan+0j)"],'
-            '["(2.3+0j)","(nan+0j)"],'
-            '["(4-5j)","(1.2+0j)"]]'
-        )
+        expected = '[["(1+0j)","(nan+0j)"],' '["(2.3+0j)","(nan+0j)"],' '["(4-5j)","(1.2+0j)"]]'
         assert df.to_json(default_handler=str, orient="values") == expected
 
     def test_default_handler_raises(self):
@@ -1206,13 +1155,9 @@ class TestPandasContainer:
             raise TypeError(msg)
 
         with pytest.raises(TypeError, match=msg):
-            DataFrame({"a": [1, 2, object()]}).to_json(
-                default_handler=my_handler_raises
-            )
+            DataFrame({"a": [1, 2, object()]}).to_json(default_handler=my_handler_raises)
         with pytest.raises(TypeError, match=msg):
-            DataFrame({"a": [1, 2, complex(4, -5)]}).to_json(
-                default_handler=my_handler_raises
-            )
+            DataFrame({"a": [1, 2, complex(4, -5)]}).to_json(default_handler=my_handler_raises)
 
     def test_categorical(self):
         # GH4377 df.to_json segfaults with non-ndarray blocks
@@ -1292,11 +1237,7 @@ class TestPandasContainer:
     )
     def test_tz_range_is_utc(self, tz_range):
         exp = '["2013-01-01T05:00:00.000Z","2013-01-02T05:00:00.000Z"]'
-        dfexp = (
-            '{"DT":{'
-            '"0":"2013-01-01T05:00:00.000Z",'
-            '"1":"2013-01-02T05:00:00.000Z"}}'
-        )
+        dfexp = '{"DT":{' '"0":"2013-01-01T05:00:00.000Z",' '"1":"2013-01-02T05:00:00.000Z"}}'
 
         assert ujson_dumps(tz_range, iso_dates=True) == exp
         dti = DatetimeIndex(tz_range)
@@ -1469,9 +1410,7 @@ class TestPandasContainer:
 
         assert size_before == size_after
 
-    @pytest.mark.parametrize(
-        "index", [None, [1, 2], [1.0, 2.0], ["a", "b"], ["1", "2"], ["1.", "2."]]
-    )
+    @pytest.mark.parametrize("index", [None, [1, 2], [1.0, 2.0], ["a", "b"], ["1", "2"], ["1.", "2."]])
     @pytest.mark.parametrize("columns", [["a", "b"], ["1", "2"], ["1.", "2."]])
     def test_from_json_to_json_table_index_and_columns(self, index, columns):
         # GH25433 GH25435
@@ -1501,9 +1440,7 @@ class TestPandasContainer:
                 "Object": Series([None, "", "c"], dtype="object"),
                 "Bool": Series([True, False, True], dtype="bool"),
                 "Category": Series(["a", "b", None], dtype="category"),
-                "Datetime": Series(
-                    ["2020-01-01", None, "2020-01-03"], dtype="datetime64[ns]"
-                ),
+                "Datetime": Series(["2020-01-01", None, "2020-01-03"], dtype="datetime64[ns]"),
             }
         )
         dfjson = expected.to_json(orient=orient)
@@ -1560,9 +1497,7 @@ class TestPandasContainer:
                 {"columns": ["a", "b"], "data": [[1, 2], [4, 5]]},
             ),
             (
-                DataFrame(
-                    [[1, 2], [4, 5]], columns=["a", "b"], index=[["a", "b"], ["c", "d"]]
-                ),
+                DataFrame([[1, 2], [4, 5]], columns=["a", "b"], index=[["a", "b"], ["c", "d"]]),
                 {"columns": ["a", "b"], "data": [[1, 2], [4, 5]]},
             ),
             (Series([1, 2, 3], name="A"), {"name": "A", "data": [1, 2, 3]}),
@@ -1590,11 +1525,7 @@ class TestPandasContainer:
         [
             (DataFrame([[1, 2], [4, 5]], columns=["a", "b"])),
             (DataFrame([[1, 2], [4, 5]], columns=["a", "b"]).rename_axis("foo")),
-            (
-                DataFrame(
-                    [[1, 2], [4, 5]], columns=["a", "b"], index=[["a", "b"], ["c", "d"]]
-                )
-            ),
+            (DataFrame([[1, 2], [4, 5]], columns=["a", "b"], index=[["a", "b"], ["c", "d"]])),
             (Series([1, 2, 3], name="A")),
             (Series([1, 2, 3], name="A").rename_axis("foo")),
             (Series([1, 2], name="A", index=[["a", "b"], ["c", "d"]])),
@@ -1621,10 +1552,7 @@ class TestPandasContainer:
 
         df = DataFrame([[1, 2], [4, 5]], columns=["a", "b"])
 
-        msg = (
-            "'index=False' is only valid when 'orient' is 'split', "
-            "'table', 'records', or 'values'"
-        )
+        msg = "'index=False' is only valid when 'orient' is 'split', " "'table', 'records', or 'values'"
         with pytest.raises(ValueError, match=msg):
             df.to_json(orient=orient, index=False)
 
@@ -1635,10 +1563,7 @@ class TestPandasContainer:
 
         df = DataFrame([[1, 2], [4, 5]], columns=["a", "b"])
 
-        msg = (
-            "'index=True' is only valid when 'orient' is 'split', "
-            "'table', 'index', or 'columns'"
-        )
+        msg = "'index=True' is only valid when 'orient' is 'split', " "'table', 'index', or 'columns'"
         with pytest.raises(ValueError, match=msg):
             df.to_json(orient=orient, index=True)
 
@@ -1654,9 +1579,7 @@ class TestPandasContainer:
 
     def test_read_timezone_information(self):
         # GH 25546
-        result = read_json(
-            StringIO('{"2019-01-01T11:00:00.000Z":88}'), typ="series", orient="index"
-        )
+        result = read_json(StringIO('{"2019-01-01T11:00:00.000Z":88}'), typ="series", orient="index")
         exp_dti = DatetimeIndex(["2019-01-01 11:00:00"], dtype="M8[ns, UTC]")
         expected = Series([88], index=exp_dti)
         tm.assert_series_equal(result, expected)
@@ -1683,16 +1606,12 @@ class TestPandasContainer:
     def test_read_json_with_very_long_file_path(self, compression):
         # GH 46718
         long_json_path = f'{"a" * 1000}.json{compression}'
-        with pytest.raises(
-            FileNotFoundError, match=f"File {long_json_path} does not exist"
-        ):
+        with pytest.raises(FileNotFoundError, match=f"File {long_json_path} does not exist"):
             # path too long for Windows is handled in file_exists() but raises in
             # _get_data_from_filepath()
             read_json(long_json_path)
 
-    @pytest.mark.parametrize(
-        "date_format,key", [("epoch", 86400000), ("iso", "P1DT0H0M0S")]
-    )
+    @pytest.mark.parametrize("date_format,key", [("epoch", 86400000), ("iso", "P1DT0H0M0S")])
     def test_timedelta_as_label(self, date_format, key):
         df = DataFrame([[1]], columns=[pd.Timedelta("1D")])
         expected = f'{{"{key}":{{"0":1}}}}'
@@ -1709,16 +1628,12 @@ class TestPandasContainer:
             pytest.param(
                 "split",
                 "",
-                marks=pytest.mark.xfail(
-                    reason="Produces JSON but not in a consistent manner"
-                ),
+                marks=pytest.mark.xfail(reason="Produces JSON but not in a consistent manner"),
             ),
             pytest.param(
                 "table",
                 "",
-                marks=pytest.mark.xfail(
-                    reason="Produces JSON but not in a consistent manner"
-                ),
+                marks=pytest.mark.xfail(reason="Produces JSON but not in a consistent manner"),
             ),
         ],
     )
@@ -1750,8 +1665,7 @@ class TestPandasContainer:
 
     @pytest.mark.skipif(
         using_string_dtype(),
-        reason="Adjust expected when infer_string is default, no bug here, "
-        "just a complicated parametrization",
+        reason="Adjust expected when infer_string is default, no bug here, " "just a complicated parametrization",
     )
     @pytest.mark.parametrize(
         "orient,expected",
@@ -1882,13 +1796,9 @@ class TestPandasContainer:
 
     def test_emca_262_nan_inf_support(self):
         # GH 12213
-        data = StringIO(
-            '["a", NaN, "NaN", Infinity, "Infinity", -Infinity, "-Infinity"]'
-        )
+        data = StringIO('["a", NaN, "NaN", Infinity, "Infinity", -Infinity, "-Infinity"]')
         result = read_json(data)
-        expected = DataFrame(
-            ["a", None, "NaN", np.inf, "Infinity", -np.inf, "-Infinity"]
-        )
+        expected = DataFrame(["a", None, "NaN", np.inf, "Infinity", -np.inf, "-Infinity"])
         tm.assert_frame_equal(result, expected)
 
     def test_frame_int_overflow(self):
@@ -1903,8 +1813,7 @@ class TestPandasContainer:
         [
             (
                 DataFrame({"x": [1, 2, 3], "y": ["a", "b", "c"]}),
-                '{"(0, \'x\')":1,"(0, \'y\')":"a","(1, \'x\')":2,'
-                '"(1, \'y\')":"b","(2, \'x\')":3,"(2, \'y\')":"c"}',
+                '{"(0, \'x\')":1,"(0, \'y\')":"a","(1, \'x\')":2,' '"(1, \'y\')":"b","(2, \'x\')":3,"(2, \'y\')":"c"}',
             )
         ],
     )
@@ -1982,15 +1891,11 @@ class TestPandasContainer:
         [
             (
                 Series({0: -6 + 8j, 1: 0 + 1j, 2: 9 - 5j}),
-                '{"0":{"imag":8.0,"real":-6.0},'
-                '"1":{"imag":1.0,"real":0.0},'
-                '"2":{"imag":-5.0,"real":9.0}}',
+                '{"0":{"imag":8.0,"real":-6.0},' '"1":{"imag":1.0,"real":0.0},' '"2":{"imag":-5.0,"real":9.0}}',
             ),
             (
                 Series({0: -9.39 + 0.66j, 1: 3.95 + 9.32j, 2: 4.03 - 0.17j}),
-                '{"0":{"imag":0.66,"real":-9.39},'
-                '"1":{"imag":9.32,"real":3.95},'
-                '"2":{"imag":-0.17,"real":4.03}}',
+                '{"0":{"imag":0.66,"real":-9.39},' '"1":{"imag":9.32,"real":3.95},' '"2":{"imag":-0.17,"real":4.03}}',
             ),
             (
                 DataFrame([[-2 + 3j, -1 - 0j], [4 - 3j, -0 - 10j]]),
@@ -2000,9 +1905,7 @@ class TestPandasContainer:
                 '"1":{"imag":-10.0,"real":0.0}}}',
             ),
             (
-                DataFrame(
-                    [[-0.28 + 0.34j, -1.08 - 0.39j], [0.41 - 0.34j, -0.78 - 1.35j]]
-                ),
+                DataFrame([[-0.28 + 0.34j, -1.08 - 0.39j], [0.41 - 0.34j, -0.78 - 1.35j]]),
                 '{"0":{"0":{"imag":0.34,"real":-0.28},'
                 '"1":{"imag":-0.34,"real":0.41}},'
                 '"1":{"0":{"imag":-0.39,"real":-1.08},'
@@ -2017,18 +1920,13 @@ class TestPandasContainer:
 
     def test_json_uint64(self):
         # GH21073
-        expected = (
-            '{"columns":["col1"],"index":[0,1],'
-            '"data":[[13342205958987758245],[12388075603347835679]]}'
-        )
+        expected = '{"columns":["col1"],"index":[0,1],' '"data":[[13342205958987758245],[12388075603347835679]]}'
         df = DataFrame(data={"col1": [13342205958987758245, 12388075603347835679]})
         result = df.to_json(orient="split")
         assert result == expected
 
     @pytest.mark.xfail(using_string_dtype(), reason="TODO(infer_string)", strict=False)
-    def test_read_json_dtype_backend(
-        self, string_storage, dtype_backend, orient, using_infer_string
-    ):
+    def test_read_json_dtype_backend(self, string_storage, dtype_backend, orient, using_infer_string):
         # GH#50750
         df = DataFrame(
             {
@@ -2045,9 +1943,7 @@ class TestPandasContainer:
 
         out = df.to_json(orient=orient)
         with pd.option_context("mode.string_storage", string_storage):
-            result = read_json(
-                StringIO(out), dtype_backend=dtype_backend, orient=orient
-            )
+            result = read_json(StringIO(out), dtype_backend=dtype_backend, orient=orient)
 
         if dtype_backend == "pyarrow":
             pa = pytest.importorskip("pyarrow")
@@ -2073,10 +1969,7 @@ class TestPandasContainer:
             from pandas.arrays import ArrowExtensionArray
 
             expected = DataFrame(
-                {
-                    col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True))
-                    for col in expected.columns
-                }
+                {col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True)) for col in expected.columns}
             )
 
         if orient == "values":
@@ -2094,9 +1987,7 @@ class TestPandasContainer:
 
         out = ser.to_json(orient=orient)
         with pd.option_context("mode.string_storage", string_storage):
-            result = read_json(
-                StringIO(out), dtype_backend=dtype_backend, orient=orient, typ="series"
-            )
+            result = read_json(StringIO(out), dtype_backend=dtype_backend, orient=orient, typ="series")
 
         expected = Series([1, np.nan, 3], dtype="Int64")
 
@@ -2108,10 +1999,7 @@ class TestPandasContainer:
         tm.assert_series_equal(result, expected)
 
     def test_invalid_dtype_backend(self):
-        msg = (
-            "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-            "'pyarrow' are allowed."
-        )
+        msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
         with pytest.raises(ValueError, match=msg):
             read_json("test", dtype_backend="numpy")
 
@@ -2133,9 +2021,7 @@ def test_pyarrow_engine_lines_false():
 
 
 def test_json_roundtrip_string_inference(orient):
-    df = DataFrame(
-        [["a", "b"], ["c", "d"]], index=["row 1", "row 2"], columns=["col 1", "col 2"]
-    )
+    df = DataFrame([["a", "b"], ["c", "d"]], index=["row 1", "row 2"], columns=["col 1", "col 2"])
     out = df.to_json()
     with pd.option_context("future.infer_string", True):
         result = read_json(StringIO(out))

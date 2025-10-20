@@ -75,9 +75,7 @@ class InstructionWalker:
         assert inst is not None
         self.max_offset = inst.offset
 
-    def walk(
-        self, *, start_at: TOffset = 0, follow_jumps: bool = True
-    ) -> Iterable[dis.Instruction]:
+    def walk(self, *, start_at: TOffset = 0, follow_jumps: bool = True) -> Iterable[dis.Instruction]:
         """
         Yield instructions starting from `start_at`.  Follow unconditional
         jumps if `follow_jumps` is true.

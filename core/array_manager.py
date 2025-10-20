@@ -1,6 +1,7 @@
 """
 Experimental manager based on storing a collection of 1D arrays
 """
+
 from __future__ import annotations
 
 import itertools
@@ -343,9 +344,7 @@ class BaseArrayManager(DataManager):
 
         return self.apply(_convert)
 
-    def get_values_for_csv(
-        self, *, float_format, date_format, decimal, na_rep: str = "nan", quoting=None
-    ) -> Self:
+    def get_values_for_csv(self, *, float_format, date_format, decimal, na_rep: str = "nan", quoting=None) -> Self:
         return self.apply(
             get_values_for_csv,
             na_rep=na_rep,
@@ -402,8 +401,7 @@ class BaseArrayManager(DataManager):
             Whether to copy the blocks
         """
         return self._get_data_subset(
-            lambda arr: is_numeric_dtype(arr.dtype)
-            or getattr(arr.dtype, "_is_numeric", False)
+            lambda arr: is_numeric_dtype(arr.dtype) or getattr(arr.dtype, "_is_numeric", False)
         )
 
     def copy(self, deep: bool | Literal["all"] | None = True) -> Self:
@@ -514,9 +512,7 @@ class BaseArrayManager(DataManager):
             new_arrays = []
             for i in indexer:
                 if i == -1:
-                    arr = self._make_na_array(
-                        fill_value=fill_value, use_na_proxy=use_na_proxy
-                    )
+                    arr = self._make_na_array(fill_value=fill_value, use_na_proxy=use_na_proxy)
                 else:
                     arr = self.arrays[i]
                     if copy:
@@ -566,9 +562,7 @@ class BaseArrayManager(DataManager):
         indexer = maybe_convert_indices(indexer, n, verify=verify)
 
         new_labels = self._axes[axis].take(indexer)
-        return self._reindex_indexer(
-            new_axis=new_labels, indexer=indexer, axis=axis, allow_dups=True
-        )
+        return self._reindex_indexer(new_axis=new_labels, indexer=indexer, axis=axis, allow_dups=True)
 
     def _make_na_array(self, fill_value=None, use_na_proxy: bool = False):
         if use_na_proxy:
@@ -628,18 +622,15 @@ class ArrayManager(BaseArrayManager):
         for arr in self.arrays:
             if not len(arr) == n_rows:
                 raise ValueError(
-                    "Passed arrays should have the same length as the rows Index: "
-                    f"{len(arr)} vs {n_rows} rows"
+                    "Passed arrays should have the same length as the rows Index: " f"{len(arr)} vs {n_rows} rows"
                 )
             if not isinstance(arr, (np.ndarray, ExtensionArray)):
                 raise ValueError(
-                    "Passed arrays should be np.ndarray or ExtensionArray instances, "
-                    f"got {type(arr)} instead"
+                    "Passed arrays should be np.ndarray or ExtensionArray instances, " f"got {type(arr)} instead"
                 )
             if not arr.ndim == 1:
                 raise ValueError(
-                    "Passed arrays should be 1-dimensional, got array with "
-                    f"{arr.ndim} dimensions instead."
+                    "Passed arrays should be 1-dimensional, got array with " f"{arr.ndim} dimensions instead."
                 )
 
     # --------------------------------------------------------------------
@@ -766,9 +757,7 @@ class ArrayManager(BaseArrayManager):
             self.arrays[mgr_idx] = value_arr
         return
 
-    def column_setitem(
-        self, loc: int, idx: int | slice | np.ndarray, value, inplace_only: bool = False
-    ) -> None:
+    def column_setitem(self, loc: int, idx: int | slice | np.ndarray, value, inplace_only: bool = False) -> None:
         """
         Set values ("setitem") into a single column (not setting the full column).
 
@@ -806,9 +795,7 @@ class ArrayManager(BaseArrayManager):
                 # matches argument type "Tuple[int, slice]"
                 value = value[0, :]  # type: ignore[call-overload]
             else:
-                raise ValueError(
-                    f"Expected a 1D array, got an array with shape {value.shape}"
-                )
+                raise ValueError(f"Expected a 1D array, got an array with shape {value.shape}")
         value = maybe_coerce_values(value)
 
         # TODO self.arrays can be empty
@@ -894,9 +881,7 @@ class ArrayManager(BaseArrayManager):
             # a timedelta result array if original was timedelta
             # what if datetime results in timedelta? (eg std)
             dtype = arr.dtype if res is NaT else None
-            result_arrays.append(
-                sanitize_array([res], None, dtype=dtype)  # type: ignore[arg-type]
-            )
+            result_arrays.append(sanitize_array([res], None, dtype=dtype))  # type: ignore[arg-type]
 
         index = Index._simple_new(np.array([None], dtype=object))  # placeholder
         columns = self.items
@@ -913,9 +898,7 @@ class ArrayManager(BaseArrayManager):
         # TODO what if `other` is BlockManager ?
         left_arrays = self.arrays
         right_arrays = other.arrays
-        result_arrays = [
-            array_op(left, right) for left, right in zip(left_arrays, right_arrays)
-        ]
+        result_arrays = [array_op(left, right) for left, right in zip(left_arrays, right_arrays)]
         return type(self)(result_arrays, self._axes)
 
     def quantile(
@@ -926,9 +909,7 @@ class ArrayManager(BaseArrayManager):
         interpolation: QuantileInterpolation = "linear",
     ) -> ArrayManager:
         arrs = [ensure_block_shape(x, 2) for x in self.arrays]
-        new_arrs = [
-            quantile_compat(x, np.asarray(qs._values), interpolation) for x in arrs
-        ]
+        new_arrs = [quantile_compat(x, np.asarray(qs._values), interpolation) for x in arrs]
         for i, arr in enumerate(new_arrs):
             if arr.ndim == 2:
                 assert arr.shape[0] == 1, arr.shape
@@ -1057,10 +1038,7 @@ class ArrayManager(BaseArrayManager):
         """
         # concatting along the rows -> concat the reindexed arrays
         # TODO(ArrayManager) doesn't yet preserve the correct dtype
-        arrays = [
-            concat_arrays([mgrs[i].arrays[j] for i in range(len(mgrs))])
-            for j in range(len(mgrs[0].arrays))
-        ]
+        arrays = [concat_arrays([mgrs[i].arrays[j] for i in range(len(mgrs))]) for j in range(len(mgrs[0].arrays))]
         new_mgr = cls(arrays, [axes[1], axes[0]], verify_integrity=False)
         return new_mgr
 
@@ -1103,10 +1081,7 @@ class SingleArrayManager(BaseArrayManager, SingleDataManager):
         arr = self.arrays[0]
         assert len(arr) == n_rows
         if not arr.ndim == 1:
-            raise ValueError(
-                "Passed array should be 1-dimensional, got array with "
-                f"{arr.ndim} dimensions instead."
-            )
+            raise ValueError("Passed array should be 1-dimensional, got array with " f"{arr.ndim} dimensions instead.")
 
     @staticmethod
     def _normalize_axis(axis):
@@ -1317,9 +1292,7 @@ def concat_arrays(to_concat: list) -> ArrayLike:
         target_dtype = find_common_type([arr.dtype for arr in to_concat_no_proxy])
 
     to_concat = [
-        arr.to_array(target_dtype)
-        if isinstance(arr, NullArrayProxy)
-        else astype_array(arr, target_dtype, copy=False)
+        arr.to_array(target_dtype) if isinstance(arr, NullArrayProxy) else astype_array(arr, target_dtype, copy=False)
         for arr in to_concat
     ]
 

@@ -32,7 +32,6 @@ from fontTools.varLib.merger import MutatorMerger
 from fontTools.varLib.varStore import VarStoreInstancer
 from fontTools.varLib.mvar import MVAR_ENTRIES
 from fontTools.varLib.iup import iup_delta
-import fontTools.subset.cff
 import os.path
 import logging
 from io import BytesIO
@@ -167,8 +166,7 @@ def interpolate_cff2_metrics(varfont, topDict, glyphOrder, loc):
 
 
 @deprecateFunction(
-    "use fontTools.varLib.instancer.instantiateVariableFont instead "
-    "for either full or partial instancing",
+    "use fontTools.varLib.instancer.instantiateVariableFont instead " "for either full or partial instancing",
 )
 def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
     """Generate a static instance from a variable TTFont and a dictionary
@@ -214,19 +212,13 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
         glyphnames = sorted(
             gvar.variations.keys(),
             key=lambda name: (
-                (
-                    glyf[name].getCompositeMaxpValues(glyf).maxComponentDepth
-                    if glyf[name].isComposite()
-                    else 0
-                ),
+                (glyf[name].getCompositeMaxpValues(glyf).maxComponentDepth if glyf[name].isComposite() else 0),
                 name,
             ),
         )
         for glyphname in glyphnames:
             variations = gvar.variations[glyphname]
-            coordinates, _ = glyf._getCoordinatesAndControls(
-                glyphname, hMetrics, vMetrics
-            )
+            coordinates, _ = glyf._getCoordinatesAndControls(glyphname, hMetrics, vMetrics)
             origCoords, endPts = None, None
             for var in variations:
                 scalar = supportScalar(loc, var.axes)
@@ -235,9 +227,7 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
                 delta = var.coordinates
                 if None in delta:
                     if origCoords is None:
-                        origCoords, g = glyf._getCoordinatesAndControls(
-                            glyphname, hMetrics, vMetrics
-                        )
+                        origCoords, g = glyf._getCoordinatesAndControls(glyphname, hMetrics, vMetrics)
                     delta = iup_delta(delta, origCoords, g.endPts)
                 coordinates += GlyphCoordinates(delta) * scalar
             glyf._setCoordinates(glyphname, coordinates, hMetrics, vMetrics)
@@ -297,7 +287,7 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
 
     log.info("Mutating FeatureVariations")
     for tableTag in "GSUB", "GPOS":
-        if not tableTag in varfont:
+        if tableTag not in varfont:
             continue
         table = varfont[tableTag].table
         if not getattr(table, "FeatureVariations", None):
@@ -322,9 +312,7 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
             if applies:
                 assert record.FeatureTableSubstitution.Version == 0x00010000
                 for rec in record.FeatureTableSubstitution.SubstitutionRecord:
-                    table.FeatureList.FeatureRecord[rec.FeatureIndex].Feature = (
-                        rec.Feature
-                    )
+                    table.FeatureList.FeatureRecord[rec.FeatureIndex].Feature = rec.Feature
                 break
         del table.FeatureVariations
 
@@ -392,9 +380,7 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
         # Change maxp attributes as IDEF is added
         if "maxp" in varfont:
             maxp = varfont["maxp"]
-            setattr(
-                maxp, "maxInstructionDefs", 1 + getattr(maxp, "maxInstructionDefs", 0)
-            )
+            setattr(maxp, "maxInstructionDefs", 1 + getattr(maxp, "maxInstructionDefs", 0))
             setattr(
                 maxp,
                 "maxStackElements",
@@ -418,11 +404,7 @@ def instantiateVariableFont(varfont, location, inplace=False, overlap=True):
             ]
             if set(excludedUnicodeLangIDs) == set(range(len((varfont["ltag"].tags)))):
                 del varfont["ltag"]
-        varfont["name"].names[:] = [
-            n
-            for n in varfont["name"].names
-            if n.nameID < 256 or n.nameID not in exclude
-        ]
+        varfont["name"].names[:] = [n for n in varfont["name"].names if n.nameID < 256 or n.nameID not in exclude]
 
     if "wght" in location and "OS/2" in varfont:
         varfont["OS/2"].usWeightClass = otRound(max(1, min(location["wght"], 1000)))
@@ -450,9 +432,7 @@ def main(args=None):
     from fontTools import configLogger
     import argparse
 
-    parser = argparse.ArgumentParser(
-        "fonttools varLib.mutator", description="Instantiate a variable font"
-    )
+    parser = argparse.ArgumentParser("fonttools varLib.mutator", description="Instantiate a variable font")
     parser.add_argument("input", metavar="INPUT.ttf", help="Input variable TTF file.")
     parser.add_argument(
         "locargs",
@@ -476,12 +456,8 @@ def main(args=None):
         help="Don't set the output font's timestamp to the current time.",
     )
     logging_group = parser.add_mutually_exclusive_group(required=False)
-    logging_group.add_argument(
-        "-v", "--verbose", action="store_true", help="Run more verbosely."
-    )
-    logging_group.add_argument(
-        "-q", "--quiet", action="store_true", help="Turn verbosity off."
-    )
+    logging_group.add_argument("-v", "--verbose", action="store_true", help="Run more verbosely.")
+    logging_group.add_argument("-q", "--quiet", action="store_true", help="Turn verbosity off.")
     parser.add_argument(
         "--no-overlap",
         dest="overlap",
@@ -491,14 +467,8 @@ def main(args=None):
     options = parser.parse_args(args)
 
     varfilename = options.input
-    outfile = (
-        os.path.splitext(varfilename)[0] + "-instance.ttf"
-        if not options.output
-        else options.output
-    )
-    configLogger(
-        level=("DEBUG" if options.verbose else "ERROR" if options.quiet else "INFO")
-    )
+    outfile = os.path.splitext(varfilename)[0] + "-instance.ttf" if not options.output else options.output
+    configLogger(level=("DEBUG" if options.verbose else "ERROR" if options.quiet else "INFO"))
 
     loc = {}
     for arg in options.locargs:

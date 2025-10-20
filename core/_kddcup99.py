@@ -246,9 +246,7 @@ def fetch_kddcup99(
 
     frame = None
     if as_frame:
-        frame, data, target = _convert_data_dataframe(
-            "fetch_kddcup99", data, target, feature_names, target_names
-        )
+        frame, data, target = _convert_data_dataframe("fetch_kddcup99", data, target, feature_names, target_names)
 
     if return_X_y:
         return data, target
@@ -263,9 +261,7 @@ def fetch_kddcup99(
     )
 
 
-def _fetch_brute_kddcup99(
-    data_home=None, download_if_missing=True, percent10=True, n_retries=3, delay=1.0
-):
+def _fetch_brute_kddcup99(data_home=None, download_if_missing=True, percent10=True, n_retries=3, delay=1.0):
     """Load the kddcup99 dataset, downloading it if necessary.
 
     Parameters

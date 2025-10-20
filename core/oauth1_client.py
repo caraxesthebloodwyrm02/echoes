@@ -22,13 +22,9 @@ class OAuth1Auth(Auth, ClientAuth):
     requires_request_body = True
 
     def auth_flow(self, request: Request) -> typing.Generator[Request, Response, None]:
-        url, headers, body = self.prepare(
-            request.method, str(request.url), request.headers, request.content
-        )
+        url, headers, body = self.prepare(request.method, str(request.url), request.headers, request.content)
         headers["Content-Length"] = str(len(body))
-        yield build_request(
-            url=url, headers=headers, body=body, initial_request=request
-        )
+        yield build_request(url=url, headers=headers, body=body, initial_request=request)
 
 
 class AsyncOAuth1Client(_OAuth1Client, httpx.AsyncClient):

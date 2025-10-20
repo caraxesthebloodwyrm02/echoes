@@ -17,12 +17,7 @@ class ValidateInStrings:
     ignorecase: bool
     valid: dict[str, str]
     def __init__(
-        self,
-        key: str,
-        valid: Iterable[str],
-        ignorecase: bool = ...,
-        *,
-        _deprecated_since: str | None = ...
+        self, key: str, valid: Iterable[str], ignorecase: bool = ..., *, _deprecated_since: str | None = ...
     ) -> None: ...
     def __call__(self, s: Any) -> str: ...
 
@@ -57,30 +52,37 @@ def _validate_color_or_linecolor(
 def validate_aspect(s: Any) -> Literal["auto", "equal"] | float: ...
 def validate_fontsize_None(
     s: Any,
-) -> Literal[
-    "xx-small",
-    "x-small",
-    "small",
-    "medium",
-    "large",
-    "x-large",
-    "xx-large",
-    "smaller",
-    "larger",
-] | float | None: ...
+) -> (
+    Literal[
+        "xx-small",
+        "x-small",
+        "small",
+        "medium",
+        "large",
+        "x-large",
+        "xx-large",
+        "smaller",
+        "larger",
+    ]
+    | float
+    | None
+): ...
 def validate_fontsize(
     s: Any,
-) -> Literal[
-    "xx-small",
-    "x-small",
-    "small",
-    "medium",
-    "large",
-    "x-large",
-    "xx-large",
-    "smaller",
-    "larger",
-] | float: ...
+) -> (
+    Literal[
+        "xx-small",
+        "x-small",
+        "small",
+        "medium",
+        "large",
+        "x-large",
+        "xx-large",
+        "smaller",
+        "larger",
+    ]
+    | float
+): ...
 def validate_fontsizelist(
     s: Any,
 ) -> list[
@@ -99,35 +101,41 @@ def validate_fontsizelist(
 ]: ...
 def validate_fontweight(
     s: Any,
-) -> Literal[
-    "ultralight",
-    "light",
-    "normal",
-    "regular",
-    "book",
-    "medium",
-    "roman",
-    "semibold",
-    "demibold",
-    "demi",
-    "bold",
-    "heavy",
-    "extra bold",
-    "black",
-] | int: ...
+) -> (
+    Literal[
+        "ultralight",
+        "light",
+        "normal",
+        "regular",
+        "book",
+        "medium",
+        "roman",
+        "semibold",
+        "demibold",
+        "demi",
+        "bold",
+        "heavy",
+        "extra bold",
+        "black",
+    ]
+    | int
+): ...
 def validate_fontstretch(
     s: Any,
-) -> Literal[
-    "ultra-condensed",
-    "extra-condensed",
-    "condensed",
-    "semi-condensed",
-    "normal",
-    "semi-expanded",
-    "expanded",
-    "extra-expanded",
-    "ultra-expanded",
-] | int: ...
+) -> (
+    Literal[
+        "ultra-condensed",
+        "extra-condensed",
+        "condensed",
+        "semi-condensed",
+        "normal",
+        "semi-expanded",
+        "expanded",
+        "extra-expanded",
+        "ultra-expanded",
+    ]
+    | int
+): ...
 def validate_font_properties(s: Any) -> dict[str, Any]: ...
 def validate_whiskers(s: Any) -> list[float] | float: ...
 def validate_ps_distiller(s: Any) -> None | Literal["ghostscript", "xpdf"]: ...
@@ -151,9 +159,7 @@ def cycler(*args, **kwargs) -> Cycler: ...
 def validate_cycler(s: Any) -> Cycler: ...
 def validate_hist_bins(
     s: Any,
-) -> Literal["auto", "sturges", "fd", "doane", "scott", "rice", "sqrt"] | int | list[
-    float
-]: ...
+) -> Literal["auto", "sturges", "fd", "doane", "scott", "rice", "sqrt"] | int | list[float]: ...
 
 # At runtime is added in __init__.py
 defaultParams: dict[str, Any]

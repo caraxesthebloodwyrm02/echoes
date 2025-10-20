@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Generated from turkish.sbl by Snowball 3.0.1 - https://snowballstem.org/
 
 from .basestemmer import BaseStemmer
@@ -6,26 +6,26 @@ from .among import Among
 
 
 class TurkishStemmer(BaseStemmer):
-    '''
+    """
     This class implements the stemming algorithm defined by a snowball script.
     Generated from turkish.sbl by Snowball 3.0.1 - https://snowballstem.org/
-    '''
+    """
 
-    g_vowel = {u"a", u"e", u"ı", u"i", u"o", u"ö", u"u", u"ü"}
+    g_vowel = {"a", "e", "ı", "i", "o", "ö", "u", "ü"}
 
-    g_U = {u"ı", u"i", u"u", u"ü"}
+    g_U = {"ı", "i", "u", "ü"}
 
-    g_vowel1 = {u"a", u"ı", u"o", u"u"}
+    g_vowel1 = {"a", "ı", "o", "u"}
 
-    g_vowel2 = {u"e", u"i", u"ö", u"ü"}
+    g_vowel2 = {"e", "i", "ö", "ü"}
 
-    g_vowel3 = {u"a", u"ı"}
+    g_vowel3 = {"a", "ı"}
 
-    g_vowel4 = {u"e", u"i"}
+    g_vowel4 = {"e", "i"}
 
-    g_vowel5 = {u"o", u"u"}
+    g_vowel5 = {"o", "u"}
 
-    g_vowel6 = {u"ö", u"ü"}
+    g_vowel6 = {"ö", "ü"}
 
     B_continue_stemming_noun_suffixes = False
 
@@ -36,66 +36,74 @@ class TurkishStemmer(BaseStemmer):
         try:
             v_2 = self.limit - self.cursor
             try:
-                if not self.eq_s_b(u"a"):
+                if not self.eq_s_b("a"):
                     raise lab1()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel1):
                     raise lab1()
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"e"):
+                if not self.eq_s_b("e"):
                     raise lab2()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel2):
                     raise lab2()
                 raise lab0()
-            except lab2: pass
+            except lab2:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"ı"):
+                if not self.eq_s_b("ı"):
                     raise lab3()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel3):
                     raise lab3()
                 raise lab0()
-            except lab3: pass
+            except lab3:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"i"):
+                if not self.eq_s_b("i"):
                     raise lab4()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel4):
                     raise lab4()
                 raise lab0()
-            except lab4: pass
+            except lab4:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"o"):
+                if not self.eq_s_b("o"):
                     raise lab5()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel5):
                     raise lab5()
                 raise lab0()
-            except lab5: pass
+            except lab5:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"ö"):
+                if not self.eq_s_b("ö"):
                     raise lab6()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel6):
                     raise lab6()
                 raise lab0()
-            except lab6: pass
+            except lab6:
+                pass
             self.cursor = self.limit - v_2
             try:
-                if not self.eq_s_b(u"u"):
+                if not self.eq_s_b("u"):
                     raise lab7()
                 if not self.go_out_grouping_b(TurkishStemmer.g_vowel5):
                     raise lab7()
                 raise lab0()
-            except lab7: pass
+            except lab7:
+                pass
             self.cursor = self.limit - v_2
-            if not self.eq_s_b(u"ü"):
+            if not self.eq_s_b("ü"):
                 return False
             if not self.go_out_grouping_b(TurkishStemmer.g_vowel6):
                 return False
-        except lab0: pass
+        except lab0:
+            pass
         self.cursor = self.limit - v_1
         return True
 
@@ -103,23 +111,25 @@ class TurkishStemmer(BaseStemmer):
         try:
             v_1 = self.limit - self.cursor
             try:
-                if not self.eq_s_b(u"n"):
+                if not self.eq_s_b("n"):
                     raise lab1()
                 v_2 = self.limit - self.cursor
                 if not self.in_grouping_b(TurkishStemmer.g_vowel):
                     raise lab1()
                 self.cursor = self.limit - v_2
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             v_3 = self.limit - self.cursor
             try:
                 v_4 = self.limit - self.cursor
-                if not self.eq_s_b(u"n"):
+                if not self.eq_s_b("n"):
                     raise lab2()
                 self.cursor = self.limit - v_4
                 return False
-            except lab2: pass
+            except lab2:
+                pass
             self.cursor = self.limit - v_3
             v_5 = self.limit - self.cursor
             if self.cursor <= self.limit_backward:
@@ -128,30 +138,33 @@ class TurkishStemmer(BaseStemmer):
             if not self.in_grouping_b(TurkishStemmer.g_vowel):
                 return False
             self.cursor = self.limit - v_5
-        except lab0: pass
+        except lab0:
+            pass
         return True
 
     def __r_mark_suffix_with_optional_s_consonant(self):
         try:
             v_1 = self.limit - self.cursor
             try:
-                if not self.eq_s_b(u"s"):
+                if not self.eq_s_b("s"):
                     raise lab1()
                 v_2 = self.limit - self.cursor
                 if not self.in_grouping_b(TurkishStemmer.g_vowel):
                     raise lab1()
                 self.cursor = self.limit - v_2
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             v_3 = self.limit - self.cursor
             try:
                 v_4 = self.limit - self.cursor
-                if not self.eq_s_b(u"s"):
+                if not self.eq_s_b("s"):
                     raise lab2()
                 self.cursor = self.limit - v_4
                 return False
-            except lab2: pass
+            except lab2:
+                pass
             self.cursor = self.limit - v_3
             v_5 = self.limit - self.cursor
             if self.cursor <= self.limit_backward:
@@ -160,30 +173,33 @@ class TurkishStemmer(BaseStemmer):
             if not self.in_grouping_b(TurkishStemmer.g_vowel):
                 return False
             self.cursor = self.limit - v_5
-        except lab0: pass
+        except lab0:
+            pass
         return True
 
     def __r_mark_suffix_with_optional_y_consonant(self):
         try:
             v_1 = self.limit - self.cursor
             try:
-                if not self.eq_s_b(u"y"):
+                if not self.eq_s_b("y"):
                     raise lab1()
                 v_2 = self.limit - self.cursor
                 if not self.in_grouping_b(TurkishStemmer.g_vowel):
                     raise lab1()
                 self.cursor = self.limit - v_2
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             v_3 = self.limit - self.cursor
             try:
                 v_4 = self.limit - self.cursor
-                if not self.eq_s_b(u"y"):
+                if not self.eq_s_b("y"):
                     raise lab2()
                 self.cursor = self.limit - v_4
                 return False
-            except lab2: pass
+            except lab2:
+                pass
             self.cursor = self.limit - v_3
             v_5 = self.limit - self.cursor
             if self.cursor <= self.limit_backward:
@@ -192,7 +208,8 @@ class TurkishStemmer(BaseStemmer):
             if not self.in_grouping_b(TurkishStemmer.g_vowel):
                 return False
             self.cursor = self.limit - v_5
-        except lab0: pass
+        except lab0:
+            pass
         return True
 
     def __r_mark_suffix_with_optional_U_vowel(self):
@@ -206,7 +223,8 @@ class TurkishStemmer(BaseStemmer):
                     raise lab1()
                 self.cursor = self.limit - v_2
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             v_3 = self.limit - self.cursor
             try:
@@ -215,7 +233,8 @@ class TurkishStemmer(BaseStemmer):
                     raise lab2()
                 self.cursor = self.limit - v_4
                 return False
-            except lab2: pass
+            except lab2:
+                pass
             self.cursor = self.limit - v_3
             v_5 = self.limit - self.cursor
             if self.cursor <= self.limit_backward:
@@ -224,7 +243,8 @@ class TurkishStemmer(BaseStemmer):
             if not self.out_grouping_b(TurkishStemmer.g_vowel):
                 return False
             self.cursor = self.limit - v_5
-        except lab0: pass
+        except lab0:
+            pass
         return True
 
     def __r_mark_possessives(self):
@@ -327,7 +347,7 @@ class TurkishStemmer(BaseStemmer):
         return True
 
     def __r_mark_ki(self):
-        if not self.eq_s_b(u"ki"):
+        if not self.eq_s_b("ki"):
             return False
         return True
 
@@ -422,7 +442,7 @@ class TurkishStemmer(BaseStemmer):
         return True
 
     def __r_mark_yken(self):
-        if not self.eq_s_b(u"ken"):
+        if not self.eq_s_b("ken"):
             return False
         if not self.__r_mark_suffix_with_optional_y_consonant():
             return False
@@ -440,25 +460,30 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_ymUs_():
                             raise lab3()
                         raise lab2()
-                    except lab3: pass
+                    except lab3:
+                        pass
                     self.cursor = self.limit - v_2
                     try:
                         if not self.__r_mark_yDU():
                             raise lab4()
                         raise lab2()
-                    except lab4: pass
+                    except lab4:
+                        pass
                     self.cursor = self.limit - v_2
                     try:
                         if not self.__r_mark_ysA():
                             raise lab5()
                         raise lab2()
-                    except lab5: pass
+                    except lab5:
+                        pass
                     self.cursor = self.limit - v_2
                     if not self.__r_mark_yken():
                         raise lab1()
-                except lab2: pass
+                except lab2:
+                    pass
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             try:
                 if not self.__r_mark_cAsInA():
@@ -469,37 +494,44 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_sUnUz():
                             raise lab8()
                         raise lab7()
-                    except lab8: pass
+                    except lab8:
+                        pass
                     self.cursor = self.limit - v_3
                     try:
                         if not self.__r_mark_lAr():
                             raise lab9()
                         raise lab7()
-                    except lab9: pass
+                    except lab9:
+                        pass
                     self.cursor = self.limit - v_3
                     try:
                         if not self.__r_mark_yUm():
                             raise lab10()
                         raise lab7()
-                    except lab10: pass
+                    except lab10:
+                        pass
                     self.cursor = self.limit - v_3
                     try:
                         if not self.__r_mark_sUn():
                             raise lab11()
                         raise lab7()
-                    except lab11: pass
+                    except lab11:
+                        pass
                     self.cursor = self.limit - v_3
                     try:
                         if not self.__r_mark_yUz():
                             raise lab12()
                         raise lab7()
-                    except lab12: pass
+                    except lab12:
+                        pass
                     self.cursor = self.limit - v_3
-                except lab7: pass
+                except lab7:
+                    pass
                 if not self.__r_mark_ymUs_():
                     raise lab6()
                 raise lab0()
-            except lab6: pass
+            except lab6:
+                pass
             self.cursor = self.limit - v_1
             try:
                 if not self.__r_mark_lAr():
@@ -517,28 +549,34 @@ class TurkishStemmer(BaseStemmer):
                             if not self.__r_mark_DUr():
                                 raise lab16()
                             raise lab15()
-                        except lab16: pass
+                        except lab16:
+                            pass
                         self.cursor = self.limit - v_5
                         try:
                             if not self.__r_mark_yDU():
                                 raise lab17()
                             raise lab15()
-                        except lab17: pass
+                        except lab17:
+                            pass
                         self.cursor = self.limit - v_5
                         try:
                             if not self.__r_mark_ysA():
                                 raise lab18()
                             raise lab15()
-                        except lab18: pass
+                        except lab18:
+                            pass
                         self.cursor = self.limit - v_5
                         if not self.__r_mark_ymUs_():
                             self.cursor = self.limit - v_4
                             raise lab14()
-                    except lab15: pass
-                except lab14: pass
+                    except lab15:
+                        pass
+                except lab14:
+                    pass
                 self.B_continue_stemming_noun_suffixes = False
                 raise lab0()
-            except lab13: pass
+            except lab13:
+                pass
             self.cursor = self.limit - v_1
             try:
                 if not self.__r_mark_nUz():
@@ -549,13 +587,16 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_yDU():
                             raise lab21()
                         raise lab20()
-                    except lab21: pass
+                    except lab21:
+                        pass
                     self.cursor = self.limit - v_6
                     if not self.__r_mark_ysA():
                         raise lab19()
-                except lab20: pass
+                except lab20:
+                    pass
                 raise lab0()
-            except lab19: pass
+            except lab19:
+                pass
             self.cursor = self.limit - v_1
             try:
                 try:
@@ -564,23 +605,27 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_sUnUz():
                             raise lab24()
                         raise lab23()
-                    except lab24: pass
+                    except lab24:
+                        pass
                     self.cursor = self.limit - v_7
                     try:
                         if not self.__r_mark_yUz():
                             raise lab25()
                         raise lab23()
-                    except lab25: pass
+                    except lab25:
+                        pass
                     self.cursor = self.limit - v_7
                     try:
                         if not self.__r_mark_sUn():
                             raise lab26()
                         raise lab23()
-                    except lab26: pass
+                    except lab26:
+                        pass
                     self.cursor = self.limit - v_7
                     if not self.__r_mark_yUm():
                         raise lab22()
-                except lab23: pass
+                except lab23:
+                    pass
                 self.bra = self.cursor
                 if not self.slice_del():
                     return False
@@ -591,9 +636,11 @@ class TurkishStemmer(BaseStemmer):
                     if not self.__r_mark_ymUs_():
                         self.cursor = self.limit - v_8
                         raise lab27()
-                except lab27: pass
+                except lab27:
+                    pass
                 raise lab0()
-            except lab22: pass
+            except lab22:
+                pass
             self.cursor = self.limit - v_1
             if not self.__r_mark_DUr():
                 return False
@@ -610,38 +657,46 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_sUnUz():
                             raise lab30()
                         raise lab29()
-                    except lab30: pass
+                    except lab30:
+                        pass
                     self.cursor = self.limit - v_10
                     try:
                         if not self.__r_mark_lAr():
                             raise lab31()
                         raise lab29()
-                    except lab31: pass
+                    except lab31:
+                        pass
                     self.cursor = self.limit - v_10
                     try:
                         if not self.__r_mark_yUm():
                             raise lab32()
                         raise lab29()
-                    except lab32: pass
+                    except lab32:
+                        pass
                     self.cursor = self.limit - v_10
                     try:
                         if not self.__r_mark_sUn():
                             raise lab33()
                         raise lab29()
-                    except lab33: pass
+                    except lab33:
+                        pass
                     self.cursor = self.limit - v_10
                     try:
                         if not self.__r_mark_yUz():
                             raise lab34()
                         raise lab29()
-                    except lab34: pass
+                    except lab34:
+                        pass
                     self.cursor = self.limit - v_10
-                except lab29: pass
+                except lab29:
+                    pass
                 if not self.__r_mark_ymUs_():
                     self.cursor = self.limit - v_9
                     raise lab28()
-            except lab28: pass
-        except lab0: pass
+            except lab28:
+                pass
+        except lab0:
+            pass
         self.bra = self.cursor
         if not self.slice_del():
             return False
@@ -678,9 +733,11 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_4
                                     raise lab5()
-                            except lab5: pass
+                            except lab5:
+                                pass
                             raise lab3()
-                        except lab4: pass
+                        except lab4:
+                            pass
                         self.cursor = self.limit - v_3
                         if not self.__r_mark_possessives():
                             self.cursor = self.limit - v_2
@@ -702,11 +759,15 @@ class TurkishStemmer(BaseStemmer):
                             if not self.__r_stem_suffix_chain_before_ki():
                                 self.cursor = self.limit - v_5
                                 raise lab6()
-                        except lab6: pass
-                    except lab3: pass
-                except lab2: pass
+                        except lab6:
+                            pass
+                    except lab3:
+                        pass
+                except lab2:
+                    pass
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             try:
                 if not self.__r_mark_nUn():
@@ -728,7 +789,8 @@ class TurkishStemmer(BaseStemmer):
                                 return False
 
                             raise lab9()
-                        except lab10: pass
+                        except lab10:
+                            pass
                         self.cursor = self.limit - v_7
                         try:
                             self.ket = self.cursor
@@ -738,11 +800,13 @@ class TurkishStemmer(BaseStemmer):
                                     if not self.__r_mark_possessives():
                                         raise lab13()
                                     raise lab12()
-                                except lab13: pass
+                                except lab13:
+                                    pass
                                 self.cursor = self.limit - v_8
                                 if not self.__r_mark_sU():
                                     raise lab11()
-                            except lab12: pass
+                            except lab12:
+                                pass
                             self.bra = self.cursor
                             if not self.slice_del():
                                 return False
@@ -760,17 +824,22 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_9
                                     raise lab14()
-                            except lab14: pass
+                            except lab14:
+                                pass
                             raise lab9()
-                        except lab11: pass
+                        except lab11:
+                            pass
                         self.cursor = self.limit - v_7
                         if not self.__r_stem_suffix_chain_before_ki():
                             self.cursor = self.limit - v_6
                             raise lab8()
-                    except lab9: pass
-                except lab8: pass
+                    except lab9:
+                        pass
+                except lab8:
+                    pass
                 raise lab0()
-            except lab7: pass
+            except lab7:
+                pass
             self.cursor = self.limit - v_1
             if not self.__r_mark_ndA():
                 return False
@@ -784,7 +853,8 @@ class TurkishStemmer(BaseStemmer):
                         return False
 
                     raise lab15()
-                except lab16: pass
+                except lab16:
+                    pass
                 self.cursor = self.limit - v_10
                 try:
                     if not self.__r_mark_sU():
@@ -806,14 +876,18 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_stem_suffix_chain_before_ki():
                             self.cursor = self.limit - v_11
                             raise lab18()
-                    except lab18: pass
+                    except lab18:
+                        pass
                     raise lab15()
-                except lab17: pass
+                except lab17:
+                    pass
                 self.cursor = self.limit - v_10
                 if not self.__r_stem_suffix_chain_before_ki():
                     return False
-            except lab15: pass
-        except lab0: pass
+            except lab15:
+                pass
+        except lab0:
+            pass
         return True
 
     def __r_stem_noun_suffixes(self):
@@ -832,9 +906,11 @@ class TurkishStemmer(BaseStemmer):
                     if not self.__r_stem_suffix_chain_before_ki():
                         self.cursor = self.limit - v_2
                         raise lab2()
-                except lab2: pass
+                except lab2:
+                    pass
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -857,7 +933,8 @@ class TurkishStemmer(BaseStemmer):
                                 return False
 
                             raise lab5()
-                        except lab6: pass
+                        except lab6:
+                            pass
                         self.cursor = self.limit - v_4
                         try:
                             self.ket = self.cursor
@@ -867,11 +944,13 @@ class TurkishStemmer(BaseStemmer):
                                     if not self.__r_mark_possessives():
                                         raise lab9()
                                     raise lab8()
-                                except lab9: pass
+                                except lab9:
+                                    pass
                                 self.cursor = self.limit - v_5
                                 if not self.__r_mark_sU():
                                     raise lab7()
-                            except lab8: pass
+                            except lab8:
+                                pass
                             self.bra = self.cursor
                             if not self.slice_del():
                                 return False
@@ -889,9 +968,11 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_6
                                     raise lab10()
-                            except lab10: pass
+                            except lab10:
+                                pass
                             raise lab5()
-                        except lab7: pass
+                        except lab7:
+                            pass
                         self.cursor = self.limit - v_4
                         self.ket = self.cursor
                         if not self.__r_mark_lAr():
@@ -904,10 +985,13 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_stem_suffix_chain_before_ki():
                             self.cursor = self.limit - v_3
                             raise lab4()
-                    except lab5: pass
-                except lab4: pass
+                    except lab5:
+                        pass
+                except lab4:
+                    pass
                 raise lab0()
-            except lab3: pass
+            except lab3:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -917,11 +1001,13 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_ndA():
                             raise lab13()
                         raise lab12()
-                    except lab13: pass
+                    except lab13:
+                        pass
                     self.cursor = self.limit - v_7
                     if not self.__r_mark_nA():
                         raise lab11()
-                except lab12: pass
+                except lab12:
+                    pass
                 try:
                     v_8 = self.limit - self.cursor
                     try:
@@ -932,7 +1018,8 @@ class TurkishStemmer(BaseStemmer):
                             return False
 
                         raise lab14()
-                    except lab15: pass
+                    except lab15:
+                        pass
                     self.cursor = self.limit - v_8
                     try:
                         if not self.__r_mark_sU():
@@ -954,15 +1041,19 @@ class TurkishStemmer(BaseStemmer):
                             if not self.__r_stem_suffix_chain_before_ki():
                                 self.cursor = self.limit - v_9
                                 raise lab17()
-                        except lab17: pass
+                        except lab17:
+                            pass
                         raise lab14()
-                    except lab16: pass
+                    except lab16:
+                        pass
                     self.cursor = self.limit - v_8
                     if not self.__r_stem_suffix_chain_before_ki():
                         raise lab11()
-                except lab14: pass
+                except lab14:
+                    pass
                 raise lab0()
-            except lab11: pass
+            except lab11:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -972,11 +1063,13 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_ndAn():
                             raise lab20()
                         raise lab19()
-                    except lab20: pass
+                    except lab20:
+                        pass
                     self.cursor = self.limit - v_10
                     if not self.__r_mark_nU():
                         raise lab18()
-                except lab19: pass
+                except lab19:
+                    pass
                 try:
                     v_11 = self.limit - self.cursor
                     try:
@@ -999,15 +1092,19 @@ class TurkishStemmer(BaseStemmer):
                             if not self.__r_stem_suffix_chain_before_ki():
                                 self.cursor = self.limit - v_12
                                 raise lab23()
-                        except lab23: pass
+                        except lab23:
+                            pass
                         raise lab21()
-                    except lab22: pass
+                    except lab22:
+                        pass
                     self.cursor = self.limit - v_11
                     if not self.__r_mark_lArI():
                         raise lab18()
-                except lab21: pass
+                except lab21:
+                    pass
                 raise lab0()
-            except lab18: pass
+            except lab18:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -1042,9 +1139,11 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_15
                                     raise lab28()
-                            except lab28: pass
+                            except lab28:
+                                pass
                             raise lab26()
-                        except lab27: pass
+                        except lab27:
+                            pass
                         self.cursor = self.limit - v_14
                         try:
                             if not self.__r_mark_lAr():
@@ -1058,17 +1157,22 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_16
                                     raise lab30()
-                            except lab30: pass
+                            except lab30:
+                                pass
                             raise lab26()
-                        except lab29: pass
+                        except lab29:
+                            pass
                         self.cursor = self.limit - v_14
                         if not self.__r_stem_suffix_chain_before_ki():
                             self.cursor = self.limit - v_13
                             raise lab25()
-                    except lab26: pass
-                except lab25: pass
+                    except lab26:
+                        pass
+                except lab25:
+                    pass
                 raise lab0()
-            except lab24: pass
+            except lab24:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -1078,11 +1182,13 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_nUn():
                             raise lab33()
                         raise lab32()
-                    except lab33: pass
+                    except lab33:
+                        pass
                     self.cursor = self.limit - v_17
                     if not self.__r_mark_ylA():
                         raise lab31()
-                except lab32: pass
+                except lab32:
+                    pass
                 self.bra = self.cursor
                 if not self.slice_del():
                     return False
@@ -1102,7 +1208,8 @@ class TurkishStemmer(BaseStemmer):
                             if not self.__r_stem_suffix_chain_before_ki():
                                 raise lab36()
                             raise lab35()
-                        except lab36: pass
+                        except lab36:
+                            pass
                         self.cursor = self.limit - v_19
                         try:
                             self.ket = self.cursor
@@ -1112,11 +1219,13 @@ class TurkishStemmer(BaseStemmer):
                                     if not self.__r_mark_possessives():
                                         raise lab39()
                                     raise lab38()
-                                except lab39: pass
+                                except lab39:
+                                    pass
                                 self.cursor = self.limit - v_20
                                 if not self.__r_mark_sU():
                                     raise lab37()
-                            except lab38: pass
+                            except lab38:
+                                pass
                             self.bra = self.cursor
                             if not self.slice_del():
                                 return False
@@ -1134,17 +1243,22 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_stem_suffix_chain_before_ki():
                                     self.cursor = self.limit - v_21
                                     raise lab40()
-                            except lab40: pass
+                            except lab40:
+                                pass
                             raise lab35()
-                        except lab37: pass
+                        except lab37:
+                            pass
                         self.cursor = self.limit - v_19
                         if not self.__r_stem_suffix_chain_before_ki():
                             self.cursor = self.limit - v_18
                             raise lab34()
-                    except lab35: pass
-                except lab34: pass
+                    except lab35:
+                        pass
+                except lab34:
+                    pass
                 raise lab0()
-            except lab31: pass
+            except lab31:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -1155,13 +1269,15 @@ class TurkishStemmer(BaseStemmer):
                     return False
 
                 raise lab0()
-            except lab41: pass
+            except lab41:
+                pass
             self.cursor = self.limit - v_1
             try:
                 if not self.__r_stem_suffix_chain_before_ki():
                     raise lab42()
                 raise lab0()
-            except lab42: pass
+            except lab42:
+                pass
             self.cursor = self.limit - v_1
             try:
                 self.ket = self.cursor
@@ -1171,17 +1287,20 @@ class TurkishStemmer(BaseStemmer):
                         if not self.__r_mark_DA():
                             raise lab45()
                         raise lab44()
-                    except lab45: pass
+                    except lab45:
+                        pass
                     self.cursor = self.limit - v_22
                     try:
                         if not self.__r_mark_yU():
                             raise lab46()
                         raise lab44()
-                    except lab46: pass
+                    except lab46:
+                        pass
                     self.cursor = self.limit - v_22
                     if not self.__r_mark_yA():
                         raise lab43()
-                except lab44: pass
+                except lab44:
+                    pass
                 self.bra = self.cursor
                 if not self.slice_del():
                     return False
@@ -1204,14 +1323,17 @@ class TurkishStemmer(BaseStemmer):
                                 if not self.__r_mark_lAr():
                                     self.cursor = self.limit - v_25
                                     raise lab50()
-                            except lab50: pass
+                            except lab50:
+                                pass
                             raise lab48()
-                        except lab49: pass
+                        except lab49:
+                            pass
                         self.cursor = self.limit - v_24
                         if not self.__r_mark_lAr():
                             self.cursor = self.limit - v_23
                             raise lab47()
-                    except lab48: pass
+                    except lab48:
+                        pass
                     self.bra = self.cursor
                     if not self.slice_del():
                         return False
@@ -1220,9 +1342,11 @@ class TurkishStemmer(BaseStemmer):
                     if not self.__r_stem_suffix_chain_before_ki():
                         self.cursor = self.limit - v_23
                         raise lab47()
-                except lab47: pass
+                except lab47:
+                    pass
                 raise lab0()
-            except lab43: pass
+            except lab43:
+                pass
             self.cursor = self.limit - v_1
             self.ket = self.cursor
             try:
@@ -1231,11 +1355,13 @@ class TurkishStemmer(BaseStemmer):
                     if not self.__r_mark_possessives():
                         raise lab52()
                     raise lab51()
-                except lab52: pass
+                except lab52:
+                    pass
                 self.cursor = self.limit - v_26
                 if not self.__r_mark_sU():
                     return False
-            except lab51: pass
+            except lab51:
+                pass
             self.bra = self.cursor
             if not self.slice_del():
                 return False
@@ -1253,8 +1379,10 @@ class TurkishStemmer(BaseStemmer):
                 if not self.__r_stem_suffix_chain_before_ki():
                     self.cursor = self.limit - v_27
                     raise lab53()
-            except lab53: pass
-        except lab0: pass
+            except lab53:
+                pass
+        except lab0:
+            pass
         return True
 
     def __r_post_process_last_consonants(self):
@@ -1264,16 +1392,16 @@ class TurkishStemmer(BaseStemmer):
             return False
         self.bra = self.cursor
         if among_var == 1:
-            if not self.slice_from(u"p"):
+            if not self.slice_from("p"):
                 return False
         elif among_var == 2:
-            if not self.slice_from(u"ç"):
+            if not self.slice_from("ç"):
                 return False
         elif among_var == 3:
-            if not self.slice_from(u"t"):
+            if not self.slice_from("t"):
                 return False
         else:
-            if not self.slice_from(u"k"):
+            if not self.slice_from("k"):
                 return False
         return True
 
@@ -1283,14 +1411,16 @@ class TurkishStemmer(BaseStemmer):
         try:
             v_1 = self.limit - self.cursor
             try:
-                if not self.eq_s_b(u"d"):
+                if not self.eq_s_b("d"):
                     raise lab1()
                 raise lab0()
-            except lab1: pass
+            except lab1:
+                pass
             self.cursor = self.limit - v_1
-            if not self.eq_s_b(u"g"):
+            if not self.eq_s_b("g"):
                 return False
-        except lab0: pass
+        except lab0:
+            pass
         if not self.go_out_grouping_b(TurkishStemmer.g_vowel):
             return False
         try:
@@ -1299,78 +1429,91 @@ class TurkishStemmer(BaseStemmer):
                 try:
                     v_3 = self.limit - self.cursor
                     try:
-                        if not self.eq_s_b(u"a"):
+                        if not self.eq_s_b("a"):
                             raise lab5()
                         raise lab4()
-                    except lab5: pass
+                    except lab5:
+                        pass
                     self.cursor = self.limit - v_3
-                    if not self.eq_s_b(u"ı"):
+                    if not self.eq_s_b("ı"):
                         raise lab3()
-                except lab4: pass
-                if not self.slice_from(u"ı"):
+                except lab4:
+                    pass
+                if not self.slice_from("ı"):
                     return False
                 raise lab2()
-            except lab3: pass
+            except lab3:
+                pass
             self.cursor = self.limit - v_2
             try:
                 try:
                     v_4 = self.limit - self.cursor
                     try:
-                        if not self.eq_s_b(u"e"):
+                        if not self.eq_s_b("e"):
                             raise lab8()
                         raise lab7()
-                    except lab8: pass
+                    except lab8:
+                        pass
                     self.cursor = self.limit - v_4
-                    if not self.eq_s_b(u"i"):
+                    if not self.eq_s_b("i"):
                         raise lab6()
-                except lab7: pass
-                if not self.slice_from(u"i"):
+                except lab7:
+                    pass
+                if not self.slice_from("i"):
                     return False
                 raise lab2()
-            except lab6: pass
+            except lab6:
+                pass
             self.cursor = self.limit - v_2
             try:
                 try:
                     v_5 = self.limit - self.cursor
                     try:
-                        if not self.eq_s_b(u"o"):
+                        if not self.eq_s_b("o"):
                             raise lab11()
                         raise lab10()
-                    except lab11: pass
+                    except lab11:
+                        pass
                     self.cursor = self.limit - v_5
-                    if not self.eq_s_b(u"u"):
+                    if not self.eq_s_b("u"):
                         raise lab9()
-                except lab10: pass
-                if not self.slice_from(u"u"):
+                except lab10:
+                    pass
+                if not self.slice_from("u"):
                     return False
                 raise lab2()
-            except lab9: pass
+            except lab9:
+                pass
             self.cursor = self.limit - v_2
             try:
                 v_6 = self.limit - self.cursor
                 try:
-                    if not self.eq_s_b(u"ö"):
+                    if not self.eq_s_b("ö"):
                         raise lab13()
                     raise lab12()
-                except lab13: pass
+                except lab13:
+                    pass
                 self.cursor = self.limit - v_6
-                if not self.eq_s_b(u"ü"):
+                if not self.eq_s_b("ü"):
                     return False
-            except lab12: pass
-            if not self.slice_from(u"ü"):
+            except lab12:
+                pass
+            if not self.slice_from("ü"):
                 return False
-        except lab2: pass
+        except lab2:
+            pass
         return True
 
     def __r_is_reserved_word(self):
-        if not self.eq_s_b(u"ad"):
+        if not self.eq_s_b("ad"):
             return False
         v_1 = self.limit - self.cursor
         try:
-            if not self.eq_s_b(u"soy"):
+            if not self.eq_s_b("soy"):
                 self.cursor = self.limit - v_1
                 raise lab0()
-        except lab0: pass
+        except lab0:
+            pass
         if self.cursor > self.limit_backward:
             return False
         return True
@@ -1385,24 +1528,28 @@ class TurkishStemmer(BaseStemmer):
                     try:
                         v_3 = self.cursor
                         try:
-                            if not self.eq_s(u"'"):
+                            if not self.eq_s("'"):
                                 raise lab3()
                             raise lab2()
-                        except lab3: pass
+                        except lab3:
+                            pass
                         self.cursor = v_3
                         self.cursor = v_2
                         raise lab1()
-                    except lab2: pass
+                    except lab2:
+                        pass
                     self.cursor = v_2
                     if self.cursor >= self.limit:
                         raise lab0()
                     self.cursor += 1
-            except lab1: pass
+            except lab1:
+                pass
             self.ket = self.cursor
             if not self.slice_del():
                 return False
 
-        except lab0: pass
+        except lab0:
+            pass
         self.cursor = v_1
         v_4 = self.cursor
         try:
@@ -1414,23 +1561,26 @@ class TurkishStemmer(BaseStemmer):
                 while True:
                     v_5 = self.cursor
                     try:
-                        if not self.eq_s(u"'"):
+                        if not self.eq_s("'"):
                             raise lab6()
                         self.cursor = v_5
                         raise lab5()
-                    except lab6: pass
+                    except lab6:
+                        pass
                     self.cursor = v_5
                     if self.cursor >= self.limit:
                         raise lab4()
                     self.cursor += 1
-            except lab5: pass
+            except lab5:
+                pass
             self.bra = self.cursor
             self.cursor = self.limit
             self.ket = self.cursor
             if not self.slice_del():
                 return False
 
-        except lab4: pass
+        except lab4:
+            pass
         self.cursor = v_4
         return True
 
@@ -1452,7 +1602,8 @@ class TurkishStemmer(BaseStemmer):
             if not self.__r_is_reserved_word():
                 raise lab0()
             return False
-        except lab0: pass
+        except lab0:
+            pass
         self.cursor = self.limit - v_1
         v_2 = self.limit - self.cursor
         self.__r_append_U_to_stems_ending_with_d_or_g()
@@ -1483,355 +1634,327 @@ class TurkishStemmer(BaseStemmer):
         return True
 
     a_0 = [
-        Among(u"m", -1, -1),
-        Among(u"n", -1, -1),
-        Among(u"miz", -1, -1),
-        Among(u"niz", -1, -1),
-        Among(u"muz", -1, -1),
-        Among(u"nuz", -1, -1),
-        Among(u"müz", -1, -1),
-        Among(u"nüz", -1, -1),
-        Among(u"mız", -1, -1),
-        Among(u"nız", -1, -1)
+        Among("m", -1, -1),
+        Among("n", -1, -1),
+        Among("miz", -1, -1),
+        Among("niz", -1, -1),
+        Among("muz", -1, -1),
+        Among("nuz", -1, -1),
+        Among("müz", -1, -1),
+        Among("nüz", -1, -1),
+        Among("mız", -1, -1),
+        Among("nız", -1, -1),
     ]
 
-    a_1 = [
-        Among(u"leri", -1, -1),
-        Among(u"ları", -1, -1)
-    ]
+    a_1 = [Among("leri", -1, -1), Among("ları", -1, -1)]
 
-    a_2 = [
-        Among(u"ni", -1, -1),
-        Among(u"nu", -1, -1),
-        Among(u"nü", -1, -1),
-        Among(u"nı", -1, -1)
-    ]
+    a_2 = [Among("ni", -1, -1), Among("nu", -1, -1), Among("nü", -1, -1), Among("nı", -1, -1)]
 
-    a_3 = [
-        Among(u"in", -1, -1),
-        Among(u"un", -1, -1),
-        Among(u"ün", -1, -1),
-        Among(u"ın", -1, -1)
-    ]
+    a_3 = [Among("in", -1, -1), Among("un", -1, -1), Among("ün", -1, -1), Among("ın", -1, -1)]
 
-    a_4 = [
-        Among(u"a", -1, -1),
-        Among(u"e", -1, -1)
-    ]
+    a_4 = [Among("a", -1, -1), Among("e", -1, -1)]
 
-    a_5 = [
-        Among(u"na", -1, -1),
-        Among(u"ne", -1, -1)
-    ]
+    a_5 = [Among("na", -1, -1), Among("ne", -1, -1)]
 
-    a_6 = [
-        Among(u"da", -1, -1),
-        Among(u"ta", -1, -1),
-        Among(u"de", -1, -1),
-        Among(u"te", -1, -1)
-    ]
+    a_6 = [Among("da", -1, -1), Among("ta", -1, -1), Among("de", -1, -1), Among("te", -1, -1)]
 
-    a_7 = [
-        Among(u"nda", -1, -1),
-        Among(u"nde", -1, -1)
-    ]
+    a_7 = [Among("nda", -1, -1), Among("nde", -1, -1)]
 
-    a_8 = [
-        Among(u"dan", -1, -1),
-        Among(u"tan", -1, -1),
-        Among(u"den", -1, -1),
-        Among(u"ten", -1, -1)
-    ]
+    a_8 = [Among("dan", -1, -1), Among("tan", -1, -1), Among("den", -1, -1), Among("ten", -1, -1)]
 
-    a_9 = [
-        Among(u"ndan", -1, -1),
-        Among(u"nden", -1, -1)
-    ]
+    a_9 = [Among("ndan", -1, -1), Among("nden", -1, -1)]
 
-    a_10 = [
-        Among(u"la", -1, -1),
-        Among(u"le", -1, -1)
-    ]
+    a_10 = [Among("la", -1, -1), Among("le", -1, -1)]
 
-    a_11 = [
-        Among(u"ca", -1, -1),
-        Among(u"ce", -1, -1)
-    ]
+    a_11 = [Among("ca", -1, -1), Among("ce", -1, -1)]
 
-    a_12 = [
-        Among(u"im", -1, -1),
-        Among(u"um", -1, -1),
-        Among(u"üm", -1, -1),
-        Among(u"ım", -1, -1)
-    ]
+    a_12 = [Among("im", -1, -1), Among("um", -1, -1), Among("üm", -1, -1), Among("ım", -1, -1)]
 
-    a_13 = [
-        Among(u"sin", -1, -1),
-        Among(u"sun", -1, -1),
-        Among(u"sün", -1, -1),
-        Among(u"sın", -1, -1)
-    ]
+    a_13 = [Among("sin", -1, -1), Among("sun", -1, -1), Among("sün", -1, -1), Among("sın", -1, -1)]
 
-    a_14 = [
-        Among(u"iz", -1, -1),
-        Among(u"uz", -1, -1),
-        Among(u"üz", -1, -1),
-        Among(u"ız", -1, -1)
-    ]
+    a_14 = [Among("iz", -1, -1), Among("uz", -1, -1), Among("üz", -1, -1), Among("ız", -1, -1)]
 
-    a_15 = [
-        Among(u"siniz", -1, -1),
-        Among(u"sunuz", -1, -1),
-        Among(u"sünüz", -1, -1),
-        Among(u"sınız", -1, -1)
-    ]
+    a_15 = [Among("siniz", -1, -1), Among("sunuz", -1, -1), Among("sünüz", -1, -1), Among("sınız", -1, -1)]
 
-    a_16 = [
-        Among(u"lar", -1, -1),
-        Among(u"ler", -1, -1)
-    ]
+    a_16 = [Among("lar", -1, -1), Among("ler", -1, -1)]
 
-    a_17 = [
-        Among(u"niz", -1, -1),
-        Among(u"nuz", -1, -1),
-        Among(u"nüz", -1, -1),
-        Among(u"nız", -1, -1)
-    ]
+    a_17 = [Among("niz", -1, -1), Among("nuz", -1, -1), Among("nüz", -1, -1), Among("nız", -1, -1)]
 
     a_18 = [
-        Among(u"dir", -1, -1),
-        Among(u"tir", -1, -1),
-        Among(u"dur", -1, -1),
-        Among(u"tur", -1, -1),
-        Among(u"dür", -1, -1),
-        Among(u"tür", -1, -1),
-        Among(u"dır", -1, -1),
-        Among(u"tır", -1, -1)
+        Among("dir", -1, -1),
+        Among("tir", -1, -1),
+        Among("dur", -1, -1),
+        Among("tur", -1, -1),
+        Among("dür", -1, -1),
+        Among("tür", -1, -1),
+        Among("dır", -1, -1),
+        Among("tır", -1, -1),
     ]
 
-    a_19 = [
-        Among(u"casına", -1, -1),
-        Among(u"cesine", -1, -1)
-    ]
+    a_19 = [Among("casına", -1, -1), Among("cesine", -1, -1)]
 
     a_20 = [
-        Among(u"di", -1, -1),
-        Among(u"ti", -1, -1),
-        Among(u"dik", -1, -1),
-        Among(u"tik", -1, -1),
-        Among(u"duk", -1, -1),
-        Among(u"tuk", -1, -1),
-        Among(u"dük", -1, -1),
-        Among(u"tük", -1, -1),
-        Among(u"dık", -1, -1),
-        Among(u"tık", -1, -1),
-        Among(u"dim", -1, -1),
-        Among(u"tim", -1, -1),
-        Among(u"dum", -1, -1),
-        Among(u"tum", -1, -1),
-        Among(u"düm", -1, -1),
-        Among(u"tüm", -1, -1),
-        Among(u"dım", -1, -1),
-        Among(u"tım", -1, -1),
-        Among(u"din", -1, -1),
-        Among(u"tin", -1, -1),
-        Among(u"dun", -1, -1),
-        Among(u"tun", -1, -1),
-        Among(u"dün", -1, -1),
-        Among(u"tün", -1, -1),
-        Among(u"dın", -1, -1),
-        Among(u"tın", -1, -1),
-        Among(u"du", -1, -1),
-        Among(u"tu", -1, -1),
-        Among(u"dü", -1, -1),
-        Among(u"tü", -1, -1),
-        Among(u"dı", -1, -1),
-        Among(u"tı", -1, -1)
+        Among("di", -1, -1),
+        Among("ti", -1, -1),
+        Among("dik", -1, -1),
+        Among("tik", -1, -1),
+        Among("duk", -1, -1),
+        Among("tuk", -1, -1),
+        Among("dük", -1, -1),
+        Among("tük", -1, -1),
+        Among("dık", -1, -1),
+        Among("tık", -1, -1),
+        Among("dim", -1, -1),
+        Among("tim", -1, -1),
+        Among("dum", -1, -1),
+        Among("tum", -1, -1),
+        Among("düm", -1, -1),
+        Among("tüm", -1, -1),
+        Among("dım", -1, -1),
+        Among("tım", -1, -1),
+        Among("din", -1, -1),
+        Among("tin", -1, -1),
+        Among("dun", -1, -1),
+        Among("tun", -1, -1),
+        Among("dün", -1, -1),
+        Among("tün", -1, -1),
+        Among("dın", -1, -1),
+        Among("tın", -1, -1),
+        Among("du", -1, -1),
+        Among("tu", -1, -1),
+        Among("dü", -1, -1),
+        Among("tü", -1, -1),
+        Among("dı", -1, -1),
+        Among("tı", -1, -1),
     ]
 
     a_21 = [
-        Among(u"sa", -1, -1),
-        Among(u"se", -1, -1),
-        Among(u"sak", -1, -1),
-        Among(u"sek", -1, -1),
-        Among(u"sam", -1, -1),
-        Among(u"sem", -1, -1),
-        Among(u"san", -1, -1),
-        Among(u"sen", -1, -1)
+        Among("sa", -1, -1),
+        Among("se", -1, -1),
+        Among("sak", -1, -1),
+        Among("sek", -1, -1),
+        Among("sam", -1, -1),
+        Among("sem", -1, -1),
+        Among("san", -1, -1),
+        Among("sen", -1, -1),
     ]
 
-    a_22 = [
-        Among(u"miş", -1, -1),
-        Among(u"muş", -1, -1),
-        Among(u"müş", -1, -1),
-        Among(u"mış", -1, -1)
-    ]
+    a_22 = [Among("miş", -1, -1), Among("muş", -1, -1), Among("müş", -1, -1), Among("mış", -1, -1)]
 
-    a_23 = [
-        Among(u"b", -1, 1),
-        Among(u"c", -1, 2),
-        Among(u"d", -1, 3),
-        Among(u"ğ", -1, 4)
-    ]
+    a_23 = [Among("b", -1, 1), Among("c", -1, 2), Among("d", -1, 3), Among("ğ", -1, 4)]
 
 
-class lab0(BaseException): pass
+class lab0(BaseException):
+    pass
 
 
-class lab1(BaseException): pass
+class lab1(BaseException):
+    pass
 
 
-class lab2(BaseException): pass
+class lab2(BaseException):
+    pass
 
 
-class lab3(BaseException): pass
+class lab3(BaseException):
+    pass
 
 
-class lab4(BaseException): pass
+class lab4(BaseException):
+    pass
 
 
-class lab5(BaseException): pass
+class lab5(BaseException):
+    pass
 
 
-class lab6(BaseException): pass
+class lab6(BaseException):
+    pass
 
 
-class lab7(BaseException): pass
+class lab7(BaseException):
+    pass
 
 
-class lab8(BaseException): pass
+class lab8(BaseException):
+    pass
 
 
-class lab9(BaseException): pass
+class lab9(BaseException):
+    pass
 
 
-class lab10(BaseException): pass
+class lab10(BaseException):
+    pass
 
 
-class lab11(BaseException): pass
+class lab11(BaseException):
+    pass
 
 
-class lab12(BaseException): pass
+class lab12(BaseException):
+    pass
 
 
-class lab13(BaseException): pass
+class lab13(BaseException):
+    pass
 
 
-class lab14(BaseException): pass
+class lab14(BaseException):
+    pass
 
 
-class lab15(BaseException): pass
+class lab15(BaseException):
+    pass
 
 
-class lab16(BaseException): pass
+class lab16(BaseException):
+    pass
 
 
-class lab17(BaseException): pass
+class lab17(BaseException):
+    pass
 
 
-class lab18(BaseException): pass
+class lab18(BaseException):
+    pass
 
 
-class lab19(BaseException): pass
+class lab19(BaseException):
+    pass
 
 
-class lab20(BaseException): pass
+class lab20(BaseException):
+    pass
 
 
-class lab21(BaseException): pass
+class lab21(BaseException):
+    pass
 
 
-class lab22(BaseException): pass
+class lab22(BaseException):
+    pass
 
 
-class lab23(BaseException): pass
+class lab23(BaseException):
+    pass
 
 
-class lab24(BaseException): pass
+class lab24(BaseException):
+    pass
 
 
-class lab25(BaseException): pass
+class lab25(BaseException):
+    pass
 
 
-class lab26(BaseException): pass
+class lab26(BaseException):
+    pass
 
 
-class lab27(BaseException): pass
+class lab27(BaseException):
+    pass
 
 
-class lab28(BaseException): pass
+class lab28(BaseException):
+    pass
 
 
-class lab29(BaseException): pass
+class lab29(BaseException):
+    pass
 
 
-class lab30(BaseException): pass
+class lab30(BaseException):
+    pass
 
 
-class lab31(BaseException): pass
+class lab31(BaseException):
+    pass
 
 
-class lab32(BaseException): pass
+class lab32(BaseException):
+    pass
 
 
-class lab33(BaseException): pass
+class lab33(BaseException):
+    pass
 
 
-class lab34(BaseException): pass
+class lab34(BaseException):
+    pass
 
 
-class lab35(BaseException): pass
+class lab35(BaseException):
+    pass
 
 
-class lab36(BaseException): pass
+class lab36(BaseException):
+    pass
 
 
-class lab37(BaseException): pass
+class lab37(BaseException):
+    pass
 
 
-class lab38(BaseException): pass
+class lab38(BaseException):
+    pass
 
 
-class lab39(BaseException): pass
+class lab39(BaseException):
+    pass
 
 
-class lab40(BaseException): pass
+class lab40(BaseException):
+    pass
 
 
-class lab41(BaseException): pass
+class lab41(BaseException):
+    pass
 
 
-class lab42(BaseException): pass
+class lab42(BaseException):
+    pass
 
 
-class lab43(BaseException): pass
+class lab43(BaseException):
+    pass
 
 
-class lab44(BaseException): pass
+class lab44(BaseException):
+    pass
 
 
-class lab45(BaseException): pass
+class lab45(BaseException):
+    pass
 
 
-class lab46(BaseException): pass
+class lab46(BaseException):
+    pass
 
 
-class lab47(BaseException): pass
+class lab47(BaseException):
+    pass
 
 
-class lab48(BaseException): pass
+class lab48(BaseException):
+    pass
 
 
-class lab49(BaseException): pass
+class lab49(BaseException):
+    pass
 
 
-class lab50(BaseException): pass
+class lab50(BaseException):
+    pass
 
 
-class lab51(BaseException): pass
+class lab51(BaseException):
+    pass
 
 
-class lab52(BaseException): pass
+class lab52(BaseException):
+    pass
 
 
-class lab53(BaseException): pass
+class lab53(BaseException):
+    pass

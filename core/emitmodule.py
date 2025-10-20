@@ -118,9 +118,7 @@ class MypycPlugin(Plugin):
         recompile the module so we mark it as stale.
     """
 
-    def __init__(
-        self, options: Options, compiler_options: CompilerOptions, groups: Groups
-    ) -> None:
+    def __init__(self, options: Options, compiler_options: CompilerOptions, groups: Groups) -> None:
         super().__init__(options)
         self.group_map: dict[str, tuple[str | None, list[str]]] = {}
         for sources, name in groups:
@@ -308,11 +306,7 @@ def compile_ir_to_c(
     Returns a dictionary mapping group names to a list of (file name,
     file text) pairs.
     """
-    source_paths = {
-        source.module: result.graph[source.module].xpath
-        for sources, _ in groups
-        for source in sources
-    }
+    source_paths = {source.module: result.graph[source.module].xpath for sources, _ in groups for source in sources}
 
     names = NameGenerator(
         [[source.module for source in sources] for sources, _ in groups],
@@ -323,17 +317,11 @@ def compile_ir_to_c(
     # compiled into a separate extension module.
     ctext: dict[str | None, list[tuple[str, str]]] = {}
     for group_sources, group_name in groups:
-        group_modules = {
-            source.module: modules[source.module]
-            for source in group_sources
-            if source.module in modules
-        }
+        group_modules = {source.module: modules[source.module] for source in group_sources if source.module in modules}
         if not group_modules:
             ctext[group_name] = []
             continue
-        generator = GroupGenerator(
-            group_modules, source_paths, group_name, mapper.group_map, names, compiler_options
-        )
+        generator = GroupGenerator(group_modules, source_paths, group_name, mapper.group_map, names, compiler_options)
         ctext[group_name] = generator.generate_c_for_modules()
 
     return ctext
@@ -401,17 +389,13 @@ def write_cache(
     result.manager.metastore.commit()
 
 
-def load_scc_from_cache(
-    scc: list[MypyFile], result: BuildResult, mapper: Mapper, ctx: DeserMaps
-) -> ModuleIRs:
+def load_scc_from_cache(scc: list[MypyFile], result: BuildResult, mapper: Mapper, ctx: DeserMaps) -> ModuleIRs:
     """Load IR for an SCC of modules from the cache.
 
     Arguments and return are as compile_scc_to_ir.
     """
     cache_data = {
-        k.fullname: json.loads(
-            result.manager.metastore.read(get_state_ir_cache_name(result.graph[k.fullname]))
-        )["ir"]
+        k.fullname: json.loads(result.manager.metastore.read(get_state_ir_cache_name(result.graph[k.fullname])))["ir"]
         for k in scc
     }
     modules = deserialize_modules(cache_data, ctx)
@@ -445,9 +429,7 @@ def compile_modules_to_c(
 
     # Sometimes when we call back into mypy, there might be errors.
     # We don't want to crash when that happens.
-    result.manager.errors.set_file(
-        "<mypyc>", module=None, scope=None, options=result.manager.options
-    )
+    result.manager.errors.set_file("<mypyc>", module=None, scope=None, options=result.manager.options)
 
     modules = compile_modules_to_ir(result, mapper, compiler_options, errors)
     if errors.num_errors > 0:
@@ -581,13 +563,9 @@ class GroupGenerator:
                 if fn.name != TOP_LEVEL_NAME and not fn.internal:
                     emitter.emit_line()
                     if is_fastcall_supported(fn, emitter.capi_version):
-                        generate_wrapper_function(
-                            fn, emitter, self.source_paths[module_name], module_name
-                        )
+                        generate_wrapper_function(fn, emitter, self.source_paths[module_name], module_name)
                     else:
-                        generate_legacy_wrapper_function(
-                            fn, emitter, self.source_paths[module_name], module_name
-                        )
+                        generate_legacy_wrapper_function(fn, emitter, self.source_paths[module_name], module_name)
             if multi_file:
                 name = f"__native_{exported_name(module_name)}.c"
                 file_contents.append((name, "".join(emitter.fragments)))
@@ -800,9 +778,7 @@ class GroupGenerator:
 
         if self.compiler_options.separate:
             emitter.emit_lines(
-                'capsule = PyCapsule_New(&exports, "{}.exports", NULL);'.format(
-                    shared_lib_name(self.group_name)
-                ),
+                'capsule = PyCapsule_New(&exports, "{}.exports", NULL);'.format(shared_lib_name(self.group_name)),
                 "if (!capsule) {",
                 "goto fail;",
                 "}",
@@ -855,9 +831,7 @@ class GroupGenerator:
                 f"if (!pexports_{egroup}) {{",
                 "goto fail;",
                 "}",
-                "memcpy(&exports_{group}, pexports_{group}, sizeof(exports_{group}));".format(
-                    group=egroup
-                ),
+                "memcpy(&exports_{group}, pexports_{group}, sizeof(exports_{group}));".format(group=egroup),
                 "",
             )
 
@@ -927,9 +901,7 @@ class GroupGenerator:
             emitter.emit_line(f"{symbol} = {fixup};")
 
         values = "CPyLit_Str, CPyLit_Bytes, CPyLit_Int, CPyLit_Float, CPyLit_Complex, CPyLit_Tuple, CPyLit_FrozenSet"
-        emitter.emit_lines(
-            f"if (CPyStatics_Initialize(CPyStatics, {values}) < 0) {{", "return -1;", "}"
-        )
+        emitter.emit_lines(f"if (CPyStatics_Initialize(CPyStatics, {values}) < 0) {{", "return -1;", "}")
 
         emitter.emit_lines("is_initialized = 1;", "return 0;", "}")
 
@@ -947,9 +919,7 @@ class GroupGenerator:
             self.emit_module_def_struct(emitter, module_name, module_prefix)
             self.emit_module_init_func(emitter, module_name, module_prefix)
 
-    def emit_module_def_slots(
-        self, emitter: Emitter, module_prefix: str, module_name: str
-    ) -> None:
+    def emit_module_def_slots(self, emitter: Emitter, module_prefix: str, module_name: str) -> None:
         name = f"{module_prefix}_slots"
         exec_name = f"CPyExec_{exported_name(module_name)}"
 
@@ -958,9 +928,7 @@ class GroupGenerator:
         if sys.version_info >= (3, 12):
             # Multiple interpreter support requires not using any C global state,
             # which we don't support yet.
-            emitter.emit_line(
-                "{Py_mod_multiple_interpreters, Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED},"
-            )
+            emitter.emit_line("{Py_mod_multiple_interpreters, Py_MOD_MULTIPLE_INTERPRETERS_NOT_SUPPORTED},")
         if sys.version_info >= (3, 13):
             # Declare support for free-threading to enable experimentation,
             # even if we don't properly support it.
@@ -968,9 +936,7 @@ class GroupGenerator:
         emitter.emit_line("{0, NULL},")
         emitter.emit_line("};")
 
-    def emit_module_methods(
-        self, emitter: Emitter, module_name: str, module_prefix: str, module: ModuleIR
-    ) -> None:
+    def emit_module_methods(self, emitter: Emitter, module_name: str, module_prefix: str, module: ModuleIR) -> None:
         """Emit module methods (the static PyMethodDef table)."""
         emitter.emit_line(f"static PyMethodDef {module_prefix}module_methods[] = {{")
         for fn in module.functions:
@@ -986,17 +952,13 @@ class GroupGenerator:
                 (
                     '{{"{name}", (PyCFunction){prefix}{cname}, {flag} | METH_KEYWORDS, '
                     "PyDoc_STR({doc}) /* docstring */}},"
-                ).format(
-                    name=name, cname=fn.cname(emitter.names), prefix=PREFIX, flag=flag, doc=doc
-                )
+                ).format(name=name, cname=fn.cname(emitter.names), prefix=PREFIX, flag=flag, doc=doc)
             )
         emitter.emit_line("{NULL, NULL, 0, NULL}")
         emitter.emit_line("};")
         emitter.emit_line()
 
-    def emit_module_def_struct(
-        self, emitter: Emitter, module_name: str, module_prefix: str
-    ) -> None:
+    def emit_module_def_struct(self, emitter: Emitter, module_name: str, module_prefix: str) -> None:
         """Emit the static module definition struct (PyModuleDef)."""
         emitter.emit_lines(
             f"static struct PyModuleDef {module_prefix}module = {{",
@@ -1014,9 +976,7 @@ class GroupGenerator:
         emitter.emit_line("};")
         emitter.emit_line()
 
-    def emit_module_exec_func(
-        self, emitter: Emitter, module_name: str, module_prefix: str, module: ModuleIR
-    ) -> None:
+    def emit_module_exec_func(self, emitter: Emitter, module_name: str, module_prefix: str, module: ModuleIR) -> None:
         """Emit the module exec function.
 
         If we are compiling just one module, this will be the normal C API
@@ -1036,9 +996,7 @@ class GroupGenerator:
         emitter.emit_line("PyObject* modname = NULL;")
         if self.multi_phase_init:
             emitter.emit_line(f"{module_static} = module;")
-        emitter.emit_line(
-            f'modname = PyObject_GetAttrString((PyObject *){module_static}, "__name__");'
-        )
+        emitter.emit_line(f'modname = PyObject_GetAttrString((PyObject *){module_static}, "__name__");')
 
         module_globals = emitter.static_name("globals", module_name)
         emitter.emit_lines(
@@ -1089,9 +1047,7 @@ class GroupGenerator:
         emitter.emit_line("return -1;")
         emitter.emit_line("}")
 
-    def emit_module_init_func(
-        self, emitter: Emitter, module_name: str, module_prefix: str
-    ) -> None:
+    def emit_module_init_func(self, emitter: Emitter, module_name: str, module_prefix: str) -> None:
         if not self.use_shared_lib:
             declaration = f"PyMODINIT_FUNC PyInit_{module_name}(void)"
         else:
@@ -1172,9 +1128,7 @@ class GroupGenerator:
 
         return result
 
-    def declare_global(
-        self, type_spaced: str, name: str, *, initializer: str | None = None
-    ) -> None:
+    def declare_global(self, type_spaced: str, name: str, *, initializer: str | None = None) -> None:
         if "[" not in type_spaced:
             base = f"{type_spaced}{name}"
         else:
@@ -1211,9 +1165,7 @@ class GroupGenerator:
         for imp in imps:
             self.declare_module(imp, emitter)
 
-    def declare_finals(
-        self, module: str, final_names: Iterable[tuple[str, RType]], emitter: Emitter
-    ) -> None:
+    def declare_finals(self, module: str, final_names: Iterable[tuple[str, RType]], emitter: Emitter) -> None:
         for name, typ in final_names:
             static_name = emitter.static_name(name, module)
             emitter.context.declarations[static_name] = HeaderDeclaration(

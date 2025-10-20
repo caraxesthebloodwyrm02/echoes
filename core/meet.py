@@ -150,19 +150,14 @@ def narrow_declared_type(declared: Type, narrowed: Type) -> Type:
                 # x: float | None
                 # y: int | None
                 # x = y
-                if (
-                    is_overlapping_types(d, n, ignore_promotions=True)
-                    or is_subtype(n, d, ignore_promotions=False)
-                )
+                if (is_overlapping_types(d, n, ignore_promotions=True) or is_subtype(n, d, ignore_promotions=False))
             ]
         )
     if is_enum_overlapping_union(declared, narrowed):
         # Quick check before reaching `is_overlapping_types`. If it's enum/literal overlap,
         # avoid full expansion and make it faster.
         assert isinstance(narrowed, UnionType)
-        return make_simplified_union(
-            [narrow_declared_type(declared, x) for x in narrowed.relevant_items()]
-        )
+        return make_simplified_union([narrow_declared_type(declared, x) for x in narrowed.relevant_items()])
     elif (
         isinstance(declared, TypeVarType)
         and not has_type_vars(original_narrowed)
@@ -177,20 +172,14 @@ def narrow_declared_type(declared: Type, narrowed: Type) -> Type:
         else:
             return NoneType()
     elif isinstance(narrowed, UnionType):
-        return make_simplified_union(
-            [narrow_declared_type(declared, x) for x in narrowed.relevant_items()]
-        )
+        return make_simplified_union([narrow_declared_type(declared, x) for x in narrowed.relevant_items()])
     elif isinstance(narrowed, AnyType):
         return original_narrowed
     elif isinstance(narrowed, TypeVarType) and is_subtype(narrowed.upper_bound, declared):
         return narrowed
     elif isinstance(declared, TypeType) and isinstance(narrowed, TypeType):
         return TypeType.make_normalized(narrow_declared_type(declared.item, narrowed.item))
-    elif (
-        isinstance(declared, TypeType)
-        and isinstance(narrowed, Instance)
-        and narrowed.type.is_metaclass()
-    ):
+    elif isinstance(declared, TypeType) and isinstance(narrowed, Instance) and narrowed.type.is_metaclass():
         # We'd need intersection types, so give up.
         return original_declared
     elif isinstance(declared, Instance):
@@ -275,19 +264,14 @@ def is_enum_overlapping_union(x: ProperType, y: ProperType) -> bool:
         and x.type.is_enum
         and isinstance(y, UnionType)
         and any(
-            isinstance(p := get_proper_type(z), LiteralType) and x.type == p.fallback.type
-            for z in y.relevant_items()
+            isinstance(p := get_proper_type(z), LiteralType) and x.type == p.fallback.type for z in y.relevant_items()
         )
     )
 
 
 def is_literal_in_union(x: ProperType, y: ProperType) -> bool:
     """Return True if x is a Literal and y is an Union that includes x"""
-    return (
-        isinstance(x, LiteralType)
-        and isinstance(y, UnionType)
-        and any(x == get_proper_type(z) for z in y.items)
-    )
+    return isinstance(x, LiteralType) and isinstance(y, UnionType) and any(x == get_proper_type(z) for z in y.items)
 
 
 def is_object(t: ProperType) -> bool:
@@ -299,20 +283,14 @@ def is_none_typevarlike_overlap(t1: ProperType, t2: ProperType) -> bool:
 
 
 def is_none_object_overlap(t1: ProperType, t2: ProperType) -> bool:
-    return (
-        isinstance(t1, NoneType)
-        and isinstance(t2, Instance)
-        and t2.type.fullname == "builtins.object"
-    )
+    return isinstance(t1, NoneType) and isinstance(t2, Instance) and t2.type.fullname == "builtins.object"
 
 
-def are_related_types(
-    left: Type, right: Type, *, proper_subtype: bool, ignore_promotions: bool
-) -> bool:
+def are_related_types(left: Type, right: Type, *, proper_subtype: bool, ignore_promotions: bool) -> bool:
     if proper_subtype:
-        return is_proper_subtype(
-            left, right, ignore_promotions=ignore_promotions
-        ) or is_proper_subtype(right, left, ignore_promotions=ignore_promotions)
+        return is_proper_subtype(left, right, ignore_promotions=ignore_promotions) or is_proper_subtype(
+            right, left, ignore_promotions=ignore_promotions
+        )
     else:
         return is_subtype(left, right, ignore_promotions=ignore_promotions) or is_subtype(
             right, left, ignore_promotions=ignore_promotions
@@ -398,9 +376,7 @@ def is_overlapping_types(
         if is_none_object_overlap(left, right) or is_none_object_overlap(right, left):
             return False
 
-    if are_related_types(
-        left, right, proper_subtype=overlap_for_overloads, ignore_promotions=ignore_promotions
-    ):
+    if are_related_types(left, right, proper_subtype=overlap_for_overloads, ignore_promotions=ignore_promotions):
         return True
 
     # See the docstring for 'get_possible_variants' for more info on what the
@@ -574,9 +550,7 @@ def is_overlapping_types(
     if isinstance(left, Instance) and isinstance(right, Instance):
         # First we need to handle promotions and structural compatibility for instances
         # that came as fallbacks, so simply call is_subtype() to avoid code duplication.
-        if are_related_types(
-            left, right, proper_subtype=overlap_for_overloads, ignore_promotions=ignore_promotions
-        ):
+        if are_related_types(left, right, proper_subtype=overlap_for_overloads, ignore_promotions=ignore_promotions):
             return True
 
         if right.type.fullname == "builtins.int" and left.type.fullname in MYPYC_NATIVE_INT_NAMES:
@@ -599,12 +573,8 @@ def is_overlapping_types(
             tvt = right.type.defn.type_vars[prefix]
             assert isinstance(tvt, TypeVarTupleType)
             fallback = tvt.tuple_fallback
-            left_prefix, left_middle, left_suffix = split_with_prefix_and_suffix(
-                left.args, prefix, suffix
-            )
-            right_prefix, right_middle, right_suffix = split_with_prefix_and_suffix(
-                right.args, prefix, suffix
-            )
+            left_prefix, left_middle, left_suffix = split_with_prefix_and_suffix(left.args, prefix, suffix)
+            right_prefix, right_middle, right_suffix = split_with_prefix_and_suffix(right.args, prefix, suffix)
             left_args = left_prefix + (TupleType(list(left_middle), fallback),) + left_suffix
             right_args = right_prefix + (TupleType(list(right_middle), fallback),) + right_suffix
         else:
@@ -625,10 +595,7 @@ def is_overlapping_types(
             # Or, to use a more concrete example, List[Union[A, B]] and List[Union[B, C]]
             # would be considered partially overlapping since it's possible for both lists
             # to contain only instances of B at runtime.
-            if all(
-                _is_overlapping_types(left_arg, right_arg)
-                for left_arg, right_arg in zip(left_args, right_args)
-            ):
+            if all(_is_overlapping_types(left_arg, right_arg) for left_arg, right_arg in zip(left_args, right_args)):
                 return True
 
         return False
@@ -643,9 +610,7 @@ def is_overlapping_types(
     return False
 
 
-def is_overlapping_erased_types(
-    left: Type, right: Type, *, ignore_promotions: bool = False
-) -> bool:
+def is_overlapping_erased_types(left: Type, right: Type, *, ignore_promotions: bool = False) -> bool:
     """The same as 'is_overlapping_erased_types', except the types are erased first."""
     return is_overlapping_types(
         erase_type(left),
@@ -679,9 +644,7 @@ def are_typed_dicts_overlapping(
     return True
 
 
-def are_tuples_overlapping(
-    left: Type, right: Type, is_overlapping: Callable[[Type, Type], bool]
-) -> bool:
+def are_tuples_overlapping(left: Type, right: Type, is_overlapping: Callable[[Type, Type], bool]) -> bool:
     """Returns true if left and right are overlapping tuples."""
     left, right = get_proper_types((left, right))
     left = adjust_tuple(left, right) or left
@@ -746,9 +709,7 @@ def adjust_tuple(left: ProperType, r: ProperType) -> TupleType | None:
 
 def is_tuple(typ: Type) -> bool:
     typ = get_proper_type(typ)
-    return isinstance(typ, TupleType) or (
-        isinstance(typ, Instance) and typ.type.fullname == "builtins.tuple"
-    )
+    return isinstance(typ, TupleType) or (isinstance(typ, Instance) and typ.type.fullname == "builtins.tuple")
 
 
 class TypeMeetVisitor(TypeVisitor[ProperType]):
@@ -836,9 +797,7 @@ class TypeMeetVisitor(TypeVisitor[ProperType]):
                 return self.default(self.s)
             from mypy.join import join_types
 
-            return t.copy_modified(
-                arg_types=[join_types(s_a, t_a) for s_a, t_a in zip(self.s.arg_types, t.arg_types)]
-            )
+            return t.copy_modified(arg_types=[join_types(s_a, t_a) for s_a, t_a in zip(self.s.arg_types, t.arg_types)])
         else:
             return self.default(self.s)
 
@@ -863,12 +822,8 @@ class TypeMeetVisitor(TypeVisitor[ProperType]):
                         tvt = s.type.defn.type_vars[prefix]
                         assert isinstance(tvt, TypeVarTupleType)
                         fallback = tvt.tuple_fallback
-                        s_prefix, s_middle, s_suffix = split_with_prefix_and_suffix(
-                            s.args, prefix, suffix
-                        )
-                        t_prefix, t_middle, t_suffix = split_with_prefix_and_suffix(
-                            t.args, prefix, suffix
-                        )
+                        s_prefix, s_middle, s_suffix = split_with_prefix_and_suffix(s.args, prefix, suffix)
+                        t_prefix, t_middle, t_suffix = split_with_prefix_and_suffix(t.args, prefix, suffix)
                         s_args = s_prefix + (TupleType(list(s_middle), fallback),) + s_suffix
                         t_args = t_prefix + (TupleType(list(t_middle), fallback),) + t_suffix
                     else:
@@ -1039,9 +994,7 @@ class TypeMeetVisitor(TypeVisitor[ProperType]):
             return None
         prefix_len = unpack_index
         suffix_len = variadic.length() - prefix_len - 1
-        prefix, middle, suffix = split_with_prefix_and_suffix(
-            tuple(fixed.items), prefix_len, suffix_len
-        )
+        prefix, middle, suffix = split_with_prefix_and_suffix(tuple(fixed.items), prefix_len, suffix_len)
         items = []
         for fi, vi in zip(prefix, variadic.items[:prefix_len]):
             items.append(self.meet(fi, vi))
@@ -1075,9 +1028,7 @@ class TypeMeetVisitor(TypeVisitor[ProperType]):
     def visit_typeddict_type(self, t: TypedDictType) -> ProperType:
         if isinstance(self.s, TypedDictType):
             for name, l, r in self.s.zip(t):
-                if not is_equivalent(l, r) or (name in t.required_keys) != (
-                    name in self.s.required_keys
-                ):
+                if not is_equivalent(l, r) or (name in t.required_keys) != (name in self.s.required_keys):
                     return self.default(self.s)
             item_list: list[tuple[str, Type]] = []
             for item_name, s_item_type, t_item_type in self.s.zipall(t):
@@ -1191,9 +1142,7 @@ def typed_dict_mapping_pair(left: Type, right: Type) -> bool:
     return isinstance(other, Instance) and other.type.has_base("typing.Mapping")
 
 
-def typed_dict_mapping_overlap(
-    left: Type, right: Type, overlapping: Callable[[Type, Type], bool]
-) -> bool:
+def typed_dict_mapping_overlap(left: Type, right: Type, overlapping: Callable[[Type, Type], bool]) -> bool:
     """Check if a TypedDict type is overlapping with a Mapping.
 
     The basic logic here consists of two rules:
@@ -1236,9 +1185,7 @@ def typed_dict_mapping_overlap(
         assert isinstance(right, TypedDictType)
         typed, other = right, left
 
-    mutable_mapping = next(
-        (base for base in other.type.mro if base.fullname == "typing.MutableMapping"), None
-    )
+    mutable_mapping = next((base for base in other.type.mro if base.fullname == "typing.MutableMapping"), None)
     if mutable_mapping is not None and typed.readonly_keys:
         return False
 

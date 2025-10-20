@@ -117,9 +117,7 @@ class WebSocketProtocol(WebSocketServerProtocol):
             (name.decode("latin-1"), value.decode("latin-1")) for name, value in server_state.default_headers
         ]
 
-    def connection_made(  # type: ignore[override]
-        self, transport: asyncio.Transport
-    ) -> None:
+    def connection_made(self, transport: asyncio.Transport) -> None:  # type: ignore[override]
         self.connections.add(self)
         self.transport = transport
         self.server = get_local_addr(transport)

@@ -10,7 +10,7 @@
   Use /assistant for AI assistant mode
 
 ================================================================================
-        
+
 System Status:
   * Environment loaded
   * Batch processing ready
@@ -18,6 +18,6 @@ System Status:
   ACTIVE Budget: $5.00 remaining ($0.00 spent, 0 calls)
   Files: 3 input, 0 output
 
-echoes> 
+echoes>
 
 Goodbye!

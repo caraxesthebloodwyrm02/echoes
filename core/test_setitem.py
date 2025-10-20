@@ -215,10 +215,7 @@ class TestSetitemScalarIndexer:
 
 class TestSetitemSlices:
     def test_setitem_slice_float_raises(self, datetime_series):
-        msg = (
-            "cannot do slice indexing on DatetimeIndex with these indexers "
-            r"\[{key}\] of type float"
-        )
+        msg = "cannot do slice indexing on DatetimeIndex with these indexers " r"\[{key}\] of type float"
         with pytest.raises(TypeError, match=msg.format(key=r"4\.0")):
             datetime_series[4.0:10.0] = 0
 
@@ -245,9 +242,7 @@ class TestSetitemSlices:
 
     def test_setitem_slicestep(self):
         # caught this bug when writing tests
-        series = Series(
-            np.arange(20, dtype=np.float64), index=np.arange(20, dtype=np.int64)
-        )
+        series = Series(np.arange(20, dtype=np.float64), index=np.arange(20, dtype=np.int64))
 
         series[::2] = 0
         assert (series[::2] == 0).all()
@@ -273,15 +268,11 @@ class TestSetitemBooleanMask:
 
     def test_setitem_mask_align_and_promote(self):
         # GH#8387: test that changing types does not break alignment
-        ts = Series(
-            np.random.default_rng(2).standard_normal(100), index=np.arange(100, 0, -1)
-        ).round(5)
+        ts = Series(np.random.default_rng(2).standard_normal(100), index=np.arange(100, 0, -1)).round(5)
         mask = ts > 0
         left = ts.copy()
         right = ts[mask].copy().map(str)
-        with tm.assert_produces_warning(
-            FutureWarning, match="item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="item of incompatible dtype"):
             left[mask] = right
         expected = ts.map(lambda t: str(t) if t > 0 else t)
         tm.assert_series_equal(left, expected)
@@ -290,9 +281,7 @@ class TestSetitemBooleanMask:
         ser = Series([0, 1, 2, 0])
         mask = ser > 0
         ser2 = ser[mask].map(str)
-        with tm.assert_produces_warning(
-            FutureWarning, match="item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="item of incompatible dtype"):
             ser[mask] = ser2
 
         expected = Series([0, "1", "2", 0])
@@ -385,9 +374,7 @@ class TestSetitemBooleanMask:
     def test_setitem_nan_with_bool(self):
         # GH 13034
         result = Series([True, False, True])
-        with tm.assert_produces_warning(
-            FutureWarning, match="item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="item of incompatible dtype"):
             result[0] = np.nan
         expected = Series([np.nan, False, True], dtype=object)
         tm.assert_series_equal(result, expected)
@@ -399,17 +386,13 @@ class TestSetitemBooleanMask:
         mask = np.array([True, False, True])
 
         ser = orig.copy()
-        with tm.assert_produces_warning(
-            FutureWarning, match="item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="item of incompatible dtype"):
             ser[mask] = Series(alt)
         expected = Series([999, 2, 1001])
         tm.assert_series_equal(ser, expected)
 
         ser2 = orig.copy()
-        with tm.assert_produces_warning(
-            FutureWarning, match="item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="item of incompatible dtype"):
             ser2.mask(mask, alt, inplace=True)
         tm.assert_series_equal(ser2, expected)
 
@@ -604,9 +587,7 @@ class TestSetitemWithExpansion:
             (np.nan, np.nan, "int64", "float64", 2, None),
         ],
     )
-    def test_setitem_enlarge_with_na(
-        self, na, target_na, dtype, target_dtype, indexer, warn
-    ):
+    def test_setitem_enlarge_with_na(self, na, target_na, dtype, target_dtype, indexer, warn):
         # GH#32346
         ser = Series([1, 2], dtype=dtype)
         with tm.assert_produces_warning(warn, match="incompatible dtype"):
@@ -619,11 +600,7 @@ class TestSetitemWithExpansion:
         # GH#48665
         ser = Series(["a", "b"])
         ser[3] = nulls_fixture
-        dtype = (
-            "str"
-            if using_infer_string and not isinstance(nulls_fixture, Decimal)
-            else object
-        )
+        dtype = "str" if using_infer_string and not isinstance(nulls_fixture, Decimal) else object
         expected = Series(["a", "b", nulls_fixture], index=[0, 1, 3], dtype=dtype)
         tm.assert_series_equal(ser, expected)
         if using_infer_string:
@@ -1076,9 +1053,7 @@ class TestSetitemNADatetimeLikeDtype(SetitemCastingEquivalents):
     #  to object and retain their dtypes.
     # GH#18586 for td64 and boolean mask case
 
-    @pytest.fixture(
-        params=["m8[ns]", "M8[ns]", "datetime64[ns, UTC]", "datetime64[ns, US/Central]"]
-    )
+    @pytest.fixture(params=["m8[ns]", "M8[ns]", "datetime64[ns, UTC]", "datetime64[ns, US/Central]"])
     def dtype(self, request):
         return request.param
 
@@ -1190,9 +1165,7 @@ class TestSetitemFloatIntervalWithIntIntervalValues(SetitemCastingEquivalents):
         obj = Series(idx)
         val = Interval(0.5, 1.5)
 
-        with tm.assert_produces_warning(
-            FutureWarning, match="Setting an item of incompatible dtype"
-        ):
+        with tm.assert_produces_warning(FutureWarning, match="Setting an item of incompatible dtype"):
             obj[0] = val
         assert obj.dtype == "Interval[float64, right]"
 
@@ -1535,9 +1508,7 @@ class TestCoercionTimedelta64(CoercionTest):
         return None
 
 
-@pytest.mark.parametrize(
-    "val", ["foo", Period("2016", freq="Y"), Interval(1, 2, closed="both")]
-)
+@pytest.mark.parametrize("val", ["foo", Period("2016", freq="Y"), Interval(1, 2, closed="both")])
 @pytest.mark.parametrize("exp_dtype", [object])
 class TestPeriodIntervalCoercion(CoercionTest):
     # GH#45768
@@ -1793,17 +1764,11 @@ def test_setitem_with_bool_indexer():
 
 
 @pytest.mark.parametrize("size", range(2, 6))
-@pytest.mark.parametrize(
-    "mask", [[True, False, False, False, False], [True, False], [False]]
-)
-@pytest.mark.parametrize(
-    "item", [2.0, np.nan, np.finfo(float).max, np.finfo(float).min]
-)
+@pytest.mark.parametrize("mask", [[True, False, False, False, False], [True, False], [False]])
+@pytest.mark.parametrize("item", [2.0, np.nan, np.finfo(float).max, np.finfo(float).min])
 # Test numpy arrays, lists and tuples as the input to be
 # broadcast
-@pytest.mark.parametrize(
-    "box", [lambda x: np.array([x]), lambda x: [x], lambda x: (x,)]
-)
+@pytest.mark.parametrize("box", [lambda x: np.array([x]), lambda x: [x], lambda x: (x,)])
 def test_setitem_bool_indexer_dont_broadcast_length1_values(size, mask, item, box):
     # GH#44265
     # see also tests.series.indexing.test_where.test_broadcast
@@ -1815,10 +1780,7 @@ def test_setitem_bool_indexer_dont_broadcast_length1_values(size, mask, item, bo
     ser = Series(data)
 
     if selection.sum() != 1:
-        msg = (
-            "cannot set using a list-like indexer with a different "
-            "length than the value"
-        )
+        msg = "cannot set using a list-like indexer with a different " "length than the value"
         with pytest.raises(ValueError, match=msg):
             # GH#44265
             ser[selection] = box(item)

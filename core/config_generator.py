@@ -81,8 +81,7 @@ def parse_args():
         "--show-defaults",
         dest="show_defaults",
         action="store_true",
-        help="show the default settings values for each "
-        "plugin but do not output a profile",
+        help="show the default settings values for each " "plugin but do not output a profile",
     )
     parser.add_argument(
         "-o",
@@ -165,17 +164,9 @@ def main():
                         raise RuntimeError(f"unknown ID in tests: {test}")
 
                 tpl = "# {0} : {1}"
-                test_list = [
-                    tpl.format(t.plugin._test_id, t.name)
-                    for t in extension_loader.MANAGER.plugins
-                ]
+                test_list = [tpl.format(t.plugin._test_id, t.name) for t in extension_loader.MANAGER.plugins]
 
-                others = [
-                    tpl.format(k, v["name"])
-                    for k, v in (
-                        extension_loader.MANAGER.blacklist_by_id.items()
-                    )
-                ]
+                others = [tpl.format(k, v["name"]) for k, v in (extension_loader.MANAGER.blacklist_by_id.items())]
                 test_list.extend(others)
                 test_list.sort()
 

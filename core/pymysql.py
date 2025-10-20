@@ -100,9 +100,7 @@ class MySQLDialect_pymysql(MySQLDialect_mysqldb):
         """  # noqa: E501
 
         try:
-            Connection = __import__(
-                "pymysql.connections"
-            ).connections.Connection
+            Connection = __import__("pymysql.connections").connections.Connection
         except (ImportError, AttributeError):
             return True
         else:
@@ -112,9 +110,7 @@ class MySQLDialect_pymysql(MySQLDialect_mysqldb):
             except IndexError:
                 return False
             else:
-                return reconnect_arg == "reconnect" and (
-                    not insp.defaults or insp.defaults[0] is not False
-                )
+                return reconnect_arg == "reconnect" and (not insp.defaults or insp.defaults[0] is not False)
 
     def do_ping(self, dbapi_connection: DBAPIConnection) -> Literal[True]:
         if self._send_false_to_ping:
@@ -124,14 +120,10 @@ class MySQLDialect_pymysql(MySQLDialect_mysqldb):
 
         return True
 
-    def create_connect_args(
-        self, url: URL, _translate_args: Optional[Dict[str, Any]] = None
-    ) -> ConnectArgsType:
+    def create_connect_args(self, url: URL, _translate_args: Optional[Dict[str, Any]] = None) -> ConnectArgsType:
         if _translate_args is None:
             _translate_args = dict(username="user")
-        return super().create_connect_args(
-            url, _translate_args=_translate_args
-        )
+        return super().create_connect_args(url, _translate_args=_translate_args)
 
     def is_disconnect(
         self,
@@ -143,9 +135,7 @@ class MySQLDialect_pymysql(MySQLDialect_mysqldb):
             return True
         elif isinstance(e, self.loaded_dbapi.Error):
             str_e = str(e).lower()
-            return (
-                "already closed" in str_e or "connection was killed" in str_e
-            )
+            return "already closed" in str_e or "connection was killed" in str_e
         else:
             return False
 

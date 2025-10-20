@@ -33,9 +33,7 @@ api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY_ECHOES")
 project_name = os.getenv("PROJECT", "ECHOES")
 
 if not api_key:
-    raise EnvironmentError(
-        "❌ Missing API key. Add OPENAI_API_KEY or OPENAI_API_KEY_ECHOES to .env"
-    )
+    raise EnvironmentError("❌ Missing API key. Add OPENAI_API_KEY or OPENAI_API_KEY_ECHOES to .env")
 
 client = OpenAI(api_key=api_key)
 

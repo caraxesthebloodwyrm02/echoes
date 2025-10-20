@@ -69,9 +69,7 @@ class BaseNonlocalControl(NonlocalControl):
 class LoopNonlocalControl(NonlocalControl):
     """Nonlocal control within a loop."""
 
-    def __init__(
-        self, outer: NonlocalControl, continue_block: BasicBlock, break_block: BasicBlock
-    ) -> None:
+    def __init__(self, outer: NonlocalControl, continue_block: BasicBlock, break_block: BasicBlock) -> None:
         self.outer = outer
         self.continue_block = continue_block
         self.break_block = break_block

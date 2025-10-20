@@ -40,7 +40,5 @@ class Backend(abc.ABC):
         remove_build_dir: bool,
         extra_dat: dict[str, Any],
     ) -> None: ...
-
-    #
     @abc.abstractmethod
     def compile(self) -> None: ...

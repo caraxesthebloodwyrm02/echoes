@@ -50,9 +50,7 @@ class TestSymphonyComponents:
             assert agent is not None
 
             # Test task addition
-            task = orchestrator.add_task(
-                "Review test file", "code_reviewer", "Review completed"
-            )
+            task = orchestrator.add_task("Review test file", "code_reviewer", "Review completed")
             assert task is not None
 
         except ImportError:
@@ -71,9 +69,7 @@ class TestSymphonyComponents:
             assert text_data["word_count"] == 2
 
             # Test cross-modal similarity (text-text for now)
-            similarity = processor.cross_modal_similarity(
-                text_data["text_features"], text_data["text_features"]
-            )
+            similarity = processor.cross_modal_similarity(text_data["text_features"], text_data["text_features"])
             assert similarity > 0.9  # Same text should be very similar
 
         except ImportError:
@@ -137,9 +133,7 @@ class TestSymphonyComponents:
             assert metadata is not None
 
             # Test synthetic generation (small sample for speed)
-            synthetic, validation = generator.generate_synthetic_data(
-                test_data, 10, method="copula"
-            )
+            synthetic, validation = generator.generate_synthetic_data(test_data, 10, method="copula")
             assert len(synthetic) == 10
             assert "quality_metrics" in validation
 
@@ -199,9 +193,7 @@ class TestSymphonyComponents:
         )
 
         # Should complete (exit code 0 or 1 is acceptable, not crash with 2+)
-        assert result.returncode < 2, (
-            f"Visualizer crashed with exit code {result.returncode}"
-        )
+        assert result.returncode < 2, f"Visualizer crashed with exit code {result.returncode}"
 
     def test_symphony_integration(self):
         """Test integration between symphony components"""
@@ -251,9 +243,7 @@ class TestSymphonyPerformance:
 
             _start_time = time.time()
 
-            synthetic, _ = generator.generate_synthetic_data(
-                large_data, 100, method="copula"
-            )
+            synthetic, _ = generator.generate_synthetic_data(large_data, 100, method="copula")
 
             duration = time.time() - _start_time
             assert duration < 30  # Should complete within 30 seconds

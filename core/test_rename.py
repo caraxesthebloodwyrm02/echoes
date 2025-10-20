@@ -33,9 +33,7 @@ class TestRename:
 
     def test_rename_retain_index_name(self):
         # index with name
-        renamer = Series(
-            np.arange(4), index=Index(["a", "b", "c", "d"], name="name"), dtype="int64"
-        )
+        renamer = Series(np.arange(4), index=Index(["a", "b", "c", "d"], name="name"), dtype="int64")
         renamed = renamer.rename({})
         assert renamed.index.name == renamer.index.name
 
@@ -136,9 +134,7 @@ class TestRename:
             ["yes", "yes", "two", "two", "yes"],
         ]
 
-        index_expected = MultiIndex.from_arrays(
-            arrays_expected, names=["first", "second"]
-        )
+        index_expected = MultiIndex.from_arrays(arrays_expected, names=["first", "second"])
         series_expected = Series(np.ones(5), index=index_expected)
 
         tm.assert_series_equal(result, series_expected)

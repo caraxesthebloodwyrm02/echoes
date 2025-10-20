@@ -66,9 +66,7 @@ class WindowsRegistry:
             raise RuntimeError("Windows registry only available on Windows")
         self.logger = logging.getLogger(__name__)
 
-    def read_value(
-        self, key_path: str, value_name: str, root=winreg.HKEY_LOCAL_MACHINE
-    ) -> Optional[Any]:
+    def read_value(self, key_path: str, value_name: str, root=winreg.HKEY_LOCAL_MACHINE) -> Optional[Any]:
         """Read value from registry"""
         try:
             key = winreg.OpenKey(root, key_path, 0, winreg.KEY_READ)
@@ -82,9 +80,7 @@ class WindowsRegistry:
             self.logger.error(f"Error reading registry: {e}")
             return None
 
-    def write_value(
-        self, key_path: str, value_name: str, value: Any, root=winreg.HKEY_LOCAL_MACHINE
-    ):
+    def write_value(self, key_path: str, value_name: str, value: Any, root=winreg.HKEY_LOCAL_MACHINE):
         """Write value to registry (requires admin)"""
         try:
             key = winreg.CreateKey(root, key_path)

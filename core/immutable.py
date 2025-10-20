@@ -21,9 +21,7 @@ class ImmutableTree(Tree):
         try:
             self._hash = hash((self._label, tuple(self)))
         except (TypeError, ValueError) as e:
-            raise ValueError(
-                "%s: node value and children " "must be immutable" % type(self).__name__
-            ) from e
+            raise ValueError("%s: node value and children " "must be immutable" % type(self).__name__) from e
 
     def __setitem__(self, index, value):
         raise ValueError("%s may not be modified" % type(self).__name__)

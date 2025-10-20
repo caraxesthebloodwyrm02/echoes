@@ -44,9 +44,7 @@ class TokenBucket:
             burst_capacity: Maximum burst capacity (defaults to max_per_min * 2)
         """
         self.rate_per_second = max_per_min / 60.0
-        self.max_tokens = (
-            burst_capacity if burst_capacity is not None else max_per_min * 2
-        )
+        self.max_tokens = burst_capacity if burst_capacity is not None else max_per_min * 2
         self.tokens = float(max_per_min)  # Start with full capacity
         self.last_refill = datetime.utcnow()
 
@@ -100,9 +98,7 @@ class TokenBucket:
             "total_requests": self.total_requests,
             "total_allowed": self.total_allowed,
             "total_denied": self.total_denied,
-            "allowance_rate": round(
-                self.total_allowed / max(self.total_requests, 1), 3
-            ),
+            "allowance_rate": round(self.total_allowed / max(self.total_requests, 1), 3),
             "last_denied": self.last_denied.isoformat() if self.last_denied else None,
             "time_until_full": self._time_until_full(),
         }

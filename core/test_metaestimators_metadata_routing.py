@@ -590,11 +590,7 @@ def set_requests(obj, *, method_mapping, methods, metadata_name, value=True):
         for callee in method_mapping.get(caller, [caller]):
             set_request_for_method = getattr(obj, f"set_{callee}_request")
             set_request_for_method(**{metadata_name: value})
-            if (
-                isinstance(obj, BaseEstimator)
-                and is_classifier(obj)
-                and callee == "partial_fit"
-            ):
+            if isinstance(obj, BaseEstimator) and is_classifier(obj) and callee == "partial_fit":
                 set_request_for_method(classes=True)
 
 
@@ -666,9 +662,7 @@ def test_error_on_missing_requests_for_sub_estimator(metaestimator):
 
     for method_name in routing_methods:
         for key in ["sample_weight", "metadata"]:
-            kwargs, (estimator, _), (scorer, _), *_ = get_init_args(
-                metaestimator, sub_estimator_consumes=True
-            )
+            kwargs, (estimator, _), (scorer, _), *_ = get_init_args(metaestimator, sub_estimator_consumes=True)
             if scorer:
                 scorer.set_score_request(**{key: True})
             val = {"sample_weight": sample_weight, "metadata": metadata}[key]
@@ -734,9 +728,7 @@ def test_setting_request_on_sub_estimator_removes_error(metaestimator):
                 metaestimator, sub_estimator_consumes=True
             )
             if scorer:
-                set_requests(
-                    scorer, method_mapping={}, methods=["score"], metadata_name=key
-                )
+                set_requests(scorer, method_mapping={}, methods=["score"], metadata_name=key)
             if cv:
                 cv.set_split_request(groups=True, metadata=True)
 
@@ -750,9 +742,7 @@ def test_setting_request_on_sub_estimator_removes_error(metaestimator):
 
             instance = metaestimator_class(**kwargs)
             method = getattr(instance, method_name)
-            extra_method_args = metaestimator.get("method_args", {}).get(
-                method_name, {}
-            )
+            extra_method_args = metaestimator.get("method_args", {}).get(method_name, {})
             if "fit" not in method_name:
                 # fit before calling method
                 instance.fit(X, y)
@@ -765,9 +755,7 @@ def test_setting_request_on_sub_estimator_removes_error(metaestimator):
             # sanity check that registry is not empty, or else the test passes
             # trivially
             assert registry
-            split_params = (
-                method_kwargs.keys() if preserves_metadata == "subset" else ()
-            )
+            split_params = method_kwargs.keys() if preserves_metadata == "subset" else ()
             for estimator in registry:
                 check_recorded_metadata(
                     estimator,
@@ -800,9 +788,7 @@ def test_non_consuming_estimator_works(metaestimator):
     routing_methods = metaestimator["estimator_routing_methods"]
 
     for method_name in routing_methods:
-        kwargs, (estimator, _), (_, _), (_, _) = get_init_args(
-            metaestimator, sub_estimator_consumes=False
-        )
+        kwargs, (estimator, _), (_, _), (_, _) = get_init_args(metaestimator, sub_estimator_consumes=False)
         instance = metaestimator_class(**kwargs)
         set_request(estimator, method_name)
         method = getattr(instance, method_name)
@@ -832,9 +818,7 @@ def test_metadata_is_routed_correctly_to_scorer(metaestimator):
     method_mapping = metaestimator.get("method_mapping", {})
 
     for method_name in routing_methods:
-        kwargs, (estimator, _), (scorer, registry), (cv, _) = get_init_args(
-            metaestimator, sub_estimator_consumes=True
-        )
+        kwargs, (estimator, _), (scorer, registry), (cv, _) = get_init_args(metaestimator, sub_estimator_consumes=True)
         scorer.set_score_request(sample_weight=True)
         if cv:
             cv.set_split_request(groups=True, metadata=True)
@@ -879,9 +863,7 @@ def test_metadata_is_routed_correctly_to_splitter(metaestimator):
     y_ = metaestimator["y"]
 
     for method_name in routing_methods:
-        kwargs, (estimator, _), (scorer, _), (cv, registry) = get_init_args(
-            metaestimator, sub_estimator_consumes=True
-        )
+        kwargs, (estimator, _), (scorer, _), (cv, registry) = get_init_args(metaestimator, sub_estimator_consumes=True)
         if estimator:
             estimator.set_fit_request(sample_weight=False, metadata=False)
         if scorer:
@@ -893,9 +875,7 @@ def test_metadata_is_routed_correctly_to_splitter(metaestimator):
         method(X_, y_, **method_kwargs)
         assert registry
         for _splitter in registry:
-            check_recorded_metadata(
-                obj=_splitter, method="split", parent=method_name, **method_kwargs
-            )
+            check_recorded_metadata(obj=_splitter, method="split", parent=method_name, **method_kwargs)
 
 
 @pytest.mark.parametrize("metaestimator", METAESTIMATORS, ids=METAESTIMATOR_IDS)

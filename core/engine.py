@@ -125,9 +125,7 @@ def evaluate_bias_safely(
 
             # Calculate overall bias score (average across axes)
             axis_scores = [axis_data["score"] for axis_data in result["axes"].values()]
-            overall_bias_score = (
-                sum(axis_scores) / len(axis_scores) if axis_scores else 0.0
-            )
+            overall_bias_score = sum(axis_scores) / len(axis_scores) if axis_scores else 0.0
 
             final_result = {
                 "bias_score": overall_bias_score,

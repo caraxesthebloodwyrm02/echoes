@@ -1,4 +1,5 @@
 """ test orc compat """
+
 import datetime
 from decimal import Decimal
 from io import BytesIO
@@ -17,9 +18,7 @@ pytest.importorskip("pyarrow.orc")
 
 import pyarrow as pa
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 @pytest.fixture
@@ -331,10 +330,7 @@ def test_orc_dtype_backend_pyarrow(using_infer_string):
     result = read_orc(BytesIO(bytes_data), dtype_backend="pyarrow")
 
     expected = pd.DataFrame(
-        {
-            col: pd.arrays.ArrowExtensionArray(pa.array(df[col], from_pandas=True))
-            for col in df.columns
-        }
+        {col: pd.arrays.ArrowExtensionArray(pa.array(df[col], from_pandas=True)) for col in df.columns}
     )
     if using_infer_string:
         # ORC does not preserve distinction between string and large string
@@ -371,12 +367,8 @@ def test_orc_dtype_backend_numpy_nullable():
     expected = pd.DataFrame(
         {
             "string": StringArray(np.array(["a", "b", "c"], dtype=np.object_)),
-            "string_with_nan": StringArray(
-                np.array(["a", pd.NA, "c"], dtype=np.object_)
-            ),
-            "string_with_none": StringArray(
-                np.array(["a", pd.NA, "c"], dtype=np.object_)
-            ),
+            "string_with_nan": StringArray(np.array(["a", pd.NA, "c"], dtype=np.object_)),
+            "string_with_none": StringArray(np.array(["a", pd.NA, "c"], dtype=np.object_)),
             "int": pd.Series([1, 2, 3], dtype="Int64"),
             "int_with_nan": pd.Series([1, pd.NA, 3], dtype="Int64"),
             "na_only": pd.Series([pd.NA, pd.NA, pd.NA], dtype="Int64"),
@@ -409,19 +401,13 @@ def test_orc_uri_path():
 )
 def test_to_orc_non_default_index(index):
     df = pd.DataFrame({"a": [1, 2, 3]}, index=index)
-    msg = (
-        "orc does not support serializing a non-default index|"
-        "orc does not serialize index meta-data"
-    )
+    msg = "orc does not support serializing a non-default index|" "orc does not serialize index meta-data"
     with pytest.raises(ValueError, match=msg):
         df.to_orc()
 
 
 def test_invalid_dtype_backend():
-    msg = (
-        "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-        "'pyarrow' are allowed."
-    )
+    msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
     df = pd.DataFrame({"int": list(range(1, 4))})
     with tm.ensure_clean("tmp.orc") as path:
         df.to_orc(path)

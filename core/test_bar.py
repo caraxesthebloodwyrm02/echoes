@@ -178,11 +178,7 @@ def test_align_mixed_cases(df_mix, align, exp, nans):
 def test_align_axis(align, exp, axis):
     # test all axis combinations with positive values and different aligns
     data = DataFrame([[1, 2], [3, 4]])
-    result = (
-        data.style.bar(align=align, axis=None if axis == "none" else axis)
-        ._compute()
-        .ctx
-    )
+    result = data.style.bar(align=align, axis=None if axis == "none" else axis)._compute().ctx
     expected = {
         (0, 0): exp[axis][0][0],
         (0, 1): exp[axis][0][1],
@@ -216,11 +212,7 @@ def test_vmin_vmax_clipping(df_pos, df_neg, df_mix, values, vmin, vmax, nullify,
     clip_df = df.where(df <= (vmax if vmax else 999), other=vmax)
     clip_df = clip_df.where(clip_df >= (vmin if vmin else -999), other=vmin)
 
-    result = (
-        df.style.bar(align=align, vmin=vmin, vmax=vmax, color=["red", "green"])
-        ._compute()
-        .ctx
-    )
+    result = df.style.bar(align=align, vmin=vmin, vmax=vmax, color=["red", "green"])._compute().ctx
     expected = clip_df.style.bar(align=align, color=["red", "green"])._compute().ctx
     assert result == expected
 
@@ -249,11 +241,7 @@ def test_vmin_vmax_widening(df_pos, df_neg, df_mix, values, vmin, vmax, nullify,
     expand_df = df.copy()
     expand_df.loc[3, :], expand_df.loc[4, :] = vmin, vmax
 
-    result = (
-        df.style.bar(align=align, vmin=vmin, vmax=vmax, color=["red", "green"])
-        ._compute()
-        .ctx
-    )
+    result = df.style.bar(align=align, vmin=vmin, vmax=vmax, color=["red", "green"])._compute().ctx
     expected = expand_df.style.bar(align=align, color=["red", "green"])._compute().ctx
     assert result.items() <= expected.items()
 
@@ -323,10 +311,7 @@ def test_bar_color_and_cmap_error_raises():
 
 def test_bar_invalid_color_type_error_raises():
     df = DataFrame({"A": [1, 2, 3, 4]})
-    msg = (
-        r"`color` must be string or list or tuple of 2 strings,"
-        r"\(eg: color=\['#d65f5f', '#5fba7d'\]\)"
-    )
+    msg = r"`color` must be string or list or tuple of 2 strings," r"\(eg: color=\['#d65f5f', '#5fba7d'\]\)"
     # Test that providing an invalid color type raises a ValueError
     with pytest.raises(ValueError, match=msg):
         df.style.bar(color=123).to_html()

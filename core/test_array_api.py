@@ -147,9 +147,7 @@ def test_asarray_with_order(array_api):
         ([[1, 2, 1], [2, 2, 2]], 1, False, [8, 30]),
     ],
 )
-def test_average(
-    array_namespace, device_, dtype_name, weights, axis, normalize, expected
-):
+def test_average(array_namespace, device_, dtype_name, weights, axis, normalize, expected):
     xp = _array_api_for_tests(array_namespace, device_)
     array_in = numpy.asarray([[1, 2, 3], [4, 5, 6]], dtype=dtype_name)
     array_in = xp.asarray(array_in, device=device_)
@@ -177,9 +175,7 @@ def test_average(
 def test_average_raises_with_wrong_dtype(array_namespace, device, dtype_name):
     xp = _array_api_for_tests(array_namespace, device)
 
-    array_in = numpy.asarray([2, 0], dtype=dtype_name) + 1j * numpy.asarray(
-        [4, 3], dtype=dtype_name
-    )
+    array_in = numpy.asarray([2, 0], dtype=dtype_name) + 1j * numpy.asarray([4, 3], dtype=dtype_name)
     complex_type_name = array_in.dtype.name
     if not hasattr(xp, complex_type_name):
         # This is the case for cupy as of March 2024 for instance.
@@ -225,9 +221,7 @@ def test_average_raises_with_wrong_dtype(array_namespace, device, dtype_name):
         (0, [-1, 1], ZeroDivisionError, "Weights sum to zero, can't be normalized"),
     ),
 )
-def test_average_raises_with_invalid_parameters(
-    array_namespace, device, dtype_name, axis, weights, error, error_msg
-):
+def test_average_raises_with_invalid_parameters(array_namespace, device, dtype_name, axis, weights, error, error_msg):
     xp = _array_api_for_tests(array_namespace, device)
 
     array_in = numpy.asarray([[1, 2, 3], [4, 5, 6]], dtype=dtype_name)
@@ -477,9 +471,7 @@ def test_max_precision_float_dtype(namespace, _device, _dtype):
 @pytest.mark.parametrize("assume_unique", [True, False])
 @pytest.mark.parametrize("element_size", [6, 10, 14])
 @pytest.mark.parametrize("int_dtype", ["int16", "int32", "int64", "uint8"])
-def test_isin(
-    array_namespace, device, _, invert, assume_unique, element_size, int_dtype
-):
+def test_isin(array_namespace, device, _, invert, assume_unique, element_size, int_dtype):
     xp = _array_api_for_tests(array_namespace, device)
     r = element_size // 2
     element = 2 * numpy.arange(element_size).reshape((r, 2)).astype(int_dtype)
@@ -504,9 +496,7 @@ def test_isin(
     assert_array_equal(_convert_to_numpy(result, xp=xp), expected)
 
 
-@pytest.mark.skipif(
-    os.environ.get("SCIPY_ARRAY_API") != "1", reason="SCIPY_ARRAY_API not set to 1."
-)
+@pytest.mark.skipif(os.environ.get("SCIPY_ARRAY_API") != "1", reason="SCIPY_ARRAY_API not set to 1.")
 def test_get_namespace_and_device():
     # Use torch as a library with custom Device objects:
     torch = pytest.importorskip("torch")
@@ -542,9 +532,7 @@ def test_get_namespace_and_device():
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 @pytest.mark.parametrize("axis", [0, 1, None, -1, -2])
 @pytest.mark.parametrize("sample_weight_type", [None, "int", "float"])
-def test_count_nonzero(
-    array_namespace, device_, dtype_name, csr_container, axis, sample_weight_type
-):
+def test_count_nonzero(array_namespace, device_, dtype_name, csr_container, axis, sample_weight_type):
     from sklearn.utils.sparsefuncs import count_nonzero as sparse_count_nonzero
 
     xp = _array_api_for_tests(array_namespace, device_)
@@ -555,15 +543,11 @@ def test_count_nonzero(
         sample_weight = numpy.asarray([0.5, 1.5, 0.8, 3.2, 2.4], dtype=dtype_name)
     else:
         sample_weight = None
-    expected = sparse_count_nonzero(
-        csr_container(array), axis=axis, sample_weight=sample_weight
-    )
+    expected = sparse_count_nonzero(csr_container(array), axis=axis, sample_weight=sample_weight)
     array_xp = xp.asarray(array, device=device_)
 
     with config_context(array_api_dispatch=True):
-        result = _count_nonzero(
-            array_xp, axis=axis, sample_weight=sample_weight, xp=xp, device=device_
-        )
+        result = _count_nonzero(array_xp, axis=axis, sample_weight=sample_weight, xp=xp, device=device_)
 
     assert_allclose(_convert_to_numpy(result, xp=xp), expected)
 

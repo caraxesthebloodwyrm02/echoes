@@ -50,14 +50,10 @@ _DEFAULT = "English: Brown Corpus (Humor)"
 _CORPORA = {
     "Catalan: CESS-CAT Corpus": lambda: cess_cat.words(),
     "English: Brown Corpus": lambda: brown.words(),
-    "English: Brown Corpus (Press)": lambda: brown.words(
-        categories=["news", "editorial", "reviews"]
-    ),
+    "English: Brown Corpus (Press)": lambda: brown.words(categories=["news", "editorial", "reviews"]),
     "English: Brown Corpus (Religion)": lambda: brown.words(categories="religion"),
     "English: Brown Corpus (Learned)": lambda: brown.words(categories="learned"),
-    "English: Brown Corpus (Science Fiction)": lambda: brown.words(
-        categories="science_fiction"
-    ),
+    "English: Brown Corpus (Science Fiction)": lambda: brown.words(categories="science_fiction"),
     "English: Brown Corpus (Romance)": lambda: brown.words(categories="romance"),
     "English: Brown Corpus (Humor)": lambda: brown.words(categories="humor"),
     "English: NPS Chat Corpus": lambda: nps_chat.words(),
@@ -93,9 +89,7 @@ class CollocationsView:
         top.minsize(550, 650)
 
     def _init_widgets(self, parent):
-        self.main_frame = Frame(
-            parent, dict(background=self._BACKGROUND_COLOUR, padx=1, pady=1, border=1)
-        )
+        self.main_frame = Frame(parent, dict(background=self._BACKGROUND_COLOUR, padx=1, pady=1, border=1))
         self._init_corpus_select(self.main_frame)
         self._init_results_box(self.main_frame)
         self._init_paging(self.main_frame)
@@ -116,9 +110,7 @@ class CollocationsView:
             border=0,
         ).pack(side="left")
 
-        other_corpora = list(self.model.CORPORA.keys()).remove(
-            self.model.DEFAULT_CORPUS
-        )
+        other_corpora = list(self.model.CORPORA.keys()).remove(self.model.DEFAULT_CORPUS)
         om = OptionMenu(
             innerframe,
             self.var,
@@ -148,9 +140,7 @@ class CollocationsView:
         menubar = Menu(self.top)
 
         filemenu = Menu(menubar, tearoff=0, borderwidth=0)
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-q"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-q")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         editmenu = Menu(menubar, tearoff=0)
@@ -209,9 +199,7 @@ class CollocationsView:
         hscrollbar.pack(side="left", fill="x", expand=True, anchor="w")
         hscrollbar.config(command=self.results_box.xview)
         # there is no other way of avoiding the overlap of scrollbars while using pack layout manager!!!
-        Label(i2, text="   ", background=self._BACKGROUND_COLOUR).pack(
-            side="left", anchor="e"
-        )
+        Label(i2, text="   ", background=self._BACKGROUND_COLOUR).pack(side="left", anchor="e")
         i1.pack(side="top", fill="both", expand=True, anchor="n")
         i2.pack(side="bottom", fill="x", anchor="s")
         innerframe.pack(side="top", fill="both", expand=True)
@@ -377,18 +365,13 @@ class CollocationsModel:
     def is_last_page(self, number):
         if number < len(self.result_pages):
             return False
-        return self.results_returned + (
-            number - len(self.result_pages)
-        ) * self.result_count >= len(self.collocations)
+        return self.results_returned + (number - len(self.result_pages)) * self.result_count >= len(self.collocations)
 
     def next(self, page):
         if (len(self.result_pages) - 1) < page:
             for i in range(page - (len(self.result_pages) - 1)):
                 self.result_pages.append(
-                    self.collocations[
-                        self.results_returned : self.results_returned
-                        + self.result_count
-                    ]
+                    self.collocations[self.results_returned : self.results_returned + self.result_count]
                 )
                 self.results_returned += self.result_count
         return self.result_pages[page]
@@ -411,10 +394,7 @@ class CollocationsModel:
                 text = [w for w in words if len(w) > 2]
                 fd = FreqDist(tuple(text[i : i + 2]) for i in range(len(text) - 1))
                 vocab = FreqDist(text)
-                scored = [
-                    ((w1, w2), fd[(w1, w2)] ** 3 / (vocab[w1] * vocab[w2]))
-                    for w1, w2 in fd
-                ]
+                scored = [((w1, w2), fd[(w1, w2)] ** 3 / (vocab[w1] * vocab[w2])) for w1, w2 in fd]
                 scored.sort(key=itemgetter(1), reverse=True)
                 self.model.collocations = list(map(itemgetter(0), scored))
                 self.model.queue.put(CORPUS_LOADED_EVENT)

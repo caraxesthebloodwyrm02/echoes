@@ -255,7 +255,6 @@ class ToolboxData(StandardFormat):
         :rtype: ElementTree._ElementInterface
         """
         from nltk import chunk
-        from nltk.tree import Tree
 
         cp = chunk.RegexpParser(grammar, root_label=root_label, trace=trace)
         db = self.parse(**kwargs)
@@ -295,9 +294,7 @@ def to_sfm_string(tree, encoding=None, errors="strict", unicode_fields=None):
     if tree.tag != "toolbox_data":
         raise ValueError("not a toolbox_data element structure")
     if encoding is None and unicode_fields is not None:
-        raise ValueError(
-            "if encoding is not specified then neither should unicode_fields"
-        )
+        raise ValueError("if encoding is not specified then neither should unicode_fields")
     l = []
     for rec in tree:
         l.append("\n")
@@ -449,9 +446,7 @@ def _sort_fields(elem, orders_dicts):
     except KeyError:
         pass
     else:
-        tmp = sorted(
-            ((order.get(child.tag, 1e9), i), child) for i, child in enumerate(elem)
-        )
+        tmp = sorted(((order.get(child.tag, 1e9), i), child) for i, child in enumerate(elem))
         elem[:] = [child for key, child in tmp]
     for child in elem:
         if len(child):

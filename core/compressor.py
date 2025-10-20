@@ -27,9 +27,7 @@ except ImportError:
     lzma = None
 
 
-LZ4_NOT_INSTALLED_ERROR = (
-    "LZ4 is not installed. Install it with pip: https://python-lz4.readthedocs.io/"
-)
+LZ4_NOT_INSTALLED_ERROR = "LZ4 is not installed. Install it with pip: https://python-lz4.readthedocs.io/"
 
 # Registered compressors
 _COMPRESSORS = {}
@@ -56,14 +54,11 @@ def register_compressor(compressor_name, compressor, force=False):
     """
     global _COMPRESSORS
     if not isinstance(compressor_name, str):
-        raise ValueError(
-            "Compressor name should be a string, '{}' given.".format(compressor_name)
-        )
+        raise ValueError("Compressor name should be a string, '{}' given.".format(compressor_name))
 
     if not isinstance(compressor, CompressorWrapper):
         raise ValueError(
-            "Compressor should implement the CompressorWrapper "
-            "interface, '{}' given.".format(compressor)
+            "Compressor should implement the CompressorWrapper " "interface, '{}' given.".format(compressor)
         )
 
     if compressor.fileobj_factory is not None and (
@@ -74,9 +69,7 @@ def register_compressor(compressor_name, compressor, force=False):
     ):
         raise ValueError(
             "Compressor 'fileobj_factory' attribute should "
-            "implement the file object interface, '{}' given.".format(
-                compressor.fileobj_factory
-            )
+            "implement the file object interface, '{}' given.".format(compressor.fileobj_factory)
         )
 
     if compressor_name in _COMPRESSORS and not force:
@@ -130,9 +123,7 @@ class BZ2CompressorWrapper(CompressorWrapper):
 
     def _check_versions(self):
         if bz2 is None:
-            raise ValueError(
-                "bz2 module is not compiled on your python standard library."
-            )
+            raise ValueError("bz2 module is not compiled on your python standard library.")
 
     def compressor_file(self, fileobj, compresslevel=None):
         """Returns an instance of a compressor file object."""
@@ -163,18 +154,14 @@ class LZMACompressorWrapper(CompressorWrapper):
 
     def _check_versions(self):
         if lzma is None:
-            raise ValueError(
-                "lzma module is not compiled on your python standard library."
-            )
+            raise ValueError("lzma module is not compiled on your python standard library.")
 
     def compressor_file(self, fileobj, compresslevel=None):
         """Returns an instance of a compressor file object."""
         if compresslevel is None:
             return self.fileobj_factory(fileobj, "wb", format=self._lzma_format)
         else:
-            return self.fileobj_factory(
-                fileobj, "wb", format=self._lzma_format, preset=compresslevel
-            )
+            return self.fileobj_factory(fileobj, "wb", format=self._lzma_format, preset=compresslevel)
 
     def decompressor_file(self, fileobj):
         """Returns an instance of a decompressor file object."""
@@ -279,9 +266,7 @@ class BinaryZlibFile(io.BufferedIOBase):
             self._buffer_offset = 0
         elif mode == "wb":
             self._mode = _MODE_WRITE
-            self._compressor = zlib.compressobj(
-                self.compresslevel, zlib.DEFLATED, self.wbits, zlib.DEF_MEM_LEVEL, 0
-            )
+            self._compressor = zlib.compressobj(self.compresslevel, zlib.DEFLATED, self.wbits, zlib.DEF_MEM_LEVEL, 0)
         else:
             raise ValueError("Invalid mode: %r" % (mode,))
 
@@ -367,13 +352,9 @@ class BinaryZlibFile(io.BufferedIOBase):
     def _check_can_seek(self):
         if self._mode not in (_MODE_READ, _MODE_READ_EOF):
             self._check_not_closed()
-            raise io.UnsupportedOperation(
-                "Seeking is only supported on files open for reading"
-            )
+            raise io.UnsupportedOperation("Seeking is only supported on files open for reading")
         if not self._fp.seekable():
-            raise io.UnsupportedOperation(
-                "The underlying file object does not support seeking"
-            )
+            raise io.UnsupportedOperation("The underlying file object does not support seeking")
 
     # Fill the readahead buffer if it is empty. Returns False on EOF.
     def _fill_buffer(self):
@@ -543,9 +524,7 @@ class BinaryZlibFile(io.BufferedIOBase):
 
 class ZlibCompressorWrapper(CompressorWrapper):
     def __init__(self):
-        CompressorWrapper.__init__(
-            self, obj=BinaryZlibFile, prefix=_ZLIB_PREFIX, extension=".z"
-        )
+        CompressorWrapper.__init__(self, obj=BinaryZlibFile, prefix=_ZLIB_PREFIX, extension=".z")
 
 
 class BinaryGzipFile(BinaryZlibFile):
@@ -567,6 +546,4 @@ class BinaryGzipFile(BinaryZlibFile):
 
 class GzipCompressorWrapper(CompressorWrapper):
     def __init__(self):
-        CompressorWrapper.__init__(
-            self, obj=BinaryGzipFile, prefix=_GZIP_PREFIX, extension=".gz"
-        )
+        CompressorWrapper.__init__(self, obj=BinaryGzipFile, prefix=_GZIP_PREFIX, extension=".gz")

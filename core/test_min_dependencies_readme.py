@@ -21,9 +21,7 @@ min_dependencies_tag_to_pyproject_section = {
     "install": "project.dependencies",
 }
 for tag in min_depencies_tag_to_packages_without_version:
-    min_dependencies_tag_to_pyproject_section[tag] = (
-        f"project.optional-dependencies.{tag}"
-    )
+    min_dependencies_tag_to_pyproject_section[tag] = f"project.optional-dependencies.{tag}"
 
 
 def test_min_dependencies_readme():
@@ -31,12 +29,7 @@ def test_min_dependencies_readme():
     # consistent with the minimum dependencies defined at the file:
     # sklearn/_min_dependencies.py
 
-    pattern = re.compile(
-        r"\.\. \|"
-        r"([A-Za-z-]+)"
-        r"MinVersion\| replace::"
-        r"( [0-9]+\.[0-9]+(\.[0-9]+)?)"
-    )
+    pattern = re.compile(r"\.\. \|" r"([A-Za-z-]+)" r"MinVersion\| replace::" r"( [0-9]+\.[0-9]+(\.[0-9]+)?)")
 
     readme_path = Path(sklearn.__file__).parent.parent
     readme_file = readme_path / "README.rst"
@@ -63,18 +56,14 @@ def test_min_dependencies_readme():
                 assert version == min_version, f"{package} has a mismatched version"
 
 
-def check_pyproject_section(
-    pyproject_section, min_dependencies_tag, skip_version_check_for=None
-):
+def check_pyproject_section(pyproject_section, min_dependencies_tag, skip_version_check_for=None):
     # tomllib is available in Python 3.11
     tomllib = pytest.importorskip("tomllib")
 
     if skip_version_check_for is None:
         skip_version_check_for = []
 
-    expected_packages = min_depencies_tag_to_packages_without_version[
-        min_dependencies_tag
-    ]
+    expected_packages = min_depencies_tag_to_packages_without_version[min_dependencies_tag]
 
     root_directory = Path(sklearn.__file__).parent.parent
     pyproject_toml_path = root_directory / "pyproject.toml"

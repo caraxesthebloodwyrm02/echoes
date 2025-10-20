@@ -96,12 +96,8 @@ def contains_alias(alias: Union[Alias, Subquery]) -> AliasOption:
 
 
 def mapped_column(
-    __name_pos: Optional[
-        Union[str, _TypeEngineArgument[Any], SchemaEventTarget]
-    ] = None,
-    __type_pos: Optional[
-        Union[_TypeEngineArgument[Any], SchemaEventTarget]
-    ] = None,
+    __name_pos: Optional[Union[str, _TypeEngineArgument[Any], SchemaEventTarget]] = None,
+    __type_pos: Optional[Union[_TypeEngineArgument[Any], SchemaEventTarget]] = None,
     *args: SchemaEventTarget,
     init: Union[_NoArg, bool] = _NoArg.NO_ARG,
     repr: Union[_NoArg, bool] = _NoArg.NO_ARG,  # noqa: A002
@@ -110,9 +106,7 @@ def mapped_column(
     compare: Union[_NoArg, bool] = _NoArg.NO_ARG,
     kw_only: Union[_NoArg, bool] = _NoArg.NO_ARG,
     hash: Union[_NoArg, bool, None] = _NoArg.NO_ARG,  # noqa: A002
-    nullable: Optional[
-        Union[bool, Literal[SchemaConst.NULL_UNSPECIFIED]]
-    ] = SchemaConst.NULL_UNSPECIFIED,
+    nullable: Optional[Union[bool, Literal[SchemaConst.NULL_UNSPECIFIED]]] = SchemaConst.NULL_UNSPECIFIED,
     primary_key: Optional[bool] = False,
     deferred: Union[_NoArg, bool] = _NoArg.NO_ARG,
     deferred_group: Optional[str] = None,
@@ -433,9 +427,7 @@ def orm_insert_sentinel(
 
     return mapped_column(
         name=name,
-        default=(
-            default if default is not None else _InsertSentinelColumnDefault()
-        ),
+        default=(default if default is not None else _InsertSentinelColumnDefault()),
         _omit_from_statements=omit_from_statements,
         insert_sentinel=True,
         use_existing_column=True,
@@ -697,9 +689,7 @@ def composite(
 
 
 def composite(
-    _class_or_attr: Union[
-        None, Type[_CC], Callable[..., _CC], _CompositeAttrType[Any]
-    ] = None,
+    _class_or_attr: Union[None, Type[_CC], Callable[..., _CC], _CompositeAttrType[Any]] = None,
     *attrs: _CompositeAttrType[Any],
     group: Optional[str] = None,
     deferred: bool = False,
@@ -1032,9 +1022,7 @@ def relationship(
     secondary: Optional[_RelationshipSecondaryArgument] = None,
     *,
     uselist: Optional[bool] = None,
-    collection_class: Optional[
-        Union[Type[Collection[Any]], Callable[[], Collection[Any]]]
-    ] = None,
+    collection_class: Optional[Union[Type[Collection[Any]], Callable[[], Collection[Any]]]] = None,
     primaryjoin: Optional[_RelationshipJoinConditionArgument] = None,
     secondaryjoin: Optional[_RelationshipJoinConditionArgument] = None,
     back_populates: Optional[str] = None,
@@ -1059,9 +1047,7 @@ def relationship(
     foreign_keys: Optional[_ORMColCollectionArgument] = None,
     remote_side: Optional[_ORMColCollectionArgument] = None,
     join_depth: Optional[int] = None,
-    comparator_factory: Optional[
-        Type[RelationshipProperty.Comparator[Any]]
-    ] = None,
+    comparator_factory: Optional[Type[RelationshipProperty.Comparator[Any]]] = None,
     single_parent: bool = False,
     innerjoin: bool = False,
     distinct_target_key: Optional[bool] = None,
@@ -2078,9 +2064,7 @@ def synonym(
     )
 
 
-def create_session(
-    bind: Optional[_SessionBind] = None, **kwargs: Any
-) -> Session:
+def create_session(bind: Optional[_SessionBind] = None, **kwargs: Any) -> Session:
     r"""Create a new :class:`.Session`
     with no automation enabled by default.
 
@@ -2143,9 +2127,7 @@ def _mapper_fn(*arg: Any, **kw: Any) -> NoReturn:
     )
 
 
-def dynamic_loader(
-    argument: Optional[_RelationshipArgumentType[Any]] = None, **kw: Any
-) -> RelationshipProperty[Any]:
+def dynamic_loader(argument: Optional[_RelationshipArgumentType[Any]] = None, **kw: Any) -> RelationshipProperty[Any]:
     """Construct a dynamically-loading mapper property.
 
     This is essentially the same as

@@ -74,16 +74,11 @@ class IPIPANCorpusReader(CorpusReader):
     def categories(self, fileids=None):
         if not fileids:
             fileids = self.fileids()
-        return [
-            self._map_category(cat) for cat in self._parse_header(fileids, "keyTerm")
-        ]
+        return [self._map_category(cat) for cat in self._parse_header(fileids, "keyTerm")]
 
     def fileids(self, channels=None, domains=None, categories=None):
         if channels is not None and domains is not None and categories is not None:
-            raise ValueError(
-                "You can specify only one of channels, domains "
-                "and categories parameter at once"
-            )
+            raise ValueError("You can specify only one of channels, domains " "and categories parameter at once")
         if channels is None and domains is None and categories is None:
             return CorpusReader.fileids(self)
         if isinstance(channels, str):
@@ -97,17 +92,13 @@ class IPIPANCorpusReader(CorpusReader):
         elif domains:
             return self._list_morph_files_by("domain", domains)
         else:
-            return self._list_morph_files_by(
-                "keyTerm", categories, map=self._map_category
-            )
+            return self._list_morph_files_by("keyTerm", categories, map=self._map_category)
 
     @_parse_args
     def sents(self, fileids=None, **kwargs):
         return concat(
             [
-                self._view(
-                    fileid, mode=IPIPANCorpusView.SENTS_MODE, tags=False, **kwargs
-                )
+                self._view(fileid, mode=IPIPANCorpusView.SENTS_MODE, tags=False, **kwargs)
                 for fileid in self._list_morph_files(fileids)
             ]
         )
@@ -116,21 +107,14 @@ class IPIPANCorpusReader(CorpusReader):
     def paras(self, fileids=None, **kwargs):
         return concat(
             [
-                self._view(
-                    fileid, mode=IPIPANCorpusView.PARAS_MODE, tags=False, **kwargs
-                )
+                self._view(fileid, mode=IPIPANCorpusView.PARAS_MODE, tags=False, **kwargs)
                 for fileid in self._list_morph_files(fileids)
             ]
         )
 
     @_parse_args
     def words(self, fileids=None, **kwargs):
-        return concat(
-            [
-                self._view(fileid, tags=False, **kwargs)
-                for fileid in self._list_morph_files(fileids)
-            ]
-        )
+        return concat([self._view(fileid, tags=False, **kwargs) for fileid in self._list_morph_files(fileids)])
 
     @_parse_args
     def tagged_sents(self, fileids=None, **kwargs):
@@ -152,18 +136,13 @@ class IPIPANCorpusReader(CorpusReader):
 
     @_parse_args
     def tagged_words(self, fileids=None, **kwargs):
-        return concat(
-            [self._view(fileid, **kwargs) for fileid in self._list_morph_files(fileids)]
-        )
+        return concat([self._view(fileid, **kwargs) for fileid in self._list_morph_files(fileids)])
 
     def _list_morph_files(self, fileids):
         return [f for f in self.abspaths(fileids)]
 
     def _list_header_files(self, fileids):
-        return [
-            f.replace("morph.xml", "header.xml")
-            for f in self._list_morph_files(fileids)
-        ]
+        return [f.replace("morph.xml", "header.xml") for f in self._list_morph_files(fileids)]
 
     def _parse_header(self, fileids, tag):
         values = set()
@@ -218,13 +197,10 @@ class IPIPANCorpusReader(CorpusReader):
         if len(kwargs) > 0:
             raise ValueError("Unexpected arguments: %s" % kwargs.keys())
         if not one_tag and not disamb_only:
-            raise ValueError(
-                "You cannot specify both one_tag=False and " "disamb_only=False"
-            )
+            raise ValueError("You cannot specify both one_tag=False and " "disamb_only=False")
         if not tags and (simplify_tags or not one_tag or not disamb_only):
             raise ValueError(
-                "You cannot specify simplify_tags, one_tag or "
-                "disamb_only with functions other than tagged_*"
+                "You cannot specify simplify_tags, one_tag or " "disamb_only with functions other than tagged_*"
             )
 
         return IPIPANCorpusView(

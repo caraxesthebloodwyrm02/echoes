@@ -42,29 +42,23 @@ def _create_element_from_result(
     contnode: TextElement,
 ) -> nodes.reference:
     uri = inv_item.uri
-    if '://' not in uri and node.get('refdoc'):
+    if "://" not in uri and node.get("refdoc"):
         # get correct path in case of subdirectories
-        uri = (_relative_path(Path(), Path(node['refdoc']).parent) / uri).as_posix()
+        uri = (_relative_path(Path(), Path(node["refdoc"]).parent) / uri).as_posix()
     if inv_item.project_version:
-        reftitle = _('(in %s v%s)') % (inv_item.project_name, inv_item.project_version)
+        reftitle = _("(in %s v%s)") % (inv_item.project_name, inv_item.project_version)
     else:
-        reftitle = _('(in %s)') % (inv_item.project_name,)
+        reftitle = _("(in %s)") % (inv_item.project_name,)
 
-    newnode = nodes.reference('', '', internal=False, refuri=uri, reftitle=reftitle)
-    if node.get('refexplicit'):
+    newnode = nodes.reference("", "", internal=False, refuri=uri, reftitle=reftitle)
+    if node.get("refexplicit"):
         # use whatever title was given
         newnode.append(contnode)
-    elif inv_item.display_name == '-' or (
-        domain_name == 'std' and node['reftype'] == 'keyword'
-    ):
+    elif inv_item.display_name == "-" or (domain_name == "std" and node["reftype"] == "keyword"):
         # use whatever title was given, but strip prefix
         title = contnode.astext()
-        if inv_name is not None and title.startswith(inv_name + ':'):
-            newnode.append(
-                contnode.__class__(
-                    title[len(inv_name) + 1 :], title[len(inv_name) + 1 :]
-                )
-            )
+        if inv_name is not None and title.startswith(inv_name + ":"):
+            newnode.append(contnode.__class__(title[len(inv_name) + 1 :], title[len(inv_name) + 1 :]))
         else:
             newnode.append(contnode)
     else:
@@ -90,27 +84,23 @@ def _resolve_reference_in_domain_by_target(
         if target in inventory[objtype]:
             # Case sensitive match, use it
             data = inventory[objtype][target]
-        elif objtype in {'std:label', 'std:term'}:
+        elif objtype in {"std:label", "std:term"}:
             # Some types require case insensitive matches:
             # * 'term': https://github.com/sphinx-doc/sphinx/issues/9291
             # * 'label': https://github.com/sphinx-doc/sphinx/issues/12008
             target_lower = target.lower()
-            insensitive_matches = list(
-                filter(lambda k: k.lower() == target_lower, inventory[objtype].keys())
-            )
+            insensitive_matches = list(filter(lambda k: k.lower() == target_lower, inventory[objtype].keys()))
             if len(insensitive_matches) > 1:
-                data_items = {
-                    inventory[objtype][match] for match in insensitive_matches
-                }
-                inv_descriptor = inv_name or 'main_inventory'
+                data_items = {inventory[objtype][match] for match in insensitive_matches}
+                inv_descriptor = inv_name or "main_inventory"
                 if len(data_items) == 1:  # these are duplicates; relatively innocuous
                     LOGGER.debug(
                         __("inventory '%s': duplicate matches found for %s:%s"),
                         inv_descriptor,
                         objtype,
                         target,
-                        type='intersphinx',
-                        subtype='external',
+                        type="intersphinx",
+                        subtype="external",
                         location=node,
                     )
                 else:
@@ -119,8 +109,8 @@ def _resolve_reference_in_domain_by_target(
                         inv_descriptor,
                         objtype,
                         target,
-                        type='intersphinx',
-                        subtype='external',
+                        type="intersphinx",
+                        subtype="external",
                         location=node,
                     )
             if insensitive_matches:
@@ -151,29 +141,25 @@ def _resolve_reference_in_domain(
     obj_types: dict[str, None] = dict.fromkeys(objtypes)
 
     # we adjust the object types for backwards compatibility
-    if domain_name == 'std' and 'cmdoption' in obj_types:
+    if domain_name == "std" and "cmdoption" in obj_types:
         # cmdoptions were stored as std:option until Sphinx 1.6
-        obj_types['option'] = None
-    if domain_name == 'py' and 'attribute' in obj_types:
+        obj_types["option"] = None
+    if domain_name == "py" and "attribute" in obj_types:
         # properties are stored as py:method since Sphinx 2.1
-        obj_types['method'] = None
+        obj_types["method"] = None
 
     # the inventory contains domain:type as objtype
-    obj_types = {f'{domain_name}:{obj_type}': None for obj_type in obj_types}
+    obj_types = {f"{domain_name}:{obj_type}": None for obj_type in obj_types}
 
     # now that the objtypes list is complete we can remove the disabled ones
     if honor_disabled_refs:
-        obj_types = {
-            obj_type: None
-            for obj_type in obj_types
-            if obj_type not in disabled_reftypes
-        }
+        obj_types = {obj_type: None for obj_type in obj_types if obj_type not in disabled_reftypes}
 
     objtypes = [*obj_types.keys()]
 
     # without qualification
     res = _resolve_reference_in_domain_by_target(
-        inv_name, inventory, domain_name, objtypes, node['reftarget'], node, contnode
+        inv_name, inventory, domain_name, objtypes, node["reftarget"], node, contnode
     )
     if res is not None:
         return res
@@ -199,13 +185,13 @@ def _resolve_reference(
     # disabling should only be done if no inventory is given
     honor_disabled_refs = honor_disabled_refs and inv_name is None
 
-    if honor_disabled_refs and '*' in disabled_reftypes:
+    if honor_disabled_refs and "*" in disabled_reftypes:
         return None
 
-    typ = node['reftype']
-    if typ == 'any':
+    typ = node["reftype"]
+    if typ == "any":
         for domain in domains.sorted():
-            if honor_disabled_refs and f'{domain.name}:*' in disabled_reftypes:
+            if honor_disabled_refs and f"{domain.name}:*" in disabled_reftypes:
                 continue
             objtypes: Iterable[str] = domain.object_types.keys()
             res = _resolve_reference_in_domain(
@@ -222,16 +208,16 @@ def _resolve_reference(
                 return res
         return None
     else:
-        domain_name = node.get('refdomain')
+        domain_name = node.get("refdomain")
         if not domain_name:
             # only objects in domains are in the inventory
             return None
-        if honor_disabled_refs and f'{domain_name}:*' in disabled_reftypes:
+        if honor_disabled_refs and f"{domain_name}:*" in disabled_reftypes:
             return None
         try:
             domain = domains[domain_name]
         except KeyError as exc:
-            msg = __('Domain %r is not registered') % domain_name
+            msg = __("Domain %r is not registered") % domain_name
             raise ExtensionError(msg) from exc
 
         objtypes = domain.objtypes_for_role(typ) or ()
@@ -316,23 +302,23 @@ def resolve_reference_detect_inventory(
         return res
 
     # try splitting the target into 'inv_name:target'
-    target = node['reftarget']
-    if ':' not in target:
+    target = node["reftarget"]
+    if ":" not in target:
         return None
-    inv_name, _, new_target = target.partition(':')
+    inv_name, _, new_target = target.partition(":")
 
     # check if the target is self-referential
     self_referential = bool(resolve_self) and resolve_self == inv_name
     if self_referential:
-        node['reftarget'] = new_target
-        node['intersphinx_self_referential'] = True
+        node["reftarget"] = new_target
+        node["intersphinx_self_referential"] = True
         return None
 
     if not inventory_exists(env, inv_name):
         return None
-    node['reftarget'] = new_target
+    node["reftarget"] = new_target
     res_inv = resolve_reference_in_inventory(env, inv_name, node, contnode)
-    node['reftarget'] = target
+    node["reftarget"] = target
     return res_inv
 
 
@@ -356,7 +342,7 @@ class IntersphinxDispatcher(CustomReSTDispatcher):
         lineno: int,
         reporter: Reporter,
     ) -> tuple[RoleFunction, list[system_message]]:
-        if len(role_name) > 9 and role_name.startswith(('external:', 'external+')):
+        if len(role_name) > 9 and role_name.startswith(("external:", "external+")):
             return IntersphinxRole(role_name), []
         else:
             return super().role(role_name, language_module, lineno, reporter)
@@ -366,7 +352,7 @@ class IntersphinxRole(SphinxRole):
     # group 1: just for the optionality of the inventory name
     # group 2: the inventory name (optional)
     # group 3: the domain:role or role part
-    _re_inv_ref = re.compile(r'(\+([^:]+))?:(.*)')
+    _re_inv_ref = re.compile(r"(\+([^:]+))?:(.*)")
 
     def __init__(self, orig_name: str) -> None:
         self.orig_name = orig_name
@@ -380,7 +366,7 @@ class IntersphinxRole(SphinxRole):
         if not self_referential:
             if inventory and not inventory_exists(self.env, inventory):
                 self._emit_warning(
-                    __('inventory for external cross-reference not found: %r'),
+                    __("inventory for external cross-reference not found: %r"),
                     inventory,
                 )
                 return [], []
@@ -388,9 +374,7 @@ class IntersphinxRole(SphinxRole):
         domain_name, role_name = self._get_domain_role(name_suffix)
 
         if role_name is None:
-            self._emit_warning(
-                __('invalid external cross-reference suffix: %r'), name_suffix
-            )
+            self._emit_warning(__("invalid external cross-reference suffix: %r"), name_suffix)
             return [], []
 
         # attempt to find a matching role function
@@ -399,18 +383,16 @@ class IntersphinxRole(SphinxRole):
         if domain_name is not None:
             # the user specified a domain, so we only check that
             if domain_name not in self.env.domains:
-                self._emit_warning(
-                    __('domain for external cross-reference not found: %r'), domain_name
-                )
+                self._emit_warning(__("domain for external cross-reference not found: %r"), domain_name)
                 return [], []
             domain = self.env.domains[domain_name]
             role_func = domain.roles.get(role_name)
             if role_func is None:
-                msg = 'role for external cross-reference not found in domain %r: %r'
+                msg = "role for external cross-reference not found in domain %r: %r"
                 object_types = domain.object_types.get(role_name)
                 if object_types is not None and object_types.roles:
                     self._emit_warning(
-                        __(f'{msg} (perhaps you meant one of: %s)'),
+                        __(f"{msg} (perhaps you meant one of: %s)"),
                         domain_name,
                         role_name,
                         self._concat_strings(object_types.roles),
@@ -439,15 +421,15 @@ class IntersphinxRole(SphinxRole):
 
             if role_func is None or domain_name is None:
                 domains_str = self._concat_strings(domain.name for domain in domains)
-                msg = 'role for external cross-reference not found in domains %s: %r'
+                msg = "role for external cross-reference not found in domains %s: %r"
                 possible_roles: set[str] = {
-                    f'{domain.name}:{r}'
+                    f"{domain.name}:{r}"
                     for domain in domains
                     if (object_types := domain.object_types.get(role_name))
                     for r in object_types.roles
                 }
                 if possible_roles:
-                    msg = f'{msg} (perhaps you meant one of: %s)'
+                    msg = f"{msg} (perhaps you meant one of: %s)"
                     self._emit_warning(
                         __(msg),
                         domains_str,
@@ -459,7 +441,7 @@ class IntersphinxRole(SphinxRole):
                 return [], []
 
         result, messages = role_func(
-            f'{domain_name}:{role_name}',
+            f"{domain_name}:{role_name}",
             self.rawtext,
             self.text,
             self.lineno,
@@ -474,8 +456,8 @@ class IntersphinxRole(SphinxRole):
             # Only do this when it is an external reference.
             for node in result:
                 if isinstance(node, pending_xref):
-                    node['intersphinx'] = True
-                    node['inventory'] = inventory
+                    node["intersphinx"] = True
+                    node["inventory"] = inventory
 
         return result, messages
 
@@ -490,15 +472,15 @@ class IntersphinxRole(SphinxRole):
         - ``external:name`` -- any inventory and domain, explicit name.
         - ``external:domain:name`` -- any inventory, explicit domain and name.
         """
-        assert name.startswith('external'), name
+        assert name.startswith("external"), name
         suffix = name[9:]
-        if name[8] == '+':
-            inv_name, suffix = suffix.split(':', 1)
+        if name[8] == "+":
+            inv_name, suffix = suffix.split(":", 1)
             return inv_name, suffix
-        elif name[8] == ':':
+        elif name[8] == ":":
             return None, suffix
         else:
-            msg = f'Malformed :external: role name: {name}'
+            msg = f"Malformed :external: role name: {name}"
             raise ValueError(msg)
 
     def _get_domain_role(self, name: str) -> tuple[str | None, str | None]:
@@ -508,7 +490,7 @@ class IntersphinxRole(SphinxRole):
         - If *name* contains a single ``:``, the domain/role is split on this.
         - If *name* contains multiple ``:``, return ``(None, None)``.
         """
-        names = name.split(':')
+        names = name.split(":")
         if len(names) == 1:
             return None, names[0]
         elif len(names) == 2:
@@ -520,21 +502,19 @@ class IntersphinxRole(SphinxRole):
         LOGGER.warning(
             msg,
             *args,
-            type='intersphinx',
-            subtype='external',
+            type="intersphinx",
+            subtype="external",
             location=(self.env.docname, self.lineno),
         )
 
     def _concat_strings(self, strings: Iterable[str]) -> str:
-        return ', '.join(f'{s!r}' for s in sorted(strings))
+        return ", ".join(f"{s!r}" for s in sorted(strings))
 
     # deprecated methods
 
     def get_role_name(self, name: str) -> tuple[str, str] | None:
-        _deprecation_warning(
-            __name__, f'{self.__class__.__name__}.get_role_name', '', remove=(9, 0)
-        )
-        names = name.split(':')
+        _deprecation_warning(__name__, f"{self.__class__.__name__}.get_role_name", "", remove=(9, 0))
+        names = name.split(":")
         if len(names) == 1:
             # role
             if (domain := self.env.current_document.default_domain) is not None:
@@ -550,15 +530,13 @@ class IntersphinxRole(SphinxRole):
 
         if domain_name and self.is_existent_role(domain_name, role):
             return domain_name, role
-        elif self.is_existent_role('std', role):
-            return 'std', role
+        elif self.is_existent_role("std", role):
+            return "std", role
         else:
             return None
 
     def is_existent_role(self, domain_name: str, role_name: str) -> bool:
-        _deprecation_warning(
-            __name__, f'{self.__class__.__name__}.is_existent_role', '', remove=(9, 0)
-        )
+        _deprecation_warning(__name__, f"{self.__class__.__name__}.is_existent_role", "", remove=(9, 0))
         try:
             domain = self.env.domains[domain_name]
         except KeyError:
@@ -566,20 +544,16 @@ class IntersphinxRole(SphinxRole):
         else:
             return role_name in domain.roles
 
-    def invoke_role(
-        self, role: tuple[str, str]
-    ) -> tuple[list[Node], list[system_message]]:
+    def invoke_role(self, role: tuple[str, str]) -> tuple[list[Node], list[system_message]]:
         """Invoke the role described by a ``(domain, role name)`` pair."""
-        _deprecation_warning(
-            __name__, f'{self.__class__.__name__}.invoke_role', '', remove=(9, 0)
-        )
+        _deprecation_warning(__name__, f"{self.__class__.__name__}.invoke_role", "", remove=(9, 0))
         domain = self.env.get_domain(role[0])
         if domain:
             role_func = domain.role(role[1])
             assert role_func is not None
 
             return role_func(
-                ':'.join(role),
+                ":".join(role),
                 self.rawtext,
                 self.text,
                 self.lineno,
@@ -601,27 +575,23 @@ class IntersphinxRoleResolver(ReferencesResolver):
 
     def run(self, **kwargs: Any) -> None:
         for node in self.document.findall(pending_xref):
-            if 'intersphinx' not in node:
+            if "intersphinx" not in node:
                 continue
-            contnode = cast('nodes.TextElement', node[0].deepcopy())
-            inv_name = node['inventory']
+            contnode = cast("nodes.TextElement", node[0].deepcopy())
+            inv_name = node["inventory"]
             if inv_name is not None:
                 assert inventory_exists(self.env, inv_name)
-                newnode = resolve_reference_in_inventory(
-                    self.env, inv_name, node, contnode
-                )
+                newnode = resolve_reference_in_inventory(self.env, inv_name, node, contnode)
             else:
-                newnode = resolve_reference_any_inventory(
-                    self.env, False, node, contnode
-                )
+                newnode = resolve_reference_any_inventory(self.env, False, node, contnode)
             if newnode is None:
-                typ = node['reftype']
-                msg = __('external %s:%s reference target not found: %s') % (
-                    node['refdomain'],
+                typ = node["reftype"]
+                msg = __("external %s:%s reference target not found: %s") % (
+                    node["refdomain"],
                     typ,
-                    node['reftarget'],
+                    node["reftarget"],
                 )
-                LOGGER.warning(msg, location=node, type='ref', subtype=typ)
+                LOGGER.warning(msg, location=node, type="ref", subtype=typ)
                 node.replace_self(contnode)
             else:
                 node.replace_self(newnode)

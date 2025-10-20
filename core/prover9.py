@@ -62,9 +62,7 @@ class Prover9CommandParent:
             for a in convert_to_prover9(self.assumptions()):
                 print(a)
         else:
-            raise NameError(
-                "Unrecognized value for 'output_format': %s" % output_format
-            )
+            raise NameError("Unrecognized value for 'output_format': %s" % output_format)
 
 
 class Prover9Command(Prover9CommandParent, BaseProverCommand):
@@ -102,9 +100,7 @@ class Prover9Command(Prover9CommandParent, BaseProverCommand):
         :see BaseProverCommand.decorate_proof()
         """
         if simplify:
-            return self._prover._call_prooftrans(proof_string, ["striplabels"])[
-                0
-            ].rstrip()
+            return self._prover._call_prooftrans(proof_string, ["striplabels"])[0].rstrip()
         else:
             return proof_string.rstrip()
 
@@ -204,9 +200,7 @@ class Prover9Parent:
             input_str = input_str.encode("utf8")
         except AttributeError:
             pass
-        p = subprocess.Popen(
-            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE
-        )
+        p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, stdin=subprocess.PIPE)
         (stdout, stderr) = p.communicate(input=input_str)
 
         if verbose:
@@ -245,61 +239,21 @@ def _convert_to_prover9(expression):
     Convert ``logic.Expression`` to Prover9 formatted string.
     """
     if isinstance(expression, ExistsExpression):
-        return (
-            "exists "
-            + str(expression.variable)
-            + " "
-            + _convert_to_prover9(expression.term)
-        )
+        return "exists " + str(expression.variable) + " " + _convert_to_prover9(expression.term)
     elif isinstance(expression, AllExpression):
-        return (
-            "all "
-            + str(expression.variable)
-            + " "
-            + _convert_to_prover9(expression.term)
-        )
+        return "all " + str(expression.variable) + " " + _convert_to_prover9(expression.term)
     elif isinstance(expression, NegatedExpression):
         return "-(" + _convert_to_prover9(expression.term) + ")"
     elif isinstance(expression, AndExpression):
-        return (
-            "("
-            + _convert_to_prover9(expression.first)
-            + " & "
-            + _convert_to_prover9(expression.second)
-            + ")"
-        )
+        return "(" + _convert_to_prover9(expression.first) + " & " + _convert_to_prover9(expression.second) + ")"
     elif isinstance(expression, OrExpression):
-        return (
-            "("
-            + _convert_to_prover9(expression.first)
-            + " | "
-            + _convert_to_prover9(expression.second)
-            + ")"
-        )
+        return "(" + _convert_to_prover9(expression.first) + " | " + _convert_to_prover9(expression.second) + ")"
     elif isinstance(expression, ImpExpression):
-        return (
-            "("
-            + _convert_to_prover9(expression.first)
-            + " -> "
-            + _convert_to_prover9(expression.second)
-            + ")"
-        )
+        return "(" + _convert_to_prover9(expression.first) + " -> " + _convert_to_prover9(expression.second) + ")"
     elif isinstance(expression, IffExpression):
-        return (
-            "("
-            + _convert_to_prover9(expression.first)
-            + " <-> "
-            + _convert_to_prover9(expression.second)
-            + ")"
-        )
+        return "(" + _convert_to_prover9(expression.first) + " <-> " + _convert_to_prover9(expression.second) + ")"
     elif isinstance(expression, EqualityExpression):
-        return (
-            "("
-            + _convert_to_prover9(expression.first)
-            + " = "
-            + _convert_to_prover9(expression.second)
-            + ")"
-        )
+        return "(" + _convert_to_prover9(expression.first) + " = " + _convert_to_prover9(expression.second) + ")"
     else:
         return str(expression)
 
@@ -324,9 +278,7 @@ class Prover9(Prover9Parent, Prover):
         if not assumptions:
             assumptions = []
 
-        stdout, returncode = self._call_prover9(
-            self.prover9_input(goal, assumptions), verbose=verbose
-        )
+        stdout, returncode = self._call_prover9(self.prover9_input(goal, assumptions), verbose=verbose)
         return (returncode == 0, stdout)
 
     def prover9_input(self, goal, assumptions):
@@ -353,9 +305,7 @@ class Prover9(Prover9Parent, Prover):
             updated_input_str += "assign(max_seconds, %d).\n\n" % self._timeout
         updated_input_str += input_str
 
-        stdout, returncode = self._call(
-            updated_input_str, self._prover9_bin, args, verbose
-        )
+        stdout, returncode = self._call(updated_input_str, self._prover9_bin, args, verbose)
 
         if returncode not in [0, 2]:
             errormsgprefix = "%%ERROR:"
@@ -458,15 +408,11 @@ arguments = [
     ("some x.all y.sees(x,y)", []),
     (
         "some e3.(walk(e3) & subj(e3, mary))",
-        [
-            "some e1.(see(e1) & subj(e1, john) & some e2.(pred(e1, e2) & walk(e2) & subj(e2, mary)))"
-        ],
+        ["some e1.(see(e1) & subj(e1, john) & some e2.(pred(e1, e2) & walk(e2) & subj(e2, mary)))"],
     ),
     (
         "some x e1.(see(e1) & subj(e1, x) & some e2.(pred(e1, e2) & walk(e2) & subj(e2, mary)))",
-        [
-            "some e1.(see(e1) & subj(e1, john) & some e2.(pred(e1, e2) & walk(e2) & subj(e2, mary)))"
-        ],
+        ["some e1.(see(e1) & subj(e1, john) & some e2.(pred(e1, e2) & walk(e2) & subj(e2, mary)))"],
     ),
 ]
 

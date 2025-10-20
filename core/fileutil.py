@@ -27,9 +27,9 @@ def _template_basename(filename: Path) -> Path | None:
     be written to.  Otherwise, return no result (None).
     """
     basename = filename.name.lower()
-    if basename.endswith('_t'):
+    if basename.endswith("_t"):
         return filename.with_name(filename.name[:-2])
-    elif basename.endswith('.jinja'):
+    elif basename.endswith(".jinja"):
         return filename.with_name(filename.name[:-6])
     return None
 
@@ -68,32 +68,31 @@ def copy_asset_file(
 
             renderer = SphinxRenderer()
 
-        template_content = source.read_text(encoding='utf-8')
+        template_content = source.read_text(encoding="utf-8")
         rendered_template = renderer.render_string(template_content, context)
 
         if not force and destination.exists() and template_content != rendered_template:
             msg = __(
-                'Aborted attempted copy from rendered template %s to %s '
-                '(the destination path has existing data).'
+                "Aborted attempted copy from rendered template %s to %s " "(the destination path has existing data)."
             )
             logger.warning(
                 msg,
                 os.fsdecode(source),
                 os.fsdecode(destination),
-                type='misc',
-                subtype='copy_overwrite',
+                type="misc",
+                subtype="copy_overwrite",
             )
             return
 
         destination = _template_basename(destination) or destination
-        msg = __('Writing evaluated template result to %s')
+        msg = __("Writing evaluated template result to %s")
         logger.info(
             msg,
             os.fsdecode(destination),
-            type='misc',
-            subtype='template_evaluation',
+            type="misc",
+            subtype="template_evaluation",
         )
-        destination.write_text(rendered_template, encoding='utf-8')
+        destination.write_text(rendered_template, encoding="utf-8")
     else:
         copyfile(source, destination, force=force)
 
@@ -134,9 +133,7 @@ def copy_asset(
 
     ensuredir(destination)
     if source.is_file():
-        copy_asset_file(
-            source, destination, context=context, renderer=renderer, force=force
-        )
+        copy_asset_file(source, destination, context=context, renderer=renderer, force=force)
         return
 
     for root, dirs, files in os.walk(source, followlinks=True):

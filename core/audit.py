@@ -89,9 +89,7 @@ class AuditLogger:
             "axes_count": len(response.get("axes", {})),
             "safety_status": safety_status,
             "model": response.get("model", "unknown"),
-            "timestamp": response.get(
-                "timestamp", datetime.datetime.utcnow().isoformat()
-            ),
+            "timestamp": response.get("timestamp", datetime.datetime.utcnow().isoformat()),
         }
 
         # Create audit event

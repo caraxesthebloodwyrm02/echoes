@@ -23,9 +23,7 @@ from pandas import (
 
 def test_info_categorical_column_just_works():
     n = 2500
-    data = np.array(list("abcdefghij")).take(
-        np.random.default_rng(2).integers(0, 10, size=n, dtype=int)
-    )
+    data = np.array(list("abcdefghij")).take(np.random.default_rng(2).integers(0, 10, size=n, dtype=int))
     s = Series(data).astype("category")
     s.isna()
     buf = StringIO()
@@ -45,9 +43,7 @@ def test_info_categorical():
 
 
 @pytest.mark.parametrize("verbose", [True, False])
-def test_info_series(
-    lexsorted_two_level_string_multiindex, verbose, using_infer_string
-):
+def test_info_series(lexsorted_two_level_string_multiindex, verbose, using_infer_string):
     index = lexsorted_two_level_string_multiindex
     ser = Series(range(len(index)), index=index, name="sth")
     buf = StringIO()
@@ -130,9 +126,7 @@ def test_info_shows_dtypes():
 @pytest.mark.xfail(PYPY, reason="on PyPy deep=True doesn't change result")
 def test_info_memory_usage_deep_not_pypy():
     s_with_object_index = Series({"a": [1]}, index=["foo"])
-    assert s_with_object_index.memory_usage(
-        index=True, deep=True
-    ) > s_with_object_index.memory_usage(index=True)
+    assert s_with_object_index.memory_usage(index=True, deep=True) > s_with_object_index.memory_usage(index=True)
 
     s_object = Series({"a": ["a"]})
     assert s_object.memory_usage(deep=True) > s_object.memory_usage()
@@ -141,9 +135,7 @@ def test_info_memory_usage_deep_not_pypy():
 @pytest.mark.xfail(not PYPY, reason="on PyPy deep=True does not change result")
 def test_info_memory_usage_deep_pypy():
     s_with_object_index = Series({"a": [1]}, index=["foo"])
-    assert s_with_object_index.memory_usage(
-        index=True, deep=True
-    ) == s_with_object_index.memory_usage(index=True)
+    assert s_with_object_index.memory_usage(index=True, deep=True) == s_with_object_index.memory_usage(index=True)
 
     s_object = Series({"a": ["a"]})
     assert s_object.memory_usage(deep=True) == s_object.memory_usage()

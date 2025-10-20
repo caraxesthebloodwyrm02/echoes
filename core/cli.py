@@ -47,12 +47,8 @@ console = Console()
 
 @app.command()
 def run(
-    input_file: Path = typer.Option(
-        Path("data/input_vectors.json"), "--input", "-i", help="Input vectors JSON file"
-    ),
-    auto_ingest: bool = typer.Option(
-        False, "--auto-ingest", help="Automatically run ingest after experiment"
-    ),
+    input_file: Path = typer.Option(Path("data/input_vectors.json"), "--input", "-i", help="Input vectors JSON file"),
+    auto_ingest: bool = typer.Option(False, "--auto-ingest", help="Automatically run ingest after experiment"),
 ) -> None:
     """Run deterministic trajectory efficiency experiment."""
     console.print("[bold blue]Running experiment...[/bold blue]")
@@ -80,9 +76,7 @@ def run(
 @app.command()
 def ingest(
     json_path: Path = typer.Argument(..., help="Path to analysis JSON"),
-    create_pr: bool = typer.Option(
-        False, "--create-pr", help="Create GitHub PR with updates"
-    ),
+    create_pr: bool = typer.Option(False, "--create-pr", help="Create GitHub PR with updates"),
 ) -> None:
     """Process o3 JSON artifact into interactive HTML and documentation."""
     if not json_path.exists():

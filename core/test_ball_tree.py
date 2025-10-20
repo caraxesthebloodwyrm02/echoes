@@ -75,9 +75,7 @@ def test_ball_tree_query_metrics(metric, array_type, BallTreeImplementation):
     assert_array_almost_equal(dist1, dist2)
 
 
-@pytest.mark.parametrize(
-    "BallTreeImplementation, decimal_tol", zip(BALL_TREE_CLASSES, [6, 5])
-)
+@pytest.mark.parametrize("BallTreeImplementation, decimal_tol", zip(BALL_TREE_CLASSES, [6, 5]))
 def test_query_haversine(BallTreeImplementation, decimal_tol):
     rng = check_random_state(0)
     X = 2 * np.pi * rng.random_sample((40, 2))
@@ -119,9 +117,7 @@ def test_bad_pyfunc_metric(BallTreeImplementation):
 def test_ball_tree_numerical_consistency(global_random_seed, metric):
     # Results on float64 and float32 versions of a dataset must be
     # numerically close.
-    X_64, X_32, Y_64, Y_32 = get_dataset_for_binary_tree(
-        random_seed=global_random_seed, features=50
-    )
+    X_64, X_32, Y_64, Y_32 = get_dataset_for_binary_tree(random_seed=global_random_seed, features=50)
 
     metric_params = METRICS.get(metric, {})
     bt_64 = BallTree64(X_64, leaf_size=1, metric=metric, **metric_params)

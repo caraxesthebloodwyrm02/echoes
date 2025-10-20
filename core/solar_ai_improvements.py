@@ -63,7 +63,9 @@ class SolarAITool:
                 "Staten Island, New York": (40.5795, -74.1502),
             }
             lat, lon = locations.get(location, (48.8566, 2.3522))
-            url = f"https://re.jrc.ec.europa.eu/api/v5_2/PVcalc?lat={lat}&lon={lon}&peakpower=1&loss=14&outputformat=json"
+            url = (
+                f"https://re.jrc.ec.europa.eu/api/v5_2/PVcalc?lat={lat}&lon={lon}&peakpower=1&loss=14&outputformat=json"
+            )
             response = requests.get(url, timeout=10)
             if response.status_code == 200:
                 data = response.json()

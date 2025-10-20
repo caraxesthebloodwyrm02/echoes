@@ -98,9 +98,7 @@ class TreebankWordTokenizer(TokenizerI):
     CONTRACTIONS2 = list(map(re.compile, _contractions.CONTRACTIONS2))
     CONTRACTIONS3 = list(map(re.compile, _contractions.CONTRACTIONS3))
 
-    def tokenize(
-        self, text: str, convert_parentheses: bool = False, return_str: bool = False
-    ) -> List[str]:
+    def tokenize(self, text: str, convert_parentheses: bool = False, return_str: bool = False) -> List[str]:
         r"""Return a tokenized copy of `text`.
 
         >>> from nltk.tokenize import TreebankWordTokenizer
@@ -127,8 +125,7 @@ class TreebankWordTokenizer(TokenizerI):
         """
         if return_str is not False:
             warnings.warn(
-                "Parameter 'return_str' has been deprecated and should no "
-                "longer be used.",
+                "Parameter 'return_str' has been deprecated and should no " "longer be used.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -203,10 +200,7 @@ class TreebankWordTokenizer(TokenizerI):
             matched = [m.group() for m in re.finditer(r"``|'{2}|\"", text)]
 
             # Replace converted quotes back to double quotes
-            tokens = [
-                matched.pop(0) if tok in ['"', "``", "''"] else tok
-                for tok in raw_tokens
-            ]
+            tokens = [matched.pop(0) if tok in ['"', "``", "''"] else tok for tok in raw_tokens]
         else:
             tokens = raw_tokens
 
@@ -275,14 +269,8 @@ class TreebankWordDetokenizer(TokenizerI):
     """
 
     _contractions = MacIntyreContractions()
-    CONTRACTIONS2 = [
-        re.compile(pattern.replace("(?#X)", r"\s"))
-        for pattern in _contractions.CONTRACTIONS2
-    ]
-    CONTRACTIONS3 = [
-        re.compile(pattern.replace("(?#X)", r"\s"))
-        for pattern in _contractions.CONTRACTIONS3
-    ]
+    CONTRACTIONS2 = [re.compile(pattern.replace("(?#X)", r"\s")) for pattern in _contractions.CONTRACTIONS2]
+    CONTRACTIONS3 = [re.compile(pattern.replace("(?#X)", r"\s")) for pattern in _contractions.CONTRACTIONS3]
 
     # ending quotes
     ENDING_QUOTES = [

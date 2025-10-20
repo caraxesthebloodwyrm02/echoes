@@ -157,9 +157,7 @@ class TurboBridge:
 
         return results
 
-    def streamline_communication(
-        self, source: str, target: str, message: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def streamline_communication(self, source: str, target: str, message: Dict[str, Any]) -> Dict[str, Any]:
         r"""
         Streamline communication between platforms
 

@@ -71,9 +71,7 @@ def test_case_when_multiple_conditions(df):
     """
     Test output when booleans are derived from a computation
     """
-    result = Series([np.nan, np.nan, np.nan]).case_when(
-        [(df.a.eq(1), 1), (Series([False, True, False]), 2)]
-    )
+    result = Series([np.nan, np.nan, np.nan]).case_when([(df.a.eq(1), 1), (Series([False, True, False]), 2)])
     expected = Series([1, 2, np.nan])
     tm.assert_series_equal(result, expected)
 
@@ -123,9 +121,7 @@ def test_case_when_non_range_index():
     """
     rng = np.random.default_rng(seed=123)
     dates = date_range("1/1/2000", periods=8)
-    df = DataFrame(
-        rng.standard_normal(size=(8, 4)), index=dates, columns=["A", "B", "C", "D"]
-    )
+    df = DataFrame(rng.standard_normal(size=(8, 4)), index=dates, columns=["A", "B", "C", "D"])
     result = Series(5, index=df.index, name="A").case_when([(df.A.gt(0), df.B)])
     expected = df.A.mask(df.A.gt(0), df.B).where(df.A.gt(0), 5)
     tm.assert_series_equal(result, expected)

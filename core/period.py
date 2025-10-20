@@ -261,8 +261,7 @@ class PeriodIndex(DatetimeIndexOpsMixin):
         elif len(fields):
             # GH#55960
             warnings.warn(
-                "Constructing PeriodIndex from fields is deprecated. Use "
-                "PeriodIndex.from_fields instead.",
+                "Constructing PeriodIndex from fields is deprecated. Use " "PeriodIndex.from_fields instead.",
                 FutureWarning,
                 stacklevel=find_stack_level(),
             )
@@ -538,9 +537,7 @@ class PeriodIndex(DatetimeIndexOpsMixin):
     @doc(DatetimeIndexOpsMixin.shift)
     def shift(self, periods: int = 1, freq=None) -> Self:
         if freq is not None:
-            raise TypeError(
-                f"`freq` argument is not supported for {type(self).__name__}.shift"
-            )
+            raise TypeError(f"`freq` argument is not supported for {type(self).__name__}.shift")
         return self + periods
 
 
@@ -601,10 +598,7 @@ def period_range(
                 dtype='period[M]')
     """
     if com.count_not_none(start, end, periods) != 2:
-        raise ValueError(
-            "Of the three parameters: start, end, and periods, "
-            "exactly two must be specified"
-        )
+        raise ValueError("Of the three parameters: start, end, and periods, " "exactly two must be specified")
     if freq is None and (not isinstance(start, Period) and not isinstance(end, Period)):
         freq = "D"
 

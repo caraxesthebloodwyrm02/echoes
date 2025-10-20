@@ -81,8 +81,7 @@ class Comparison:
 
     def __repr__(self):
         return (
-            'Comparison(text="{}", comp_type={}, entity_1="{}", entity_2="{}", '
-            'feature="{}", keyword="{}")'
+            'Comparison(text="{}", comp_type={}, entity_1="{}", entity_2="{}", ' 'feature="{}", keyword="{}")'
         ).format(
             self.text,
             self.comp_type,
@@ -243,9 +242,7 @@ class ComparativeSentencesCorpusReader(CorpusReader):
                     # Each comparison tag has its own relations on a separate line
                     for comp in grad_comparisons:
                         comp_type = int(re.match(r"<cs-(\d)>", comp).group(1))
-                        comparison = Comparison(
-                            text=comparison_text, comp_type=comp_type
-                        )
+                        comparison = Comparison(text=comparison_text, comp_type=comp_type)
                         line = stream.readline()
                         entities_feats = ENTITIES_FEATS.findall(line)
                         if entities_feats:
@@ -266,9 +263,7 @@ class ComparativeSentencesCorpusReader(CorpusReader):
                     for comp in non_grad_comparisons:
                         # comp_type in this case should always be 4.
                         comp_type = int(re.match(r"<cs-(\d)>", comp).group(1))
-                        comparison = Comparison(
-                            text=comparison_text, comp_type=comp_type
-                        )
+                        comparison = Comparison(text=comparison_text, comp_type=comp_type)
                         comparison_bundle.append(comparison)
                 # Flatten the list of comparisons before returning them
                 # return concat([comparison_bundle])
@@ -295,10 +290,7 @@ class ComparativeSentencesCorpusReader(CorpusReader):
                 and not re.findall(CLOSE_COMPARISON, line)
             ):
                 if self._sent_tokenizer:
-                    return [
-                        self._word_tokenizer.tokenize(sent)
-                        for sent in self._sent_tokenizer.tokenize(line)
-                    ]
+                    return [self._word_tokenizer.tokenize(sent) for sent in self._sent_tokenizer.tokenize(line)]
                 else:
                     return [self._word_tokenizer.tokenize(line)]
 

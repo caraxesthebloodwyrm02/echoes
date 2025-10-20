@@ -8,37 +8,26 @@ class GeoAxes(Axes):
     class ThetaFormatter(Formatter):
         def __init__(self, round_to: float = ...) -> None: ...
         def __call__(self, x: float, pos: Any | None = ...): ...
+
     RESOLUTION: float
-    def get_xaxis_transform(
-        self, which: Literal["tick1", "tick2", "grid"] = ...
-    ) -> Transform: ...
-    def get_xaxis_text1_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_xaxis_transform(self, which: Literal["tick1", "tick2", "grid"] = ...) -> Transform: ...
+    def get_xaxis_text1_transform(self, pad: float) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_xaxis_text2_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_xaxis_text2_transform(self, pad: float) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_transform(
-        self, which: Literal["tick1", "tick2", "grid"] = ...
-    ) -> Transform: ...
-    def get_yaxis_text1_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_yaxis_transform(self, which: Literal["tick1", "tick2", "grid"] = ...) -> Transform: ...
+    def get_yaxis_text1_transform(self, pad: float) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_text2_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_yaxis_text2_transform(self, pad: float) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
@@ -92,21 +81,11 @@ class LambertAxes(GeoAxes):
     name: str
 
     class LambertTransform(_GeoTransform):
-        def __init__(
-            self, center_longitude: float, center_latitude: float, resolution: int
-        ) -> None: ...
+        def __init__(self, center_longitude: float, center_latitude: float, resolution: int) -> None: ...
         def inverted(self) -> LambertAxes.InvertedLambertTransform: ...
 
     class InvertedLambertTransform(_GeoTransform):
-        def __init__(
-            self, center_longitude: float, center_latitude: float, resolution: int
-        ) -> None: ...
+        def __init__(self, center_longitude: float, center_latitude: float, resolution: int) -> None: ...
         def inverted(self) -> LambertAxes.LambertTransform: ...
 
-    def __init__(
-        self,
-        *args,
-        center_longitude: float = ...,
-        center_latitude: float = ...,
-        **kwargs
-    ) -> None: ...
+    def __init__(self, *args, center_longitude: float = ..., center_latitude: float = ..., **kwargs) -> None: ...

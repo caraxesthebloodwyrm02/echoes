@@ -90,8 +90,6 @@ def zgelsd(
     iwork: NDArray[fortran_int],
     info: int,
 ) -> _ZGELSD: ...
-
-#
 def dgeqrf(
     m: int,
     n: int,
@@ -112,8 +110,6 @@ def zgeqrf(
     lwork: int,
     info: int,  # out
 ) -> _ZGEQRF: ...
-
-#
 def dorgqr(
     m: int,  # >=0
     n: int,  # m >= n >= 0
@@ -136,6 +132,4 @@ def zungqr(
     lwork: int,
     info: int,
 ) -> _ZUNGQR: ...
-
-#
 def xerbla(srname: object, info: int) -> None: ...

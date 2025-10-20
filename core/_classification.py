@@ -187,9 +187,7 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
 
     _parameter_constraints: dict = {**NeighborsBase._parameter_constraints}
     _parameter_constraints.pop("radius")
-    _parameter_constraints.update(
-        {"weights": [StrOptions({"uniform", "distance"}), callable, None]}
-    )
+    _parameter_constraints.update({"weights": [StrOptions({"uniform", "distance"}), callable, None]})
 
     def __init__(
         self,
@@ -256,16 +254,11 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
         """
         check_is_fitted(self, "_fit_method")
         if self.weights == "uniform":
-            if self._fit_method == "brute" and ArgKminClassMode.is_usable_for(
-                X, self._fit_X, self.metric
-            ):
+            if self._fit_method == "brute" and ArgKminClassMode.is_usable_for(X, self._fit_X, self.metric):
                 probabilities = self.predict_proba(X)
                 if self.outputs_2d_:
                     return np.stack(
-                        [
-                            self.classes_[idx][np.argmax(probas, axis=1)]
-                            for idx, probas in enumerate(probabilities)
-                        ],
+                        [self.classes_[idx][np.argmax(probas, axis=1)] for idx, probas in enumerate(probabilities)],
                         axis=1,
                     )
                 return self.classes_[np.argmax(probabilities, axis=1)]
@@ -329,9 +322,7 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
         if self.weights == "uniform":
             # TODO: systematize this mapping of metric for
             # PairwiseDistancesReductions.
-            metric, metric_kwargs = _adjusted_metric(
-                metric=self.metric, metric_kwargs=self.metric_params, p=self.p
-            )
+            metric, metric_kwargs = _adjusted_metric(metric=self.metric, metric_kwargs=self.metric_params, p=self.p)
             if (
                 self._fit_method == "brute"
                 and ArgKminClassMode.is_usable_for(X, self._fit_X, metric)
@@ -341,9 +332,7 @@ class KNeighborsClassifier(KNeighborsMixin, ClassifierMixin, NeighborsBase):
                 if self.metric == "precomputed":
                     X = _check_precomputed(X)
                 else:
-                    X = validate_data(
-                        self, X, accept_sparse="csr", reset=False, order="C"
-                    )
+                    X = validate_data(self, X, accept_sparse="csr", reset=False, order="C")
 
                 probabilities = ArgKminClassMode.compute(
                     X,
@@ -683,9 +672,7 @@ class RadiusNeighborsClassifier(RadiusNeighborsMixin, ClassifierMixin, Neighbors
                 outlier_label_.append(classes_k[label_count.argmax()])
 
         else:
-            if _is_arraylike(self.outlier_label) and not isinstance(
-                self.outlier_label, str
-            ):
+            if _is_arraylike(self.outlier_label) and not isinstance(self.outlier_label, str):
                 if len(self.outlier_label) != len(classes_):
                     raise ValueError(
                         "The length of outlier_label: {} is "
@@ -781,9 +768,7 @@ class RadiusNeighborsClassifier(RadiusNeighborsMixin, ClassifierMixin, Neighbors
         check_is_fitted(self, "_fit_method")
         n_queries = _num_samples(self._fit_X if X is None else X)
 
-        metric, metric_kwargs = _adjusted_metric(
-            metric=self.metric, metric_kwargs=self.metric_params, p=self.p
-        )
+        metric, metric_kwargs = _adjusted_metric(metric=self.metric, metric_kwargs=self.metric_params, p=self.p)
 
         if (
             self.weights == "uniform"
@@ -850,9 +835,7 @@ class RadiusNeighborsClassifier(RadiusNeighborsMixin, ClassifierMixin, Neighbors
                     proba_inl[i, :] = np.bincount(idx, minlength=classes_k.size)
             else:
                 for i, idx in enumerate(pred_labels[inliers]):
-                    proba_inl[i, :] = np.bincount(
-                        idx, weights[i], minlength=classes_k.size
-                    )
+                    proba_inl[i, :] = np.bincount(idx, weights[i], minlength=classes_k.size)
             proba_k[inliers, :] = proba_inl
 
             if outliers.size > 0:

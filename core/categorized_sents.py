@@ -73,13 +73,7 @@ class CategorizedSentencesCorpusReader(CategorizedCorpusReader, CorpusReader):
     CorpusView = StreamBackedCorpusView
 
     def __init__(
-        self,
-        root,
-        fileids,
-        word_tokenizer=WhitespaceTokenizer(),
-        sent_tokenizer=None,
-        encoding="utf8",
-        **kwargs
+        self, root, fileids, word_tokenizer=WhitespaceTokenizer(), sent_tokenizer=None, encoding="utf8", **kwargs
     ):
         """
         :param root: The root directory for the corpus.
@@ -151,12 +145,7 @@ class CategorizedSentencesCorpusReader(CategorizedCorpusReader, CorpusReader):
             if not line:
                 continue
             if self._sent_tokenizer:
-                sents.extend(
-                    [
-                        self._word_tokenizer.tokenize(sent)
-                        for sent in self._sent_tokenizer.tokenize(line)
-                    ]
-                )
+                sents.extend([self._word_tokenizer.tokenize(sent) for sent in self._sent_tokenizer.tokenize(line)])
             else:
                 sents.append(self._word_tokenizer.tokenize(line))
         return sents

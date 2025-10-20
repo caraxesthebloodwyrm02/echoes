@@ -78,9 +78,7 @@ class disallow:
             obj_iter = itertools.chain(args, kwargs.values())
             if any(self.check(obj) for obj in obj_iter):
                 f_name = f.__name__.replace("nan", "")
-                raise TypeError(
-                    f"reduction operation '{f_name}' not allowed for this dtype"
-                )
+                raise TypeError(f"reduction operation '{f_name}' not allowed for this dtype")
             try:
                 return f(*args, **kwargs)
             except ValueError as e:
@@ -184,9 +182,7 @@ def _has_infs(result) -> bool:
         return False
 
 
-def _get_fill_value(
-    dtype: DtypeObj, fill_value: Scalar | None = None, fill_value_typ=None
-):
+def _get_fill_value(dtype: DtypeObj, fill_value: Scalar | None = None, fill_value_typ=None):
     """return the correct fill value for the dtype of the values"""
     if fill_value is not None:
         return fill_value
@@ -305,9 +301,7 @@ def _get_values(
     if skipna and (mask is not None):
         # get our fill value (in case we need to provide an alternative
         # dtype for it)
-        fill_value = _get_fill_value(
-            dtype, fill_value=fill_value, fill_value_typ=fill_value_typ
-        )
+        fill_value = _get_fill_value(dtype, fill_value=fill_value, fill_value_typ=fill_value_typ)
 
         if fill_value is not None:
             if mask.any():
@@ -467,9 +461,7 @@ def maybe_operate_rowwise(func: F) -> F:
             arrs = list(values)
             if kwargs.get("mask") is not None:
                 mask = kwargs.pop("mask")
-                results = [
-                    func(arrs[i], mask=mask[i], **kwargs) for i in range(len(arrs))
-                ]
+                results = [func(arrs[i], mask=mask[i], **kwargs) for i in range(len(arrs))]
             else:
                 results = [func(x, **kwargs) for x in arrs]
             return np.array(results)
@@ -771,9 +763,7 @@ def nanmedian(values, *, axis: AxisInt | None = None, skipna: bool = True, mask=
             return np.nan
         with warnings.catch_warnings():
             # Suppress RuntimeWarning about All-NaN slice
-            warnings.filterwarnings(
-                "ignore", "All-NaN slice encountered", RuntimeWarning
-            )
+            warnings.filterwarnings("ignore", "All-NaN slice encountered", RuntimeWarning)
             res = np.nanmedian(x[_mask])
         return res
 
@@ -808,12 +798,8 @@ def nanmedian(values, *, axis: AxisInt | None = None, skipna: bool = True, mask=
                 # fastpath for the skipna case
                 with warnings.catch_warnings():
                     # Suppress RuntimeWarning about All-NaN slice
-                    warnings.filterwarnings(
-                        "ignore", "All-NaN slice encountered", RuntimeWarning
-                    )
-                    if (values.shape[1] == 1 and axis == 0) or (
-                        values.shape[0] == 1 and axis == 1
-                    ):
+                    warnings.filterwarnings("ignore", "All-NaN slice encountered", RuntimeWarning)
+                    if (values.shape[1] == 1 and axis == 0) or (values.shape[0] == 1 and axis == 1):
                         # GH52788: fastpath when squeezable, nanmedian for 2D array slow
                         res = np.nanmedian(np.squeeze(values), keepdims=True)
                     else:
@@ -1092,9 +1078,7 @@ def _nanminmax(meth, fill_value_typ):
         if values.size == 0:
             return _na_for_min_count(values, axis)
 
-        values, mask = _get_values(
-            values, skipna, fill_value_typ=fill_value_typ, mask=mask
-        )
+        values, mask = _get_values(values, skipna, fill_value_typ=fill_value_typ, mask=mask)
         result = getattr(values, meth)(axis)
         result = _maybe_null_out(result, axis, mask, values.shape)
         return result
@@ -1423,9 +1407,7 @@ def nanprod(
     result = values.prod(axis)
     # error: Incompatible return value type (got "Union[ndarray, float]", expected
     # "float")
-    return _maybe_null_out(  # type: ignore[return-value]
-        result, axis, mask, values.shape, min_count=min_count
-    )
+    return _maybe_null_out(result, axis, mask, values.shape, min_count=min_count)  # type: ignore[return-value]
 
 
 def _maybe_arg_null_out(
@@ -1544,9 +1526,7 @@ def _maybe_null_out(
     return result
 
 
-def check_below_min_count(
-    shape: tuple[int, ...], mask: npt.NDArray[np.bool_] | None, min_count: int
-) -> bool:
+def check_below_min_count(shape: tuple[int, ...], mask: npt.NDArray[np.bool_] | None, min_count: int) -> bool:
     """
     Check for the `min_count` keyword. Returns True if below `min_count` (when
     missing value should be returned from the reduction).
@@ -1641,10 +1621,7 @@ def get_corr_func(
     elif callable(method):
         return method
 
-    raise ValueError(
-        f"Unknown method '{method}', expected one of "
-        "'kendall', 'spearman', 'pearson', or callable"
-    )
+    raise ValueError(f"Unknown method '{method}', expected one of " "'kendall', 'spearman', 'pearson', or callable")
 
 
 @disallow("M8", "m8")

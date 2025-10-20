@@ -39,9 +39,7 @@ X, _ = make_blobs(
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 @pytest.mark.parametrize("eigen_solver", ("arpack", "lobpcg"))
 @pytest.mark.parametrize("assign_labels", ("kmeans", "discretize", "cluster_qr"))
-def test_spectral_clustering(
-    eigen_solver, assign_labels, csr_container, global_random_seed
-):
+def test_spectral_clustering(eigen_solver, assign_labels, csr_container, global_random_seed):
     S = np.array(
         [
             [1.0, 1.0, 1.0, 0.2, 0.0, 0.0, 0.0],
@@ -134,9 +132,7 @@ def test_affinities(global_random_seed):
     # Note: in the following, random_state has been selected to have
     # a dataset that yields a stable eigen decomposition both when built
     # on OSX and Linux
-    X, y = make_blobs(
-        n_samples=20, random_state=0, centers=[[1, 1], [-1, -1]], cluster_std=0.01
-    )
+    X, y = make_blobs(n_samples=20, random_state=0, centers=[[1, 1], [-1, -1]], cluster_std=0.01)
     # nearest neighbors affinity
     sp = SpectralClustering(n_clusters=2, affinity="nearest_neighbors", random_state=0)
     with pytest.warns(UserWarning, match="not fully connected"):
@@ -216,9 +212,7 @@ def test_discretize(n_samples, coo_container, global_random_seed):
             (np.ones(n_samples), (np.arange(n_samples), y_true)),
             shape=(n_samples, n_class + 1),
         )
-        y_true_noisy = y_indicator.toarray() + 0.1 * random_state.randn(
-            n_samples, n_class + 1
-        )
+        y_true_noisy = y_indicator.toarray() + 0.1 * random_state.randn(n_samples, n_class + 1)
         y_pred = discretize(y_true_noisy, random_state=random_state)
         assert adjusted_rand_score(y_true, y_pred) > 0.8
 
@@ -243,16 +237,12 @@ def test_spectral_clustering_with_arpack_amg_solvers(global_random_seed):
     graph = img_to_graph(img, mask=mask)
     graph.data = np.exp(-graph.data / graph.data.std())
 
-    labels_arpack = spectral_clustering(
-        graph, n_clusters=2, eigen_solver="arpack", random_state=global_random_seed
-    )
+    labels_arpack = spectral_clustering(graph, n_clusters=2, eigen_solver="arpack", random_state=global_random_seed)
 
     assert len(np.unique(labels_arpack)) == 2
 
     if amg_loaded:
-        labels_amg = spectral_clustering(
-            graph, n_clusters=2, eigen_solver="amg", random_state=global_random_seed
-        )
+        labels_amg = spectral_clustering(graph, n_clusters=2, eigen_solver="amg", random_state=global_random_seed)
         assert adjusted_rand_score(labels_arpack, labels_amg) == 1
     else:
         with pytest.raises(ValueError):
@@ -271,32 +261,20 @@ def test_n_components(global_random_seed):
     sp = SpectralClustering(n_clusters=2, random_state=global_random_seed)
     labels = sp.fit(X).labels_
     # set n_components = n_cluster and test if result is the same
-    labels_same_ncomp = (
-        SpectralClustering(
-            n_clusters=2, n_components=2, random_state=global_random_seed
-        )
-        .fit(X)
-        .labels_
-    )
+    labels_same_ncomp = SpectralClustering(n_clusters=2, n_components=2, random_state=global_random_seed).fit(X).labels_
     # test that n_components=n_clusters by default
     assert_array_equal(labels, labels_same_ncomp)
 
     # test that n_components affect result
     # n_clusters=8 by default, and set n_components=2
-    labels_diff_ncomp = (
-        SpectralClustering(n_components=2, random_state=global_random_seed)
-        .fit(X)
-        .labels_
-    )
+    labels_diff_ncomp = SpectralClustering(n_components=2, random_state=global_random_seed).fit(X).labels_
     assert not np.array_equal(labels, labels_diff_ncomp)
 
 
 @pytest.mark.parametrize("assign_labels", ("kmeans", "discretize", "cluster_qr"))
 def test_verbose(assign_labels, capsys):
     # Check verbose mode of KMeans for better coverage.
-    X, y = make_blobs(
-        n_samples=20, random_state=0, centers=[[1, 1], [-1, -1]], cluster_std=0.01
-    )
+    X, y = make_blobs(n_samples=20, random_state=0, centers=[[1, 1], [-1, -1]], cluster_std=0.01)
 
     SpectralClustering(n_clusters=2, random_state=42, verbose=1).fit(X)
 

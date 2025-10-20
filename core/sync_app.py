@@ -128,9 +128,7 @@ class OAuth1Base:
         self._kwargs = kwargs
 
     def _get_oauth_client(self):
-        session = self.client_cls(
-            self.client_id, self.client_secret, **self.client_kwargs
-        )
+        session = self.client_cls(self.client_id, self.client_secret, **self.client_kwargs)
         session.headers["User-Agent"] = self._user_agent
         return session
 
@@ -280,11 +278,7 @@ class OAuth2Base:
             log.debug(f"Using code_verifier: {code_verifier!r}")
 
         scope = kwargs.get("scope", client.scope)
-        scope = (
-            (scope if isinstance(scope, (list, tuple)) else scope.split())
-            if scope
-            else None
-        )
+        scope = (scope if isinstance(scope, (list, tuple)) else scope.split()) if scope else None
         if scope and "openid" in scope:
             # this is an OpenID Connect service
             nonce = kwargs.get("nonce")
@@ -321,9 +315,7 @@ class OAuth2Mixin(_RequestMixin, OAuth2Base):
     def load_server_metadata(self):
         if self._server_metadata_url and "_loaded_at" not in self.server_metadata:
             with self.client_cls(**self.client_kwargs) as session:
-                resp = session.request(
-                    "GET", self._server_metadata_url, withhold_token=True
-                )
+                resp = session.request("GET", self._server_metadata_url, withhold_token=True)
                 resp.raise_for_status()
                 metadata = resp.json()
 
@@ -339,9 +331,7 @@ class OAuth2Mixin(_RequestMixin, OAuth2Base):
         :return: dict
         """
         metadata = self.load_server_metadata()
-        authorization_endpoint = self.authorize_url or metadata.get(
-            "authorization_endpoint"
-        )
+        authorization_endpoint = self.authorize_url or metadata.get("authorization_endpoint")
 
         if not authorization_endpoint:
             raise RuntimeError('Missing "authorize_url" value')
@@ -352,9 +342,7 @@ class OAuth2Mixin(_RequestMixin, OAuth2Base):
         with self._get_oauth_client(**metadata) as client:
             if redirect_uri is not None:
                 client.redirect_uri = redirect_uri
-            return self._create_oauth2_authorization_url(
-                client, authorization_endpoint, **kwargs
-            )
+            return self._create_oauth2_authorization_url(client, authorization_endpoint, **kwargs)
 
     def fetch_access_token(self, redirect_uri=None, **kwargs):
         """Fetch access token in the final step.

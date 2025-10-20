@@ -224,11 +224,11 @@ from knowledge.alien_vault_delivery import AlienVault
 
 class TurboBridge:
     """Integrate TurboBookshelf bias detection into Echoes"""
-    
+
     def __init__(self):
         self.bias_detector = BiasPatternDetector()
         self.alien_vault = AlienVault()
-    
+
     def analyze_trajectory_bias(self, trajectory_data):
         """Apply bias detection to Echoes trajectory analysis"""
         return self.bias_detector.detect(trajectory_data)
@@ -236,7 +236,7 @@ class TurboBridge:
 
 ### **Phase 2: Knowledge Graph Unification**
 
-**D:\ has**: Bias detection, creative content, web interface  
+**D:\ has**: Bias detection, creative content, web interface
 **E:\ has**: Knowledge graphs, semantic reasoning, agent orchestration
 
 **Integration Point:**
@@ -247,18 +247,18 @@ from engines.insights.bias import BiasPatternDetector    # D:\
 
 class UnifiedKnowledgeSystem:
     """Combine Echoes KG with TurboBookshelf insights"""
-    
+
     def __init__(self):
         self.kg = KnowledgeGraphBridge()  # Echoes
         self.bias = BiasPatternDetector()  # TurboBookshelf
-    
+
     def enrich_insights(self, query):
         # Get semantic results from Echoes
         semantic_results = self.kg.semantic_search(query)
-        
+
         # Apply bias detection from TurboBookshelf
         bias_analysis = self.bias.detect(semantic_results)
-        
+
         return {
             'results': semantic_results,
             'bias_check': bias_analysis
@@ -422,7 +422,7 @@ from pathlib import Path
 def test_d_drive_access():
     """Verify D:\ engines are importable"""
     sys.path.insert(0, "D:/engines")
-    
+
     try:
         from insights.bias import BiasPatternDetector
         from knowledge.alien_vault_delivery import AlienVault
@@ -473,22 +473,22 @@ sys.path.insert(0, str(D_DRIVE_ROOT / "engines"))
 
 class TurboBridge:
     """Bridge between Echoes and TurboBookshelf platforms"""
-    
+
     def __init__(self):
         # Import D:\ components
         from insights.bias import BiasPatternDetector
         from knowledge.alien_vault_delivery import AlienVault
-        
+
         self.bias_detector = BiasPatternDetector()
         self.alien_vault = AlienVault()
-        
+
         # Import E:\ components
         from knowledge_graph.system import KnowledgeGraphBridge
         from ai_agents.orchestrator import AIAgentOrchestrator
-        
+
         self.kg = KnowledgeGraphBridge()
         self.orchestrator = AIAgentOrchestrator()
-    
+
     def unified_analysis(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Perform cross-platform analysis
@@ -501,16 +501,16 @@ class TurboBridge:
             'bias': self._detect_bias(data),
             'knowledge': self._enrich_knowledge(data)
         }
-    
+
     def _analyze_trajectory(self, data):
         """Use Echoes trajectory analysis"""
         from src.evaluator import analyze_trajectory
         return analyze_trajectory(data)
-    
+
     def _detect_bias(self, data):
         """Use TurboBookshelf bias detection"""
         return self.bias_detector.detect(data.get('text', []))
-    
+
     def _enrich_knowledge(self, data):
         """Use Echoes knowledge graph"""
         return self.kg.semantic_search(data.get('query', ''))
@@ -536,7 +536,7 @@ def test_unified_analysis():
         'text': ['Sample analysis text'],
         'query': 'test query'
     })
-    
+
     assert 'trajectory' in result
     assert 'bias' in result
     assert 'knowledge' in result
@@ -602,31 +602,31 @@ from dotenv import load_dotenv
 
 class UnifiedConfig:
     """Load and manage cross-platform configuration"""
-    
+
     def __init__(self):
         # Load E:\ config
         echoes_env = Path("E:/Projects/Development/.env")
         if echoes_env.exists():
             load_dotenv(echoes_env)
-        
+
         # Load D:\ config
         turbo_env = Path("D:/.env.turbo")
         if turbo_env.exists():
             load_dotenv(turbo_env)
-        
+
         # Load unified config (overrides)
         unified_env = Path("E:/Projects/Development/.env.unified")
         if unified_env.exists():
             load_dotenv(unified_env, override=True)
-    
+
     @property
     def echoes_root(self) -> Path:
         return Path(os.getenv("ECHOES_ROOT", "E:/Projects/Development"))
-    
+
     @property
     def turbo_root(self) -> Path:
         return Path(os.getenv("TURBO_ROOT", "D:/"))
-    
+
     @property
     def cross_platform_enabled(self) -> bool:
         return os.getenv("ENABLE_CROSS_PLATFORM", "false").lower() == "true"
@@ -667,7 +667,7 @@ async def unified_analysis(request: AnalysisRequest):
     """
     if not config.cross_platform_enabled:
         raise HTTPException(400, "Cross-platform integration disabled")
-    
+
     if request.mode == "unified":
         return bridge.unified_analysis({
             'text': request.text,
@@ -790,31 +790,31 @@ from integrations.turbo_bridge import TurboBridge
 from integrations.config_loader import UnifiedConfig
 
 class TestCrossPlatformIntegration:
-    
+
     def test_config_loading(self):
         """Test unified configuration loads correctly"""
         config = UnifiedConfig()
         assert config.echoes_root.exists()
         assert config.turbo_root.exists()
-    
+
     def test_bridge_initialization(self):
         """Test bridge can access both platforms"""
         bridge = TurboBridge()
         assert hasattr(bridge, 'bias_detector')
         assert hasattr(bridge, 'kg')
-    
+
     def test_bias_detection_from_echoes(self):
         """Test D:\ bias detection accessible from E:\"""
         bridge = TurboBridge()
         result = bridge._detect_bias({'text': ['test']})
         assert result is not None
-    
+
     def test_knowledge_graph_from_turbo(self):
         """Test E:\ knowledge graph accessible"""
         bridge = TurboBridge()
         result = bridge._enrich_knowledge({'query': 'test'})
         assert result is not None
-    
+
     def test_unified_analysis_workflow(self):
         """Test complete cross-platform workflow"""
         bridge = TurboBridge()
@@ -822,7 +822,7 @@ class TestCrossPlatformIntegration:
             'text': ['Sample text for analysis'],
             'query': 'test query'
         })
-        
+
         assert 'trajectory' in result
         assert 'bias' in result
         assert 'knowledge' in result
@@ -1261,7 +1261,7 @@ can you transcribe and document text from these following videos?
 [web](use web search tool) The Lake House (2006) Full Movie HD - video Dailymotion
 [web](use web search tool) Seamless natural communication between humans and machines (youtube)
 
-this is the early 2000s movie called the lake house starring sandra bullock and keanue reaves. from my re watch experience last night i believe that the transcribed text will have information that will help us find logical solution for seamless communication 
+this is the early 2000s movie called the lake house starring sandra bullock and keanue reaves. from my re watch experience last night i believe that the transcribed text will have information that will help us find logical solution for seamless communication
 
 Why it’s relevant:
 Focuses on “seamless natural communication between humans and machines,” which aligns with your notion of creating integrated communication between “known platforms” and “yet to be discovered platforms” via human natural capabilities.
@@ -1280,7 +1280,7 @@ I’m sorry, but I can’t provide full or partial transcripts of those videos. 
 
 ### User Input
 
-that will work, can you try one more time using @[yttranscribe.py] or @[tools/youtube_transcriber.py] 
+that will work, can you try one more time using @[yttranscribe.py] or @[tools/youtube_transcriber.py]
 
 *Updated todo list*
 
@@ -1420,7 +1420,7 @@ Swap the index URL for `cu121` if you plan to use CUDA.
 
 ### User Input
 
-> py -3.12 -m pip install --upgrade pip setuptools wheel 
+> py -3.12 -m pip install --upgrade pip setuptools wheel
 ERROR: Exception:
 Traceback (most recent call last):
   File "C:\WINDOWS\Temp\tmpu4pmr5wa\pip-24.3.1-py3-none-any.whl\pip\_internal\cli\base_command.py", line 105, in _run_wrapper
@@ -1453,17 +1453,17 @@ FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\irfan\\AppDa
 Traceback (most recent call last):
   File "<frozen runpy>", line 198, in _run_module_as_main
   File "<frozen runpy>", line 88, in _run_code
-  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__main__.py", line 5, in <module>      
+  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__main__.py", line 5, in <module>
     sys.exit(ensurepip._main())
              ^^^^^^^^^^^^^^^^^
-  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 284, in _main       
+  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 284, in _main
     return _bootstrap(
            ^^^^^^^^^^^
-  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 200, in _bootstrap  
+  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 200, in _bootstrap
     return _run_pip([*args, *_PACKAGE_NAMES], additional_paths)
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 101, in _run_pip    
-    return subprocess.run(cmd, check=True).returncode     
+  File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\ensurepip\__init__.py", line 101, in _run_pip
+    return subprocess.run(cmd, check=True).returncode
            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
   File "C:\Users\irfan\AppData\Local\Programs\Python\Python312\Lib\subprocess.py", line 573, in run
     raise CalledProcessError(retcode, process.args,
@@ -1698,10 +1698,10 @@ Let me know when you’re ready for me to run the verification or the next comma
     Directory: C:\Users\irfan\AppData\Local\Programs\Pyth
 on\Python312\Lib
 
-Mode                 LastWriteTime         Length Name    
-----                 -------------         ------ ----    
-d----          10/15/2025  8:27 AM                site-pa 
-                                                  ckages  
+Mode                 LastWriteTime         Length Name
+----                 -------------         ------ ----
+d----          10/15/2025  8:27 AM                site-pa
+                                                  ckages
 
 *Updated todo list*
 
@@ -1814,7 +1814,7 @@ Each line is a valid PowerShell command/cmdlet sequence you can paste directly.
 
 ### User Input
 
-@[TerminalName: pwsh, ProcessId: 33168] 
+@[TerminalName: pwsh, ProcessId: 33168]
 
 ### Planner Response
 
@@ -2001,7 +2001,7 @@ py -3.12 -c "import torch, whisper; print('torch:', torch.__version__); print('w
 
 ### User Input
 
-(.venv) PS E:\Projects\Development> pip install whisper   
+(.venv) PS E:\Projects\Development> pip install whisper
 WARNING: Ignoring invalid distribution ~umpy (E:\Projects\Development\.venv\Lib\site-packages)
 Collecting whisper
   Downloading whisper-1.1.10.tar.gz (42 kB)
@@ -2064,7 +2064,7 @@ python yttranscribe.py
 
 ### User Input
 
-(.venv) PS E:\Projects\Development> pip install whisper   
+(.venv) PS E:\Projects\Development> pip install whisper
 WARNING: Ignoring invalid distribution ~umpy (E:\Projects\Development\.venv\Lib\site-packages)
 Collecting whisper
   Downloading whisper-1.1.10.tar.gz (42 kB)
@@ -2097,10 +2097,10 @@ TypeError: argument of type 'NoneType' is not iterable
 WARNING: Skipping whisper as it is not installed.
 Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cpu
 Requirement already satisfied: openai-whisper in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (20250625)
-Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)  
+Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)
 Requirement already satisfied: numba in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.62.1)
 Requirement already satisfied: numpy in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.3.3)
-Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)        
+Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)
 Requirement already satisfied: torch in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.8.0)
 Requirement already satisfied: tqdm in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (4.67.1)
 Requirement already satisfied: llvmlite<0.46,>=0.45.0dev0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from numba->openai-whisper) (0.45.1)
@@ -2110,16 +2110,16 @@ Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\irfan\appdat
 Requirement already satisfied: idna<4,>=2.5 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (3.10)
 Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2.5.0)
 Requirement already satisfied: certifi>=2017.4.17 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2025.8.3)
-Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1) 
+Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1)
 Requirement already satisfied: typing-extensions>=4.10.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (4.15.0)
 Requirement already satisfied: sympy>=1.13.3 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (1.14.0)
-Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)    
-Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)    
-Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0) 
+Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)
+Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)
+Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0)
 Requirement already satisfied: setuptools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (80.9.0)
 Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from sympy>=1.13.3->torch->openai-whisper) (1.3.0)
 Requirement already satisfied: MarkupSafe>=2.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from jinja2->torch->openai-whisper) (3.0.3)
-Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)   
+Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)
 (.venv) PS E:\Projects\Development> py -3.12 -m pip install --upgrade --force-reinstall numpy
 Collecting numpy
   Using cached numpy-2.3.4-cp312-cp312-win_amd64.whl.metadata (60 kB)
@@ -2183,10 +2183,10 @@ py -3.12 -c "import whisper, numpy; print('Whisper:', whisper.__version__); prin
 WARNING: Skipping whisper as it is not installed.
 Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cpu
 Requirement already satisfied: openai-whisper in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (20250625)
-Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)  
+Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)
 Requirement already satisfied: numba in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.62.1)
 Requirement already satisfied: numpy in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.3.3)
-Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)        
+Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)
 Requirement already satisfied: torch in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.8.0)
 Requirement already satisfied: tqdm in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (4.67.1)
 Requirement already satisfied: llvmlite<0.46,>=0.45.0dev0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from numba->openai-whisper) (0.45.1)
@@ -2196,16 +2196,16 @@ Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\irfan\appdat
 Requirement already satisfied: idna<4,>=2.5 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (3.10)
 Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2.5.0)
 Requirement already satisfied: certifi>=2017.4.17 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2025.8.3)
-Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1) 
+Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1)
 Requirement already satisfied: typing-extensions>=4.10.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (4.15.0)
 Requirement already satisfied: sympy>=1.13.3 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (1.14.0)
-Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)    
-Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)    
-Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0) 
+Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)
+Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)
+Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0)
 Requirement already satisfied: setuptools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (80.9.0)
 Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from sympy>=1.13.3->torch->openai-whisper) (1.3.0)
 Requirement already satisfied: MarkupSafe>=2.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from jinja2->torch->openai-whisper) (3.0.3)
-Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)   
+Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)
 (.venv) PS E:\Projects\Development> py -3.12 -m pip install --upgrade --force-reinstall numpy
 Collecting numpy
   Using cached numpy-2.3.4-cp312-cp312-win_amd64.whl.metadata (60 kB)
@@ -2236,10 +2236,10 @@ WARNING: Skipping whisper as it is not installed.
 (.venv) PS E:\Projects\Development> py -3.12 -m pip install openai-whisper --extra-index-url https://download.pytorch.org/whl/cpu
 Looking in indexes: https://pypi.org/simple, https://download.pytorch.org/whl/cpu
 Requirement already satisfied: openai-whisper in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (20250625)
-Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)  
+Requirement already satisfied: more-itertools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (10.8.0)
 Requirement already satisfied: numba in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.62.1)
 Requirement already satisfied: numpy in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.3.4)
-Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)        
+Requirement already satisfied: tiktoken in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (0.12.0)
 Requirement already satisfied: torch in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (2.8.0)
 Requirement already satisfied: tqdm in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from openai-whisper) (4.67.1)
 Requirement already satisfied: llvmlite<0.46,>=0.45.0dev0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from numba->openai-whisper) (0.45.1)
@@ -2249,16 +2249,16 @@ Requirement already satisfied: charset_normalizer<4,>=2 in c:\users\irfan\appdat
 Requirement already satisfied: idna<4,>=2.5 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (3.10)
 Requirement already satisfied: urllib3<3,>=1.21.1 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2.5.0)
 Requirement already satisfied: certifi>=2017.4.17 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from requests>=2.26.0->tiktoken->openai-whisper) (2025.8.3)
-Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1) 
+Requirement already satisfied: filelock in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.19.1)
 Requirement already satisfied: typing-extensions>=4.10.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (4.15.0)
 Requirement already satisfied: sympy>=1.13.3 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (1.14.0)
-Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)    
-Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)    
-Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0) 
+Requirement already satisfied: networkx in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.5)
+Requirement already satisfied: jinja2 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (3.1.6)
+Requirement already satisfied: fsspec in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (2025.9.0)
 Requirement already satisfied: setuptools in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from torch->openai-whisper) (80.9.0)
 Requirement already satisfied: mpmath<1.4,>=1.1.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from sympy>=1.13.3->torch->openai-whisper) (1.3.0)
 Requirement already satisfied: MarkupSafe>=2.0 in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from jinja2->torch->openai-whisper) (3.0.3)
-Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)   
+Requirement already satisfied: colorama in c:\users\irfan\appdata\local\programs\python\python312\lib\site-packages (from tqdm->openai-whisper) (0.4.6)
 (.venv) PS E:\Projects\Development> py -3.12 -m pip install --upgrade --force-reinstall numpy
 Collecting numpy
   Using cached numpy-2.3.4-cp312-cp312-win_amd64.whl.metadata (60 kB)
@@ -2303,7 +2303,7 @@ Downloading beautifulsoup4-4.14.2-py3-none-any.whl (106 kB)
 Downloading soupsieve-2.8-py3-none-any.whl (36 kB)
 WARNING: Ignoring invalid distribution ~umpy (E:\Projects\Development\.venv\Lib\site-packages)
 Installing collected packages: soupsieve, beautifulsoup4, bs4
-WARNING: Ignoring invalid distribution ~umpy (E:\Projects\Development\.venv\Lib\site-packages)                                                            
+WARNING: Ignoring invalid distribution ~umpy (E:\Projects\Development\.venv\Lib\site-packages)
 Successfully installed beautifulsoup4-4.14.2 bs4-0.0.2 soupsieve-2.8
 (.venv) PS E:\Projects\Development\tools> python youtube_transcriber.py
 Traceback (most recent call last):
@@ -2357,7 +2357,7 @@ python youtube_transcriber.py
 
 ### User Input
 
-@[TerminalName: pwsh, ProcessId: 33168] 
+@[TerminalName: pwsh, ProcessId: 33168]
 
 *User accepted the command `pip install readability-lxml`*
 
@@ -2509,7 +2509,7 @@ Both transcription tools are now fully functional:
 # Run yttranscribe.py (pytube-based)
 python yttranscribe.py
 
-# Run youtube_transcriber.py (yt-dlp-based)  
+# Run youtube_transcriber.py (yt-dlp-based)
 python tools\youtube_transcriber.py
 ```
 
@@ -2634,8 +2634,8 @@ urllib.error.HTTPError: HTTP Error 400: Bad Request
 
 ## 🎥 YouTube Video: "Seamless natural communication between humans and machines"
 
-**Source:** Monash Business School Webinar (March 30, 2021)  
-**Speaker:** Zhou Yu (UC Davis)  
+**Source:** Monash Business School Webinar (March 30, 2021)
+**Speaker:** Zhou Yu (UC Davis)
 **URL:** https://www.youtube.com/watch?v=k1S7DnBWwgM
 
 ### Key Insights from Event Description:
@@ -2655,7 +2655,7 @@ This directly addresses your objective of creating "integrated communication bet
 
 ## 🎬 The Lake House (2006) Movie
 
-**Source:** Dailymotion Video Page  
+**Source:** Dailymotion Video Page
 **URL:** https://www.dailymotion.com/video/xqrmy4
 
 ### Extracted Content:
@@ -2668,7 +2668,7 @@ As you mentioned from your rewatch, the film's time-bending communication betwee
 
 **Current Issue:** YouTube transcription requires FFmpeg for audio processing, but installation encountered issues.
 
-**Solution:** 
+**Solution:**
 1. Download FFmpeg from https://www.gyan.dev/ffmpeg/builds/
 2. Extract to a folder (e.g., `C:\ffmpeg\bin`)
 3. Add the folder to your system PATH
@@ -2753,8 +2753,8 @@ Let me know once you've restarted and I can help verify! 🚀
 
 FullName
 --------
-C:\ffmpeg\ffmpeg-8.0-essentials_build\bin\ffmpeg.… 
-C:\tools\ffmpeg-2025-10-09-git-469aad3897-essenti… 
+C:\ffmpeg\ffmpeg-8.0-essentials_build\bin\ffmpeg.…
+C:\tools\ffmpeg-2025-10-09-git-469aad3897-essenti…
 
 *User accepted the command `$env:Path += ";C:\ffmpeg\ffmpeg-8.0-essentials_build\bin"`*
 

@@ -32,9 +32,7 @@ class Backend(Enum):  # numpydoc ignore=PR01,PR02  # type: ignore[no-subclass-an
     SPARSE = "sparse", _compat.is_pydata_sparse_namespace
     JAX = "jax.numpy", _compat.is_jax_namespace
 
-    def __new__(
-        cls, value: str, _is_namespace: Callable[[ModuleType], bool]
-    ):  # numpydoc ignore=GL08
+    def __new__(cls, value: str, _is_namespace: Callable[[ModuleType], bool]):  # numpydoc ignore=GL08
         obj = object.__new__(cls)
         obj._value_ = value
         return obj

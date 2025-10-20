@@ -243,9 +243,7 @@ def eager_shape(x: Array, /) -> tuple[int, ...]:
     return cast(tuple[int, ...], shape)
 
 
-def meta_namespace(
-    *arrays: Array | complex | None, xp: ModuleType | None = None
-) -> ModuleType:
+def meta_namespace(*arrays: Array | complex | None, xp: ModuleType | None = None) -> ModuleType:
     """
     Get the namespace of Dask chunks.
 

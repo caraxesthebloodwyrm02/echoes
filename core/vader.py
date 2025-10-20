@@ -363,9 +363,7 @@ class SentimentIntensityAnalyzer:
             matched as if it was a normal word in the sentence.
         """
         # text, words_and_emoticons, is_cap_diff = self.preprocess(text)
-        sentitext = SentiText(
-            text, self.constants.PUNC_LIST, self.constants.REGEX_REMOVE_PUNCTUATION
-        )
+        sentitext = SentiText(text, self.constants.PUNC_LIST, self.constants.REGEX_REMOVE_PUNCTUATION)
         sentiments = []
         words_and_emoticons = sentitext.words_and_emoticons
         for item in words_and_emoticons:
@@ -401,25 +399,17 @@ class SentimentIntensityAnalyzer:
                     valence -= self.constants.C_INCR
 
             for start_i in range(0, 3):
-                if (
-                    i > start_i
-                    and words_and_emoticons[i - (start_i + 1)].lower()
-                    not in self.lexicon
-                ):
+                if i > start_i and words_and_emoticons[i - (start_i + 1)].lower() not in self.lexicon:
                     # dampen the scalar modifier of preceding words and emoticons
                     # (excluding the ones that immediately preceed the item) based
                     # on their distance from the current item.
-                    s = self.constants.scalar_inc_dec(
-                        words_and_emoticons[i - (start_i + 1)], valence, is_cap_diff
-                    )
+                    s = self.constants.scalar_inc_dec(words_and_emoticons[i - (start_i + 1)], valence, is_cap_diff)
                     if start_i == 1 and s != 0:
                         s = s * 0.95
                     if start_i == 2 and s != 0:
                         s = s * 0.9
                     valence = valence + s
-                    valence = self._never_check(
-                        valence, words_and_emoticons, start_i, i
-                    )
+                    valence = self._never_check(valence, words_and_emoticons, start_i, i)
                     if start_i == 2:
                         valence = self._idioms_check(valence, words_and_emoticons, i)
 
@@ -442,10 +432,7 @@ class SentimentIntensityAnalyzer:
             and words_and_emoticons[i - 1].lower() not in self.lexicon
             and words_and_emoticons[i - 1].lower() == "least"
         ):
-            if (
-                words_and_emoticons[i - 2].lower() != "at"
-                and words_and_emoticons[i - 2].lower() != "very"
-            ):
+            if words_and_emoticons[i - 2].lower() != "at" and words_and_emoticons[i - 2].lower() != "very":
                 valence = valence * self.constants.N_SCALAR
         elif (
             i > 0
@@ -484,9 +471,7 @@ class SentimentIntensityAnalyzer:
             words_and_emoticons[i - 1],
         )
 
-        threetwo = "{} {}".format(
-            words_and_emoticons[i - 3], words_and_emoticons[i - 2]
-        )
+        threetwo = "{} {}".format(words_and_emoticons[i - 3], words_and_emoticons[i - 2])
 
         sequences = [onezero, twoonezero, twoone, threetwoone, threetwo]
 
@@ -509,10 +494,7 @@ class SentimentIntensityAnalyzer:
                 valence = self.constants.SPECIAL_CASE_IDIOMS[zeroonetwo]
 
         # check for booster/dampener bi-grams such as 'sort of' or 'kind of'
-        if (
-            threetwo in self.constants.BOOSTER_DICT
-            or twoone in self.constants.BOOSTER_DICT
-        ):
+        if threetwo in self.constants.BOOSTER_DICT or twoone in self.constants.BOOSTER_DICT:
             valence = valence + self.constants.B_DECR
         return valence
 
@@ -522,8 +504,7 @@ class SentimentIntensityAnalyzer:
                 valence = valence * self.constants.N_SCALAR
         if start_i == 1:
             if words_and_emoticons[i - 2] == "never" and (
-                words_and_emoticons[i - 1] == "so"
-                or words_and_emoticons[i - 1] == "this"
+                words_and_emoticons[i - 1] == "so" or words_and_emoticons[i - 1] == "this"
             ):
                 valence = valence * 1.5
             elif self.constants.negated([words_and_emoticons[i - (start_i + 1)]]):
@@ -531,14 +512,8 @@ class SentimentIntensityAnalyzer:
         if start_i == 2:
             if (
                 words_and_emoticons[i - 3] == "never"
-                and (
-                    words_and_emoticons[i - 2] == "so"
-                    or words_and_emoticons[i - 2] == "this"
-                )
-                or (
-                    words_and_emoticons[i - 1] == "so"
-                    or words_and_emoticons[i - 1] == "this"
-                )
+                and (words_and_emoticons[i - 2] == "so" or words_and_emoticons[i - 2] == "this")
+                or (words_and_emoticons[i - 1] == "so" or words_and_emoticons[i - 1] == "this")
             ):
                 valence = valence * 1.25
             elif self.constants.negated([words_and_emoticons[i - (start_i + 1)]]):
@@ -582,13 +557,9 @@ class SentimentIntensityAnalyzer:
         neu_count = 0
         for sentiment_score in sentiments:
             if sentiment_score > 0:
-                pos_sum += (
-                    float(sentiment_score) + 1
-                )  # compensates for neutral words that are counted as 1
+                pos_sum += float(sentiment_score) + 1  # compensates for neutral words that are counted as 1
             if sentiment_score < 0:
-                neg_sum += (
-                    float(sentiment_score) - 1
-                )  # when used with math.fabs(), compensates for neutrals
+                neg_sum += float(sentiment_score) - 1  # when used with math.fabs(), compensates for neutrals
             if sentiment_score == 0:
                 neu_count += 1
         return pos_sum, neg_sum, neu_count
