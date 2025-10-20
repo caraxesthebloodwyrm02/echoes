@@ -189,8 +189,7 @@ class RangeIndex(Index):
         """
         if not isinstance(data, range):
             raise TypeError(
-                f"{cls.__name__}(...) must be called with object coercible to a "
-                f"range, {repr(data)} was passed"
+                f"{cls.__name__}(...) must be called with object coercible to a " f"range, {repr(data)} was passed"
             )
         cls._validate_dtype(dtype)
         return cls._simple_new(data, name=name)
@@ -199,9 +198,7 @@ class RangeIndex(Index):
     #  supertype defines the argument type as
     #  "Union[ExtensionArray, ndarray[Any, Any]]"  [override]
     @classmethod
-    def _simple_new(  # type: ignore[override]
-        cls, values: range, name: Hashable | None = None
-    ) -> Self:
+    def _simple_new(cls, values: range, name: Hashable | None = None) -> Self:  # type: ignore[override]
         result = object.__new__(cls)
 
         assert isinstance(values, range)
@@ -220,9 +217,7 @@ class RangeIndex(Index):
 
         validation_func, expected = cls._dtype_validation_metadata
         if not validation_func(dtype):
-            raise ValueError(
-                f"Incorrect `dtype` passed: expected {expected}, received {dtype}"
-            )
+            raise ValueError(f"Incorrect `dtype` passed: expected {expected}, received {dtype}")
 
     # --------------------------------------------------------------------
 
@@ -343,10 +338,7 @@ class RangeIndex(Index):
         Return the number of bytes in the underlying data.
         """
         rng = self._range
-        return getsizeof(rng) + sum(
-            getsizeof(getattr(rng, attr_name))
-            for attr_name in ["start", "stop", "step"]
-        )
+        return getsizeof(rng) + sum(getsizeof(getattr(rng, attr_name)) for attr_name in ["start", "stop", "step"])
 
     def memory_usage(self, deep: bool = False) -> int:
         """
@@ -426,9 +418,7 @@ class RangeIndex(Index):
         tolerance=None,
     ) -> npt.NDArray[np.intp]:
         if com.any_not_none(method, tolerance, limit):
-            return super()._get_indexer(
-                target, method=method, tolerance=tolerance, limit=limit
-            )
+            return super()._get_indexer(target, method=method, tolerance=tolerance, limit=limit)
 
         if self.step > 0:
             start, stop, step = self.start, self.stop, self.step
@@ -567,8 +557,7 @@ class RangeIndex(Index):
         ascending: bool = ...,
         na_position: NaPosition = ...,
         key: Callable | None = ...,
-    ) -> Self:
-        ...
+    ) -> Self: ...
 
     @overload
     def sort_values(
@@ -578,8 +567,7 @@ class RangeIndex(Index):
         ascending: bool = ...,
         na_position: NaPosition = ...,
         key: Callable | None = ...,
-    ) -> tuple[Self, np.ndarray | RangeIndex]:
-        ...
+    ) -> tuple[Self, np.ndarray | RangeIndex]: ...
 
     @overload
     def sort_values(
@@ -589,12 +577,9 @@ class RangeIndex(Index):
         ascending: bool = ...,
         na_position: NaPosition = ...,
         key: Callable | None = ...,
-    ) -> Self | tuple[Self, np.ndarray | RangeIndex]:
-        ...
+    ) -> Self | tuple[Self, np.ndarray | RangeIndex]: ...
 
-    @deprecate_nonkeyword_arguments(
-        version="3.0", allowed_args=["self"], name="sort_values"
-    )
+    @deprecate_nonkeyword_arguments(version="3.0", allowed_args=["self"], name="sort_values")
     def sort_values(
         self,
         return_indexer: bool = False,
@@ -733,9 +718,7 @@ class RangeIndex(Index):
         union : Index
         """
         if isinstance(other, RangeIndex):
-            if sort in (None, True) or (
-                sort is False and self.step > 0 and self._range_in_self(other._range)
-            ):
+            if sort in (None, True) or (sort is False and self.step > 0 and self._range_in_self(other._range)):
                 # GH 47557: Can still return a RangeIndex
                 # if other range in self and sort=False
                 start_s, step_s = self.start, self.step
@@ -874,9 +857,7 @@ class RangeIndex(Index):
 
         return new_index
 
-    def symmetric_difference(
-        self, other, result_name: Hashable | None = None, sort=None
-    ):
+    def symmetric_difference(self, other, result_name: Hashable | None = None, sort=None):
         if not isinstance(other, RangeIndex) or sort is not None:
             return super().symmetric_difference(other, result_name, sort)
 
@@ -974,13 +955,9 @@ class RangeIndex(Index):
 
                 step = rng.start - start
 
-            non_consecutive = (step != rng.step and len(rng) > 1) or (
-                next_ is not None and rng.start != next_
-            )
+            non_consecutive = (step != rng.step and len(rng) > 1) or (next_ is not None and rng.start != next_)
             if non_consecutive:
-                result = self._constructor(
-                    np.concatenate([x._values for x in rng_indexes])
-                )
+                result = self._constructor(np.concatenate([x._values for x in rng_indexes]))
                 return result.rename(name)
 
             if step is not None:
@@ -1017,9 +994,7 @@ class RangeIndex(Index):
             try:
                 return self._range[new_key]
             except IndexError as err:
-                raise IndexError(
-                    f"index {key} is out of bounds for axis 0 with size {len(self)}"
-                ) from err
+                raise IndexError(f"index {key} is out of bounds for axis 0 with size {len(self)}") from err
         elif is_scalar(key):
             raise IndexError(
                 "only integers, slices (`:`), "
@@ -1167,14 +1142,10 @@ class RangeIndex(Index):
         else:
             ind_max = indices.max()
             if ind_max >= len(self):
-                raise IndexError(
-                    f"index {ind_max} is out of bounds for axis 0 with size {len(self)}"
-                )
+                raise IndexError(f"index {ind_max} is out of bounds for axis 0 with size {len(self)}")
             ind_min = indices.min()
             if ind_min < -len(self):
-                raise IndexError(
-                    f"index {ind_min} is out of bounds for axis 0 with size {len(self)}"
-                )
+                raise IndexError(f"index {ind_min} is out of bounds for axis 0 with size {len(self)}")
             taken = indices.astype(self.dtype, casting="safe")
             if ind_min < 0:
                 taken %= len(self)

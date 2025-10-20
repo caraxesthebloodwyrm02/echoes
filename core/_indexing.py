@@ -196,9 +196,7 @@ def _determine_key_type(key, accept_slice=True):
             raise ValueError(err_msg)
     if isinstance(key, slice):
         if not accept_slice:
-            raise TypeError(
-                "Only array-like or scalar are supported. A Python slice was given."
-            )
+            raise TypeError("Only array-like or scalar are supported. A Python slice was given.")
         if key.start is None and key.stop is None:
             return None
         key_start_type = _determine_key_type(key.start)
@@ -295,8 +293,7 @@ def _safe_indexing(X, indices, *, axis=0):
 
     if axis not in (0, 1):
         raise ValueError(
-            "'axis' should be either 0 (to index rows) or 1 (to index "
-            " column). Got {} instead.".format(axis)
+            "'axis' should be either 0 (to index rows) or 1 (to index " " column). Got {} instead.".format(axis)
         )
 
     indices_dtype = _determine_key_type(indices)
@@ -314,14 +311,8 @@ def _safe_indexing(X, indices, *, axis=0):
             f"Got {type(X)} instead with {ndim} dimension(s)."
         )
 
-    if (
-        axis == 1
-        and indices_dtype == "str"
-        and not (_is_pandas_df(X) or _use_interchange_protocol(X))
-    ):
-        raise ValueError(
-            "Specifying the columns using strings is only supported for dataframes."
-        )
+    if axis == 1 and indices_dtype == "str" and not (_is_pandas_df(X) or _use_interchange_protocol(X)):
+        raise ValueError("Specifying the columns using strings is only supported for dataframes.")
 
     if hasattr(X, "iloc"):
         # TODO: we should probably use _is_pandas_df_or_series(X) instead but:
@@ -371,9 +362,7 @@ def _safe_assign(X, values, *, row_indexer=None, column_indexer=None):
         columns are selected.
     """
     row_indexer = slice(None, None, None) if row_indexer is None else row_indexer
-    column_indexer = (
-        slice(None, None, None) if column_indexer is None else column_indexer
-    )
+    column_indexer = slice(None, None, None) if column_indexer is None else column_indexer
 
     if hasattr(X, "iloc"):  # pandas dataframe
         with warnings.catch_warnings():
@@ -393,9 +382,7 @@ def _get_column_indices_for_bool_or_int(key, n_columns):
     try:
         idx = _safe_indexing(np.arange(n_columns), key)
     except IndexError as e:
-        raise ValueError(
-            f"all features must be in [0, {n_columns - 1}] or [-{n_columns}, 0]"
-        ) from e
+        raise ValueError(f"all features must be in [0, {n_columns - 1}] or [-{n_columns}, 0]") from e
     return np.atleast_1d(idx).tolist()
 
 
@@ -419,9 +406,7 @@ def _get_column_indices(X, key):
         try:
             all_columns = X.columns
         except AttributeError:
-            raise ValueError(
-                "Specifying the columns using strings is only supported for dataframes."
-            )
+            raise ValueError("Specifying the columns using strings is only supported for dataframes.")
         if isinstance(key, str):
             columns = [key]
         elif isinstance(key, slice):
@@ -442,9 +427,7 @@ def _get_column_indices(X, key):
             for col in columns:
                 col_idx = all_columns.get_loc(col)
                 if not isinstance(col_idx, numbers.Integral):
-                    raise ValueError(
-                        f"Selected columns, {columns}, are not unique in dataframe"
-                    )
+                    raise ValueError(f"Selected columns, {columns}, are not unique in dataframe")
                 column_indices.append(col_idx)
 
         except KeyError as e:
@@ -612,26 +595,19 @@ def resample(
         max_n_samples = n_samples
     elif (max_n_samples > n_samples) and (not replace):
         raise ValueError(
-            "Cannot sample %d out of arrays with dim %d when replace is False"
-            % (max_n_samples, n_samples)
+            "Cannot sample %d out of arrays with dim %d when replace is False" % (max_n_samples, n_samples)
         )
 
     check_consistent_length(*arrays)
 
     if sample_weight is not None and not replace:
-        raise NotImplementedError(
-            "Resampling with sample_weight is only implemented for replace=True."
-        )
+        raise NotImplementedError("Resampling with sample_weight is only implemented for replace=True.")
     if sample_weight is not None and stratify is not None:
-        raise NotImplementedError(
-            "Resampling with sample_weight is only implemented for stratify=None."
-        )
+        raise NotImplementedError("Resampling with sample_weight is only implemented for stratify=None.")
     if stratify is None:
         if replace:
             if sample_weight is not None:
-                sample_weight = _check_sample_weight(
-                    sample_weight, first, dtype=np.float64
-                )
+                sample_weight = _check_sample_weight(sample_weight, first, dtype=np.float64)
                 p = sample_weight / sample_weight.sum()
             else:
                 p = None
@@ -660,9 +636,7 @@ def resample(
 
         # Find the sorted list of instances for each class:
         # (np.unique above performs a sort, so code is O(n logn) already)
-        class_indices = np.split(
-            np.argsort(y_indices, kind="mergesort"), np.cumsum(class_counts)[:-1]
-        )
+        class_indices = np.split(np.argsort(y_indices, kind="mergesort"), np.cumsum(class_counts)[:-1])
 
         n_i = _approximate_mode(class_counts, max_n_samples, random_state)
 
@@ -750,6 +724,4 @@ def shuffle(*arrays, random_state=None, n_samples=None):
       >>> shuffle(y, n_samples=2, random_state=0)
       array([0, 1])
     """
-    return resample(
-        *arrays, replace=False, n_samples=n_samples, random_state=random_state
-    )
+    return resample(*arrays, replace=False, n_samples=n_samples, random_state=random_state)

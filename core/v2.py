@@ -91,12 +91,8 @@ class ModelField:
             if shared.PYDANTIC_VERSION_MINOR_TUPLE >= (2, 12):
                 from pydantic.warnings import UnsupportedFieldAttributeWarning
 
-                warnings.simplefilter(
-                    "ignore", category=UnsupportedFieldAttributeWarning
-                )
-            self._type_adapter: TypeAdapter[Any] = TypeAdapter(
-                Annotated[self.field_info.annotation, self.field_info]
-            )
+                warnings.simplefilter("ignore", category=UnsupportedFieldAttributeWarning)
+            self._type_adapter: TypeAdapter[Any] = TypeAdapter(Annotated[self.field_info.annotation, self.field_info])
 
     def get_default(self) -> Any:
         if self.field_info.is_required():
@@ -116,9 +112,7 @@ class ModelField:
                 None,
             )
         except ValidationError as exc:
-            return None, v1._regenerate_error_with_loc(
-                errors=exc.errors(include_url=False), loc_prefix=loc
-            )
+            return None, v1._regenerate_error_with_loc(errors=exc.errors(include_url=False), loc_prefix=loc)
 
     def serialize(
         self,
@@ -151,9 +145,7 @@ class ModelField:
         return id(self)
 
 
-def get_annotation_from_field_info(
-    annotation: Any, field_info: FieldInfo, field_name: str
-) -> Any:
+def get_annotation_from_field_info(annotation: Any, field_info: FieldInfo, field_name: str) -> Any:
     return annotation
 
 
@@ -161,9 +153,7 @@ def _model_rebuild(model: Type[BaseModel]) -> None:
     model.model_rebuild()
 
 
-def _model_dump(
-    model: BaseModel, mode: Literal["json", "python"] = "json", **kwargs: Any
-) -> Any:
+def _model_dump(model: BaseModel, mode: Literal["json", "python"] = "json", **kwargs: Any) -> Any:
     return model.model_dump(mode=mode, **kwargs)
 
 
@@ -175,22 +165,16 @@ def get_schema_from_model_field(
     *,
     field: ModelField,
     model_name_map: ModelNameMap,
-    field_mapping: Dict[
-        Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue
-    ],
+    field_mapping: Dict[Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue],
     separate_input_output_schemas: bool = True,
 ) -> Dict[str, Any]:
-    override_mode: Union[Literal["validation"], None] = (
-        None if separate_input_output_schemas else "validation"
-    )
+    override_mode: Union[Literal["validation"], None] = None if separate_input_output_schemas else "validation"
     # This expects that GenerateJsonSchema was already used to generate the definitions
     json_schema = field_mapping[(field, override_mode or field.mode)]
     if "$ref" not in json_schema:
         # TODO remove when deprecating Pydantic v1
         # Ref: https://github.com/pydantic/pydantic/blob/d61792cc42c80b13b23e3ffa74bc37ec7c77f7d1/pydantic/schema.py#L207
-        json_schema["title"] = field.field_info.title or field.alias.title().replace(
-            "_", " "
-        )
+        json_schema["title"] = field.field_info.title or field.alias.title().replace("_", " ")
     return json_schema
 
 
@@ -204,18 +188,13 @@ def get_definitions(
     Dict[str, Dict[str, Any]],
 ]:
     schema_generator = GenerateJsonSchema(ref_template=REF_TEMPLATE)
-    override_mode: Union[Literal["validation"], None] = (
-        None if separate_input_output_schemas else "validation"
-    )
+    override_mode: Union[Literal["validation"], None] = None if separate_input_output_schemas else "validation"
     flat_models = get_flat_models_from_fields(fields, known_models=set())
     flat_model_fields = [
-        ModelField(field_info=FieldInfo(annotation=model), name=model.__name__)
-        for model in flat_models
+        ModelField(field_info=FieldInfo(annotation=model), name=model.__name__) for model in flat_models
     ]
     input_types = {f.type_ for f in fields}
-    unique_flat_model_fields = {
-        f for f in flat_model_fields if f.type_ not in input_types
-    }
+    unique_flat_model_fields = {f for f in flat_model_fields if f.type_ not in input_types}
 
     inputs = [
         (field, override_mode or field.mode, field._type_adapter.core_schema)
@@ -274,9 +253,7 @@ def _remap_definitions_and_field_mappings(
     *,
     model_name_map: ModelNameMap,
     definitions: Dict[str, Any],
-    field_mapping: Dict[
-        Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue
-    ],
+    field_mapping: Dict[Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue],
 ) -> Tuple[
     Dict[Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue],
     Dict[str, Any],
@@ -292,9 +269,7 @@ def _remap_definitions_and_field_mappings(
             continue
         old_name_to_new_name_map[old_name] = new_name
 
-    new_field_mapping: Dict[
-        Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue
-    ] = {}
+    new_field_mapping: Dict[Tuple[ModelField, Literal["validation", "serialization"]], JsonSchemaValue] = {}
     for field_key, schema in field_mapping.items():
         new_schema = _replace_refs(
             schema=schema,
@@ -319,9 +294,9 @@ def _remap_definitions_and_field_mappings(
 def is_scalar_field(field: ModelField) -> bool:
     from fastapi import params
 
-    return shared.field_annotation_is_scalar(
-        field.field_info.annotation
-    ) and not isinstance(field.field_info, params.Body)
+    return shared.field_annotation_is_scalar(field.field_info.annotation) and not isinstance(
+        field.field_info, params.Body
+    )
 
 
 def is_sequence_field(field: ModelField) -> bool:
@@ -363,19 +338,14 @@ def get_missing_field_error(loc: Tuple[str, ...]) -> Dict[str, Any]:
     return error  # type: ignore[return-value]
 
 
-def create_body_model(
-    *, fields: Sequence[ModelField], model_name: str
-) -> Type[BaseModel]:
+def create_body_model(*, fields: Sequence[ModelField], model_name: str) -> Type[BaseModel]:
     field_params = {f.name: (f.field_info.annotation, f.field_info) for f in fields}
     BodyModel: Type[BaseModel] = create_model(model_name, **field_params)  # type: ignore[call-overload]
     return BodyModel
 
 
 def get_model_fields(model: Type[BaseModel]) -> List[ModelField]:
-    return [
-        ModelField(field_info=field_info, name=name)
-        for name, field_info in model.model_fields.items()
-    ]
+    return [ModelField(field_info=field_info, name=name) for name, field_info in model.model_fields.items()]
 
 
 # Duplicate of several schema functions from Pydantic v1 to make them compatible with
@@ -416,9 +386,7 @@ def get_flat_models_from_model(
     return known_models
 
 
-def get_flat_models_from_annotation(
-    annotation: Any, known_models: TypeModelSet
-) -> TypeModelSet:
+def get_flat_models_from_annotation(annotation: Any, known_models: TypeModelSet) -> TypeModelSet:
     origin = get_origin(annotation)
     if origin is not None:
         for arg in get_args(annotation):
@@ -431,9 +399,7 @@ def get_flat_models_from_annotation(
     return known_models
 
 
-def get_flat_models_from_field(
-    field: ModelField, known_models: TypeModelSet
-) -> TypeModelSet:
+def get_flat_models_from_field(field: ModelField, known_models: TypeModelSet) -> TypeModelSet:
     field_type = field.type_
     if lenient_issubclass(field_type, BaseModel):
         if field_type in known_models:
@@ -447,9 +413,7 @@ def get_flat_models_from_field(
     return known_models
 
 
-def get_flat_models_from_fields(
-    fields: Sequence[ModelField], known_models: TypeModelSet
-) -> TypeModelSet:
+def get_flat_models_from_fields(fields: Sequence[ModelField], known_models: TypeModelSet) -> TypeModelSet:
     for field in fields:
         get_flat_models_from_field(field, known_models=known_models)
     return known_models

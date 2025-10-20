@@ -47,9 +47,7 @@ def test_kdtree_picklable_with_joblib(BinarySearchTree):
 def test_kd_tree_numerical_consistency(global_random_seed, metric):
     # Results on float64 and float32 versions of a dataset must be
     # numerically close.
-    X_64, X_32, Y_64, Y_32 = get_dataset_for_binary_tree(
-        random_seed=global_random_seed, features=50
-    )
+    X_64, X_32, Y_64, Y_32 = get_dataset_for_binary_tree(random_seed=global_random_seed, features=50)
 
     metric_params = METRICS.get(metric, {})
     kd_64 = KDTree64(X_64, leaf_size=2, metric=metric, **metric_params)

@@ -39,9 +39,7 @@ class PromptCache:
     def __init__(self) -> None:
         self.entries: List[CacheEntry] = []
 
-    def add(
-        self, template_id: str, context_vec: List[float], prompt: str, score: float
-    ) -> None:
+    def add(self, template_id: str, context_vec: List[float], prompt: str, score: float) -> None:
         entry = CacheEntry(
             template_id=template_id,
             vec=context_vec,

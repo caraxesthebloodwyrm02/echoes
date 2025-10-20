@@ -1,0 +1,62 @@
+name: Solution Analysis
+
+on:
+  push:
+    branches: [ main ]
+    paths:
+      - '**.sln'
+      - '**.csproj'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - '**.sln'
+      - '**.csproj'
+
+jobs:
+  analyze:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+
+    - name: Validate Solution
+      run: |
+        # Check solution format version
+        if (Select-String -Path *.sln -Pattern "Format Version 12.00" -Quiet) {
+          Write-Host "Solution format version is correct"
+        } else {
+          Write-Error "Invalid solution format version"
+          exit 1
+        }
+
+        # Check for missing project references
+        $solutionContent = Get-Content *.sln
+        $projectGuids = $solutionContent | Select-String -Pattern 'Project\("\{[A-F0-9-]+\}"\) = "[^"]+", "[^"]+", "\{([A-F0-9-]+)\}"' | ForEach-Object { $_.Matches.Groups[1].Value }
+        $configGuids = $solutionContent | Select-String -Pattern '\{([A-F0-9-]+)\}\.Debug\|' | ForEach-Object { $_.Matches.Groups[1].Value }
+
+        $missingRefs = $configGuids | Where-Object { $_ -notin $projectGuids }
+        if ($missingRefs) {
+          Write-Error "Found missing project references: $missingRefs"
+          exit 1
+        }
+
+        Write-Host "Solution validation completed successfully"
+
+    - name: Check Build Configurations
+      run: |
+        $requiredConfigs = @("Debug", "Release", "Development", "Staging")
+        $solutionContent = Get-Content *.sln
+
+        foreach ($config in $requiredConfigs) {
+          if (-not ($solutionContent | Select-String -Pattern "\|$config\|")) {
+            Write-Error "Missing required configuration: $config"
+            exit 1
+          }
+        }
+
+        Write-Host "All required configurations present"

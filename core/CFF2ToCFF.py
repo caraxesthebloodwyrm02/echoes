@@ -82,9 +82,7 @@ def _convertCFF2ToCFF(cff, otFont):
     for cs in charStrings.values():
         cs.decompile()
         cs.program.append("endchar")
-    for subrSets in [cff.GlobalSubrs] + [
-        getattr(fd.Private, "Subrs", []) for fd in fdArray
-    ]:
+    for subrSets in [cff.GlobalSubrs] + [getattr(fd.Private, "Subrs", []) for fd in fdArray]:
         for cs in subrSets:
             cs.program.append("return")
 
@@ -116,9 +114,7 @@ def _convertCFF2ToCFF(cff, otFont):
         if fdIndex is None:
             fdIndex = 0
         private = fdArray[fdIndex].Private
-        extractor = T2StackUseExtractor(
-            getattr(private, "Subrs", []), cff.GlobalSubrs, private=private
-        )
+        extractor = T2StackUseExtractor(getattr(private, "Subrs", []), cff.GlobalSubrs, private=private)
         stackUse = extractor.execute(cs)
         if stackUse > 48:  # CFF stack depth is 48
             desubroutinizeCharString(cs)
@@ -130,16 +126,9 @@ def _convertCFF2ToCFF(cff, otFont):
     # stack-use fixup. So we remove all unused subroutines now.
     cff.remove_unused_subroutines()
 
-    mapping = {
-        name: ("cid" + str(n).zfill(5) if n else ".notdef")
-        for n, name in enumerate(topDict.charset)
-    }
-    topDict.charset = [
-        "cid" + str(n).zfill(5) if n else ".notdef" for n in range(len(topDict.charset))
-    ]
-    charStrings.charStrings = {
-        mapping[name]: v for name, v in charStrings.charStrings.items()
-    }
+    mapping = {name: ("cid" + str(n).zfill(5) if n else ".notdef") for n, name in enumerate(topDict.charset)}
+    topDict.charset = ["cid" + str(n).zfill(5) if n else ".notdef" for n in range(len(topDict.charset))]
+    charStrings.charStrings = {mapping[name]: v for name, v in charStrings.charStrings.items()}
 
     topDict.ROS = ("Adobe", "Identity", 0)
 
@@ -173,9 +162,7 @@ def main(args=None):
         "fonttools cffLib.CFF2ToCFF",
         description="Convert a non-variable CFF2 font to CFF.",
     )
-    parser.add_argument(
-        "input", metavar="INPUT.ttf", help="Input OTF file with CFF table."
-    )
+    parser.add_argument("input", metavar="INPUT.ttf", help="Input OTF file with CFF table.")
     parser.add_argument(
         "-o",
         "--output",
@@ -190,19 +177,13 @@ def main(args=None):
         help="Don't set the output font's timestamp to the current time.",
     )
     loggingGroup = parser.add_mutually_exclusive_group(required=False)
-    loggingGroup.add_argument(
-        "-v", "--verbose", action="store_true", help="Run more verbosely."
-    )
-    loggingGroup.add_argument(
-        "-q", "--quiet", action="store_true", help="Turn verbosity off."
-    )
+    loggingGroup.add_argument("-v", "--verbose", action="store_true", help="Run more verbosely.")
+    loggingGroup.add_argument("-q", "--quiet", action="store_true", help="Turn verbosity off.")
     options = parser.parse_args(args)
 
     from fontTools import configLogger
 
-    configLogger(
-        level=("DEBUG" if options.verbose else "ERROR" if options.quiet else "INFO")
-    )
+    configLogger(level=("DEBUG" if options.verbose else "ERROR" if options.quiet else "INFO"))
 
     import os
 
@@ -210,11 +191,7 @@ def main(args=None):
     if not os.path.isfile(infile):
         parser.error("No such file '{}'".format(infile))
 
-    outfile = (
-        makeOutputFileName(infile, overWrite=True, suffix="-CFF")
-        if not options.output
-        else options.output
-    )
+    outfile = makeOutputFileName(infile, overWrite=True, suffix="-CFF") if not options.output else options.output
 
     font = TTFont(infile, recalcTimestamp=options.recalc_timestamp, recalcBBoxes=False)
 

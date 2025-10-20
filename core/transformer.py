@@ -25,9 +25,7 @@ import os
 import sys
 
 # Add project root to path for imports
-PROJECT_ROOT = os.path.dirname(
-    os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-)
+PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, PROJECT_ROOT)
 
 from utils.openai_integration import get_openai_integration
@@ -56,9 +54,7 @@ def transform_text(task, text, model=None, max_tokens=300):
         "analyze": "You are an expert analyst. Provide a detailed analysis of the given text, including key themes, insights, and observations.",
     }
 
-    system_prompt = system_prompts.get(
-        task.lower(), f"You are a precise text transformer that can {task} any input."
-    )
+    system_prompt = system_prompts.get(task.lower(), f"You are a precise text transformer that can {task} any input.")
 
     try:
         # Use our integration to make the API call with custom messages

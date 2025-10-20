@@ -65,9 +65,7 @@ class ForwardCombinator(DirectedBinaryCombinator):
         self._suffix = suffix
 
     def can_combine(self, left, right):
-        return self._combinator.can_combine(left, right) and self._predicate(
-            left, right
-        )
+        return self._combinator.can_combine(left, right) and self._predicate(left, right)
 
     def combine(self, left, right):
         yield from self._combinator.combine(left, right)
@@ -87,9 +85,7 @@ class BackwardCombinator(DirectedBinaryCombinator):
         self._suffix = suffix
 
     def can_combine(self, left, right):
-        return self._combinator.can_combine(right, left) and self._predicate(
-            left, right
-        )
+        return self._combinator.can_combine(right, left) and self._predicate(left, right)
 
     def combine(self, left, right):
         yield from self._combinator.combine(right, left)
@@ -110,7 +106,7 @@ class UndirectedFunctionApplication(UndirectedBinaryCombinator):
         if not function.is_function():
             return False
 
-        return not function.arg().can_unify(argument) is None
+        return function.arg().can_unify(argument) is not None
 
     def combine(self, function, argument):
         if not function.is_function():
@@ -158,7 +154,7 @@ class UndirectedComposition(UndirectedBinaryCombinator):
         if not (function.is_function() and argument.is_function()):
             return False
         if function.dir().can_compose() and argument.dir().can_compose():
-            return not function.arg().can_unify(argument.res()) is None
+            return function.arg().can_unify(argument.res()) is not None
         return False
 
     def combine(self, function, argument):
@@ -207,9 +203,7 @@ ForwardComposition = ForwardCombinator(UndirectedComposition(), forwardOnly)
 BackwardComposition = BackwardCombinator(UndirectedComposition(), backwardOnly)
 
 # Backward crossed composition
-BackwardBx = BackwardCombinator(
-    UndirectedComposition(), backwardBxConstraint, suffix="x"
-)
+BackwardBx = BackwardCombinator(UndirectedComposition(), backwardBxConstraint, suffix="x")
 
 
 class UndirectedSubstitution(UndirectedBinaryCombinator):
@@ -233,15 +227,11 @@ class UndirectedSubstitution(UndirectedBinaryCombinator):
 
         if not (function.dir().can_compose() and argument.dir().can_compose()):
             return False
-        return (function.res().arg() == argument.res()) and (
-            function.arg() == argument.arg()
-        )
+        return (function.res().arg() == argument.res()) and (function.arg() == argument.arg())
 
     def combine(self, function, argument):
         if self.can_combine(function, argument):
-            yield FunctionalCategory(
-                function.res().res(), argument.arg(), argument.dir()
-            )
+            yield FunctionalCategory(function.res().res(), argument.arg(), argument.dir())
 
     def __str__(self):
         return "S"
@@ -301,9 +291,7 @@ class UndirectedTypeRaise(UndirectedBinaryCombinator):
         return False
 
     def combine(self, function, arg):
-        if not (
-            function.is_primitive() and arg.is_function() and arg.res().is_function()
-        ):
+        if not (function.is_primitive() and arg.is_function() and arg.res().is_function()):
             return
 
         # Type-raising matches only the innermost application.
@@ -312,9 +300,7 @@ class UndirectedTypeRaise(UndirectedBinaryCombinator):
         subs = function.can_unify(arg.arg())
         if subs is not None:
             xcat = arg.res().substitute(subs)
-            yield FunctionalCategory(
-                xcat, FunctionalCategory(xcat, function, arg.dir()), -(arg.dir())
-            )
+            yield FunctionalCategory(xcat, FunctionalCategory(xcat, function, arg.dir()), -(arg.dir()))
 
     def __str__(self):
         return "T"

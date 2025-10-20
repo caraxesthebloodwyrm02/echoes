@@ -54,9 +54,7 @@ class OAuth2ClientMixin(ClientMixin):
 
     @property
     def token_endpoint_auth_method(self):
-        return self.client_metadata.get(
-            "token_endpoint_auth_method", "client_secret_basic"
-        )
+        return self.client_metadata.get("token_endpoint_auth_method", "client_secret_basic")
 
     @property
     def grant_types(self):

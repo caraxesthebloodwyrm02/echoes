@@ -107,9 +107,7 @@ class BaseGetitemTests:
         result = df.loc[2]
         tm.assert_series_equal(result, expected)
 
-        expected = pd.Series(
-            [data[-1]], index=["A"], name=len(data) - 1, dtype=data.dtype
-        )
+        expected = pd.Series([data[-1]], index=["A"], name=len(data) - 1, dtype=data.dtype)
         result = df.iloc[-1]
         tm.assert_series_equal(result, expected)
 
@@ -258,10 +256,7 @@ class BaseGetitemTests:
         with pytest.raises(ValueError, match=msg):
             data[idx]
 
-    @pytest.mark.xfail(
-        reason="Tries label-based and raises KeyError; "
-        "in some cases raises when calling np.asarray"
-    )
+    @pytest.mark.xfail(reason="Tries label-based and raises KeyError; " "in some cases raises when calling np.asarray")
     @pytest.mark.parametrize(
         "idx",
         [[0, 1, 2, pd.NA], pd.array([0, 1, 2, pd.NA], dtype="Int64")],
@@ -386,9 +381,7 @@ class BaseGetitemTests:
         fill_value = data_missing[1]  # valid
         na = data_missing[0]
 
-        arr = data_missing._from_sequence(
-            [na, fill_value, na], dtype=data_missing.dtype
-        )
+        arr = data_missing._from_sequence([na, fill_value, na], dtype=data_missing.dtype)
         result = arr.take([-1, 1], fill_value=fill_value, allow_fill=True)
         expected = arr.take([1, 1])
         tm.assert_extension_array_equal(result, expected)
@@ -428,9 +421,7 @@ class BaseGetitemTests:
         tm.assert_series_equal(result, expected)
 
         result = s.reindex([n, n + 1])
-        expected = pd.Series(
-            data._from_sequence([na_value, na_value], dtype=s.dtype), index=[n, n + 1]
-        )
+        expected = pd.Series(data._from_sequence([na_value, na_value], dtype=s.dtype), index=[n, n + 1])
         tm.assert_series_equal(result, expected)
 
     def test_reindex_non_na_fill_value(self, data_missing):
@@ -440,9 +431,7 @@ class BaseGetitemTests:
         arr = data_missing._from_sequence([na, valid], dtype=data_missing.dtype)
         ser = pd.Series(arr)
         result = ser.reindex([0, 1, 2], fill_value=valid)
-        expected = pd.Series(
-            data_missing._from_sequence([na, valid, valid], dtype=data_missing.dtype)
-        )
+        expected = pd.Series(data_missing._from_sequence([na, valid, valid], dtype=data_missing.dtype))
 
         tm.assert_series_equal(result, expected)
 

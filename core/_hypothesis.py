@@ -1,6 +1,7 @@
 """
 Hypothesis data generator helpers.
 """
+
 from datetime import datetime
 
 from hypothesis import strategies as st
@@ -44,9 +45,7 @@ OPTIONAL_LISTS = st.lists(
     min_size=3,
 )
 
-OPTIONAL_ONE_OF_ALL = st.one_of(
-    OPTIONAL_DICTS, OPTIONAL_FLOATS, OPTIONAL_INTS, OPTIONAL_LISTS, OPTIONAL_TEXT
-)
+OPTIONAL_ONE_OF_ALL = st.one_of(OPTIONAL_DICTS, OPTIONAL_FLOATS, OPTIONAL_INTS, OPTIONAL_LISTS, OPTIONAL_TEXT)
 
 if is_platform_windows():
     DATETIME_NO_TZ = st.datetimes(min_value=datetime(1900, 1, 1))
@@ -54,12 +53,8 @@ else:
     DATETIME_NO_TZ = st.datetimes()
 
 DATETIME_JAN_1_1900_OPTIONAL_TZ = st.datetimes(
-    min_value=pd.Timestamp(
-        1900, 1, 1
-    ).to_pydatetime(),  # pyright: ignore[reportGeneralTypeIssues]
-    max_value=pd.Timestamp(
-        1900, 1, 1
-    ).to_pydatetime(),  # pyright: ignore[reportGeneralTypeIssues]
+    min_value=pd.Timestamp(1900, 1, 1).to_pydatetime(),  # pyright: ignore[reportGeneralTypeIssues]
+    max_value=pd.Timestamp(1900, 1, 1).to_pydatetime(),  # pyright: ignore[reportGeneralTypeIssues]
     timezones=st.one_of(st.none(), dateutil_timezones(), pytz_timezones()),
 )
 

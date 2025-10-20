@@ -379,12 +379,7 @@ def read_excel(
     header: int | Sequence[int] | None = ...,
     names: SequenceNotStr[Hashable] | range | None = ...,
     index_col: int | str | Sequence[int] | None = ...,
-    usecols: int
-    | str
-    | Sequence[int]
-    | Sequence[str]
-    | Callable[[str], bool]
-    | None = ...,
+    usecols: int | str | Sequence[int] | Sequence[str] | Callable[[str], bool] | None = ...,
     dtype: DtypeArg | None = ...,
     engine: Literal["xlrd", "openpyxl", "odf", "pyxlsb", "calamine"] | None = ...,
     converters: dict[str, Callable] | dict[int, Callable] | None = ...,
@@ -405,8 +400,7 @@ def read_excel(
     skipfooter: int = ...,
     storage_options: StorageOptions = ...,
     dtype_backend: DtypeBackend | lib.NoDefault = ...,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -418,12 +412,7 @@ def read_excel(
     header: int | Sequence[int] | None = ...,
     names: SequenceNotStr[Hashable] | range | None = ...,
     index_col: int | str | Sequence[int] | None = ...,
-    usecols: int
-    | str
-    | Sequence[int]
-    | Sequence[str]
-    | Callable[[str], bool]
-    | None = ...,
+    usecols: int | str | Sequence[int] | Sequence[str] | Callable[[str], bool] | None = ...,
     dtype: DtypeArg | None = ...,
     engine: Literal["xlrd", "openpyxl", "odf", "pyxlsb", "calamine"] | None = ...,
     converters: dict[str, Callable] | dict[int, Callable] | None = ...,
@@ -444,8 +433,7 @@ def read_excel(
     skipfooter: int = ...,
     storage_options: StorageOptions = ...,
     dtype_backend: DtypeBackend | lib.NoDefault = ...,
-) -> dict[IntStrT, DataFrame]:
-    ...
+) -> dict[IntStrT, DataFrame]: ...
 
 
 @doc(storage_options=_shared_docs["storage_options"])
@@ -457,12 +445,7 @@ def read_excel(
     header: int | Sequence[int] | None = 0,
     names: SequenceNotStr[Hashable] | range | None = None,
     index_col: int | str | Sequence[int] | None = None,
-    usecols: int
-    | str
-    | Sequence[int]
-    | Sequence[str]
-    | Callable[[str], bool]
-    | None = None,
+    usecols: int | str | Sequence[int] | Sequence[str] | Callable[[str], bool] | None = None,
     dtype: DtypeArg | None = None,
     engine: Literal["xlrd", "openpyxl", "odf", "pyxlsb", "calamine"] | None = None,
     converters: dict[str, Callable] | dict[int, Callable] | None = None,
@@ -500,8 +483,7 @@ def read_excel(
         )
     elif engine and engine != io.engine:
         raise ValueError(
-            "Engine should not be specified when passing "
-            "an ExcelFile - ExcelFile already has the engine set"
+            "Engine should not be specified when passing " "an ExcelFile - ExcelFile already has the engine set"
         )
 
     try:
@@ -556,13 +538,9 @@ class BaseExcelReader(Generic[_WorkbookT]):
         if isinstance(filepath_or_buffer, bytes):
             filepath_or_buffer = BytesIO(filepath_or_buffer)
 
-        self.handles = IOHandles(
-            handle=filepath_or_buffer, compression={"method": None}
-        )
+        self.handles = IOHandles(handle=filepath_or_buffer, compression={"method": None})
         if not isinstance(filepath_or_buffer, (ExcelFile, self._workbook_class)):
-            self.handles = get_handle(
-                filepath_or_buffer, "rb", storage_options=storage_options, is_text=False
-            )
+            self.handles = get_handle(filepath_or_buffer, "rb", storage_options=storage_options, is_text=False)
 
         if isinstance(self.handles.handle, self._workbook_class):
             self.book = self.handles.handle
@@ -575,9 +553,7 @@ class BaseExcelReader(Generic[_WorkbookT]):
                 self.close()
                 raise
         else:
-            raise ValueError(
-                "Must explicitly set engine if not passing in buffer or path for io."
-            )
+            raise ValueError("Must explicitly set engine if not passing in buffer or path for io.")
 
     @property
     def _workbook_class(self) -> type[_WorkbookT]:
@@ -615,9 +591,7 @@ class BaseExcelReader(Generic[_WorkbookT]):
     def raise_if_bad_sheet_by_index(self, index: int) -> None:
         n_sheets = len(self.sheet_names)
         if index >= n_sheets:
-            raise ValueError(
-                f"Worksheet index {index} is invalid, {n_sheets} worksheets found"
-            )
+            raise ValueError(f"Worksheet index {index} is invalid, {n_sheets} worksheets found")
 
     def raise_if_bad_sheet_by_name(self, name: str) -> None:
         if name not in self.sheet_names:
@@ -811,8 +785,7 @@ class BaseExcelReader(Generic[_WorkbookT]):
 
                     if row > len(data) - 1:
                         raise ValueError(
-                            f"header index {row} exceeds maximum index "
-                            f"{len(data) - 1} of data.",
+                            f"header index {row} exceeds maximum index " f"{len(data) - 1} of data.",
                         )
 
                     data[row], control_row = fill_mi_header(data[row], control_row)
@@ -838,9 +811,7 @@ class BaseExcelReader(Generic[_WorkbookT]):
                 if len(header) < len(data):
                     potential_index_names = data[len(header)]
                     potential_data = [
-                        x
-                        for i, x in enumerate(potential_index_names)
-                        if not control_row[i] and i not in index_col_list
+                        x for i, x in enumerate(potential_index_names) if not control_row[i] and i not in index_col_list
                     ]
                     has_index_names = all(x == "" or x is None for x in potential_data)
 
@@ -903,9 +874,7 @@ class BaseExcelReader(Generic[_WorkbookT]):
                 output[asheetname] = parser.read(nrows=nrows)
 
                 if header_names:
-                    output[asheetname].columns = output[asheetname].columns.set_names(
-                        header_names
-                    )
+                    output[asheetname].columns = output[asheetname].columns.set_names(header_names)
 
             except EmptyDataError:
                 # No Data, return an empty DataFrame
@@ -1239,13 +1208,9 @@ class ExcelWriter(Generic[_WorkbookT]):
         self._if_sheet_exists = if_sheet_exists
 
         # cast ExcelWriter to avoid adding 'if self._handles is not None'
-        self._handles = IOHandles(
-            cast(IO[bytes], path), compression={"compression": None}
-        )
+        self._handles = IOHandles(cast(IO[bytes], path), compression={"compression": None})
         if not isinstance(path, ExcelWriter):
-            self._handles = get_handle(
-                path, mode, storage_options=storage_options, is_text=False
-            )
+            self._handles = get_handle(path, mode, storage_options=storage_options, is_text=False)
         self._cur_sheet = None
 
         if date_format is None:
@@ -1290,11 +1255,7 @@ class ExcelWriter(Generic[_WorkbookT]):
             raise ValueError("Must pass explicit sheet_name or set _cur_sheet property")
         return sheet_name
 
-    def _value_with_fmt(
-        self, val
-    ) -> tuple[
-        int | float | bool | str | datetime.datetime | datetime.date, str | None
-    ]:
+    def _value_with_fmt(self, val) -> tuple[int | float | bool | str | datetime.datetime | datetime.date, str | None]:
         """
         Convert numpy types to Python types for the Excel writers.
 
@@ -1399,9 +1360,7 @@ def inspect_excel_format(
     if isinstance(content_or_path, bytes):
         content_or_path = BytesIO(content_or_path)
 
-    with get_handle(
-        content_or_path, "rb", storage_options=storage_options, is_text=False
-    ) as handle:
+    with get_handle(content_or_path, "rb", storage_options=storage_options, is_text=False) as handle:
         stream = handle.handle
         stream.seek(0)
         buf = stream.read(PEEK_SIZE)
@@ -1419,9 +1378,7 @@ def inspect_excel_format(
         with zipfile.ZipFile(stream) as zf:
             # Workaround for some third party files that use forward slashes and
             # lower case names.
-            component_names = [
-                name.replace("\\", "/").lower() for name in zf.namelist()
-            ]
+            component_names = [name.replace("\\", "/").lower() for name in zf.namelist()]
 
         if "xl/workbook.xml" in component_names:
             return "xlsx"
@@ -1547,14 +1504,9 @@ class ExcelFile:
             if xlrd_version is not None and isinstance(path_or_buffer, xlrd.Book):
                 ext = "xls"
             else:
-                ext = inspect_excel_format(
-                    content_or_path=path_or_buffer, storage_options=storage_options
-                )
+                ext = inspect_excel_format(content_or_path=path_or_buffer, storage_options=storage_options)
                 if ext is None:
-                    raise ValueError(
-                        "Excel file format cannot be determined, you must specify "
-                        "an engine manually."
-                    )
+                    raise ValueError("Excel file format cannot be determined, you must specify " "an engine manually.")
 
             engine = config.get_option(f"io.excel.{ext}.reader", silent=True)
             if engine == "auto":

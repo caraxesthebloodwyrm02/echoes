@@ -10,10 +10,8 @@
 import os
 import re
 import subprocess
-import sys
 import tempfile
 
-from nltk.data import ZipFilePathPointer
 from nltk.internals import find_dir
 from nltk.tokenize.api import TokenizerI
 
@@ -128,10 +126,7 @@ class ReppTokenizer(TokenizerI):
         """
         line_regex = re.compile(r"^\((\d+), (\d+), (.+)\)$", re.MULTILINE)
         for section in repp_output.split("\n\n"):
-            words_with_positions = [
-                (token, int(start), int(end))
-                for start, end, token in line_regex.findall(section)
-            ]
+            words_with_positions = [(token, int(start), int(end)) for start, end, token in line_regex.findall(section)]
             words = tuple(t[2] for t in words_with_positions)
             yield words_with_positions
 

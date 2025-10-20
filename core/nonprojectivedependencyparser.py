@@ -403,9 +403,7 @@ class ProbabilisticNonprojectiveParser:
         max_score = None
         for row_index in range(len(self.scores)):
             for col_index in range(len(self.scores[row_index])):
-                if col_index in originals and (
-                    max_score is None or self.scores[row_index][col_index] > max_score
-                ):
+                if col_index in originals and (max_score is None or self.scores[row_index][col_index] > max_score):
                     max_score = self.scores[row_index][col_index]
                     max_arc = row_index
                     logger.debug("%s, %s", row_index, col_index)
@@ -426,9 +424,7 @@ class ProbabilisticNonprojectiveParser:
         max_orig = None
         for row_index in range(len(self.scores)):
             for col_index in range(len(self.scores[row_index])):
-                if col_index in originals and (
-                    max_score is None or self.scores[row_index][col_index] > max_score
-                ):
+                if col_index in originals and (max_score is None or self.scores[row_index][col_index] > max_score):
                     max_score = self.scores[row_index][col_index]
                     max_arc = row_index
                     max_orig = col_index
@@ -454,9 +450,7 @@ class ProbabilisticNonprojectiveParser:
         # Initialize g_graph
         g_graph = DependencyGraph()
         for index, token in enumerate(tokens):
-            g_graph.nodes[index + 1].update(
-                {"word": token, "tag": tags[index], "rel": "NTOP", "address": index + 1}
-            )
+            g_graph.nodes[index + 1].update({"word": token, "tag": tags[index], "rel": "NTOP", "address": index + 1})
 
         # Fully connect non-root nodes in g_graph
         g_graph.connect_graph()
@@ -470,9 +464,7 @@ class ProbabilisticNonprojectiveParser:
         c_graph = DependencyGraph()
 
         for index, token in enumerate(tokens):
-            c_graph.nodes[index + 1].update(
-                {"word": token, "tag": tags[index], "rel": "NTOP", "address": index + 1}
-            )
+            c_graph.nodes[index + 1].update({"word": token, "tag": tags[index], "rel": "NTOP", "address": index + 1})
 
         # Assign initial scores to g_graph edges
         self.initialize_edge_scores(g_graph)
@@ -495,9 +487,7 @@ class ProbabilisticNonprojectiveParser:
             logger.debug("best in arc: %s --> %s", best_in_edge, current_vertex)
             # b_graph = Union(b_graph, b)
             for new_vertex in [current_vertex, best_in_edge]:
-                b_graph.nodes[new_vertex].update(
-                    {"word": "TEMP", "rel": "NTOP", "address": new_vertex}
-                )
+                b_graph.nodes[new_vertex].update({"word": "TEMP", "rel": "NTOP", "address": new_vertex})
             b_graph.add_arc(best_in_edge, current_vertex)
             # Beta(current node) = b  - stored for parse recovery
             # If b_graph contains a cycle, collapse it
@@ -685,9 +675,7 @@ class NonprojectiveDependencyParser:
             graph = DependencyGraph()
             graph.root = graph.nodes[analysis.index(-1) + 1]
 
-            for address, (token, head_index) in enumerate(
-                zip(tokens, analysis), start=1
-            ):
+            for address, (token, head_index) in enumerate(zip(tokens, analysis), start=1):
                 head_address = head_index + 1
 
                 node = graph.nodes[address]
@@ -727,9 +715,7 @@ def nonprojective_conll_parse_demo():
     graphs = [DependencyGraph(entry) for entry in conll_data2.split("\n\n") if entry]
     npp = ProbabilisticNonprojectiveParser()
     npp.train(graphs, NaiveBayesDependencyScorer())
-    for parse_graph in npp.parse(
-        ["Cathy", "zag", "hen", "zwaaien", "."], ["N", "V", "Pron", "Adj", "N", "Punc"]
-    ):
+    for parse_graph in npp.parse(["Cathy", "zag", "hen", "zwaaien", "."], ["N", "V", "Pron", "Adj", "N", "Punc"]):
         print(parse_graph)
 
 

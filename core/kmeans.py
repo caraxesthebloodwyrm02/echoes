@@ -175,9 +175,7 @@ class KMeansClusterer(VectorSpaceClusterer):
         else:
             if not len(cluster):
                 sys.stderr.write("Error: no centroid defined for empty cluster.\n")
-                sys.stderr.write(
-                    "Try setting argument 'avoid_empty_clusters' to True\n"
-                )
+                sys.stderr.write("Try setting argument 'avoid_empty_clusters' to True\n")
                 assert False
             centroid = copy.copy(cluster[0])
             for vector in cluster[1:]:

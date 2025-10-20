@@ -338,11 +338,7 @@ def overridden(method):
     """
     if isinstance(method, types.MethodType) and method.__self__.__class__ is not None:
         name = method.__name__
-        funcs = [
-            cls.__dict__[name]
-            for cls in _mro(method.__self__.__class__)
-            if name in cls.__dict__
-        ]
+        funcs = [cls.__dict__[name] for cls in _mro(method.__self__.__class__) if name in cls.__dict__]
         return len(funcs) > 1
     else:
         raise TypeError("Expected an instance method.")
@@ -605,11 +601,7 @@ def find_file_iter(
                 pass
 
     if not yielded:
-        msg = (
-            "NLTK was unable to find the %s file!"
-            "\nUse software specific "
-            "configuration parameters" % filename
-        )
+        msg = "NLTK was unable to find the %s file!" "\nUse software specific " "configuration parameters" % filename
         if env_vars:
             msg += " or set the %s environment variable" % env_vars[0]
         msg += "."
@@ -622,22 +614,12 @@ def find_file_iter(
         raise LookupError(f"\n\n{div}\n{msg}\n{div}")
 
 
-def find_file(
-    filename, env_vars=(), searchpath=(), file_names=None, url=None, verbose=False
-):
-    return next(
-        find_file_iter(filename, env_vars, searchpath, file_names, url, verbose)
-    )
+def find_file(filename, env_vars=(), searchpath=(), file_names=None, url=None, verbose=False):
+    return next(find_file_iter(filename, env_vars, searchpath, file_names, url, verbose))
 
 
-def find_dir(
-    filename, env_vars=(), searchpath=(), file_names=None, url=None, verbose=False
-):
-    return next(
-        find_file_iter(
-            filename, env_vars, searchpath, file_names, url, verbose, finding_dir=True
-        )
-    )
+def find_dir(filename, env_vars=(), searchpath=(), file_names=None, url=None, verbose=False):
+    return next(find_file_iter(filename, env_vars, searchpath, file_names, url, verbose, finding_dir=True))
 
 
 def find_binary_iter(
@@ -660,9 +642,7 @@ def find_binary_iter(
     :param url: URL presented to user for download help.
     :param verbose: Whether or not to print path when a file is found.
     """
-    yield from find_file_iter(
-        path_to_bin or name, env_vars, searchpath, binary_names, url, verbose
-    )
+    yield from find_file_iter(path_to_bin or name, env_vars, searchpath, binary_names, url, verbose)
 
 
 def find_binary(
@@ -674,11 +654,7 @@ def find_binary(
     url=None,
     verbose=False,
 ):
-    return next(
-        find_binary_iter(
-            name, path_to_bin, env_vars, searchpath, binary_names, url, verbose
-        )
-    )
+    return next(find_binary_iter(name, path_to_bin, env_vars, searchpath, binary_names, url, verbose))
 
 
 def find_jar_iter(
@@ -718,9 +694,7 @@ def find_jar_iter(
             yielded = True
             yield path_to_jar
         else:
-            raise LookupError(
-                f"Could not find {name_pattern} jar file at {path_to_jar}"
-            )
+            raise LookupError(f"Could not find {name_pattern} jar file at {path_to_jar}")
 
     # Check environment variables
     for env_var in env_vars:
@@ -731,11 +705,7 @@ def find_jar_iter(
                     cp = os.path.expanduser(cp)
                     if os.path.isfile(cp):
                         filename = os.path.basename(cp)
-                        if (
-                            is_regex
-                            and re.match(name_pattern, filename)
-                            or (not is_regex and filename == name_pattern)
-                        ):
+                        if is_regex and re.match(name_pattern, filename) or (not is_regex and filename == name_pattern):
                             if verbose:
                                 print(f"[Found {name_pattern}: {cp}]")
                             yielded = True
@@ -766,21 +736,14 @@ def find_jar_iter(
             else:
                 jar_env = os.path.expanduser(os.environ[env_var])
                 jar_iter = (
-                    (
-                        os.path.join(jar_env, path_to_jar)
-                        for path_to_jar in os.listdir(jar_env)
-                    )
+                    (os.path.join(jar_env, path_to_jar) for path_to_jar in os.listdir(jar_env))
                     if os.path.isdir(jar_env)
                     else (jar_env,)
                 )
                 for path_to_jar in jar_iter:
                     if os.path.isfile(path_to_jar):
                         filename = os.path.basename(path_to_jar)
-                        if (
-                            is_regex
-                            and re.match(name_pattern, filename)
-                            or (not is_regex and filename == name_pattern)
-                        ):
+                        if is_regex and re.match(name_pattern, filename) or (not is_regex and filename == name_pattern):
                             if verbose:
                                 print(f"[Found {name_pattern}: {path_to_jar}]")
                             yielded = True
@@ -832,11 +795,7 @@ def find_jar(
     verbose=False,
     is_regex=False,
 ):
-    return next(
-        find_jar_iter(
-            name_pattern, path_to_jar, env_vars, searchpath, url, verbose, is_regex
-        )
-    )
+    return next(find_jar_iter(name_pattern, path_to_jar, env_vars, searchpath, url, verbose, is_regex))
 
 
 def find_jars_within_path(path_to_jars):
@@ -948,9 +907,7 @@ class ElementWrapper:
         :return: the result of applying ``ElementTree.tostring()`` to
         the wrapped Element object.
         """
-        return (
-            ElementTree.tostring(self._etree, encoding="utf8").decode("utf8").rstrip()
-        )
+        return ElementTree.tostring(self._etree, encoding="utf8").decode("utf8").rstrip()
 
     ##////////////////////////////////////////////////////////////
     # { Element interface Delegation (pass-through)
@@ -1049,9 +1006,7 @@ def slice_bounds(sequence, slice_obj, allow_step=False):
 
     # Otherwise, make sure that no non-default step value is used.
     elif slice_obj.step not in (None, 1):
-        raise ValueError(
-            "slices with steps are not supported by %s" % sequence.__class__.__name__
-        )
+        raise ValueError("slices with steps are not supported by %s" % sequence.__class__.__name__)
 
     # Supply default offsets.
     if start is None:
@@ -1119,7 +1074,4 @@ def is_writable(path):
 
 
 def raise_unorderable_types(ordering, a, b):
-    raise TypeError(
-        "unorderable types: %s() %s %s()"
-        % (type(a).__name__, ordering, type(b).__name__)
-    )
+    raise TypeError("unorderable types: %s() %s %s()" % (type(a).__name__, ordering, type(b).__name__))

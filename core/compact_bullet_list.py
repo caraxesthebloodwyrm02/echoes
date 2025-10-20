@@ -32,9 +32,7 @@ class RefOnlyListChecker(nodes.GenericNodeVisitor):
         pass
 
     def visit_list_item(self, node: nodes.list_item) -> None:
-        children: list[Node] = [
-            child for child in node.children if not isinstance(child, nodes.Invisible)
-        ]
+        children: list[Node] = [child for child in node.children if not isinstance(child, nodes.Invisible)]
         if len(children) != 1:
             raise nodes.NodeFound
         if not isinstance(children[0], nodes.paragraph):
@@ -77,8 +75,8 @@ class RefOnlyBulletListTransform(SphinxTransform):
         for node in self.document.findall(nodes.bullet_list):
             if check_refonly_list(node):
                 for item in node.findall(nodes.list_item):
-                    para = cast('nodes.paragraph', item[0])
-                    ref = cast('nodes.reference', para[0])
+                    para = cast("nodes.paragraph", item[0])
+                    ref = cast("nodes.reference", para[0])
                     compact_para = addnodes.compact_paragraph()
                     compact_para += ref
                     item.replace(para, compact_para)
@@ -88,7 +86,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_transform(RefOnlyBulletListTransform)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

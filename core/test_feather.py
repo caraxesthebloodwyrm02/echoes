@@ -1,4 +1,5 @@
 """ test feather-format compat """
+
 import numpy as np
 import pytest
 
@@ -12,9 +13,7 @@ import pandas._testing as tm
 
 from pandas.io.feather_format import read_feather, to_feather  # isort:skip
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 pa = pytest.importorskip("pyarrow")
@@ -71,9 +70,7 @@ class TestFeather:
                 "bool": [True, False, True],
                 "bool_with_null": [True, np.nan, False],
                 "cat": pd.Categorical(list("abc")),
-                "dt": pd.DatetimeIndex(
-                    list(pd.date_range("20130101", periods=3)), freq=None
-                ),
+                "dt": pd.DatetimeIndex(list(pd.date_range("20130101", periods=3)), freq=None),
                 "dttz": pd.DatetimeIndex(
                     list(pd.date_range("20130101", periods=3, tz="US/Eastern")),
                     freq=None,
@@ -83,9 +80,7 @@ class TestFeather:
                     pd.NaT,
                     pd.Timestamp("20130103"),
                 ],
-                "dtns": pd.DatetimeIndex(
-                    list(pd.date_range("20130101", periods=3, freq="ns")), freq=None
-                ),
+                "dtns": pd.DatetimeIndex(list(pd.date_range("20130101", periods=3, freq="ns")), freq=None),
             }
         )
         df["periods"] = pd.period_range("2013", freq="M", periods=3)
@@ -169,9 +164,7 @@ class TestFeather:
             res = read_feather(httpserver.url)
         tm.assert_frame_equal(expected, res)
 
-    def test_read_feather_dtype_backend(
-        self, string_storage, dtype_backend, using_infer_string
-    ):
+    def test_read_feather_dtype_backend(self, string_storage, dtype_backend, using_infer_string):
         # GH#50765
         df = pd.DataFrame(
             {
@@ -217,16 +210,11 @@ class TestFeather:
             from pandas.arrays import ArrowExtensionArray
 
             expected = pd.DataFrame(
-                {
-                    col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True))
-                    for col in expected.columns
-                }
+                {col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True)) for col in expected.columns}
             )
 
         if using_infer_string:
-            expected.columns = expected.columns.astype(
-                pd.StringDtype(string_storage, na_value=np.nan)
-            )
+            expected.columns = expected.columns.astype(pd.StringDtype(string_storage, na_value=np.nan))
         tm.assert_frame_equal(result, expected)
 
     def test_int_columns_and_index(self):
@@ -234,10 +222,7 @@ class TestFeather:
         self.check_round_trip(df)
 
     def test_invalid_dtype_backend(self):
-        msg = (
-            "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-            "'pyarrow' are allowed."
-        )
+        msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
         df = pd.DataFrame({"int": list(range(1, 4))})
         with tm.ensure_clean("tmp.feather") as path:
             df.to_feather(path)
@@ -252,17 +237,13 @@ class TestFeather:
         with pd.option_context("future.infer_string", True):
             result = read_feather(path)
         dtype = pd.StringDtype(na_value=np.nan)
-        expected = pd.DataFrame(
-            data={"a": ["x", "y"]}, dtype=pd.StringDtype(na_value=np.nan)
-        )
+        expected = pd.DataFrame(data={"a": ["x", "y"]}, dtype=pd.StringDtype(na_value=np.nan))
         expected = pd.DataFrame(
             data={"a": ["x", "y"]},
             dtype=dtype,
             columns=pd.Index(
                 ["a"],
-                dtype=object
-                if pa_version_under19p0 and not using_infer_string
-                else dtype,
+                dtype=object if pa_version_under19p0 and not using_infer_string else dtype,
             ),
         )
         tm.assert_frame_equal(result, expected)
@@ -280,7 +261,5 @@ class TestFeather:
         with pd.option_context("future.infer_string", True):
             result = read_feather(path)
 
-            expected = pd.DataFrame(
-                data={"a": [None, "b", "c"]}, dtype=pd.StringDtype(na_value=np.nan)
-            )
+            expected = pd.DataFrame(data={"a": [None, "b", "c"]}, dtype=pd.StringDtype(na_value=np.nan))
         tm.assert_frame_equal(result, expected)

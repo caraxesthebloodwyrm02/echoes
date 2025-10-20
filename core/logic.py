@@ -234,17 +234,14 @@ class LogicParser:
                         if len(data) == i:  # if there are no more chars
                             raise LogicalExpressionException(
                                 None,
-                                "End of input reached.  "
-                                "Escape character [%s] found at end." % escape,
+                                "End of input reached.  " "Escape character [%s] found at end." % escape,
                             )
                         token += data[i]
                     else:
                         token += data[i]
                     i += 1
                     if len(data) == i:
-                        raise LogicalExpressionException(
-                            None, "End of input reached.  " "Expected: [%s]" % end
-                        )
+                        raise LogicalExpressionException(None, "End of input reached.  " "Expected: [%s]" % end)
                 if incl_quotes:
                     token += data[i]
                 i += 1
@@ -283,16 +280,12 @@ class LogicParser:
         try:
             tok = self.token()
         except ExpectedMoreTokensException as e:
-            raise ExpectedMoreTokensException(
-                self._currentIndex + 1, message="Expression expected."
-            ) from e
+            raise ExpectedMoreTokensException(self._currentIndex + 1, message="Expression expected.") from e
 
         accum = self.handle(tok, context)
 
         if not accum:
-            raise UnexpectedTokenException(
-                self._currentIndex, tok, message="Expression expected."
-            )
+            raise UnexpectedTokenException(self._currentIndex, tok, message="Expression expected.")
 
         return self.attempt_adjuncts(accum, context)
 
@@ -336,9 +329,7 @@ class LogicParser:
         accum = self.make_VariableExpression(tok)
         if self.inRange(0) and self.token(0) == Tokens.OPEN:
             # The predicate has arguments
-            if not isinstance(accum, FunctionVariableExpression) and not isinstance(
-                accum, ConstantExpression
-            ):
+            if not isinstance(accum, FunctionVariableExpression) and not isinstance(accum, ConstantExpression):
                 raise LogicalExpressionException(
                     self._currentIndex,
                     "'%s' is an illegal predicate name.  "
@@ -348,14 +339,10 @@ class LogicParser:
             self.token()  # swallow the Open Paren
 
             # curry the arguments
-            accum = self.make_ApplicationExpression(
-                accum, self.process_next_expression(APP)
-            )
+            accum = self.make_ApplicationExpression(accum, self.process_next_expression(APP))
             while self.inRange(0) and self.token(0) == Tokens.COMMA:
                 self.token()  # swallow the comma
-                accum = self.make_ApplicationExpression(
-                    accum, self.process_next_expression(APP)
-                )
+                accum = self.make_ApplicationExpression(accum, self.process_next_expression(APP))
             self.assertNextToken(Tokens.CLOSE)
         return accum
 
@@ -367,8 +354,7 @@ class LogicParser:
         if isinstance(self.make_VariableExpression(tok), ConstantExpression):
             raise LogicalExpressionException(
                 self._currentIndex,
-                "'%s' is an illegal variable name.  "
-                "Constants may not be %s." % (tok, description),
+                "'%s' is an illegal variable name.  " "Constants may not be %s." % (tok, description),
             )
         return Variable(tok)
 
@@ -381,12 +367,8 @@ class LogicParser:
             )
         vars = [self.get_next_token_variable("abstracted")]
         while True:
-            if not self.inRange(0) or (
-                self.token(0) == Tokens.DOT and not self.inRange(1)
-            ):
-                raise ExpectedMoreTokensException(
-                    self._currentIndex + 2, message="Expression expected."
-                )
+            if not self.inRange(0) or (self.token(0) == Tokens.DOT and not self.inRange(1)):
+                raise ExpectedMoreTokensException(self._currentIndex + 2, message="Expression expected.")
             if not self.isvariable(self.token(0)):
                 break
             # Support expressions like: \x y.M == \x.\y.M
@@ -406,17 +388,12 @@ class LogicParser:
         if not self.inRange(0):
             raise ExpectedMoreTokensException(
                 self._currentIndex + 2,
-                message="Variable and Expression expected following quantifier '%s'."
-                % tok,
+                message="Variable and Expression expected following quantifier '%s'." % tok,
             )
         vars = [self.get_next_token_variable("quantified")]
         while True:
-            if not self.inRange(0) or (
-                self.token(0) == Tokens.DOT and not self.inRange(1)
-            ):
-                raise ExpectedMoreTokensException(
-                    self._currentIndex + 2, message="Expression expected."
-                )
+            if not self.inRange(0) or (self.token(0) == Tokens.DOT and not self.inRange(1)):
+                raise ExpectedMoreTokensException(self._currentIndex + 2, message="Expression expected.")
             if not self.isvariable(self.token(0)):
                 break
             # Support expressions like: some x y.M == some x.some y.M
@@ -456,13 +433,9 @@ class LogicParser:
         Otherwise, the parameter will be returned."""
         if self.inRange(0):
             tok = self.token(0)
-            if tok in Tokens.EQ_LIST + Tokens.NEQ_LIST and self.has_priority(
-                tok, context
-            ):
+            if tok in Tokens.EQ_LIST + Tokens.NEQ_LIST and self.has_priority(tok, context):
                 self.token()  # swallow the "=" or "!="
-                expression = self.make_EqualityExpression(
-                    expression, self.process_next_expression(tok)
-                )
+                expression = self.make_EqualityExpression(expression, self.process_next_expression(tok))
                 if tok in Tokens.NEQ_LIST:
                     expression = self.make_NegatedExpression(expression)
         return expression
@@ -481,9 +454,7 @@ class LogicParser:
             factory = self.get_BooleanExpression_factory(tok)
             if factory and self.has_priority(tok, context):
                 self.token()  # swallow the operator
-                expression = self.make_BooleanExpression(
-                    factory, expression, self.process_next_expression(tok)
-                )
+                expression = self.make_BooleanExpression(factory, expression, self.process_next_expression(tok))
             else:
                 break
         return expression
@@ -520,22 +491,17 @@ class LogicParser:
                 ):
                     raise LogicalExpressionException(
                         self._currentIndex,
-                        ("The function '%s" % expression)
-                        + "' is not a Lambda Expression, an "
+                        ("The function '%s" % expression) + "' is not a Lambda Expression, an "
                         "Application Expression, or a "
                         "functional predicate, so it may "
                         "not take arguments.",
                     )
                 self.token()  # swallow then open paren
                 # curry the arguments
-                accum = self.make_ApplicationExpression(
-                    expression, self.process_next_expression(APP)
-                )
+                accum = self.make_ApplicationExpression(expression, self.process_next_expression(APP))
                 while self.inRange(0) and self.token(0) == Tokens.COMMA:
                     self.token()  # swallow the comma
-                    accum = self.make_ApplicationExpression(
-                        accum, self.process_next_expression(APP)
-                    )
+                    accum = self.make_ApplicationExpression(accum, self.process_next_expression(APP))
                 self.assertNextToken(Tokens.CLOSE)
                 return accum
         return expression
@@ -550,9 +516,7 @@ class LogicParser:
         return LambdaExpression(variable, term)
 
     def has_priority(self, operation, context):
-        return self.operator_precedence[operation] < self.operator_precedence[
-            context
-        ] or (
+        return self.operator_precedence[operation] < self.operator_precedence[context] or (
             operation in self.right_associated_operations
             and self.operator_precedence[operation] == self.operator_precedence[context]
         )
@@ -561,9 +525,7 @@ class LogicParser:
         try:
             tok = self.token()
         except ExpectedMoreTokensException as e:
-            raise ExpectedMoreTokensException(
-                e.index, message="Expected token '%s'." % expected
-            ) from e
+            raise ExpectedMoreTokensException(e.index, message="Expected token '%s'." % expected) from e
 
         if isinstance(expected, list):
             if tok not in expected:
@@ -711,11 +673,7 @@ class ComplexType(Type):
         self.second = second
 
     def __eq__(self, other):
-        return (
-            isinstance(other, ComplexType)
-            and self.first == other.first
-            and self.second == other.second
-        )
+        return isinstance(other, ComplexType) and self.first == other.first and self.second == other.second
 
     def __ne__(self, other):
         return not self == other
@@ -854,9 +812,7 @@ def read_type(type_string):
             elif char == ",":
                 if paren_count == 1:
                     break
-        return ComplexType(
-            read_type(type_string[1:i]), read_type(type_string[i + 1 : -1])
-        )
+        return ComplexType(read_type(type_string[1:i]), read_type(type_string[i + 1 : -1]))
     elif type_string[0] == "%s" % ENTITY_TYPE:
         return ENTITY_TYPE
     elif type_string[0] == "%s" % TRUTH_TYPE:
@@ -864,9 +820,7 @@ def read_type(type_string):
     elif type_string[0] == "%s" % ANY_TYPE:
         return ANY_TYPE
     else:
-        raise LogicalExpressionException(
-            None, "Unexpected character: '%s'." % type_string[0]
-        )
+        raise LogicalExpressionException(None, "Unexpected character: '%s'." % type_string[0])
 
 
 class TypeException(Exception):
@@ -877,23 +831,19 @@ class TypeException(Exception):
 class InconsistentTypeHierarchyException(TypeException):
     def __init__(self, variable, expression=None):
         if expression:
-            msg = (
-                "The variable '%s' was found in multiple places with different"
-                " types in '%s'." % (variable, expression)
+            msg = "The variable '%s' was found in multiple places with different" " types in '%s'." % (
+                variable,
+                expression,
             )
         else:
-            msg = (
-                "The variable '%s' was found in multiple places with different"
-                " types." % (variable)
-            )
+            msg = "The variable '%s' was found in multiple places with different" " types." % (variable)
         super().__init__(msg)
 
 
 class TypeResolutionException(TypeException):
     def __init__(self, expression, other_type):
         super().__init__(
-            "The type of '%s', '%s', cannot be resolved with type '%s'"
-            % (expression, expression.type, other_type)
+            "The type of '%s', '%s', cannot be resolved with type '%s'" % (expression, expression.type, other_type)
         )
 
 
@@ -1029,10 +979,7 @@ class Expression(SubstituteBindingsI):
                 if isinstance(val, Variable):
                     val = self.make_VariableExpression(val)
                 elif not isinstance(val, Expression):
-                    raise ValueError(
-                        "Can not substitute a non-expression "
-                        "value into an expression: %r" % (val,)
-                    )
+                    raise ValueError("Can not substitute a non-expression " "value into an expression: %r" % (val,))
                 # Substitute bindings in the target value.
                 val = val.substitute_bindings(bindings)
                 # Replace var w/ the target value.
@@ -1090,9 +1037,7 @@ class Expression(SubstituteBindingsI):
         :param alpha_convert: bool Alpha convert automatically to avoid name clashes?
         """
         assert isinstance(variable, Variable), "%s is not a Variable" % variable
-        assert isinstance(expression, Expression), (
-            "%s is not an Expression" % expression
-        )
+        assert isinstance(expression, Expression), "%s is not an Expression" % expression
 
         return self.visit_structured(
             lambda e: e.replace(variable, expression, replace_bound, alpha_convert),
@@ -1108,9 +1053,7 @@ class Expression(SubstituteBindingsI):
             elif isinstance(e, AbstractVariableExpression):
                 return set()
             else:
-                return e.visit(
-                    get_indiv_vars, lambda parts: reduce(operator.or_, parts, set())
-                )
+                return e.visit(get_indiv_vars, lambda parts: reduce(operator.or_, parts, set()))
 
         result = self
         for i, e in enumerate(sorted(get_indiv_vars(self), key=lambda e: e.variable)):
@@ -1168,9 +1111,7 @@ class Expression(SubstituteBindingsI):
         variables and any variable starting with '?' or '@'.
         :return: set of ``Variable`` objects
         """
-        return self.free() | {
-            p for p in self.predicates() | self.constants() if re.match("^[?@]", p.name)
-        }
+        return self.free() | {p for p in self.predicates() | self.constants() if re.match("^[?@]", p.name)}
 
     def free(self):
         """
@@ -1178,27 +1119,21 @@ class Expression(SubstituteBindingsI):
         both individual and predicate variables, but not constants.
         :return: set of ``Variable`` objects
         """
-        return self.visit(
-            lambda e: e.free(), lambda parts: reduce(operator.or_, parts, set())
-        )
+        return self.visit(lambda e: e.free(), lambda parts: reduce(operator.or_, parts, set()))
 
     def constants(self):
         """
         Return a set of individual constants (non-predicates).
         :return: set of ``Variable`` objects
         """
-        return self.visit(
-            lambda e: e.constants(), lambda parts: reduce(operator.or_, parts, set())
-        )
+        return self.visit(lambda e: e.constants(), lambda parts: reduce(operator.or_, parts, set()))
 
     def predicates(self):
         """
         Return a set of predicates (constants, not variables).
         :return: set of ``Variable`` objects
         """
-        return self.visit(
-            lambda e: e.predicates(), lambda parts: reduce(operator.or_, parts, set())
-        )
+        return self.visit(lambda e: e.predicates(), lambda parts: reduce(operator.or_, parts, set()))
 
     def simplify(self):
         """
@@ -1273,9 +1208,7 @@ class ApplicationExpression(Expression):
 
         self.argument._set_type(ANY_TYPE, signature)
         try:
-            self.function._set_type(
-                ComplexType(self.argument.type, other_type), signature
-            )
+            self.function._set_type(ComplexType(self.argument.type, other_type), signature)
         except TypeResolutionException as e:
             raise TypeException(
                 "The function '%s' is of type '%s' and cannot be applied "
@@ -1429,9 +1362,7 @@ class AbstractVariableExpression(Expression):
     def replace(self, variable, expression, replace_bound=False, alpha_convert=True):
         """:see: Expression.replace()"""
         assert isinstance(variable, Variable), "%s is not an Variable" % variable
-        assert isinstance(expression, Expression), (
-            "%s is not an Expression" % expression
-        )
+        assert isinstance(expression, Expression), "%s is not an Expression" % expression
         if self.variable == variable:
             return expression
         else:
@@ -1469,10 +1400,7 @@ class AbstractVariableExpression(Expression):
     def __eq__(self, other):
         """Allow equality between instances of ``AbstractVariableExpression``
         subtypes."""
-        return (
-            isinstance(other, AbstractVariableExpression)
-            and self.variable == other.variable
-        )
+        return isinstance(other, AbstractVariableExpression) and self.variable == other.variable
 
     def __ne__(self, other):
         return not self == other
@@ -1612,9 +1540,7 @@ class VariableBinderExpression(Expression):
     def replace(self, variable, expression, replace_bound=False, alpha_convert=True):
         """:see: Expression.replace()"""
         assert isinstance(variable, Variable), "%s is not a Variable" % variable
-        assert isinstance(expression, Expression), (
-            "%s is not an Expression" % expression
-        )
+        assert isinstance(expression, Expression), "%s is not an Expression" % expression
         # if the bound variable is the thing being replaced
         if self.variable == variable:
             if replace_bound:
@@ -1645,9 +1571,7 @@ class VariableBinderExpression(Expression):
         :param newvar: ``Variable``, for the new variable
         """
         assert isinstance(newvar, Variable), "%s is not a Variable" % newvar
-        return self.__class__(
-            newvar, self.term.replace(self.variable, VariableExpression(newvar), True)
-        )
+        return self.__class__(newvar, self.term.replace(self.variable, VariableExpression(newvar), True))
 
     def free(self):
         """:see: Expression.free()"""
@@ -1710,12 +1634,7 @@ class LambdaExpression(VariableBinderExpression):
         while term.__class__ == self.__class__:
             variables.append(term.variable)
             term = term.term
-        return (
-            Tokens.LAMBDA
-            + " ".join("%s" % v for v in variables)
-            + Tokens.DOT
-            + "%s" % term
-        )
+        return Tokens.LAMBDA + " ".join("%s" % v for v in variables) + Tokens.DOT + "%s" % term
 
 
 class QuantifiedExpression(VariableBinderExpression):
@@ -1740,13 +1659,7 @@ class QuantifiedExpression(VariableBinderExpression):
         while term.__class__ == self.__class__:
             variables.append(term.variable)
             term = term.term
-        return (
-            self.getQuantifier()
-            + " "
-            + " ".join("%s" % v for v in variables)
-            + Tokens.DOT
-            + "%s" % term
-        )
+        return self.getQuantifier() + " " + " ".join("%s" % v for v in variables) + Tokens.DOT + "%s" % term
 
 
 class ExistsExpression(QuantifiedExpression):
@@ -1958,9 +1871,7 @@ class ExpectedMoreTokensException(LogicalExpressionException):
     def __init__(self, index, message=None):
         if not message:
             message = "More tokens expected."
-        LogicalExpressionException.__init__(
-            self, index, "End of input found.  " + message
-        )
+        LogicalExpressionException.__init__(self, index, "End of input found.  " + message)
 
 
 def is_indvar(expr):

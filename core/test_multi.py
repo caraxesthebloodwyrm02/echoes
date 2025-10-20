@@ -81,19 +81,13 @@ class TestMergeMulti:
 
         tm.assert_frame_equal(result, expected)
 
-        result = left.join(right, on=on_cols, how=join_type, sort=True).reset_index(
-            drop=True
-        )
+        result = left.join(right, on=on_cols, how=join_type, sort=True).reset_index(drop=True)
 
-        expected = merge(
-            left, right.reset_index(), on=on_cols, how=join_type, sort=True
-        )
+        expected = merge(left, right.reset_index(), on=on_cols, how=join_type, sort=True)
 
         tm.assert_frame_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-    )
+    @pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
     @pytest.mark.parametrize("sort", [True, False])
     def test_left_join_multi_index(self, sort, infer_string):
         with option_context("future.infer_string", infer_string):
@@ -125,9 +119,7 @@ class TestMergeMulti:
                 tm.assert_frame_equal(out, res)
 
             lc = list(map(chr, np.arange(ord("a"), ord("z") + 1)))
-            left = DataFrame(
-                np.random.default_rng(2).choice(lc, (50, 2)), columns=["1st", "3rd"]
-            )
+            left = DataFrame(np.random.default_rng(2).choice(lc, (50, 2)), columns=["1st", "3rd"])
             # Explicit cast to float to avoid implicit cast when setting nan
             left.insert(
                 1,
@@ -161,13 +153,9 @@ class TestMergeMulti:
     def test_merge_right_vs_left(self, left, right, sort):
         # compare left vs right merge with multikey
         on_cols = ["key1", "key2"]
-        merged_left_right = left.merge(
-            right, left_on=on_cols, right_index=True, how="left", sort=sort
-        )
+        merged_left_right = left.merge(right, left_on=on_cols, right_index=True, how="left", sort=sort)
 
-        merge_right_left = right.merge(
-            left, right_on=on_cols, left_index=True, how="right", sort=sort
-        )
+        merge_right_left = right.merge(left, right_on=on_cols, left_index=True, how="right", sort=sort)
 
         # Reorder columns
         merge_right_left = merge_right_left[merged_left_right.columns]
@@ -450,9 +438,7 @@ class TestMergeMulti:
     @pytest.mark.parametrize("klass", [None, np.asarray, Series, Index])
     def test_merge_datetime_index(self, klass):
         # see gh-19038
-        df = DataFrame(
-            [1, 2, 3], ["2016-01-01", "2017-01-01", "2018-01-01"], columns=["a"]
-        )
+        df = DataFrame([1, 2, 3], ["2016-01-01", "2017-01-01", "2018-01-01"], columns=["a"])
         df.index = pd.to_datetime(df.index)
         on_vector = df.index.year
 
@@ -484,9 +470,7 @@ class TestMergeMulti:
             ),
         )
 
-        right = DataFrame(
-            index=MultiIndex.from_tuples([], names=["date", "panel"]), columns=["state"]
-        )
+        right = DataFrame(index=MultiIndex.from_tuples([], names=["date", "panel"]), columns=["state"])
 
         expected_index = MultiIndex.from_tuples(
             [[Timestamp("1950-01-01"), "A"], [Timestamp("1950-01-02"), "B"]],
@@ -630,9 +614,7 @@ class TestMergeMulti:
                 (
                     DataFrame(
                         {"share": [1.00]},
-                        index=MultiIndex.from_tuples(
-                            [(4, np.nan)], names=["household_id", "asset_id"]
-                        ),
+                        index=MultiIndex.from_tuples([(4, np.nan)], names=["household_id", "asset_id"]),
                     )
                 ),
             ],
@@ -648,9 +630,7 @@ class TestMergeMulti:
         # invalid cases
         household.index.name = "foo"
 
-        with pytest.raises(
-            ValueError, match="cannot join with no overlapping index names"
-        ):
+        with pytest.raises(ValueError, match="cannot join with no overlapping index names"):
             household.join(portfolio, how="inner")
 
         portfolio2 = portfolio.copy()
@@ -839,9 +819,7 @@ class TestJoinMultiMulti:
         result = left_multi.join(right_multi, how=join_type).sort_index()
         tm.assert_frame_equal(result, expected)
 
-    def test_join_multi_empty_frames(
-        self, left_multi, right_multi, join_type, on_cols_multi
-    ):
+    def test_join_multi_empty_frames(self, left_multi, right_multi, join_type, on_cols_multi):
         left_multi = left_multi.drop(columns=left_multi.columns)
         right_multi = right_multi.drop(columns=right_multi.columns)
 
@@ -869,9 +847,7 @@ class TestJoinMultiMulti:
     @pytest.mark.parametrize("box", [None, np.asarray, Series, Index])
     def test_merge_datetime_index(self, box):
         # see gh-19038
-        df = DataFrame(
-            [1, 2, 3], ["2016-01-01", "2017-01-01", "2018-01-01"], columns=["a"]
-        )
+        df = DataFrame([1, 2, 3], ["2016-01-01", "2017-01-01", "2018-01-01"], columns=["a"])
         df.index = pd.to_datetime(df.index)
         on_vector = df.index.year
 
@@ -890,13 +866,9 @@ class TestJoinMultiMulti:
         tm.assert_frame_equal(result, expected)
 
     def test_single_common_level(self):
-        index_left = MultiIndex.from_tuples(
-            [("K0", "X0"), ("K0", "X1"), ("K1", "X2")], names=["key", "X"]
-        )
+        index_left = MultiIndex.from_tuples([("K0", "X0"), ("K0", "X1"), ("K1", "X2")], names=["key", "X"])
 
-        left = DataFrame(
-            {"A": ["A0", "A1", "A2"], "B": ["B0", "B1", "B2"]}, index=index_left
-        )
+        left = DataFrame({"A": ["A0", "A1", "A2"], "B": ["B0", "B1", "B2"]}, index=index_left)
 
         index_right = MultiIndex.from_tuples(
             [("K0", "Y0"), ("K1", "Y1"), ("K2", "Y2"), ("K2", "Y3")], names=["key", "Y"]
@@ -908,9 +880,7 @@ class TestJoinMultiMulti:
         )
 
         result = left.join(right)
-        expected = merge(
-            left.reset_index(), right.reset_index(), on=["key"], how="inner"
-        ).set_index(["key", "X", "Y"])
+        expected = merge(left.reset_index(), right.reset_index(), on=["key"], how="inner").set_index(["key", "X", "Y"])
 
         tm.assert_frame_equal(result, expected)
 

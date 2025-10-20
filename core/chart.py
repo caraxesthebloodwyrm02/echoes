@@ -198,10 +198,7 @@ class EdgeI:
     # ////////////////////////////////////////////////////////////
 
     def __eq__(self, other):
-        return (
-            self.__class__ is other.__class__
-            and self._comparison_key == other._comparison_key
-        )
+        return self.__class__ is other.__class__ and self._comparison_key == other._comparison_key
 
     def __ne__(self, other):
         return not self == other
@@ -285,9 +282,7 @@ class TreeEdge(EdgeI):
 
         :rtype: TreeEdge
         """
-        return TreeEdge(
-            span=(index, index), lhs=production.lhs(), rhs=production.rhs(), dot=0
-        )
+        return TreeEdge(span=(index, index), lhs=production.lhs(), rhs=production.rhs(), dot=0)
 
     def move_dot_forward(self, new_end):
         """
@@ -830,9 +825,7 @@ class Chart:
         edges = [e for (_, _, e) in edges]
 
         return (
-            self.pretty_format_leaves(width)
-            + "\n"
-            + "\n".join(self.pretty_format_edge(edge, width) for edge in edges)
+            self.pretty_format_leaves(width) + "\n" + "\n".join(self.pretty_format_edge(edge, width) for edge in edges)
         )
 
     # ////////////////////////////////////////////////////////////
@@ -852,9 +845,7 @@ class Chart:
             if y == 0:
                 s += '  node [style=filled, color="black"];\n'
             for x in range(self.num_leaves() + 1):
-                if y == 0 or (
-                    x <= self._edges[y - 1].start() or x >= self._edges[y - 1].end()
-                ):
+                if y == 0 or (x <= self._edges[y - 1].start() or x >= self._edges[y - 1].end()):
                     s += '  %04d.%04d [label=""];\n' % (x, y)
 
         # Add a spacer
@@ -864,9 +855,7 @@ class Chart:
         for x in range(self.num_leaves() + 1):
             s += "  {rank=same;"
             for y in range(self.num_edges() + 1):
-                if y == 0 or (
-                    x <= self._edges[y - 1].start() or x >= self._edges[y - 1].end()
-                ):
+                if y == 0 or (x <= self._edges[y - 1].start() or x >= self._edges[y - 1].end()):
                     s += " %04d.%04d" % (x, y)
             s += "}\n"
 
@@ -1070,17 +1059,13 @@ class SingleEdgeFundamentalRule(FundamentalRule):
             yield from self._apply_complete(chart, grammar, edge)
 
     def _apply_complete(self, chart, grammar, right_edge):
-        for left_edge in chart.select(
-            end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()
-        ):
+        for left_edge in chart.select(end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()):
             new_edge = left_edge.move_dot_forward(right_edge.end())
             if chart.insert_with_backpointer(new_edge, left_edge, right_edge):
                 yield new_edge
 
     def _apply_incomplete(self, chart, grammar, left_edge):
-        for right_edge in chart.select(
-            start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()
-        ):
+        for right_edge in chart.select(start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()):
             new_edge = left_edge.move_dot_forward(right_edge.end())
             if chart.insert_with_backpointer(new_edge, left_edge, right_edge):
                 yield new_edge
@@ -1263,18 +1248,14 @@ class FilteredSingleEdgeFundamentalRule(SingleEdgeFundamentalRule):
     def _apply_complete(self, chart, grammar, right_edge):
         end = right_edge.end()
         nexttoken = end < chart.num_leaves() and chart.leaf(end)
-        for left_edge in chart.select(
-            end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()
-        ):
+        for left_edge in chart.select(end=right_edge.start(), is_complete=False, nextsym=right_edge.lhs()):
             if _bottomup_filter(grammar, nexttoken, left_edge.rhs(), left_edge.dot()):
                 new_edge = left_edge.move_dot_forward(right_edge.end())
                 if chart.insert_with_backpointer(new_edge, left_edge, right_edge):
                     yield new_edge
 
     def _apply_incomplete(self, chart, grammar, left_edge):
-        for right_edge in chart.select(
-            start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()
-        ):
+        for right_edge in chart.select(start=left_edge.end(), is_complete=True, lhs=left_edge.nextsym()):
             end = right_edge.end()
             nexttoken = end < chart.num_leaves() and chart.leaf(end)
             if _bottomup_filter(grammar, nexttoken, left_edge.rhs(), left_edge.dot()):
@@ -1494,8 +1475,7 @@ class BottomUpChartParser(ChartParser):
     def __init__(self, grammar, **parser_args):
         if isinstance(grammar, PCFG):
             warnings.warn(
-                "BottomUpChartParser only works for CFG, "
-                "use BottomUpProbabilisticChartParser instead",
+                "BottomUpChartParser only works for CFG, " "use BottomUpProbabilisticChartParser instead",
                 category=DeprecationWarning,
             )
         ChartParser.__init__(self, grammar, BU_STRATEGY, **parser_args)
@@ -1515,9 +1495,7 @@ class BottomUpLeftCornerChartParser(ChartParser):
 class LeftCornerChartParser(ChartParser):
     def __init__(self, grammar, **parser_args):
         if not grammar.is_nonempty():
-            raise ValueError(
-                "LeftCornerParser only works for grammars " "without empty productions."
-            )
+            raise ValueError("LeftCornerParser only works for grammars " "without empty productions.")
         ChartParser.__init__(self, grammar, LC_STRATEGY, **parser_args)
 
 
@@ -1734,8 +1712,6 @@ def demo(
     """
     import sys
     import time
-
-    from nltk import CFG, Production, nonterminals
 
     # The grammar for ChartParser and SteppingChartParser:
     grammar = demo_grammar()

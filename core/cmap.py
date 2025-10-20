@@ -108,8 +108,7 @@ def computeMegaCmap(merger, cmapTables):
                 format14 = subtable
             else:
                 log.warning(
-                    "Dropped cmap subtable from font '%s':\t"
-                    "format %2s, platformID %2s, platEncID %2s",
+                    "Dropped cmap subtable from font '%s':\t" "format %2s, platformID %2s, platEncID %2s",
                     fontIdx,
                     subtable.format,
                     subtable.platformID,
@@ -153,9 +152,7 @@ def computeMegaCmap(merger, cmapTables):
                     # Char previously mapped to oldgid but oldgid is already remapped to a different
                     # gid, because of another Unicode character.
                     # TODO: Try harder to do something about these.
-                    log.warning(
-                        "Dropped mapping from codepoint %#06X to glyphId '%s'", uni, gid
-                    )
+                    log.warning("Dropped mapping from codepoint %#06X to glyphId '%s'", uni, gid)
 
     merger.uvsDict = computeMegaUvs(merger, chosenUvsTables)
 

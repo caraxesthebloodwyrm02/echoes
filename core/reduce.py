@@ -84,10 +84,7 @@ class BaseReduceTests:
 
         if not self._supports_reduction(ser, op_name):
             # TODO: the message being checked here isn't actually checking anything
-            msg = (
-                "[Cc]annot perform|Categorical is not ordered for operation|"
-                "does not support reduction|"
-            )
+            msg = "[Cc]annot perform|Categorical is not ordered for operation|" "does not support reduction|"
 
             with pytest.raises(TypeError, match=msg):
                 getattr(ser, op_name)(skipna=skipna)
@@ -103,10 +100,7 @@ class BaseReduceTests:
 
         if not self._supports_reduction(ser, op_name):
             # TODO: the message being checked here isn't actually checking anything
-            msg = (
-                "[Cc]annot perform|Categorical is not ordered for operation|"
-                "does not support reduction|"
-            )
+            msg = "[Cc]annot perform|Categorical is not ordered for operation|" "does not support reduction|"
 
             with pytest.raises(TypeError, match=msg):
                 getattr(ser, op_name)(skipna=skipna)

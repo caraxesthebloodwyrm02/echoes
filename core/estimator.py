@@ -164,10 +164,7 @@ def _write_label_html(
     param_prefix : str, default=""
         The prefix to prepend to parameter names for nested estimators.
     """
-    out.write(
-        f'<div class="{outer_class}"><div'
-        f' class="{inner_class} {is_fitted_css_class} sk-toggleable">'
-    )
+    out.write(f'<div class="{outer_class}"><div' f' class="{inner_class} {is_fitted_css_class} sk-toggleable">')
     name = html.escape(name)
     if name_details is not None:
         name_details = html.escape(str(name_details))
@@ -185,17 +182,9 @@ def _write_label_html(
                 f' rel="noreferrer" target="_blank" href="{doc_link}">?{doc_label}</a>'
             )
 
-        name_caption_div = (
-            ""
-            if name_caption is None
-            else f'<div class="caption">{html.escape(name_caption)}</div>'
-        )
+        name_caption_div = "" if name_caption is None else f'<div class="caption">{html.escape(name_caption)}</div>'
         name_caption_div = f"<div><div>{name}</div>{name_caption_div}</div>"
-        links_div = (
-            f"<div>{doc_link}{is_fitted_icon}</div>"
-            if doc_link or is_fitted_icon
-            else ""
-        )
+        links_div = f"<div>{doc_link}{is_fitted_icon}</div>" if doc_link or is_fitted_icon else ""
 
         label_html = (
             f'<label for="{est_id}" class="sk-toggleable__label {is_fitted_css_class} '
@@ -234,9 +223,7 @@ def _get_visual_block(estimator):
             )
 
     if isinstance(estimator, str):
-        return _VisualBlock(
-            "single", estimator, names=estimator, name_details=estimator
-        )
+        return _VisualBlock("single", estimator, names=estimator, name_details=estimator)
     elif estimator is None:
         return _VisualBlock("single", estimator, names="None", name_details="None")
 
@@ -323,9 +310,7 @@ def _write_estimator_html(
         out.write(f'<div class="sk-item{dash_cls}">')
 
         if estimator_label:
-            if hasattr(estimator, "get_params") and hasattr(
-                estimator, "_get_params_html"
-            ):
+            if hasattr(estimator, "get_params") and hasattr(estimator, "_get_params_html"):
                 params = estimator._get_params_html(deep=False)._repr_html_inner()
             else:
                 params = ""
@@ -441,10 +426,7 @@ def estimator_html_repr(estimator):
             status_label = "<span>Not fitted</span>"
             is_fitted_css_class = ""
 
-    is_fitted_icon = (
-        f'<span class="sk-estimator-doc-link {is_fitted_css_class}">'
-        f"i{status_label}</span>"
-    )
+    is_fitted_icon = f'<span class="sk-estimator-doc-link {is_fitted_css_class}">' f"i{status_label}</span>"
     with closing(StringIO()) as out:
         container_id = _CONTAINER_ID_COUNTER.get_id()
         style_template = Template(_CSS_STYLE)

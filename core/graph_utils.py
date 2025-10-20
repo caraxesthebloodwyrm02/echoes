@@ -8,9 +8,7 @@ from typing import TypeVar
 T = TypeVar("T")
 
 
-def strongly_connected_components(
-    vertices: AbstractSet[T], edges: dict[T, list[T]]
-) -> Iterator[set[T]]:
+def strongly_connected_components(vertices: AbstractSet[T], edges: dict[T, list[T]]) -> Iterator[set[T]]:
     """Compute Strongly Connected Components of a directed graph.
 
     Args:
@@ -54,9 +52,7 @@ def strongly_connected_components(
             yield from dfs(v)
 
 
-def prepare_sccs(
-    sccs: list[set[T]], edges: dict[T, list[T]]
-) -> dict[AbstractSet[T], set[AbstractSet[T]]]:
+def prepare_sccs(sccs: list[set[T]], edges: dict[T, list[T]]) -> dict[AbstractSet[T], set[AbstractSet[T]]]:
     """Use original edges to organize SCCs in a graph by dependencies between them."""
     sccsmap = {}
     for scc in sccs:

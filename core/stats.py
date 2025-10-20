@@ -67,9 +67,7 @@ def _weighted_percentile(array, sample_weight, percentile_rank=50, xp=None):
     # Set NaN values in `sample_weight` to 0. Only perform this operation if NaN
     # values present to avoid temporary allocations of size `(n_samples, n_features)`.
     n_features = array.shape[1]
-    largest_value_per_column = array[
-        sorted_idx[-1, ...], xp.arange(n_features, device=device)
-    ]
+    largest_value_per_column = array[sorted_idx[-1, ...], xp.arange(n_features, device=device)]
     # NaN values get sorted to end (largest value)
     if xp.any(xp.isnan(largest_value_per_column)):
         sorted_nan_mask = xp.take_along_axis(xp.isnan(array), sorted_idx, axis=0)
@@ -87,17 +85,13 @@ def _weighted_percentile(array, sample_weight, percentile_rank=50, xp=None):
 
     # Ignore leading `sample_weight=0` observations when `percentile_rank=0` (#20528)
     mask = adjusted_percentile_rank == 0
-    adjusted_percentile_rank[mask] = xp.nextafter(
-        adjusted_percentile_rank[mask], adjusted_percentile_rank[mask] + 1
-    )
+    adjusted_percentile_rank[mask] = xp.nextafter(adjusted_percentile_rank[mask], adjusted_percentile_rank[mask] + 1)
     # For each feature with index j, find sample index i of the scalar value
     # `adjusted_percentile_rank[j]` in 1D array `weight_cdf[j]`, such that:
     # weight_cdf[j, i-1] < adjusted_percentile_rank[j] <= weight_cdf[j, i].
     percentile_indices = xp.stack(
         [
-            xp.searchsorted(
-                weight_cdf[feature_idx, ...], adjusted_percentile_rank[feature_idx]
-            )
+            xp.searchsorted(weight_cdf[feature_idx, ...], adjusted_percentile_rank[feature_idx])
             for feature_idx in range(weight_cdf.shape[0])
         ],
     )

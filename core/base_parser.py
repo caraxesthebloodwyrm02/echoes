@@ -154,27 +154,17 @@ class ParserBase:
         self.header = kwds.get("header")
         if is_list_like(self.header, allow_sets=False):
             if kwds.get("usecols"):
-                raise ValueError(
-                    "cannot specify usecols when specifying a multi-index header"
-                )
+                raise ValueError("cannot specify usecols when specifying a multi-index header")
             if kwds.get("names"):
-                raise ValueError(
-                    "cannot specify names when specifying a multi-index header"
-                )
+                raise ValueError("cannot specify names when specifying a multi-index header")
 
             # validate index_col that only contains integers
             if self.index_col is not None:
                 # In this case we can pin down index_col as list[int]
                 if is_integer(self.index_col):
                     self.index_col = [self.index_col]
-                elif not (
-                    is_list_like(self.index_col, allow_sets=False)
-                    and all(map(is_integer, self.index_col))
-                ):
-                    raise ValueError(
-                        "index_col must only contain row numbers "
-                        "when specifying a multi-index header"
-                    )
+                elif not (is_list_like(self.index_col, allow_sets=False) and all(map(is_integer, self.index_col))):
+                    raise ValueError("index_col must only contain row numbers " "when specifying a multi-index header")
                 else:
                     self.index_col = list(self.index_col)
 
@@ -221,8 +211,7 @@ class ParserBase:
             # ParseDates = Union[DateGroups, List[DateGroups],
             #     Dict[ColReference, DateGroups]]
             cols_needed = itertools.chain.from_iterable(
-                col if is_list_like(col) and not isinstance(col, tuple) else [col]
-                for col in self.parse_dates
+                col if is_list_like(col) and not isinstance(col, tuple) else [col] for col in self.parse_dates
             )
         else:
             cols_needed = []
@@ -230,24 +219,11 @@ class ParserBase:
         cols_needed = list(cols_needed)
 
         # get only columns that are references using names (str), not by index
-        missing_cols = ", ".join(
-            sorted(
-                {
-                    col
-                    for col in cols_needed
-                    if isinstance(col, str) and col not in columns
-                }
-            )
-        )
+        missing_cols = ", ".join(sorted({col for col in cols_needed if isinstance(col, str) and col not in columns}))
         if missing_cols:
-            raise ValueError(
-                f"Missing column provided to 'parse_dates': '{missing_cols}'"
-            )
+            raise ValueError(f"Missing column provided to 'parse_dates': '{missing_cols}'")
         # Convert positions to actual column names
-        return [
-            col if (isinstance(col, str) or col in columns) else columns[col]
-            for col in cols_needed
-        ]
+        return [col if (isinstance(col, str) or col in columns) else columns[col] for col in cols_needed]
 
     def close(self) -> None:
         pass
@@ -256,9 +232,7 @@ class ParserBase:
     @property
     def _has_complex_date_col(self) -> bool:
         return isinstance(self.parse_dates, dict) or (
-            isinstance(self.parse_dates, list)
-            and len(self.parse_dates) > 0
-            and isinstance(self.parse_dates[0], list)
+            isinstance(self.parse_dates, list) and len(self.parse_dates) > 0 and isinstance(self.parse_dates[0], list)
         )
 
     @final
@@ -272,9 +246,7 @@ class ParserBase:
                 name = None
             j = i if self.index_col is None else self.index_col[i]
 
-            return (j in self.parse_dates) or (
-                name is not None and name in self.parse_dates
-            )
+            return (j in self.parse_dates) or (name is not None and name in self.parse_dates)
 
     @final
     def _extract_multi_indexer_columns(
@@ -282,9 +254,7 @@ class ParserBase:
         header,
         index_names: Sequence[Hashable] | None,
         passed_names: bool = False,
-    ) -> tuple[
-        Sequence[Hashable], Sequence[Hashable] | None, Sequence[Hashable] | None, bool
-    ]:
+    ) -> tuple[Sequence[Hashable], Sequence[Hashable] | None, Sequence[Hashable] | None, bool]:
         """
         Extract and return the names, index_names, col_names if the column
         names are a MultiIndex.
@@ -335,10 +305,7 @@ class ParserBase:
         # Clean the column names (if we have an index_col).
         if len(ic):
             col_names = [
-                r[ic[0]]
-                if ((r[ic[0]] is not None) and r[ic[0]] not in self.unnamed_cols)
-                else None
-                for r in header
+                r[ic[0]] if ((r[ic[0]] is not None) and r[ic[0]] not in self.unnamed_cols) else None for r in header
             ]
         else:
             col_names = [None] * len(header)
@@ -372,9 +339,7 @@ class ParserBase:
             index = self._agg_index(simple_index)
         elif self._has_complex_date_col:
             if not self._name_processed:
-                (self.index_names, _, self.index_col) = self._clean_index_names(
-                    list(columns), self.index_col
-                )
+                (self.index_names, _, self.index_col) = self._clean_index_names(list(columns), self.index_col)
                 self._name_processed = True
             date_index = self._get_complex_date_index(data, columns)
             index = self._agg_index(date_index, try_parse_dates=False)
@@ -501,13 +466,9 @@ class ParserBase:
                 if isinstance(converters, dict):
                     index_converter = converters.get(self.index_names[i]) is not None
 
-            try_num_bool = not (
-                cast_type and is_string_dtype(cast_type) or index_converter
-            )
+            try_num_bool = not (cast_type and is_string_dtype(cast_type) or index_converter)
 
-            arr, _ = self._infer_types(
-                arr, col_na_values | col_na_fvalues, cast_type is None, try_num_bool
-            )
+            arr, _ = self._infer_types(arr, col_na_values | col_na_fvalues, cast_type is None, try_num_bool)
             if cast_type is not None:
                 # Don't perform RangeIndex inference
                 idx = Index(arr, name=name, dtype=cast_type)
@@ -540,9 +501,7 @@ class ParserBase:
                 cast_type = dtypes
 
             if self.na_filter:
-                col_na_values, col_na_fvalues = _get_na_values(
-                    c, na_values, na_fvalues, self.keep_default_na
-                )
+                col_na_values, col_na_fvalues = _get_na_values(c, na_values, na_fvalues, self.keep_default_na)
             else:
                 col_na_values, col_na_fvalues = set(), set()
 
@@ -608,9 +567,7 @@ class ParserBase:
         return result
 
     @final
-    def _set_noconvert_dtype_columns(
-        self, col_indices: list[int], names: Sequence[Hashable]
-    ) -> set[int]:
+    def _set_noconvert_dtype_columns(self, col_indices: list[int], names: Sequence[Hashable]) -> set[int]:
         """
         Set the columns that should not undergo dtype conversions.
 
@@ -677,9 +634,7 @@ class ParserBase:
         return noconvert_columns
 
     @final
-    def _infer_types(
-        self, values, na_values, no_dtype_specified, try_num_bool: bool = True
-    ) -> tuple[ArrayLike, int]:
+    def _infer_types(self, values, na_values, no_dtype_specified, try_num_bool: bool = True) -> tuple[ArrayLike, int]:
         """
         Infer types of values, possibly casting
 
@@ -709,9 +664,7 @@ class ParserBase:
             return values, na_count
 
         dtype_backend = self.dtype_backend
-        non_default_dtype_backend = (
-            no_dtype_specified and dtype_backend is not lib.no_default
-        )
+        non_default_dtype_backend = no_dtype_specified and dtype_backend is not lib.no_default
         result: ArrayLike
 
         if try_num_bool and is_object_dtype(values.dtype):
@@ -734,9 +687,7 @@ class ParserBase:
                         result_mask = np.zeros(result.shape, dtype=np.bool_)
 
                     if result_mask.all():
-                        result = IntegerArray(
-                            np.ones(result_mask.shape, dtype=np.int64), result_mask
-                        )
+                        result = IntegerArray(np.ones(result_mask.shape, dtype=np.int64), result_mask)
                     elif is_integer_dtype(result):
                         result = IntegerArray(result, result_mask)
                     elif is_bool_dtype(result):
@@ -779,13 +730,9 @@ class ParserBase:
                     # We want an arrow null array here
                     result = ArrowExtensionArray(pa.array([None] * len(result)))
                 else:
-                    result = ArrowExtensionArray(
-                        pa.array(result._data, mask=result._mask)
-                    )
+                    result = ArrowExtensionArray(pa.array(result._data, mask=result._mask))
             else:
-                result = ArrowExtensionArray(
-                    pa.array(result.to_numpy(), from_pandas=True)
-                )
+                result = ArrowExtensionArray(pa.array(result.to_numpy(), from_pandas=True))
 
         return result, na_count
 
@@ -813,9 +760,7 @@ class ParserBase:
                 # TODO: this is for consistency with
                 # c-parser which parses all categories
                 # as strings
-                values = lib.ensure_string_array(
-                    values, skipna=False, convert_na_value=False
-                )
+                values = lib.ensure_string_array(values, skipna=False, convert_na_value=False)
 
             cats = Index(values).unique().dropna()
             values = Categorical._from_inferred_categories(
@@ -849,16 +794,12 @@ class ParserBase:
             # TODO: why skipna=True here and False above? some tests depend
             #  on it here, but nothing fails if we change it above
             #  (as no tests get there as of 2022-12-06)
-            values = lib.ensure_string_array(
-                values, skipna=True, convert_na_value=False
-            )
+            values = lib.ensure_string_array(values, skipna=True, convert_na_value=False)
         else:
             try:
                 values = astype_array(values, cast_type, copy=True)
             except ValueError as err:
-                raise ValueError(
-                    f"Unable to convert column {column} to type {cast_type}"
-                ) from err
+                raise ValueError(f"Unable to convert column {column} to type {cast_type}") from err
         return values
 
     @overload
@@ -866,16 +807,14 @@ class ParserBase:
         self,
         names: Index,
         data: DataFrame,
-    ) -> tuple[Sequence[Hashable] | Index, DataFrame]:
-        ...
+    ) -> tuple[Sequence[Hashable] | Index, DataFrame]: ...
 
     @overload
     def _do_date_conversions(
         self,
         names: Sequence[Hashable],
         data: Mapping[Hashable, ArrayLike],
-    ) -> tuple[Sequence[Hashable], Mapping[Hashable, ArrayLike]]:
-        ...
+    ) -> tuple[Sequence[Hashable], Mapping[Hashable, ArrayLike]]: ...
 
     @final
     def _do_date_conversions(
@@ -934,14 +873,10 @@ class ParserBase:
         self,
         usecols: set[int] | Callable[[Hashable], object],
         names: Sequence[Hashable],
-    ) -> set[int]:
-        ...
+    ) -> set[int]: ...
 
     @overload
-    def _evaluate_usecols(
-        self, usecols: set[str], names: Sequence[Hashable]
-    ) -> set[str]:
-        ...
+    def _evaluate_usecols(self, usecols: set[str], names: Sequence[Hashable]) -> set[str]: ...
 
     @final
     def _evaluate_usecols(
@@ -985,10 +920,7 @@ class ParserBase:
         """
         missing = [c for c in usecols if c not in names]
         if len(missing) > 0:
-            raise ValueError(
-                f"Usecols do not match columns, columns expected but not found: "
-                f"{missing}"
-            )
+            raise ValueError(f"Usecols do not match columns, columns expected but not found: " f"{missing}")
 
         return usecols
 
@@ -1018,10 +950,7 @@ class ParserBase:
             'usecols_dtype` is the inferred dtype of 'usecols' if an array-like
             is passed in or None if a callable or None is passed in.
         """
-        msg = (
-            "'usecols' must either be list-like of all strings, all unicode, "
-            "all integers or a callable."
-        )
+        msg = "'usecols' must either be list-like of all strings, all unicode, " "all integers or a callable."
         if usecols is not None:
             if callable(usecols):
                 return usecols, None
@@ -1115,9 +1044,7 @@ class ParserBase:
             index = default_index(0)
         else:
             # TODO: We could return default_index(0) if dtype_dict[name] is None
-            data = [
-                Index([], name=name, dtype=dtype_dict[name]) for name in index_names
-            ]
+            data = [Index([], name=name, dtype=dtype_dict[name]) for name in index_names]
             if len(data) == 1:
                 index = data[0]
             else:
@@ -1127,9 +1054,7 @@ class ParserBase:
             for i, n in enumerate(index_col):
                 columns.pop(n - i)
 
-        col_dict = {
-            col_name: Series([], dtype=dtype_dict[col_name]) for col_name in columns
-        }
+        col_dict = {col_name: Series([], dtype=dtype_dict[col_name]) for col_name in columns}
 
         return index, columns, col_dict
 
@@ -1164,9 +1089,7 @@ def _make_date_converter(
 
         if date_parser is lib.no_default:
             strs = parsing.concat_date_cols(date_cols)
-            date_fmt = (
-                date_format.get(col) if isinstance(date_format, dict) else date_format
-            )
+            date_fmt = date_format.get(col) if isinstance(date_format, dict) else date_format
 
             with warnings.catch_warnings():
                 warnings.filterwarnings(
@@ -1197,13 +1120,10 @@ def _make_date_converter(
                 with warnings.catch_warnings():
                     warnings.filterwarnings(
                         "ignore",
-                        ".*parsing datetimes with mixed time zones "
-                        "will raise an error",
+                        ".*parsing datetimes with mixed time zones " "will raise an error",
                         category=FutureWarning,
                     )
-                    pre_parsed = date_parser(
-                        *(unpack_if_single_element(arg) for arg in date_cols)
-                    )
+                    pre_parsed = date_parser(*(unpack_if_single_element(arg) for arg in date_cols))
                     try:
                         result = tools.to_datetime(
                             pre_parsed,
@@ -1220,8 +1140,7 @@ def _make_date_converter(
                 with warnings.catch_warnings():
                     warnings.filterwarnings(
                         "ignore",
-                        ".*parsing datetimes with mixed time zones "
-                        "will raise an error",
+                        ".*parsing datetimes with mixed time zones " "will raise an error",
                         category=FutureWarning,
                     )
                     pre_parsed = parsing.try_parse_dates(
@@ -1319,20 +1238,15 @@ def _process_date_conversion(
 
                     dtype = data_dict[colspec].dtype
                     if isinstance(dtype, ArrowDtype) and (
-                        pa.types.is_timestamp(dtype.pyarrow_dtype)
-                        or pa.types.is_date(dtype.pyarrow_dtype)
+                        pa.types.is_timestamp(dtype.pyarrow_dtype) or pa.types.is_date(dtype.pyarrow_dtype)
                     ):
                         continue
 
                 # Pyarrow engine returns Series which we need to convert to
                 # numpy array before converter, its a no-op for other parsers
-                data_dict[colspec] = converter(
-                    np.asarray(data_dict[colspec]), col=colspec
-                )
+                data_dict[colspec] = converter(np.asarray(data_dict[colspec]), col=colspec)
             else:
-                new_name, col, old_names = _try_convert_dates(
-                    converter, colspec, data_dict, orig_names
-                )
+                new_name, col, old_names = _try_convert_dates(converter, colspec, data_dict, orig_names)
                 if new_name in data_dict:
                     raise ValueError(f"New date column already in dict {new_name}")
                 new_data[new_name] = col
@@ -1377,9 +1291,7 @@ def _process_date_conversion(
     return data_dict, new_cols
 
 
-def _try_convert_dates(
-    parser: Callable, colspec, data_dict, columns, target_name: str | None = None
-):
+def _try_convert_dates(parser: Callable, colspec, data_dict, columns, target_name: str | None = None):
     colset = set(columns)
     colnames = []
 
@@ -1443,16 +1355,9 @@ def _validate_parse_dates_arg(parse_dates):
     is a non-boolean scalar. Raises a ValueError if
     that is the case.
     """
-    msg = (
-        "Only booleans, lists, and dictionaries are accepted "
-        "for the 'parse_dates' parameter"
-    )
+    msg = "Only booleans, lists, and dictionaries are accepted " "for the 'parse_dates' parameter"
 
-    if not (
-        parse_dates is None
-        or lib.is_bool(parse_dates)
-        or isinstance(parse_dates, (list, dict))
-    ):
+    if not (parse_dates is None or lib.is_bool(parse_dates) or isinstance(parse_dates, (list, dict))):
         raise TypeError(msg)
 
     return parse_dates

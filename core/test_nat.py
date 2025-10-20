@@ -105,9 +105,7 @@ def test_nat_vector_field_access():
 
 
 @pytest.mark.parametrize("klass", [Timestamp, Timedelta, Period])
-@pytest.mark.parametrize(
-    "value", [None, np.nan, iNaT, float("nan"), NaT, "NaT", "nat", "", "NAT"]
-)
+@pytest.mark.parametrize("value", [None, np.nan, iNaT, float("nan"), NaT, "NaT", "nat", "", "NAT"])
 def test_identity(klass, value):
     assert klass(value) is NaT
 
@@ -163,17 +161,13 @@ def test_nat_methods_nan(method):
     assert np.isnan(getattr(NaT, method)())
 
 
-@pytest.mark.parametrize(
-    "method", ["date", "now", "replace", "today", "tz_convert", "tz_localize"]
-)
+@pytest.mark.parametrize("method", ["date", "now", "replace", "today", "tz_convert", "tz_localize"])
 def test_nat_methods_nat(method):
     # see gh-8254, gh-9513, gh-17329
     assert getattr(NaT, method)() is NaT
 
 
-@pytest.mark.parametrize(
-    "get_nat", [lambda x: NaT, lambda x: Timedelta(x), lambda x: Timestamp(x)]
-)
+@pytest.mark.parametrize("get_nat", [lambda x: NaT, lambda x: Timedelta(x), lambda x: Timestamp(x)])
 def test_nat_iso_format(get_nat):
     # see gh-12300
     assert get_nat("NaT").isoformat() == "NaT"
@@ -230,11 +224,7 @@ def _get_overlap_public_nat_methods(klass, as_tuple=False):
     nat_names = dir(NaT)
     klass_names = dir(klass)
 
-    overlap = [
-        x
-        for x in nat_names
-        if x in klass_names and not x.startswith("_") and callable(getattr(klass, x))
-    ]
+    overlap = [x for x in nat_names if x in klass_names and not x.startswith("_") and callable(getattr(klass, x))]
 
     # Timestamp takes precedence over Timedelta in terms of overlap.
     if klass is Timedelta:
@@ -309,10 +299,7 @@ def test_overlap_public_nat_methods(klass, expected):
 
 @pytest.mark.parametrize(
     "compare",
-    (
-        _get_overlap_public_nat_methods(Timestamp, True)
-        + _get_overlap_public_nat_methods(Timedelta, True)
-    ),
+    (_get_overlap_public_nat_methods(Timestamp, True) + _get_overlap_public_nat_methods(Timedelta, True)),
     ids=lambda x: f"{x[0].__name__}.{x[1]}",
 )
 def test_nat_doc_strings(compare):
@@ -323,9 +310,7 @@ def test_nat_doc_strings(compare):
     klass_doc = getattr(klass, method).__doc__
 
     if klass == Timestamp and method == "isoformat":
-        pytest.skip(
-            "Ignore differences with Timestamp.isoformat() as they're intentional"
-        )
+        pytest.skip("Ignore differences with Timestamp.isoformat() as they're intentional")
 
     if method == "to_numpy":
         # GH#44460 can return either dt64 or td64 depending on dtype,
@@ -389,11 +374,7 @@ def test_nat_arithmetic_scalar(op_name, value, val_type):
     op = _ops[op_name]
 
     if op_name in invalid_ops.get(val_type, set()):
-        if (
-            val_type == "timedelta"
-            and "times" in op_name
-            and isinstance(value, Timedelta)
-        ):
+        if val_type == "timedelta" and "times" in op_name and isinstance(value, Timedelta):
             typs = "(Timedelta|NaTType)"
             msg = rf"unsupported operand type\(s\) for \*: '{typs}' and '{typs}'"
         elif val_type == "str":
@@ -422,9 +403,7 @@ def test_nat_arithmetic_scalar(op_name, value, val_type):
         assert op(NaT, value) is expected
 
 
-@pytest.mark.parametrize(
-    "val,expected", [(np.nan, NaT), (NaT, np.nan), (np.timedelta64("NaT"), np.nan)]
-)
+@pytest.mark.parametrize("val,expected", [(np.nan, NaT), (NaT, np.nan), (np.timedelta64("NaT"), np.nan)])
 def test_nat_rfloordiv_timedelta(val, expected):
     # see gh-#18846
     #
@@ -443,9 +422,7 @@ def test_nat_rfloordiv_timedelta(val, expected):
         DatetimeIndex(["2011-01-01", "2011-01-02"], name="x"),
         DatetimeIndex(["2011-01-01", "2011-01-02"], tz="US/Eastern", name="x"),
         DatetimeArray._from_sequence(["2011-01-01", "2011-01-02"], dtype="M8[ns]"),
-        DatetimeArray._from_sequence(
-            ["2011-01-01", "2011-01-02"], dtype=DatetimeTZDtype(tz="US/Pacific")
-        ),
+        DatetimeArray._from_sequence(["2011-01-01", "2011-01-02"], dtype=DatetimeTZDtype(tz="US/Pacific")),
         TimedeltaIndex(["1 day", "2 day"], name="x"),
     ],
 )

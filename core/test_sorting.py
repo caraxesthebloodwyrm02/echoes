@@ -29,9 +29,7 @@ from pandas.core.sorting import (
 @pytest.fixture
 def left_right():
     low, high, n = -1 << 10, 1 << 10, 1 << 20
-    left = DataFrame(
-        np.random.default_rng(2).integers(low, high, (n, 7)), columns=list("ABCDEFG")
-    )
+    left = DataFrame(np.random.default_rng(2).integers(low, high, (n, 7)), columns=list("ABCDEFG"))
     left["left"] = left.sum(axis=1)
 
     # one-2-one match
@@ -113,9 +111,7 @@ class TestSorting:
             names=list("abcde"),
         )
 
-        res = DataFrame(
-            np.zeros((len(mi), 2)), columns=["jim", "joe"], index=mi
-        ).sort_index()
+        res = DataFrame(np.zeros((len(mi), 2)), columns=["jim", "joe"], index=mi).sort_index()
 
         tm.assert_frame_equal(getattr(gr, agg)(), res)
 
@@ -186,9 +182,7 @@ class TestSorting:
         # because quick and merge sort fall over to insertion sort for small
         # arrays."""
 
-        result = nargsort(
-            items, kind="mergesort", ascending=ascending, na_position=na_position
-        )
+        result = nargsort(items, kind="mergesort", ascending=ascending, na_position=na_position)
         tm.assert_numpy_array_equal(result, np.array(exp), check_dtype=False)
 
 
@@ -331,9 +325,7 @@ class TestMerge:
         res = merge(left, right, how=how, sort=sort)
         if sort:
             kcols = list("ABCDEFG")
-            tm.assert_frame_equal(
-                res[kcols].copy(), res[kcols].sort_values(kcols, kind="mergesort")
-            )
+            tm.assert_frame_equal(res[kcols].copy(), res[kcols].sort_values(kcols, kind="mergesort"))
 
         # as in GH9092 dtypes break with outer/right join
         # 2021-12-18: dtype does not break anymore
@@ -397,9 +389,7 @@ class TestSafeSort:
         values = np.array([3, 1, 2, 0, 4])
         expected = np.array([0, 1, 2, 3, 4])
 
-        result, result_codes = safe_sort(
-            values, codes, use_na_sentinel=True, verify=verify
-        )
+        result, result_codes = safe_sort(values, codes, use_na_sentinel=True, verify=verify)
         expected_codes = np.array(exp_codes, dtype=np.intp)
         tm.assert_numpy_array_equal(result, expected)
         tm.assert_numpy_array_equal(result_codes, expected_codes)
@@ -449,9 +439,7 @@ class TestSafeSort:
         with pytest.raises(err, match=msg):
             safe_sort(values=arg, codes=codes)
 
-    @pytest.mark.parametrize(
-        "arg, exp", [[[1, 3, 2], [1, 2, 3]], [[1, 3, np.nan, 2], [1, 2, 3, np.nan]]]
-    )
+    @pytest.mark.parametrize("arg, exp", [[[1, 3, 2], [1, 2, 3]], [[1, 3, np.nan, 2], [1, 2, 3, np.nan]]])
     def test_extension_array(self, arg, exp):
         a = array(arg, dtype="Int64")
         result = safe_sort(a)
@@ -481,7 +469,5 @@ def test_safe_sort_multiindex():
     arr2 = [2, 1, 3, 3]
     midx = MultiIndex.from_arrays([arr1, arr2])
     result = safe_sort(midx)
-    expected = MultiIndex.from_arrays(
-        [Series([1, 2, NA, NA], dtype="Int64"), [1, 2, 3, 3]]
-    )
+    expected = MultiIndex.from_arrays([Series([1, 2, NA, NA], dtype="Int64"), [1, 2, 3, 3]])
     tm.assert_index_equal(result, expected)

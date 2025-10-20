@@ -17,10 +17,7 @@ def check_library_installed(library):
     try:
         return importlib.import_module(library)
     except ImportError as exc:
-        raise ImportError(
-            f"Setting output container to '{library}' requires {library} to be"
-            " installed"
-        ) from exc
+        raise ImportError(f"Setting output container to '{library}' requires {library} to be" " installed") from exc
 
 
 def get_columns(columns):
@@ -255,9 +252,7 @@ def _get_output_config(method, estimator=None):
 
     supported_outputs = ADAPTERS_MANAGER.supported_outputs
     if dense_config not in supported_outputs:
-        raise ValueError(
-            f"output config must be in {sorted(supported_outputs)}, got {dense_config}"
-        )
+        raise ValueError(f"output config must be in {sorted(supported_outputs)}, got {dense_config}")
 
     return {"dense": dense_config}
 
@@ -338,10 +333,7 @@ def _auto_wrap_is_configured(estimator):
     is manually disabled.
     """
     auto_wrap_output_keys = getattr(estimator, "_sklearn_auto_wrap_output_keys", set())
-    return (
-        hasattr(estimator, "get_feature_names_out")
-        and "transform" in auto_wrap_output_keys
-    )
+    return hasattr(estimator, "get_feature_names_out") and "transform" in auto_wrap_output_keys
 
 
 class _SetOutputMixin:
@@ -359,9 +351,7 @@ class _SetOutputMixin:
 
         # Dynamically wraps `transform` and `fit_transform` and configure it's
         # output based on `set_output`.
-        if not (
-            isinstance(auto_wrap_output_keys, tuple) or auto_wrap_output_keys is None
-        ):
+        if not (isinstance(auto_wrap_output_keys, tuple) or auto_wrap_output_keys is None):
             raise ValueError("auto_wrap_output_keys must be None or a tuple of keys.")
 
         if auto_wrap_output_keys is None:
@@ -453,8 +443,5 @@ def _safe_set_output(estimator, *, transform=None):
         return
 
     if not hasattr(estimator, "set_output"):
-        raise ValueError(
-            f"Unable to configure output for {estimator} because `set_output` "
-            "is not available."
-        )
+        raise ValueError(f"Unable to configure output for {estimator} because `set_output` " "is not available.")
     return estimator.set_output(transform=transform)

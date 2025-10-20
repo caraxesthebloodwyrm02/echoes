@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 logger = logging.getLogger(__name__)
 
 # our parallel functionality only works for the forking Process
-parallel_available = HAS_MULTIPROCESSING and os.name == 'posix'
+parallel_available = HAS_MULTIPROCESSING and os.name == "posix"
 
 
 class SerialTasks:
@@ -71,9 +71,7 @@ class ParallelTasks:
         # task number of each subprocess
         self._taskid = 0
 
-    def _process(
-        self, pipe: Any, func: Callable[[Any], Any] | Callable[[], Any], arg: Any
-    ) -> None:
+    def _process(self, pipe: Any, func: Callable[[Any], Any] | Callable[[], Any], arg: Any) -> None:
         try:
             collector = logging.LogCollector()
             with collector.collect():
@@ -100,7 +98,7 @@ class ParallelTasks:
         self._result_funcs[tid] = result_func or (lambda arg, result: None)
         self._args[tid] = arg
         precv, psend = multiprocessing.Pipe(False)
-        context: Any = multiprocessing.get_context('fork')
+        context: Any = multiprocessing.get_context("fork")
         proc = context.Process(target=self._process, args=(psend, task_func, arg))
         self._procs[tid] = proc
         self._precvs_waiting[tid] = precv

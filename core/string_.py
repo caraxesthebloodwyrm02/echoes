@@ -175,13 +175,9 @@ class StringDtype(StorageExtensionDtype):
 
         # validate options
         if storage not in {"python", "pyarrow"}:
-            raise ValueError(
-                f"Storage must be 'python' or 'pyarrow'. Got {storage} instead."
-            )
+            raise ValueError(f"Storage must be 'python' or 'pyarrow'. Got {storage} instead.")
         if storage == "pyarrow" and pa_version_under10p1:
-            raise ImportError(
-                "pyarrow>=10.0.1 is required for PyArrow backed StringArray."
-            )
+            raise ImportError("pyarrow>=10.0.1 is required for PyArrow backed StringArray.")
 
         if isinstance(na_value, float) and np.isnan(na_value):
             # when passed a NaN value, always set to np.nan to ensure we use
@@ -262,9 +258,7 @@ class StringDtype(StorageExtensionDtype):
             If the string is not a valid option.
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
         if string == "string":
             return cls()
         elif string == "str" and using_string_dtype():
@@ -334,9 +328,7 @@ class StringDtype(StorageExtensionDtype):
 
         return StringDtype(storage=storage, na_value=na_value)
 
-    def __from_arrow__(
-        self, array: pyarrow.Array | pyarrow.ChunkedArray
-    ) -> BaseStringArray:
+    def __from_arrow__(self, array: pyarrow.Array | pyarrow.ChunkedArray) -> BaseStringArray:
         """
         Construct StringArray from pyarrow Array/ChunkedArray.
         """
@@ -436,9 +428,7 @@ class BaseStringArray(ExtensionArray):
         convert: bool = True,
     ):
         if self.dtype.na_value is np.nan:
-            return self._str_map_nan_semantics(
-                f, na_value=na_value, dtype=dtype, convert=convert
-            )
+            return self._str_map_nan_semantics(f, na_value=na_value, dtype=dtype, convert=convert)
 
         from pandas.arrays import BooleanArray
 
@@ -494,15 +484,11 @@ class BaseStringArray(ExtensionArray):
         # _str_map helper for case where dtype is either string dtype or object
         if is_string_dtype(dtype) and not is_object_dtype(dtype):
             # i.e. StringDtype
-            result = lib.map_infer_mask(
-                arr, f, mask.view("uint8"), convert=False, na_value=na_value
-            )
+            result = lib.map_infer_mask(arr, f, mask.view("uint8"), convert=False, na_value=na_value)
             if self.dtype.storage == "pyarrow":
                 import pyarrow as pa
 
-                result = pa.array(
-                    result, mask=mask, type=pa.large_string(), from_pandas=True
-                )
+                result = pa.array(result, mask=mask, type=pa.large_string(), from_pandas=True)
             # error: Too many arguments for "BaseStringArray"
             return type(self)(result)  # type: ignore[call-arg]
 
@@ -732,9 +718,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
         return new_string_array
 
     @classmethod
-    def _from_sequence_of_strings(
-        cls, strings, *, dtype: Dtype | None = None, copy: bool = False
-    ):
+    def _from_sequence_of_strings(cls, strings, *, dtype: Dtype | None = None, copy: bool = False):
         return cls._from_sequence(strings, dtype=dtype, copy=copy)
 
     @classmethod
@@ -784,8 +768,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
                 value = np.asarray(value)
             if len(value) and not lib.is_string_array(value, skipna=True):
                 raise TypeError(
-                    "Invalid value for dtype 'str'. Value should be a "
-                    "string or missing value (or array of those)."
+                    "Invalid value for dtype 'str'. Value should be a " "string or missing value (or array of those)."
                 )
         return value
 
@@ -985,16 +968,12 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
 
     def min(self, axis=None, skipna: bool = True, **kwargs) -> Scalar:
         nv.validate_min((), kwargs)
-        result = masked_reductions.min(
-            values=self.to_numpy(), mask=self.isna(), skipna=skipna
-        )
+        result = masked_reductions.min(values=self.to_numpy(), mask=self.isna(), skipna=skipna)
         return self._wrap_reduction_result(axis, result)
 
     def max(self, axis=None, skipna: bool = True, **kwargs) -> Scalar:
         nv.validate_max((), kwargs)
-        result = masked_reductions.max(
-            values=self.to_numpy(), mask=self.isna(), skipna=skipna
-        )
+        result = masked_reductions.max(values=self.to_numpy(), mask=self.isna(), skipna=skipna)
         return self._wrap_reduction_result(axis, result)
 
     def sum(
@@ -1006,9 +985,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
         **kwargs,
     ) -> Scalar:
         nv.validate_sum((), kwargs)
-        result = masked_reductions.sum(
-            values=self._ndarray, mask=self.isna(), skipna=skipna
-        )
+        result = masked_reductions.sum(values=self._ndarray, mask=self.isna(), skipna=skipna)
         return self._wrap_reduction_result(axis, result)
 
     def value_counts(self, dropna: bool = True) -> Series:
@@ -1036,10 +1013,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
         sorter: NumpySorter | None = None,
     ) -> npt.NDArray[np.intp] | np.intp:
         if self._hasna:
-            raise ValueError(
-                "searchsorted requires array to be sorted, which is impossible "
-                "with NAs present."
-            )
+            raise ValueError("searchsorted requires array to be sorted, which is impossible " "with NAs present.")
         return super().searchsorted(value=value, side=side, sorter=sorter)
 
     def _cmp_method(self, other, op):
@@ -1060,10 +1034,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
             if isinstance(other, BaseStringArray):
                 # pyarrow storage has priority over python storage
                 # (except if we have NA semantics and other not)
-                if not (
-                    self.dtype.na_value is libmissing.NA
-                    and other.dtype.na_value is not libmissing.NA
-                ):
+                if not (self.dtype.na_value is libmissing.NA and other.dtype.na_value is not libmissing.NA):
                     return NotImplemented
             else:
                 return NotImplemented
@@ -1077,9 +1048,7 @@ class StringArray(BaseStringArray, NumpyExtensionArray):  # type: ignore[misc]
         if lib.is_list_like(other):
             if len(other) != len(self):
                 # prevent improper broadcasting when other is 2D
-                raise ValueError(
-                    f"Lengths of operands do not match: {len(self)} != {len(other)}"
-                )
+                raise ValueError(f"Lengths of operands do not match: {len(self)} != {len(other)}")
 
             # for array-likes, first filter out NAs before converting to numpy
             if not is_array_like(other):
@@ -1116,9 +1085,7 @@ class StringArrayNumpySemantics(StringArray):
     def _validate(self) -> None:
         """Validate that we only store NaN or strings."""
         if len(self._ndarray) and not lib.is_string_array(self._ndarray, skipna=True):
-            raise ValueError(
-                "StringArrayNumpySemantics requires a sequence of strings or NaN"
-            )
+            raise ValueError("StringArrayNumpySemantics requires a sequence of strings or NaN")
         if self._ndarray.dtype != "object":
             raise ValueError(
                 "StringArrayNumpySemantics requires a sequence of strings or NaN. Got "
@@ -1127,9 +1094,7 @@ class StringArrayNumpySemantics(StringArray):
         # TODO validate or force NA/None to NaN
 
     @classmethod
-    def _from_sequence(
-        cls, scalars, *, dtype: Dtype | None = None, copy: bool = False
-    ) -> Self:
+    def _from_sequence(cls, scalars, *, dtype: Dtype | None = None, copy: bool = False) -> Self:
         if dtype is None:
             dtype = StringDtype(storage="python", na_value=np.nan)
         return super()._from_sequence(scalars, dtype=dtype, copy=copy)

@@ -141,9 +141,7 @@ def _apply_specialization(
     return None
 
 
-def apply_function_specialization(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def apply_function_specialization(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Invoke the Specializer callback for a function if one has been registered"""
     return _apply_specialization(builder, expr, callee, callee.fullname)
 
@@ -156,9 +154,7 @@ def apply_method_specialization(
     return _apply_specialization(builder, expr, callee, name, typ)
 
 
-def specialize_function(
-    name: str, typ: RType | None = None
-) -> Callable[[Specializer], Specializer]:
+def specialize_function(name: str, typ: RType | None = None) -> Callable[[Specializer], Specializer]:
     """Decorator to register a function as being a specializer.
 
     There may exist multiple specializers for one function. When
@@ -188,9 +184,7 @@ def translate_globals(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Va
 @specialize_function("mypy_extensions.i32")
 @specialize_function("mypy_extensions.i16")
 @specialize_function("mypy_extensions.u8")
-def translate_builtins_with_unary_dunder(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_builtins_with_unary_dunder(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Specialize calls on native classes that implement the associated dunder.
 
     E.g. i64(x) gets specialized to x.__int__() if x is a native instance.
@@ -262,9 +256,7 @@ def dict_methods_fast_path(builder: IRBuilder, expr: CallExpr, callee: RefExpr) 
 
 
 @specialize_function("builtins.list")
-def translate_list_from_generator_call(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_list_from_generator_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Special case for simplest list comprehension.
 
     For example:
@@ -272,11 +264,7 @@ def translate_list_from_generator_call(
     'translate_list_comprehension()' would take care of other cases
     if this fails.
     """
-    if (
-        len(expr.args) == 1
-        and expr.arg_kinds[0] == ARG_POS
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) == 1 and expr.arg_kinds[0] == ARG_POS and isinstance(expr.args[0], GeneratorExpr):
         return sequence_from_generator_preallocate_helper(
             builder,
             expr.args[0],
@@ -287,9 +275,7 @@ def translate_list_from_generator_call(
 
 
 @specialize_function("builtins.tuple")
-def translate_tuple_from_generator_call(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_tuple_from_generator_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Special case for simplest tuple creation from a generator.
 
     For example:
@@ -297,11 +283,7 @@ def translate_tuple_from_generator_call(
     'translate_safe_generator_call()' would take care of other cases
     if this fails.
     """
-    if (
-        len(expr.args) == 1
-        and expr.arg_kinds[0] == ARG_POS
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) == 1 and expr.arg_kinds[0] == ARG_POS and isinstance(expr.args[0], GeneratorExpr):
         return sequence_from_generator_preallocate_helper(
             builder,
             expr.args[0],
@@ -312,19 +294,13 @@ def translate_tuple_from_generator_call(
 
 
 @specialize_function("builtins.set")
-def translate_set_from_generator_call(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_set_from_generator_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Special case for set creation from a generator.
 
     For example:
         set(f(...) for ... in iterator/nested_generators...)
     """
-    if (
-        len(expr.args) == 1
-        and expr.arg_kinds[0] == ARG_POS
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) == 1 and expr.arg_kinds[0] == ARG_POS and isinstance(expr.args[0], GeneratorExpr):
         return translate_set_comprehension(builder, expr.args[0])
     return None
 
@@ -368,17 +344,11 @@ def faster_min_max(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value
 @specialize_function("extend", list_rprimitive)
 @specialize_function("update", dict_rprimitive)
 @specialize_function("update", set_rprimitive)
-def translate_safe_generator_call(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_safe_generator_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Special cases for things that consume iterators where we know we
     can safely compile a generator into a list.
     """
-    if (
-        len(expr.args) > 0
-        and expr.arg_kinds[0] == ARG_POS
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) > 0 and expr.arg_kinds[0] == ARG_POS and isinstance(expr.args[0], GeneratorExpr):
         if isinstance(callee, MemberExpr):
             return builder.gen_method_call(
                 builder.accept(callee.expr),
@@ -406,22 +376,14 @@ def translate_safe_generator_call(
 
 @specialize_function("builtins.any")
 def translate_any_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
-    if (
-        len(expr.args) == 1
-        and expr.arg_kinds == [ARG_POS]
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) == 1 and expr.arg_kinds == [ARG_POS] and isinstance(expr.args[0], GeneratorExpr):
         return any_all_helper(builder, expr.args[0], builder.false, lambda x: x, builder.true)
     return None
 
 
 @specialize_function("builtins.all")
 def translate_all_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
-    if (
-        len(expr.args) == 1
-        and expr.arg_kinds == [ARG_POS]
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if len(expr.args) == 1 and expr.arg_kinds == [ARG_POS] and isinstance(expr.args[0], GeneratorExpr):
         return any_all_helper(
             builder,
             expr.args[0],
@@ -464,11 +426,7 @@ def translate_sum_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> V
     # - only one or two arguments given (if not, sum() has been given invalid arguments)
     # - first argument is a Generator (there is no benefit to optimizing the performance of eg.
     #   sum([1, 2, 3]), so non-Generator Iterables are not handled)
-    if not (
-        len(expr.args) in (1, 2)
-        and expr.arg_kinds[0] == ARG_POS
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if not (len(expr.args) in (1, 2) and expr.arg_kinds[0] == ARG_POS and isinstance(expr.args[0], GeneratorExpr)):
         return None
 
     # handle 'start' argument, if given
@@ -489,9 +447,7 @@ def translate_sum_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> V
         call_expr = builder.accept(gen_expr.left_expr)
         builder.assign(retval, builder.binary_op(retval, call_expr, "+", -1), -1)
 
-    loop_params = list(
-        zip(gen_expr.indices, gen_expr.sequences, gen_expr.condlists, gen_expr.is_async)
-    )
+    loop_params = list(zip(gen_expr.indices, gen_expr.sequences, gen_expr.condlists, gen_expr.is_async))
     comprehension_helper(builder, loop_params, gen_inner_stmts, gen_expr.line)
 
     return retval
@@ -501,9 +457,7 @@ def translate_sum_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> V
 @specialize_function("attr.ib")
 @specialize_function("attr.attrib")
 @specialize_function("attr.Factory")
-def translate_dataclasses_field_call(
-    builder: IRBuilder, expr: CallExpr, callee: RefExpr
-) -> Value | None:
+def translate_dataclasses_field_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value | None:
     """Special case for 'dataclasses.field', 'attr.attrib', and 'attr.Factory'
     function calls because the results of such calls are type-checked
     by mypy using the types of the arguments to their respective
@@ -524,10 +478,7 @@ def translate_next_call(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> 
     and produce the first such object, or None if no such element
     exists.
     """
-    if not (
-        expr.arg_kinds in ([ARG_POS], [ARG_POS, ARG_POS])
-        and isinstance(expr.args[0], GeneratorExpr)
-    ):
+    if not (expr.arg_kinds in ([ARG_POS], [ARG_POS, ARG_POS]) and isinstance(expr.args[0], GeneratorExpr)):
         return None
 
     gen = expr.args[0]
@@ -590,8 +541,7 @@ def translate_isinstance(builder: IRBuilder, expr: CallExpr, callee: RefExpr) ->
         irs = builder.flatten_classes(expr.args[1])
         if irs is not None:
             can_borrow = all(
-                ir.is_ext_class and not ir.inherits_python and not ir.allow_interpreted_subclasses
-                for ir in irs
+                ir.is_ext_class and not ir.inherits_python and not ir.allow_interpreted_subclasses for ir in irs
             )
             obj = builder.accept(expr.args[0], can_borrow=can_borrow)
             return builder.builder.isinstance_helper(obj, irs, expr.line)
@@ -620,11 +570,7 @@ def translate_dict_setdefault(builder: IRBuilder, expr: CallExpr, callee: RefExp
          d.setdefault(key, []).append(value)
          d.setdefault(key, {})[inner_key] = inner_val
     """
-    if (
-        len(expr.args) == 2
-        and expr.arg_kinds == [ARG_POS, ARG_POS]
-        and isinstance(callee, MemberExpr)
-    ):
+    if len(expr.args) == 2 and expr.arg_kinds == [ARG_POS, ARG_POS] and isinstance(callee, MemberExpr):
         arg = expr.args[1]
         if isinstance(arg, ListExpr):
             if len(arg.items):
@@ -634,11 +580,7 @@ def translate_dict_setdefault(builder: IRBuilder, expr: CallExpr, callee: RefExp
             if len(arg.items):
                 return None
             data_type = Integer(2, c_int_rprimitive, expr.line)
-        elif (
-            isinstance(arg, CallExpr)
-            and isinstance(arg.callee, NameExpr)
-            and arg.callee.fullname == "builtins.set"
-        ):
+        elif isinstance(arg, CallExpr) and isinstance(arg.callee, NameExpr) and arg.callee.fullname == "builtins.set":
             if len(arg.args):
                 return None
             data_type = Integer(3, c_int_rprimitive, expr.line)
@@ -647,9 +589,7 @@ def translate_dict_setdefault(builder: IRBuilder, expr: CallExpr, callee: RefExp
 
         callee_dict = builder.accept(callee.expr)
         key_val = builder.accept(expr.args[0])
-        return builder.call_c(
-            dict_setdefault_spec_init_op, [callee_dict, key_val, data_type], expr.line
-        )
+        return builder.call_c(dict_setdefault_spec_init_op, [callee_dict, key_val, data_type], expr.line)
     return None
 
 
@@ -694,9 +634,7 @@ def translate_fstring(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Va
             elif isinstance(item, CallExpr):
                 if not isinstance(item.callee, MemberExpr) or item.callee.name != "format":
                     return None
-                elif (
-                    not isinstance(item.callee.expr, StrExpr) or item.callee.expr.value != "{:{}}"
-                ):
+                elif not isinstance(item.callee.expr, StrExpr) or item.callee.expr.value != "{:{}}":
                     return None
 
                 if not isinstance(item.args[1], StrExpr) or item.args[1].value != "":
@@ -927,11 +865,7 @@ def translate_u8(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value |
     arg_type = builder.node_type(arg)
     if is_uint8_rprimitive(arg_type):
         return builder.accept(arg)
-    elif (
-        is_int16_rprimitive(arg_type)
-        or is_int32_rprimitive(arg_type)
-        or is_int64_rprimitive(arg_type)
-    ):
+    elif is_int16_rprimitive(arg_type) or is_int32_rprimitive(arg_type) or is_int64_rprimitive(arg_type):
         val = builder.accept(arg)
         return builder.add(Truncate(val, uint8_rprimitive, line=expr.line))
     elif is_int_rprimitive(arg_type) or is_bool_rprimitive(arg_type):
@@ -963,11 +897,7 @@ def translate_int(builder: IRBuilder, expr: CallExpr, callee: RefExpr) -> Value 
         return None
     arg = expr.args[0]
     arg_type = builder.node_type(arg)
-    if (
-        is_bool_rprimitive(arg_type)
-        or is_int_rprimitive(arg_type)
-        or is_fixed_width_rtype(arg_type)
-    ):
+    if is_bool_rprimitive(arg_type) or is_int_rprimitive(arg_type) or is_fixed_width_rtype(arg_type):
         src = builder.accept(arg)
         return builder.coerce(src, int_rprimitive, expr.line)
     return None

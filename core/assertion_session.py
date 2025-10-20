@@ -9,9 +9,7 @@ from .utils import update_session_configure
 
 class AssertionAuth(OAuth2Auth):
     def ensure_active_token(self):
-        if self.client and (
-            not self.token or self.token.is_expired(self.client.leeway)
-        ):
+        if self.client and (not self.token or self.token.is_expired(self.client.leeway)):
             return self.client.refresh_token()
 
 

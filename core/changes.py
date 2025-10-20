@@ -25,23 +25,23 @@ logger = logging.getLogger(__name__)
 class ChangesBuilder(Builder):
     """Write a summary with all versionadded/changed/deprecated/removed directives."""
 
-    name = 'changes'
-    epilog = __('The overview file is in %(outdir)s.')
+    name = "changes"
+    epilog = __("The overview file is in %(outdir)s.")
 
     def init(self) -> None:
         self.create_template_bridge()
         theme_factory = HTMLThemeFactory(self.app)
-        self.theme = theme_factory.create('default')
+        self.theme = theme_factory.create("default")
         self.templates.init(self, self.theme)
 
     def get_outdated_docs(self) -> str:
         return str(self.outdir)
 
     typemap = {
-        'versionadded': 'added',
-        'versionchanged': 'changed',
-        'deprecated': 'deprecated',
-        'versionremoved': 'removed',
+        "versionadded": "added",
+        "versionchanged": "changed",
+        "deprecated": "deprecated",
+        "versionremoved": "removed",
     }
 
     def write_documents(self, _docnames: Set[str]) -> None:
@@ -53,64 +53,68 @@ class ChangesBuilder(Builder):
 
         changesets = domain.get_changesets_for(version)
         if not changesets:
-            logger.info(bold(__('no changes in version %s.')), version)
+            logger.info(bold(__("no changes in version %s.")), version)
             return
-        logger.info(bold(__('writing summary file...')))
+        logger.info(bold(__("writing summary file...")))
         for changeset in changesets:
             descname = changeset.descname
             ttext = self.typemap[changeset.type]
-            context = changeset.content.replace('\n', ' ')
-            if descname and changeset.docname.startswith('c-api'):
+            context = changeset.content.replace("\n", " ")
+            if descname and changeset.docname.startswith("c-api"):
                 if context:
-                    entry = f'<b>{descname}</b>: <i>{ttext}:</i> {context}'
+                    entry = f"<b>{descname}</b>: <i>{ttext}:</i> {context}"
                 else:
-                    entry = f'<b>{descname}</b>: <i>{ttext}</i>.'
+                    entry = f"<b>{descname}</b>: <i>{ttext}</i>."
                 apichanges.append((entry, changeset.docname, changeset.lineno))
             elif descname or changeset.module:
-                module = changeset.module or _('Builtins')
+                module = changeset.module or _("Builtins")
                 if not descname:
-                    descname = _('Module level')
+                    descname = _("Module level")
                 if context:
-                    entry = f'<b>{descname}</b>: <i>{ttext}:</i> {context}'
+                    entry = f"<b>{descname}</b>: <i>{ttext}:</i> {context}"
                 else:
-                    entry = f'<b>{descname}</b>: <i>{ttext}</i>.'
-                libchanges.setdefault(module, []).append((
-                    entry,
-                    changeset.docname,
-                    changeset.lineno,
-                ))
+                    entry = f"<b>{descname}</b>: <i>{ttext}</i>."
+                libchanges.setdefault(module, []).append(
+                    (
+                        entry,
+                        changeset.docname,
+                        changeset.lineno,
+                    )
+                )
             else:
                 if not context:
                     continue
-                entry = f'<i>{ttext.capitalize()}:</i> {context}'
+                entry = f"<i>{ttext.capitalize()}:</i> {context}"
                 title = self.env.titles[changeset.docname].astext()
-                otherchanges.setdefault((changeset.docname, title), []).append((
-                    entry,
-                    changeset.docname,
-                    changeset.lineno,
-                ))
+                otherchanges.setdefault((changeset.docname, title), []).append(
+                    (
+                        entry,
+                        changeset.docname,
+                        changeset.lineno,
+                    )
+                )
 
         ctx = {
-            'project': self.config.project,
-            'version': version,
-            'docstitle': self.config.html_title,
-            'shorttitle': self.config.html_short_title,
-            'libchanges': sorted(libchanges.items()),
-            'apichanges': sorted(apichanges),
-            'otherchanges': sorted(otherchanges.items()),
-            'show_copyright': self.config.html_show_copyright,
-            'show_sphinx': self.config.html_show_sphinx,
+            "project": self.config.project,
+            "version": version,
+            "docstitle": self.config.html_title,
+            "shorttitle": self.config.html_short_title,
+            "libchanges": sorted(libchanges.items()),
+            "apichanges": sorted(apichanges),
+            "otherchanges": sorted(otherchanges.items()),
+            "show_copyright": self.config.html_show_copyright,
+            "show_sphinx": self.config.html_show_sphinx,
         }
-        with open(self.outdir / 'index.html', 'w', encoding='utf8') as f:
-            f.write(self.templates.render('changes/frameset.html', ctx))
-        with open(self.outdir / 'changes.html', 'w', encoding='utf8') as f:
-            f.write(self.templates.render('changes/versionchanges.html', ctx))
+        with open(self.outdir / "index.html", "w", encoding="utf8") as f:
+            f.write(self.templates.render("changes/frameset.html", ctx))
+        with open(self.outdir / "changes.html", "w", encoding="utf8") as f:
+            f.write(self.templates.render("changes/versionchanges.html", ctx))
 
         hltext = [
-            f'.. versionadded:: {version}',
-            f'.. versionchanged:: {version}',
-            f'.. deprecated:: {version}',
-            f'.. versionremoved:: {version}',
+            f".. versionadded:: {version}",
+            f".. versionchanged:: {version}",
+            f".. deprecated:: {version}",
+            f".. versionremoved:: {version}",
         ]
 
         def hl(no: int, line: str) -> str:
@@ -121,55 +125,47 @@ class ChangesBuilder(Builder):
                     break
             return line
 
-        logger.info(bold(__('copying source files...')))
+        logger.info(bold(__("copying source files...")))
         for docname in self.env.all_docs:
-            with open(
-                self.env.doc2path(docname), encoding=self.config.source_encoding
-            ) as f:
+            with open(self.env.doc2path(docname), encoding=self.config.source_encoding) as f:
                 try:
                     lines = f.readlines()
                 except UnicodeDecodeError:
-                    logger.warning(
-                        __('could not read %r for changelog creation'), docname
-                    )
+                    logger.warning(__("could not read %r for changelog creation"), docname)
                     continue
-            text = ''.join(hl(i + 1, line) for (i, line) in enumerate(lines))
+            text = "".join(hl(i + 1, line) for (i, line) in enumerate(lines))
             ctx = {
-                'filename': str(self.env.doc2path(docname, False)),
-                'text': text,
+                "filename": str(self.env.doc2path(docname, False)),
+                "text": text,
             }
-            rendered = self.templates.render('changes/rstsource.html', ctx)
-            targetfn = self.outdir / 'rst' / f'{docname}.html'
+            rendered = self.templates.render("changes/rstsource.html", ctx)
+            targetfn = self.outdir / "rst" / f"{docname}.html"
             targetfn.parent.mkdir(parents=True, exist_ok=True)
-            with open(targetfn, 'w', encoding='utf-8') as f:
+            with open(targetfn, "w", encoding="utf-8") as f:
                 f.write(rendered)
-        themectx = {
-            'theme_' + key: val for (key, val) in self.theme.get_options({}).items()
-        }
+        themectx = {"theme_" + key: val for (key, val) in self.theme.get_options({}).items()}
         copy_asset_file(
-            package_dir.joinpath('themes', 'default', 'static', 'default.css.jinja'),
+            package_dir.joinpath("themes", "default", "static", "default.css.jinja"),
             self.outdir,
             context=themectx,
             renderer=self.templates,
             force=True,
         )
         copy_asset_file(
-            package_dir.joinpath('themes', 'basic', 'static', 'basic.css'),
-            self.outdir / 'basic.css',
+            package_dir.joinpath("themes", "basic", "static", "basic.css"),
+            self.outdir / "basic.css",
             force=True,
         )
 
     def hl(self, text: str, version: str) -> str:
         text = html.escape(text)
         for directive in (
-            'versionchanged',
-            'versionadded',
-            'deprecated',
-            'versionremoved',
+            "versionchanged",
+            "versionadded",
+            "deprecated",
+            "versionremoved",
         ):
-            text = text.replace(
-                f'.. {directive}:: {version}', f'<b>.. {directive}:: {version}</b>'
-            )
+            text = text.replace(f".. {directive}:: {version}", f"<b>.. {directive}:: {version}</b>")
         return text
 
     def finish(self) -> None:
@@ -180,7 +176,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_builder(ChangesBuilder)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

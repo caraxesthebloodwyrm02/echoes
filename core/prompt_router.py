@@ -79,9 +79,7 @@ class PromptRouter:
             "analysis": r"\b(analyze|analysis|examine|investigate)\b",
         }
 
-    def detect_mode(
-        self, prompt: str, context: Optional[Dict[str, Any]] = None
-    ) -> ModeType:
+    def detect_mode(self, prompt: str, context: Optional[Dict[str, Any]] = None) -> ModeType:
         """
         Detect the most appropriate mode for the given prompt
 

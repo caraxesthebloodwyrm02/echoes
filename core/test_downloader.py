@@ -17,9 +17,7 @@ def test_downloader_using_existing_parent_download_dir(tmp_path):
 def test_downloader_using_non_existing_parent_download_dir(tmp_path):
     """Test that download works properly when the parent folder of the download_dir does not exist"""
 
-    download_dir = str(
-        tmp_path.joinpath("non-existing-parent-folder", "another-non-existing-folder")
-    )
+    download_dir = str(tmp_path.joinpath("non-existing-parent-folder", "another-non-existing-folder"))
     download_status = download("mwa_ppdb", download_dir)
     assert download_status is True
 
@@ -38,14 +36,11 @@ def test_downloader_redownload(tmp_path):
             assert download_status is True
             if i == first_download:
                 expected_second_call = unittest.mock.call(
-                    "[nltk_data]   Unzipping %s."
-                    % os.path.join("corpora", "stopwords.zip")
+                    "[nltk_data]   Unzipping %s." % os.path.join("corpora", "stopwords.zip")
                 )
                 assert print_mock.call_args_list[1].args == expected_second_call.args
             elif i == second_download:
-                expected_second_call = unittest.mock.call(
-                    "[nltk_data]   Package stopwords is already up-to-date!"
-                )
+                expected_second_call = unittest.mock.call("[nltk_data]   Package stopwords is already up-to-date!")
                 assert print_mock.call_args_list[1].args == expected_second_call.args
 
 
@@ -59,8 +54,7 @@ def test_build_index(tmp_path):
     test_xml_path = os.path.join(test_pkg_path, f"{test_pkg_name}.xml")
     with open(test_xml_path, "w") as fi:
         fi.write(
-            f'<package id="{test_pkg_name}" name="A Test Package" webpage="http://www.somefake.url/"'
-            ' unzip="1"/>'
+            f'<package id="{test_pkg_name}" name="A Test Package" webpage="http://www.somefake.url/"' ' unzip="1"/>'
         )
     # Cannot mock a zip here as we are trying to validate file checksums, so just create a simple one with the XML
     zip_path = os.path.join(test_pkg_path, f"{test_pkg_name}")
@@ -70,9 +64,7 @@ def test_build_index(tmp_path):
         root_dir=test_pkg_dir,
         base_dir=os.path.basename(test_pkg_path),
     )
-    xml_index = build_index(
-        root=os.path.dirname(test_pkg_dir), base_url="https://someurl"
-    )
+    xml_index = build_index(root=os.path.dirname(test_pkg_dir), base_url="https://someurl")
     package_element = xml_index[0][0]
     assert package_element.get("id") == "test_package"
     md5_checksum = package_element.get("checksum")

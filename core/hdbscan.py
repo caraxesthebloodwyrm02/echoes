@@ -121,9 +121,7 @@ def _brute_mst(mutual_reachability, min_samples):
     # Check connected component on mutual reachability.
     # If more than one connected component is present,
     # it means that the graph is disconnected.
-    n_components = csgraph.connected_components(
-        mutual_reachability, directed=False, return_labels=False
-    )
+    n_components = csgraph.connected_components(mutual_reachability, directed=False, return_labels=False)
     if n_components > 1:
         raise ValueError(
             f"Sparse mutual reachability matrix has {n_components} connected"
@@ -244,9 +242,7 @@ def _hdbscan_brute(
 
         distance_matrix = X.copy() if copy else X
     else:
-        distance_matrix = pairwise_distances(
-            X, metric=metric, n_jobs=n_jobs, **metric_params
-        )
+        distance_matrix = pairwise_distances(X, metric=metric, n_jobs=n_jobs, **metric_params)
     distance_matrix /= alpha
 
     max_distance = metric_params.get("max_distance", 0.0)
@@ -390,9 +386,7 @@ def remap_single_linkage_tree(tree, internal_to_raw, non_finite):
             tree[i]["right_node"] = right + outlier_count
 
     outlier_tree = np.zeros(len(non_finite), dtype=HIERARCHY_dtype)
-    last_cluster_id = max(
-        tree[tree.shape[0] - 1]["left_node"], tree[tree.shape[0] - 1]["right_node"]
-    )
+    last_cluster_id = max(tree[tree.shape[0] - 1]["left_node"], tree[tree.shape[0] - 1]["right_node"])
     last_cluster_size = tree[tree.shape[0] - 1]["cluster_size"]
     for i, outlier in enumerate(non_finite):
         outlier_tree[i] = (outlier, last_cluster_id + 1, np.inf, last_cluster_size + 1)
@@ -408,9 +402,7 @@ def _get_finite_row_indices(matrix):
     sparse matrix or dense ndarray
     """
     if issparse(matrix):
-        row_indices = np.array(
-            [i for i, row in enumerate(matrix.tolil().data) if np.all(np.isfinite(row))]
-        )
+        row_indices = np.array([i for i, row in enumerate(matrix.tolil().data) if np.all(np.isfinite(row))])
     else:
         (row_indices,) = np.isfinite(matrix.sum(axis=1)).nonzero()
     return row_indices
@@ -632,9 +624,7 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
     _parameter_constraints = {
         "min_cluster_size": [Interval(Integral, left=2, right=None, closed="left")],
         "min_samples": [Interval(Integral, left=1, right=None, closed="left"), None],
-        "cluster_selection_epsilon": [
-            Interval(Real, left=0, right=None, closed="left")
-        ],
+        "cluster_selection_epsilon": [Interval(Real, left=0, right=None, closed="left")],
         "max_cluster_size": [
             None,
             Interval(Integral, left=1, right=None, closed="left"),
@@ -709,9 +699,7 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
             Returns self.
         """
         if self.metric == "precomputed" and self.store_centers is not None:
-            raise ValueError(
-                "Cannot store centers when using a precomputed distance matrix."
-            )
+            raise ValueError("Cannot store centers when using a precomputed distance matrix.")
 
         self._metric_params = self.metric_params or {}
         if self.metric != "precomputed":
@@ -765,23 +753,18 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
 
             # Perform data validation after removing infinite values (numpy.inf)
             # from the given distance matrix.
-            X = validate_data(
-                self, X, ensure_all_finite=False, dtype=np.float64, force_writeable=True
-            )
+            X = validate_data(self, X, ensure_all_finite=False, dtype=np.float64, force_writeable=True)
             if np.isnan(X).any():
                 # TODO: Support np.nan in Cython implementation for precomputed
                 # dense HDBSCAN
                 raise ValueError("np.nan values found in precomputed-dense")
         if X.shape[0] == 1:
             raise ValueError("n_samples=1 while HDBSCAN requires more than one sample")
-        self._min_samples = (
-            self.min_cluster_size if self.min_samples is None else self.min_samples
-        )
+        self._min_samples = self.min_cluster_size if self.min_samples is None else self.min_samples
 
         if self._min_samples > X.shape[0]:
             raise ValueError(
-                f"min_samples ({self._min_samples}) must be at most the number of"
-                f" samples in X ({X.shape[0]})"
+                f"min_samples ({self._min_samples}) must be at most the number of" f" samples in X ({X.shape[0]})"
             )
 
         mst_func = None
@@ -798,20 +781,14 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
                 f"{self.metric} is not a valid metric for a KDTree-based algorithm."
                 " Please select a different metric."
             )
-        elif (
-            self.algorithm == "ball_tree" and self.metric not in BallTree.valid_metrics
-        ):
+        elif self.algorithm == "ball_tree" and self.metric not in BallTree.valid_metrics:
             raise ValueError(
                 f"{self.metric} is not a valid metric for a BallTree-based algorithm."
                 " Please select a different metric."
             )
 
         if self.algorithm != "auto":
-            if (
-                self.metric != "precomputed"
-                and issparse(X)
-                and self.algorithm != "brute"
-            ):
+            if self.metric != "precomputed" and issparse(X) and self.algorithm != "brute":
                 raise ValueError("Sparse data matrices only support algorithm `brute`.")
 
             if self.algorithm == "brute":
@@ -936,9 +913,7 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
                 self.centroids_[idx] = np.average(data, weights=strength, axis=0)
             if make_medoids:
                 # TODO: Implement weighted argmin PWD backend
-                dist_mat = pairwise_distances(
-                    data, metric=self.metric, **self._metric_params
-                )
+                dist_mat = pairwise_distances(data, metric=self.metric, **self._metric_params)
                 dist_mat = dist_mat * strength
                 medoid_index = np.argmin(dist_mat.sum(axis=1))
                 self.medoids_[idx] = data[medoid_index]
@@ -981,9 +956,7 @@ class HDBSCAN(ClusterMixin, BaseEstimator):
             - Samples with missing data are given the label -3, even if they
               also have infinite elements.
         """
-        labels = labelling_at_cut(
-            self._single_linkage_tree_, cut_distance, min_cluster_size
-        )
+        labels = labelling_at_cut(self._single_linkage_tree_, cut_distance, min_cluster_size)
         # Infer indices from labels generated during `fit`
         infinite_index = self.labels_ == _OUTLIER_ENCODING["infinite"]["label"]
         missing_index = self.labels_ == _OUTLIER_ENCODING["missing"]["label"]

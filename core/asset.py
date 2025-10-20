@@ -55,20 +55,20 @@ class ImageCollector(EnvironmentCollector):
             # set if there is only single candidate to be used by a writer.
             # The special key ? is set for nonlocal URIs.
             candidates: dict[str, str] = {}
-            node['candidates'] = candidates
-            imguri = node['uri']
-            if imguri.startswith('data:'):
-                candidates['?'] = imguri
+            node["candidates"] = candidates
+            imguri = node["uri"]
+            if imguri.startswith("data:"):
+                candidates["?"] = imguri
                 continue
-            if imguri.find('://') != -1:
-                candidates['?'] = imguri
+            if imguri.find("://") != -1:
+                candidates["?"] = imguri
                 continue
 
-            if imguri.endswith(os.extsep + '*'):
+            if imguri.endswith(os.extsep + "*"):
                 # Update `node['uri']` to a relative path from srcdir
                 # from a relative path from current document.
                 rel_imgpath, full_imgpath = app.env.relfn2path(imguri, docname)
-                node['uri'] = rel_imgpath
+                node["uri"] = rel_imgpath
 
                 # Search language-specific figures at first
                 i18n_imguri = get_image_filename_for_language(imguri, app.env)
@@ -83,11 +83,11 @@ class ImageCollector(EnvironmentCollector):
 
                 # Update `node['uri']` to a relative path from srcdir
                 # from a relative path from current document.
-                original_uri = node['uri']
-                node['uri'], _ = app.env.relfn2path(imguri, docname)
-                candidates['*'] = node['uri']
-                if node['uri'] != original_uri:
-                    node['original_uri'] = original_uri
+                original_uri = node["uri"]
+                node["uri"], _ = app.env.relfn2path(imguri, docname)
+                candidates["*"] = node["uri"]
+                if node["uri"] != original_uri:
+                    node["original_uri"] = original_uri
 
             # map image paths to unique image names (so that they can be put
             # into a single directory)
@@ -95,11 +95,11 @@ class ImageCollector(EnvironmentCollector):
                 app.env.note_dependency(imgpath)
                 if not os.access(app.srcdir / imgpath, os.R_OK):
                     logger.warning(
-                        __('image file not readable: %s'),
+                        __("image file not readable: %s"),
                         imgpath,
                         location=node,
-                        type='image',
-                        subtype='not_readable',
+                        type="image",
+                        subtype="not_readable",
                     )
                     continue
                 app.env.images.add_file(docname, imgpath)
@@ -118,17 +118,17 @@ class ImageCollector(EnvironmentCollector):
                 mimetype = guess_mimetype(filename)
                 if mimetype is None:
                     basename, suffix = os.path.splitext(filename)
-                    mimetype = 'image/x-' + suffix[1:]
+                    mimetype = "image/x-" + suffix[1:]
                 if mimetype not in candidates:
                     globbed.setdefault(mimetype, []).append(new_imgpath.as_posix())
             except OSError as err:
                 logger.warning(
-                    __('image file %s not readable: %s'),
+                    __("image file %s not readable: %s"),
                     filename,
                     err,
                     location=node,
-                    type='image',
-                    subtype='not_readable',
+                    type="image",
+                    subtype="not_readable",
                 )
         for key, files in globbed.items():
             candidates[key] = min(files, key=len)  # select by similarity
@@ -152,24 +152,22 @@ class DownloadFileCollector(EnvironmentCollector):
     def process_doc(self, app: Sphinx, doctree: nodes.document) -> None:
         """Process downloadable file paths."""
         for node in doctree.findall(addnodes.download_reference):
-            targetname = node['reftarget']
-            if '://' in targetname:
-                node['refuri'] = targetname
+            targetname = node["reftarget"]
+            if "://" in targetname:
+                node["refuri"] = targetname
             else:
                 rel_filename, filename = app.env.relfn2path(targetname, app.env.docname)
                 app.env.note_dependency(rel_filename)
                 if not os.access(filename, os.R_OK):
                     logger.warning(
-                        __('download file not readable: %s'),
+                        __("download file not readable: %s"),
                         filename,
                         location=node,
-                        type='download',
-                        subtype='not_readable',
+                        type="download",
+                        subtype="not_readable",
                     )
                     continue
-                node['filename'] = app.env.dlfiles.add_file(
-                    app.env.docname, rel_filename
-                ).as_posix()
+                node["filename"] = app.env.dlfiles.add_file(app.env.docname, rel_filename).as_posix()
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
@@ -177,7 +175,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_env_collector(DownloadFileCollector)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

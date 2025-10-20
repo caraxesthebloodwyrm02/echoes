@@ -286,9 +286,7 @@ def default_tags(estimator) -> Tags:
         estimator_type=getattr(estimator, "_estimator_type", None),
         target_tags=TargetTags(required=target_required),
         transformer_tags=(
-            TransformerTags()
-            if hasattr(estimator, "transform") or hasattr(estimator, "fit_transform")
-            else None
+            TransformerTags() if hasattr(estimator, "transform") or hasattr(estimator, "fit_transform") else None
         ),
         classifier_tags=ClassifierTags() if est_is_classifier else None,
         regressor_tags=RegressorTags() if est_is_regressor else None,

@@ -405,9 +405,7 @@ class BorrowedArgumentsVisitor(BaseAnalysisVisitor[Value]):
         return set(), set()
 
 
-def analyze_borrowed_arguments(
-    blocks: list[BasicBlock], cfg: CFG, borrowed: set[Value]
-) -> AnalysisResult[Value]:
+def analyze_borrowed_arguments(blocks: list[BasicBlock], cfg: CFG, borrowed: set[Value]) -> AnalysisResult[Value]:
     """Calculate arguments that can use references borrowed from the caller.
 
     When assigning to an argument, it no longer is borrowed.

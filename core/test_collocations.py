@@ -58,13 +58,9 @@ def test_bigram3():
         ]
     )
 
-    assert sorted(b.word_fd.items()) == sorted(
-        [("a", 2), ("is", 2), ("test", 2), ("this", 2)]
-    )
+    assert sorted(b.word_fd.items()) == sorted([("a", 2), ("is", 2), ("test", 2), ("this", 2)])
 
-    assert (
-        len(SENT) == sum(b.word_fd.values()) == (sum(b.ngram_fd.values()) + 2 + 1) / 2.0
-    )
+    assert len(SENT) == sum(b.word_fd.values()) == (sum(b.ngram_fd.values()) + 2 + 1) / 2.0
     assert close_enough(
         sorted(b.score_ngrams(BigramAssocMeasures.pmi)),
         sorted(
@@ -96,9 +92,7 @@ def test_bigram5():
             (("this", "this"), 1),
         ]
     )
-    assert sorted(b.word_fd.items()) == sorted(
-        [("a", 2), ("is", 2), ("test", 2), ("this", 2)]
-    )
+    assert sorted(b.word_fd.items()) == sorted([("a", 2), ("is", 2), ("test", 2), ("this", 2)])
     n_word_fd = sum(b.word_fd.values())
     n_ngram_fd = (sum(b.ngram_fd.values()) + 4 + 3 + 2 + 1) / 4.0
     assert len(SENT) == n_word_fd == n_ngram_fd

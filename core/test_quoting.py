@@ -17,9 +17,7 @@ from pandas.errors import ParserError
 from pandas import DataFrame
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
 
@@ -146,9 +144,7 @@ def test_quoting_various(all_parsers, kwargs, exp_data):
     tm.assert_frame_equal(result, expected)
 
 
-@pytest.mark.parametrize(
-    "doublequote,exp_data", [(True, [[3, '4 " 5']]), (False, [[3, '4 " 5"']])]
-)
+@pytest.mark.parametrize("doublequote,exp_data", [(True, [[3, '4 " 5']]), (False, [[3, '4 " 5"']])])
 def test_double_quote(all_parsers, doublequote, exp_data, request):
     parser = all_parsers
     data = 'a,b\n3,"4 "" 5"'
@@ -189,11 +185,7 @@ def test_unbalanced_quoting(all_parsers, balanced, request):
         result = parser.read_csv(StringIO(data + '"'))
         tm.assert_frame_equal(result, expected)
     else:
-        msg = (
-            "EOF inside string starting at row 1"
-            if parser.engine == "c"
-            else "unexpected end of data"
-        )
+        msg = "EOF inside string starting at row 1" if parser.engine == "c" else "unexpected end of data"
 
         with pytest.raises(ParserError, match=msg):
             parser.read_csv(StringIO(data))

@@ -1,6 +1,7 @@
 """
 Reducer using memory mapping for numpy arrays
 """
+
 # Author: Thomas Moreau <thomas.moreau.2010@gmail.com>
 # Copyright: 2017, Thomas Moreau
 # License: BSD 3 clause
@@ -61,9 +62,7 @@ def _log_and_unlink(filename):
 
     util.debug(
         "[FINALIZER CALL] object mapping to {} about to be deleted,"
-        " decrementing the refcount of the file (pid: {})".format(
-            os.path.basename(filename), os.getpid()
-        )
+        " decrementing the refcount of the file (pid: {})".format(os.path.basename(filename), os.getpid())
     )
     _resource_tracker.maybe_unlink(filename, "file")
 
@@ -94,11 +93,7 @@ def unlink_file(filename):
             os.unlink(filename)
             break
         except PermissionError:
-            util.debug(
-                "[ResourceTracker] tried to unlink {}, got PermissionError".format(
-                    filename
-                )
-            )
+            util.debug("[ResourceTracker] tried to unlink {}, got PermissionError".format(filename))
             if retry_no == NUM_RETRIES:
                 raise
             else:
@@ -288,11 +283,7 @@ def _reduce_memmap_backed(a, m):
     attribute ancestry of a. ``m.base`` should be the real python mmap object.
     """
     # offset that comes from the striding differences between a and m
-    util.debug(
-        "[MEMMAP REDUCE] reducing a memmap-backed array (shape, {}, pid: {})".format(
-            a.shape, os.getpid()
-        )
-    )
+    util.debug("[MEMMAP REDUCE] reducing a memmap-backed array (shape, {}, pid: {})".format(a.shape, os.getpid()))
     try:
         from numpy.lib.array_utils import byte_bounds
     except (ModuleNotFoundError, ImportError):
@@ -431,11 +422,7 @@ class ArrayMemmapForwardReducer(object):
             # a is already backed by a memmap file, let's reuse it directly
             return _reduce_memmap_backed(a, m)
 
-        if (
-            not a.dtype.hasobject
-            and self._max_nbytes is not None
-            and a.nbytes > self._max_nbytes
-        ):
+        if not a.dtype.hasobject and self._max_nbytes is not None and a.nbytes > self._max_nbytes:
             # check that the folder exists (lazily create the pool temp folder
             # if required)
             try:
@@ -452,9 +439,7 @@ class ArrayMemmapForwardReducer(object):
                 # ids are only useful for debugging purpose and to make it
                 # easier to cleanup orphaned files in case of hard process
                 # kill (e.g. by "kill -9" or segfault).
-                basename = "{}-{}-{}.pkl".format(
-                    os.getpid(), id(threading.current_thread()), uuid4().hex
-                )
+                basename = "{}-{}-{}.pkl".format(os.getpid(), id(threading.current_thread()), uuid4().hex)
                 self._memmaped_arrays.set(a, basename)
             filename = os.path.join(self._temp_folder, basename)
 
@@ -508,9 +493,7 @@ class ArrayMemmapForwardReducer(object):
             else:
                 util.debug(
                     "[ARRAY DUMP] Pickling known array (shape={}, dtype={}) "
-                    "reusing memmap file: {}".format(
-                        a.shape, a.dtype, os.path.basename(filename)
-                    )
+                    "reusing memmap file: {}".format(a.shape, a.dtype, os.path.basename(filename))
                 )
 
             # The worker process will use joblib.load to memmap the data
@@ -521,10 +504,7 @@ class ArrayMemmapForwardReducer(object):
         else:
             # do not convert a into memmap, let pickler do its usual copy with
             # the default system pickler
-            util.debug(
-                "[ARRAY DUMP] Pickling array (NO MEMMAPPING) (shape={}, "
-                " dtype={}).".format(a.shape, a.dtype)
-            )
+            util.debug("[ARRAY DUMP] Pickling array (NO MEMMAPPING) (shape={}, " " dtype={}).".format(a.shape, a.dtype))
             return (loads, (dumps(a, protocol=HIGHEST_PROTOCOL),))
 
 
@@ -620,9 +600,7 @@ class TemporaryResourcesManager(object):
             # register/use/delete the same folder, we also add an id specific
             # to the current Manager (and thus specific to its associated
             # executor) to the folder name.
-            new_folder_name = "joblib_memmapping_folder_{}_{}_{}".format(
-                os.getpid(), self._id, context_id
-            )
+            new_folder_name = "joblib_memmapping_folder_{}_{}_{}".format(os.getpid(), self._id, context_id)
             new_folder_path, _ = _get_temp_dir(new_folder_name, self._temp_folder_root)
             self.register_folder_finalizer(new_folder_path, context_id)
             self._cached_temp_folders[context_id] = new_folder_path
@@ -651,30 +629,22 @@ class TemporaryResourcesManager(object):
             # We cannot just use from 'joblib.pool import delete_folder'
             # because joblib should only use relative imports to allow
             # easy vendoring.
-            delete_folder = __import__(
-                pool_module_name, fromlist=["delete_folder"]
-            ).delete_folder
+            delete_folder = __import__(pool_module_name, fromlist=["delete_folder"]).delete_folder
             try:
                 delete_folder(pool_subfolder, allow_non_empty=True)
                 resource_tracker.unregister(pool_subfolder, "folder")
             except OSError:
-                warnings.warn(
-                    "Failed to delete temporary folder: {}".format(pool_subfolder)
-                )
+                warnings.warn("Failed to delete temporary folder: {}".format(pool_subfolder))
 
         self._finalizers[context_id] = atexit.register(_cleanup)
 
-    def _clean_temporary_resources(
-        self, context_id=None, force=False, allow_non_empty=False
-    ):
+    def _clean_temporary_resources(self, context_id=None, force=False, allow_non_empty=False):
         """Clean temporary resources created by a process-based pool"""
         if context_id is None:
             # Iterates over a copy of the cache keys to avoid Error due to
             # iterating over a changing size dictionary.
             for context_id in list(self._cached_temp_folders):
-                self._clean_temporary_resources(
-                    context_id, force=force, allow_non_empty=allow_non_empty
-                )
+                self._clean_temporary_resources(context_id, force=force, allow_non_empty=allow_non_empty)
         else:
             temp_folder = self._cached_temp_folders.get(context_id)
             if temp_folder and os.path.exists(temp_folder):
@@ -683,13 +653,9 @@ class TemporaryResourcesManager(object):
                         # Some workers have failed and the ref counted might
                         # be off. The workers should have shut down by this
                         # time so forcefully clean up the files.
-                        resource_tracker.unregister(
-                            os.path.join(temp_folder, filename), "file"
-                        )
+                        resource_tracker.unregister(os.path.join(temp_folder, filename), "file")
                     else:
-                        resource_tracker.maybe_unlink(
-                            os.path.join(temp_folder, filename), "file"
-                        )
+                        resource_tracker.maybe_unlink(os.path.join(temp_folder, filename), "file")
 
                 # When forcing clean-up, try to delete the folder even if some
                 # files are still in it. Otherwise, try to delete the folder

@@ -28,9 +28,7 @@ from sklearn.datasets.tests.test_common import (
         ("smtp", 9571, 3),
     ],
 )
-def test_fetch_kddcup99_percent10(
-    fetch_kddcup99_fxt, as_frame, subset, n_samples, n_features
-):
+def test_fetch_kddcup99_percent10(fetch_kddcup99_fxt, as_frame, subset, n_samples, n_features):
     data = fetch_kddcup99_fxt(subset=subset, as_frame=as_frame)
     assert data.data.shape == (n_samples, n_features)
     assert data.target.shape == (n_samples,)
@@ -80,10 +78,7 @@ def test_corrupted_file_error_message(fetch_kddcup99_fxt, tmp_path):
     with samples_path.open("wb") as f:
         f.write(b"THIS IS CORRUPTED")
 
-    msg = (
-        "The cache for fetch_kddcup99 is invalid, please "
-        f"delete {kddcup99_dir} and run the fetch_kddcup99 again"
-    )
+    msg = "The cache for fetch_kddcup99 is invalid, please " f"delete {kddcup99_dir} and run the fetch_kddcup99 again"
 
     with pytest.raises(OSError, match=msg):
         fetch_kddcup99_fxt(data_home=str(tmp_path))

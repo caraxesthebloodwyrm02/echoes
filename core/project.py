@@ -17,21 +17,19 @@ if TYPE_CHECKING:
     from collections.abc import Iterable
 
 logger = logging.getLogger(__name__)
-EXCLUDE_PATHS = ['**/_sources', '.#*', '**/.#*', '*.lproj/**']
+EXCLUDE_PATHS = ["**/_sources", ".#*", "**/.#*", "*.lproj/**"]
 
 
 class Project:
     """A project is the source code set of the Sphinx document(s)."""
 
-    def __init__(
-        self, srcdir: str | os.PathLike[str], source_suffix: Iterable[str]
-    ) -> None:
+    def __init__(self, srcdir: str | os.PathLike[str], source_suffix: Iterable[str]) -> None:
         #: Source directory.
         self.srcdir = _StrPath(srcdir)
 
         #: source_suffix. Same as :confval:`source_suffix`.
         self.source_suffix = tuple(source_suffix)
-        self._first_source_suffix = next(iter(self.source_suffix), '')
+        self._first_source_suffix = next(iter(self.source_suffix), "")
 
         #: The name of documents belonging to this project.
         self.docnames: set[str] = set()
@@ -46,9 +44,7 @@ class Project:
         self._path_to_docname = other._path_to_docname
         self._docname_to_path = other._docname_to_path
 
-    def discover(
-        self, exclude_paths: Iterable[str] = (), include_paths: Iterable[str] = ('**',)
-    ) -> set[str]:
+    def discover(self, exclude_paths: Iterable[str] = (), include_paths: Iterable[str] = ("**",)) -> set[str]:
         """Find all document files in the source directory and put them in
         :attr:`docnames`.
         """
@@ -63,17 +59,11 @@ class Project:
         ):
             if docname := self.path2doc(filename):
                 if docname in self.docnames:
-                    files = [
-                        str(f.relative_to(self.srcdir))
-                        for f in self.srcdir.glob(f'{docname}.*')
-                    ]
+                    files = [str(f.relative_to(self.srcdir)) for f in self.srcdir.glob(f"{docname}.*")]
                     logger.warning(
-                        __(
-                            'multiple files found for the document "%s": %s\n'
-                            'Use %r for the build.'
-                        ),
+                        __('multiple files found for the document "%s": %s\n' "Use %r for the build."),
                         docname,
-                        ', '.join(files),
+                        ", ".join(files),
                         self.doc2path(docname, absolute=True),
                         once=True,
                     )
@@ -84,7 +74,7 @@ class Project:
                     self._docname_to_path[docname] = path
                 else:
                     logger.warning(
-                        __('Ignored unreadable document %r.'),
+                        __("Ignored unreadable document %r."),
                         filename,
                         location=docname,
                     )

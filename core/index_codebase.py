@@ -54,10 +54,7 @@ def collect_codebase_texts(
     texts = []
     for ext in extensions:
         for file_path in base_path.rglob(f"*{ext}"):
-            if not any(
-                skip in str(file_path)
-                for skip in ["__pycache__", ".git", ".venv", "node_modules"]
-            ):
+            if not any(skip in str(file_path) for skip in ["__pycache__", ".git", ".venv", "node_modules"]):
                 try:
                     with open(file_path, "r", encoding="utf-8") as f:
                         content = f.read()
@@ -88,16 +85,12 @@ def synthesize_summary(module: UnifiedVectorModule, texts: List[Dict[str, Any]])
 
     summary_parts = []
     for cluster_id in range(n_clusters):
-        cluster_texts = [
-            texts[i]["content"][:200] for i, c in enumerate(clusters) if c == cluster_id
-        ]
+        cluster_texts = [texts[i]["content"][:200] for i, c in enumerate(clusters) if c == cluster_id]
         if cluster_texts:
             # Simple theme extraction (most common words)
             words = " ".join(cluster_texts).split()
             common_words = [w for w in set(words) if words.count(w) > 1][:5]
-            summary_parts.append(
-                f"Cluster {cluster_id}: Themes - {', '.join(common_words)}"
-            )
+            summary_parts.append(f"Cluster {cluster_id}: Themes - {', '.join(common_words)}")
 
     return "\n".join(summary_parts)
 

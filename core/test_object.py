@@ -34,9 +34,7 @@ class TestObjectComparisons:
         expected = func(ser.astype(float), shifted.astype(float))
         tm.assert_series_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-    )
+    @pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
     def test_object_comparisons(self, infer_string):
         with option_context("future.infer_string", infer_string):
             ser = Series(["a", "b", np.nan, "c", "a"])
@@ -256,9 +254,7 @@ class TestArithmetic:
             name="xxx",
         )
         assert ser2.dtype == object
-        exp = Series(
-            [pd.Timedelta("2 days"), pd.Timedelta("4 days")], name="xxx", dtype=object
-        )
+        exp = Series([pd.Timedelta("2 days"), pd.Timedelta("4 days")], name="xxx", dtype=object)
         tm.assert_series_equal(ser2 - ser, exp)
         tm.assert_series_equal(ser - ser2, -exp)
 
@@ -404,9 +400,7 @@ class MyIndex(pd.Index):
 )
 def test_index_ops_defer_to_unknown_subclasses(other):
     # https://github.com/pandas-dev/pandas/issues/31109
-    values = np.array(
-        [datetime.date(2000, 1, 1), datetime.date(2000, 1, 2)], dtype=object
-    )
+    values = np.array([datetime.date(2000, 1, 1), datetime.date(2000, 1, 2)], dtype=object)
     a = MyIndex._simple_new(values)
     other = pd.Index(other)
     result = other + a

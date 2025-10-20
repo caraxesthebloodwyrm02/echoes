@@ -417,10 +417,7 @@ class Leaf(Base):
         from .pgen2.token import tok_name
 
         assert self.type is not None
-        return (
-            f"{self.__class__.__name__}({tok_name.get(self.type, self.type)},"
-            f" {self.value!r})"
-        )
+        return f"{self.__class__.__name__}({tok_name.get(self.type, self.type)}," f" {self.value!r})"
 
     def __str__(self) -> str:
         """
@@ -748,9 +745,7 @@ class WildcardPattern(BasePattern):
             f = lambda s: tuple(s)
             wrapped_content = tuple(map(f, content))  # Protect against alterations
             # Check sanity of alternatives
-            assert len(wrapped_content), repr(
-                wrapped_content
-            )  # Can't have zero alternatives
+            assert len(wrapped_content), repr(wrapped_content)  # Can't have zero alternatives
             for alt in wrapped_content:
                 assert len(alt), repr(alt)  # Can have empty alternatives
         self.content = wrapped_content
@@ -761,11 +756,7 @@ class WildcardPattern(BasePattern):
     def optimize(self) -> Any:
         """Optimize certain stacked wildcard patterns."""
         subpattern = None
-        if (
-            self.content is not None
-            and len(self.content) == 1
-            and len(self.content[0]) == 1
-        ):
+        if self.content is not None and len(self.content) == 1 and len(self.content[0]) == 1:
             subpattern = self.content[0][0]
         if self.min == 1 and self.max == 1:
             if self.content is None:
@@ -941,9 +932,7 @@ class NegatedPattern(BasePattern):
             yield 0, {}
 
 
-def generate_matches(
-    patterns: list[BasePattern], nodes: list[NL]
-) -> Iterator[tuple[int, _Results]]:
+def generate_matches(patterns: list[BasePattern], nodes: list[NL]) -> Iterator[tuple[int, _Results]]:
     """
     Generator yielding matches for a sequence of patterns and nodes.
 

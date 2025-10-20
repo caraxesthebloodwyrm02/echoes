@@ -138,10 +138,7 @@ class AbstractParentedTree(Tree, metaclass=ABCMeta):
                 del self[index[0]][index[1:]]
 
         else:
-            raise TypeError(
-                "%s indices must be integers, not %s"
-                % (type(self).__name__, type(index).__name__)
-            )
+            raise TypeError("%s indices must be integers, not %s" % (type(self).__name__, type(index).__name__))
 
     def __setitem__(self, index, value):
         # ptree[start:stop] = value
@@ -198,10 +195,7 @@ class AbstractParentedTree(Tree, metaclass=ABCMeta):
                 self[index[0]][index[1:]] = value
 
         else:
-            raise TypeError(
-                "%s indices must be integers, not %s"
-                % (type(self).__name__, type(index).__name__)
-            )
+            raise TypeError("%s indices must be integers, not %s" % (type(self).__name__, type(index).__name__))
 
     def append(self, child):
         if isinstance(child, Tree):
@@ -467,11 +461,7 @@ class MultiParentedTree(AbstractParentedTree):
 
         :type: list(MultiParentedTree)
         """
-        return [
-            parent[index - 1]
-            for (parent, index) in self._get_parent_indices()
-            if index > 0
-        ]
+        return [parent[index - 1] for (parent, index) in self._get_parent_indices() if index > 0]
 
     def right_siblings(self):
         """
@@ -483,19 +473,10 @@ class MultiParentedTree(AbstractParentedTree):
 
         :type: list(MultiParentedTree)
         """
-        return [
-            parent[index + 1]
-            for (parent, index) in self._get_parent_indices()
-            if index < (len(parent) - 1)
-        ]
+        return [parent[index + 1] for (parent, index) in self._get_parent_indices() if index < (len(parent) - 1)]
 
     def _get_parent_indices(self):
-        return [
-            (parent, index)
-            for parent in self._parents
-            for index, child in enumerate(parent)
-            if child is self
-        ]
+        return [(parent, index) for parent in self._parents for index, child in enumerate(parent) if child is self]
 
     def roots(self):
         """
@@ -571,9 +552,7 @@ class MultiParentedTree(AbstractParentedTree):
     def _setparent(self, child, index, dry_run=False):
         # If the child's type is incorrect, then complain.
         if not isinstance(child, MultiParentedTree):
-            raise TypeError(
-                "Can not insert a non-MultiParentedTree into a MultiParentedTree"
-            )
+            raise TypeError("Can not insert a non-MultiParentedTree into a MultiParentedTree")
 
         # Add self as a parent pointer if it's not already listed.
         if not dry_run:

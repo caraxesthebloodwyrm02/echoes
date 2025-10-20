@@ -116,9 +116,7 @@ class LLMClient:
 
         # Handle Markdown code fences like ```json ... ```
         if cleaned.startswith("```"):
-            match = re.match(
-                r"```(?:json)?\s*(.*?)\s*```$", cleaned, re.DOTALL | re.IGNORECASE
-            )
+            match = re.match(r"```(?:json)?\s*(.*?)\s*```$", cleaned, re.DOTALL | re.IGNORECASE)
             if match:
                 cleaned = match.group(1).strip()
 

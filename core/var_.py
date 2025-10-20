@@ -6,6 +6,7 @@ Numba 1D var kernels that can be shared by
 
 Mirrors pandas/_libs/window/aggregation.pyx
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -87,9 +88,7 @@ def sliding_var(
     compensation_remove = 0.0
 
     min_periods = max(min_periods, 1)
-    is_monotonic_increasing_bounds = is_monotonic_increasing(
-        start
-    ) and is_monotonic_increasing(end)
+    is_monotonic_increasing_bounds = is_monotonic_increasing(start) and is_monotonic_increasing(end)
 
     output = np.empty(N, dtype=result_dtype)
 
@@ -121,9 +120,7 @@ def sliding_var(
         else:
             for j in range(start[i - 1], s):
                 val = values[j]
-                nobs, mean_x, ssqdm_x, compensation_remove = remove_var(
-                    val, nobs, mean_x, ssqdm_x, compensation_remove
-                )
+                nobs, mean_x, ssqdm_x, compensation_remove = remove_var(val, nobs, mean_x, ssqdm_x, compensation_remove)
 
             for j in range(end[i - 1], e):
                 val = values[j]

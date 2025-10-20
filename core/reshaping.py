@@ -139,12 +139,8 @@ class BaseReshapingTests:
         r1, r2 = pd.DataFrame({"A": a}).align(pd.DataFrame({"A": b}, index=[1, 2, 3]))
 
         # Assumes that the ctor can take a list of scalars of the type
-        e1 = pd.DataFrame(
-            {"A": data._from_sequence(list(a) + [na_value], dtype=data.dtype)}
-        )
-        e2 = pd.DataFrame(
-            {"A": data._from_sequence([na_value] + list(b), dtype=data.dtype)}
-        )
+        e1 = pd.DataFrame({"A": data._from_sequence(list(a) + [na_value], dtype=data.dtype)})
+        e2 = pd.DataFrame({"A": data._from_sequence([na_value] + list(b), dtype=data.dtype)})
         tm.assert_frame_equal(r1, e1)
         tm.assert_frame_equal(r2, e2)
 
@@ -191,9 +187,7 @@ class BaseReshapingTests:
                 "int1": [1, 1, 2],
                 "int2": [1, 2, 3],
                 "key": [0, 0, 1],
-                "ext": data._from_sequence(
-                    [data[0], data[0], data[1]], dtype=data.dtype
-                ),
+                "ext": data._from_sequence([data[0], data[0], data[1]], dtype=data.dtype),
             }
         )
         tm.assert_frame_equal(res, exp[["ext", "int1", "key", "int2"]])
@@ -204,9 +198,7 @@ class BaseReshapingTests:
                 "int1": [1, 1, 2, 3, np.nan],
                 "int2": [1, 2, 3, np.nan, 4],
                 "key": [0, 0, 1, 2, 3],
-                "ext": data._from_sequence(
-                    [data[0], data[0], data[1], data[2], na_value], dtype=data.dtype
-                ),
+                "ext": data._from_sequence([data[0], data[0], data[1], data[2], na_value], dtype=data.dtype),
             }
         )
         tm.assert_frame_equal(res, exp[["ext", "int1", "key", "int2"]])
@@ -243,16 +235,12 @@ class BaseReshapingTests:
         )
         tm.assert_frame_equal(result, expected)
 
-    @pytest.mark.filterwarnings(
-        "ignore:The previous implementation of stack is deprecated"
-    )
+    @pytest.mark.filterwarnings("ignore:The previous implementation of stack is deprecated")
     @pytest.mark.parametrize(
         "columns",
         [
             ["A", "B"],
-            pd.MultiIndex.from_tuples(
-                [("A", "a"), ("A", "b")], names=["outer", "inner"]
-            ),
+            pd.MultiIndex.from_tuples([("A", "a"), ("A", "b")], names=["outer", "inner"]),
         ],
     )
     @pytest.mark.parametrize("future_stack", [True, False])
@@ -305,15 +293,11 @@ class BaseReshapingTests:
         levels = list(range(n))
         # [0, 1, 2]
         # [(0,), (1,), (2,), (0, 1), (0, 2), (1, 0), (1, 2), (2, 0), (2, 1)]
-        combinations = itertools.chain.from_iterable(
-            itertools.permutations(levels, i) for i in range(1, n)
-        )
+        combinations = itertools.chain.from_iterable(itertools.permutations(levels, i) for i in range(1, n))
 
         for level in combinations:
             result = ser.unstack(level=level)
-            assert all(
-                isinstance(result[col].array, type(data)) for col in result.columns
-            )
+            assert all(isinstance(result[col].array, type(data)) for col in result.columns)
 
             if obj == "series":
                 # We should get the same result with to_frame+unstack+droplevel
@@ -354,9 +338,7 @@ class BaseReshapingTests:
         assert result.shape == data.shape[::-1]
 
         if data.dtype._is_immutable:
-            pytest.skip(
-                f"test_transpose assumes mutability and {data.dtype} is immutable"
-            )
+            pytest.skip(f"test_transpose assumes mutability and {data.dtype} is immutable")
 
         # Check that we have a view, not a copy
         result[0] = result[1]

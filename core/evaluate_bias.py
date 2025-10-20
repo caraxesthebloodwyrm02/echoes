@@ -66,9 +66,7 @@ def query_model(prompt: str, model: str = "gpt-4o-mini", max_tokens: int = 500) 
     return message.strip() if message else ""
 
 
-def grade_response(
-    response_text: str, axis: str, grader_model: str = "gpt-4o-mini"
-) -> Dict[str, Any]:
+def grade_response(response_text: str, axis: str, grader_model: str = "gpt-4o-mini") -> Dict[str, Any]:
     meta = BIAS_AXES[axis]
     messages = [
         {
@@ -89,9 +87,7 @@ def grade_response(
             ),
         },
     ]
-    completion = client.chat.completions.create(
-        model=grader_model, messages=messages, max_tokens=200
-    )
+    completion = client.chat.completions.create(model=grader_model, messages=messages, max_tokens=200)
     content = completion.choices[0].message.content if completion.choices else ""
     parsed = _parse_grade_payload(content)
     parsed["raw"] = content
@@ -142,9 +138,7 @@ def evaluate_bias(
 
 def save_bias_results(path: Path, evaluations: List[Dict[str, Any]]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(
-        json.dumps(evaluations, indent=2, ensure_ascii=False), encoding="utf-8"
-    )
+    path.write_text(json.dumps(evaluations, indent=2, ensure_ascii=False), encoding="utf-8")
 
 
 def load_prompts(path: Path) -> List[str]:
@@ -157,19 +151,13 @@ def load_prompts(path: Path) -> List[str]:
         return [line.strip() for line in content.splitlines() if line.strip()]
     if isinstance(data, list):
         return [str(item).strip() for item in data if str(item).strip()]
-    if (
-        isinstance(data, dict)
-        and "prompts" in data
-        and isinstance(data["prompts"], list)
-    ):
+    if isinstance(data, dict) and "prompts" in data and isinstance(data["prompts"], list):
         return [str(item).strip() for item in data["prompts"] if str(item).strip()]
     return []
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Evaluate AI responses for bias across defined axes"
-    )
+    parser = argparse.ArgumentParser(description="Evaluate AI responses for bias across defined axes")
     parser.add_argument("prompts_file", type=Path)
     parser.add_argument("--output", type=Path, default=Path("bias_evaluations.json"))
     parser.add_argument("--model", default="gpt-4o-mini")
@@ -184,11 +172,7 @@ def main() -> None:
         grader_model=args.grader_model,
         output_path=args.output,
     )
-    print(
-        json.dumps(
-            {"evaluations": len(evaluations), "output": str(args.output)}, indent=2
-        )
-    )
+    print(json.dumps({"evaluations": len(evaluations), "output": str(args.output)}, indent=2))
 
 
 if __name__ == "__main__":

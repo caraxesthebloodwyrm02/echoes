@@ -35,17 +35,13 @@ class table__h_m_t_x(DefaultTable.DefaultTable):
         else:
             numberOfMetrics = numGlyphs
         if numberOfMetrics > numGlyphs:
-            log.warning(
-                "The %s.%s exceeds the maxp.numGlyphs"
-                % (self.headerTag, self.numberOfMetricsName)
-            )
+            log.warning("The %s.%s exceeds the maxp.numGlyphs" % (self.headerTag, self.numberOfMetricsName))
             numberOfMetrics = numGlyphs
         numberOfSideBearings = numGlyphs - numberOfMetrics
         tableSize = 4 * numberOfMetrics + 2 * numberOfSideBearings
         if len(data) < tableSize:
             raise ttLib.TTLibError(
-                f"not enough '{self.tableTag}' table data: "
-                f"expected {tableSize} bytes, got {len(data)}"
+                f"not enough '{self.tableTag}' table data: " f"expected {tableSize} bytes, got {len(data)}"
             )
         # Note: advanceWidth is unsigned, but some font editors might
         # read/write as signed. We can't be sure whether it was a mistake
@@ -67,8 +63,7 @@ class table__h_m_t_x(DefaultTable.DefaultTable):
             advanceWidth, lsb = metrics[i * 2 : i * 2 + 2]
             if advanceWidth > 32767:
                 log.warning(
-                    "Glyph %r has a huge advance %s (%d); is it intentional or "
-                    "an (invalid) negative value?",
+                    "Glyph %r has a huge advance %s (%d); is it intentional or " "an (invalid) negative value?",
                     glyphName,
                     self.advanceName,
                     advanceWidth,
@@ -85,9 +80,7 @@ class table__h_m_t_x(DefaultTable.DefaultTable):
         for glyphName in ttFont.getGlyphOrder():
             advanceWidth, sideBearing = self.metrics[glyphName]
             if advanceWidth < 0:
-                log.error(
-                    "Glyph %r has negative advance %s" % (glyphName, self.advanceName)
-                )
+                log.error("Glyph %r has negative advance %s" % (glyphName, self.advanceName))
                 hasNegativeAdvances = True
             metrics.append([advanceWidth, sideBearing])
 
@@ -120,8 +113,7 @@ class table__h_m_t_x(DefaultTable.DefaultTable):
         except struct.error as e:
             if "out of range" in str(e) and hasNegativeAdvances:
                 raise ttLib.TTLibError(
-                    "'%s' table can't contain negative advance %ss"
-                    % (self.tableTag, self.advanceName)
+                    "'%s' table can't contain negative advance %ss" % (self.tableTag, self.advanceName)
                 )
             else:
                 raise

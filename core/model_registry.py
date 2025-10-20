@@ -67,7 +67,7 @@ class ModelRegistry:
         """Load existing registry metadata."""
         if self.metadata_file.exists():
             try:
-                with open(self.metadata_file, 'r') as f:
+                with open(self.metadata_file, "r") as f:
                     self.registry = json.load(f)
             except Exception as e:
                 self.logger.warning(f"Failed to load registry metadata: {e}")
@@ -78,7 +78,7 @@ class ModelRegistry:
     def _save_registry(self) -> None:
         """Save registry metadata to disk."""
         try:
-            with open(self.metadata_file, 'w') as f:
+            with open(self.metadata_file, "w") as f:
                 json.dump(self.registry, f, indent=2, default=str)
         except Exception as e:
             self.logger.error(f"Failed to save registry metadata: {e}")
@@ -90,7 +90,7 @@ class ModelRegistry:
         metadata: Optional[Dict[str, Any]] = None,
         performance_metrics: Optional[Dict[str, Any]] = None,
         training_info: Optional[Dict[str, Any]] = None,
-        tags: Optional[List[str]] = None
+        tags: Optional[List[str]] = None,
     ) -> str:
         """
         Register a new model version in the registry.
@@ -112,24 +112,24 @@ class ModelRegistry:
 
         # Create model entry
         model_entry = {
-            'version_id': version_id,
-            'name': name,
-            'model_hash': model_hash,
-            'created_at': datetime.now().isoformat(),
-            'metadata': metadata or {},
-            'performance_metrics': performance_metrics or {},
-            'training_info': training_info or {},
-            'tags': tags or [],
-            'status': 'active',
-            'deployment_history': []
+            "version_id": version_id,
+            "name": name,
+            "model_hash": model_hash,
+            "created_at": datetime.now().isoformat(),
+            "metadata": metadata or {},
+            "performance_metrics": performance_metrics or {},
+            "training_info": training_info or {},
+            "tags": tags or [],
+            "status": "active",
+            "deployment_history": [],
         }
 
         # Save model to disk
         model_path = self.registry_path / f"{version_id}.pkl"
         try:
-            with open(model_path, 'wb') as f:
+            with open(model_path, "wb") as f:
                 pickle.dump(model, f)
-            model_entry['model_path'] = str(model_path)
+            model_entry["model_path"] = str(model_path)
         except Exception as e:
             self.logger.error(f"Failed to save model {version_id}: {e}")
             raise
@@ -164,14 +164,14 @@ class ModelRegistry:
         if version:
             # Find specific version
             for v in versions:
-                if v['version_id'] == version:
+                if v["version_id"] == version:
                     return self._load_model_from_entry(v)
         else:
             # Get latest active version
-            active_versions = [v for v in versions if v.get('status') == 'active']
+            active_versions = [v for v in versions if v.get("status") == "active"]
             if active_versions:
                 # Sort by creation time (latest first)
-                active_versions.sort(key=lambda x: x['created_at'], reverse=True)
+                active_versions.sort(key=lambda x: x["created_at"], reverse=True)
                 return self._load_model_from_entry(active_versions[0])
 
         return None
@@ -179,9 +179,9 @@ class ModelRegistry:
     def _load_model_from_entry(self, entry: Dict[str, Any]) -> Optional[BaseEstimator]:
         """Load model from registry entry."""
         try:
-            model_path = entry.get('model_path')
+            model_path = entry.get("model_path")
             if model_path and Path(model_path).exists():
-                with open(model_path, 'rb') as f:
+                with open(model_path, "rb") as f:
                     return pickle.load(f)
             else:
                 self.logger.warning(f"Model file not found: {model_path}")
@@ -207,17 +207,11 @@ class ModelRegistry:
             all_models = []
             for model_name, versions in self.registry.items():
                 for version in versions:
-                    version['model_name'] = model_name
+                    version["model_name"] = model_name
                     all_models.append(version)
             return all_models
 
-    def update_model_status(
-        self,
-        name: str,
-        version: str,
-        status: str,
-        reason: Optional[str] = None
-    ) -> bool:
+    def update_model_status(self, name: str, version: str, status: str, reason: Optional[str] = None) -> bool:
         """
         Update the status of a model version.
 
@@ -234,21 +228,23 @@ class ModelRegistry:
             return False
 
         for model_entry in self.registry[name]:
-            if model_entry['version_id'] == version:
-                old_status = model_entry.get('status', 'unknown')
-                model_entry['status'] = status
-                model_entry['status_updated_at'] = datetime.now().isoformat()
+            if model_entry["version_id"] == version:
+                old_status = model_entry.get("status", "unknown")
+                model_entry["status"] = status
+                model_entry["status_updated_at"] = datetime.now().isoformat()
                 if reason:
-                    model_entry['status_change_reason'] = reason
+                    model_entry["status_change_reason"] = reason
 
                 # Log deployment history
-                if status in ['active', 'deprecated']:
-                    model_entry['deployment_history'].append({
-                        'timestamp': datetime.now().isoformat(),
-                        'action': f"status_changed_to_{status}",
-                        'old_status': old_status,
-                        'reason': reason
-                    })
+                if status in ["active", "deprecated"]:
+                    model_entry["deployment_history"].append(
+                        {
+                            "timestamp": datetime.now().isoformat(),
+                            "action": f"status_changed_to_{status}",
+                            "old_status": old_status,
+                            "reason": reason,
+                        }
+                    )
 
                 self._save_registry()
                 self.logger.info(f"✅ Updated {name} {version} status to {status}")
@@ -256,11 +252,7 @@ class ModelRegistry:
 
         return False
 
-    def compare_models(
-        self,
-        model_names: List[str],
-        metric: str = 'accuracy'
-    ) -> Dict[str, Any]:
+    def compare_models(self, model_names: List[str], metric: str = "accuracy") -> Dict[str, Any]:
         """
         Compare multiple models based on performance metrics.
 
@@ -272,13 +264,13 @@ class ModelRegistry:
             Comparison results
         """
         comparison = {
-            'models': [],
-            'best_model': None,
-            'metric': metric,
-            'comparison_timestamp': datetime.now().isoformat()
+            "models": [],
+            "best_model": None,
+            "metric": metric,
+            "comparison_timestamp": datetime.now().isoformat(),
         }
 
-        best_score = float('-inf')
+        best_score = float("-inf")
         best_model_info = None
 
         for model_name in model_names:
@@ -287,31 +279,31 @@ class ModelRegistry:
                 continue
 
             # Get latest active version
-            active_versions = [v for v in versions if v.get('status') == 'active']
+            active_versions = [v for v in versions if v.get("status") == "active"]
             if not active_versions:
                 continue
 
-            latest_version = max(active_versions, key=lambda x: x['created_at'])
+            latest_version = max(active_versions, key=lambda x: x["created_at"])
 
-            metrics = latest_version.get('performance_metrics', {})
+            metrics = latest_version.get("performance_metrics", {})
             score = metrics.get(metric, 0)
 
             model_info = {
-                'name': model_name,
-                'version': latest_version['version_id'],
-                'score': score,
-                'metrics': metrics,
-                'created_at': latest_version['created_at']
+                "name": model_name,
+                "version": latest_version["version_id"],
+                "score": score,
+                "metrics": metrics,
+                "created_at": latest_version["created_at"],
             }
 
-            comparison['models'].append(model_info)
+            comparison["models"].append(model_info)
 
             if score > best_score:
                 best_score = score
                 best_model_info = model_info
 
         if best_model_info:
-            comparison['best_model'] = best_model_info
+            comparison["best_model"] = best_model_info
 
         return comparison
 
@@ -327,15 +319,10 @@ class ModelRegistry:
         """
         versions = self.registry.get(name, [])
         # Sort by creation time
-        versions.sort(key=lambda x: x['created_at'])
+        versions.sort(key=lambda x: x["created_at"])
         return versions
 
-    def archive_old_versions(
-        self,
-        name: str,
-        keep_versions: int = 5,
-        archive_threshold_days: int = 30
-    ) -> int:
+    def archive_old_versions(self, name: str, keep_versions: int = 5, archive_threshold_days: int = 30) -> int:
         """
         Archive old model versions to save space.
 
@@ -351,7 +338,7 @@ class ModelRegistry:
             return 0
 
         versions = self.registry[name]
-        versions.sort(key=lambda x: x['created_at'], reverse=True)  # Newest first
+        versions.sort(key=lambda x: x["created_at"], reverse=True)  # Newest first
 
         archived_count = 0
 
@@ -361,12 +348,12 @@ class ModelRegistry:
                 continue  # Keep this version
 
             # Check if old enough to archive
-            created_at = datetime.fromisoformat(version['created_at'])
+            created_at = datetime.fromisoformat(version["created_at"])
             age_days = (datetime.now() - created_at).days
 
-            if age_days >= archive_threshold_days and version.get('status') != 'active':
-                version['status'] = 'archived'
-                version['archived_at'] = datetime.now().isoformat()
+            if age_days >= archive_threshold_days and version.get("status") != "active":
+                version["status"] = "archived"
+                version["archived_at"] = datetime.now().isoformat()
                 archived_count += 1
 
         if archived_count > 0:
@@ -394,27 +381,27 @@ class ModelRegistry:
     def get_registry_stats(self) -> Dict[str, Any]:
         """Get statistics about the model registry."""
         stats = {
-            'total_models': len(self.registry),
-            'total_versions': sum(len(versions) for versions in self.registry.values()),
-            'active_models': 0,
-            'deprecated_models': 0,
-            'archived_models': 0,
-            'storage_used_mb': 0
+            "total_models": len(self.registry),
+            "total_versions": sum(len(versions) for versions in self.registry.values()),
+            "active_models": 0,
+            "deprecated_models": 0,
+            "archived_models": 0,
+            "storage_used_mb": 0,
         }
 
         for model_name, versions in self.registry.items():
             for version in versions:
-                status = version.get('status', 'unknown')
-                if status == 'active':
-                    stats['active_models'] += 1
-                elif status == 'deprecated':
-                    stats['deprecated_models'] += 1
-                elif status == 'archived':
-                    stats['archived_models'] += 1
+                status = version.get("status", "unknown")
+                if status == "active":
+                    stats["active_models"] += 1
+                elif status == "deprecated":
+                    stats["deprecated_models"] += 1
+                elif status == "archived":
+                    stats["archived_models"] += 1
 
                 # Estimate storage (rough calculation)
-                model_path = version.get('model_path')
+                model_path = version.get("model_path")
                 if model_path and Path(model_path).exists():
-                    stats['storage_used_mb'] += Path(model_path).stat().st_size / (1024 * 1024)
+                    stats["storage_used_mb"] += Path(model_path).stat().st_size / (1024 * 1024)
 
         return stats

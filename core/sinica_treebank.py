@@ -66,9 +66,7 @@ class SinicaTreebankCorpusReader(SyntaxCorpusReader):
     def _tag(self, sent, tagset=None):
         tagged_sent = [(w, t) for (t, w) in TAGWORD.findall(sent)]
         if tagset and tagset != self._tagset:
-            tagged_sent = [
-                (w, map_tag(self._tagset, tagset, t)) for (w, t) in tagged_sent
-            ]
+            tagged_sent = [(w, map_tag(self._tagset, tagset, t)) for (w, t) in tagged_sent]
         return tagged_sent
 
     def _word(self, sent):

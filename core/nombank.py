@@ -11,7 +11,6 @@ from xml.etree import ElementTree
 
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.util import *
-from nltk.internals import raise_unorderable_types
 from nltk.tree import Tree
 
 
@@ -98,9 +97,7 @@ class NombankCorpusReader(CorpusReader):
         """
         baseform = roleset_id.split(".")[0]
         baseform = baseform.replace("perc-sign", "%")
-        baseform = baseform.replace("oneslashonezero", "1/10").replace(
-            "1/10", "1-slash-10"
-        )
+        baseform = baseform.replace("oneslashonezero", "1/10").replace("1/10", "1-slash-10")
         framefile = "frames/%s.xml" % baseform
         if framefile not in self.fileids():
             raise ValueError("Frameset file for %s not found" % roleset_id)
@@ -153,9 +150,7 @@ class NombankCorpusReader(CorpusReader):
         for i in range(100):
             line = stream.readline().strip()
             if line:
-                inst = NombankInstance.parse(
-                    line, self._parse_fileid_xform, self._parse_corpus
-                )
+                inst = NombankInstance.parse(line, self._parse_fileid_xform, self._parse_corpus)
                 if instance_filter(inst):
                     block.append(inst)
 
@@ -381,16 +376,12 @@ class NombankTreePointer(NombankPointer):
         # Deal with chains (xx*yy*zz)
         pieces = s.split("*")
         if len(pieces) > 1:
-            return NombankChainTreePointer(
-                [NombankTreePointer.parse(elt) for elt in pieces]
-            )
+            return NombankChainTreePointer([NombankTreePointer.parse(elt) for elt in pieces])
 
         # Deal with split args (xx,yy,zz)
         pieces = s.split(",")
         if len(pieces) > 1:
-            return NombankSplitTreePointer(
-                [NombankTreePointer.parse(elt) for elt in pieces]
-            )
+            return NombankSplitTreePointer([NombankTreePointer.parse(elt) for elt in pieces])
 
         # Deal with normal pointers.
         pieces = s.split(":")

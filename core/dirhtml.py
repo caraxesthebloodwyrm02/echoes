@@ -22,29 +22,29 @@ class DirectoryHTMLBuilder(StandaloneHTMLBuilder):
     ``.html`` in them.
     """
 
-    name = 'dirhtml'
+    name = "dirhtml"
 
     def get_target_uri(self, docname: str, typ: str | None = None) -> str:
-        if docname == 'index':
-            return ''
-        if docname.endswith(SEP + 'index'):
+        if docname == "index":
+            return ""
+        if docname.endswith(SEP + "index"):
             return docname[:-5]  # up to sep
         return docname + SEP
 
     def get_output_path(self, page_name: str, /) -> Path:
         page_parts = page_name.split(SEP)
-        if page_parts[-1] == 'index':
+        if page_parts[-1] == "index":
             page_parts.pop()
-        return Path(self.outdir, *page_parts, f'index{self.out_suffix}')
+        return Path(self.outdir, *page_parts, f"index{self.out_suffix}")
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
-    app.setup_extension('sphinx.builders.html')
+    app.setup_extension("sphinx.builders.html")
 
     app.add_builder(DirectoryHTMLBuilder)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

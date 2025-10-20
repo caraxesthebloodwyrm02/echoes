@@ -87,15 +87,11 @@ class _InspectableProtocol(Protocol[_TCov]):
 
 
 @overload
-def inspect(
-    subject: Type[_InspectableTypeProtocol[_IN]], raiseerr: bool = True
-) -> _IN: ...
+def inspect(subject: Type[_InspectableTypeProtocol[_IN]], raiseerr: bool = True) -> _IN: ...
 
 
 @overload
-def inspect(
-    subject: _InspectableProtocol[_IN], raiseerr: bool = True
-) -> _IN: ...
+def inspect(subject: _InspectableProtocol[_IN], raiseerr: bool = True) -> _IN: ...
 
 
 @overload
@@ -144,10 +140,7 @@ def inspect(subject: Any, raiseerr: bool = True) -> Any:
         reg = ret = None
 
     if raiseerr and (reg is None or ret is None):
-        raise exc.NoInspectionAvailable(
-            "No inspection system is "
-            "available for object of type %s" % type_
-        )
+        raise exc.NoInspectionAvailable("No inspection system is " "available for object of type %s" % type_)
     return ret
 
 

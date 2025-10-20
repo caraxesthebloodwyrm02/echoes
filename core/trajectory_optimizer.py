@@ -232,9 +232,7 @@ class TrajectoryOptimizer:
 
         # Select decision function
         decision_fn = (
-            self.data_driven_decision
-            if method == OptimizationMethod.DATA_DRIVEN
-            else self.fast_compound_decision
+            self.data_driven_decision if method == OptimizationMethod.DATA_DRIVEN else self.fast_compound_decision
         )
 
         # Simulate each step
@@ -264,9 +262,7 @@ class TrajectoryOptimizer:
 
         # Against-the-clock metrics
         quality_per_second = average_quality / (total_time / num_steps)
-        efficiency_ratio = average_quality / (
-            total_time * total_cognitive_load / num_steps
-        )
+        efficiency_ratio = average_quality / (total_time * total_cognitive_load / num_steps)
 
         return TrajectoryResult(
             method=method,
@@ -282,9 +278,7 @@ class TrajectoryOptimizer:
             efficiency_ratio=efficiency_ratio,
         )
 
-    def compare_methods(
-        self, num_steps: int = 20, num_trials: int = 10
-    ) -> Dict[str, any]:
+    def compare_methods(self, num_steps: int = 20, num_trials: int = 10) -> Dict[str, any]:
         """Compare both methods across multiple trials.
 
         Returns
@@ -295,12 +289,8 @@ class TrajectoryOptimizer:
         fc_results = []
 
         for _ in range(num_trials):
-            dda_results.append(
-                self.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps)
-            )
-            fc_results.append(
-                self.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps)
-            )
+            dda_results.append(self.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps))
+            fc_results.append(self.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps))
 
         # Aggregate statistics
         comparison = {
@@ -310,21 +300,15 @@ class TrajectoryOptimizer:
                 "avg_quality": np.mean([r.average_quality for r in dda_results]),
                 "final_quality": np.mean([r.final_quality for r in dda_results]),
                 "avg_time": np.mean([r.total_time for r in dda_results]),
-                "avg_cognitive_load": np.mean(
-                    [r.total_cognitive_load for r in dda_results]
-                ),
+                "avg_cognitive_load": np.mean([r.total_cognitive_load for r in dda_results]),
                 "efficiency_ratio": np.mean([r.efficiency_ratio for r in dda_results]),
-                "learning_slope": np.mean(
-                    [r.learning_curve_slope for r in dda_results]
-                ),
+                "learning_slope": np.mean([r.learning_curve_slope for r in dda_results]),
             },
             "fast_compound": {
                 "avg_quality": np.mean([r.average_quality for r in fc_results]),
                 "final_quality": np.mean([r.final_quality for r in fc_results]),
                 "avg_time": np.mean([r.total_time for r in fc_results]),
-                "avg_cognitive_load": np.mean(
-                    [r.total_cognitive_load for r in fc_results]
-                ),
+                "avg_cognitive_load": np.mean([r.total_cognitive_load for r in fc_results]),
                 "efficiency_ratio": np.mean([r.efficiency_ratio for r in fc_results]),
                 "learning_slope": np.mean([r.learning_curve_slope for r in fc_results]),
                 "compound_gain": np.mean([r.compound_gain for r in fc_results]),
@@ -333,24 +317,16 @@ class TrajectoryOptimizer:
 
         # Calculate advantages
         comparison["advantages"] = {
-            "fc_time_saved": (
-                comparison["data_driven"]["avg_time"]
-                - comparison["fast_compound"]["avg_time"]
-            ),
+            "fc_time_saved": (comparison["data_driven"]["avg_time"] - comparison["fast_compound"]["avg_time"]),
             "fc_cognitive_saved": (
-                comparison["data_driven"]["avg_cognitive_load"]
-                - comparison["fast_compound"]["avg_cognitive_load"]
+                comparison["data_driven"]["avg_cognitive_load"] - comparison["fast_compound"]["avg_cognitive_load"]
             ),
             "fc_efficiency_gain": (
-                comparison["fast_compound"]["efficiency_ratio"]
-                / comparison["data_driven"]["efficiency_ratio"]
-                - 1.0
+                comparison["fast_compound"]["efficiency_ratio"] / comparison["data_driven"]["efficiency_ratio"] - 1.0
             )
             * 100,  # Percentage
             "fc_learning_advantage": (
-                comparison["fast_compound"]["learning_slope"]
-                / comparison["data_driven"]["learning_slope"]
-                - 1.0
+                comparison["fast_compound"]["learning_slope"] / comparison["data_driven"]["learning_slope"] - 1.0
             )
             * 100,  # Percentage
         }
@@ -385,9 +361,7 @@ class TrajectoryOptimizer:
             step = 0
 
             decision_fn = (
-                self.data_driven_decision
-                if method == OptimizationMethod.DATA_DRIVEN
-                else self.fast_compound_decision
+                self.data_driven_decision if method == OptimizationMethod.DATA_DRIVEN else self.fast_compound_decision
             )
 
             # Run until time budget exhausted
@@ -405,9 +379,7 @@ class TrajectoryOptimizer:
                 elapsed_time += decision.time_spent
 
                 # Update experience
-                learning_rate = (
-                    0.08 if method == OptimizationMethod.FAST_COMPOUND else 0.05
-                )
+                learning_rate = 0.08 if method == OptimizationMethod.FAST_COMPOUND else 0.05
                 experience += decision.quality * learning_rate
                 experience = min(experience, 1.0)
 
@@ -422,16 +394,10 @@ class TrajectoryOptimizer:
 
                 qualities = [d.quality for d in decisions]
                 steps_arr = np.arange(len(decisions))
-                learning_curve_slope = (
-                    np.polyfit(steps_arr, qualities, 1)[0]
-                    if len(decisions) > 1
-                    else 0.0
-                )
+                learning_curve_slope = np.polyfit(steps_arr, qualities, 1)[0] if len(decisions) > 1 else 0.0
 
                 quality_per_second = average_quality / (elapsed_time / len(decisions))
-                efficiency_ratio = average_quality / (
-                    elapsed_time * total_cognitive_load / len(decisions)
-                )
+                efficiency_ratio = average_quality / (elapsed_time * total_cognitive_load / len(decisions))
 
                 results[method.value] = TrajectoryResult(
                     method=method,

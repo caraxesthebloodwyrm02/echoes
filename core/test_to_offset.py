@@ -37,9 +37,7 @@ def test_to_offset(freq_input, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize(
-    "freqstr,expected", [("-1s", -1), ("-2SME", -2), ("-1SMS", -1), ("-5min10s", -310)]
-)
+@pytest.mark.parametrize("freqstr,expected", [("-1s", -1), ("-2SME", -2), ("-1SMS", -1), ("-5min10s", -310)])
 def test_to_offset_negative(freqstr, expected):
     result = to_offset(freqstr)
     assert result.n == expected
@@ -119,9 +117,7 @@ def test_to_offset_whitespace(freqstr, expected):
     assert result == expected
 
 
-@pytest.mark.parametrize(
-    "freqstr,expected", [("00h 00min 01s", 1), ("-00h 03min 14s", -194)]
-)
+@pytest.mark.parametrize("freqstr,expected", [("00h 00min 01s", 1), ("-00h 03min 14s", -194)])
 def test_to_offset_leading_zero(freqstr, expected):
     result = to_offset(freqstr)
     assert result.n == expected

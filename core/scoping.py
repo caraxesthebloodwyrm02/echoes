@@ -208,8 +208,7 @@ class scoped_session(Generic[_S]):
         if kw:
             if self.registry.has():
                 raise sa_exc.InvalidRequestError(
-                    "Scoped session is already present; "
-                    "no new arguments may be specified."
+                    "Scoped session is already present; " "no new arguments may be specified."
                 )
             else:
                 sess = self.session_factory(**kw)
@@ -259,9 +258,7 @@ class scoped_session(Generic[_S]):
             self.registry().close()
         self.registry.clear()
 
-    def query_property(
-        self, query_cls: Optional[Type[Query[_T]]] = None
-    ) -> QueryPropertyDescriptor:
+    def query_property(self, query_cls: Optional[Type[Query[_T]]] = None) -> QueryPropertyDescriptor:
         """return a class property which produces a legacy
         :class:`_query.Query` object against the class and the current
         :class:`.Session` when called.
@@ -637,9 +634,7 @@ class scoped_session(Generic[_S]):
 
         """  # noqa: E501
 
-        return self._proxied.connection(
-            bind_arguments=bind_arguments, execution_options=execution_options
-        )
+        return self._proxied.connection(bind_arguments=bind_arguments, execution_options=execution_options)
 
     def delete(self, instance: object) -> None:
         r"""Mark an instance as deleted.
@@ -771,9 +766,7 @@ class scoped_session(Generic[_S]):
             _add_event=_add_event,
         )
 
-    def expire(
-        self, instance: object, attribute_names: Optional[Iterable[str]] = None
-    ) -> None:
+    def expire(self, instance: object, attribute_names: Optional[Iterable[str]] = None) -> None:
         r"""Expire the attributes on an instance.
 
         .. container:: class_bases
@@ -1198,9 +1191,7 @@ class scoped_session(Generic[_S]):
             **kw,
         )
 
-    def is_modified(
-        self, instance: object, include_collections: bool = True
-    ) -> bool:
+    def is_modified(self, instance: object, include_collections: bool = True) -> bool:
         r"""Return ``True`` if the given instance has locally
         modified attributes.
 
@@ -1258,9 +1249,7 @@ class scoped_session(Generic[_S]):
 
         """  # noqa: E501
 
-        return self._proxied.is_modified(
-            instance, include_collections=include_collections
-        )
+        return self._proxied.is_modified(instance, include_collections=include_collections)
 
     def bulk_save_objects(
         self,
@@ -1435,9 +1424,7 @@ class scoped_session(Generic[_S]):
             render_nulls=render_nulls,
         )
 
-    def bulk_update_mappings(
-        self, mapper: Mapper[Any], mappings: Iterable[Dict[str, Any]]
-    ) -> None:
+    def bulk_update_mappings(self, mapper: Mapper[Any], mappings: Iterable[Dict[str, Any]]) -> None:
         r"""Perform a bulk update of the given list of mapping dictionaries.
 
         .. container:: class_bases
@@ -1556,9 +1543,7 @@ class scoped_session(Generic[_S]):
     def query(self, _entity: _EntityType[_O]) -> Query[_O]: ...
 
     @overload
-    def query(
-        self, _colexpr: TypedColumnsClauseRole[_T]
-    ) -> RowReturningQuery[Tuple[_T]]: ...
+    def query(self, _colexpr: TypedColumnsClauseRole[_T]) -> RowReturningQuery[Tuple[_T]]: ...
 
     # START OVERLOADED FUNCTIONS self.query RowReturningQuery 2-8
 
@@ -1566,9 +1551,7 @@ class scoped_session(Generic[_S]):
     # statically generated** by tools/generate_tuple_map_overloads.py
 
     @overload
-    def query(
-        self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]
-    ) -> RowReturningQuery[Tuple[_T0, _T1]]: ...
+    def query(self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]) -> RowReturningQuery[Tuple[_T0, _T1]]: ...
 
     @overload
     def query(
@@ -1633,13 +1616,9 @@ class scoped_session(Generic[_S]):
     # END OVERLOADED FUNCTIONS self.query
 
     @overload
-    def query(
-        self, *entities: _ColumnsClauseArgument[Any], **kwargs: Any
-    ) -> Query[Any]: ...
+    def query(self, *entities: _ColumnsClauseArgument[Any], **kwargs: Any) -> Query[Any]: ...
 
-    def query(
-        self, *entities: _ColumnsClauseArgument[Any], **kwargs: Any
-    ) -> Query[Any]:
+    def query(self, *entities: _ColumnsClauseArgument[Any], **kwargs: Any) -> Query[Any]:
         r"""Return a new :class:`_query.Query` object corresponding to this
         :class:`_orm.Session`.
 

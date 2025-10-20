@@ -176,9 +176,7 @@ def _raise_for_params(params, owner, method, allow=None):
     ValueError
         If metadata routing is not enabled and params are passed.
     """
-    caller = (
-        f"{owner.__class__.__name__}.{method}" if method else owner.__class__.__name__
-    )
+    caller = f"{owner.__class__.__name__}.{method}" if method else owner.__class__.__name__
 
     allow = allow if allow is not None else {}
 
@@ -235,9 +233,7 @@ class _RoutingNotSupportedMixin:
         """Raise `NotImplementedError`.
 
         This estimator does not support metadata routing yet."""
-        raise NotImplementedError(
-            f"{self.__class__.__name__} has not implemented metadata routing yet."
-        )
+        raise NotImplementedError(f"{self.__class__.__name__} has not implemented metadata routing yet.")
 
 
 # Request values
@@ -377,10 +373,7 @@ class MethodMetadataRequest:
             if param in self._requests:
                 del self._requests[param]
             else:
-                raise ValueError(
-                    f"Trying to remove parameter {param} with UNUSED which doesn't"
-                    " exist."
-                )
+                raise ValueError(f"Trying to remove parameter {param} with UNUSED which doesn't" " exist.")
         else:
             self._requests[param] = alias
 
@@ -420,11 +413,7 @@ class MethodMetadataRequest:
             The metadata passed to a method.
         """
         params = {} if params is None else params
-        warn_params = {
-            prop
-            for prop, alias in self._requests.items()
-            if alias == WARN and prop in params
-        }
+        warn_params = {prop for prop, alias in self._requests.items() if alias == WARN and prop in params}
         for param in warn_params:
             warn(
                 f"Support for {param} has recently been added to this class. "
@@ -476,12 +465,7 @@ class MethodMetadataRequest:
                 callee_methods = COMPOSITE_METHODS[self.method]
             else:
                 callee_methods = [self.method]
-            set_requests_on = "".join(
-                [
-                    f".set_{method}_request({{metadata}}=True/False)"
-                    for method in callee_methods
-                ]
-            )
+            set_requests_on = "".join([f".set_{method}_request({{metadata}}=True/False)" for method in callee_methods])
             message = (
                 f"[{', '.join([key for key in unrequested])}] are passed but are not"
                 " explicitly set as requested or not requested for"
@@ -599,9 +583,7 @@ class MetadataRequest:
         # AttributeError exception.
         # https://docs.python.org/3/reference/datamodel.html#object.__getattr__
         if name not in COMPOSITE_METHODS:
-            raise AttributeError(
-                f"'{self.__class__.__name__}' object has no attribute '{name}'"
-            )
+            raise AttributeError(f"'{self.__class__.__name__}' object has no attribute '{name}'")
 
         requests = {}
         for method in COMPOSITE_METHODS[name]:
@@ -673,9 +655,7 @@ class MetadataRequest:
             A :class:`~sklearn.utils.Bunch` of {metadata: value} which can be given to
             the corresponding method.
         """
-        return getattr(self, method)._route_params(
-            params=params, parent=parent, caller=caller
-        )
+        return getattr(self, method)._route_params(params=params, parent=parent, caller=caller)
 
     def _check_warnings(self, *, method, params):
         """Check whether metadata is passed which is marked as WARN.
@@ -767,15 +747,9 @@ class MethodMapping:
             Returns self.
         """
         if caller not in METHODS:
-            raise ValueError(
-                f"Given caller:{caller} is not a valid method. Valid methods are:"
-                f" {METHODS}"
-            )
+            raise ValueError(f"Given caller:{caller} is not a valid method. Valid methods are:" f" {METHODS}")
         if callee not in METHODS:
-            raise ValueError(
-                f"Given callee:{callee} is not a valid method. Valid methods are:"
-                f" {METHODS}"
-            )
+            raise ValueError(f"Given callee:{callee} is not a valid method. Valid methods are:" f" {METHODS}")
         self._routes.append(MethodPair(caller=caller, callee=callee))
         return self
 
@@ -894,9 +868,7 @@ class MetadataRouter:
         method_mapping = deepcopy(method_mapping)
 
         for name, obj in objs.items():
-            self._route_mappings[name] = RouterMappingPair(
-                mapping=method_mapping, router=get_routing_for_object(obj)
-            )
+            self._route_mappings[name] = RouterMappingPair(mapping=method_mapping, router=get_routing_for_object(obj))
         return self
 
     def consumes(self, method, params):
@@ -924,9 +896,7 @@ class MetadataRouter:
         for _, route_mapping in self._route_mappings.items():
             for caller, callee in route_mapping.mapping:
                 if caller == method:
-                    res = res | route_mapping.router.consumes(
-                        method=callee, params=params
-                    )
+                    res = res | route_mapping.router.consumes(method=callee, params=params)
 
         return res
 
@@ -958,11 +928,7 @@ class MetadataRouter:
         """
         res = set()
         if self._self_request and not ignore_self_request:
-            res = res.union(
-                self._self_request._get_param_names(
-                    method=method, return_alias=return_alias
-                )
-            )
+            res = res.union(self._self_request._get_param_names(method=method, return_alias=return_alias))
 
         for name, route_mapping in self._route_mappings.items():
             for caller, callee in route_mapping.mapping:
@@ -1015,12 +981,8 @@ class MetadataRouter:
                 )
             )
 
-        param_names = self._get_param_names(
-            method=method, return_alias=True, ignore_self_request=True
-        )
-        child_params = {
-            key: value for key, value in params.items() if key in param_names
-        }
+        param_names = self._get_param_names(method=method, return_alias=True, ignore_self_request=True)
+        child_params = {key: value for key, value in params.items() if key in param_names}
         for key in set(res.keys()).intersection(child_params.keys()):
             # conflicts are okay if the passed objects are the same, but it's
             # an issue if they're different objects.
@@ -1095,20 +1057,15 @@ class MetadataRouter:
         params : dict
             A dictionary of provided metadata.
         """
-        param_names = self._get_param_names(
-            method=method, return_alias=False, ignore_self_request=False
-        )
+        param_names = self._get_param_names(method=method, return_alias=False, ignore_self_request=False)
         if self._self_request:
-            self_params = self._self_request._get_param_names(
-                method=method, return_alias=False
-            )
+            self_params = self._self_request._get_param_names(method=method, return_alias=False)
         else:
             self_params = set()
         extra_keys = set(params.keys()) - param_names - self_params
         if extra_keys:
             raise TypeError(
-                f"{self.owner}.{method} got unexpected argument(s) {extra_keys}, which"
-                " are not routed to any object."
+                f"{self.owner}.{method} got unexpected argument(s) {extra_keys}, which" " are not routed to any object."
             )
 
     def _serialize(self):
@@ -1314,10 +1271,7 @@ class RequestMethod:
             # Replicating python's behavior when positional args are given other than
             # `self`, and `self` is only allowed if this method is unbound.
             if args:
-                raise TypeError(
-                    f"set_{self.name}_request() takes 0 positional argument but"
-                    f" {len(args)} were given"
-                )
+                raise TypeError(f"set_{self.name}_request() takes 0 positional argument but" f" {len(args)} were given")
 
             requests = _instance._get_metadata_request()
             method_metadata_request = getattr(requests, self.name)
@@ -1617,8 +1571,7 @@ def process_routing(_obj, _method, /, **kwargs):
         )
     if _method not in METHODS:
         raise TypeError(
-            f"Can only route and process input on these methods: {METHODS}, "
-            f"while the passed method is: {_method}."
+            f"Can only route and process input on these methods: {METHODS}, " f"while the passed method is: {_method}."
         )
 
     request_routing = get_routing_for_object(_obj)

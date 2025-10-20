@@ -33,9 +33,7 @@ def setup_logging(level: int = logging.INFO) -> None:
     Args:
         level (int): Logging level.
     """
-    logging.basicConfig(
-        level=level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    logging.basicConfig(level=level, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 
 def log_exception(e: Exception) -> None:

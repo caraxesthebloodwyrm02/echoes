@@ -8,12 +8,7 @@ class Text:
     def __init__(
         self,
         text: str | bytes,
-        font: (
-            ImageFont.ImageFont
-            | ImageFont.FreeTypeFont
-            | ImageFont.TransposedFont
-            | None
-        ) = None,
+        font: ImageFont.ImageFont | ImageFont.FreeTypeFont | ImageFont.TransposedFont | None = None,
         mode: str = "RGB",
         spacing: float = 4,
         direction: str | None = None,
@@ -151,11 +146,7 @@ class Text:
             msg = "anchor must be a 2 character string"
             raise ValueError(msg)
 
-        lines = (
-            self.text.split("\n")
-            if isinstance(self.text, str)
-            else self.text.split(b"\n")
-        )
+        lines = self.text.split("\n") if isinstance(self.text, str) else self.text.split(b"\n")
         if len(lines) == 1:
             return [(xy, anchor, self.text)]
 
@@ -188,9 +179,7 @@ class Text:
             widths = []
             max_width: float = 0
             for line in lines:
-                line_width = self.font.getlength(
-                    line, fontmode, self.direction, self.features, self.language
-                )
+                line_width = self.font.getlength(line, fontmode, self.direction, self.features, self.language)
                 widths.append(line_width)
                 max_width = max(max_width, line_width)
 
@@ -216,14 +205,8 @@ class Text:
                     msg = 'align must be "left", "center", "right" or "justify"'
                     raise ValueError(msg)
 
-                if (
-                    align == "justify"
-                    and width_difference != 0
-                    and idx != len(lines) - 1
-                ):
-                    words = (
-                        line.split(" ") if isinstance(line, str) else line.split(b" ")
-                    )
+                if align == "justify" and width_difference != 0 and idx != len(lines) - 1:
+                    words = line.split(" ") if isinstance(line, str) else line.split(b" ")
                     if len(words) > 1:
                         # align left by anchor
                         if anchor[0] == "m":

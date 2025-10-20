@@ -5,10 +5,7 @@
 from scipy._lib.deprecation import _sub_module_deprecation
 
 
-__all__ = [  # noqa: F822
-    'fourier_gaussian', 'fourier_uniform',
-    'fourier_ellipsoid', 'fourier_shift'
-]
+__all__ = ["fourier_gaussian", "fourier_uniform", "fourier_ellipsoid", "fourier_shift"]  # noqa: F822
 
 
 def __dir__():
@@ -16,6 +13,6 @@ def __dir__():
 
 
 def __getattr__(name):
-    return _sub_module_deprecation(sub_package='ndimage', module='fourier',
-                                   private_modules=['_fourier'], all=__all__,
-                                   attribute=name)
+    return _sub_module_deprecation(
+        sub_package="ndimage", module="fourier", private_modules=["_fourier"], all=__all__, attribute=name
+    )

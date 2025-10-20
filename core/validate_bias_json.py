@@ -93,12 +93,8 @@ class BiasValidationReport:
 
                 if "score" not in axis_data:
                     self.errors.append(f"Evaluation {i} axis '{axis}' missing 'score'")
-                elif not isinstance(axis_data["score"], (int, float)) or not (
-                    1 <= axis_data["score"] <= 5
-                ):
-                    self.errors.append(
-                        f"Evaluation {i} axis '{axis}' score must be 1-5"
-                    )
+                elif not isinstance(axis_data["score"], (int, float)) or not (1 <= axis_data["score"] <= 5):
+                    self.errors.append(f"Evaluation {i} axis '{axis}' score must be 1-5")
 
     def _compute_metrics(self) -> None:
         """Compute bias management metrics."""
@@ -121,9 +117,7 @@ class BiasValidationReport:
                     # Normalize to 0-1 for bias measurement
                     all_scores.append(score / 5.0)
 
-        completeness = (
-            complete_evaluations / total_evaluations if total_evaluations > 0 else 0.0
-        )
+        completeness = complete_evaluations / total_evaluations if total_evaluations > 0 else 0.0
         mean_bias = mean(all_scores) if all_scores else 0.0
 
         self.metrics = {
@@ -159,9 +153,7 @@ def validate_bias_json(json_path: str | Path) -> Dict[str, Any]:
 def main() -> None:
     """CLI entry point."""
     if len(sys.argv) != 2:
-        print(
-            "Usage: python -m bias_detection.validate_bias_json <path_to_bias_evaluations.json>"
-        )
+        print("Usage: python -m bias_detection.validate_bias_json <path_to_bias_evaluations.json>")
         sys.exit(1)
 
     json_path = sys.argv[1]

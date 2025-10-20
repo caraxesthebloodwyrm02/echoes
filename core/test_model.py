@@ -43,9 +43,7 @@ def sample_data():
 
     cost_data = pd.DataFrame({"cost_of_living": [2000, 2500], "region": ["A", "B"]})
 
-    employment_data = pd.DataFrame(
-        {"employment_rate": [0.8, 0.9], "region": ["A", "B"]}
-    )
+    employment_data = pd.DataFrame({"employment_rate": [0.8, 0.9], "region": ["A", "B"]})
 
     return census_data, cost_data, employment_data
 

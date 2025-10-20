@@ -186,10 +186,7 @@ def lidstone_bigram_model(bigram_training_data, vocabulary):
     ],
 )
 def test_lidstone_bigram_score(lidstone_bigram_model, word, context, expected_score):
-    assert (
-        pytest.approx(lidstone_bigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+    assert pytest.approx(lidstone_bigram_model.score(word, context), 1e-4) == expected_score
 
 
 def test_lidstone_entropy_perplexity(lidstone_bigram_model):
@@ -237,10 +234,7 @@ def lidstone_trigram_model(trigram_training_data, vocabulary):
     ],
 )
 def test_lidstone_trigram_score(lidstone_trigram_model, word, context, expected_score):
-    assert (
-        pytest.approx(lidstone_trigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+    assert pytest.approx(lidstone_trigram_model.score(word, context), 1e-4) == expected_score
 
 
 @pytest.fixture
@@ -276,9 +270,7 @@ def laplace_bigram_model(bigram_training_data, vocabulary):
     ],
 )
 def test_laplace_bigram_score(laplace_bigram_model, word, context, expected_score):
-    assert (
-        pytest.approx(laplace_bigram_model.score(word, context), 1e-4) == expected_score
-    )
+    assert pytest.approx(laplace_bigram_model.score(word, context), 1e-4) == expected_score
 
 
 def test_laplace_bigram_entropy_perplexity(laplace_bigram_model):
@@ -347,13 +339,8 @@ def wittenbell_trigram_model(trigram_training_data, vocabulary):
         ("c", ["z", "b"], ((1 - 0.5) * 0.5 + 0.5 * 1 / 18)),
     ],
 )
-def test_wittenbell_trigram_score(
-    wittenbell_trigram_model, word, context, expected_score
-):
-    assert (
-        pytest.approx(wittenbell_trigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+def test_wittenbell_trigram_score(wittenbell_trigram_model, word, context, expected_score):
+    assert pytest.approx(wittenbell_trigram_model.score(word, context), 1e-4) == expected_score
 
 
 ###############################################################################
@@ -410,13 +397,8 @@ def kneserney_trigram_model(trigram_training_data, vocabulary):
         ("c", ["z", "b"], (0.125 + 0.75 * (1 / 14))),
     ],
 )
-def test_kneserney_trigram_score(
-    kneserney_trigram_model, word, context, expected_score
-):
-    assert (
-        pytest.approx(kneserney_trigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+def test_kneserney_trigram_score(kneserney_trigram_model, word, context, expected_score):
+    assert pytest.approx(kneserney_trigram_model.score(word, context), 1e-4) == expected_score
 
 
 @pytest.fixture
@@ -459,13 +441,8 @@ def absolute_discounting_trigram_model(trigram_training_data, vocabulary):
         ("c", ["z", "b"], (0.125 + 0.75 * (2 / 2) * (1 / 18))),
     ],
 )
-def test_absolute_discounting_trigram_score(
-    absolute_discounting_trigram_model, word, context, expected_score
-):
-    assert (
-        pytest.approx(absolute_discounting_trigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+def test_absolute_discounting_trigram_score(absolute_discounting_trigram_model, word, context, expected_score):
+    assert pytest.approx(absolute_discounting_trigram_model.score(word, context), 1e-4) == expected_score
 
 
 @pytest.fixture
@@ -496,13 +473,8 @@ def stupid_backoff_trigram_model(trigram_training_data, vocabulary):
         ("c", ["z", "b"], (0.4 * (1 / 2))),
     ],
 )
-def test_stupid_backoff_trigram_score(
-    stupid_backoff_trigram_model, word, context, expected_score
-):
-    assert (
-        pytest.approx(stupid_backoff_trigram_model.score(word, context), 1e-4)
-        == expected_score
-    )
+def test_stupid_backoff_trigram_score(stupid_backoff_trigram_model, word, context, expected_score):
+    assert pytest.approx(stupid_backoff_trigram_model.score(word, context), 1e-4) == expected_score
 
 
 ###############################################################################
@@ -529,9 +501,7 @@ def kneserney_bigram_model(bigram_training_data, vocabulary):
         "kneserney_bigram_model",
         pytest.param(
             "stupid_backoff_trigram_model",
-            marks=pytest.mark.xfail(
-                reason="Stupid Backoff is not a valid distribution"
-            ),
+            marks=pytest.mark.xfail(reason="Stupid Backoff is not a valid distribution"),
         ),
     ],
 )
@@ -595,9 +565,9 @@ def test_generate_with_text_seed(mle_trigram_model):
 
 
 def test_generate_oov_text_seed(mle_trigram_model):
-    assert mle_trigram_model.generate(
-        text_seed=("aliens",), random_seed=3
-    ) == mle_trigram_model.generate(text_seed=("<UNK>",), random_seed=3)
+    assert mle_trigram_model.generate(text_seed=("aliens",), random_seed=3) == mle_trigram_model.generate(
+        text_seed=("<UNK>",), random_seed=3
+    )
 
 
 def test_generate_None_text_seed(mle_trigram_model):
@@ -606,6 +576,4 @@ def test_generate_None_text_seed(mle_trigram_model):
         mle_trigram_model.generate(text_seed=(None,))
 
     # This will work
-    assert mle_trigram_model.generate(
-        text_seed=None, random_seed=3
-    ) == mle_trigram_model.generate(random_seed=3)
+    assert mle_trigram_model.generate(text_seed=None, random_seed=3) == mle_trigram_model.generate(random_seed=3)

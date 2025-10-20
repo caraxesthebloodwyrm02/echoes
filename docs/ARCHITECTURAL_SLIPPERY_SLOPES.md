@@ -95,11 +95,11 @@ def find_python_executable():
         shutil.which('python3'),  # Linux/Mac
         shutil.which('py'),  # Python launcher
     ]
-    
+
     for candidate in candidates:
         if candidate and Path(candidate).exists():
             return candidate
-    
+
     raise RuntimeError("Could not find Python executable")
 ```
 
@@ -236,7 +236,7 @@ class EchoesError(Exception):
         self.severity = severity
         self.context = context or {}
         super().__init__(message)
-        
+
         # Always log
         log_method = getattr(logger, severity.value)
         log_method(f"{message} | Context: {context}")
@@ -275,7 +275,7 @@ raise ToolCallError("Invalid JSON in tool call", severity=ErrorSeverity.WARNING,
 GuardrailMiddleware fails
   ↓
 Glimpse can't start with guardrails
-  ↓  
+  ↓
 ContextAwareAPI can't initialize
   ↓
 Demo script crashes
@@ -289,7 +289,7 @@ Demo script crashes
 def create_glimpse(enable_security=True, enable_guardrails=True):
     """Create Glimpse with fallback options"""
     glimpse = GlimpseOrchestrator()
-    
+
     # Try to enable security
     if enable_security:
         try:
@@ -297,7 +297,7 @@ def create_glimpse(enable_security=True, enable_guardrails=True):
         except Exception as e:
             logger.warning(f"Security failed to initialize, continuing without: {e}")
             # Continue anyway with limited functionality
-    
+
     # Try to enable guardrails
     if enable_guardrails:
         try:
@@ -305,7 +305,7 @@ def create_glimpse(enable_security=True, enable_guardrails=True):
         except Exception as e:
             logger.warning(f"Guardrails failed to initialize, continuing without: {e}")
             # Continue anyway
-    
+
     return glimpse  # Always return something usable
 ```
 
@@ -379,10 +379,10 @@ Systems should:
 
 After implementing these fixes, we should see:
 
-✅ **Reduced failure rate**: 90% → 10%  
-✅ **Faster debugging**: 2 hours → 15 minutes  
-✅ **Better recovery**: 0% → 80% auto-recovery  
-✅ **Clearer errors**: "Something went wrong" → "Tool call JSON had backticks, cleaned and retried"  
+✅ **Reduced failure rate**: 90% → 10%
+✅ **Faster debugging**: 2 hours → 15 minutes
+✅ **Better recovery**: 0% → 80% auto-recovery
+✅ **Clearer errors**: "Something went wrong" → "Tool call JSON had backticks, cleaned and retried"
 
 ---
 
@@ -402,5 +402,5 @@ This transforms a brittle system into a resilient one.
 
 ---
 
-*Document created: October 18, 2025*  
+*Document created: October 18, 2025*
 *Next review: After implementing priority fixes*

@@ -90,9 +90,7 @@ def test_read_column(setup_path):
 
         store.append("df", df)
         # error
-        with pytest.raises(
-            KeyError, match=re.escape("'column [foo] not found in the table'")
-        ):
+        with pytest.raises(KeyError, match=re.escape("'column [foo] not found in the table'")):
             store.select_column("df", "foo")
 
         msg = re.escape("select_column() got an unexpected keyword argument 'where'")
@@ -105,10 +103,7 @@ def test_read_column(setup_path):
         assert isinstance(result, Series)
 
         # not a data indexable column
-        msg = re.escape(
-            "column [values_block_0] can not be extracted individually; "
-            "it is not data indexable"
-        )
+        msg = re.escape("column [values_block_0] can not be extracted individually; " "it is not data indexable")
         with pytest.raises(ValueError, match=msg):
             store.select_column("df", "values_block_0")
 
@@ -155,18 +150,14 @@ def test_read_column(setup_path):
 
 
 def test_pytables_native_read(datapath):
-    with ensure_clean_store(
-        datapath("io", "data", "legacy_hdf/pytables_native.h5"), mode="r"
-    ) as store:
+    with ensure_clean_store(datapath("io", "data", "legacy_hdf/pytables_native.h5"), mode="r") as store:
         d2 = store["detector/readout"]
     assert isinstance(d2, DataFrame)
 
 
 @pytest.mark.skipif(is_platform_windows(), reason="native2 read fails oddly on windows")
 def test_pytables_native2_read(datapath):
-    with ensure_clean_store(
-        datapath("io", "data", "legacy_hdf", "pytables_native2.h5"), mode="r"
-    ) as store:
+    with ensure_clean_store(datapath("io", "data", "legacy_hdf", "pytables_native2.h5"), mode="r") as store:
         str(store)
         d1 = store["detector"]
     assert isinstance(d1, DataFrame)
@@ -175,9 +166,7 @@ def test_pytables_native2_read(datapath):
 def test_legacy_table_fixed_format_read_py2(datapath):
     # GH 24510
     # legacy table with fixed format written in Python 2
-    with ensure_clean_store(
-        datapath("io", "data", "legacy_hdf", "legacy_table_fixed_py2.h5"), mode="r"
-    ) as store:
+    with ensure_clean_store(datapath("io", "data", "legacy_hdf", "legacy_table_fixed_py2.h5"), mode="r") as store:
         result = store.select("df")
     expected = DataFrame(
         [[1, 2, 3, "D"]],
@@ -207,9 +196,7 @@ def test_legacy_table_fixed_format_read_datetime_py2(datapath):
 def test_legacy_table_read_py2(datapath):
     # issue: 24925
     # legacy table written in Python 2
-    with ensure_clean_store(
-        datapath("io", "data", "legacy_hdf", "legacy_table_py2.h5"), mode="r"
-    ) as store:
+    with ensure_clean_store(datapath("io", "data", "legacy_hdf", "legacy_table_py2.h5"), mode="r") as store:
         result = store.select("table")
 
     expected = DataFrame({"a": ["a", "b"], "b": [2, 3]})
@@ -319,10 +306,7 @@ def test_read_nokey_empty(tmp_path, setup_path):
     path = tmp_path / setup_path
     store = HDFStore(path)
     store.close()
-    msg = re.escape(
-        "Dataset(s) incompatible with Pandas data types, not table, or no "
-        "datasets found in HDF5 file."
-    )
+    msg = re.escape("Dataset(s) incompatible with Pandas data types, not table, or no " "datasets found in HDF5 file.")
     with pytest.raises(ValueError, match=msg):
         read_hdf(path)
 
@@ -393,9 +377,7 @@ def test_read_py2_hdf_file_in_py3(datapath):
     )
 
     with ensure_clean_store(
-        datapath(
-            "io", "data", "legacy_hdf", "periodindex_0.20.1_x86_64_darwin_2.7.13.h5"
-        ),
+        datapath("io", "data", "legacy_hdf", "periodindex_0.20.1_x86_64_darwin_2.7.13.h5"),
         mode="r",
     ) as store:
         result = store["p"]

@@ -53,9 +53,7 @@ class BanditTester:
                     result = test(context)
 
                 if result is not None:
-                    nosec_tests_to_skip = self._get_nosecs_from_contexts(
-                        temp_context, test_result=result
-                    )
+                    nosec_tests_to_skip = self._get_nosecs_from_contexts(temp_context, test_result=result)
 
                     if isinstance(temp_context["filename"], bytes):
                         result.fname = temp_context["filename"].decode("utf-8")
@@ -69,9 +67,7 @@ class BanditTester:
                         result.linerange = temp_context["linerange"]
                     if result.col_offset == -1:
                         result.col_offset = temp_context["col_offset"]
-                    result.end_col_offset = temp_context.get(
-                        "end_col_offset", 0
-                    )
+                    result.end_col_offset = temp_context.get("end_col_offset", 0)
                     result.test = name
                     if result.test_id == "":
                         result.test_id = test._test_id
@@ -87,9 +83,7 @@ class BanditTester:
                             self.metrics.note_nosec()
                             continue
                         if result.test_id in nosec_tests_to_skip:
-                            LOG.debug(
-                                f"skipped, nosec for test {result.test_id}"
-                            )
+                            LOG.debug(f"skipped, nosec for test {result.test_id}")
                             self.metrics.note_skipped_test()
                             continue
 
@@ -103,13 +97,8 @@ class BanditTester:
                     val = constants.RANKING_VALUES[result.confidence]
                     scores["CONFIDENCE"][con] += val
                 else:
-                    nosec_tests_to_skip = self._get_nosecs_from_contexts(
-                        temp_context
-                    )
-                    if (
-                        nosec_tests_to_skip
-                        and test._test_id in nosec_tests_to_skip
-                    ):
+                    nosec_tests_to_skip = self._get_nosecs_from_contexts(temp_context)
+                    if nosec_tests_to_skip and test._test_id in nosec_tests_to_skip:
                         LOG.warning(
                             f"nosec encountered ({test._test_id}), but no "
                             f"failed test on line {temp_context['lineno']}"
@@ -129,11 +118,7 @@ class BanditTester:
         :return: set of tests to skip for the line based on contexts
         """
         nosec_tests_to_skip = set()
-        base_tests = (
-            self.nosec_lines.get(test_result.lineno, None)
-            if test_result
-            else None
-        )
+        base_tests = self.nosec_lines.get(test_result.lineno, None) if test_result else None
         context_tests = utils.get_nosec(self.nosec_lines, context)
 
         # if both are none there were no comments

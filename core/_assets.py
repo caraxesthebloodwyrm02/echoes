@@ -25,27 +25,22 @@ class _CascadingStyleSheet:
         /,
         *,
         priority: int = 500,
-        rel: str = 'stylesheet',
-        type: str = 'text/css',
+        rel: str = "stylesheet",
+        type: str = "text/css",
         **attributes: str,
     ) -> None:
-        object.__setattr__(self, 'filename', filename)
-        object.__setattr__(self, 'priority', priority)
-        object.__setattr__(self, 'attributes', {'rel': rel, 'type': type} | attributes)
+        object.__setattr__(self, "filename", filename)
+        object.__setattr__(self, "priority", priority)
+        object.__setattr__(self, "attributes", {"rel": rel, "type": type} | attributes)
 
     def __str__(self) -> str:
-        attr = ', '.join(f'{k}={v!r}' for k, v in self.attributes.items())
-        return (
-            f'{self.__class__.__name__}({self.filename!r}, '
-            f'priority={self.priority}, '
-            f'{attr})'
-        )
+        attr = ", ".join(f"{k}={v!r}" for k, v in self.attributes.items())
+        return f"{self.__class__.__name__}({self.filename!r}, " f"priority={self.priority}, " f"{attr})"
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
             warnings.warn(
-                'The str interface for _CascadingStyleSheet objects is deprecated. '
-                'Use css.filename instead.',
+                "The str interface for _CascadingStyleSheet objects is deprecated. " "Use css.filename instead.",
                 RemovedInSphinx90Warning,
                 stacklevel=2,
             )
@@ -53,26 +48,23 @@ class _CascadingStyleSheet:
         if not isinstance(other, _CascadingStyleSheet):
             return NotImplemented
         return (
-            self.filename == other.filename
-            and self.priority == other.priority
-            and self.attributes == other.attributes
+            self.filename == other.filename and self.priority == other.priority and self.attributes == other.attributes
         )
 
     def __hash__(self) -> int:
         return hash((self.filename, self.priority, *sorted(self.attributes.items())))
 
     def __setattr__(self, key: str, value: Any) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
     def __delattr__(self, key: str) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
     def __getattr__(self, key: str) -> str:
         warnings.warn(
-            'The str interface for _CascadingStyleSheet objects is deprecated. '
-            'Use css.filename instead.',
+            "The str interface for _CascadingStyleSheet objects is deprecated. " "Use css.filename instead.",
             RemovedInSphinx90Warning,
             stacklevel=2,
         )
@@ -80,8 +72,7 @@ class _CascadingStyleSheet:
 
     def __getitem__(self, key: int | slice) -> str:
         warnings.warn(
-            'The str interface for _CascadingStyleSheet objects is deprecated. '
-            'Use css.filename instead.',
+            "The str interface for _CascadingStyleSheet objects is deprecated. " "Use css.filename instead.",
             RemovedInSphinx90Warning,
             stacklevel=2,
         )
@@ -101,25 +92,20 @@ class _JavaScript:
         priority: int = 500,
         **attributes: str,
     ) -> None:
-        object.__setattr__(self, 'filename', filename)
-        object.__setattr__(self, 'priority', priority)
-        object.__setattr__(self, 'attributes', attributes)
+        object.__setattr__(self, "filename", filename)
+        object.__setattr__(self, "priority", priority)
+        object.__setattr__(self, "attributes", attributes)
 
     def __str__(self) -> str:
-        attr = ''
+        attr = ""
         if self.attributes:
-            attr = ', ' + ', '.join(f'{k}={v!r}' for k, v in self.attributes.items())
-        return (
-            f'{self.__class__.__name__}({self.filename!r}, '
-            f'priority={self.priority}'
-            f'{attr})'
-        )
+            attr = ", " + ", ".join(f"{k}={v!r}" for k, v in self.attributes.items())
+        return f"{self.__class__.__name__}({self.filename!r}, " f"priority={self.priority}" f"{attr})"
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, str):
             warnings.warn(
-                'The str interface for _JavaScript objects is deprecated. '
-                'Use js.filename instead.',
+                "The str interface for _JavaScript objects is deprecated. " "Use js.filename instead.",
                 RemovedInSphinx90Warning,
                 stacklevel=2,
             )
@@ -127,26 +113,23 @@ class _JavaScript:
         if not isinstance(other, _JavaScript):
             return NotImplemented
         return (
-            self.filename == other.filename
-            and self.priority == other.priority
-            and self.attributes == other.attributes
+            self.filename == other.filename and self.priority == other.priority and self.attributes == other.attributes
         )
 
     def __hash__(self) -> int:
         return hash((self.filename, self.priority, *sorted(self.attributes.items())))
 
     def __setattr__(self, key: str, value: Any) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
     def __delattr__(self, key: str) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
     def __getattr__(self, key: str) -> str:
         warnings.warn(
-            'The str interface for _JavaScript objects is deprecated. '
-            'Use js.filename instead.',
+            "The str interface for _JavaScript objects is deprecated. " "Use js.filename instead.",
             RemovedInSphinx90Warning,
             stacklevel=2,
         )
@@ -154,8 +137,7 @@ class _JavaScript:
 
     def __getitem__(self, key: int | slice) -> str:
         warnings.warn(
-            'The str interface for _JavaScript objects is deprecated. '
-            'Use js.filename instead.',
+            "The str interface for _JavaScript objects is deprecated. " "Use js.filename instead.",
             RemovedInSphinx90Warning,
             stacklevel=2,
         )
@@ -165,14 +147,14 @@ class _JavaScript:
 def _file_checksum(outdir: Path, filename: str | os.PathLike[str]) -> str:
     filename = os.fspath(filename)
     # Don't generate checksums for HTTP URIs
-    if '://' in filename:
-        return ''
+    if "://" in filename:
+        return ""
     # Some themes and extensions have used query strings
     # for a similar asset checksum feature.
     # As we cannot safely strip the query string,
     # raise an error to the user.
-    if '?' in filename:
-        msg = f'Local asset file paths must not contain query strings: {filename!r}'
+    if "?" in filename:
+        msg = f"Local asset file paths must not contain query strings: {filename!r}"
         raise ThemeError(msg)
     return _file_checksum_inner(outdir.joinpath(filename).resolve())
 
@@ -181,9 +163,9 @@ def _file_checksum(outdir: Path, filename: str | os.PathLike[str]) -> str:
 def _file_checksum_inner(file: Path) -> str:
     try:
         # Remove all carriage returns to avoid checksum differences
-        content = file.read_bytes().translate(None, b'\r')
+        content = file.read_bytes().translate(None, b"\r")
     except FileNotFoundError:
-        return ''
+        return ""
     if not content:
-        return ''
-    return f'{zlib.crc32(content):08x}'
+        return ""
+    return f"{zlib.crc32(content):08x}"

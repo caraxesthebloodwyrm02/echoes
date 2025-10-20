@@ -29,9 +29,7 @@ def test_str_cat_name(index_or_series, other):
     assert result.name == "name"
 
 
-@pytest.mark.parametrize(
-    "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-)
+@pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
 def test_str_cat(index_or_series, infer_string):
     with option_context("future.infer_string", infer_string):
         box = index_or_series
@@ -85,15 +83,11 @@ def test_str_cat_raises_intuitive_error(index_or_series):
         s.str.cat("    ")
 
 
-@pytest.mark.parametrize(
-    "infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))]
-)
+@pytest.mark.parametrize("infer_string", [False, pytest.param(True, marks=td.skip_if_no("pyarrow"))])
 @pytest.mark.parametrize("sep", ["", None])
 @pytest.mark.parametrize("dtype_target", ["object", "category"])
 @pytest.mark.parametrize("dtype_caller", ["object", "category"])
-def test_str_cat_categorical(
-    index_or_series, dtype_caller, dtype_target, sep, infer_string
-):
+def test_str_cat_categorical(index_or_series, dtype_caller, dtype_target, sep, infer_string):
     box = index_or_series
 
     with option_context("future.infer_string", infer_string):
@@ -101,15 +95,9 @@ def test_str_cat_categorical(
         s = s if box == Index else Series(s, index=s, dtype=s.dtype)
         t = Index(["b", "a", "b", "c"], dtype=dtype_target)
 
-        expected = Index(
-            ["ab", "aa", "bb", "ac"], dtype=object if dtype_caller == "object" else None
-        )
+        expected = Index(["ab", "aa", "bb", "ac"], dtype=object if dtype_caller == "object" else None)
         expected = (
-            expected
-            if box == Index
-            else Series(
-                expected, index=Index(s, dtype=dtype_caller), dtype=expected.dtype
-            )
+            expected if box == Index else Series(expected, index=Index(s, dtype=dtype_caller), dtype=expected.dtype)
         )
 
         # Series/Index with unaligned Index -> t.values
@@ -314,9 +302,7 @@ def test_str_cat_align_mixed_inputs(join):
     rhs_idx = (
         t.index.intersection(s.index)
         if join == "inner"
-        else t.index.union(s.index)
-        if join == "outer"
-        else t.index.append(s.index.difference(t.index))
+        else t.index.union(s.index) if join == "outer" else t.index.append(s.index.difference(t.index))
     )
 
     expected = expected_outer.loc[s.index.join(rhs_idx, how=join)]
@@ -384,11 +370,7 @@ def test_str_cat_special_cases():
 
 
 def test_cat_on_filtered_index():
-    df = DataFrame(
-        index=MultiIndex.from_product(
-            [[2011, 2012], [1, 2, 3]], names=["year", "month"]
-        )
-    )
+    df = DataFrame(index=MultiIndex.from_product([[2011, 2012], [1, 2, 3]], names=["year", "month"]))
 
     df = df.reset_index()
     df = df[df.month > 1]

@@ -82,9 +82,7 @@ class ProductionList(ColorizedList):
     def _init_colortags(self, textwidget, options):
         textwidget.tag_config("terminal", foreground="#006000")
         textwidget.tag_config("arrow", font="symbol", underline="0")
-        textwidget.tag_config(
-            "nonterminal", foreground="blue", font=("helvetica", -12, "bold")
-        )
+        textwidget.tag_config("nonterminal", foreground="blue", font=("helvetica", -12, "bold"))
 
     def _item_repr(self, item):
         contents = []
@@ -163,11 +161,7 @@ class CFGEditor:
     _LHS_RE = re.compile(r"(^\s*\w+\s*)(->|(" + ARROW + "))")
     _ARROW_RE = re.compile(r"\s*(->|(" + ARROW + r"))\s*")
     _PRODUCTION_RE = re.compile(
-        r"(^\s*\w+\s*)"
-        + "(->|("  # LHS
-        + ARROW
-        + r"))\s*"
-        + r"((\w+|'[\w ]*'|\"[\w ]*\"|\|)\s*)*$"  # arrow
+        r"(^\s*\w+\s*)" + "(->|(" + ARROW + r"))\s*" + r"((\w+|'[\w ]*'|\"[\w ]*\"|\|)\s*)*$"  # LHS  # arrow
     )  # RHS
     _TOKEN_RE = re.compile("\\w+|->|'[\\w ]+'|\"[\\w ]+\"|(" + ARROW + ")")
     _BOLD = ("helvetica", -12, "bold")
@@ -205,21 +199,11 @@ class CFGEditor:
 
     def _init_buttons(self):
         frame = self._buttonframe = Frame(self._top)
-        Button(frame, text="Ok", command=self._ok, underline=0, takefocus=0).pack(
-            side="left"
-        )
-        Button(frame, text="Apply", command=self._apply, underline=0, takefocus=0).pack(
-            side="left"
-        )
-        Button(frame, text="Reset", command=self._reset, underline=0, takefocus=0).pack(
-            side="left"
-        )
-        Button(
-            frame, text="Cancel", command=self._cancel, underline=0, takefocus=0
-        ).pack(side="left")
-        Button(frame, text="Help", command=self._help, underline=0, takefocus=0).pack(
-            side="right"
-        )
+        Button(frame, text="Ok", command=self._ok, underline=0, takefocus=0).pack(side="left")
+        Button(frame, text="Apply", command=self._apply, underline=0, takefocus=0).pack(side="left")
+        Button(frame, text="Reset", command=self._reset, underline=0, takefocus=0).pack(side="left")
+        Button(frame, text="Cancel", command=self._cancel, underline=0, takefocus=0).pack(side="left")
+        Button(frame, text="Help", command=self._help, underline=0, takefocus=0).pack(side="right")
 
     def _init_bindings(self):
         self._top.title("CFG Editor")
@@ -246,9 +230,7 @@ class CFGEditor:
         self._prodframe = Frame(self._top)
 
         # Create the basic Text widget & scrollbar.
-        self._textwidget = Text(
-            self._prodframe, background="#e0e0e0", exportselection=1
-        )
+        self._textwidget = Text(self._prodframe, background="#e0e0e0", exportselection=1)
         self._textscroll = Scrollbar(self._prodframe, takefocus=0, orient="vertical")
         self._textwidget.config(yscrollcommand=self._textscroll.set)
         self._textscroll.config(command=self._textwidget.yview)
@@ -673,11 +655,7 @@ class CFGDemo:
                     and node.symbol == widget.label().text()
                 ):
                     pass  # matching nonterminal
-                elif (
-                    isinstance(node, str)
-                    and isinstance(widget, TextWidget)
-                    and node == widget.text()
-                ):
+                elif isinstance(node, str) and isinstance(widget, TextWidget) and node == widget.text():
                     pass  # matching nonterminal
                 else:
                     break
@@ -707,9 +685,7 @@ class CFGDemo:
         fontsize = int(self._size.get())
         node_font = ("helvetica", -(fontsize + 4), "bold")
         leaf_font = ("helvetica", -(fontsize + 2))
-        self._treelet = tree_to_treesegment(
-            canvas, tree, node_font=node_font, leaf_font=leaf_font
-        )
+        self._treelet = tree_to_treesegment(canvas, tree, node_font=node_font, leaf_font=leaf_font)
         self._treelet["draggable"] = 1
 
         # Center the treelet.
@@ -811,9 +787,7 @@ def demo():
 def demo3():
     from nltk import Production
 
-    (S, VP, NP, PP, P, N, Name, V, Det) = nonterminals(
-        "S, VP, NP, PP, P, N, Name, V, Det"
-    )
+    (S, VP, NP, PP, P, N, Name, V, Det) = nonterminals("S, VP, NP, PP, P, N, Name, V, Det")
 
     productions = (
         # Syntactic Productions

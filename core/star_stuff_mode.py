@@ -35,9 +35,7 @@ class StarStuffMode(ModeHandler):
     def __init__(self):
         super().__init__()
         self.mode_name = "star_stuff"
-        self.description = (
-            "Poetic-scientific, vivid, expansive - inspire cross-boundary learning"
-        )
+        self.description = "Poetic-scientific, vivid, expansive - inspire cross-boundary learning"
         self.config = {
             "style": "poetic_scientific",
             "imagery": "vivid",

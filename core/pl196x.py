@@ -44,9 +44,7 @@ class TEICorpusView(StreamBackedCorpusView):
     def read_block(self, stream):
         block = stream.readlines(self._pagesize)
         block = concat(block)
-        while (block.count("<text id") > block.count("</text>")) or block.count(
-            "<text id"
-        ) == 0:
+        while (block.count("<text id") > block.count("</text>")) or block.count("<text id") == 0:
             tmp = stream.readline()
             if len(tmp) <= 0:
                 break
@@ -112,10 +110,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
                     line = line.strip()
                     file_id, text_ids = line.split(" ", 1)
                     if file_id not in self.fileids():
-                        raise ValueError(
-                            "In text_id mapping file %s: %s not found"
-                            % (self._textids, file_id)
-                        )
+                        raise ValueError("In text_id mapping file %s: %s not found" % (self._textids, file_id))
                     for text_id in text_ids.split(self._delimiter):
                         self._add_textids(file_id, text_id)
 
@@ -136,9 +131,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
             != 1
         ):
-            raise ValueError(
-                "Specify exactly one of: fileids, " "categories or textids"
-            )
+            raise ValueError("Specify exactly one of: fileids, " "categories or textids")
 
         if fileids is not None:
             return fileids, None
@@ -233,12 +226,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
         else:
             return concat(
-                [
-                    TEICorpusView(
-                        self.abspath(fileid), False, True, False, head_len=self.head_len
-                    )
-                    for fileid in fileids
-                ]
+                [TEICorpusView(self.abspath(fileid), False, True, False, head_len=self.head_len) for fileid in fileids]
             )
 
     def paras(self, fileids=None, categories=None, textids=None):
@@ -264,12 +252,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
         else:
             return concat(
-                [
-                    TEICorpusView(
-                        self.abspath(fileid), False, True, True, head_len=self.head_len
-                    )
-                    for fileid in fileids
-                ]
+                [TEICorpusView(self.abspath(fileid), False, True, True, head_len=self.head_len) for fileid in fileids]
             )
 
     def tagged_words(self, fileids=None, categories=None, textids=None):
@@ -295,12 +278,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
         else:
             return concat(
-                [
-                    TEICorpusView(
-                        self.abspath(fileid), True, False, False, head_len=self.head_len
-                    )
-                    for fileid in fileids
-                ]
+                [TEICorpusView(self.abspath(fileid), True, False, False, head_len=self.head_len) for fileid in fileids]
             )
 
     def tagged_sents(self, fileids=None, categories=None, textids=None):
@@ -326,12 +304,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
         else:
             return concat(
-                [
-                    TEICorpusView(
-                        self.abspath(fileid), True, True, False, head_len=self.head_len
-                    )
-                    for fileid in fileids
-                ]
+                [TEICorpusView(self.abspath(fileid), True, True, False, head_len=self.head_len) for fileid in fileids]
             )
 
     def tagged_paras(self, fileids=None, categories=None, textids=None):
@@ -357,12 +330,7 @@ class Pl196xCorpusReader(CategorizedCorpusReader, XMLCorpusReader):
             )
         else:
             return concat(
-                [
-                    TEICorpusView(
-                        self.abspath(fileid), True, True, True, head_len=self.head_len
-                    )
-                    for fileid in fileids
-                ]
+                [TEICorpusView(self.abspath(fileid), True, True, True, head_len=self.head_len) for fileid in fileids]
             )
 
     def xml(self, fileids=None, categories=None):

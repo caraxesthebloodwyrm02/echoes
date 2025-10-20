@@ -152,16 +152,12 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
                 else:
                     max_workers = cpu_count()
             elif max_workers <= 0:
-                raise ValueError(
-                    f"max_workers must be greater than 0, got {max_workers}."
-                )
+                raise ValueError(f"max_workers must be greater than 0, got {max_workers}.")
 
             if isinstance(context, str):
                 context = get_context(context)
             if context is not None and context.get_start_method() == "fork":
-                raise ValueError(
-                    "Cannot use reusable executor with the 'fork' context"
-                )
+                raise ValueError("Cannot use reusable executor with the 'fork' context")
 
             kwargs = dict(
                 context=context,
@@ -174,9 +170,7 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
             )
             if executor is None:
                 is_reused = False
-                mp.util.debug(
-                    f"Create a executor with max_workers={max_workers}."
-                )
+                mp.util.debug(f"Create a executor with max_workers={max_workers}.")
                 executor_id = _get_next_executor_id()
                 _executor_kwargs = kwargs
                 _executor = executor = cls(
@@ -188,12 +182,7 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
             else:
                 if reuse == "auto":
                     reuse = kwargs == _executor_kwargs
-                if (
-                    executor._flags.broken
-                    or executor._flags.shutdown
-                    or not reuse
-                    or executor.queue_size < max_workers
-                ):
+                if executor._flags.broken or executor._flags.shutdown or not reuse or executor.queue_size < max_workers:
                     if executor._flags.broken:
                         reason = "broken"
                     elif executor._flags.shutdown:
@@ -212,14 +201,9 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
                     executor.shutdown(wait=True, kill_workers=kill_workers)
                     _executor = executor = _executor_kwargs = None
                     # Recursive call to build a new instance
-                    return cls.get_reusable_executor(
-                        max_workers=max_workers, **kwargs
-                    )
+                    return cls.get_reusable_executor(max_workers=max_workers, **kwargs)
                 else:
-                    mp.util.debug(
-                        "Reusing existing executor with "
-                        f"max_workers={executor._max_workers}."
-                    )
+                    mp.util.debug("Reusing existing executor with " f"max_workers={executor._max_workers}.")
                     is_reused = True
                     executor._resize(max_workers)
 
@@ -254,9 +238,7 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
                 self._max_workers = max_workers
                 for _ in range(max_workers, nb_children_alive):
                     self._call_queue.put(None)
-            while (
-                len(self._processes) > max_workers and not self._flags.broken
-            ):
+            while len(self._processes) > max_workers and not self._flags.broken:
                 time.sleep(1e-3)
 
             self._adjust_process_count()
@@ -269,14 +251,10 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
         # Issue a warning to the user about the bad effect of this usage.
         if self._pending_work_items:
             warnings.warn(
-                "Trying to resize an executor with running jobs: "
-                "waiting for jobs completion before resizing.",
+                "Trying to resize an executor with running jobs: " "waiting for jobs completion before resizing.",
                 UserWarning,
             )
-            mp.util.debug(
-                f"Executor {self.executor_id} waiting for jobs completion "
-                "before resizing"
-            )
+            mp.util.debug(f"Executor {self.executor_id} waiting for jobs completion " "before resizing")
         # Wait for the completion of the jobs
         while self._pending_work_items:
             time.sleep(1e-3)
@@ -289,6 +267,4 @@ class _ReusablePoolExecutor(ProcessPoolExecutor):
 
         min_queue_size = max(cpu_count(), self._max_workers)
         self.queue_size = 2 * min_queue_size + EXTRA_QUEUED_CALLS
-        super()._setup_queues(
-            job_reducers, result_reducers, queue_size=self.queue_size
-        )
+        super()._setup_queues(job_reducers, result_reducers, queue_size=self.queue_size)

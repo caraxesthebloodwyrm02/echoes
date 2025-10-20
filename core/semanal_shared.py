@@ -70,9 +70,7 @@ class SemanticAnalyzerCoreInterface:
     """
 
     @abstractmethod
-    def lookup_qualified(
-        self, name: str, ctx: Context, suppress_errors: bool = False
-    ) -> SymbolTableNode | None:
+    def lookup_qualified(self, name: str, ctx: Context, suppress_errors: bool = False) -> SymbolTableNode | None:
         raise NotImplementedError
 
     @abstractmethod
@@ -156,9 +154,7 @@ class SemanticAnalyzerInterface(SemanticAnalyzerCoreInterface):
     tvar_scope: TypeVarLikeScope
 
     @abstractmethod
-    def lookup(
-        self, name: str, ctx: Context, suppress_errors: bool = False
-    ) -> SymbolTableNode | None:
+    def lookup(self, name: str, ctx: Context, suppress_errors: bool = False) -> SymbolTableNode | None:
         raise NotImplementedError
 
     @abstractmethod
@@ -252,9 +248,7 @@ class SemanticAnalyzerInterface(SemanticAnalyzerCoreInterface):
         raise NotImplementedError
 
     @abstractmethod
-    def process_placeholder(
-        self, name: str | None, kind: str, ctx: Context, force_progress: bool = False
-    ) -> None:
+    def process_placeholder(self, name: str | None, kind: str, ctx: Context, force_progress: bool = False) -> None:
         raise NotImplementedError
 
 
@@ -297,10 +291,7 @@ def calculate_tuple_fallback(typ: TupleType) -> None:
             unpacked_type = get_proper_type(item.type)
             if isinstance(unpacked_type, TypeVarTupleType):
                 unpacked_type = get_proper_type(unpacked_type.upper_bound)
-            if (
-                isinstance(unpacked_type, Instance)
-                and unpacked_type.type.fullname == "builtins.tuple"
-            ):
+            if isinstance(unpacked_type, Instance) and unpacked_type.type.fullname == "builtins.tuple":
                 items.append(unpacked_type.args[0])
             else:
                 raise NotImplementedError
@@ -475,9 +466,7 @@ def require_bool_literal_argument(
     """Attempt to interpret an expression as a boolean literal, and fail analysis if we can't."""
     value = parse_bool(expression)
     if value is None:
-        api.fail(
-            f'"{name}" argument must be a True or False literal', expression, code=LITERAL_REQ
-        )
+        api.fail(f'"{name}" argument must be a True or False literal', expression, code=LITERAL_REQ)
         return default
 
     return value

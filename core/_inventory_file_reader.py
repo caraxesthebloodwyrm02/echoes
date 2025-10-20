@@ -17,7 +17,7 @@ if TYPE_CHECKING:
         def read(self, size: int = ...) -> bytes: ...
 
 
-__all__ = ('InventoryFileReader',)
+__all__ = ("InventoryFileReader",)
 
 
 class InventoryFileReader:
@@ -28,23 +28,23 @@ class InventoryFileReader:
 
     def __init__(self, stream: _SupportsRead) -> None:
         self.stream = stream
-        self.buffer = b''
+        self.buffer = b""
         self.eof = False
 
     def read_buffer(self) -> None:
         chunk = self.stream.read(BUFSIZE)
-        if chunk == b'':
+        if chunk == b"":
             self.eof = True
         self.buffer += chunk
 
     def readline(self) -> str:
-        pos = self.buffer.find(b'\n')
+        pos = self.buffer.find(b"\n")
         if pos != -1:
             line = self.buffer[:pos].decode()
             self.buffer = self.buffer[pos + 1 :]
         elif self.eof:
             line = self.buffer.decode()
-            self.buffer = b''
+            self.buffer = b""
         else:
             self.read_buffer()
             line = self.readline()
@@ -62,15 +62,15 @@ class InventoryFileReader:
         while not self.eof:
             self.read_buffer()
             yield decompressor.decompress(self.buffer)
-            self.buffer = b''
+            self.buffer = b""
         yield decompressor.flush()
 
     def read_compressed_lines(self) -> Iterator[str]:
-        buf = b''
+        buf = b""
         for chunk in self.read_compressed_chunks():
             buf += chunk
-            pos = buf.find(b'\n')
+            pos = buf.find(b"\n")
             while pos != -1:
                 yield buf[:pos].decode()
                 buf = buf[pos + 1 :]
-                pos = buf.find(b'\n')
+                pos = buf.find(b"\n")

@@ -105,9 +105,7 @@ def test_encoding(categories, unknown_value, global_random_seed, smooth, target_
 
     # Define our CV splitting strategy
     if target_type == "binary":
-        cv = StratifiedKFold(
-            n_splits=n_splits, random_state=global_random_seed, shuffle=True
-        )
+        cv = StratifiedKFold(n_splits=n_splits, random_state=global_random_seed, shuffle=True)
     else:
         cv = KFold(n_splits=n_splits, random_state=global_random_seed, shuffle=True)
 
@@ -118,9 +116,7 @@ def test_encoding(categories, unknown_value, global_random_seed, smooth, target_
     for train_idx, test_idx in cv.split(X_train_int_array, y_train):
         X_, y_ = X_train_int_array[train_idx, 0], y_numeric[train_idx]
         cur_encodings = _encode_target(X_, y_, n_categories, smooth)
-        expected_X_fit_transform[test_idx, 0] = cur_encodings[
-            X_train_int_array[test_idx, 0]
-        ]
+        expected_X_fit_transform[test_idx, 0] = cur_encodings[X_train_int_array[test_idx, 0]]
 
     # Check that we can obtain the same encodings by calling `fit_transform` on
     # the estimator with the same CV parameters:
@@ -143,17 +139,13 @@ def test_encoding(categories, unknown_value, global_random_seed, smooth, target_
 
     # compute encodings for all data to validate `transform`
     y_mean = np.mean(y_numeric)
-    expected_encodings = _encode_target(
-        X_train_int_array[:, 0], y_numeric, n_categories, smooth
-    )
+    expected_encodings = _encode_target(X_train_int_array[:, 0], y_numeric, n_categories, smooth)
     assert_allclose(target_encoder.encodings_[0], expected_encodings)
     assert target_encoder.target_mean_ == pytest.approx(y_mean)
 
     # Transform on test data, the last value is unknown so it is encoded as the target
     # mean
-    expected_X_test_transform = np.concatenate(
-        (expected_encodings, np.array([y_mean]))
-    ).reshape(-1, 1)
+    expected_X_test_transform = np.concatenate((expected_encodings, np.array([y_mean]))).reshape(-1, 1)
 
     X_test_transform = target_encoder.transform(X_test)
     assert_allclose(X_test_transform, expected_X_test_transform)
@@ -166,13 +158,9 @@ def test_encoding(categories, unknown_value, global_random_seed, smooth, target_
         ([np.array(["cat", "dog", "snake"], dtype=object)], ["bear", "rabbit"]),
     ],
 )
-@pytest.mark.parametrize(
-    "target_labels", [np.array([1, 2, 3]), np.array(["a", "b", "c"])]
-)
+@pytest.mark.parametrize("target_labels", [np.array([1, 2, 3]), np.array(["a", "b", "c"])])
 @pytest.mark.parametrize("smooth", [5.0, "auto"])
-def test_encoding_multiclass(
-    global_random_seed, categories, unknown_values, target_labels, smooth
-):
+def test_encoding_multiclass(global_random_seed, categories, unknown_values, target_labels, smooth):
     """Check encoding for multiclass targets."""
     rng = np.random.RandomState(global_random_seed)
 
@@ -192,9 +180,7 @@ def test_encoding_multiclass(
     y_train_enc = LabelBinarizer().fit_transform(y_train)
 
     n_splits = 3
-    cv = StratifiedKFold(
-        n_splits=n_splits, random_state=global_random_seed, shuffle=True
-    )
+    cv = StratifiedKFold(n_splits=n_splits, random_state=global_random_seed, shuffle=True)
 
     # Manually compute encodings for cv splits to validate `fit_transform`
     expected_X_fit_transform = np.empty(
@@ -211,9 +197,7 @@ def test_encoding_multiclass(
                 # c_idx:   0, 1, 2, 0, 1, 2
                 # exp_idx: 0, 1, 2, 3, 4, 5
                 exp_idx = c_idx + (f_idx * n_classes)
-                expected_X_fit_transform[test_idx, exp_idx] = current_encoding[
-                    X_train_int[test_idx, f_idx]
-                ]
+                expected_X_fit_transform[test_idx, exp_idx] = current_encoding[X_train_int[test_idx, f_idx]]
 
     target_encoder = TargetEncoder(
         smooth=smooth,
@@ -230,9 +214,7 @@ def test_encoding_multiclass(
     for f_idx, cats in enumerate(categories_):
         for c_idx in range(n_classes):
             y_class = y_train_enc[:, c_idx]
-            current_encoding = _encode_target(
-                X_train_int[:, f_idx], y_class, len(cats), smooth
-            )
+            current_encoding = _encode_target(X_train_int[:, f_idx], y_class, len(cats), smooth)
             expected_encodings.append(current_encoding)
 
     assert len(target_encoder.encodings_) == n_features * n_classes
@@ -282,9 +264,7 @@ def test_encoding_multiclass(
             [[0, 1, 2]],
         ),
         (
-            np.array(
-                [["cat"] * 10 + ["dog"] * 10 + ["snake"]], dtype=object
-            ).T,  # snake is unknown
+            np.array([["cat"] * 10 + ["dog"] * 10 + ["snake"]], dtype=object).T,  # snake is unknown
             [["dog", "cat", "cow"]],
         ),
     ],
@@ -333,10 +313,7 @@ def test_use_regression_target():
     enc = TargetEncoder(cv=2)
     with pytest.warns(
         UserWarning,
-        match=re.escape(
-            "The least populated class in y has only 1 members, which is less than"
-            " n_splits=2."
-        ),
+        match=re.escape("The least populated class in y has only 1 members, which is less than" " n_splits=2."),
     ):
         enc.fit_transform(X, y)
     assert enc.target_type_ == "multiclass"
@@ -381,9 +358,7 @@ def test_feature_names_out_set_output(y, feature_names):
 @pytest.mark.parametrize("target_type", ["binary-ints", "binary-str", "continuous"])
 def test_multiple_features_quick(to_pandas, smooth, target_type):
     """Check target encoder with multiple features."""
-    X_ordinal = np.array(
-        [[1, 1], [0, 1], [1, 1], [2, 1], [1, 0], [0, 1], [1, 0], [0, 0]], dtype=np.int64
-    )
+    X_ordinal = np.array([[1, 1], [0, 1], [1, 1], [2, 1], [1, 0], [0, 1], [1, 0], [0, 0]], dtype=np.int64)
     if target_type == "binary-str":
         y_train = np.array(["a", "b", "a", "a", "b", "b", "a", "b"])
         y_integer = LabelEncoder().fit_transform(y_train)
@@ -428,16 +403,12 @@ def test_multiple_features_quick(to_pandas, smooth, target_type):
         for train_idx, test_idx in cv.split(X_ordinal, y_integer):
             X_, y_ = X_ordinal[train_idx, f_idx], y_integer[train_idx]
             current_encoding = _encode_target(X_, y_, len(cats), smooth)
-            expected_X_fit_transform[test_idx, f_idx] = current_encoding[
-                X_ordinal[test_idx, f_idx]
-            ]
+            expected_X_fit_transform[test_idx, f_idx] = current_encoding[X_ordinal[test_idx, f_idx]]
 
     # manually compute encoding for transform
     expected_encodings = []
     for f_idx, cats in enumerate(categories):
-        current_encoding = _encode_target(
-            X_ordinal[:, f_idx], y_integer, len(cats), smooth
-        )
+        current_encoding = _encode_target(X_ordinal[:, f_idx], y_integer, len(cats), smooth)
         expected_encodings.append(current_encoding)
 
     expected_X_test_transform = np.array(
@@ -508,9 +479,7 @@ def test_fit_transform_not_associated_with_y_if_ordinal_categorical_is_not(
     X_encoded_train_no_shuffled = target_encoder.fit_transform(X_train, y_train)
 
     # Check that no information about y_train has leaked into X_train:
-    regressor = RandomForestRegressor(
-        n_estimators=10, min_samples_leaf=20, random_state=global_random_seed
-    )
+    regressor = RandomForestRegressor(n_estimators=10, min_samples_leaf=20, random_state=global_random_seed)
 
     # It's impossible to learn a good predictive model on the training set when
     # using the original representation X_train or the target encoded
@@ -519,18 +488,12 @@ def test_fit_transform_not_associated_with_y_if_ordinal_categorical_is_not(
     # `X_encoded_train_shuffled`:
     cv = ShuffleSplit(n_splits=50, random_state=global_random_seed)
     assert cross_val_score(regressor, X_train, y_train, cv=cv).mean() < 0.1
-    assert (
-        cross_val_score(regressor, X_encoded_train_shuffled, y_train, cv=cv).mean()
-        < 0.1
-    )
+    assert cross_val_score(regressor, X_encoded_train_shuffled, y_train, cv=cv).mean() < 0.1
 
     # Without the inner CV shuffling, a lot of information about y_train goes into the
     # the per-fold y_train.mean() priors: shrinkage is no longer effective in this
     # case and would no longer be able to prevent downstream over-fitting.
-    assert (
-        cross_val_score(regressor, X_encoded_train_no_shuffled, y_train, cv=cv).mean()
-        > 0.5
-    )
+    assert cross_val_score(regressor, X_encoded_train_no_shuffled, y_train, cv=cv).mean() > 0.5
 
 
 def test_smooth_zero():
@@ -561,13 +524,11 @@ def test_invariance_of_encoding_under_label_permutation(smooth, global_random_se
     # using smoothing.
     y = rng.normal(size=1000)
     n_categories = 30
-    X = KBinsDiscretizer(
-        n_bins=n_categories, quantile_method="averaged_inverted_cdf", encode="ordinal"
-    ).fit_transform(y.reshape(-1, 1))
-
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, random_state=global_random_seed
+    X = KBinsDiscretizer(n_bins=n_categories, quantile_method="averaged_inverted_cdf", encode="ordinal").fit_transform(
+        y.reshape(-1, 1)
     )
+
+    X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=global_random_seed)
 
     # Shuffle the labels to make sure that the encoding is invariant to the
     # permutation of the labels
@@ -637,9 +598,7 @@ def test_target_encoding_for_linear_regression(smooth, global_random_seed):
     # should be removed from a machine learning datasets but here we want to
     # study the ability of the default behavior of TargetEncoder to mitigate
     # them automatically.
-    X_near_unique_categories = rng.choice(
-        int(0.9 * n_samples), size=n_samples, replace=True
-    ).reshape(-1, 1)
+    X_near_unique_categories = rng.choice(int(0.9 * n_samples), size=n_samples, replace=True).reshape(-1, 1)
 
     # Assemble the dataset and do a train-test split:
     X = np.concatenate(
@@ -657,9 +616,9 @@ def test_target_encoding_for_linear_regression(smooth, global_random_seed):
 
     # Now do the same with target encoding using the internal CV mechanism
     # implemented when using fit_transform.
-    model_with_cv = make_pipeline(
-        TargetEncoder(smooth=smooth, random_state=rng), linear_regression
-    ).fit(X_train, y_train)
+    model_with_cv = make_pipeline(TargetEncoder(smooth=smooth, random_state=rng), linear_regression).fit(
+        X_train, y_train
+    )
 
     # This model should be able to fit the data well and also generalise to the
     # test data (assuming that the binning is fine-grained enough). The R2
@@ -679,9 +638,7 @@ def test_target_encoding_for_linear_regression(smooth, global_random_seed):
 
     # Let's now disable the internal cross-validation by calling fit and then
     # transform separately on the training set:
-    target_encoder = TargetEncoder(smooth=smooth, random_state=rng).fit(
-        X_train, y_train
-    )
+    target_encoder = TargetEncoder(smooth=smooth, random_state=rng).fit(X_train, y_train)
     X_enc_no_cv_train = target_encoder.transform(X_train)
     X_enc_no_cv_test = target_encoder.transform(X_test)
     model_no_cv = linear_regression.fit(X_enc_no_cv_train, y_train)

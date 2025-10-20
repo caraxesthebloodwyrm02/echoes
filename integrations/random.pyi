@@ -77,24 +77,24 @@ assert_type(seed_seq.spawn(1), list[np.random.SeedSequence])
 assert_type(seed_seq.generate_state(8, "uint32"), npt.NDArray[np.uint32 | np.uint64])
 assert_type(seed_seq.generate_state(8, "uint64"), npt.NDArray[np.uint32 | np.uint64])
 
-def_gen: np.random.Generator = np.random.default_rng()
+def_gen: np.random.Generator = ...
 
-D_arr_0p1: npt.NDArray[np.float64] = np.array([0.1])
-D_arr_0p5: npt.NDArray[np.float64] = np.array([0.5])
-D_arr_0p9: npt.NDArray[np.float64] = np.array([0.9])
-D_arr_1p5: npt.NDArray[np.float64] = np.array([1.5])
-I_arr_10: npt.NDArray[np.int_] = np.array([10], dtype=np.int_)
-I_arr_20: npt.NDArray[np.int_] = np.array([20], dtype=np.int_)
+D_arr_0p1: npt.NDArray[np.float64] = ...
+D_arr_0p5: npt.NDArray[np.float64] = ...
+D_arr_0p9: npt.NDArray[np.float64] = ...
+D_arr_1p5: npt.NDArray[np.float64] = ...
+I_arr_10: npt.NDArray[np.int_] = ...
+I_arr_20: npt.NDArray[np.int_] = ...
 D_arr_like_0p1: list[float] = [0.1]
 D_arr_like_0p5: list[float] = [0.5]
 D_arr_like_0p9: list[float] = [0.9]
 D_arr_like_1p5: list[float] = [1.5]
 I_arr_like_10: list[int] = [10]
 I_arr_like_20: list[int] = [20]
-D_2D_like: list[list[float]] = [[1, 2], [2, 3], [3, 4], [4, 5.1]]
-D_2D: npt.NDArray[np.float64] = np.array(D_2D_like)
-S_out: npt.NDArray[np.float32] = np.empty(1, dtype=np.float32)
-D_out: npt.NDArray[np.float64] = np.empty(1)
+D_2D_like: list[list[float]] = ...
+D_2D: npt.NDArray[np.float64] = ...
+S_out: npt.NDArray[np.float32] = ...
+D_out: npt.NDArray[np.float64] = ...
 
 assert_type(def_gen.standard_normal(), float)
 assert_type(def_gen.standard_normal(dtype=np.float32), float)
@@ -499,17 +499,17 @@ assert_type(def_gen.hypergeometric(I_arr_like_20, I_arr_like_20, 10), npt.NDArra
 assert_type(def_gen.hypergeometric(I_arr_20, I_arr_20, I_arr_10, size=1), npt.NDArray[np.int64])
 assert_type(def_gen.hypergeometric(I_arr_like_20, I_arr_like_20, I_arr_like_10, size=1), npt.NDArray[np.int64])
 
-I_int64_100: npt.NDArray[np.int64] = np.array([100], dtype=np.int64)
+I_int64_100: npt.NDArray[np.int64] = ...
 
 assert_type(def_gen.integers(0, 100), np.int64)
 assert_type(def_gen.integers(100), np.int64)
 assert_type(def_gen.integers([100]), npt.NDArray[np.int64])
 assert_type(def_gen.integers(0, [100]), npt.NDArray[np.int64])
 
-I_bool_low: npt.NDArray[np.bool] = np.array([0], dtype=np.bool)
+I_bool_low: npt.NDArray[np.bool] = ...
 I_bool_low_like: list[int] = [0]
-I_bool_high_open: npt.NDArray[np.bool] = np.array([1], dtype=np.bool)
-I_bool_high_closed: npt.NDArray[np.bool] = np.array([1], dtype=np.bool)
+I_bool_high_open: npt.NDArray[np.bool] = ...
+I_bool_high_closed: npt.NDArray[np.bool] = ...
 
 assert_type(def_gen.integers(2, dtype=bool), bool)
 assert_type(def_gen.integers(0, 2, dtype=bool), bool)
@@ -535,10 +535,10 @@ assert_type(def_gen.integers(I_bool_high_closed, dtype=np.bool, endpoint=True), 
 assert_type(def_gen.integers(I_bool_low, I_bool_high_closed, dtype=np.bool, endpoint=True), npt.NDArray[np.bool])
 assert_type(def_gen.integers(0, I_bool_high_closed, dtype=np.bool, endpoint=True), npt.NDArray[np.bool])
 
-I_u1_low: npt.NDArray[np.uint8] = np.array([0], dtype=np.uint8)
+I_u1_low: npt.NDArray[np.uint8] = ...
 I_u1_low_like: list[int] = [0]
-I_u1_high_open: npt.NDArray[np.uint8] = np.array([255], dtype=np.uint8)
-I_u1_high_closed: npt.NDArray[np.uint8] = np.array([255], dtype=np.uint8)
+I_u1_high_open: npt.NDArray[np.uint8] = ...
+I_u1_high_closed: npt.NDArray[np.uint8] = ...
 
 assert_type(def_gen.integers(256, dtype="u1"), np.uint8)
 assert_type(def_gen.integers(0, 256, dtype="u1"), np.uint8)
@@ -576,10 +576,10 @@ assert_type(def_gen.integers(I_u1_high_closed, dtype=np.uint8, endpoint=True), n
 assert_type(def_gen.integers(I_u1_low, I_u1_high_closed, dtype=np.uint8, endpoint=True), npt.NDArray[np.uint8])
 assert_type(def_gen.integers(0, I_u1_high_closed, dtype=np.uint8, endpoint=True), npt.NDArray[np.uint8])
 
-I_u2_low: npt.NDArray[np.uint16] = np.array([0], dtype=np.uint16)
+I_u2_low: npt.NDArray[np.uint16] = ...
 I_u2_low_like: list[int] = [0]
-I_u2_high_open: npt.NDArray[np.uint16] = np.array([65535], dtype=np.uint16)
-I_u2_high_closed: npt.NDArray[np.uint16] = np.array([65535], dtype=np.uint16)
+I_u2_high_open: npt.NDArray[np.uint16] = ...
+I_u2_high_closed: npt.NDArray[np.uint16] = ...
 
 assert_type(def_gen.integers(65536, dtype="u2"), np.uint16)
 assert_type(def_gen.integers(0, 65536, dtype="u2"), np.uint16)
@@ -617,10 +617,10 @@ assert_type(def_gen.integers(I_u2_high_closed, dtype=np.uint16, endpoint=True), 
 assert_type(def_gen.integers(I_u2_low, I_u2_high_closed, dtype=np.uint16, endpoint=True), npt.NDArray[np.uint16])
 assert_type(def_gen.integers(0, I_u2_high_closed, dtype=np.uint16, endpoint=True), npt.NDArray[np.uint16])
 
-I_u4_low: npt.NDArray[np.uint32] = np.array([0], dtype=np.uint32)
+I_u4_low: npt.NDArray[np.uint32] = ...
 I_u4_low_like: list[int] = [0]
-I_u4_high_open: npt.NDArray[np.uint32] = np.array([4294967295], dtype=np.uint32)
-I_u4_high_closed: npt.NDArray[np.uint32] = np.array([4294967295], dtype=np.uint32)
+I_u4_high_open: npt.NDArray[np.uint32] = ...
+I_u4_high_closed: npt.NDArray[np.uint32] = ...
 
 assert_type(def_gen.integers(4294967296, dtype=np.int_), np.int_)
 assert_type(def_gen.integers(0, 4294967296, dtype=np.int_), np.int_)
@@ -682,16 +682,16 @@ assert_type(def_gen.integers(I_u4_high_closed, dtype=np.uint, endpoint=True), np
 assert_type(def_gen.integers(I_u4_low, I_u4_high_closed, dtype=np.uint, endpoint=True), npt.NDArray[np.uint])
 assert_type(def_gen.integers(0, I_u4_high_closed, dtype=np.uint, endpoint=True), npt.NDArray[np.uint])
 
-I_u8_low: npt.NDArray[np.uint64] = np.array([0], dtype=np.uint64)
+I_u8_low: npt.NDArray[np.uint64] = ...
 I_u8_low_like: list[int] = [0]
-I_u8_high_open: npt.NDArray[np.uint64] = np.array([18446744073709551615], dtype=np.uint64)
-I_u8_high_closed: npt.NDArray[np.uint64] = np.array([18446744073709551615], dtype=np.uint64)
+I_u8_high_open: npt.NDArray[np.uint64] = ...
+I_u8_high_closed: npt.NDArray[np.uint64] = ...
 
-assert_type(def_gen.integers(18446744073709551616, dtype="u8"), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551616, dtype="u8"), np.uint64)
-assert_type(def_gen.integers(18446744073709551615, dtype="u8", endpoint=True), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551615, dtype="u8", endpoint=True), np.uint64)
-assert_type(def_gen.integers(I_u8_low_like, 18446744073709551615, dtype="u8", endpoint=True), npt.NDArray[np.uint64])
+assert_type(def_gen.integers(..., dtype="u8"), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype="u8"), np.uint64)
+assert_type(def_gen.integers(..., dtype="u8", endpoint=True), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype="u8", endpoint=True), np.uint64)
+assert_type(def_gen.integers(I_u8_low_like, ..., dtype="u8", endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_low, I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
@@ -699,11 +699,11 @@ assert_type(def_gen.integers(I_u8_high_closed, dtype="u8", endpoint=True), npt.N
 assert_type(def_gen.integers(I_u8_low, I_u8_high_closed, dtype="u8", endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_closed, dtype="u8", endpoint=True), npt.NDArray[np.uint64])
 
-assert_type(def_gen.integers(18446744073709551616, dtype="uint64"), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551616, dtype="uint64"), np.uint64)
-assert_type(def_gen.integers(18446744073709551615, dtype="uint64", endpoint=True), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551615, dtype="uint64", endpoint=True), np.uint64)
-assert_type(def_gen.integers(I_u8_low_like, 18446744073709551615, dtype="uint64", endpoint=True), npt.NDArray[np.uint64])
+assert_type(def_gen.integers(..., dtype="uint64"), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype="uint64"), np.uint64)
+assert_type(def_gen.integers(..., dtype="uint64", endpoint=True), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype="uint64", endpoint=True), np.uint64)
+assert_type(def_gen.integers(I_u8_low_like, ..., dtype="uint64", endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_low, I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
@@ -711,11 +711,11 @@ assert_type(def_gen.integers(I_u8_high_closed, dtype="uint64", endpoint=True), n
 assert_type(def_gen.integers(I_u8_low, I_u8_high_closed, dtype="uint64", endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_closed, dtype="uint64", endpoint=True), npt.NDArray[np.uint64])
 
-assert_type(def_gen.integers(18446744073709551616, dtype=np.uint64), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551616, dtype=np.uint64), np.uint64)
-assert_type(def_gen.integers(18446744073709551615, dtype=np.uint64, endpoint=True), np.uint64)
-assert_type(def_gen.integers(0, 18446744073709551615, dtype=np.uint64, endpoint=True), np.uint64)
-assert_type(def_gen.integers(I_u8_low_like, 18446744073709551615, dtype=np.uint64, endpoint=True), npt.NDArray[np.uint64])
+assert_type(def_gen.integers(..., dtype=np.uint64), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype=np.uint64), np.uint64)
+assert_type(def_gen.integers(..., dtype=np.uint64, endpoint=True), np.uint64)
+assert_type(def_gen.integers(0, ..., dtype=np.uint64, endpoint=True), np.uint64)
+assert_type(def_gen.integers(I_u8_low_like, ..., dtype=np.uint64, endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(I_u8_low, I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
@@ -723,10 +723,10 @@ assert_type(def_gen.integers(I_u8_high_closed, dtype=np.uint64, endpoint=True), 
 assert_type(def_gen.integers(I_u8_low, I_u8_high_closed, dtype=np.uint64, endpoint=True), npt.NDArray[np.uint64])
 assert_type(def_gen.integers(0, I_u8_high_closed, dtype=np.uint64, endpoint=True), npt.NDArray[np.uint64])
 
-I_i1_low: npt.NDArray[np.int8] = np.array([-128], dtype=np.int8)
+I_i1_low: npt.NDArray[np.int8] = ...
 I_i1_low_like: list[int] = [-128]
-I_i1_high_open: npt.NDArray[np.int8] = np.array([127], dtype=np.int8)
-I_i1_high_closed: npt.NDArray[np.int8] = np.array([127], dtype=np.int8)
+I_i1_high_open: npt.NDArray[np.int8] = ...
+I_i1_high_closed: npt.NDArray[np.int8] = ...
 
 assert_type(def_gen.integers(128, dtype="i1"), np.int8)
 assert_type(def_gen.integers(-128, 128, dtype="i1"), np.int8)
@@ -764,10 +764,10 @@ assert_type(def_gen.integers(I_i1_high_closed, dtype=np.int8, endpoint=True), np
 assert_type(def_gen.integers(I_i1_low, I_i1_high_closed, dtype=np.int8, endpoint=True), npt.NDArray[np.int8])
 assert_type(def_gen.integers(-128, I_i1_high_closed, dtype=np.int8, endpoint=True), npt.NDArray[np.int8])
 
-I_i2_low: npt.NDArray[np.int16] = np.array([-32768], dtype=np.int16)
+I_i2_low: npt.NDArray[np.int16] = ...
 I_i2_low_like: list[int] = [-32768]
-I_i2_high_open: npt.NDArray[np.int16] = np.array([32767], dtype=np.int16)
-I_i2_high_closed: npt.NDArray[np.int16] = np.array([32767], dtype=np.int16)
+I_i2_high_open: npt.NDArray[np.int16] = ...
+I_i2_high_closed: npt.NDArray[np.int16] = ...
 
 assert_type(def_gen.integers(32768, dtype="i2"), np.int16)
 assert_type(def_gen.integers(-32768, 32768, dtype="i2"), np.int16)
@@ -805,10 +805,10 @@ assert_type(def_gen.integers(I_i2_high_closed, dtype=np.int16, endpoint=True), n
 assert_type(def_gen.integers(I_i2_low, I_i2_high_closed, dtype=np.int16, endpoint=True), npt.NDArray[np.int16])
 assert_type(def_gen.integers(-32768, I_i2_high_closed, dtype=np.int16, endpoint=True), npt.NDArray[np.int16])
 
-I_i4_low: npt.NDArray[np.int32] = np.array([-2147483648], dtype=np.int32)
+I_i4_low: npt.NDArray[np.int32] = ...
 I_i4_low_like: list[int] = [-2147483648]
-I_i4_high_open: npt.NDArray[np.int32] = np.array([2147483647], dtype=np.int32)
-I_i4_high_closed: npt.NDArray[np.int32] = np.array([2147483647], dtype=np.int32)
+I_i4_high_open: npt.NDArray[np.int32] = ...
+I_i4_high_closed: npt.NDArray[np.int32] = ...
 
 assert_type(def_gen.integers(2147483648, dtype="i4"), np.int32)
 assert_type(def_gen.integers(-2147483648, 2147483648, dtype="i4"), np.int32)
@@ -846,46 +846,46 @@ assert_type(def_gen.integers(I_i4_high_closed, dtype=np.int32, endpoint=True), n
 assert_type(def_gen.integers(I_i4_low, I_i4_high_closed, dtype=np.int32, endpoint=True), npt.NDArray[np.int32])
 assert_type(def_gen.integers(-2147483648, I_i4_high_closed, dtype=np.int32, endpoint=True), npt.NDArray[np.int32])
 
-I_i8_low: npt.NDArray[np.int64] = np.array([-9223372036854775808], dtype=np.int64)
-I_i8_low_like: list[int] = [-9223372036854775808]
-I_i8_high_open: npt.NDArray[np.int64] = np.array([9223372036854775807], dtype=np.int64)
-I_i8_high_closed: npt.NDArray[np.int64] = np.array([9223372036854775807], dtype=np.int64)
+I_i8_low: npt.NDArray[np.int64] = ...
+I_i8_low_like: list[int] = ...
+I_i8_high_open: npt.NDArray[np.int64] = ...
+I_i8_high_closed: npt.NDArray[np.int64] = ...
 
-assert_type(def_gen.integers(9223372036854775808, dtype="i8"), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775808, dtype="i8"), np.int64)
-assert_type(def_gen.integers(9223372036854775807, dtype="i8", endpoint=True), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775807, dtype="i8", endpoint=True), np.int64)
-assert_type(def_gen.integers(I_i8_low_like, 9223372036854775807, dtype="i8", endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(..., dtype="i8"), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype="i8"), np.int64)
+assert_type(def_gen.integers(..., dtype="i8", endpoint=True), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype="i8", endpoint=True), np.int64)
+assert_type(def_gen.integers(I_i8_low_like, ..., dtype="i8", endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_closed, dtype="i8", endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_closed, dtype="i8", endpoint=True), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_closed, dtype="i8", endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_closed, dtype="i8", endpoint=True), npt.NDArray[np.int64])
 
-assert_type(def_gen.integers(9223372036854775808, dtype="int64"), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775808, dtype="int64"), np.int64)
-assert_type(def_gen.integers(9223372036854775807, dtype="int64", endpoint=True), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775807, dtype="int64", endpoint=True), np.int64)
-assert_type(def_gen.integers(I_i8_low_like, 9223372036854775807, dtype="int64", endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(..., dtype="int64"), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype="int64"), np.int64)
+assert_type(def_gen.integers(..., dtype="int64", endpoint=True), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype="int64", endpoint=True), np.int64)
+assert_type(def_gen.integers(I_i8_low_like, ..., dtype="int64", endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_closed, dtype="int64", endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_closed, dtype="int64", endpoint=True), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_closed, dtype="int64", endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_closed, dtype="int64", endpoint=True), npt.NDArray[np.int64])
 
-assert_type(def_gen.integers(9223372036854775808, dtype=np.int64), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775808, dtype=np.int64), np.int64)
-assert_type(def_gen.integers(9223372036854775807, dtype=np.int64, endpoint=True), np.int64)
-assert_type(def_gen.integers(-9223372036854775808, 9223372036854775807, dtype=np.int64, endpoint=True), np.int64)
-assert_type(def_gen.integers(I_i8_low_like, 9223372036854775807, dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(..., dtype=np.int64), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype=np.int64), np.int64)
+assert_type(def_gen.integers(..., dtype=np.int64, endpoint=True), np.int64)
+assert_type(def_gen.integers(-..., ..., dtype=np.int64, endpoint=True), np.int64)
+assert_type(def_gen.integers(I_i8_low_like, ..., dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_high_closed, dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
 assert_type(def_gen.integers(I_i8_low, I_i8_high_closed, dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
-assert_type(def_gen.integers(-9223372036854775808, I_i8_high_closed, dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
+assert_type(def_gen.integers(-..., I_i8_high_closed, dtype=np.int64, endpoint=True), npt.NDArray[np.int64])
 
 assert_type(def_gen.bit_generator, np.random.BitGenerator)
 
@@ -901,7 +901,12 @@ assert_type(def_gen.choice(["pooh", "rabbit", "piglet", "Christopher"]), Any)
 assert_type(def_gen.choice(["pooh", "rabbit", "piglet", "Christopher"], 3), npt.NDArray[Any])
 assert_type(def_gen.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, p=[1 / 4] * 4), npt.NDArray[Any])
 assert_type(def_gen.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, replace=True), npt.NDArray[Any])
-assert_type(def_gen.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, replace=False, p=np.array([1 / 8, 1 / 8, 1 / 2, 1 / 4])), npt.NDArray[Any])
+assert_type(
+    def_gen.choice(
+        ["pooh", "rabbit", "piglet", "Christopher"], 3, replace=False, p=np.array([1 / 8, 1 / 8, 1 / 2, 1 / 4])
+    ),
+    npt.NDArray[Any],
+)
 
 assert_type(def_gen.dirichlet([0.5, 0.5]), npt.NDArray[np.float64])
 assert_type(def_gen.dirichlet(np.array([0.5, 0.5])), npt.NDArray[np.float64])
@@ -947,7 +952,7 @@ assert_type(def_gen.__repr__(), str)
 assert_type(def_gen.__setstate__(dict(def_gen.bit_generator.state)), None)
 
 # RandomState
-random_st: np.random.RandomState = np.random.RandomState()
+random_st: np.random.RandomState = ...
 
 assert_type(random_st.standard_normal(), float)
 assert_type(random_st.standard_normal(size=None), float)
@@ -1377,20 +1382,20 @@ assert_type(random_st.randint(I_u4_high_open, dtype=np.uint), npt.NDArray[np.uin
 assert_type(random_st.randint(I_u4_low, I_u4_high_open, dtype=np.uint), npt.NDArray[np.uint])
 assert_type(random_st.randint(0, I_u4_high_open, dtype=np.uint), npt.NDArray[np.uint])
 
-assert_type(random_st.randint(18446744073709551616, dtype="u8"), np.uint64)
-assert_type(random_st.randint(0, 18446744073709551616, dtype="u8"), np.uint64)
+assert_type(random_st.randint(..., dtype="u8"), np.uint64)
+assert_type(random_st.randint(0, ..., dtype="u8"), np.uint64)
 assert_type(random_st.randint(I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
 assert_type(random_st.randint(I_u8_low, I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
 assert_type(random_st.randint(0, I_u8_high_open, dtype="u8"), npt.NDArray[np.uint64])
 
-assert_type(random_st.randint(18446744073709551616, dtype="uint64"), np.uint64)
-assert_type(random_st.randint(0, 18446744073709551616, dtype="uint64"), np.uint64)
+assert_type(random_st.randint(..., dtype="uint64"), np.uint64)
+assert_type(random_st.randint(0, ..., dtype="uint64"), np.uint64)
 assert_type(random_st.randint(I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
 assert_type(random_st.randint(I_u8_low, I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
 assert_type(random_st.randint(0, I_u8_high_open, dtype="uint64"), npt.NDArray[np.uint64])
 
-assert_type(random_st.randint(18446744073709551616, dtype=np.uint64), np.uint64)
-assert_type(random_st.randint(0, 18446744073709551616, dtype=np.uint64), np.uint64)
+assert_type(random_st.randint(..., dtype=np.uint64), np.uint64)
+assert_type(random_st.randint(0, ..., dtype=np.uint64), np.uint64)
 assert_type(random_st.randint(I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
 assert_type(random_st.randint(I_u8_low, I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
 assert_type(random_st.randint(0, I_u8_high_open, dtype=np.uint64), npt.NDArray[np.uint64])
@@ -1455,23 +1460,23 @@ assert_type(random_st.randint(I_i4_high_open, dtype=np.int_), npt.NDArray[np.int
 assert_type(random_st.randint(I_i4_low, I_i4_high_open, dtype=np.int_), npt.NDArray[np.int_])
 assert_type(random_st.randint(-2147483648, I_i4_high_open, dtype=np.int_), npt.NDArray[np.int_])
 
-assert_type(random_st.randint(9223372036854775808, dtype="i8"), np.int64)
-assert_type(random_st.randint(-9223372036854775808, 9223372036854775808, dtype="i8"), np.int64)
+assert_type(random_st.randint(..., dtype="i8"), np.int64)
+assert_type(random_st.randint(-..., ..., dtype="i8"), np.int64)
 assert_type(random_st.randint(I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
 assert_type(random_st.randint(I_i8_low, I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
-assert_type(random_st.randint(-9223372036854775808, I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
+assert_type(random_st.randint(-..., I_i8_high_open, dtype="i8"), npt.NDArray[np.int64])
 
-assert_type(random_st.randint(9223372036854775808, dtype="int64"), np.int64)
-assert_type(random_st.randint(-9223372036854775808, 9223372036854775808, dtype="int64"), np.int64)
+assert_type(random_st.randint(..., dtype="int64"), np.int64)
+assert_type(random_st.randint(-..., ..., dtype="int64"), np.int64)
 assert_type(random_st.randint(I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
 assert_type(random_st.randint(I_i8_low, I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
-assert_type(random_st.randint(-9223372036854775808, I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
+assert_type(random_st.randint(-..., I_i8_high_open, dtype="int64"), npt.NDArray[np.int64])
 
-assert_type(random_st.randint(9223372036854775808, dtype=np.int64), np.int64)
-assert_type(random_st.randint(-9223372036854775808, 9223372036854775808, dtype=np.int64), np.int64)
+assert_type(random_st.randint(..., dtype=np.int64), np.int64)
+assert_type(random_st.randint(-..., ..., dtype=np.int64), np.int64)
 assert_type(random_st.randint(I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
 assert_type(random_st.randint(I_i8_low, I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
-assert_type(random_st.randint(-9223372036854775808, I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
+assert_type(random_st.randint(-..., I_i8_high_open, dtype=np.int64), npt.NDArray[np.int64])
 
 assert_type(random_st._bit_generator, np.random.BitGenerator)
 
@@ -1487,7 +1492,12 @@ assert_type(random_st.choice(["pooh", "rabbit", "piglet", "Christopher"]), Any)
 assert_type(random_st.choice(["pooh", "rabbit", "piglet", "Christopher"], 3), npt.NDArray[Any])
 assert_type(random_st.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, p=[1 / 4] * 4), npt.NDArray[Any])
 assert_type(random_st.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, replace=True), npt.NDArray[Any])
-assert_type(random_st.choice(["pooh", "rabbit", "piglet", "Christopher"], 3, replace=False, p=np.array([1 / 8, 1 / 8, 1 / 2, 1 / 4])), npt.NDArray[Any])
+assert_type(
+    random_st.choice(
+        ["pooh", "rabbit", "piglet", "Christopher"], 3, replace=False, p=np.array([1 / 8, 1 / 8, 1 / 2, 1 / 4])
+    ),
+    npt.NDArray[Any],
+)
 
 assert_type(random_st.dirichlet([0.5, 0.5]), npt.NDArray[np.float64])
 assert_type(random_st.dirichlet(np.array([0.5, 0.5])), npt.NDArray[np.float64])

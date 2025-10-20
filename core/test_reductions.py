@@ -119,33 +119,21 @@ def test_validate_any_all_out_keepdims_raises(kwargs, func):
     param = next(iter(kwargs))
     name = func.__name__
 
-    msg = (
-        f"the '{param}' parameter is not "
-        "supported in the pandas "
-        rf"implementation of {name}\(\)"
-    )
+    msg = f"the '{param}' parameter is not " "supported in the pandas " rf"implementation of {name}\(\)"
     with pytest.raises(ValueError, match=msg):
         func(ser, **kwargs)
 
 
 def test_validate_sum_initial():
     ser = Series([1, 2])
-    msg = (
-        r"the 'initial' parameter is not "
-        r"supported in the pandas "
-        r"implementation of sum\(\)"
-    )
+    msg = r"the 'initial' parameter is not " r"supported in the pandas " r"implementation of sum\(\)"
     with pytest.raises(ValueError, match=msg):
         np.sum(ser, initial=10)
 
 
 def test_validate_median_initial():
     ser = Series([1, 2])
-    msg = (
-        r"the 'overwrite_input' parameter is not "
-        r"supported in the pandas "
-        r"implementation of median\(\)"
-    )
+    msg = r"the 'overwrite_input' parameter is not " r"supported in the pandas " r"implementation of median\(\)"
     with pytest.raises(ValueError, match=msg):
         # It seems like np.median doesn't dispatch, so we use the
         # method instead of the ufunc.
@@ -154,11 +142,7 @@ def test_validate_median_initial():
 
 def test_validate_stat_keepdims():
     ser = Series([1, 2])
-    msg = (
-        r"the 'keepdims' parameter is not "
-        r"supported in the pandas "
-        r"implementation of sum\(\)"
-    )
+    msg = r"the 'keepdims' parameter is not " r"supported in the pandas " r"implementation of sum\(\)"
     with pytest.raises(ValueError, match=msg):
         np.sum(ser, keepdims=True)
 
@@ -208,10 +192,7 @@ def test_median_with_convertible_string_raises(using_array_manager):
         ser.median()
 
     if not using_array_manager:
-        msg = (
-            r"Cannot convert \[\['1' '2' '3'\]\] to numeric|does not support"
-            "|Cannot perform"
-        )
+        msg = r"Cannot convert \[\['1' '2' '3'\]\] to numeric|does not support" "|Cannot perform"
     df = ser.to_frame()
     with pytest.raises(TypeError, match=msg):
         df.median()

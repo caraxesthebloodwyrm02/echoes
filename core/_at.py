@@ -201,9 +201,7 @@ class at:  # pylint: disable=invalid-name  # numpydoc ignore=PR02
     _idx: SetIndex | Undef
     __slots__: ClassVar[tuple[str, ...]] = ("_idx", "_x")
 
-    def __init__(
-        self, x: Array, idx: SetIndex | Undef = _undef, /
-    ) -> None:  # numpydoc ignore=GL08
+    def __init__(self, x: Array, idx: SetIndex | Undef = _undef, /) -> None:  # numpydoc ignore=GL08
         self._x = x
         self._idx = idx
 
@@ -293,18 +291,12 @@ class at:  # pylint: disable=invalid-name  # numpydoc ignore=PR02
         # masks; Dask exclusively supports __setitem__ but not iops.
         # We can handle the common special case of 0-dimensional y
         # with where(idx, y, x) instead.
-        if (
-            (is_dask_array(idx) or is_jax_array(idx))
-            and idx.dtype == xp.bool
-            and idx.shape == x.shape
-        ):
+        if (is_dask_array(idx) or is_jax_array(idx)) and idx.dtype == xp.bool and idx.shape == x.shape:
             y_xp = xp.asarray(y, dtype=x.dtype)
             if y_xp.ndim == 0:
                 if out_of_place_op:  # add(), subtract(), ...
                     # suppress inf warnings on Dask
-                    out = apply_where(
-                        idx, (x, y_xp), out_of_place_op, fill_value=x, xp=xp
-                    )
+                    out = apply_where(idx, (x, y_xp), out_of_place_op, fill_value=x, xp=xp)
                     # Undo int->float promotion on JAX after _AtOp.DIVIDE
                     out = xp.astype(out, x.dtype, copy=False)
                 else:  # set()
@@ -382,9 +374,7 @@ class at:  # pylint: disable=invalid-name  # numpydoc ignore=PR02
         xp: ModuleType | None = None,
     ) -> Array:  # numpydoc ignore=PR01,RT01
         """Apply ``x[idx] -= y`` and return the updated array."""
-        return self._op(
-            _AtOp.SUBTRACT, operator.isub, operator.sub, y, copy=copy, xp=xp
-        )
+        return self._op(_AtOp.SUBTRACT, operator.isub, operator.sub, y, copy=copy, xp=xp)
 
     def multiply(
         self,
@@ -394,9 +384,7 @@ class at:  # pylint: disable=invalid-name  # numpydoc ignore=PR02
         xp: ModuleType | None = None,
     ) -> Array:  # numpydoc ignore=PR01,RT01
         """Apply ``x[idx] *= y`` and return the updated array."""
-        return self._op(
-            _AtOp.MULTIPLY, operator.imul, operator.mul, y, copy=copy, xp=xp
-        )
+        return self._op(_AtOp.MULTIPLY, operator.imul, operator.mul, y, copy=copy, xp=xp)
 
     def divide(
         self,
@@ -406,9 +394,7 @@ class at:  # pylint: disable=invalid-name  # numpydoc ignore=PR02
         xp: ModuleType | None = None,
     ) -> Array:  # numpydoc ignore=PR01,RT01
         """Apply ``x[idx] /= y`` and return the updated array."""
-        return self._op(
-            _AtOp.DIVIDE, operator.itruediv, operator.truediv, y, copy=copy, xp=xp
-        )
+        return self._op(_AtOp.DIVIDE, operator.itruediv, operator.truediv, y, copy=copy, xp=xp)
 
     def power(
         self,

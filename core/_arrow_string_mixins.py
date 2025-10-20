@@ -105,9 +105,7 @@ class ArrowStringArrayMixin:
                 lean_left = (width % 2) == 0
                 pa_pad = partial(pc.utf8_center, lean_left_on_odd_padding=lean_left)
         else:
-            raise ValueError(
-                f"Invalid side: {side}. Side must be one of 'left', 'right', 'both'"
-            )
+            raise ValueError(f"Invalid side: {side}. Side must be one of 'left', 'right', 'both'")
         return type(self)(pa_pad(self._pa_array, width=width, padding=fillchar))
 
     def _str_get(self, i: int):
@@ -123,16 +121,12 @@ class ArrowStringArrayMixin:
             stop = i - 1
             step = -1
         not_out_of_bounds = pc.invert(out_of_bounds.fill_null(True))
-        selected = pc.utf8_slice_codeunits(
-            self._pa_array, start=start, stop=stop, step=step
-        )
+        selected = pc.utf8_slice_codeunits(self._pa_array, start=start, stop=stop, step=step)
         null_value = pa.scalar(None, type=self._pa_array.type)
         result = pc.if_else(not_out_of_bounds, selected, null_value)
         return type(self)(result)
 
-    def _str_slice(
-        self, start: int | None = None, stop: int | None = None, step: int | None = None
-    ):
+    def _str_slice(self, start: int | None = None, stop: int | None = None, step: int | None = None):
         if pa_version_under11p0:
             # GH#59724
             result = self._apply_elementwise(lambda val: val[start:stop:step])
@@ -145,13 +139,9 @@ class ArrowStringArrayMixin:
                 start = 0
         if step is None:
             step = 1
-        return type(self)(
-            pc.utf8_slice_codeunits(self._pa_array, start=start, stop=stop, step=step)
-        )
+        return type(self)(pc.utf8_slice_codeunits(self._pa_array, start=start, stop=stop, step=step))
 
-    def _str_slice_replace(
-        self, start: int | None = None, stop: int | None = None, repl: str | None = None
-    ):
+    def _str_slice_replace(self, start: int | None = None, stop: int | None = None, repl: str | None = None):
         if repl is None:
             repl = ""
         if start is None:
@@ -174,10 +164,7 @@ class ArrowStringArrayMixin:
             or callable(repl)
             or not case
             or flags
-            or (
-                isinstance(repl, str)
-                and (r"\g<" in repl or re.search(r"\\\d", repl) is not None)
-            )
+            or (isinstance(repl, str) and (r"\g<" in repl or re.search(r"\\\d", repl) is not None))
         ):
             raise NotImplementedError(
                 "replace is not supported with a re.Pattern, callable repl, "
@@ -222,9 +209,7 @@ class ArrowStringArrayMixin:
         result = pc.if_else(ends_with, removed, self._pa_array)
         return type(self)(result)
 
-    def _str_startswith(
-        self, pat: str | tuple[str, ...], na: Scalar | lib.NoDefault = lib.no_default
-    ):
+    def _str_startswith(self, pat: str | tuple[str, ...], na: Scalar | lib.NoDefault = lib.no_default):
         if isinstance(pat, str):
             result = pc.starts_with(self._pa_array, pattern=pat)
         else:
@@ -239,9 +224,7 @@ class ArrowStringArrayMixin:
                     result = pc.or_(result, pc.starts_with(self._pa_array, pattern=p))
         return self._convert_bool_result(result, na=na, method_name="startswith")
 
-    def _str_endswith(
-        self, pat: str | tuple[str, ...], na: Scalar | lib.NoDefault = lib.no_default
-    ):
+    def _str_endswith(self, pat: str | tuple[str, ...], na: Scalar | lib.NoDefault = lib.no_default):
         if isinstance(pat, str):
             result = pc.ends_with(self._pa_array, pattern=pat)
         else:
@@ -272,9 +255,7 @@ class ArrowStringArrayMixin:
         if pa_version_under21p0:
             # https://github.com/pandas-dev/pandas/issues/61466
             res_list = self._apply_elementwise(str.isdigit)
-            return self._convert_bool_result(
-                pa.chunked_array(res_list, type=pa.bool_())
-            )
+            return self._convert_bool_result(pa.chunked_array(res_list, type=pa.bool_()))
         result = pc.utf8_is_digit(self._pa_array)
         return self._convert_bool_result(result)
 
@@ -343,11 +324,7 @@ class ArrowStringArrayMixin:
         return self._str_match(pat, case, flags, na)
 
     def _str_find(self, sub: str, start: int = 0, end: int | None = None):
-        if (
-            pa_version_under13p0
-            and not (start != 0 and end is not None)
-            and not (start == 0 and end is None)
-        ):
+        if pa_version_under13p0 and not (start != 0 and end is not None) and not (start == 0 and end is None):
             # GH#59562
             res_list = self._apply_elementwise(lambda val: val.find(sub, start, end))
             return self._convert_int_result(pa.chunked_array(res_list))
@@ -357,9 +334,7 @@ class ArrowStringArrayMixin:
         else:
             if sub == "":
                 # GH#56792
-                res_list = self._apply_elementwise(
-                    lambda val: val.find(sub, start, end)
-                )
+                res_list = self._apply_elementwise(lambda val: val.find(sub, start, end))
                 return self._convert_int_result(pa.chunked_array(res_list))
             if start is None:
                 start_offset = 0

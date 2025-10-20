@@ -75,10 +75,7 @@ class TestStackDecoder(unittest.TestCase):
         # assert
         self.assertEqual(
             future_scores[1][2],
-            (
-                phrase_table.translations_for(("hovercraft",))[0].log_prob
-                + language_model.probability(("hovercraft",))
-            ),
+            (phrase_table.translations_for(("hovercraft",))[0].log_prob + language_model.probability(("hovercraft",))),
         )
         self.assertEqual(
             future_scores[0][2],
@@ -158,9 +155,7 @@ class TestStackDecoder(unittest.TestCase):
         language_prob[("of",)] = log(0.1)
         language_prob[("eels",)] = log(0.1)
         language_prob[("my", "hovercraft")] = log(0.3)
-        language_model = type(
-            "", (object,), {"probability": lambda _, phrase: language_prob[phrase]}
-        )()
+        language_model = type("", (object,), {"probability": lambda _, phrase: language_prob[phrase]})()
         return language_model
 
 

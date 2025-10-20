@@ -48,9 +48,7 @@ async def analyze_codebase():
         "architect",
     )
 
-    orchestrator.add_task(
-        "Create unit tests for the orchestrator agent system", "test_engineer"
-    )
+    orchestrator.add_task("Create unit tests for the orchestrator agent system", "test_engineer")
 
     # Execute the collaborative workflow
     print("Starting collaborative code analysis...")

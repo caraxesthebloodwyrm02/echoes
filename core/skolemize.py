@@ -68,15 +68,11 @@ def skolemize(expression, univ_scope=None, used_variables=None):
     elif isinstance(expression, NegatedExpression):
         negated = expression.term
         if isinstance(negated, AllExpression):
-            term = skolemize(
-                -negated.term, univ_scope, used_variables | {negated.variable}
-            )
+            term = skolemize(-negated.term, univ_scope, used_variables | {negated.variable})
             if univ_scope:
                 return term.replace(negated.variable, skolem_function(univ_scope))
             else:
-                skolem_constant = VariableExpression(
-                    unique_variable(ignore=used_variables)
-                )
+                skolem_constant = VariableExpression(unique_variable(ignore=used_variables))
                 return term.replace(negated.variable, skolem_constant)
         elif isinstance(negated, AndExpression):
             return to_cnf(
@@ -118,9 +114,7 @@ def skolemize(expression, univ_scope=None, used_variables=None):
         else:
             raise Exception("'%s' cannot be skolemized" % expression)
     elif isinstance(expression, ExistsExpression):
-        term = skolemize(
-            expression.term, univ_scope, used_variables | {expression.variable}
-        )
+        term = skolemize(expression.term, univ_scope, used_variables | {expression.variable})
         if univ_scope:
             return term.replace(expression.variable, skolem_function(univ_scope))
         else:

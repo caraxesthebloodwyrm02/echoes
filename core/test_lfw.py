@@ -63,9 +63,7 @@ def mock_data_home(tmp_path_factory):
             img.save(file_path)
 
     # add some random file pollution to test robustness
-    (lfw_home / "lfw_funneled" / ".test.swp").write_bytes(
-        b"Text file to be ignored by the dataset loader."
-    )
+    (lfw_home / "lfw_funneled" / ".test.swp").write_bytes(b"Text file to be ignored by the dataset loader.")
 
     # generate some pairing metadata files using the same format as LFW
     with open(lfw_home / "pairsDevTrain.txt", "wb") as f:
@@ -80,16 +78,9 @@ def mock_data_home(tmp_path_factory):
             first_name, second_name = random_state.sample(FAKE_NAMES, 2)
             first_index = np_rng.choice(np.arange(counts[first_name]))
             second_index = np_rng.choice(np.arange(counts[second_name]))
-            f.write(
-                (
-                    "%s\t%d\t%s\t%d\n"
-                    % (first_name, first_index, second_name, second_index)
-                ).encode()
-            )
+            f.write(("%s\t%d\t%s\t%d\n" % (first_name, first_index, second_name, second_index)).encode())
 
-    (lfw_home / "pairsDevTest.txt").write_bytes(
-        b"Fake place holder that won't be tested"
-    )
+    (lfw_home / "pairsDevTest.txt").write_bytes(b"Fake place holder that won't be tested")
     (lfw_home / "pairs.txt").write_bytes(b"Fake place holder that won't be tested")
 
     yield data_dir
@@ -101,9 +92,7 @@ def test_load_empty_lfw_people(mock_empty_data_home):
 
 
 def test_load_fake_lfw_people(mock_data_home):
-    lfw_people = fetch_lfw_people(
-        data_home=mock_data_home, min_faces_per_person=3, download_if_missing=False
-    )
+    lfw_people = fetch_lfw_people(data_home=mock_data_home, min_faces_per_person=3, download_if_missing=False)
 
     # The data is croped around the center as a rectangular bounding box
     # around the face. Colors are converted to gray levels:
@@ -130,9 +119,7 @@ def test_load_fake_lfw_people(mock_data_home):
     assert lfw_people.DESCR.startswith(".. _labeled_faces_in_the_wild_dataset:")
 
     # the ids and class names are the same as previously
-    assert_array_equal(
-        lfw_people.target, [0, 0, 1, 6, 5, 6, 3, 6, 0, 3, 6, 1, 2, 4, 5, 1, 2]
-    )
+    assert_array_equal(lfw_people.target, [0, 0, 1, 6, 5, 6, 3, 6, 0, 3, 6, 1, 2, 4, 5, 1, 2])
     assert_array_equal(
         lfw_people.target_names,
         [
@@ -173,9 +160,7 @@ def test_load_empty_lfw_pairs(mock_empty_data_home):
 
 
 def test_load_fake_lfw_pairs(mock_data_home):
-    lfw_pairs_train = fetch_lfw_pairs(
-        data_home=mock_data_home, download_if_missing=False
-    )
+    lfw_pairs_train = fetch_lfw_pairs(data_home=mock_data_home, download_if_missing=False)
 
     # The data is croped around the center as a rectangular bounding box
     # around the face. Colors are converted to gray levels:

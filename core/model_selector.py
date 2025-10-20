@@ -65,9 +65,7 @@ class ModelSelector:
                     },
                 },
                 "logistic_regression": {
-                    "model": LogisticRegression(
-                        random_state=config.random_state, max_iter=1000
-                    ),
+                    "model": LogisticRegression(random_state=config.random_state, max_iter=1000),
                     "params": {
                         "C": [0.1, 1.0, 10.0, 100.0],
                         "penalty": ["l1", "l2", "elasticnet", "none"],
@@ -104,9 +102,7 @@ class ModelSelector:
                     "params": {},
                 },  # No hyperparameters to tune
                 "neural_network": {
-                    "model": MLPClassifier(
-                        random_state=config.random_state, max_iter=1000
-                    ),
+                    "model": MLPClassifier(random_state=config.random_state, max_iter=1000),
                     "params": {
                         "hidden_layer_sizes": [(50,), (100,), (50, 50), (100, 50)],
                         "activation": ["relu", "tanh", "logistic"],
@@ -183,9 +179,7 @@ class ModelSelector:
                     },
                 },
                 "neural_network": {
-                    "model": MLPRegressor(
-                        random_state=config.random_state, max_iter=1000
-                    ),
+                    "model": MLPRegressor(random_state=config.random_state, max_iter=1000),
                     "params": {
                         "hidden_layer_sizes": [(50,), (100,), (50, 50), (100, 50)],
                         "activation": ["relu", "tanh", "logistic"],
@@ -197,9 +191,7 @@ class ModelSelector:
             },
         }
 
-    def select_models(
-        self, X: np.ndarray, y: np.ndarray, task_type: str
-    ) -> List[Dict[str, Any]]:
+    def select_models(self, X: np.ndarray, y: np.ndarray, task_type: str) -> List[Dict[str, Any]]:
         """
         Select appropriate models based on dataset characteristics.
 
@@ -222,17 +214,13 @@ class ModelSelector:
             raise ValueError(f"No models available for task type: {task_type}")
 
         # Select models based on dataset characteristics
-        selected_models = self._select_optimal_models(
-            available_models, dataset_info, self.config.max_models
-        )
+        selected_models = self._select_optimal_models(available_models, dataset_info, self.config.max_models)
 
         self.logger.info(f"✅ Selected {len(selected_models)} models for evaluation")
 
         return selected_models
 
-    def _analyze_dataset(
-        self, X: np.ndarray, y: np.ndarray, task_type: str
-    ) -> Dict[str, Any]:
+    def _analyze_dataset(self, X: np.ndarray, y: np.ndarray, task_type: str) -> Dict[str, Any]:
         """Analyze dataset characteristics to inform model selection."""
         n_samples, n_features = X.shape
         n_classes = len(np.unique(y)) if task_type == "classification" else None
@@ -247,9 +235,7 @@ class ModelSelector:
             "has_missing_values": np.isnan(X).any(),
             "is_high_dimensional": n_features > 100,
             "is_small_dataset": n_samples < 1000,
-            "is_imbalanced": self._check_imbalance(y)
-            if task_type == "classification"
-            else False,
+            "is_imbalanced": self._check_imbalance(y) if task_type == "classification" else False,
         }
 
         # Task-specific analysis
@@ -325,9 +311,7 @@ class ModelSelector:
 
         return selected
 
-    def _calculate_model_suitability(
-        self, model_name: str, dataset_info: Dict[str, Any]
-    ) -> float:
+    def _calculate_model_suitability(self, model_name: str, dataset_info: Dict[str, Any]) -> float:
         """Calculate how suitable a model is for the given dataset."""
         score = 5.0  # Base score
 

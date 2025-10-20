@@ -70,9 +70,7 @@ def test_token_bucket_refill():
 
     # Wait for refill (simulate 0.6 seconds = 1.2 tokens)
     original_time = bucket.last
-    bucket.last = original_time.replace(
-        second=original_time.second - 1
-    )  # Simulate 1 second ago
+    bucket.last = original_time.replace(second=original_time.second - 1)  # Simulate 1 second ago
 
     # Should be able to acquire now
     assert bucket.acquire() == True
@@ -132,9 +130,7 @@ def test_token_bucket_max_burst():
 
     # Simulate long time passage (enough for 100+ tokens)
     original_time = bucket.last
-    bucket.last = original_time.replace(
-        second=original_time.second - 120
-    )  # 2 minutes ago
+    bucket.last = original_time.replace(second=original_time.second - 120)  # 2 minutes ago
 
     # Should refill to max (60), not beyond
     assert bucket.acquire() == True

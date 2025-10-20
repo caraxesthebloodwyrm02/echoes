@@ -18,7 +18,6 @@ For details about An Crubadan, this data, and its potential uses, see:
 http://borel.slu.edu/crubadan/index.html
 """
 
-import re
 from os import path
 
 from nltk.corpus.reader import CorpusReader
@@ -67,9 +66,7 @@ class CrubadanCorpusReader(CorpusReader):
     def _load_lang_mapping_data(self):
         """Load language mappings between codes and description from table.txt"""
         if isinstance(self.root, ZipFilePathPointer):
-            raise RuntimeError(
-                "Please install the 'crubadan' corpus first, use nltk.download()"
-            )
+            raise RuntimeError("Please install the 'crubadan' corpus first, use nltk.download()")
 
         mapper_file = path.join(self.root, self._LANG_MAPPER_FILE)
         if self._LANG_MAPPER_FILE not in self.fileids():

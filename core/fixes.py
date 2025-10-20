@@ -227,18 +227,14 @@ def pd_fillna(pd, frame):
     if parse_version(pd_version) < parse_version("2.2"):
         frame = frame.fillna(value=np.nan)
     else:
-        infer_objects_kwargs = (
-            {} if parse_version(pd_version) >= parse_version("3") else {"copy": False}
-        )
+        infer_objects_kwargs = {} if parse_version(pd_version) >= parse_version("3") else {"copy": False}
         with pd.option_context("future.no_silent_downcasting", True):
             frame = frame.fillna(value=np.nan).infer_objects(**infer_objects_kwargs)
     return frame
 
 
 # TODO: remove when SciPy 1.12 is the minimum supported version
-def _preserve_dia_indices_dtype(
-    sparse_container, original_container_format, requested_sparse_format
-):
+def _preserve_dia_indices_dtype(sparse_container, original_container_format, requested_sparse_format):
     """Preserve indices dtype for SciPy < 1.12 when converting from DIA to CSR/CSC.
 
     For SciPy < 1.12, DIA arrays indices are upcasted to `np.int64` that is
@@ -268,16 +264,10 @@ def _preserve_dia_indices_dtype(
                 maxval=max(sparse_container.nnz, sparse_container.shape[1]),
                 check_contents=True,
             )
-            sparse_container.indices = sparse_container.indices.astype(
-                index_dtype, copy=False
-            )
-            sparse_container.indptr = sparse_container.indptr.astype(
-                index_dtype, copy=False
-            )
+            sparse_container.indices = sparse_container.indices.astype(index_dtype, copy=False)
+            sparse_container.indptr = sparse_container.indptr.astype(index_dtype, copy=False)
         else:  # requested_sparse_format == "coo"
-            index_dtype = _smallest_admissible_index_dtype(
-                maxval=max(sparse_container.shape)
-            )
+            index_dtype = _smallest_admissible_index_dtype(maxval=max(sparse_container.shape))
             sparse_container.row = sparse_container.row.astype(index_dtype, copy=False)
             sparse_container.col = sparse_container.col.astype(index_dtype, copy=False)
 
@@ -315,9 +305,7 @@ def _smallest_admissible_index_dtype(arrays=(), maxval=None, check_contents=Fals
 
     if maxval is not None:
         if maxval > np.iinfo(np.int64).max:
-            raise ValueError(
-                f"maxval={maxval} is to large to be represented as np.int64."
-            )
+            raise ValueError(f"maxval={maxval} is to large to be represented as np.int64.")
         if maxval > int32max:
             return np.int64
 
@@ -326,14 +314,9 @@ def _smallest_admissible_index_dtype(arrays=(), maxval=None, check_contents=Fals
 
     for arr in arrays:
         if not isinstance(arr, np.ndarray):
-            raise TypeError(
-                f"Arrays should be of type np.ndarray, got {type(arr)} instead."
-            )
+            raise TypeError(f"Arrays should be of type np.ndarray, got {type(arr)} instead.")
         if not np.issubdtype(arr.dtype, np.integer):
-            raise ValueError(
-                f"Array dtype {arr.dtype} is not supported for index dtype. We expect "
-                "integral values."
-            )
+            raise ValueError(f"Array dtype {arr.dtype} is not supported for index dtype. We expect " "integral values.")
         if not np.can_cast(arr.dtype, np.int32):
             if not check_contents:
                 # when `check_contents` is False, we stay on the safe side and return
@@ -396,10 +379,7 @@ def _in_unstable_openblas_configuration():
         if openblas_version is None or openblas_architecture is None:
             # Cannot be sure that OpenBLAS is good enough. Assume unstable:
             return True  # pragma: no cover
-        if (
-            openblas_architecture == "neoversen1"
-            and parse_version(openblas_version) < openblas_arm64_stable_version
-        ):
+        if openblas_architecture == "neoversen1" and parse_version(openblas_version) < openblas_arm64_stable_version:
             # See discussions in https://github.com/numpy/numpy/issues/19411
             return True  # pragma: no cover
     return False

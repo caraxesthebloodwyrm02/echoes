@@ -56,9 +56,7 @@ class OIDVECTOR(TypeDecorator[Sequence[int]]):
 
 
 class _SpaceVector:
-    def result_processor(
-        self, dialect: Dialect, coltype: object
-    ) -> _ResultProcessorType[list[int]]:
+    def result_processor(self, dialect: Dialect, coltype: object) -> _ResultProcessorType[list[int]]:
         def process(value: Any) -> Optional[list[int]]:
             if value is None:
                 return value

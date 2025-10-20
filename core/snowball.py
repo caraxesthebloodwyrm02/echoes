@@ -139,8 +139,7 @@ class _LanguageSpecificStemmer(StemmerI):
                     self.stopwords.add(word)
             except OSError as e:
                 raise ValueError(
-                    "{!r} has no list of stopwords. Please set"
-                    " 'ignore_stopwords' to 'False'.".format(self)
+                    "{!r} has no list of stopwords. Please set" " 'ignore_stopwords' to 'False'.".format(self)
                 ) from e
 
     def __repr__(self):
@@ -317,9 +316,7 @@ class ArabicStemmer(_StandardStemmer):
     """
 
     # Normalize_pre stes
-    __vocalization = re.compile(
-        r"[\u064b-\u064c-\u064d-\u064e-\u064f-\u0650-\u0651-\u0652]"
-    )  # ً، ٌ، ٍ، َ، ُ، ِ، ّ، ْ
+    __vocalization = re.compile(r"[\u064b-\u064c-\u064d-\u064e-\u064f-\u0650-\u0651-\u0652]")  # ً، ٌ، ٍ، َ، ُ، ِ، ّ، ْ
 
     __kasheeda = re.compile(r"[\u0640]")  # ـ tatweel/kasheeda
 
@@ -861,10 +858,7 @@ class ArabicStemmer(_StandardStemmer):
                     modified_word = self.__Suffix_Noun_Step2a(modified_word)
                     if not self.suffix_noun_step2a_success:
                         modified_word = self.__Suffix_Noun_Step2b(modified_word)
-                    if (
-                        not self.suffix_noun_step2b_success
-                        and not self.suffix_noun_step2a_success
-                    ):
+                    if not self.suffix_noun_step2b_success and not self.suffix_noun_step2a_success:
                         modified_word = self.__Suffix_Noun_Step2c1(modified_word)
                     # or next ? todo : how to deal with or next
                 else:
@@ -873,10 +867,7 @@ class ArabicStemmer(_StandardStemmer):
                         modified_word = self.__Suffix_Noun_Step2a(modified_word)
                         if not self.suffix_noun_step2a_success:
                             modified_word = self.__Suffix_Noun_Step2b(modified_word)
-                        if (
-                            not self.suffix_noun_step2b_success
-                            and not self.suffix_noun_step2a_success
-                        ):
+                        if not self.suffix_noun_step2b_success and not self.suffix_noun_step2a_success:
                             modified_word = self.__Suffix_Noun_Step2c1(modified_word)
                     else:
                         if not self.is_defined:
@@ -1128,11 +1119,7 @@ class DutchStemmer(_StandardStemmer):
                 word = "".join((word[:i], "Y", word[i + 1 :]))
 
         for i in range(1, len(word) - 1):
-            if (
-                word[i - 1] in self.__vowels
-                and word[i] == "i"
-                and word[i + 1] in self.__vowels
-            ):
+            if word[i - 1] in self.__vowels and word[i] == "i" and word[i + 1] in self.__vowels:
                 word = "".join((word[:i], "I", word[i + 1 :]))
 
         r1, r2 = self._r1r2_standard(word, self.__vowels)
@@ -1198,11 +1185,7 @@ class DutchStemmer(_StandardStemmer):
             r1 = r1[:-4]
             r2 = r2[:-4]
 
-            if (
-                r1.endswith("en")
-                and word[-3] not in self.__vowels
-                and word[-5:-2] != "gem"
-            ):
+            if r1.endswith("en") and word[-3] not in self.__vowels and word[-5:-2] != "gem":
                 word = word[:-2]
                 r1 = r1[:-2]
                 r2 = r2[:-2]
@@ -1415,11 +1398,7 @@ class EnglishStemmer(_StandardStemmer):
             return self.__special_words[word]
 
         # Map the different apostrophe characters to a single consistent one
-        word = (
-            word.replace("\u2019", "\x27")
-            .replace("\u2018", "\x27")
-            .replace("\u201B", "\x27")
-        )
+        word = word.replace("\u2019", "\x27").replace("\u2018", "\x27").replace("\u201B", "\x27")
 
         if word.startswith("\x27"):
             word = word[1:]
@@ -1535,10 +1514,7 @@ class EnglishStemmer(_StandardStemmer):
                             and word[-2] in self.__vowels
                             and word[-3] not in self.__vowels
                         ) or (
-                            r1 == ""
-                            and len(word) == 2
-                            and word[0] in self.__vowels
-                            and word[1] not in self.__vowels
+                            r1 == "" and len(word) == 2 and word[0] in self.__vowels and word[1] not in self.__vowels
                         ):
                             word = "".join((word, "e"))
 
@@ -1995,10 +1971,7 @@ class FinnishStemmer(_StandardStemmer):
                         step3_success = True
 
                 elif suffix in ("siin", "den", "tten"):
-                    if (
-                        word[-len(suffix) - 1] == "i"
-                        and word[-len(suffix) - 2] in self.__restricted_vowels
-                    ):
+                    if word[-len(suffix) - 1] == "i" and word[-len(suffix) - 2] in self.__restricted_vowels:
                         word = word[: -len(suffix)]
                         r1 = r1[: -len(suffix)]
                         r2 = r2[: -len(suffix)]
@@ -2065,12 +2038,7 @@ class FinnishStemmer(_StandardStemmer):
             word = word[:-1]
             r1 = r1[:-1]
 
-        elif (
-            not step3_success
-            and len(r1) >= 2
-            and r1[-1] == "t"
-            and r1[-2] in self.__vowels
-        ):
+        elif not step3_success and len(r1) >= 2 and r1[-1] == "t" and r1[-2] in self.__vowels:
             word = word[:-1]
             r1 = r1[:-1]
             r2 = r2[:-1]
@@ -2367,9 +2335,7 @@ class FrenchStemmer(_StandardStemmer):
                     step1_success = True
 
                 elif (
-                    suffix in ("issement", "issements")
-                    and suffix in r1
-                    and word[-len(suffix) - 1] not in self.__vowels
+                    suffix in ("issement", "issements") and suffix in r1 and word[-len(suffix) - 1] not in self.__vowels
                 ):
                     word = word[: -len(suffix)]
                     step1_success = True
@@ -2394,11 +2360,7 @@ class FrenchStemmer(_StandardStemmer):
                     word = word[: -len(suffix)]
                     step1_success = True
 
-                elif (
-                    suffix
-                    in ("atrice", "ateur", "ation", "atrices", "ateurs", "ations")
-                    and suffix in r2
-                ):
+                elif suffix in ("atrice", "ateur", "ation", "atrices", "ateurs", "ations") and suffix in r2:
                     word = word[: -len(suffix)]
                     step1_success = True
 
@@ -2458,11 +2420,7 @@ class FrenchStemmer(_StandardStemmer):
         if not step1_success or rv_ending_found:
             for suffix in self.__step2a_suffixes:
                 if word.endswith(suffix):
-                    if (
-                        suffix in rv
-                        and len(rv) > len(suffix)
-                        and rv[rv.rindex(suffix) - 1] not in self.__vowels
-                    ):
+                    if suffix in rv and len(rv) > len(suffix) and rv[rv.rindex(suffix) - 1] not in self.__vowels:
                         word = word[: -len(suffix)]
                         step2a_success = True
                     break
@@ -2595,9 +2553,7 @@ class FrenchStemmer(_StandardStemmer):
         """
         rv = ""
         if len(word) >= 2:
-            if word.startswith(("par", "col", "tap")) or (
-                word[0] in vowels and word[1] in vowels
-            ):
+            if word.startswith(("par", "col", "tap")) or (word[0] in vowels and word[1] in vowels):
                 rv = word[3:]
             else:
                 for i in range(1, len(word)):
@@ -2680,10 +2636,7 @@ class GermanStemmer(_StandardStemmer):
         # STEP 1
         for suffix in self.__step1_suffixes:
             if r1.endswith(suffix):
-                if (
-                    suffix in ("en", "es", "e")
-                    and word[-len(suffix) - 4 : -len(suffix)] == "niss"
-                ):
+                if suffix in ("en", "es", "e") and word[-len(suffix) - 4 : -len(suffix)] == "niss":
                     word = word[: -len(suffix) - 1]
                     r1 = r1[: -len(suffix) - 1]
                     r2 = r2[: -len(suffix) - 1]
@@ -2725,17 +2678,11 @@ class GermanStemmer(_StandardStemmer):
                     else:
                         word = word[: -len(suffix)]
 
-                elif (
-                    suffix in ("ig", "ik", "isch")
-                    and "e" not in r2[-len(suffix) - 1 : -len(suffix)]
-                ):
+                elif suffix in ("ig", "ik", "isch") and "e" not in r2[-len(suffix) - 1 : -len(suffix)]:
                     word = word[: -len(suffix)]
 
                 elif suffix in ("lich", "heit"):
-                    if (
-                        "er" in r1[-len(suffix) - 2 : -len(suffix)]
-                        or "en" in r1[-len(suffix) - 2 : -len(suffix)]
-                    ):
+                    if "er" in r1[-len(suffix) - 2 : -len(suffix)] or "en" in r1[-len(suffix) - 2 : -len(suffix)]:
                         word = word[: -len(suffix) - 2]
                     else:
                         word = word[: -len(suffix)]
@@ -2752,13 +2699,7 @@ class GermanStemmer(_StandardStemmer):
 
         # Umlaut accents are removed and
         # 'u' and 'y' are put back into lower case.
-        word = (
-            word.replace("\xE4", "a")
-            .replace("\xF6", "o")
-            .replace("\xFC", "u")
-            .replace("U", "u")
-            .replace("Y", "y")
-        )
+        word = word.replace("\xE4", "a").replace("\xF6", "o").replace("\xFC", "u").replace("U", "u").replace("Y", "y")
 
         return word
 
@@ -3463,9 +3404,7 @@ class ItalianStemmer(_StandardStemmer):
                         word = word[:-4]
                         rv = rv[:-4]
 
-                elif suffix in ("amento", "amenti", "imento", "imenti") and rv.endswith(
-                    suffix
-                ):
+                elif suffix in ("amento", "amenti", "imento", "imenti") and rv.endswith(suffix):
                     step1_success = True
                     word = word[:-6]
                     rv = rv[:-6]
@@ -3645,9 +3584,7 @@ class NorwegianStemmer(_ScandinavianStemmer):
                     r1 = suffix_replace(r1, suffix, "er")
 
                 elif suffix == "s":
-                    if word[-2] in self.__s_ending or (
-                        word[-2] == "k" and word[-3] not in self.__vowels
-                    ):
+                    if word[-2] in self.__s_ending or (word[-2] == "k" and word[-3] not in self.__vowels):
                         word = word[:-1]
                         r1 = r1[:-1]
                 else:
@@ -3881,12 +3818,7 @@ class PortugueseStemmer(_StandardStemmer):
         step1_success = False
         step2_success = False
 
-        word = (
-            word.replace("\xE3", "a~")
-            .replace("\xF5", "o~")
-            .replace("q\xFC", "qu")
-            .replace("g\xFC", "gu")
-        )
+        word = word.replace("\xE3", "a~").replace("\xF5", "o~").replace("q\xFC", "qu").replace("g\xFC", "gu")
 
         r1, r2 = self._r1r2_standard(word, self.__vowels)
         rv = self._rv_standard(word, self.__vowels)
@@ -3914,11 +3846,7 @@ class PortugueseStemmer(_StandardStemmer):
                         word = word[:-2]
                         rv = rv[:-2]
 
-                elif (
-                    suffix in ("ira", "iras")
-                    and rv.endswith(suffix)
-                    and word[-len(suffix) - 1 : -len(suffix)] == "e"
-                ):
+                elif suffix in ("ira", "iras") and rv.endswith(suffix) and word[-len(suffix) - 1 : -len(suffix)] == "e":
                     step1_success = True
 
                     word = suffix_replace(word, suffix, "ir")
@@ -4003,9 +3931,7 @@ class PortugueseStemmer(_StandardStemmer):
             word = word[:-1]
             rv = rv[:-1]
 
-            if (word.endswith("gu") and rv.endswith("u")) or (
-                word.endswith("ci") and rv.endswith("i")
-            ):
+            if (word.endswith("gu") and rv.endswith("u")) or (word.endswith("ci") and rv.endswith("i")):
                 word = word[:-1]
 
         elif word.endswith("\xE7"):
@@ -4305,11 +4231,7 @@ class RomanianStemmer(_StandardStemmer):
                         else:
                             rv = ""
 
-                    elif (
-                        suffix == "aua"
-                        or suffix == "atei"
-                        or (suffix == "ile" and word[-5:-3] != "ab")
-                    ):
+                    elif suffix == "aua" or suffix == "atei" or (suffix == "ile" and word[-5:-3] != "ab"):
                         word = word[:-2]
 
                     elif suffix in ("ea", "ele", "elor"):
@@ -4478,10 +4400,7 @@ class RomanianStemmer(_StandardStemmer):
                             word = word[: -len(suffix)]
                             rv = rv[: -len(suffix)]
                         else:
-                            if (
-                                not rv.startswith(suffix)
-                                and rv[rv.index(suffix) - 1] not in "aeio\u0103\xE2\xEE"
-                            ):
+                            if not rv.startswith(suffix) and rv[rv.index(suffix) - 1] not in "aeio\u0103\xE2\xEE":
                                 word = word[: -len(suffix)]
                         break
 
@@ -4894,10 +4813,7 @@ class RussianStemmer(_LanguageSpecificStemmer):
         for suffix in self.__perfective_gerund_suffixes:
             if rv.endswith(suffix):
                 if suffix in ("v", "vshi", "vshis'"):
-                    if (
-                        rv[-len(suffix) - 3 : -len(suffix)] == "i^a"
-                        or rv[-len(suffix) - 1 : -len(suffix)] == "a"
-                    ):
+                    if rv[-len(suffix) - 3 : -len(suffix)] == "i^a" or rv[-len(suffix) - 1 : -len(suffix)] == "a":
                         word = word[: -len(suffix)]
                         r2 = r2[: -len(suffix)]
                         rv = rv[: -len(suffix)]
@@ -5052,10 +4968,7 @@ class RussianStemmer(_LanguageSpecificStemmer):
                         "nnym",
                         "nnom",
                     ):
-                        if (
-                            rv[-len(suffix) - 3 : -len(suffix)] == "i^a"
-                            or rv[-len(suffix) - 1 : -len(suffix)] == "a"
-                        ):
+                        if rv[-len(suffix) - 3 : -len(suffix)] == "i^a" or rv[-len(suffix) - 1 : -len(suffix)] == "a":
                             word = word[: -len(suffix)]
                             r2 = r2[: -len(suffix)]
                             rv = rv[: -len(suffix)]
@@ -5578,10 +5491,7 @@ class SpanishStemmer(_StandardStemmer):
                         "\xEDr",
                     )
                 )
-            ) or (
-                rv[: -len(suffix)].endswith("yendo")
-                and word[: -len(suffix)].endswith("uyendo")
-            ):
+            ) or (rv[: -len(suffix)].endswith("yendo") and word[: -len(suffix)].endswith("uyendo")):
                 word = self.__replace_accented(word[: -len(suffix)])
                 r1 = self.__replace_accented(r1[: -len(suffix)])
                 r2 = self.__replace_accented(r2[: -len(suffix)])
@@ -5896,10 +5806,7 @@ def demo():
             break
 
         if language not in SnowballStemmer.languages:
-            print(
-                "\nOops, there is no stemmer for this language. "
-                + "Please try again.\n"
-            )
+            print("\nOops, there is no stemmer for this language. " + "Please try again.\n")
             continue
 
         stemmer = SnowballStemmer(language)

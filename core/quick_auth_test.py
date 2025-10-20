@@ -3,6 +3,7 @@
 
 import sys
 from pathlib import Path
+
 sys.path.insert(0, str(Path(__file__).parent))
 
 print("=" * 70)
@@ -13,6 +14,7 @@ print("=" * 70)
 print("\n[1/5] Testing JWT Token Handler...")
 try:
     from api.auth.jwt_handler import JWTHandler
+
     handler = JWTHandler(secret_key="test-secret")
     token = handler.create_access_token({"sub": "user123", "role": "admin"})
     payload = handler.verify_token(token)
@@ -28,10 +30,11 @@ try:
     from api.auth.api_keys import APIKeyManager
     import tempfile
     import json
-    temp_file = tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json')
+
+    temp_file = tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".json")
     temp_path = temp_file.name
     # Initialize with empty dict to avoid JSON decode error
-    with open(temp_path, 'w') as f:
+    with open(temp_path, "w") as f:
         json.dump({}, f)
     manager = APIKeyManager(storage_path=temp_path)
     api_key = manager.generate_key(name="Test", role="researcher")
@@ -46,6 +49,7 @@ except Exception as e:
 print("\n[3/5] Testing Permissions...")
 try:
     from api.auth.permissions import Roles, has_permission, can_access_platform
+
     assert has_permission(Roles.ADMIN, Roles.RESEARCHER)
     assert can_access_platform(Roles.RESEARCHER, "glimpse")
     print("PASSED: Permissions")
@@ -57,6 +61,7 @@ except Exception as e:
 print("\n[4/5] Testing Rate Limiter...")
 try:
     from api.middleware.rate_limiter import TokenBucketRateLimiter
+
     limiter = TokenBucketRateLimiter(capacity=5, refill_rate=1.0)
     assert limiter.allow_request("client1", cost=1.0)
     print("PASSED: Rate Limiter")
@@ -69,19 +74,17 @@ print("\n[5/5] Testing Complete Workflow...")
 try:
     # Create user with JWT
     handler = JWTHandler(secret_key="integration-test")
-    access_token = handler.create_access_token({
-        "sub": "researcher001",
-        "role": "researcher",
-        "platforms": ["glimpse", "turbo"]
-    })
-    
+    access_token = handler.create_access_token(
+        {"sub": "researcher001", "role": "researcher", "platforms": ["glimpse", "turbo"]}
+    )
+
     # Verify token
     payload = handler.verify_token(access_token)
-    
+
     # Check permissions
     assert can_access_platform(payload["role"], "glimpse")
     assert can_access_platform(payload["role"], "turbo")
-    
+
     print("PASSED: Integration Workflow")
 except Exception as e:
     print(f"FAILED: Integration - {e}")

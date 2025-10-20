@@ -53,11 +53,7 @@ class RateLimitMetrics:
 
     @property
     def success_rate(self) -> float:
-        return (
-            self.successful_requests / self.requests_made
-            if self.requests_made
-            else 0.0
-        )
+        return self.successful_requests / self.requests_made if self.requests_made else 0.0
 
     @property
     def average_response_time(self) -> float:
@@ -101,15 +97,13 @@ class RateLimitHandler:
     def _is_rate_limited(self) -> bool:
         now = datetime.now()
         self.request_times = [
-            t
-            for t in self.request_times
-            if (now - t).total_seconds() < self.config.rate_limit_window
+            t for t in self.request_times if (now - t).total_seconds() < self.config.rate_limit_window
         ]
         return len(self.request_times) >= self.config.max_requests_per_window
 
     def _calculate_backoff_delay(self, attempt: int) -> float:
         return min(
-            self.config.base_delay * (self.config.backoff_factor ** attempt),
+            self.config.base_delay * (self.config.backoff_factor**attempt),
             self.config.max_delay,
         )
 
@@ -124,9 +118,7 @@ class RateLimitHandler:
         ]
         return any(ind.lower() in error_output.lower() for ind in indicators)
 
-    def _update_metrics(
-        self, success: bool, response_time: float, error: Optional[str] = None
-    ) -> None:
+    def _update_metrics(self, success: bool, response_time: float, error: Optional[str] = None) -> None:
         with self.lock:
             self.metrics.requests_made += 1
             self.metrics.response_times.append(response_time)
@@ -145,9 +137,7 @@ class RateLimitHandler:
         if not self.request_times:
             return
         oldest = min(self.request_times)
-        wait = self.config.rate_limit_window - (
-            datetime.now() - oldest
-        ).total_seconds()
+        wait = self.config.rate_limit_window - (datetime.now() - oldest).total_seconds()
         if wait > 0:
             logger.info("Waiting %.1f s for rate‑limit reset", wait)
             time.sleep(wait)
@@ -159,16 +149,12 @@ class RateLimitHandler:
     @contextmanager
     def circuit_breaker_context(self):
         if self.circuit_breaker_tripped:
-            if self.last_failure_time and (
-                datetime.now() - self.last_failure_time
-            ).total_seconds() > 300:
+            if self.last_failure_time and (datetime.now() - self.last_failure_time).total_seconds() > 300:
                 self.circuit_breaker_tripped = False
                 self.consecutive_failures = 0
                 logger.info("Circuit breaker reset – resuming requests")
             else:
-                raise RuntimeError(
-                    "Circuit breaker is open – too many consecutive failures"
-                )
+                raise RuntimeError("Circuit breaker is open – too many consecutive failures")
         try:
             yield
         except Exception:
@@ -212,9 +198,7 @@ class RateLimitHandler:
 
                 if self._detect_rate_limit_error(err_msg):
                     self.metrics.rate_limit_hits += 1
-                    logger.warning(
-                        "Rate‑limit error on attempt %d", attempt + 1
-                    )
+                    logger.warning("Rate‑limit error on attempt %d", attempt + 1)
 
                 if attempt < self.config.max_retries:
                     delay = self._calculate_backoff_delay(attempt)
@@ -235,9 +219,7 @@ class RateLimitHandler:
 class ModelEvaluator:
     """Run inference on a set of prompts with robust error handling."""
 
-    def __init__(
-        self, models: List[str], questions_dir: Path, output_dir: Path
-    ) -> None:
+    def __init__(self, models: List[str], questions_dir: Path, output_dir: Path) -> None:
         self.models = models
         self.questions_dir = questions_dir
         self.output_dir = output_dir
@@ -278,12 +260,12 @@ class ModelEvaluator:
 
         # Decode output safely
         try:
-            stdout = result.stdout.decode('utf-8', errors='replace')
-            stderr = result.stderr.decode('utf-8', errors='replace')
+            stdout = result.stdout.decode("utf-8", errors="replace")
+            stderr = result.stderr.decode("utf-8", errors="replace")
         except UnicodeDecodeError:
             # Fallback to latin-1 which can decode any byte sequence
-            stdout = result.stdout.decode('latin-1', errors='replace')
-            stderr = result.stderr.decode('latin-1', errors='replace')
+            stdout = result.stdout.decode("latin-1", errors="replace")
+            stderr = result.stderr.decode("latin-1", errors="replace")
 
         if result.returncode != 0:
             raise RuntimeError(stderr.strip() or stdout.strip())
@@ -291,9 +273,7 @@ class ModelEvaluator:
 
     def run_model_inference(self, model: str, prompt: str) -> str:
         try:
-            response, elapsed = self.rate_limiter.execute_with_retry(
-                self._run_ollama, model, prompt
-            )
+            response, elapsed = self.rate_limiter.execute_with_retry(self._run_ollama, model, prompt)
             logger.info("Inference completed in %.2f s", elapsed)
             return response
         except Exception as exc:
@@ -304,9 +284,7 @@ class ModelEvaluator:
     # Single‑question evaluation
     # --------------------------------------------------------------------- #
 
-    def evaluate_single_question(
-        self, model: str, question_file: Path
-    ) -> Dict[str, Any]:
+    def evaluate_single_question(self, model: str, question_file: Path) -> Dict[str, Any]:
         qid = question_file.stem
         model_dir = self.output_dir / model.replace(":", "_")
         self._ensure_dir(model_dir)
@@ -361,11 +339,7 @@ class ModelEvaluator:
         futures = []
         for model in self.models:
             for qfile in self._question_files():
-                futures.append(
-                    self.executor.submit(
-                        self.evaluate_single_question, model, qfile
-                    )
-                )
+                futures.append(self.executor.submit(self.evaluate_single_question, model, qfile))
 
         results: List[Dict[str, Any]] = []
         for fut in as_completed(futures):
@@ -403,12 +377,7 @@ class ModelEvaluator:
 
         logger.info(f"Running load test for {model}")
 
-        config = LoadTestConfig(
-            model=model,
-            concurrent_requests=3,
-            total_requests=num_requests,
-            ramp_up_time=10.0
-        )
+        config = LoadTestConfig(model=model, concurrent_requests=3, total_requests=num_requests, ramp_up_time=10.0)
 
         tester = LoadTester(config)
         result = tester.run_load_test()
@@ -446,15 +415,9 @@ class ModelEvaluator:
             report["model_performance"][model] = {
                 "total_evaluations": len(model_res),
                 "successful_evaluations": len(model_success),
-                "success_rate": len(model_success) / len(model_res)
-                if model_res
-                else 0.0,
+                "success_rate": len(model_success) / len(model_res) if model_res else 0.0,
                 "average_processing_time": (
-                    statistics.mean(
-                        [r["processing_time"] for r in model_success]
-                    )
-                    if model_success
-                    else 0.0
+                    statistics.mean([r["processing_time"] for r in model_success]) if model_success else 0.0
                 ),
             }
 
@@ -468,11 +431,7 @@ class ModelEvaluator:
                 "successful_evaluations": len(q_success),
                 "success_rate": len(q_success) / len(q_res) if q_res else 0.0,
                 "average_processing_time": (
-                    statistics.mean(
-                        [r["processing_time"] for r in q_success]
-                    )
-                    if q_success
-                    else 0.0
+                    statistics.mean([r["processing_time"] for r in q_success]) if q_success else 0.0
                 ),
             }
 
@@ -480,15 +439,14 @@ class ModelEvaluator:
 
     def _save_report(self, report: Dict[str, Any]) -> None:
         out_file = self.output_dir / "evaluation_metrics.json"
-        out_file.write_text(
-            json.dumps(report, indent=2, default=str), encoding="utf-8"
-        )
+        out_file.write_text(json.dumps(report, indent=2, default=str), encoding="utf-8")
         logger.info("Metrics written to %s", out_file)
 
 
 # --------------------------------------------------------------------------- #
 # Entry‑point (called by the thin wrapper)
 # --------------------------------------------------------------------------- #
+
 
 def main() -> None:
     """Run the full evaluation workflow."""
@@ -516,18 +474,10 @@ def main() -> None:
         # --------------------------------------------------------------- #
         print("\nEvaluation Summary")
         print(f"Total evaluations      : {report['total_evaluations']}")
-        print(
-            f"Overall success rate   : {report['overall_success_rate']:.2%}"
-        )
-        print(
-            f"Rate‑limit hits        : {report['rate_limiting_metrics']['rate_limit_hits']}"
-        )
-        print(
-            f"Retries attempted      : {report['rate_limiting_metrics']['retries_attempted']}"
-        )
-        print(
-            f"Avg. response time     : {report['rate_limiting_metrics']['average_response_time']:.2f}s"
-        )
+        print(f"Overall success rate   : {report['overall_success_rate']:.2%}")
+        print(f"Rate‑limit hits        : {report['rate_limiting_metrics']['rate_limit_hits']}")
+        print(f"Retries attempted      : {report['rate_limiting_metrics']['retries_attempted']}")
+        print(f"Avg. response time     : {report['rate_limiting_metrics']['average_response_time']:.2f}s")
         print(f"\nResults stored in   : {OUTPUT_DIR.resolve()}")
 
     except KeyboardInterrupt:

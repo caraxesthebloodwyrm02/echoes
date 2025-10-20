@@ -112,9 +112,7 @@ def parse_tag(tag: str) -> frozenset[Tag]:
 def _get_config_var(name: str, warn: bool = False) -> int | str | None:
     value: int | str | None = sysconfig.get_config_var(name)
     if value is None and warn:
-        logger.debug(
-            "Config variable '%s' is unset, Python ABI tag may be incorrect", name
-        )
+        logger.debug("Config variable '%s' is unset, Python ABI tag may be incorrect", name)
     return value
 
 
@@ -169,9 +167,7 @@ def _cpython_abis(py_version: PythonVersion, warn: bool = False) -> list[str]:
             pymalloc = "m"
         if py_version < (3, 3):
             unicode_size = _get_config_var("Py_UNICODE_SIZE", warn)
-            if unicode_size == 4 or (
-                unicode_size is None and sys.maxunicode == 0x10FFFF
-            ):
+            if unicode_size == 4 or (unicode_size is None and sys.maxunicode == 0x10FFFF):
                 ucs4 = "u"
     elif debug:
         # Debug builds can also load "normal" extension modules.
@@ -235,9 +231,7 @@ def cpython_tags(
     if use_abi3:
         for minor_version in range(python_version[1] - 1, 1, -1):
             for platform_ in platforms:
-                interpreter = "cp{version}".format(
-                    version=_version_nodot((python_version[0], minor_version))
-                )
+                interpreter = "cp{version}".format(version=_version_nodot((python_version[0], minor_version)))
                 yield Tag(interpreter, "abi3", platform_)
 
 
@@ -395,9 +389,7 @@ def _mac_binary_formats(version: AppleVersion, cpu_arch: str) -> list[str]:
     return formats
 
 
-def mac_platforms(
-    version: AppleVersion | None = None, arch: str | None = None
-) -> Iterator[str]:
+def mac_platforms(version: AppleVersion | None = None, arch: str | None = None) -> Iterator[str]:
     """
     Yields the platform tags for a macOS system.
 
@@ -483,9 +475,7 @@ def mac_platforms(
                 )
 
 
-def ios_platforms(
-    version: AppleVersion | None = None, multiarch: str | None = None
-) -> Iterator[str]:
+def ios_platforms(version: AppleVersion | None = None, multiarch: str | None = None) -> Iterator[str]:
     """
     Yields the platform tags for an iOS system.
 
@@ -522,22 +512,16 @@ def ios_platforms(
         return
 
     # Consider the actual X.Y version that was requested.
-    yield ios_platform_template.format(
-        major=version[0], minor=version[1], multiarch=multiarch
-    )
+    yield ios_platform_template.format(major=version[0], minor=version[1], multiarch=multiarch)
 
     # Consider every minor version from X.0 to the minor version prior to the
     # version requested by the platform.
     for minor in range(version[1] - 1, -1, -1):
-        yield ios_platform_template.format(
-            major=version[0], minor=minor, multiarch=multiarch
-        )
+        yield ios_platform_template.format(major=version[0], minor=minor, multiarch=multiarch)
 
     for major in range(version[0] - 1, 11, -1):
         for minor in range(9, -1, -1):
-            yield ios_platform_template.format(
-                major=major, minor=minor, multiarch=multiarch
-            )
+            yield ios_platform_template.format(major=major, minor=minor, multiarch=multiarch)
 
 
 def _linux_platforms(is_32bit: bool = _32_BIT_INTERPRETER) -> Iterator[str]:

@@ -23,9 +23,7 @@ class BrillTaggerTrainer:
     A trainer for tbl taggers.
     """
 
-    def __init__(
-        self, initial_tagger, templates, trace=0, deterministic=None, ruleformat="str"
-    ):
+    def __init__(self, initial_tagger, templates, trace=0, deterministic=None, ruleformat="str"):
         """
         Construct a Brill tagger from a baseline tagger and a
         set of templates
@@ -243,9 +241,7 @@ class BrillTaggerTrainer:
         # Create a new copy of the training corpus, and run the
         # initial tagger on it.  We will progressively update this
         # test corpus to look more like the training corpus.
-        test_sents = [
-            list(self._initial_tagger.tag(untag(sent))) for sent in train_sents
-        ]
+        test_sents = [list(self._initial_tagger.tag(untag(sent))) for sent in train_sents]
 
         # Collect some statistics on the training process
         trainstats = {}
@@ -256,19 +252,13 @@ class BrillTaggerTrainer:
         trainstats["templatecount"] = len(self._templates)
         trainstats["rulescores"] = []
         trainstats["initialerrors"] = sum(
-            tag[1] != truth[1]
-            for paired in zip(test_sents, train_sents)
-            for (tag, truth) in zip(*paired)
+            tag[1] != truth[1] for paired in zip(test_sents, train_sents) for (tag, truth) in zip(*paired)
         )
-        trainstats["initialacc"] = (
-            1 - trainstats["initialerrors"] / trainstats["tokencount"]
-        )
+        trainstats["initialacc"] = 1 - trainstats["initialerrors"] / trainstats["tokencount"]
         if self._trace > 0:
             print(
                 "TBL train (fast) (seqs: {sequencecount}; tokens: {tokencount}; "
-                "tpls: {templatecount}; min score: {min_score}; min acc: {min_acc})".format(
-                    **trainstats
-                )
+                "tpls: {templatecount}; min score: {min_score}; min acc: {min_acc})".format(**trainstats)
             )
 
         # Initialize our mappings.  This will find any errors made
@@ -320,12 +310,8 @@ class BrillTaggerTrainer:
 
         # Discard our tag position mapping & rule mappings.
         self._clean()
-        trainstats["finalerrors"] = trainstats["initialerrors"] - sum(
-            trainstats["rulescores"]
-        )
-        trainstats["finalacc"] = (
-            1 - trainstats["finalerrors"] / trainstats["tokencount"]
-        )
+        trainstats["finalerrors"] = trainstats["initialerrors"] - sum(trainstats["rulescores"])
+        trainstats["finalacc"] = 1 - trainstats["finalerrors"] / trainstats["tokencount"]
         # Create and return a tagger from the rules we found.
         return BrillTagger(self._initial_tagger, rules, trainstats)
 
@@ -540,17 +526,13 @@ class BrillTaggerTrainer:
             # Check if the change causes our templates to propose any
             # new rules for this position.
             for template in self._templates:
-                for new_rule in template.applicable_rules(
-                    test_sent, wordnum, correct_tag
-                ):
+                for new_rule in template.applicable_rules(test_sent, wordnum, correct_tag):
                     if new_rule not in old_rules:
                         num_new += 1
                         if new_rule not in self._rule_scores:
                             num_unseen += 1
                         old_rules.add(new_rule)
-                        self._update_rule_applies(
-                            new_rule, sentnum, wordnum, train_sents
-                        )
+                        self._update_rule_applies(new_rule, sentnum, wordnum, train_sents)
 
             # We may have caused other rules to match here, that are
             # not proposed by our templates -- in particular, rules
@@ -562,9 +544,7 @@ class BrillTaggerTrainer:
                     if new_rule not in old_rules:
                         num_new += 1
                         if new_rule.applies(test_sent, wordnum):
-                            self._update_rule_applies(
-                                new_rule, sentnum, wordnum, train_sents
-                            )
+                            self._update_rule_applies(new_rule, sentnum, wordnum, train_sents)
 
         if self._trace > 3:
             self._trace_update_rules(num_obsolete, num_new, num_unseen)
@@ -596,9 +576,7 @@ class BrillTaggerTrainer:
         rulestr = rule.format(self._ruleformat)
         if self._trace > 2:
             print(
-                "{:4d}{:4d}{:4d}{:4d}  |".format(
-                    score, num_fixed, num_broken, num_other
-                ),
+                "{:4d}{:4d}{:4d}{:4d}  |".format(score, num_fixed, num_broken, num_other),
                 end=" ",
             )
             print(

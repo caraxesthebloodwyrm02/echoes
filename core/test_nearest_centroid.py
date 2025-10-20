@@ -213,9 +213,7 @@ def test_warn_non_normalized_priors():
     assert_allclose(clf.class_prior_, np.asarray(priors) / np.asarray(priors).sum())
 
 
-@pytest.mark.parametrize(
-    "response_method", ["decision_function", "predict_proba", "predict_log_proba"]
-)
+@pytest.mark.parametrize("response_method", ["decision_function", "predict_proba", "predict_log_proba"])
 def test_method_not_available_with_manhattan(response_method):
     """Check that we raise an AttributeError with Manhattan metric when trying
     to call a non-thresholded response method.

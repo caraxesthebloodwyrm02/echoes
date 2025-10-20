@@ -78,9 +78,7 @@ class HyperparameterTuner:
             Dictionary with tuned model and parameters
         """
         start_time = time.time()
-        time_limit = (
-            time_limit or self.config.max_time_seconds / 10
-        )  # 10% of total time per model
+        time_limit = time_limit or self.config.max_time_seconds / 10  # 10% of total time per model
 
         self.logger.info(f"🔧 Tuning hyperparameters for {model_name}")
 
@@ -102,20 +100,14 @@ class HyperparameterTuner:
 
             if n_combinations > 100:
                 # Use randomized search for large parameter spaces
-                best_model, best_params, best_score = self._randomized_search(
-                    model, param_grid, X, y, time_limit
-                )
+                best_model, best_params, best_score = self._randomized_search(model, param_grid, X, y, time_limit)
             else:
                 # Use grid search for smaller parameter spaces
-                best_model, best_params, best_score = self._grid_search(
-                    model, param_grid, X, y, time_limit
-                )
+                best_model, best_params, best_score = self._grid_search(model, param_grid, X, y, time_limit)
 
             tuning_time = time.time() - start_time
 
-            self.logger.info(
-                f"✅ Tuned {model_name} - Score: {best_score:.4f} (Time: {tuning_time:.1f}s)"
-            )
+            self.logger.info(f"✅ Tuned {model_name} - Score: {best_score:.4f} (Time: {tuning_time:.1f}s)")
 
             return {
                 "name": model_name,
@@ -239,15 +231,11 @@ class HyperparameterTuner:
         else:
             return "accuracy"
 
-    def _evaluate_model(
-        self, model: BaseEstimator, X: np.ndarray, y: np.ndarray
-    ) -> float:
+    def _evaluate_model(self, model: BaseEstimator, X: np.ndarray, y: np.ndarray) -> float:
         """Evaluate a model using cross-validation."""
         try:
             scorer = self._get_scorer()
-            scores = cross_val_score(
-                model, X, y, cv=self.config.cv_folds, scoring=scorer, n_jobs=1
-            )
+            scores = cross_val_score(model, X, y, cv=self.config.cv_folds, scoring=scorer, n_jobs=1)
             return np.mean(scores)
         except Exception:
             # Fallback to simple train/test split
@@ -308,16 +296,12 @@ class BayesianOptimizer:
             for param_name, param_config in param_space.items():
                 if isinstance(param_config, list):
                     # Categorical parameter
-                    params[param_name] = trial.suggest_categorical(
-                        param_name, param_config
-                    )
+                    params[param_name] = trial.suggest_categorical(param_name, param_config)
                 elif isinstance(param_config, dict):
                     # Numerical parameter with range
                     param_type = param_config.get("type", "float")
                     if param_type == "int":
-                        params[param_name] = trial.suggest_int(
-                            param_name, param_config["low"], param_config["high"]
-                        )
+                        params[param_name] = trial.suggest_int(param_name, param_config["low"], param_config["high"])
                     else:
                         params[param_name] = trial.suggest_float(
                             param_name,
@@ -345,17 +329,13 @@ class BayesianOptimizer:
 
         return best_model, best_params, best_score
 
-    def _evaluate_model_quick(
-        self, model: BaseEstimator, X: np.ndarray, y: np.ndarray
-    ) -> float:
+    def _evaluate_model_quick(self, model: BaseEstimator, X: np.ndarray, y: np.ndarray) -> float:
         """Quick model evaluation for optimization."""
         try:
             # Simple train/test split for speed
             from sklearn.model_selection import train_test_split
 
-            X_train, X_test, y_train, y_test = train_test_split(
-                X, y, test_size=0.3, random_state=42
-            )
+            X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.3, random_state=42)
 
             model.fit(X_train, y_train)
 

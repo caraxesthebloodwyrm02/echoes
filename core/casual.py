@@ -223,8 +223,7 @@ ENT_RE = regex.compile(r"&(#?(x?))([^&;\s]+);")
 
 # For stripping away handles from a tweet:
 HANDLES_RE = regex.compile(
-    r"(?<![A-Za-z0-9_!@#\$%&*])@"
-    r"(([A-Za-z0-9_]){15}(?!@)|([A-Za-z0-9_]){1,14}(?![A-Za-z0-9_]*@))"
+    r"(?<![A-Za-z0-9_!@#\$%&*])@" r"(([A-Za-z0-9_]){15}(?!@)|([A-Za-z0-9_]){1,14}(?![A-Za-z0-9_]*@))"
 )
 
 
@@ -382,9 +381,7 @@ class TweetTokenizer(TokenizerI):
             words = self.WORD_RE.findall(safe_text)
         # Possibly alter the case, but avoid changing emoticons like :D into :d:
         if not self.preserve_case:
-            words = list(
-                map((lambda x: x if EMOTICON_RE.search(x) else x.lower()), words)
-            )
+            words = list(map((lambda x: x if EMOTICON_RE.search(x) else x.lower()), words))
         return words
 
     @property

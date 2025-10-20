@@ -231,15 +231,9 @@ def test_tuned_threshold_classifier_conflict_cv_refit(params, err_type, err_msg)
     "estimator",
     [LogisticRegression(), SVC(), GradientBoostingClassifier(n_estimators=4)],
 )
-@pytest.mark.parametrize(
-    "response_method", ["predict_proba", "predict_log_proba", "decision_function"]
-)
-@pytest.mark.parametrize(
-    "ThresholdClassifier", [FixedThresholdClassifier, TunedThresholdClassifierCV]
-)
-def test_threshold_classifier_estimator_response_methods(
-    ThresholdClassifier, estimator, response_method
-):
+@pytest.mark.parametrize("response_method", ["predict_proba", "predict_log_proba", "decision_function"])
+@pytest.mark.parametrize("ThresholdClassifier", [FixedThresholdClassifier, TunedThresholdClassifierCV])
+def test_threshold_classifier_estimator_response_methods(ThresholdClassifier, estimator, response_method):
     """Check that `TunedThresholdClassifierCV` exposes the same response methods as the
     underlying estimator.
     """
@@ -258,9 +252,7 @@ def test_threshold_classifier_estimator_response_methods(
         assert_allclose(y_pred_cutoff, y_pred_underlying_estimator)
 
 
-@pytest.mark.parametrize(
-    "response_method", ["auto", "decision_function", "predict_proba"]
-)
+@pytest.mark.parametrize("response_method", ["auto", "decision_function", "predict_proba"])
 def test_tuned_threshold_classifier_without_constraint_value(response_method):
     """Check that `TunedThresholdClassifierCV` is optimizing a given objective
     metric."""
@@ -299,23 +291,15 @@ def test_tuned_threshold_classifier_metric_with_parameter():
     """
     X, y = load_breast_cancer(return_X_y=True)
     lr = make_pipeline(StandardScaler(), LogisticRegression()).fit(X, y)
-    model_fbeta_1 = TunedThresholdClassifierCV(
-        estimator=lr, scoring=make_scorer(fbeta_score, beta=1)
-    ).fit(X, y)
-    model_fbeta_2 = TunedThresholdClassifierCV(
-        estimator=lr, scoring=make_scorer(fbeta_score, beta=2)
-    ).fit(X, y)
-    model_f1 = TunedThresholdClassifierCV(
-        estimator=lr, scoring=make_scorer(f1_score)
-    ).fit(X, y)
+    model_fbeta_1 = TunedThresholdClassifierCV(estimator=lr, scoring=make_scorer(fbeta_score, beta=1)).fit(X, y)
+    model_fbeta_2 = TunedThresholdClassifierCV(estimator=lr, scoring=make_scorer(fbeta_score, beta=2)).fit(X, y)
+    model_f1 = TunedThresholdClassifierCV(estimator=lr, scoring=make_scorer(f1_score)).fit(X, y)
 
     assert model_fbeta_1.best_threshold_ == pytest.approx(model_f1.best_threshold_)
     assert model_fbeta_1.best_threshold_ != pytest.approx(model_fbeta_2.best_threshold_)
 
 
-@pytest.mark.parametrize(
-    "response_method", ["auto", "decision_function", "predict_proba"]
-)
+@pytest.mark.parametrize("response_method", ["auto", "decision_function", "predict_proba"])
 @pytest.mark.parametrize(
     "metric",
     [
@@ -359,9 +343,7 @@ def test_tuned_threshold_classifier_refit(with_sample_weight, global_random_seed
 
     # check that `estimator_` if fitted on the full dataset when `refit=True`
     estimator = LogisticRegression().set_fit_request(sample_weight=True)
-    model = TunedThresholdClassifierCV(estimator, refit=True).fit(
-        X, y, sample_weight=sample_weight
-    )
+    model = TunedThresholdClassifierCV(estimator, refit=True).fit(X, y, sample_weight=sample_weight)
 
     assert model.estimator_ is not estimator
     estimator.fit(X, y, sample_weight=sample_weight)
@@ -372,9 +354,7 @@ def test_tuned_threshold_classifier_refit(with_sample_weight, global_random_seed
     estimator = LogisticRegression().set_fit_request(sample_weight=True)
     estimator.fit(X, y, sample_weight=sample_weight)
     coef = estimator.coef_.copy()
-    model = TunedThresholdClassifierCV(estimator, cv="prefit", refit=False).fit(
-        X, y, sample_weight=sample_weight
-    )
+    model = TunedThresholdClassifierCV(estimator, cv="prefit", refit=False).fit(X, y, sample_weight=sample_weight)
 
     assert model.estimator_ is estimator
     assert_allclose(model.estimator_.coef_, coef)
@@ -384,9 +364,7 @@ def test_tuned_threshold_classifier_refit(with_sample_weight, global_random_seed
     cv = [
         (np.arange(50), np.arange(50, 100)),
     ]  # single split
-    model = TunedThresholdClassifierCV(estimator, cv=cv, refit=False).fit(
-        X, y, sample_weight=sample_weight
-    )
+    model = TunedThresholdClassifierCV(estimator, cv=cv, refit=False).fit(X, y, sample_weight=sample_weight)
 
     assert model.estimator_ is not estimator
     if with_sample_weight:
@@ -434,9 +412,7 @@ def test_tuned_threshold_classifier_cv_zeros_sample_weights_equivalence():
     model_with_weights.fit(X, y, sample_weight=sample_weight)
     model_without_weights.fit(X[::2], y[::2])
 
-    assert_allclose(
-        model_with_weights.estimator_.coef_, model_without_weights.estimator_.coef_
-    )
+    assert_allclose(model_with_weights.estimator_.coef_, model_without_weights.estimator_.coef_)
 
     y_pred_with_weights = model_with_weights.predict_proba(X)
     y_pred_without_weights = model_without_weights.predict_proba(X)
@@ -463,9 +439,7 @@ def test_tuned_threshold_classifier_store_cv_results(store_cv_results):
     """Check that if `cv_results_` exists depending on `store_cv_results`."""
     X, y = make_classification(random_state=0)
     estimator = LogisticRegression()
-    tuned_model = TunedThresholdClassifierCV(
-        estimator, store_cv_results=store_cv_results
-    ).fit(X, y)
+    tuned_model = TunedThresholdClassifierCV(estimator, store_cv_results=store_cv_results).fit(X, y)
     if store_cv_results:
         assert hasattr(tuned_model, "cv_results_")
     else:
@@ -481,9 +455,7 @@ def test_tuned_threshold_classifier_cv_float():
     # coefficients.
     test_size = 0.3
     estimator = LogisticRegression()
-    tuned_model = TunedThresholdClassifierCV(
-        estimator, cv=test_size, refit=False, random_state=0
-    ).fit(X, y)
+    tuned_model = TunedThresholdClassifierCV(estimator, cv=test_size, refit=False, random_state=0).fit(X, y)
     tuned_model.fit(X, y)
 
     cv = StratifiedShuffleSplit(n_splits=1, test_size=test_size, random_state=0)
@@ -512,9 +484,7 @@ def test_tuned_threshold_classifier_error_constant_predictor():
         tuned_model.fit(X, y)
 
 
-@pytest.mark.parametrize(
-    "response_method", ["auto", "predict_proba", "decision_function"]
-)
+@pytest.mark.parametrize("response_method", ["auto", "predict_proba", "decision_function"])
 def test_fixed_threshold_classifier_equivalence_default(response_method):
     """Check that `FixedThresholdClassifier` has the same behaviour as the vanilla
     classifier.
@@ -538,9 +508,7 @@ def test_fixed_threshold_classifier_equivalence_default(response_method):
     assert_allclose(classifier_default_threshold.predict(X), y_pred_lr)
 
 
-@pytest.mark.parametrize(
-    "response_method, threshold", [("predict_proba", 0.7), ("decision_function", 2.0)]
-)
+@pytest.mark.parametrize("response_method, threshold", [("predict_proba", 0.7), ("decision_function", 2.0)])
 @pytest.mark.parametrize("pos_label", [0, 1])
 def test_fixed_threshold_classifier(response_method, threshold, pos_label):
     """Check that applying `predict` lead to the same prediction as applying the
@@ -571,9 +539,7 @@ def test_fixed_threshold_classifier(response_method, threshold, pos_label):
     assert_allclose(model.predict(X), y_pred_lr)
 
     for method in ("predict_proba", "predict_log_proba", "decision_function"):
-        assert_allclose(
-            getattr(model, method)(X), getattr(logistic_regression, method)(X)
-        )
+        assert_allclose(getattr(model, method)(X), getattr(logistic_regression, method)(X))
         assert_allclose(
             getattr(model.estimator_, method)(X),
             getattr(logistic_regression, method)(X),
@@ -593,9 +559,7 @@ def test_fixed_threshold_classifier_metadata_routing():
     assert_allclose(classifier_default_threshold.estimator_.coef_, classifier.coef_)
 
 
-@pytest.mark.parametrize(
-    "method", ["predict_proba", "decision_function", "predict", "predict_log_proba"]
-)
+@pytest.mark.parametrize("method", ["predict_proba", "decision_function", "predict", "predict_log_proba"])
 def test_fixed_threshold_classifier_fitted_estimator(method):
     """Check that if the underlying estimator is already fitted, no fit is required."""
     X, y = make_classification(random_state=0)
@@ -608,9 +572,7 @@ def test_fixed_threshold_classifier_fitted_estimator(method):
 def test_fixed_threshold_classifier_classes_():
     """Check that the classes_ attribute is properly set."""
     X, y = make_classification(random_state=0)
-    with pytest.raises(
-        AttributeError, match="The underlying estimator is not fitted yet."
-    ):
+    with pytest.raises(AttributeError, match="The underlying estimator is not fitted yet."):
         FixedThresholdClassifier(estimator=LogisticRegression()).classes_
 
     classifier = LogisticRegression().fit(X, y)

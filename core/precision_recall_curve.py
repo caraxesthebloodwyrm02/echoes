@@ -193,9 +193,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         default_line_kwargs = {"drawstyle": "steps-post"}
         if self.average_precision is not None and name is not None:
-            default_line_kwargs["label"] = (
-                f"{name} (AP = {self.average_precision:0.2f})"
-            )
+            default_line_kwargs["label"] = f"{name} (AP = {self.average_precision:0.2f})"
         elif self.average_precision is not None:
             default_line_kwargs["label"] = f"AP = {self.average_precision:0.2f}"
         elif name is not None:
@@ -205,9 +203,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
 
         (self.line_,) = self.ax_.plot(self.recall, self.precision, **line_kwargs)
 
-        info_pos_label = (
-            f" (Positive label: {self.pos_label})" if self.pos_label is not None else ""
-        )
+        info_pos_label = f" (Positive label: {self.pos_label})" if self.pos_label is not None else ""
 
         xlabel = "Recall" + info_pos_label
         ylabel = "Precision" + info_pos_label
@@ -239,9 +235,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
             if chance_level_kw is None:
                 chance_level_kw = {}
 
-            chance_level_line_kw = _validate_style_kwargs(
-                default_chance_level_line_kw, chance_level_kw
-            )
+            chance_level_line_kw = _validate_style_kwargs(default_chance_level_line_kw, chance_level_kw)
 
             (self.chance_level_,) = self.ax_.plot(
                 (0, 1),
@@ -529,9 +523,7 @@ class PrecisionRecallDisplay(_BinaryClassifierCurveDisplayMixin):
             sample_weight=sample_weight,
             drop_intermediate=drop_intermediate,
         )
-        average_precision = average_precision_score(
-            y_true, y_pred, pos_label=pos_label, sample_weight=sample_weight
-        )
+        average_precision = average_precision_score(y_true, y_pred, pos_label=pos_label, sample_weight=sample_weight)
 
         class_count = Counter(y_true)
         prevalence_pos_label = class_count[pos_label] / sum(class_count.values())

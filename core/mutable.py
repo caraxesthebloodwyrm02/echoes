@@ -559,18 +559,14 @@ class MutableBase:
                 oldvalue._parents.pop(inspect(target), None)
             return value
 
-        def pickle(
-            state: InstanceState[_O], state_dict: Dict[str, Any]
-        ) -> None:
+        def pickle(state: InstanceState[_O], state_dict: Dict[str, Any]) -> None:
             val = state.dict.get(key, None)
             if val is not None:
                 if "ext.mutable.values" not in state_dict:
                     state_dict["ext.mutable.values"] = defaultdict(list)
                 state_dict["ext.mutable.values"][key].append(val)
 
-        def unpickle(
-            state: InstanceState[_O], state_dict: Dict[str, Any]
-        ) -> None:
+        def unpickle(state: InstanceState[_O], state_dict: Dict[str, Any]) -> None:
             if "ext.mutable.values" in state_dict:
                 collection = state_dict["ext.mutable.values"]
                 if isinstance(collection, list):
@@ -590,19 +586,11 @@ class MutableBase:
         )
 
         event.listen(parent_cls, "load", load, raw=True, propagate=True)
-        event.listen(
-            parent_cls, "refresh", load_attrs, raw=True, propagate=True
-        )
-        event.listen(
-            parent_cls, "refresh_flush", load_attrs, raw=True, propagate=True
-        )
-        event.listen(
-            attribute, "set", set_, raw=True, retval=True, propagate=True
-        )
+        event.listen(parent_cls, "refresh", load_attrs, raw=True, propagate=True)
+        event.listen(parent_cls, "refresh_flush", load_attrs, raw=True, propagate=True)
+        event.listen(attribute, "set", set_, raw=True, retval=True, propagate=True)
         event.listen(parent_cls, "pickle", pickle, raw=True, propagate=True)
-        event.listen(
-            parent_cls, "unpickle", unpickle, raw=True, propagate=True
-        )
+        event.listen(parent_cls, "unpickle", unpickle, raw=True, propagate=True)
 
 
 class Mutable(MutableBase):
@@ -620,9 +608,7 @@ class Mutable(MutableBase):
             flag_modified(parent.obj(), key)
 
     @classmethod
-    def associate_with_attribute(
-        cls, attribute: InstrumentedAttribute[_O]
-    ) -> None:
+    def associate_with_attribute(cls, attribute: InstrumentedAttribute[_O]) -> None:
         """Establish this type as a mutation listener for the given
         mapped descriptor.
 
@@ -724,13 +710,7 @@ class Mutable(MutableBase):
                     # "mutate"
                     isinstance(prop.expression, Column)
                     and (
-                        (
-                            schema_event_check
-                            and prop.expression.info.get(
-                                "_ext_mutable_orig_type"
-                            )
-                            is sqltype
-                        )
+                        (schema_event_check and prop.expression.info.get("_ext_mutable_orig_type") is sqltype)
                         or prop.expression.type is sqltype
                     )
                 ):
@@ -776,9 +756,7 @@ def _setup_composite_listener() -> None:
                 and isinstance(prop.composite_class, type)
                 and issubclass(prop.composite_class, MutableComposite)
             ):
-                prop.composite_class._listen_on_attribute(
-                    getattr(class_, prop.key), False, class_
-                )
+                prop.composite_class._listen_on_attribute(getattr(class_, prop.key), False, class_)
 
     if not event.contains(Mapper, "mapper_configured", _listen_for_type):
         event.listen(Mapper, "mapper_configured", _listen_for_type)
@@ -819,9 +797,7 @@ class MutableDict(Mutable, Dict[_KT, _VT]):
         # from https://github.com/python/mypy/issues/14858
 
         @overload
-        def setdefault(
-            self: MutableDict[_KT, Optional[_T]], key: _KT, value: None = None
-        ) -> Optional[_T]: ...
+        def setdefault(self: MutableDict[_KT, Optional[_T]], key: _KT, value: None = None) -> Optional[_T]: ...
 
         @overload
         def setdefault(self, key: _KT, value: _VT) -> _VT: ...
@@ -852,9 +828,7 @@ class MutableDict(Mutable, Dict[_KT, _VT]):
         @overload
         def pop(self, __key: _KT, __default: _VT | _T) -> _VT | _T: ...
 
-        def pop(
-            self, __key: _KT, __default: _VT | _T | None = None
-        ) -> _VT | _T: ...
+        def pop(self, __key: _KT, __default: _VT | _T | None = None) -> _VT | _T: ...
 
     else:
 
@@ -885,9 +859,7 @@ class MutableDict(Mutable, Dict[_KT, _VT]):
     def __getstate__(self) -> Dict[_KT, _VT]:
         return dict(self)
 
-    def __setstate__(
-        self, state: Union[Dict[str, int], Dict[str, str]]
-    ) -> None:
+    def __setstate__(self, state: Union[Dict[str, int], Dict[str, str]]) -> None:
         self.update(state)
 
 
@@ -914,9 +886,7 @@ class MutableList(Mutable, List[_T]):
 
     """
 
-    def __reduce_ex__(
-        self, proto: SupportsIndex
-    ) -> Tuple[type, Tuple[List[int]]]:
+    def __reduce_ex__(self, proto: SupportsIndex) -> Tuple[type, Tuple[List[int]]]:
         return (self.__class__, (list(self),))
 
     # needed for backwards compatibility with
@@ -924,9 +894,7 @@ class MutableList(Mutable, List[_T]):
     def __setstate__(self, state: Iterable[_T]) -> None:
         self[:] = state
 
-    def __setitem__(
-        self, index: SupportsIndex | slice, value: _T | Iterable[_T]
-    ) -> None:
+    def __setitem__(self, index: SupportsIndex | slice, value: _T | Iterable[_T]) -> None:
         """Detect list set events and emit change events."""
         list.__setitem__(self, index, value)
         self.changed()
@@ -974,9 +942,7 @@ class MutableList(Mutable, List[_T]):
         self.changed()
 
     @classmethod
-    def coerce(
-        cls, key: str, value: MutableList[_T] | _T
-    ) -> Optional[MutableList[_T]]:
+    def coerce(cls, key: str, value: MutableList[_T] | _T) -> Optional[MutableList[_T]]:
         """Convert plain list to instance of this class."""
         if not isinstance(value, cls):
             if isinstance(value, list):
@@ -1079,7 +1045,5 @@ class MutableSet(Mutable, Set[_T]):
     def __setstate__(self, state: Iterable[_T]) -> None:
         self.update(state)
 
-    def __reduce_ex__(
-        self, proto: SupportsIndex
-    ) -> Tuple[type, Tuple[List[int]]]:
+    def __reduce_ex__(self, proto: SupportsIndex) -> Tuple[type, Tuple[List[int]]]:
         return (self.__class__, (list(self),))

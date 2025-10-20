@@ -205,14 +205,10 @@ class Query(
 
     _memoized_select_entities = ()
 
-    _compile_options: Union[Type[CacheableOptions], CacheableOptions] = (
-        ORMCompileState.default_compile_options
-    )
+    _compile_options: Union[Type[CacheableOptions], CacheableOptions] = ORMCompileState.default_compile_options
 
     _with_options: Tuple[ExecutableOption, ...]
-    load_options = QueryContext.default_load_options + {
-        "_legacy_uniquing": True
-    }
+    load_options = QueryContext.default_load_options + {"_legacy_uniquing": True}
 
     _params: util.immutabledict[str, Any] = util.EMPTY_DICT
 
@@ -235,9 +231,7 @@ class Query(
 
     def __init__(
         self,
-        entities: Union[
-            _ColumnsClauseArgument[Any], Sequence[_ColumnsClauseArgument[Any]]
-        ],
+        entities: Union[_ColumnsClauseArgument[Any], Sequence[_ColumnsClauseArgument[Any]]],
         session: Optional[Session] = None,
     ):
         """Construct a :class:`_query.Query` directly.
@@ -281,9 +275,7 @@ class Query(
 
     def _set_entities(
         self,
-        entities: Union[
-            _ColumnsClauseArgument[Any], Iterable[_ColumnsClauseArgument[Any]]
-        ],
+        entities: Union[_ColumnsClauseArgument[Any], Iterable[_ColumnsClauseArgument[Any]]],
     ) -> None:
         self._raw_columns = [
             coercions.expect(
@@ -345,16 +337,11 @@ class Query(
             or "parententity" not in self._raw_columns[0]._annotations
             or not self._raw_columns[0].is_selectable
         ):
-            raise sa_exc.InvalidRequestError(
-                "%s() can only be used against "
-                "a single mapped class." % methname
-            )
+            raise sa_exc.InvalidRequestError("%s() can only be used against " "a single mapped class." % methname)
 
         return self._raw_columns[0]._annotations["parententity"]  # type: ignore  # noqa: E501
 
-    def _set_select_from(
-        self, obj: Iterable[_FromClauseArgument], set_base_alias: bool
-    ) -> None:
+    def _set_select_from(self, obj: Iterable[_FromClauseArgument], set_base_alias: bool) -> None:
         fa = [
             coercions.expect(
                 roles.StrictFromClauseRole,
@@ -380,9 +367,7 @@ class Query(
     def _get_existing_condition(self) -> None:
         self._no_criterion_assertion("get", order_by=False, distinct=False)
 
-    def _no_criterion_assertion(
-        self, meth: str, order_by: bool = True, distinct: bool = True
-    ) -> None:
+    def _no_criterion_assertion(self, meth: str, order_by: bool = True, distinct: bool = True) -> None:
         if not self._enable_assertions:
             return
         if (
@@ -396,14 +381,9 @@ class Query(
             or (order_by and self._order_by_clauses)
             or (distinct and self._distinct)
         ):
-            raise sa_exc.InvalidRequestError(
-                "Query.%s() being called on a "
-                "Query with existing criterion. " % meth
-            )
+            raise sa_exc.InvalidRequestError("Query.%s() being called on a " "Query with existing criterion. " % meth)
 
-    def _no_criterion_condition(
-        self, meth: str, order_by: bool = True, distinct: bool = True
-    ) -> None:
+    def _no_criterion_condition(self, meth: str, order_by: bool = True, distinct: bool = True) -> None:
         self._no_criterion_assertion(meth, order_by, distinct)
 
         self._from_obj = self._setup_joins = ()
@@ -418,10 +398,7 @@ class Query(
         if not self._enable_assertions:
             return
         if self._order_by_clauses:
-            raise sa_exc.InvalidRequestError(
-                "Query.%s() being called on a "
-                "Query with existing criterion. " % meth
-            )
+            raise sa_exc.InvalidRequestError("Query.%s() being called on a " "Query with existing criterion. " % meth)
         self._no_criterion_condition(meth)
 
     def _no_statement_condition(self, meth: str) -> None:
@@ -429,10 +406,7 @@ class Query(
             return
         if self._statement is not None:
             raise sa_exc.InvalidRequestError(
-                (
-                    "Query.%s() being called on a Query with an existing full "
-                    "statement - can't apply criterion."
-                )
+                ("Query.%s() being called on a Query with an existing full " "statement - can't apply criterion.")
                 % meth
             )
 
@@ -448,9 +422,7 @@ class Query(
 
     @property
     def _has_row_limiting_clause(self) -> bool:
-        return (
-            self._limit_clause is not None or self._offset_clause is not None
-        )
+        return self._limit_clause is not None or self._offset_clause is not None
 
     def _get_options(
         self,
@@ -487,9 +459,7 @@ class Query(
 
     def _get_select_statement_only(self) -> Select[_T]:
         if self._statement is not None:
-            raise sa_exc.InvalidRequestError(
-                "Can't call this method on a Query that uses from_statement()"
-            )
+            raise sa_exc.InvalidRequestError("Can't call this method on a Query that uses from_statement()")
         return cast("Select[_T]", self.statement)
 
     @property
@@ -549,9 +519,7 @@ class Query(
 
         q = self._clone()
 
-        return q._compile_state(
-            use_legacy_query_style=legacy_query_style
-        ).statement  # type: ignore
+        return q._compile_state(use_legacy_query_style=legacy_query_style).statement  # type: ignore
 
     def _statement_20(
         self, for_statement: bool = False, use_legacy_query_style: bool = True
@@ -599,9 +567,7 @@ class Query(
         # _legacy_joins are picked up that wouldn't be picked up by the
         # Core statement context
         if "compile_state_plugin" not in stmt._propagate_attrs:
-            stmt._propagate_attrs = stmt._propagate_attrs.union(
-                {"compile_state_plugin": "orm", "plugin_subject": None}
-            )
+            stmt._propagate_attrs = stmt._propagate_attrs.union({"compile_state_plugin": "orm", "plugin_subject": None})
 
         return stmt
 
@@ -724,11 +690,7 @@ class Query(
 
         """
 
-        return (
-            self.enable_eagerloads(False)
-            ._get_select_statement_only()
-            .label(name)
-        )
+        return self.enable_eagerloads(False)._get_select_statement_only().label(name)
 
     @overload
     def as_scalar(  # type: ignore[overload-overlap]
@@ -785,11 +747,7 @@ class Query(
 
         """
 
-        return (
-            self.enable_eagerloads(False)
-            ._get_select_statement_only()
-            .scalar_subquery()
-        )
+        return self.enable_eagerloads(False)._get_select_statement_only().scalar_subquery()
 
     @property
     def selectable(self) -> Union[Select[_T], FromStatement[_T], UpdateBase]:
@@ -807,22 +765,16 @@ class Query(
         self,
     ) -> Union[Select[_T], FromStatement[_T], UpdateBase]:
         return (
-            self._with_compile_options(
-                _enable_eagerloads=False, _render_for_subquery=True
-            )
+            self._with_compile_options(_enable_eagerloads=False, _render_for_subquery=True)
             .set_label_style(LABEL_STYLE_TABLENAME_PLUS_COL)
             .statement
         )
 
     @overload
-    def only_return_tuples(
-        self: Query[_O], value: Literal[True]
-    ) -> RowReturningQuery[Tuple[_O]]: ...
+    def only_return_tuples(self: Query[_O], value: Literal[True]) -> RowReturningQuery[Tuple[_O]]: ...
 
     @overload
-    def only_return_tuples(
-        self: Query[_O], value: Literal[False]
-    ) -> Query[_O]: ...
+    def only_return_tuples(self: Query[_O], value: Literal[False]) -> Query[_O]: ...
 
     @_generative
     def only_return_tuples(self, value: bool) -> Query[Any]:
@@ -897,13 +849,10 @@ class Query(
 
     @util.became_legacy_20(
         ":meth:`_orm.Query.with_labels` and :meth:`_orm.Query.apply_labels`",
-        alternative="Use set_label_style(LABEL_STYLE_TABLENAME_PLUS_COL) "
-        "instead.",
+        alternative="Use set_label_style(LABEL_STYLE_TABLENAME_PLUS_COL) " "instead.",
     )
     def with_labels(self) -> Self:
-        return self.set_label_style(
-            SelectLabelStyle.LABEL_STYLE_TABLENAME_PLUS_COL
-        )
+        return self.set_label_style(SelectLabelStyle.LABEL_STYLE_TABLENAME_PLUS_COL)
 
     apply_labels = with_labels
 
@@ -995,9 +944,7 @@ class Query(
             :attr:`_sql.Select.whereclause` - v2 equivalent property.
 
         """
-        return BooleanClauseList._construct_for_whereclause(
-            self._where_criteria
-        )
+        return BooleanClauseList._construct_for_whereclause(self._where_criteria)
 
     @_generative
     def _with_current_path(self, path: PathRegistry) -> Self:
@@ -1197,9 +1144,7 @@ class Query(
         if fromclauses and fromclauses[0] in {None, False}:
             self._correlate = ()
         else:
-            self._correlate = self._correlate + tuple(
-                coercions.expect(roles.FromClauseRole, f) for f in fromclauses
-            )
+            self._correlate = self._correlate + tuple(coercions.expect(roles.FromClauseRole, f) for f in fromclauses)
         return self
 
     @_generative
@@ -1250,9 +1195,7 @@ class Query(
     def with_parent(
         self,
         instance: object,
-        property: Optional[  # noqa: A002
-            attributes.QueryableAttribute[Any]
-        ] = None,
+        property: Optional[attributes.QueryableAttribute[Any]] = None,  # noqa: A002
         from_entity: Optional[_ExternalEntityType[Any]] = None,
     ) -> Self:
         """Add filtering criterion that relates the given instance
@@ -1336,11 +1279,7 @@ class Query(
 
         self._raw_columns = list(self._raw_columns)
 
-        self._raw_columns.append(
-            coercions.expect(
-                roles.ColumnsClauseRole, entity, apply_propagate_attrs=self
-            )
-        )
+        self._raw_columns.append(coercions.expect(roles.ColumnsClauseRole, entity, apply_propagate_attrs=self))
         return self
 
     @_generative
@@ -1370,17 +1309,12 @@ class Query(
         self.session = session
         return self
 
-    def _legacy_from_self(
-        self, *entities: _ColumnsClauseArgument[Any]
-    ) -> Self:
+    def _legacy_from_self(self, *entities: _ColumnsClauseArgument[Any]) -> Self:
         # used for query.count() as well as for the same
         # function in BakedQuery, as well as some old tests in test_baked.py.
 
         fromclause = (
-            self.set_label_style(LABEL_STYLE_TABLENAME_PLUS_COL)
-            .correlate(None)
-            .subquery()
-            ._anonymous_fromclause()
+            self.set_label_style(LABEL_STYLE_TABLENAME_PLUS_COL).correlate(None).subquery()._anonymous_fromclause()
         )
 
         q = self._from_selectable(fromclause)
@@ -1395,9 +1329,7 @@ class Query(
         return self
 
     @_generative
-    def _from_selectable(
-        self, fromclause: FromClause, set_entity_from: bool = True
-    ) -> Self:
+    def _from_selectable(self, fromclause: FromClause, set_entity_from: bool = True) -> Self:
         for attr in (
             "_where_criteria",
             "_order_by_clauses",
@@ -1436,9 +1368,7 @@ class Query(
 
     _values = values
 
-    def _values_no_warn(
-        self, *columns: _ColumnsClauseArgument[Any]
-    ) -> Iterable[Any]:
+    def _values_no_warn(self, *columns: _ColumnsClauseArgument[Any]) -> Iterable[Any]:
         if not columns:
             return iter(())
         q = self._clone().enable_eagerloads(False)
@@ -1479,9 +1409,7 @@ class Query(
     # statically generated** by tools/generate_tuple_map_overloads.py
 
     @overload
-    def with_entities(
-        self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]
-    ) -> RowReturningQuery[Tuple[_T0, _T1]]: ...
+    def with_entities(self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]) -> RowReturningQuery[Tuple[_T0, _T1]]: ...
 
     @overload
     def with_entities(
@@ -1546,14 +1474,10 @@ class Query(
     # END OVERLOADED FUNCTIONS self.with_entities
 
     @overload
-    def with_entities(
-        self, *entities: _ColumnsClauseArgument[Any]
-    ) -> Query[Any]: ...
+    def with_entities(self, *entities: _ColumnsClauseArgument[Any]) -> Query[Any]: ...
 
     @_generative
-    def with_entities(
-        self, *entities: _ColumnsClauseArgument[Any], **__kw: Any
-    ) -> Query[Any]:
+    def with_entities(self, *entities: _ColumnsClauseArgument[Any], **__kw: Any) -> Query[Any]:
         r"""Return a new :class:`_query.Query`
         replacing the SELECT list with the
         given entities.
@@ -1594,9 +1518,7 @@ class Query(
         return self
 
     @_generative
-    def add_columns(
-        self, *column: _ColumnExpressionArgument[Any]
-    ) -> Query[Any]:
+    def add_columns(self, *column: _ColumnExpressionArgument[Any]) -> Query[Any]:
         """Add one or more column expressions to the list
         of result columns to be returned.
 
@@ -1662,9 +1584,7 @@ class Query(
         self._with_options += opts
         return self
 
-    def with_transformation(
-        self, fn: Callable[[Query[Any]], Query[Any]]
-    ) -> Query[Any]:
+    def with_transformation(self, fn: Callable[[Query[Any]], Query[Any]]) -> Query[Any]:
         """Return a new :class:`_query.Query` object transformed by
         the given function.
 
@@ -1843,9 +1763,7 @@ class Query(
         return self
 
     @_generative
-    def params(
-        self, __params: Optional[Dict[str, Any]] = None, **kw: Any
-    ) -> Self:
+    def params(self, __params: Optional[Dict[str, Any]] = None, **kw: Any) -> Self:
         r"""Add values for bind parameters which may have been
         specified in filter().
 
@@ -1901,9 +1819,7 @@ class Query(
 
         """  # noqa: E501
         for crit in list(criterion):
-            crit = coercions.expect(
-                roles.WhereHavingRole, crit, apply_propagate_attrs=self
-            )
+            crit = coercions.expect(roles.WhereHavingRole, crit, apply_propagate_attrs=self)
 
             self._where_criteria += (crit,)
         return self
@@ -1988,10 +1904,7 @@ class Query(
         """
         from_entity = self._filter_by_zero()
 
-        clauses = [
-            _entity_namespace_key(from_entity, key) == value
-            for key, value in kwargs.items()
-        ]
+        clauses = [_entity_namespace_key(from_entity, key) == value for key, value in kwargs.items()]
         return self.filter(*clauses)
 
     @_generative
@@ -2037,10 +1950,7 @@ class Query(
         if not clauses and (__first is None or __first is False):
             self._order_by_clauses = ()
         elif __first is not _NoArg.NO_ARG:
-            criterion = tuple(
-                coercions.expect(roles.OrderByRole, clause)
-                for clause in (__first,) + clauses
-            )
+            criterion = tuple(coercions.expect(roles.OrderByRole, clause) for clause in (__first,) + clauses)
             self._order_by_clauses += criterion
 
         return self
@@ -2081,10 +1991,7 @@ class Query(
         if not clauses and (__first is None or __first is False):
             self._group_by_clauses = ()
         elif __first is not _NoArg.NO_ARG:
-            criterion = tuple(
-                coercions.expect(roles.GroupByRole, clause)
-                for clause in (__first,) + clauses
-            )
+            criterion = tuple(coercions.expect(roles.GroupByRole, clause) for clause in (__first,) + clauses)
             self._group_by_clauses += criterion
         return self
 
@@ -2114,9 +2021,7 @@ class Query(
         """
 
         for criterion in having:
-            having_criteria = coercions.expect(
-                roles.WhereHavingRole, criterion
-            )
+            having_criteria = coercions.expect(roles.WhereHavingRole, criterion)
             self._having_criteria += (having_criteria,)
         return self
 
@@ -2452,9 +2357,7 @@ class Query(
             legacy=True,
         )
         if onclause is not None:
-            onclause_element = coercions.expect(
-                roles.OnClauseRole, onclause, legacy=True
-            )
+            onclause_element = coercions.expect(roles.OnClauseRole, onclause, legacy=True)
         else:
             onclause_element = None
 
@@ -2672,9 +2575,7 @@ class Query(
         """
         if expr:
             self._distinct = True
-            self._distinct_on = self._distinct_on + tuple(
-                coercions.expect(roles.ByOfRole, e) for e in expr
-            )
+            self._distinct_on = self._distinct_on + tuple(coercions.expect(roles.ByOfRole, e) for e in expr)
         else:
             self._distinct = True
         return self
@@ -2722,9 +2623,7 @@ class Query(
             :meth:`_sql.Select.from_statement` - v2 comparable method.
 
         """
-        statement = coercions.expect(
-            roles.SelectStatementRole, statement, apply_propagate_attrs=self
-        )
+        statement = coercions.expect(roles.SelectStatementRole, statement, apply_propagate_attrs=self)
         self._statement = statement
         return self
 
@@ -2864,10 +2763,7 @@ class Query(
         if result._attributes.get("is_single_entity", False):
             result = cast("Result[_T]", result).scalars()
 
-        if (
-            result._attributes.get("filtered", False)
-            and not self.load_options._yield_per
-        ):
+        if result._attributes.get("filtered", False) and not self.load_options._yield_per:
             result = result.unique()
 
         return result
@@ -2876,11 +2772,7 @@ class Query(
         statement = self._statement_20()
 
         try:
-            bind = (
-                self._get_bind_args(statement, self.session.get_bind)
-                if self.session
-                else None
-            )
+            bind = self._get_bind_args(statement, self.session.get_bind) if self.session else None
         except sa_exc.UnboundExecutionError:
             bind = None
 
@@ -2989,15 +2881,12 @@ class Query(
 
     @util.became_legacy_20(
         ":meth:`_orm.Query.merge_result`",
-        alternative="The method is superseded by the "
-        ":func:`_orm.merge_frozen_result` function.",
+        alternative="The method is superseded by the " ":func:`_orm.merge_frozen_result` function.",
         enable_warnings=False,  # warnings occur via loading.merge_result
     )
     def merge_result(
         self,
-        iterator: Union[
-            FrozenResult[Any], Iterable[Sequence[Any]], Iterable[object]
-        ],
+        iterator: Union[FrozenResult[Any], Iterable[Sequence[Any]], Iterable[object]],
         load: bool = True,
     ) -> Union[FrozenResult[Any], Iterable[Any]]:
         """Merge a result into this :class:`_query.Query` object's Session.
@@ -3142,9 +3031,7 @@ class Query(
 
         """
         col = sql.func.count(sql.literal_column("*"))
-        return (  # type: ignore
-            self._legacy_from_self(col).enable_eagerloads(False).scalar()
-        )
+        return self._legacy_from_self(col).enable_eagerloads(False).scalar()  # type: ignore
 
     def delete(
         self,
@@ -3210,9 +3097,7 @@ class Query(
             self.session.execute(
                 delete_,
                 self._params,
-                execution_options=self._execution_options.union(
-                    {"synchronize_session": synchronize_session}
-                ),
+                execution_options=self._execution_options.union({"synchronize_session": synchronize_session}),
             ),
         )
         bulk_del.result = result  # type: ignore
@@ -3304,9 +3189,7 @@ class Query(
             self.session.execute(
                 upd,
                 self._params,
-                execution_options=self._execution_options.union(
-                    {"synchronize_session": synchronize_session}
-                ),
+                execution_options=self._execution_options.union({"synchronize_session": synchronize_session}),
             ),
         )
         bulk_ud.result = result  # type: ignore
@@ -3314,9 +3197,7 @@ class Query(
         result.close()
         return result.rowcount
 
-    def _compile_state(
-        self, for_statement: bool = False, **kw: Any
-    ) -> ORMCompileState:
+    def _compile_state(self, for_statement: bool = False, **kw: Any) -> ORMCompileState:
         """Create an out-of-compiler ORMCompileState object.
 
         The ORMCompileState object is normally created directly as a result
@@ -3345,9 +3226,7 @@ class Query(
             ORMCompileState._get_plugin_class_for_plugin(stmt, "orm"),
         )
 
-        return compile_state_cls._create_orm_context(
-            stmt, toplevel=True, compiler=None
-        )
+        return compile_state_cls._create_orm_context(stmt, toplevel=True, compiler=None)
 
     def _compile_context(self, for_statement: bool = False) -> QueryContext:
         compile_state = self._compile_state(for_statement=for_statement)
@@ -3417,8 +3296,7 @@ class BulkUD:
         ):
             if not op(getattr(self.query, attr), notset):
                 raise sa_exc.InvalidRequestError(
-                    "Can't call Query.update() or Query.delete() "
-                    "when %s has been called" % (methname,)
+                    "Can't call Query.update() or Query.delete() " "when %s has been called" % (methname,)
                 )
 
     @property

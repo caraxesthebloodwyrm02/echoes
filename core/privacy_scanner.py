@@ -36,9 +36,7 @@ except ImportError:
     privacy_filter_path = Path(__file__).parent.parent / "privacy_filter.py"
     if not privacy_filter_path.exists():
         print("Error: privacy_filter.py not found.")
-        print(
-            "Please run 'python privacy_filters.py' first to create the privacy filter module."
-        )
+        print("Please run 'python privacy_filters.py' first to create the privacy filter module.")
         sys.exit(1)
 
     # Add parent directory to path for imports and retry

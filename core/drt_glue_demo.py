@@ -106,9 +106,7 @@ class DrtGlueDemo:
     def _init_exampleListbox(self, parent):
         self._exampleFrame = listframe = Frame(parent)
         self._exampleFrame.pack(fill="both", side="left", padx=2)
-        self._exampleList_label = Label(
-            self._exampleFrame, font=self._boldfont, text="Examples"
-        )
+        self._exampleList_label = Label(self._exampleFrame, font=self._boldfont, text="Examples")
         self._exampleList_label.pack()
         self._exampleList = Listbox(
             self._exampleFrame,
@@ -140,9 +138,7 @@ class DrtGlueDemo:
     def _init_readingListbox(self, parent):
         self._readingFrame = listframe = Frame(parent)
         self._readingFrame.pack(fill="both", side="left", padx=2)
-        self._readingList_label = Label(
-            self._readingFrame, font=self._boldfont, text="Readings"
-        )
+        self._readingList_label = Label(self._readingFrame, font=self._boldfont, text="Readings")
         self._readingList_label.pack()
         self._readingList = Listbox(
             self._readingFrame,
@@ -232,18 +228,12 @@ class DrtGlueDemo:
         menubar = Menu(parent)
 
         filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="q"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="q")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         actionmenu = Menu(menubar, tearoff=0)
-        actionmenu.add_command(
-            label="Next", underline=0, command=self.next, accelerator="n, Space"
-        )
-        actionmenu.add_command(
-            label="Previous", underline=0, command=self.prev, accelerator="p, Backspace"
-        )
+        actionmenu.add_command(label="Next", underline=0, command=self.next, accelerator="n, Space")
+        actionmenu.add_command(label="Previous", underline=0, command=self.prev, accelerator="p, Backspace")
         menubar.add_cascade(label="Action", underline=0, menu=actionmenu)
 
         optionmenu = Menu(menubar, tearoff=0)
@@ -393,10 +383,7 @@ class DrtGlueDemo:
             self._exampleList_store_selection(0)
 
     def about(self, *e):
-        ABOUT = (
-            "NLTK Discourse Representation Theory (DRT) Glue Semantics Demo\n"
-            + "Written by Daniel H. Garrette"
-        )
+        ABOUT = "NLTK Discourse Representation Theory (DRT) Glue Semantics Demo\n" + "Written by Daniel H. Garrette"
         TITLE = "About: NLTK DRT Glue Demo"
         try:
             from tkinter.messagebox import Message
@@ -476,9 +463,7 @@ class DrtGlueDemo:
                     # add a star to the end of the example
                     self._exampleList.delete(index)
                     self._exampleList.insert(index, ("  %s *" % example))
-                    self._exampleList.config(
-                        height=min(len(self._examples), 25), width=40
-                    )
+                    self._exampleList.config(height=min(len(self._examples), 25), width=40)
 
             self._populate_readingListbox()
 
@@ -509,9 +494,7 @@ class DrsWidget:
     def __init__(self, canvas, drs, **attribs):
         self._drs = drs
         self._canvas = canvas
-        canvas.font = Font(
-            font=canvas.itemcget(canvas.create_text(0, 0, text=""), "font")
-        )
+        canvas.font = Font(font=canvas.itemcget(canvas.create_text(0, 0, text=""), "font"))
         canvas._BUFFER = 3
         self.bbox = (0, 0, 0, 0)
 

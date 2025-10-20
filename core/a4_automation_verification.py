@@ -192,9 +192,7 @@ class AutomationVerifier:
             dry_modes = set(dry_meta.get("available_modes", []))
             live_modes = set(live_meta.get("available_modes", []))
             if dry_modes != live_modes:
-                comparison["issues"].append(
-                    f"Available modes differ: dry={dry_modes}, live={live_modes}"
-                )
+                comparison["issues"].append(f"Available modes differ: dry={dry_modes}, live={live_modes}")
                 comparison["metadata_consistency"] = False
 
             # Check conversation counts (should be similar)
@@ -230,9 +228,7 @@ class AutomationVerifier:
         live_time = live_run.get("execution_time", 0)
 
         if dry_time > 10 or live_time > 10:  # Should complete in reasonable time
-            comparison["issues"].append(
-                f"Unreasonable execution times: dry={dry_time:.3f}s, live={live_time:.3f}s"
-            )
+            comparison["issues"].append(f"Unreasonable execution times: dry={dry_time:.3f}s, live={live_time:.3f}s")
             comparison["execution_time_reasonable"] = False
 
         # Check for output presence
@@ -294,9 +290,9 @@ class AutomationVerifier:
 
         # Determine overall status
         comparison = self.results.get("comparison", {})
-        if report["summary"]["passed_tests"] == report["summary"][
-            "total_tests"
-        ] and comparison.get("overall_consistent", False):
+        if report["summary"]["passed_tests"] == report["summary"]["total_tests"] and comparison.get(
+            "overall_consistent", False
+        ):
             report["summary"]["overall_status"] = "PASS"
         elif report["summary"]["failed_tests"] == 0:
             report["summary"]["overall_status"] = "PARTIAL"
@@ -349,9 +345,7 @@ async def main():
     emoji = status_emoji.get(status, "❓")
 
     print(f"{emoji} Overall Status: {status}")
-    print(
-        f"   Tests Passed: {report['summary']['passed_tests']}/{report['summary']['total_tests']}"
-    )
+    print(f"   Tests Passed: {report['summary']['passed_tests']}/{report['summary']['total_tests']}")
 
     if comparison.get("overall_consistent"):
         print("   ✅ Execution paths are consistent")

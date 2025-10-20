@@ -75,15 +75,15 @@ class DummyApplication:
         self.events = _DummyEvents()
         self.registry = SphinxComponentRegistry()
         self.messagelog: list[str] = []
-        self.srcdir = _StrPath('/')
+        self.srcdir = _StrPath("/")
         self.translator = translator
         self.verbosity = 0
         self._warncount = 0
         self._exception_on_warning = False
 
-        self.config.add('autosummary_context', {}, 'env', ())
-        self.config.add('autosummary_filename_map', {}, 'env', ())
-        self.config.add('autosummary_ignore_module_all', True, 'env', bool)
+        self.config.add("autosummary_context", {}, "env", ())
+        self.config.add("autosummary_filename_map", {}, "env", ())
+        self.config.add("autosummary_ignore_module_all", True, "env", bool)
 
     def emit_firstresult(self, *args: Any) -> None:
         pass
@@ -124,11 +124,11 @@ def setup_documenters(app: Sphinx) -> None:
         app.registry.add_documenter(documenter.objtype, documenter)
 
 
-def _underline(title: str, line: str = '=') -> str:
-    if '\n' in title:
-        msg = 'Can only underline single lines'
+def _underline(title: str, line: str = "=") -> str:
+    if "\n" in title:
+        msg = "Can only underline single lines"
         raise ValueError(msg)
-    return title + '\n' + line * len(title)
+    return title + "\n" + line * len(title)
 
 
 class AutosummaryRenderer:
@@ -136,23 +136,19 @@ class AutosummaryRenderer:
 
     def __init__(self, app: Sphinx) -> None:
         if isinstance(app, Builder):
-            msg = 'Expected a Sphinx application object!'
+            msg = "Expected a Sphinx application object!"
             raise TypeError(msg)
 
-        system_templates_path = [
-            package_dir.joinpath('ext', 'autosummary', 'templates')
-        ]
-        loader = SphinxTemplateLoader(
-            app.srcdir, app.config.templates_path, system_templates_path
-        )
+        system_templates_path = [package_dir.joinpath("ext", "autosummary", "templates")]
+        loader = SphinxTemplateLoader(app.srcdir, app.config.templates_path, system_templates_path)
 
         self.env = SandboxedEnvironment(loader=loader)
-        self.env.filters['escape'] = rst.escape
-        self.env.filters['e'] = rst.escape
-        self.env.filters['underline'] = _underline
+        self.env.filters["escape"] = rst.escape
+        self.env.filters["e"] = rst.escape
+        self.env.filters["underline"] = _underline
 
         if app.translator:
-            self.env.add_extension('jinja2.ext.i18n')
+            self.env.add_extension("jinja2.ext.i18n")
             # ``install_gettext_translations`` is injected by the ``jinja2.ext.i18n`` extension
             self.env.install_gettext_translations(app.translator)  # type: ignore[attr-defined]
 
@@ -163,10 +159,10 @@ class AutosummaryRenderer:
         except TemplateNotFound:
             try:
                 # objtype is given as template_name
-                template = self.env.get_template('autosummary/%s.rst' % template_name)
+                template = self.env.get_template("autosummary/%s.rst" % template_name)
             except TemplateNotFound:
                 # fallback to base.rst
-                template = self.env.get_template('autosummary/base.rst')
+                template = self.env.get_template("autosummary/base.rst")
 
         return template.render(context)
 
@@ -185,20 +181,20 @@ def _split_full_qualified_name(name: str) -> tuple[str | None, str]:
               Therefore you need to mock 3rd party modules if needed before
               calling this function.
     """
-    parts = name.split('.')
+    parts = name.split(".")
     for i, _part in enumerate(parts, 1):
         try:
-            modname = '.'.join(parts[:i])
+            modname = ".".join(parts[:i])
             importlib.import_module(modname)
         except ImportError:
             if parts[: i - 1]:
-                return '.'.join(parts[: i - 1]), '.'.join(parts[i - 1 :])
+                return ".".join(parts[: i - 1]), ".".join(parts[i - 1 :])
             else:
-                return None, '.'.join(parts)
+                return None, ".".join(parts)
         except IndexError:
             pass
 
-    return name, ''
+    return name, ""
 
 
 # -- Generating output ---------------------------------------------------------
@@ -223,18 +219,13 @@ class ModuleScanner:
 
     def is_skipped(self, name: str, value: Any, objtype: str) -> bool:
         try:
-            return self.events.emit_firstresult(
-                'autodoc-skip-member', objtype, name, value, False, {}
-            )
+            return self.events.emit_firstresult("autodoc-skip-member", objtype, name, value, False, {})
         except Exception as exc:
             logger.warning(
-                __(
-                    'autosummary: failed to determine %r to be documented, '
-                    'the following exception was raised:\n%s'
-                ),
+                __("autosummary: failed to determine %r to be documented, " "the following exception was raised:\n%s"),
                 name,
                 exc,
-                type='autosummary',
+                type="autosummary",
             )
             return False
 
@@ -257,11 +248,11 @@ class ModuleScanner:
                 continue
 
             try:
-                if ('', name) in attr_docs:
+                if ("", name) in attr_docs:
                     imported = False
                 elif inspect.ismodule(value):  # NoQA: SIM114
                     imported = True
-                elif safe_getattr(value, '__module__') != self.object.__name__:
+                elif safe_getattr(value, "__module__") != self.object.__name__:
                     imported = True
                 else:
                     imported = False
@@ -275,7 +266,7 @@ class ModuleScanner:
                 # list not-imported members
                 or imported is False
                 # list members that have __all__ set
-                or (respect_module_all and '__all__' in dir(self.object))
+                or (respect_module_all and "__all__" in dir(self.object))
             ):
                 members.append(name)
 
@@ -318,53 +309,46 @@ def generate_autosummary_content(
     ns: dict[str, Any] = {}
     ns.update(context)
 
-    if doc.objtype == 'module':
+    if doc.objtype == "module":
         scanner = ModuleScanner(obj, config=config, events=events, registry=registry)
-        ns['members'] = scanner.scan(imported_members)
+        ns["members"] = scanner.scan(imported_members)
 
         respect_module_all = not config.autosummary_ignore_module_all
-        imported_members = imported_members or (
-            '__all__' in dir(obj) and respect_module_all
-        )
+        imported_members = imported_members or ("__all__" in dir(obj) and respect_module_all)
 
-        ns['functions'], ns['all_functions'] = _get_members(
+        ns["functions"], ns["all_functions"] = _get_members(
             doc,
             obj,
-            {'function'},
+            {"function"},
             config=config,
             events=events,
             registry=registry,
             imported=imported_members,
         )
-        ns['classes'], ns['all_classes'] = _get_members(
+        ns["classes"], ns["all_classes"] = _get_members(
             doc,
             obj,
-            {'class'},
+            {"class"},
             config=config,
             events=events,
             registry=registry,
             imported=imported_members,
         )
-        ns['exceptions'], ns['all_exceptions'] = _get_members(
+        ns["exceptions"], ns["all_exceptions"] = _get_members(
             doc,
             obj,
-            {'exception'},
+            {"exception"},
             config=config,
             events=events,
             registry=registry,
             imported=imported_members,
         )
-        ns['attributes'], ns['all_attributes'] = _get_module_attrs(name, ns['members'])
-        ispackage = hasattr(obj, '__path__')
+        ns["attributes"], ns["all_attributes"] = _get_module_attrs(name, ns["members"])
+        ispackage = hasattr(obj, "__path__")
         if ispackage and recursive:
             # Use members that are not modules as skip list, because it would then mean
             # that module was overwritten in the package namespace
-            skip = (
-                ns['all_functions']
-                + ns['all_classes']
-                + ns['all_exceptions']
-                + ns['all_attributes']
-            )
+            skip = ns["all_functions"] + ns["all_classes"] + ns["all_exceptions"] + ns["all_attributes"]
 
             # If respect_module_all and module has a __all__ attribute, first get
             # modules that were explicitly imported. Next, find the rest with the
@@ -372,11 +356,11 @@ def generate_autosummary_content(
             # __all__ list
             #
             # Otherwise, use get_modules method normally
-            if respect_module_all and '__all__' in dir(obj):
+            if respect_module_all and "__all__" in dir(obj):
                 imported_modules, all_imported_modules = _get_members(
                     doc,
                     obj,
-                    {'module'},
+                    {"module"},
                     config=config,
                     events=events,
                     registry=registry,
@@ -388,27 +372,25 @@ def generate_autosummary_content(
                 imported_modules, all_imported_modules = [], []
                 public_members = None
 
-            modules, all_modules = _get_modules(
-                obj, skip=skip, name=name, public_members=public_members
-            )
-            ns['modules'] = imported_modules + modules
-            ns['all_modules'] = all_imported_modules + all_modules
-    elif doc.objtype == 'class':
-        ns['members'] = dir(obj)
-        ns['inherited_members'] = set(dir(obj)) - set(obj.__dict__.keys())
-        ns['methods'], ns['all_methods'] = _get_members(
+            modules, all_modules = _get_modules(obj, skip=skip, name=name, public_members=public_members)
+            ns["modules"] = imported_modules + modules
+            ns["all_modules"] = all_imported_modules + all_modules
+    elif doc.objtype == "class":
+        ns["members"] = dir(obj)
+        ns["inherited_members"] = set(dir(obj)) - set(obj.__dict__.keys())
+        ns["methods"], ns["all_methods"] = _get_members(
             doc,
             obj,
-            {'method'},
+            {"method"},
             config=config,
             events=events,
             registry=registry,
-            include_public={'__init__'},
+            include_public={"__init__"},
         )
-        ns['attributes'], ns['all_attributes'] = _get_members(
+        ns["attributes"], ns["all_attributes"] = _get_members(
             doc,
             obj,
-            {'attribute', 'property'},
+            {"attribute", "property"},
             config=config,
             events=events,
             registry=registry,
@@ -417,21 +399,21 @@ def generate_autosummary_content(
     if modname is None or qualname is None:
         modname, qualname = _split_full_qualified_name(name)
 
-    if doc.objtype in {'method', 'attribute', 'property'}:
-        ns['class'] = qualname.rsplit('.', 1)[0]
+    if doc.objtype in {"method", "attribute", "property"}:
+        ns["class"] = qualname.rsplit(".", 1)[0]
 
-    if doc.objtype == 'class':
+    if doc.objtype == "class":
         shortname = qualname
     else:
-        shortname = qualname.rsplit('.', 1)[-1]
+        shortname = qualname.rsplit(".", 1)[-1]
 
-    ns['fullname'] = name
-    ns['module'] = modname
-    ns['objname'] = qualname
-    ns['name'] = shortname
+    ns["fullname"] = name
+    ns["module"] = modname
+    ns["objname"] = qualname
+    ns["name"] = shortname
 
-    ns['objtype'] = doc.objtype
-    ns['underline'] = len(name) * '='
+    ns["objtype"] = doc.objtype
+    ns["underline"] = len(name) * "="
 
     if template_name:
         return template.render(template_name, ns)
@@ -441,18 +423,13 @@ def generate_autosummary_content(
 
 def _skip_member(obj: Any, name: str, objtype: str, *, events: EventManager) -> bool:
     try:
-        return events.emit_firstresult(
-            'autodoc-skip-member', objtype, name, obj, False, {}
-        )
+        return events.emit_firstresult("autodoc-skip-member", objtype, name, obj, False, {})
     except Exception as exc:
         logger.warning(
-            __(
-                'autosummary: failed to determine %r to be documented, '
-                'the following exception was raised:\n%s'
-            ),
+            __("autosummary: failed to determine %r to be documented, " "the following exception was raised:\n%s"),
             name,
             exc,
-            type='autosummary',
+            type="autosummary",
         )
         return False
 
@@ -472,12 +449,10 @@ def _get_module_members(obj: Any, *, config: Config) -> dict[str, Any]:
     return members
 
 
-def _get_all_members(
-    doc: type[Documenter], obj: Any, *, config: Config
-) -> dict[str, Any]:
-    if doc.objtype == 'module':
+def _get_all_members(doc: type[Documenter], obj: Any, *, config: Config) -> dict[str, Any]:
+    if doc.objtype == "module":
         return _get_module_members(obj, config=config)
-    elif doc.objtype == 'class':
+    elif doc.objtype == "class":
         return _get_class_members(obj)
     return {}
 
@@ -501,7 +476,7 @@ def _get_members(
         documenter = _get_documenter(value, obj, registry=registry)
         if documenter.objtype in types:
             # skip imported members if expected
-            if imported or getattr(value, '__module__', None) == obj.__name__:
+            if imported or getattr(value, "__module__", None) == obj.__name__:
                 skipped = _skip_member(value, name, documenter.objtype, events=events)
                 if skipped is True:
                     pass
@@ -511,7 +486,7 @@ def _get_members(
                     public.append(name)
                 else:
                     items.append(name)
-                    if name in include_public or not name.startswith('_'):
+                    if name in include_public or not name.startswith("_"):
                         # considers member as public
                         public.append(name)
     return public, items
@@ -526,7 +501,7 @@ def _get_module_attrs(name: str, members: Any) -> tuple[list[str], list[str]]:
         for namespace, attr_name in attr_docs:
             if not namespace and attr_name in members:
                 attrs.append(attr_name)
-                if not attr_name.startswith('_'):
+                if not attr_name.startswith("_"):
                     public.append(attr_name)
     except PycodeError:
         pass  # give up if ModuleAnalyzer fails to parse code
@@ -546,13 +521,13 @@ def _get_modules(
         if modname in skip:
             # module was overwritten in __init__.py, so not accessible
             continue
-        fullname = f'{name}.{modname}'
+        fullname = f"{name}.{modname}"
         try:
             module = import_module(fullname)
         except ImportError:
             pass
         else:
-            if module and hasattr(module, '__sphinx_mock__'):
+            if module and hasattr(module, "__sphinx_mock__"):
                 continue
 
         items.append(modname)
@@ -560,7 +535,7 @@ def _get_modules(
             if modname in public_members:
                 public.append(modname)
         else:
-            if not modname.startswith('_'):
+            if not modname.startswith("_"):
                 public.append(modname)
     return public, items
 
@@ -568,28 +543,26 @@ def _get_modules(
 def generate_autosummary_docs(
     sources: list[str],
     output_dir: str | os.PathLike[str] | None = None,
-    suffix: str = '.rst',
+    suffix: str = ".rst",
     base_path: str | os.PathLike[str] | None = None,
     imported_members: bool = False,
     app: Sphinx | None = None,
     overwrite: bool = True,
-    encoding: str = 'utf-8',
+    encoding: str = "utf-8",
 ) -> list[Path]:
     """Generate autosummary documentation for the given sources.
 
     :returns: list of generated files (both new and existing ones)
     """
-    assert app is not None, 'app is required'
+    assert app is not None, "app is required"
 
     showed_sources = sorted(sources)
     if len(showed_sources) > 20:
-        showed_sources = showed_sources[:10] + ['...'] + showed_sources[-10:]
-    logger.info(
-        __('[autosummary] generating autosummary for: %s'), ', '.join(showed_sources)
-    )
+        showed_sources = showed_sources[:10] + ["..."] + showed_sources[-10:]
+    logger.info(__("[autosummary] generating autosummary for: %s"), ", ".join(showed_sources))
 
     if output_dir:
-        logger.info(__('[autosummary] writing to %s'), output_dir)
+        logger.info(__("[autosummary] writing to %s"), output_dir)
 
     if base_path is not None:
         base_path = Path(base_path)
@@ -620,23 +593,23 @@ def generate_autosummary_docs(
 
         try:
             name, obj, parent, modname = import_by_name(entry.name)
-            qualname = name.replace(modname + '.', '')
+            qualname = name.replace(modname + ".", "")
         except ImportExceptionGroup as exc:
             try:
                 # try to import as an instance attribute
                 name, obj, parent, modname = import_ivar_by_name(entry.name)
-                qualname = name.replace(modname + '.', '')
+                qualname = name.replace(modname + ".", "")
             except ImportError as exc2:
                 if exc2.__cause__:
                     exceptions: list[BaseException] = [*exc.exceptions, exc2.__cause__]
                 else:
                     exceptions = [*exc.exceptions, exc2]
 
-                errors = list({f'* {type(e).__name__}: {e}' for e in exceptions})
+                errors = list({f"* {type(e).__name__}: {e}" for e in exceptions})
                 logger.warning(
-                    __('[autosummary] failed to import %s.\nPossible hints:\n%s'),
+                    __("[autosummary] failed to import %s.\nPossible hints:\n%s"),
                     entry.name,
-                    '\n'.join(errors),
+                    "\n".join(errors),
                 )
                 continue
 
@@ -667,11 +640,11 @@ def generate_autosummary_docs(
             if content == old_content:
                 continue
             if overwrite:  # content has changed
-                with file_path.open('w', encoding=encoding) as f:
+                with file_path.open("w", encoding=encoding) as f:
                     f.write(content)
                 new_files.append(file_path)
         else:
-            with open(file_path, 'w', encoding=encoding) as f:
+            with open(file_path, "w", encoding=encoding) as f:
                 f.write(content)
             new_files.append(file_path)
 
@@ -704,7 +677,7 @@ def find_autosummary_in_files(
     """
     documented: list[AutosummaryEntry] = []
     for filename in filenames:
-        with open(filename, encoding='utf-8', errors='ignore') as f:
+        with open(filename, encoding="utf-8", errors="ignore") as f:
             lines = f.read().splitlines()
         documented.extend(find_autosummary_in_lines(lines, filename=filename))
     return documented
@@ -725,12 +698,11 @@ def find_autosummary_in_docstring(
     except AttributeError:
         pass
     except ImportExceptionGroup as exc:
-        errors = '\n'.join({f'* {type(e).__name__}: {e}' for e in exc.exceptions})
-        logger.warning(f'Failed to import {name}.\nPossible hints:\n{errors}')  # NoQA: G004
+        errors = "\n".join({f"* {type(e).__name__}: {e}" for e in exc.exceptions})
+        logger.warning(f"Failed to import {name}.\nPossible hints:\n{errors}")  # NoQA: G004
     except SystemExit:
         logger.warning(
-            "Failed to import '%s'; the module executes module level "
-            'statement and it might call sys.exit().',
+            "Failed to import '%s'; the module executes module level " "statement and it might call sys.exit().",
             name,
         )
     return []
@@ -751,22 +723,22 @@ def find_autosummary_in_lines(
     *template* ``None`` if the directive does not have the
     corresponding options set.
     """
-    autosummary_re = re.compile(r'^(\s*)\.\.\s+autosummary::\s*')
-    automodule_re = re.compile(r'^\s*\.\.\s+automodule::\s*([A-Za-z0-9_.]+)\s*$')
-    module_re = re.compile(r'^\s*\.\.\s+(current)?module::\s*([a-zA-Z0-9_.]+)\s*$')
-    autosummary_item_re = re.compile(r'^\s+(~?[_a-zA-Z][a-zA-Z0-9_.]*)\s*.*?')
-    recursive_arg_re = re.compile(r'^\s+:recursive:\s*$')
-    toctree_arg_re = re.compile(r'^\s+:toctree:\s*(.*?)\s*$')
-    template_arg_re = re.compile(r'^\s+:template:\s*(.*?)\s*$')
+    autosummary_re = re.compile(r"^(\s*)\.\.\s+autosummary::\s*")
+    automodule_re = re.compile(r"^\s*\.\.\s+automodule::\s*([A-Za-z0-9_.]+)\s*$")
+    module_re = re.compile(r"^\s*\.\.\s+(current)?module::\s*([a-zA-Z0-9_.]+)\s*$")
+    autosummary_item_re = re.compile(r"^\s+(~?[_a-zA-Z][a-zA-Z0-9_.]*)\s*.*?")
+    recursive_arg_re = re.compile(r"^\s+:recursive:\s*$")
+    toctree_arg_re = re.compile(r"^\s+:toctree:\s*(.*?)\s*$")
+    template_arg_re = re.compile(r"^\s+:template:\s*(.*?)\s*$")
 
     documented: list[AutosummaryEntry] = []
 
     recursive = False
     toctree: str | None = None
-    template = ''
+    template = ""
     current_module = module
     in_autosummary = False
-    base_indent = ''
+    base_indent = ""
 
     for line in lines:
         if in_autosummary:
@@ -787,18 +759,18 @@ def find_autosummary_in_lines(
                 template = m.group(1).strip()
                 continue
 
-            if line.strip().startswith(':'):
+            if line.strip().startswith(":"):
                 continue  # skip options
 
             m = autosummary_item_re.match(line)
             if m:
-                name = m.group(1).strip().removeprefix('~')
-                if current_module and not name.startswith(current_module + '.'):
-                    name = f'{current_module}.{name}'
+                name = m.group(1).strip().removeprefix("~")
+                if current_module and not name.startswith(current_module + "."):
+                    name = f"{current_module}.{name}"
                 documented.append(AutosummaryEntry(name, toctree, template, recursive))
                 continue
 
-            if not line.strip() or line.startswith(base_indent + ' '):
+            if not line.strip() or line.startswith(base_indent + " "):
                 continue
 
             in_autosummary = False
@@ -809,16 +781,14 @@ def find_autosummary_in_lines(
             base_indent = m.group(1)
             recursive = False
             toctree = None
-            template = ''
+            template = ""
             continue
 
         m = automodule_re.search(line)
         if m:
             current_module = m.group(1).strip()
             # recurse into the automodule docstring
-            documented.extend(
-                find_autosummary_in_docstring(current_module, filename=filename)
-            )
+            documented.extend(find_autosummary_in_docstring(current_module, filename=filename))
             continue
 
         m = module_re.match(line)
@@ -831,9 +801,10 @@ def find_autosummary_in_lines(
 
 def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
-        usage='%(prog)s [OPTIONS] <SOURCE_FILE>...',
-        epilog=__('For more information, visit <https://www.sphinx-doc.org/>.'),
-        description=__("""
+        usage="%(prog)s [OPTIONS] <SOURCE_FILE>...",
+        epilog=__("For more information, visit <https://www.sphinx-doc.org/>."),
+        description=__(
+            """
 Generate ReStructuredText using autosummary directives.
 
 sphinx-autogen is a frontend to sphinx.ext.autosummary.generate. It generates
@@ -844,77 +815,71 @@ The format of the autosummary directive is documented in the
 ``sphinx.ext.autosummary`` Python module and can be read using::
 
   pydoc sphinx.ext.autosummary
-"""),
+"""
+        ),
     )
 
     parser.add_argument(
-        '--version',
-        action='version',
-        dest='show_version',
-        version='%%(prog)s %s' % __display_version__,
+        "--version",
+        action="version",
+        dest="show_version",
+        version="%%(prog)s %s" % __display_version__,
     )
 
-    parser.add_argument(
-        'source_file', nargs='+', help=__('source files to generate rST files for')
-    )
+    parser.add_argument("source_file", nargs="+", help=__("source files to generate rST files for"))
 
     parser.add_argument(
-        '-o',
-        '--output-dir',
-        action='store',
-        dest='output_dir',
-        help=__('directory to place all output in'),
+        "-o",
+        "--output-dir",
+        action="store",
+        dest="output_dir",
+        help=__("directory to place all output in"),
     )
     parser.add_argument(
-        '-s',
-        '--suffix',
-        action='store',
-        dest='suffix',
-        default='rst',
-        help=__('default suffix for files (default: %(default)s)'),
+        "-s",
+        "--suffix",
+        action="store",
+        dest="suffix",
+        default="rst",
+        help=__("default suffix for files (default: %(default)s)"),
     )
     parser.add_argument(
-        '-t',
-        '--templates',
-        action='store',
-        dest='templates',
+        "-t",
+        "--templates",
+        action="store",
+        dest="templates",
         default=None,
-        help=__('custom template directory (default: %(default)s)'),
+        help=__("custom template directory (default: %(default)s)"),
     )
     parser.add_argument(
-        '-i',
-        '--imported-members',
-        action='store_true',
-        dest='imported_members',
+        "-i",
+        "--imported-members",
+        action="store_true",
+        dest="imported_members",
         default=False,
-        help=__('document imported members (default: %(default)s)'),
+        help=__("document imported members (default: %(default)s)"),
     )
     parser.add_argument(
-        '-a',
-        '--respect-module-all',
-        action='store_true',
-        dest='respect_module_all',
+        "-a",
+        "--respect-module-all",
+        action="store_true",
+        dest="respect_module_all",
         default=False,
-        help=__(
-            'document exactly the members in module __all__ attribute. '
-            '(default: %(default)s)'
-        ),
+        help=__("document exactly the members in module __all__ attribute. " "(default: %(default)s)"),
     )
     parser.add_argument(
-        '--remove-old',
-        action='store_true',
-        dest='remove_old',
+        "--remove-old",
+        action="store_true",
+        dest="remove_old",
         default=False,
-        help=__(
-            'Remove existing files in the output directory that were not generated'
-        ),
+        help=__("Remove existing files in the output directory that were not generated"),
     )
 
     return parser
 
 
 def main(argv: Sequence[str] = (), /) -> None:
-    locale.setlocale(locale.LC_ALL, '')
+    locale.setlocale(locale.LC_ALL, "")
     sphinx.locale.init_console()
 
     app = DummyApplication(sphinx.locale.get_translator())
@@ -929,24 +894,24 @@ def main(argv: Sequence[str] = (), /) -> None:
     written_files = generate_autosummary_docs(
         args.source_file,
         args.output_dir,
-        '.' + args.suffix,
+        "." + args.suffix,
         imported_members=args.imported_members,
         app=app,  # type: ignore[arg-type]
     )
 
     if args.remove_old:
-        for existing in Path(args.output_dir).glob(f'**/*.{args.suffix}'):
+        for existing in Path(args.output_dir).glob(f"**/*.{args.suffix}"):
             if existing not in written_files:
                 try:
                     existing.unlink()
                 except OSError as exc:
                     logger.warning(
-                        __('Failed to remove %s: %s'),
+                        __("Failed to remove %s: %s"),
                         existing,
                         exc.strerror,
-                        type='autosummary',
+                        type="autosummary",
                     )
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main(sys.argv[1:])

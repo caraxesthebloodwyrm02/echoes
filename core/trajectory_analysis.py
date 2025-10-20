@@ -126,9 +126,7 @@ class VectorSet:
                 raise ValueError(f"{name} must be 3D vector, got shape {vec.shape}")
             norm = np.linalg.norm(vec)
             if not np.isclose(norm, 1.0, atol=1e-6):
-                raise ValueError(
-                    f"{name} must be normalized (norm=1), got norm={norm:.6f}"
-                )
+                raise ValueError(f"{name} must be normalized (norm=1), got norm={norm:.6f}")
 
 
 @dataclass(frozen=True)
@@ -162,13 +160,9 @@ class EfficiencySummary:
     def __post_init__(self) -> None:
         """Validate efficiency summary metrics."""
         if self.efficiency_vector.shape != (3,):
-            raise ValueError(
-                f"efficiency_vector must be 3D, got {self.efficiency_vector.shape}"
-            )
+            raise ValueError(f"efficiency_vector must be 3D, got {self.efficiency_vector.shape}")
         if not -1.0 <= self.efficiency_score <= 1.0:
-            raise ValueError(
-                f"efficiency_score must be in [-1, 1], got {self.efficiency_score}"
-            )
+            raise ValueError(f"efficiency_score must be in [-1, 1], got {self.efficiency_score}")
         for name, angle in [
             ("balance_factor_degrees", self.balance_factor_degrees),
             ("angle_influence_productivity", self.angle_influence_productivity),
@@ -184,13 +178,9 @@ class EfficiencySummary:
 
         # Efficiency score interpretation
         if self.efficiency_score > 0.5:
-            lines.append(
-                "[+] High alignment: System operates with strong synergy across dimensions"
-            )
+            lines.append("[+] High alignment: System operates with strong synergy across dimensions")
         elif self.efficiency_score > 0.2:
-            lines.append(
-                "[!] Moderate alignment: Some tension exists but system is functional"
-            )
+            lines.append("[!] Moderate alignment: Some tension exists but system is functional")
         else:
             lines.append("[-] Low alignment: Significant conflicts between dimensions")
 
@@ -198,9 +188,7 @@ class EfficiencySummary:
         if self.balance_factor_degrees < 60:
             lines.append("[+] High synergy: Dimensions work together harmoniously")
         elif self.balance_factor_degrees < 120:
-            lines.append(
-                "[!] Moderate independence: Dimensions operate somewhat independently"
-            )
+            lines.append("[!] Moderate independence: Dimensions operate somewhat independently")
         else:
             lines.append("[-] Antagonistic: Dimensions work against each other")
 
@@ -214,9 +202,7 @@ class EfficiencySummary:
             lines.append("[!] Creativity is undervalued relative to influence")
 
         if self.angle_productivity_creativity > 135:
-            lines.append(
-                "[!] Risk: Productivity may be suppressing creative exploration"
-            )
+            lines.append("[!] Risk: Productivity may be suppressing creative exploration")
 
         return "\n".join(lines)
 
@@ -340,20 +326,14 @@ def calculate_efficiency_metrics(
     productivity_vector = normalize(productivity_base)
 
     # Find creativity vector from trajectory
-    creativity_point = next(
-        (p for p in trajectory_points if p.archetype == creativity_archetype), None
-    )
+    creativity_point = next((p for p in trajectory_points if p.archetype == creativity_archetype), None)
     if creativity_point is None:
-        raise ValueError(
-            f"Creativity archetype '{creativity_archetype}' not found in trajectory"
-        )
+        raise ValueError(f"Creativity archetype '{creativity_archetype}' not found in trajectory")
 
     creativity_vector = normalize(creativity_point.vector)
 
     # Compute efficiency vector
-    efficiency_vector = compute_efficiency_vector(
-        influence_vector, productivity_vector, creativity_vector
-    )
+    efficiency_vector = compute_efficiency_vector(influence_vector, productivity_vector, creativity_vector)
 
     # Calculate angular relationships
     angle_inf_prod = angle_between(influence_vector, productivity_vector)
@@ -576,15 +556,9 @@ def print_summary(summary: EfficiencySummary) -> None:
     print(f"Balance Factor: {summary.balance_factor_degrees:.2f} degrees")
 
     print("\nAngular Relationships:")
-    print(
-        f"  Influence <-> Productivity: {summary.angle_influence_productivity:.2f} degrees"
-    )
-    print(
-        f"  Influence <-> Creativity:   {summary.angle_influence_creativity:.2f} degrees"
-    )
-    print(
-        f"  Productivity <-> Creativity: {summary.angle_productivity_creativity:.2f} degrees"
-    )
+    print(f"  Influence <-> Productivity: {summary.angle_influence_productivity:.2f} degrees")
+    print(f"  Influence <-> Creativity:   {summary.angle_influence_creativity:.2f} degrees")
+    print(f"  Productivity <-> Creativity: {summary.angle_productivity_creativity:.2f} degrees")
 
     print("\nInterpretation:")
     for line in summary.interpretation().split("\n"):
@@ -606,21 +580,15 @@ Examples:
   python trajectory_analysis.py --no-plot  # Metrics only (CI/batch mode)
         """,
     )
-    parser.add_argument(
-        "--interactive", action="store_true", help="Show interactive 3D plot"
-    )
+    parser.add_argument("--interactive", action="store_true", help="Show interactive 3D plot")
     parser.add_argument("--output", type=Path, help="Path to save JSON results")
-    parser.add_argument(
-        "--save-plot", type=Path, help="Path to save plot image (PNG, PDF, SVG)"
-    )
+    parser.add_argument("--save-plot", type=Path, help="Path to save plot image (PNG, PDF, SVG)")
     parser.add_argument(
         "--no-plot",
         action="store_true",
         help="Skip plotting (useful for CI/batch processing)",
     )
-    parser.add_argument(
-        "--version", action="version", version=f"%(prog)s {__version__}"
-    )
+    parser.add_argument("--version", action="version", version=f"%(prog)s {__version__}")
 
     args = parser.parse_args()
 
@@ -648,9 +616,7 @@ Examples:
             # Create vector set
             influence_vec = normalize(np.array([0.6, 0.8, 0.5]))
             productivity_vec = normalize(np.array([0.9, 0.4, 0.3]))
-            creativity_point = next(
-                p for p in trajectory_points if p.archetype == "Leonardo da Vinci"
-            )
+            creativity_point = next(p for p in trajectory_points if p.archetype == "Leonardo da Vinci")
             creativity_vec = normalize(creativity_point.vector)
 
             vectors = VectorSet(
@@ -670,9 +636,7 @@ Examples:
             )
 
             if not args.interactive and not args.save_plot:
-                print(
-                    "[!] Plot generated but not displayed. Use --interactive or --save-plot"
-                )
+                print("[!] Plot generated but not displayed. Use --interactive or --save-plot")
 
         print("[OK] Analysis complete")
         return 0

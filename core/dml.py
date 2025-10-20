@@ -114,9 +114,7 @@ _DMLTableElement = Union[TableClause, Alias, Join]
 class DMLState(CompileState):
     _no_parameters = True
     _dict_parameters: Optional[MutableMapping[_DMLColumnElement, Any]] = None
-    _multi_parameters: Optional[
-        List[MutableMapping[_DMLColumnElement, Any]]
-    ] = None
+    _multi_parameters: Optional[List[MutableMapping[_DMLColumnElement, Any]]] = None
     _ordered_values: Optional[List[Tuple[_DMLColumnElement, Any]]] = None
     _parameter_ordering: Optional[List[_DMLColumnElement]] = None
     _primary_table: FromClause
@@ -128,26 +126,18 @@ class DMLState(CompileState):
 
     statement: UpdateBase
 
-    def __init__(
-        self, statement: UpdateBase, compiler: SQLCompiler, **kw: Any
-    ):
+    def __init__(self, statement: UpdateBase, compiler: SQLCompiler, **kw: Any):
         raise NotImplementedError()
 
     @classmethod
     def get_entity_description(cls, statement: UpdateBase) -> Dict[str, Any]:
         return {
-            "name": (
-                statement.table.name
-                if is_named_from_clause(statement.table)
-                else None
-            ),
+            "name": (statement.table.name if is_named_from_clause(statement.table) else None),
             "table": statement.table,
         }
 
     @classmethod
-    def get_returning_column_descriptions(
-        cls, statement: UpdateBase
-    ) -> List[Dict[str, Any]]:
+    def get_returning_column_descriptions(cls, statement: UpdateBase) -> List[Dict[str, Any]]:
         return [
             {
                 "name": c.key,
@@ -173,11 +163,7 @@ class DMLState(CompileState):
         multi_kv_iterator: Iterable[Dict[_DMLColumnArgument, Any]],
     ) -> List[Dict[_DMLColumnElement, Any]]:
         return [
-            {
-                coercions.expect(roles.DMLColumnRole, k): v
-                for k, v in mapping.items()
-            }
-            for mapping in multi_kv_iterator
+            {coercions.expect(roles.DMLColumnRole, k): v for k, v in mapping.items()} for mapping in multi_kv_iterator
         ]
 
     @classmethod
@@ -204,9 +190,7 @@ class DMLState(CompileState):
             for k, v in kv_iterator
         ]
 
-    def _make_extra_froms(
-        self, statement: DMLWhereBase
-    ) -> Tuple[FromClause, List[FromClause]]:
+    def _make_extra_froms(self, statement: DMLWhereBase) -> Tuple[FromClause, List[FromClause]]:
         froms: List[FromClause] = []
 
         all_tables = list(sql_util.tables_from_leftmost(statement.table))
@@ -233,9 +217,7 @@ class DMLState(CompileState):
 
     def _process_select_values(self, statement: ValuesBase) -> None:
         assert statement._select_names is not None
-        parameters: MutableMapping[_DMLColumnElement, Any] = {
-            name: Null() for name in statement._select_names
-        }
+        parameters: MutableMapping[_DMLColumnElement, Any] = {name: Null() for name in statement._select_names}
 
         if self._no_parameters:
             self._no_parameters = False
@@ -247,8 +229,7 @@ class DMLState(CompileState):
 
     def _no_multi_values_supported(self, statement: ValuesBase) -> NoReturn:
         raise exc.InvalidRequestError(
-            "%s construct does not support "
-            "multiple parameter sets." % statement.__visit_name__.upper()
+            "%s construct does not support " "multiple parameter sets." % statement.__visit_name__.upper()
         )
 
     def _cant_mix_formats_error(self) -> NoReturn:
@@ -292,10 +273,7 @@ class InsertDMLState(DMLState):
     @util.memoized_property
     def _insert_col_keys(self) -> List[str]:
         # this is also done in crud.py -> _key_getters_for_crud_column
-        return [
-            coercions.expect(roles.DMLColumnRole, col, as_key=True)
-            for col in self._dict_parameters or ()
-        ]
+        return [coercions.expect(roles.DMLColumnRole, col, as_key=True) for col in self._dict_parameters or ()]
 
     def _process_values(self, statement: ValuesBase) -> None:
         if self._no_parameters:
@@ -309,10 +287,7 @@ class InsertDMLState(DMLState):
         for parameters in statement._multi_values:
             multi_parameters: List[MutableMapping[_DMLColumnElement, Any]] = [
                 (
-                    {
-                        c.key: value
-                        for c, value in zip(statement.table.c, parameter_set)
-                    }
+                    {c.key: value for c, value in zip(statement.table.c, parameter_set)}
                     if isinstance(parameter_set, collections_abc.Sequence)
                     else parameter_set
                 )
@@ -352,9 +327,7 @@ class UpdateDMLState(DMLState):
         self._extra_froms = ef
 
         self.is_multitable = mt = ef
-        self.include_table_with_column_exprs = bool(
-            mt and compiler.render_table_with_column_in_update_from
-        )
+        self.include_table_with_column_exprs = bool(mt and compiler.render_table_with_column_in_update_from)
 
     def _process_ordered_values(self, statement: ValuesBase) -> None:
         parameters = statement._ordered_values
@@ -367,8 +340,7 @@ class UpdateDMLState(DMLState):
             self._parameter_ordering = [key for key, value in parameters]
         else:
             raise exc.InvalidRequestError(
-                "Can only invoke ordered_values() once, and not mixed "
-                "with any other values() call"
+                "Can only invoke ordered_values() once, and not mixed " "with any other values() call"
             )
 
 
@@ -400,20 +372,14 @@ class UpdateBase(
 
     __visit_name__ = "update_base"
 
-    _hints: util.immutabledict[Tuple[_DMLTableElement, str], str] = (
-        util.EMPTY_DICT
-    )
+    _hints: util.immutabledict[Tuple[_DMLTableElement, str], str] = util.EMPTY_DICT
     named_with_column = False
 
-    _label_style: SelectLabelStyle = (
-        SelectLabelStyle.LABEL_STYLE_DISAMBIGUATE_ONLY
-    )
+    _label_style: SelectLabelStyle = SelectLabelStyle.LABEL_STYLE_DISAMBIGUATE_ONLY
     table: _DMLTableElement
 
     _return_defaults = False
-    _return_defaults_columns: Optional[Tuple[_ColumnsClauseElement, ...]] = (
-        None
-    )
+    _return_defaults_columns: Optional[Tuple[_ColumnsClauseElement, ...]] = None
     _supplemental_returning: Optional[Tuple[_ColumnsClauseElement, ...]] = None
     _returning: Tuple[_ColumnsClauseElement, ...] = ()
 
@@ -667,43 +633,31 @@ class UpdateBase(
             if self._return_defaults_columns and cols:
                 self._return_defaults_columns = tuple(
                     util.OrderedSet(self._return_defaults_columns).union(
-                        coercions.expect(roles.ColumnsClauseRole, c)
-                        for c in cols
+                        coercions.expect(roles.ColumnsClauseRole, c) for c in cols
                     )
                 )
             else:
                 # set for all columns
                 self._return_defaults_columns = ()
         else:
-            self._return_defaults_columns = tuple(
-                coercions.expect(roles.ColumnsClauseRole, c) for c in cols
-            )
+            self._return_defaults_columns = tuple(coercions.expect(roles.ColumnsClauseRole, c) for c in cols)
         self._return_defaults = True
         if sort_by_parameter_order:
             if not self.is_insert:
                 raise exc.ArgumentError(
-                    "The 'sort_by_parameter_order' argument to "
-                    "return_defaults() only applies to INSERT statements"
+                    "The 'sort_by_parameter_order' argument to " "return_defaults() only applies to INSERT statements"
                 )
             self._sort_by_parameter_order = True
         if supplemental_cols:
             # uniquifying while also maintaining order (the maintain of order
             # is for test suites but also for vertical splicing
-            supplemental_col_tup = (
-                coercions.expect(roles.ColumnsClauseRole, c)
-                for c in supplemental_cols
-            )
+            supplemental_col_tup = (coercions.expect(roles.ColumnsClauseRole, c) for c in supplemental_cols)
 
             if self._supplemental_returning is None:
-                self._supplemental_returning = tuple(
-                    util.unique_list(supplemental_col_tup)
-                )
+                self._supplemental_returning = tuple(util.unique_list(supplemental_col_tup))
             else:
                 self._supplemental_returning = tuple(
-                    util.unique_list(
-                        self._supplemental_returning
-                        + tuple(supplemental_col_tup)
-                    )
+                    util.unique_list(self._supplemental_returning + tuple(supplemental_col_tup))
                 )
 
         return self
@@ -816,17 +770,12 @@ class UpdateBase(
         if __kw:
             raise _unexpected_kw("UpdateBase.returning()", __kw)
         if self._return_defaults:
-            raise exc.InvalidRequestError(
-                "return_defaults() is already configured on this statement"
-            )
-        self._returning += tuple(
-            coercions.expect(roles.ColumnsClauseRole, c) for c in cols
-        )
+            raise exc.InvalidRequestError("return_defaults() is already configured on this statement")
+        self._returning += tuple(coercions.expect(roles.ColumnsClauseRole, c) for c in cols)
         if sort_by_parameter_order:
             if not self.is_insert:
                 raise exc.ArgumentError(
-                    "The 'sort_by_parameter_order' argument to returning() "
-                    "only applies to INSERT statements"
+                    "The 'sort_by_parameter_order' argument to returning() " "only applies to INSERT statements"
                 )
             self._sort_by_parameter_order = True
         return self
@@ -834,9 +783,7 @@ class UpdateBase(
     def corresponding_column(
         self, column: KeyedColumnElement[Any], require_embedded: bool = False
     ) -> Optional[ColumnElement[Any]]:
-        return self.exported_columns.corresponding_column(
-            column, require_embedded=require_embedded
-        )
+        return self.exported_columns.corresponding_column(column, require_embedded=require_embedded)
 
     @util.ro_memoized_property
     def _all_selected_columns(self) -> _SelectIterable:
@@ -852,11 +799,7 @@ class UpdateBase(
         .. versionadded:: 1.4
 
         """
-        return ColumnCollection(
-            (c.key, c)
-            for c in self._all_selected_columns
-            if is_column_element(c)
-        ).as_readonly()
+        return ColumnCollection((c.key, c) for c in self._all_selected_columns if is_column_element(c)).as_readonly()
 
     @_generative
     def with_hint(
@@ -979,9 +922,7 @@ class UpdateBase(
             :ref:`queryguide_inspection` - ORM background
 
         """  # noqa: E501
-        meth = DMLState.get_plugin_class(
-            self
-        ).get_returning_column_descriptions
+        meth = DMLState.get_plugin_class(self).get_returning_column_descriptions
         return meth(self)
 
 
@@ -1015,9 +956,7 @@ class ValuesBase(UpdateBase):
     _inline: bool = False
 
     def __init__(self, table: _DMLTableArgument):
-        self.table = coercions.expect(
-            roles.DMLTableRole, table, apply_propagate_attrs=self
-        )
+        self.table = coercions.expect(roles.DMLTableRole, table, apply_propagate_attrs=self)
 
     @_generative
     @_exclusive_against(
@@ -1025,8 +964,7 @@ class ValuesBase(UpdateBase):
         "_ordered_values",
         msgs={
             "_select_names": "This construct already inserts from a SELECT",
-            "_ordered_values": "This statement already has ordered "
-            "values present",
+            "_ordered_values": "This statement already has ordered " "values present",
         },
     )
     def values(
@@ -1144,21 +1082,15 @@ class ValuesBase(UpdateBase):
             arg = args[0]
 
             if kwargs:
-                raise exc.ArgumentError(
-                    "Can't pass positional and kwargs to values() "
-                    "simultaneously"
-                )
+                raise exc.ArgumentError("Can't pass positional and kwargs to values() " "simultaneously")
             elif len(args) > 1:
                 raise exc.ArgumentError(
-                    "Only a single dictionary/tuple or list of "
-                    "dictionaries/tuples is accepted positionally."
+                    "Only a single dictionary/tuple or list of " "dictionaries/tuples is accepted positionally."
                 )
 
             elif isinstance(arg, collections_abc.Sequence):
                 if arg and isinstance(arg[0], dict):
-                    multi_kv_generator = DMLState.get_plugin_class(
-                        self
-                    )._get_multi_crud_kv_pairs
+                    multi_kv_generator = DMLState.get_plugin_class(self)._get_multi_crud_kv_pairs
                     self._multi_values += (multi_kv_generator(self, arg),)
                     return self
 
@@ -1180,8 +1112,7 @@ class ValuesBase(UpdateBase):
             arg = cast("Dict[_DMLColumnArgument, Any]", kwargs)
             if args:
                 raise exc.ArgumentError(
-                    "Only a single dictionary/tuple or list of "
-                    "dictionaries/tuples is accepted positionally."
+                    "Only a single dictionary/tuple or list of " "dictionaries/tuples is accepted positionally."
                 )
 
         # for top level values(), convert literals to anonymous bound
@@ -1310,14 +1241,9 @@ class Insert(ValuesBase):
         """
 
         if self._values:
-            raise exc.InvalidRequestError(
-                "This construct already inserts value expressions"
-            )
+            raise exc.InvalidRequestError("This construct already inserts value expressions")
 
-        self._select_names = [
-            coercions.expect(roles.DMLColumnRole, name, as_key=True)
-            for name in names
-        ]
+        self._select_names = [coercions.expect(roles.DMLColumnRole, name, as_key=True) for name in names]
         self._inline = True
         self.include_insert_from_select_defaults = include_defaults
         self.select = coercions.expect(roles.DMLSelectRole, select)
@@ -1416,9 +1342,7 @@ class Insert(ValuesBase):
             __ent7: _TCCA[_T7],
             *,
             sort_by_parameter_order: bool = False,
-        ) -> ReturningInsert[
-            Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]
-        ]: ...
+        ) -> ReturningInsert[Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]]: ...
 
         # END OVERLOADED FUNCTIONS self.returning
 
@@ -1502,10 +1426,7 @@ class DMLWhereBase:
         """
         from_entity = self._filter_by_zero()
 
-        clauses = [
-            _entity_namespace_key(from_entity, key) == value
-            for key, value in kwargs.items()
-        ]
+        clauses = [_entity_namespace_key(from_entity, key) == value for key, value in kwargs.items()]
         return self.filter(*clauses)
 
     @property
@@ -1521,9 +1442,7 @@ class DMLWhereBase:
 
         """
 
-        return BooleanClauseList._construct_for_whereclause(
-            self._where_criteria
-        )
+        return BooleanClauseList._construct_for_whereclause(self._where_criteria)
 
 
 class Update(DMLWhereBase, ValuesBase):
@@ -1585,13 +1504,9 @@ class Update(DMLWhereBase, ValuesBase):
 
         """  # noqa: E501
         if self._values:
-            raise exc.ArgumentError(
-                "This statement already has values present"
-            )
+            raise exc.ArgumentError("This statement already has values present")
         elif self._ordered_values:
-            raise exc.ArgumentError(
-                "This statement already has ordered values present"
-            )
+            raise exc.ArgumentError("This statement already has ordered values present")
 
         kv_generator = DMLState.get_plugin_class(self)._get_crud_kv_pairs
         self._ordered_values = kv_generator(self, args, True)
@@ -1623,14 +1538,10 @@ class Update(DMLWhereBase, ValuesBase):
         # statically generated** by tools/generate_tuple_map_overloads.py
 
         @overload
-        def returning(
-            self, __ent0: _TCCA[_T0]
-        ) -> ReturningUpdate[Tuple[_T0]]: ...
+        def returning(self, __ent0: _TCCA[_T0]) -> ReturningUpdate[Tuple[_T0]]: ...
 
         @overload
-        def returning(
-            self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]
-        ) -> ReturningUpdate[Tuple[_T0, _T1]]: ...
+        def returning(self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]) -> ReturningUpdate[Tuple[_T0, _T1]]: ...
 
         @overload
         def returning(
@@ -1690,20 +1601,14 @@ class Update(DMLWhereBase, ValuesBase):
             __ent5: _TCCA[_T5],
             __ent6: _TCCA[_T6],
             __ent7: _TCCA[_T7],
-        ) -> ReturningUpdate[
-            Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]
-        ]: ...
+        ) -> ReturningUpdate[Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]]: ...
 
         # END OVERLOADED FUNCTIONS self.returning
 
         @overload
-        def returning(
-            self, *cols: _ColumnsClauseArgument[Any], **__kw: Any
-        ) -> ReturningUpdate[Any]: ...
+        def returning(self, *cols: _ColumnsClauseArgument[Any], **__kw: Any) -> ReturningUpdate[Any]: ...
 
-        def returning(
-            self, *cols: _ColumnsClauseArgument[Any], **__kw: Any
-        ) -> ReturningUpdate[Any]: ...
+        def returning(self, *cols: _ColumnsClauseArgument[Any], **__kw: Any) -> ReturningUpdate[Any]: ...
 
 
 class ReturningUpdate(Update, TypedReturnsRows[_TP]):
@@ -1744,9 +1649,7 @@ class Delete(DMLWhereBase, UpdateBase):
     )
 
     def __init__(self, table: _DMLTableArgument):
-        self.table = coercions.expect(
-            roles.DMLTableRole, table, apply_propagate_attrs=self
-        )
+        self.table = coercions.expect(roles.DMLTableRole, table, apply_propagate_attrs=self)
 
     if TYPE_CHECKING:
         # START OVERLOADED FUNCTIONS self.returning ReturningDelete 1-8
@@ -1755,14 +1658,10 @@ class Delete(DMLWhereBase, UpdateBase):
         # statically generated** by tools/generate_tuple_map_overloads.py
 
         @overload
-        def returning(
-            self, __ent0: _TCCA[_T0]
-        ) -> ReturningDelete[Tuple[_T0]]: ...
+        def returning(self, __ent0: _TCCA[_T0]) -> ReturningDelete[Tuple[_T0]]: ...
 
         @overload
-        def returning(
-            self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]
-        ) -> ReturningDelete[Tuple[_T0, _T1]]: ...
+        def returning(self, __ent0: _TCCA[_T0], __ent1: _TCCA[_T1]) -> ReturningDelete[Tuple[_T0, _T1]]: ...
 
         @overload
         def returning(
@@ -1822,20 +1721,14 @@ class Delete(DMLWhereBase, UpdateBase):
             __ent5: _TCCA[_T5],
             __ent6: _TCCA[_T6],
             __ent7: _TCCA[_T7],
-        ) -> ReturningDelete[
-            Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]
-        ]: ...
+        ) -> ReturningDelete[Tuple[_T0, _T1, _T2, _T3, _T4, _T5, _T6, _T7]]: ...
 
         # END OVERLOADED FUNCTIONS self.returning
 
         @overload
-        def returning(
-            self, *cols: _ColumnsClauseArgument[Any], **__kw: Any
-        ) -> ReturningDelete[Any]: ...
+        def returning(self, *cols: _ColumnsClauseArgument[Any], **__kw: Any) -> ReturningDelete[Any]: ...
 
-        def returning(
-            self, *cols: _ColumnsClauseArgument[Any], **__kw: Any
-        ) -> ReturningDelete[Any]: ...
+        def returning(self, *cols: _ColumnsClauseArgument[Any], **__kw: Any) -> ReturningDelete[Any]: ...
 
 
 class ReturningDelete(Update, TypedReturnsRows[_TP]):

@@ -33,9 +33,7 @@ def not_suppressed(argtypes: Sequence[ast.expr] = ()) -> bool:
     return True
 
 
-def signature_from_ast(
-    node: ast.FunctionDef, bound_method: bool, type_comment: ast.FunctionDef
-) -> Signature:
+def signature_from_ast(node: ast.FunctionDef, bound_method: bool, type_comment: ast.FunctionDef) -> Signature:
     """Return a Signature object for the given *node*.
 
     :param bound_method: Specify *node* is a bound method or not
@@ -106,18 +104,18 @@ def get_type_comment(obj: Any, bound_method: bool = False) -> Signature | None:
     """
     try:
         source = getsource(obj)
-        if source.startswith((' ', r'\t')):
+        if source.startswith((" ", r"\t")):
             # subject is placed inside class or block.  To read its docstring,
             # this adds if-block before the declaration.
-            module = ast.parse('if True:\n' + source, type_comments=True)
-            subject = cast('ast.FunctionDef', module.body[0].body[0])  # type: ignore[attr-defined]
+            module = ast.parse("if True:\n" + source, type_comments=True)
+            subject = cast("ast.FunctionDef", module.body[0].body[0])  # type: ignore[attr-defined]
         else:
             module = ast.parse(source, type_comments=True)
-            subject = cast('ast.FunctionDef', module.body[0])
+            subject = cast("ast.FunctionDef", module.body[0])
 
-        type_comment = getattr(subject, 'type_comment', None)
+        type_comment = getattr(subject, "type_comment", None)
         if type_comment:
-            function = ast.parse(type_comment, mode='func_type', type_comments=True)
+            function = ast.parse(type_comment, mode="func_type", type_comments=True)
             return signature_from_ast(subject, bound_method, function)  # type: ignore[arg-type]
         else:
             return None
@@ -127,9 +125,7 @@ def get_type_comment(obj: Any, bound_method: bool = False) -> Signature | None:
         return None
 
 
-def update_annotations_using_type_comments(
-    app: Sphinx, obj: Any, bound_method: bool
-) -> None:
+def update_annotations_using_type_comments(app: Sphinx, obj: Any, bound_method: bool) -> None:
     """Update annotations info of *obj* using type_comments."""
     if not app.config.autodoc_use_type_comments:
         return
@@ -144,25 +140,19 @@ def update_annotations_using_type_comments(
                     if annotation is not Parameter.empty:
                         obj.__annotations__[param.name] = ast_unparse(annotation)
 
-            if 'return' not in obj.__annotations__:
-                obj.__annotations__['return'] = type_sig.return_annotation
+            if "return" not in obj.__annotations__:
+                obj.__annotations__["return"] = type_sig.return_annotation
     except KeyError as exc:
-        logger.warning(
-            __('Failed to update signature for %r: parameter not found: %s'), obj, exc
-        )
+        logger.warning(__("Failed to update signature for %r: parameter not found: %s"), obj, exc)
     except NotImplementedError as exc:  # failed to ast.unparse()
-        logger.warning(__('Failed to parse type_comment for %r: %s'), obj, exc)
+        logger.warning(__("Failed to parse type_comment for %r: %s"), obj, exc)
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
-    app.add_config_value(
-        'autodoc_use_type_comments', True, 'env', types=frozenset({bool})
-    )
-    app.connect(
-        'autodoc-before-process-signature', update_annotations_using_type_comments
-    )
+    app.add_config_value("autodoc_use_type_comments", True, "env", types=frozenset({bool}))
+    app.connect("autodoc-before-process-signature", update_annotations_using_type_comments)
 
     return {
-        'version': sphinx.__display_version__,
-        'parallel_read_safe': True,
+        "version": sphinx.__display_version__,
+        "parallel_read_safe": True,
     }

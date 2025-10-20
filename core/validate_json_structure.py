@@ -234,13 +234,9 @@ def generate_validation_report():
     report.append("## 3. Recommendations")
     report.append("")
     report.append("### Structure Improvements:")
-    report.append(
-        "1. **Participant-based organization** (implemented in validated version)"
-    )
+    report.append("1. **Participant-based organization** (implemented in validated version)")
     report.append("2. **Simplified timestamp format** (time_s + timestamp fields)")
-    report.append(
-        "3. **Metadata enrichment** (duration, participant count, exchange stats)"
-    )
+    report.append("3. **Metadata enrichment** (duration, participant count, exchange stats)")
     report.append("4. **Role-based grouping** for better conversational analysis")
     report.append("")
 

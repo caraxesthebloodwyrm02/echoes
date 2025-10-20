@@ -56,9 +56,7 @@ try:
     KG_AVAILABLE = True
 except ImportError:
     KG_AVAILABLE = False
-    logging.warning(
-        "Knowledge graph dependencies not available. Install networkx and rdflib."
-    )
+    logging.warning("Knowledge graph dependencies not available. Install networkx and rdflib.")
 
 
 class KnowledgeGraphBridge:
@@ -90,9 +88,7 @@ class KnowledgeGraphBridge:
             self.kg = None
             self.reasoner = None
             if enable_kg:
-                logging.warning(
-                    "Knowledge graph requested but dependencies not available"
-                )
+                logging.warning("Knowledge graph requested but dependencies not available")
 
     def sync_insights_to_kg(self, insights: List[Dict[str, Any]]) -> int:
         """
@@ -119,9 +115,7 @@ class KnowledgeGraphBridge:
                         "content": insight.get("content", ""),
                         "category": insight.get("category", "general"),
                         "confidence": insight.get("confidence", 0.5),
-                        "timestamp": insight.get(
-                            "timestamp", datetime.now().isoformat()
-                        ),
+                        "timestamp": insight.get("timestamp", datetime.now().isoformat()),
                         "session_id": insight.get("session_id", ""),
                     },
                 )
@@ -129,9 +123,7 @@ class KnowledgeGraphBridge:
                 # Add relationships if available
                 if "related_insights" in insight:
                     for related in insight["related_insights"]:
-                        self.kg.add_relationship(
-                            insight_uri, "related_to", related, {"similarity": 0.8}
-                        )
+                        self.kg.add_relationship(insight_uri, "related_to", related, {"similarity": 0.8})
 
                 synced_count += 1
 
@@ -139,9 +131,7 @@ class KnowledgeGraphBridge:
                 logging.error(f"Failed to sync insight to KG: {e}")
                 continue
 
-        logging.info(
-            f"Synced {synced_count}/{len(insights)} insights to knowledge graph"
-        )
+        logging.info(f"Synced {synced_count}/{len(insights)} insights to knowledge graph")
         return synced_count
 
     def semantic_search(
@@ -232,9 +222,7 @@ class KnowledgeGraphBridge:
                 del self._cache[oldest_key]
             self._cache[cache_key] = final_results
 
-            logging.debug(
-                f"Semantic search returned {len(final_results)} results for: {query}"
-            )
+            logging.debug(f"Semantic search returned {len(final_results)} results for: {query}")
             return final_results
 
         except Exception as e:
@@ -279,9 +267,7 @@ class KnowledgeGraphBridge:
             # Use knowledge graph's similarity function
             from rdflib import URIRef
 
-            similar = self.kg.find_similar_entities(
-                URIRef(insight_uri), similarity_threshold
-            )
+            similar = self.kg.find_similar_entities(URIRef(insight_uri), similarity_threshold)
 
             return similar[:limit]
 
@@ -448,9 +434,7 @@ class KnowledgeGraphBridge:
 
 
 # Convenience function for easy integration
-def create_kg_bridge(
-    enable_kg: bool = True, cache_size: int = 100
-) -> KnowledgeGraphBridge:
+def create_kg_bridge(enable_kg: bool = True, cache_size: int = 100) -> KnowledgeGraphBridge:
     """
     Factory function to create a KnowledgeGraphBridge instance
 

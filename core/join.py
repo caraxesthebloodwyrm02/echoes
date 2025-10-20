@@ -142,9 +142,7 @@ class InstanceJoiner:
                 assert new_type is not None
                 args.append(new_type)
             result: ProperType = Instance(t.type, args)
-        elif t.type.bases and is_proper_subtype(
-            t, s, subtype_context=SubtypeContext(ignore_type_params=True)
-        ):
+        elif t.type.bases and is_proper_subtype(t, s, subtype_context=SubtypeContext(ignore_type_params=True)):
             result = self.join_instances_via_supertype(t, s)
         else:
             # Now t is not a subtype of s, and t != s. Now s could be a subtype
@@ -205,9 +203,7 @@ def trivial_join(s: Type, t: Type) -> Type:
 
 
 @overload
-def join_types(
-    s: ProperType, t: ProperType, instance_joiner: InstanceJoiner | None = None
-) -> ProperType: ...
+def join_types(s: ProperType, t: ProperType, instance_joiner: InstanceJoiner | None = None) -> ProperType: ...
 
 
 @overload
@@ -328,9 +324,7 @@ class TypeJoinVisitor(TypeVisitor[ProperType]):
             from mypy.meet import meet_types
 
             return t.copy_modified(
-                arg_types=[
-                    meet_types(s_a, t_a) for s_a, t_a in zip(self.s.arg_types, t.arg_types)
-                ],
+                arg_types=[meet_types(s_a, t_a) for s_a, t_a in zip(self.s.arg_types, t.arg_types)],
                 arg_names=combine_arg_names(self.s, t),
             )
         else:
@@ -383,10 +377,7 @@ class TypeJoinVisitor(TypeVisitor[ProperType]):
                 or (self.s.is_type_obj() and self.s.type_object().is_abstract)
             ):
                 result.from_type_type = True
-            if any(
-                isinstance(tp, (NoneType, UninhabitedType))
-                for tp in get_proper_types(result.arg_types)
-            ):
+            if any(isinstance(tp, (NoneType, UninhabitedType)) for tp in get_proper_types(result.arg_types)):
                 # We don't want to return unusable Callable, attempt fallback instead.
                 return join_types(t.fallback, self.s)
             return result
@@ -497,13 +488,7 @@ class TypeJoinVisitor(TypeVisitor[ProperType]):
                     else:
                         assert isinstance(t_unpacked, TypeVarTupleType)
                         tuple_instance = t_unpacked.tuple_fallback
-                    items.append(
-                        UnpackType(
-                            tuple_instance.copy_modified(
-                                args=[object_from_instance(tuple_instance)]
-                            )
-                        )
-                    )
+                    items.append(UnpackType(tuple_instance.copy_modified(args=[object_from_instance(tuple_instance)])))
                 if suffix_len:
                     for si, ti in zip(s.items[-suffix_len:], t.items[-suffix_len:]):
                         items.append(join_types(si, ti))
@@ -545,9 +530,7 @@ class TypeJoinVisitor(TypeVisitor[ProperType]):
             return None
         prefix_len = unpack_index
         suffix_len = variadic.length() - prefix_len - 1
-        prefix, middle, suffix = split_with_prefix_and_suffix(
-            tuple(fixed.items), prefix_len, suffix_len
-        )
+        prefix, middle, suffix = split_with_prefix_and_suffix(tuple(fixed.items), prefix_len, suffix_len)
         items = []
         for fi, vi in zip(prefix, variadic.items[:prefix_len]):
             items.append(join_types(fi, vi))
@@ -699,11 +682,7 @@ def is_similar_callables(t: CallableType, s: CallableType) -> bool:
     """Return True if t and s have identical numbers of
     arguments, default arguments and varargs.
     """
-    return (
-        len(t.arg_types) == len(s.arg_types)
-        and t.min_args == s.min_args
-        and t.is_var_arg == s.is_var_arg
-    )
+    return len(t.arg_types) == len(s.arg_types) and t.min_args == s.min_args and t.is_var_arg == s.is_var_arg
 
 
 def is_similar_params(t: Parameters, s: Parameters) -> bool:
@@ -817,9 +796,7 @@ def combine_similar_callables(t: CallableType, s: CallableType) -> CallableType:
     )
 
 
-def combine_arg_names(
-    t: CallableType | Parameters, s: CallableType | Parameters
-) -> list[str | None]:
+def combine_arg_names(t: CallableType | Parameters, s: CallableType | Parameters) -> list[str | None]:
     """Produces a list of argument names compatible with both callables.
 
     For example, suppose 't' and 's' have the following signatures:

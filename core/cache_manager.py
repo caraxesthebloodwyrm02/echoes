@@ -72,9 +72,7 @@ class CacheManager:
         with self.lock.acquire():
             yield
 
-    def get_cached_result(
-        self, file_path: Path, max_age: Optional[timedelta] = None
-    ) -> Optional[Dict[str, Any]]:
+    def get_cached_result(self, file_path: Path, max_age: Optional[timedelta] = None) -> Optional[Dict[str, Any]]:
         """
         Retrieve cached results if available and valid.
 

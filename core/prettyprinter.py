@@ -73,11 +73,7 @@ class TreePrettyPrinter:
     def __init__(self, tree, sentence=None, highlight=()):
         if sentence is None:
             leaves = tree.leaves()
-            if (
-                leaves
-                and all(len(a) > 0 for a in tree.subtrees())
-                and all(isinstance(a, int) for a in leaves)
-            ):
+            if leaves and all(len(a) > 0 for a in tree.subtrees()) and all(isinstance(a, int) for a in leaves):
                 sentence = [str(a) for a in leaves]
             else:
                 # this deals with empty nodes (frontier non-terminals)
@@ -95,9 +91,7 @@ class TreePrettyPrinter:
                                 if type(b) == tuple:
                                     b = "/".join(b)
                                 sentence.append("%s" % b)
-        self.nodes, self.coords, self.edges, self.highlight = self.nodecoords(
-            tree, sentence, highlight
-        )
+        self.nodes, self.coords, self.edges, self.highlight = self.nodecoords(tree, sentence, highlight)
 
     def __str__(self):
         return self.text()
@@ -162,44 +156,28 @@ class TreePrettyPrinter:
                 startoflevel = len(matrix)
             for rowidx in range(startoflevel, len(matrix) + 1):
                 if rowidx == len(matrix):  # need to add a new row
-                    matrix.append(
-                        [
-                            vertline if a not in (corner, None) else None
-                            for a in matrix[-1]
-                        ]
-                    )
+                    matrix.append([vertline if a not in (corner, None) else None for a in matrix[-1]])
                 row = matrix[rowidx]
                 if len(children[m]) == 1:  # place unaries directly above child
                     return rowidx, next(iter(children[m]))[1]
-                elif all(
-                    a is None or a == vertline
-                    for a in row[min(candidates) : max(candidates) + 1]
-                ):
+                elif all(a is None or a == vertline for a in row[min(candidates) : max(candidates) + 1]):
                     # find free column
                     for n in range(scale):
                         i = j = center + n
                         while j > minidx or i < maxidx:
-                            if i < maxidx and (
-                                matrix[rowidx][i] is None or i in candidates
-                            ):
+                            if i < maxidx and (matrix[rowidx][i] is None or i in candidates):
                                 return rowidx, i
-                            elif j > minidx and (
-                                matrix[rowidx][j] is None or j in candidates
-                            ):
+                            elif j > minidx and (matrix[rowidx][j] is None or j in candidates):
                                 return rowidx, j
                             i += scale
                             j -= scale
             raise ValueError(
-                "could not find a free cell for:\n%s\n%s"
-                "min=%d; max=%d" % (tree[m], minidx, maxidx, dumpmatrix())
+                "could not find a free cell for:\n%s\n%s" "min=%d; max=%d" % (tree[m], minidx, maxidx, dumpmatrix())
             )
 
         def dumpmatrix():
             """Dump matrix contents for debugging purposes."""
-            return "\n".join(
-                "%2d: %s" % (n, " ".join(("%2r" % i)[:2] for i in row))
-                for n, row in enumerate(matrix)
-            )
+            return "\n".join("%2d: %s" % (n, " ".join(("%2r" % i)[:2] for i in row)) for n, row in enumerate(matrix))
 
         leaves = tree.leaves()
         if not all(isinstance(n, int) for n in leaves):
@@ -225,9 +203,7 @@ class TreePrettyPrinter:
         matrix = [[None] * (len(sentence) * scale)]
         nodes = {}
         ids = {a: n for n, a in enumerate(positions)}
-        highlighted_nodes = {
-            n for a, n in ids.items() if not highlight or tree[a] in highlight
-        }
+        highlighted_nodes = {n for a, n in ids.items() if not highlight or tree[a] in highlight}
         levels = {n: [] for n in range(maxdepth - 1)}
         terminals = []
         for a in positions:
@@ -259,22 +235,12 @@ class TreePrettyPrinter:
         for n in sorted(levels, reverse=True):
             nodesatdepth = levels[n]
             startoflevel = len(matrix)
-            matrix.append(
-                [vertline if a not in (corner, None) else None for a in matrix[-1]]
-            )
+            matrix.append([vertline if a not in (corner, None) else None for a in matrix[-1]])
             for m in nodesatdepth:  # [::-1]:
                 if n < maxdepth - 1 and childcols[m]:
                     _, pivot = min(childcols[m], key=itemgetter(1))
-                    if {
-                        a[:-1]
-                        for row in matrix[:-1]
-                        for a in row[:pivot]
-                        if isinstance(a, tuple)
-                    } & {
-                        a[:-1]
-                        for row in matrix[:-1]
-                        for a in row[pivot:]
-                        if isinstance(a, tuple)
+                    if {a[:-1] for row in matrix[:-1] for a in row[:pivot] if isinstance(a, tuple)} & {
+                        a[:-1] for row in matrix[:-1] for a in row[pivot:] if isinstance(a, tuple)
                     }:
                         crossed.add(m)
 
@@ -301,11 +267,7 @@ class TreePrettyPrinter:
                     del row[m]
 
         # remove unused rows, reverse
-        matrix = [
-            row
-            for row in reversed(matrix)
-            if not all(a is None or a == vertline for a in row)
-        ]
+        matrix = [row for row in reversed(matrix) if not all(a is None or a == vertline for a in row)]
 
         # collect coordinates of nodes
         coords = {}
@@ -390,19 +352,13 @@ class TreePrettyPrinter:
         maxchildcol = {}
         childcols = defaultdict(set)
         labels = {}
-        wrapre = re.compile(
-            "(.{%d,%d}\\b\\W*|.{%d})" % (maxwidth - 4, maxwidth, maxwidth)
-        )
+        wrapre = re.compile("(.{%d,%d}\\b\\W*|.{%d})" % (maxwidth - 4, maxwidth, maxwidth))
         # collect labels and coordinates
         for a in self.nodes:
             row, column = self.coords[a]
             matrix[row][column] = a
             maxcol = max(maxcol, column)
-            label = (
-                self.nodes[a].label()
-                if isinstance(self.nodes[a], Tree)
-                else self.nodes[a]
-            )
+            label = self.nodes[a].label() if isinstance(self.nodes[a], Tree) else self.nodes[a]
             if abbreviate and len(label) > abbreviate:
                 label = label[:abbreviate] + ellipsis
             if maxwidth and len(label) > maxwidth:
@@ -419,10 +375,7 @@ class TreePrettyPrinter:
             maxchildcol[parent] = max(maxchildcol.get(parent, column), column)
         # bottom up level order traversal
         for row in sorted(matrix, reverse=True):
-            noderows = [
-                ["".center(maxnodewith[col]) for col in range(maxcol + 1)]
-                for _ in range(maxnodeheight[row])
-            ]
+            noderows = [["".center(maxnodewith[col]) for col in range(maxcol + 1)] for _ in range(maxnodeheight[row])]
             branchrow = ["".center(maxnodewith[col]) for col in range(maxcol + 1)]
             for col in matrix[row]:
                 n = matrix[row][col]
@@ -433,12 +386,8 @@ class TreePrettyPrinter:
                     if n in minchildcol and minchildcol[n] < maxchildcol[n]:
                         i, j = minchildcol[n], maxchildcol[n]
                         a, b = (maxnodewith[i] + 1) // 2 - 1, maxnodewith[j] // 2
-                        branchrow[i] = ((" " * a) + leftcorner).ljust(
-                            maxnodewith[i], horzline
-                        )
-                        branchrow[j] = (rightcorner + (" " * b)).rjust(
-                            maxnodewith[j], horzline
-                        )
+                        branchrow[i] = ((" " * a) + leftcorner).ljust(maxnodewith[i], horzline)
+                        branchrow[j] = (rightcorner + (" " * b)).rjust(maxnodewith[j], horzline)
                         for i in range(minchildcol[n] + 1, maxchildcol[n]):
                             if i == col and any(a == i for _, a in childcols[n]):
                                 line = cross
@@ -465,11 +414,7 @@ class TreePrettyPrinter:
                     # draw vertical lines in partially filled multiline node
                     # labels, but only if it's not a frontier node.
                     noderows[x][col] = (
-                        text[x]
-                        if x < len(text)
-                        else (vertline if childcols[n] else " ").center(
-                            maxnodewith[col], " "
-                        )
+                        text[x] if x < len(text) else (vertline if childcols[n] else " ").center(maxnodewith[col], " ")
                     )
             # for each column, if there is a node below us which has a parent
             # above us, draw a vertical branch in that column.
@@ -481,13 +426,10 @@ class TreePrettyPrinter:
                             for noderow in noderows:
                                 noderow[col] = crosscell(noderow[col])
                 branchrow = [
-                    a + ((a[-1] if a[-1] != " " else b[0]) * nodedist)
-                    for a, b in zip(branchrow, branchrow[1:] + [" "])
+                    a + ((a[-1] if a[-1] != " " else b[0]) * nodedist) for a, b in zip(branchrow, branchrow[1:] + [" "])
                 ]
                 result.append("".join(branchrow))
-            result.extend(
-                (" " * nodedist).join(noderow) for noderow in reversed(noderows)
-            )
+            result.extend((" " * nodedist).join(noderow) for noderow in reversed(noderows))
         return "\n".join(reversed(result)) + "\n"
 
     def svg(self, nodecolor="blue", leafcolor="red", funccolor="green"):
@@ -575,9 +517,7 @@ class TreePrettyPrinter:
                     fontsize,
                     x,
                     y,
-                    escape(
-                        node.label() if isinstance(node, Tree) else node, quote=False
-                    ),
+                    escape(node.label() if isinstance(node, Tree) else node, quote=False),
                 )
             ]
 
@@ -614,10 +554,7 @@ def test():
         "(vg 10) (inf (verb 11)))))) (punct 12))",
         read_leaf=int,
     )
-    sentence = (
-        "Ze had met haar moeder kunnen gaan winkelen ,"
-        " zwemmen of terrassen .".split()
-    )
+    sentence = "Ze had met haar moeder kunnen gaan winkelen ," " zwemmen of terrassen .".split()
     print_tree("Discontinuous tree", tree, sentence, nodedist=2)
 
 

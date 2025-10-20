@@ -1,4 +1,5 @@
 """ io on the clipboard """
+
 from __future__ import annotations
 
 from io import StringIO
@@ -129,9 +130,7 @@ def read_clipboard(
     return read_csv(StringIO(text), sep=sep, dtype_backend=dtype_backend, **kwargs)
 
 
-def to_clipboard(
-    obj, excel: bool | None = True, sep: str | None = None, **kwargs
-) -> None:  # pragma: no cover
+def to_clipboard(obj, excel: bool | None = True, sep: str | None = None, **kwargs) -> None:  # pragma: no cover
     """
     Attempt to write text representation of object to the system clipboard
     The clipboard can be then pasted into Excel for example.

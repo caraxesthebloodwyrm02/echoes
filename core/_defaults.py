@@ -14,16 +14,12 @@ def env(key, type_, default=None):
             return True
         if val.lower() in ["0", "false", "no", "n", "nok", "off"]:
             return False
-        raise ValueError(
-            "Invalid environment variable '%s' (expected a boolean): '%s'" % (key, val)
-        )
+        raise ValueError("Invalid environment variable '%s' (expected a boolean): '%s'" % (key, val))
     if type_ is int:
         try:
             return int(val)
         except ValueError:
-            raise ValueError(
-                "Invalid environment variable '%s' (expected an integer): '%s'" % (key, val)
-            ) from None
+            raise ValueError("Invalid environment variable '%s' (expected an integer): '%s'" % (key, val)) from None
     raise ValueError("The requested type '%s' is not supported" % type_.__name__)
 
 

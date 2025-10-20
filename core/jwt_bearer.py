@@ -41,9 +41,7 @@ class JWTBearerGrant(BaseGrant, TokenEndpointMixin):
         claims=None,
         **kwargs,
     ):
-        return sign_jwt_bearer_assertion(
-            key, issuer, audience, subject, issued_at, expires_at, claims, **kwargs
-        )
+        return sign_jwt_bearer_assertion(key, issuer, audience, subject, issued_at, expires_at, claims, **kwargs)
 
     def process_assertion_claims(self, assertion):
         """Extract JWT payload claims from request "assertion", per
@@ -56,9 +54,7 @@ class JWTBearerGrant(BaseGrant, TokenEndpointMixin):
         .. _`Section 3.1`: https://tools.ietf.org/html/rfc7523#section-3.1
         """
         try:
-            claims = jwt.decode(
-                assertion, self.resolve_public_key, claims_options=self.CLAIMS_OPTIONS
-            )
+            claims = jwt.decode(assertion, self.resolve_public_key, claims_options=self.CLAIMS_OPTIONS)
             claims.validate(leeway=self.LEEWAY)
         except JoseError as e:
             log.debug("Assertion Error: %r", e)
@@ -109,9 +105,7 @@ class JWTBearerGrant(BaseGrant, TokenEndpointMixin):
         log.debug("Validate token request of %s", client)
 
         if not client.check_grant_type(self.GRANT_TYPE):
-            raise UnauthorizedClientError(
-                f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'"
-            )
+            raise UnauthorizedClientError(f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'")
 
         self.request.client = client
         self.validate_requested_scope()
@@ -124,9 +118,7 @@ class JWTBearerGrant(BaseGrant, TokenEndpointMixin):
 
             log.debug("Check client(%s) permission to User(%s)", client, user)
             if not self.has_granted_permission(client, user):
-                raise InvalidClientError(
-                    description="Client has no permission to access user data"
-                )
+                raise InvalidClientError(description="Client has no permission to access user data")
             self.request.user = user
 
     def create_token_response(self):

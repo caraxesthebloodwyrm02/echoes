@@ -7,7 +7,7 @@
 # For license information, see LICENSE.TXT
 
 
-from itertools import chain, product
+from itertools import chain
 from typing import Callable, Iterable, List, Tuple
 
 from nltk.corpus import WordNetCorpusReader, wordnet
@@ -30,14 +30,10 @@ def _generate_enums(
     :return: enumerated words list
     """
     if isinstance(hypothesis, str):
-        raise TypeError(
-            f'"hypothesis" expects pre-tokenized hypothesis (Iterable[str]): {hypothesis}'
-        )
+        raise TypeError(f'"hypothesis" expects pre-tokenized hypothesis (Iterable[str]): {hypothesis}')
 
     if isinstance(reference, str):
-        raise TypeError(
-            f'"reference" expects pre-tokenized reference (Iterable[str]): {reference}'
-        )
+        raise TypeError(f'"reference" expects pre-tokenized reference (Iterable[str]): {reference}')
 
     enum_hypothesis_list = list(enumerate(map(preprocess, hypothesis)))
     enum_reference_list = list(enumerate(map(preprocess, reference)))
@@ -79,9 +75,7 @@ def _match_enums(
     for i in range(len(enum_hypothesis_list))[::-1]:
         for j in range(len(enum_reference_list))[::-1]:
             if enum_hypothesis_list[i][1] == enum_reference_list[j][1]:
-                word_match.append(
-                    (enum_hypothesis_list[i][0], enum_reference_list[j][0])
-                )
+                word_match.append((enum_hypothesis_list[i][0], enum_reference_list[j][0]))
                 enum_hypothesis_list.pop(i)
                 enum_reference_list.pop(j)
                 break
@@ -105,13 +99,9 @@ def _enum_stem_match(
     :return: enumerated matched tuples, enumerated unmatched hypothesis tuples,
              enumerated unmatched reference tuples
     """
-    stemmed_enum_hypothesis_list = [
-        (word_pair[0], stemmer.stem(word_pair[1])) for word_pair in enum_hypothesis_list
-    ]
+    stemmed_enum_hypothesis_list = [(word_pair[0], stemmer.stem(word_pair[1])) for word_pair in enum_hypothesis_list]
 
-    stemmed_enum_reference_list = [
-        (word_pair[0], stemmer.stem(word_pair[1])) for word_pair in enum_reference_list
-    ]
+    stemmed_enum_reference_list = [(word_pair[0], stemmer.stem(word_pair[1])) for word_pair in enum_reference_list]
 
     return _match_enums(stemmed_enum_hypothesis_list, stemmed_enum_reference_list)
 
@@ -153,19 +143,13 @@ def _enum_wordnetsyn_match(
     for i in range(len(enum_hypothesis_list))[::-1]:
         hypothesis_syns = set(
             chain.from_iterable(
-                (
-                    lemma.name()
-                    for lemma in synset.lemmas()
-                    if lemma.name().find("_") < 0
-                )
+                (lemma.name() for lemma in synset.lemmas() if lemma.name().find("_") < 0)
                 for synset in wordnet.synsets(enum_hypothesis_list[i][1])
             )
         ).union({enum_hypothesis_list[i][1]})
         for j in range(len(enum_reference_list))[::-1]:
             if enum_reference_list[j][1] in hypothesis_syns:
-                word_match.append(
-                    (enum_hypothesis_list[i][0], enum_reference_list[j][0])
-                )
+                word_match.append((enum_hypothesis_list[i][0], enum_reference_list[j][0]))
                 enum_hypothesis_list.pop(i)
                 enum_reference_list.pop(j)
                 break
@@ -187,9 +171,7 @@ def wordnetsyn_match(
     :return: list of mapped tuples
     """
     enum_hypothesis_list, enum_reference_list = _generate_enums(hypothesis, reference)
-    return _enum_wordnetsyn_match(
-        enum_hypothesis_list, enum_reference_list, wordnet=wordnet
-    )
+    return _enum_wordnetsyn_match(enum_hypothesis_list, enum_reference_list, wordnet=wordnet)
 
 
 def _enum_align_words(
@@ -212,9 +194,7 @@ def _enum_align_words(
     :return: sorted list of matched tuples, unmatched hypothesis list,
              unmatched reference list
     """
-    exact_matches, enum_hypothesis_list, enum_reference_list = _match_enums(
-        enum_hypothesis_list, enum_reference_list
-    )
+    exact_matches, enum_hypothesis_list, enum_reference_list = _match_enums(enum_hypothesis_list, enum_reference_list)
 
     stem_matches, enum_hypothesis_list, enum_reference_list = _enum_stem_match(
         enum_hypothesis_list, enum_reference_list, stemmer=stemmer
@@ -225,9 +205,7 @@ def _enum_align_words(
     )
 
     return (
-        sorted(
-            exact_matches + stem_matches + wns_matches, key=lambda wordpair: wordpair[0]
-        ),
+        sorted(exact_matches + stem_matches + wns_matches, key=lambda wordpair: wordpair[0]),
         enum_hypothesis_list,
         enum_reference_list,
     )
@@ -252,9 +230,7 @@ def align_words(
     :return: sorted list of matched tuples, unmatched hypothesis list, unmatched reference list
     """
     enum_hypothesis_list, enum_reference_list = _generate_enums(hypothesis, reference)
-    return _enum_align_words(
-        enum_hypothesis_list, enum_reference_list, stemmer=stemmer, wordnet=wordnet
-    )
+    return _enum_align_words(enum_hypothesis_list, enum_reference_list, stemmer=stemmer, wordnet=wordnet)
 
 
 def _count_chunks(matches: List[Tuple[int, int]]) -> int:
@@ -269,9 +245,7 @@ def _count_chunks(matches: List[Tuple[int, int]]) -> int:
     i = 0
     chunks = 1
     while i < len(matches) - 1:
-        if (matches[i + 1][0] == matches[i][0] + 1) and (
-            matches[i + 1][1] == matches[i][1] + 1
-        ):
+        if (matches[i + 1][0] == matches[i][0] + 1) and (matches[i + 1][1] == matches[i][1] + 1):
             i += 1
             continue
         i += 1
@@ -323,14 +297,10 @@ def single_meteor_score(
     :param gamma: relative weight assigned to fragmentation penalty.
     :return: The sentence-level METEOR score.
     """
-    enum_hypothesis, enum_reference = _generate_enums(
-        hypothesis, reference, preprocess=preprocess
-    )
+    enum_hypothesis, enum_reference = _generate_enums(hypothesis, reference, preprocess=preprocess)
     translation_length = len(enum_hypothesis)
     reference_length = len(enum_reference)
-    matches, _, _ = _enum_align_words(
-        enum_hypothesis, enum_reference, stemmer=stemmer, wordnet=wordnet
-    )
+    matches, _, _ = _enum_align_words(enum_hypothesis, enum_reference, stemmer=stemmer, wordnet=wordnet)
     matches_count = len(matches)
     try:
         precision = float(matches_count) / translation_length

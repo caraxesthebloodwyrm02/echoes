@@ -90,9 +90,7 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
             return
         self.seen_aliases.add(t)
         assert t.alias is not None, f"Unfixed type alias {t.type_ref}"
-        is_error, is_invalid = self.validate_args(
-            t.alias.name, tuple(t.args), t.alias.alias_tvars, t
-        )
+        is_error, is_invalid = self.validate_args(t.alias.name, tuple(t.args), t.alias.alias_tvars, t)
         if is_invalid:
             # If there is an arity error (e.g. non-Parameters used for ParamSpec etc.),
             # then it is safer to erase the arguments completely, to avoid crashes later.
@@ -142,9 +140,7 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
             prefix = next(i for (i, v) in enumerate(type_vars) if isinstance(v, TypeVarTupleType))
             tvt = type_vars[prefix]
             assert isinstance(tvt, TypeVarTupleType)
-            start, middle, end = split_with_prefix_and_suffix(
-                tuple(args), prefix, len(type_vars) - prefix - 1
-            )
+            start, middle, end = split_with_prefix_and_suffix(tuple(args), prefix, len(type_vars) - prefix - 1)
             args = start + (TupleType(list(middle), tvt.tuple_fallback),) + end
 
         is_error = False
@@ -168,8 +164,7 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
                 if isinstance(arg, Parameters):
                     is_invalid = True
                     self.fail(
-                        f"Cannot use {format_type(arg, self.options)} for regular type variable,"
-                        " only for ParamSpec",
+                        f"Cannot use {format_type(arg, self.options)} for regular type variable," " only for ParamSpec",
                         context,
                         code=codes.VALID_TYPE,
                     )
@@ -191,17 +186,12 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
                             continue
                     else:
                         arg_values = [arg]
-                    if self.check_type_var_values(
-                        name, arg_values, tvar.name, tvar.values, context
-                    ):
+                    if self.check_type_var_values(name, arg_values, tvar.name, tvar.values, context):
                         is_error = True
                 # Check against upper bound. Since it's object the vast majority of the time,
                 # add fast path to avoid a potentially slow subtype check.
                 upper_bound = tvar.upper_bound
-                object_upper_bound = (
-                    type(upper_bound) is Instance
-                    and upper_bound.type.fullname == "builtins.object"
-                )
+                object_upper_bound = type(upper_bound) is Instance and upper_bound.type.fullname == "builtins.object"
                 if not object_upper_bound and not is_subtype(arg, upper_bound):
                     if self.in_type_alias_expr and isinstance(arg, TypeVarType):
                         # Type aliases are allowed to use unconstrained type variables
@@ -218,9 +208,7 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
                         code=codes.TYPE_VAR,
                     )
             elif isinstance(tvar, ParamSpecType):
-                if not isinstance(
-                    get_proper_type(arg), (ParamSpecType, Parameters, AnyType, UnboundType)
-                ):
+                if not isinstance(get_proper_type(arg), (ParamSpecType, Parameters, AnyType, UnboundType)):
                     is_invalid = True
                     self.fail(
                         "Can only replace ParamSpec with a parameter types list or"
@@ -279,9 +267,7 @@ class TypeArgumentAnalyzer(MixedTraverserVisitor):
                     class_name = f'"{name}"'
                     actual_type_name = f'"{actual.type.name}"'
                     self.fail(
-                        message_registry.INCOMPATIBLE_TYPEVAR_VALUE.format(
-                            arg_name, class_name, actual_type_name
-                        ),
+                        message_registry.INCOMPATIBLE_TYPEVAR_VALUE.format(arg_name, class_name, actual_type_name),
                         context,
                         code=codes.TYPE_VAR,
                     )

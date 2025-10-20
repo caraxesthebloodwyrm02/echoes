@@ -69,7 +69,6 @@ def request_with_no_cert_validation(context):
                 severity=bandit.HIGH,
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.IMPROPER_CERT_VALIDATION,
-                text=f"Call to {qualname} with verify=False disabling SSL "
-                "certificate checks, security issue.",
+                text=f"Call to {qualname} with verify=False disabling SSL " "certificate checks, security issue.",
                 lineno=context.get_lineno_for_call_arg("verify"),
             )

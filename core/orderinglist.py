@@ -340,9 +340,7 @@ class OrderingList(List[_T]):
     # As of 0.5, _reorder is no longer semi-private
     _reorder = reorder
 
-    def _order_entity(
-        self, index: int, entity: _T, reorder: bool = True
-    ) -> None:
+    def _order_entity(self, index: int, entity: _T, reorder: bool = True) -> None:
         have = self._get_order_value(entity)
 
         # Don't disturb existing ordering if reorder is False
@@ -414,19 +412,12 @@ class OrderingList(List[_T]):
         return _reconstitute, (self.__class__, self.__dict__, list(self))
 
     for func_name, func in list(locals().items()):
-        if (
-            callable(func)
-            and func.__name__ == func_name
-            and not func.__doc__
-            and hasattr(list, func_name)
-        ):
+        if callable(func) and func.__name__ == func_name and not func.__doc__ and hasattr(list, func_name):
             func.__doc__ = getattr(list, func_name).__doc__
     del func_name, func
 
 
-def _reconstitute(
-    cls: Type[OrderingList[_T]], dict_: Dict[str, Any], items: List[_T]
-) -> OrderingList[_T]:
+def _reconstitute(cls: Type[OrderingList[_T]], dict_: Dict[str, Any], items: List[_T]) -> OrderingList[_T]:
     """Reconstitute an :class:`.OrderingList`.
 
     This is the adjoint to :meth:`.OrderingList.__reduce__`.  It is used for

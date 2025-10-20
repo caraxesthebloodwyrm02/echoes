@@ -28,9 +28,7 @@ from typing import Any, Dict, Optional, Union
 
 def get_proxy_url() -> Optional[str]:
     """Return the configured proxy URL from environment variables."""
-    return (
-        os.getenv("OPENAI_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY")
-    )
+    return os.getenv("OPENAI_PROXY") or os.getenv("HTTP_PROXY") or os.getenv("HTTPS_PROXY")
 
 
 def get_proxies() -> Dict[str, str]:

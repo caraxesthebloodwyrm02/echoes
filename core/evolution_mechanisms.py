@@ -54,11 +54,7 @@ class EvolutionPhase:
 
     def is_active(self, current_date: datetime) -> bool:
         """Check if this phase is currently active."""
-        return (
-            self.start_date <= current_date <= self.end_date
-            if self.start_date
-            else False
-        )
+        return self.start_date <= current_date <= self.end_date if self.start_date else False
 
     def get_progress(self, current_date: datetime) -> float:
         """Get completion progress of this phase (0.0 to 1.0)."""
@@ -84,9 +80,7 @@ class DistributedResponsibilityManager:
             "active_contributions": [],
         }
 
-    def assign_responsibility(
-        self, task: str, stakeholders: List[str], rotation_period_days: int = 90
-    ):
+    def assign_responsibility(self, task: str, stakeholders: List[str], rotation_period_days: int = 90):
         """Assign responsibility for a task with rotation to distribute power."""
         self.responsibility_matrix[task] = {
             "stakeholders": stakeholders,
@@ -107,9 +101,7 @@ class DistributedResponsibilityManager:
         if not stakeholders:
             return
 
-        current_index = stakeholders.index(
-            task_info.get("current_holder", stakeholders[0])
-        )
+        current_index = stakeholders.index(task_info.get("current_holder", stakeholders[0]))
         next_index = (current_index + 1) % len(stakeholders)
         task_info["current_holder"] = stakeholders[next_index]
         task_info["rotation_history"].append(
@@ -168,23 +160,13 @@ class TransparencyLedger:
             "stakeholder_count": len(DISTRIBUTED_RESPONSIBILITY.stakeholders),
         }
 
-    def get_audit_trail(
-        self, start_date: datetime = None, end_date: datetime = None
-    ) -> List[Dict]:
+    def get_audit_trail(self, start_date: datetime = None, end_date: datetime = None) -> List[Dict]:
         """Retrieve audit trail for a date range."""
         filtered_entries = self.entries
         if start_date:
-            filtered_entries = [
-                e
-                for e in filtered_entries
-                if datetime.fromisoformat(e["timestamp"]) >= start_date
-            ]
+            filtered_entries = [e for e in filtered_entries if datetime.fromisoformat(e["timestamp"]) >= start_date]
         if end_date:
-            filtered_entries = [
-                e
-                for e in filtered_entries
-                if datetime.fromisoformat(e["timestamp"]) <= end_date
-            ]
+            filtered_entries = [e for e in filtered_entries if datetime.fromisoformat(e["timestamp"]) <= end_date]
         return filtered_entries
 
 

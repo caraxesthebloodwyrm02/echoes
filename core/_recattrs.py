@@ -59,9 +59,7 @@ class RecordProcess:
         return self.id.__format__(spec)
 
 
-class RecordException(
-    namedtuple("RecordException", ("type", "value", "traceback"))  # noqa: PYI024
-):
+class RecordException(namedtuple("RecordException", ("type", "value", "traceback"))):  # noqa: PYI024
     def __repr__(self):
         return "(type=%r, value=%r, traceback=%r)" % (self.type, self.value, self.traceback)
 

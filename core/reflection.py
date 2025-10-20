@@ -90,16 +90,8 @@ def cache(
     exclude = {"info_cache", "unreflectable"}
     key = (
         fn.__name__,
-        tuple(
-            (str(a), a.quote) if isinstance(a, quoted_name) else a
-            for a in args
-            if isinstance(a, str)
-        ),
-        tuple(
-            (k, (str(v), v.quote) if isinstance(v, quoted_name) else v)
-            for k, v in kw.items()
-            if k not in exclude
-        ),
+        tuple((str(a), a.quote) if isinstance(a, quoted_name) else a for a in args if isinstance(a, str)),
+        tuple((k, (str(v), v.quote) if isinstance(v, quoted_name) else v) for k, v in kw.items() if k not in exclude),
     )
     ret: _R = info_cache.get(key)
     if ret is None:
@@ -108,9 +100,7 @@ def cache(
     return ret
 
 
-def flexi_cache(
-    *traverse_args: Tuple[str, InternalTraversal]
-) -> Callable[[Callable[..., _R]], Callable[..., _R]]:
+def flexi_cache(*traverse_args: Tuple[str, InternalTraversal]) -> Callable[[Callable[..., _R]], Callable[..., _R]]:
     @util.decorator
     def go(
         fn: Callable[..., _R],
@@ -236,9 +226,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         self._init_legacy(bind)
 
     @classmethod
-    def _construct(
-        cls, init: Callable[..., Any], bind: Union[Engine, Connection]
-    ) -> Inspector:
+    def _construct(cls, init: Callable[..., Any], bind: Union[Engine, Connection]) -> Inspector:
         if hasattr(bind.dialect, "inspector"):
             cls = bind.dialect.inspector
 
@@ -370,13 +358,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_schema_names(
-                conn, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_schema_names(conn, info_cache=self.info_cache, **kw)
 
-    def get_table_names(
-        self, schema: Optional[str] = None, **kw: Any
-    ) -> List[str]:
+    def get_table_names(self, schema: Optional[str] = None, **kw: Any) -> List[str]:
         r"""Return all table names within a particular schema.
 
         The names are expected to be real tables only, not views.
@@ -403,13 +387,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_table_names(
-                conn, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_table_names(conn, schema, info_cache=self.info_cache, **kw)
 
-    def has_table(
-        self, table_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> bool:
+    def has_table(self, table_name: str, schema: Optional[str] = None, **kw: Any) -> bool:
         r"""Return True if the backend has a table, view, or temporary
         table of the given name.
 
@@ -436,13 +416,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
 
         """
         with self._operation_context() as conn:
-            return self.dialect.has_table(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.has_table(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
-    def has_sequence(
-        self, sequence_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> bool:
+    def has_sequence(self, sequence_name: str, schema: Optional[str] = None, **kw: Any) -> bool:
         r"""Return True if the backend has a sequence with the given name.
 
         :param sequence_name: name of the sequence to check
@@ -455,9 +431,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
 
         """
         with self._operation_context() as conn:
-            return self.dialect.has_sequence(
-                conn, sequence_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.has_sequence(conn, sequence_name, schema, info_cache=self.info_cache, **kw)
 
     def has_index(
         self,
@@ -500,9 +474,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
 
         """
         with self._operation_context() as conn:
-            return self.dialect.has_schema(
-                conn, schema_name, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.has_schema(conn, schema_name, info_cache=self.info_cache, **kw)
 
     def get_sorted_table_and_fkc_names(
         self,
@@ -544,9 +516,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
             for (
                 table_key,
                 fk_collection,
-            ) in self.sort_tables_on_foreign_key_dependency(
-                consider_schemas=(schema,)
-            )
+            ) in self.sort_tables_on_foreign_key_dependency(consider_schemas=(schema,))
         ]
 
     def sort_tables_on_foreign_key_dependency(
@@ -582,14 +552,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
             schema_fkeys = self.get_multi_foreign_keys(schname, **kw)
             tnames.extend(schema_fkeys)
             for (_, tname), fkeys in schema_fkeys.items():
-                fknames_for_table[(schname, tname)] = {
-                    fk["name"] for fk in fkeys
-                }
+                fknames_for_table[(schname, tname)] = {fk["name"] for fk in fkeys}
                 for fkey in fkeys:
-                    if (
-                        tname != fkey["referred_table"]
-                        or schname != fkey["referred_schema"]
-                    ):
+                    if tname != fkey["referred_table"] or schname != fkey["referred_schema"]:
                         tuples.add(
                             (
                                 (
@@ -605,22 +570,16 @@ class Inspector(inspection.Inspectable["Inspector"]):
             edge: Tuple[SchemaTab, SchemaTab]
             for edge in err.edges:
                 tuples.remove(edge)
-                remaining_fkcs.update(
-                    (edge[1], fkc) for fkc in fknames_for_table[edge[1]]
-                )
+                remaining_fkcs.update((edge[1], fkc) for fkc in fknames_for_table[edge[1]])
 
             candidate_sort = list(topological.sort(tuples, tnames))
-        ret: List[
-            Tuple[Optional[SchemaTab], List[Tuple[SchemaTab, Optional[str]]]]
-        ]
+        ret: List[Tuple[Optional[SchemaTab], List[Tuple[SchemaTab, Optional[str]]]]]
         ret = [
             (
                 (schname, tname),
                 [
                     ((schname, tname), fk)
-                    for fk in fknames_for_table[(schname, tname)].difference(
-                        name for _, name in remaining_fkcs
-                    )
+                    for fk in fknames_for_table[(schname, tname)].difference(name for _, name in remaining_fkcs)
                 ],
             )
             for (schname, tname) in candidate_sort
@@ -640,9 +599,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_temp_table_names(
-                conn, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_temp_table_names(conn, info_cache=self.info_cache, **kw)
 
     def get_temp_view_names(self, **kw: Any) -> List[str]:
         r"""Return a list of temporary view names for the current bind.
@@ -656,13 +613,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
 
         """
         with self._operation_context() as conn:
-            return self.dialect.get_temp_view_names(
-                conn, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_temp_view_names(conn, info_cache=self.info_cache, **kw)
 
-    def get_table_options(
-        self, table_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> Dict[str, Any]:
+    def get_table_options(self, table_name: str, schema: Optional[str] = None, **kw: Any) -> Dict[str, Any]:
         r"""Return a dictionary of options specified when the table of the
         given name was created.
 
@@ -687,9 +640,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
 
         """
         with self._operation_context() as conn:
-            return self.dialect.get_table_options(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_table_options(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_table_options(
         self,
@@ -748,9 +699,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
             )
             return dict(res)
 
-    def get_view_names(
-        self, schema: Optional[str] = None, **kw: Any
-    ) -> List[str]:
+    def get_view_names(self, schema: Optional[str] = None, **kw: Any) -> List[str]:
         r"""Return all non-materialized view names in `schema`.
 
         :param schema: Optional, retrieve names from a non-default schema.
@@ -773,13 +722,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_view_names(
-                conn, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_view_names(conn, schema, info_cache=self.info_cache, **kw)
 
-    def get_materialized_view_names(
-        self, schema: Optional[str] = None, **kw: Any
-    ) -> List[str]:
+    def get_materialized_view_names(self, schema: Optional[str] = None, **kw: Any) -> List[str]:
         r"""Return all materialized view names in `schema`.
 
         :param schema: Optional, retrieve names from a non-default schema.
@@ -797,13 +742,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_materialized_view_names(
-                conn, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_materialized_view_names(conn, schema, info_cache=self.info_cache, **kw)
 
-    def get_sequence_names(
-        self, schema: Optional[str] = None, **kw: Any
-    ) -> List[str]:
+    def get_sequence_names(self, schema: Optional[str] = None, **kw: Any) -> List[str]:
         r"""Return all sequence names in `schema`.
 
         :param schema: Optional, retrieve names from a non-default schema.
@@ -815,13 +756,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_sequence_names(
-                conn, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_sequence_names(conn, schema, info_cache=self.info_cache, **kw)
 
-    def get_view_definition(
-        self, view_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> str:
+    def get_view_definition(self, view_name: str, schema: Optional[str] = None, **kw: Any) -> str:
         r"""Return definition for the plain or materialized view called
         ``view_name``.
 
@@ -835,13 +772,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_view_definition(
-                conn, view_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_view_definition(conn, view_name, schema, info_cache=self.info_cache, **kw)
 
-    def get_columns(
-        self, table_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> List[ReflectedColumn]:
+    def get_columns(self, table_name: str, schema: Optional[str] = None, **kw: Any) -> List[ReflectedColumn]:
         r"""Return information about columns in ``table_name``.
 
         Given a string ``table_name`` and an optional string ``schema``,
@@ -866,16 +799,12 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            col_defs = self.dialect.get_columns(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            col_defs = self.dialect.get_columns(conn, table_name, schema, info_cache=self.info_cache, **kw)
         if col_defs:
             self._instantiate_types([col_defs])
         return col_defs
 
-    def _instantiate_types(
-        self, data: Iterable[List[ReflectedColumn]]
-    ) -> None:
+    def _instantiate_types(self, data: Iterable[List[ReflectedColumn]]) -> None:
         # make this easy and only return instances for coltype
         for col_defs in data:
             for col_def in col_defs:
@@ -967,9 +896,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         .. seealso:: :meth:`Inspector.get_multi_pk_constraint`
         """
         with self._operation_context() as conn:
-            return self.dialect.get_pk_constraint(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_pk_constraint(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_pk_constraint(
         self,
@@ -1054,9 +981,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_foreign_keys(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_foreign_keys(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_foreign_keys(
         self,
@@ -1116,9 +1041,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
                 )
             )
 
-    def get_indexes(
-        self, table_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> List[ReflectedIndex]:
+    def get_indexes(self, table_name: str, schema: Optional[str] = None, **kw: Any) -> List[ReflectedIndex]:
         r"""Return information about indexes in ``table_name``.
 
         Given a string ``table_name`` and an optional string `schema`, return
@@ -1142,9 +1065,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_indexes(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_indexes(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_indexes(
         self,
@@ -1230,9 +1151,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_unique_constraints(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_unique_constraints(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_unique_constraints(
         self,
@@ -1292,9 +1211,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
                 )
             )
 
-    def get_table_comment(
-        self, table_name: str, schema: Optional[str] = None, **kw: Any
-    ) -> ReflectedTableComment:
+    def get_table_comment(self, table_name: str, schema: Optional[str] = None, **kw: Any) -> ReflectedTableComment:
         r"""Return information about the table comment for ``table_name``.
 
         Given a string ``table_name`` and an optional string ``schema``,
@@ -1322,9 +1239,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_table_comment(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_table_comment(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_table_comment(
         self,
@@ -1413,9 +1328,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         """
 
         with self._operation_context() as conn:
-            return self.dialect.get_check_constraints(
-                conn, table_name, schema, info_cache=self.info_cache, **kw
-            )
+            return self.dialect.get_check_constraints(conn, table_name, schema, info_cache=self.info_cache, **kw)
 
     def get_multi_check_constraints(
         self,
@@ -1526,9 +1439,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         # these are unconditionally passed to related Table
         # objects
         reflection_options = {
-            k: table.dialect_kwargs.get(k)
-            for k in dialect.reflection_options
-            if k in table.dialect_kwargs
+            k: table.dialect_kwargs.get(k) for k in dialect.reflection_options if k in table.dialect_kwargs
         }
 
         table_key = (schema, table_name)
@@ -1573,9 +1484,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         if not found_table and not self.has_table(table_name, schema):
             raise exc.NoSuchTableError(table_name)
 
-        self._reflect_pk(
-            _reflect_info, table_key, table, cols_by_orig_name, exclude_columns
-        )
+        self._reflect_pk(_reflect_info, table_key, table, cols_by_orig_name, exclude_columns)
 
         self._reflect_fk(
             _reflect_info,
@@ -1642,9 +1551,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
         # fetch name again as column_reflect is allowed to
         # change it
         name = col_d["name"]
-        if (include_columns and name not in include_columns) or (
-            exclude_columns and name in exclude_columns
-        ):
+        if (include_columns and name not in include_columns) or (exclude_columns and name in exclude_columns):
             return
 
         coltype = col_d["type"]
@@ -1671,13 +1578,9 @@ class Inspector(inspection.Inspectable["Inspector"]):
             default_text = col_d["default"]
             assert default_text is not None
             if isinstance(default_text, TextClause):
-                default = sa_schema.DefaultClause(
-                    default_text, _reflected=True
-                )
+                default = sa_schema.DefaultClause(default_text, _reflected=True)
             elif not isinstance(default_text, sa_schema.FetchedValue):
-                default = sa_schema.DefaultClause(
-                    sql.text(default_text), _reflected=True
-                )
+                default = sa_schema.DefaultClause(sql.text(default_text), _reflected=True)
             else:
                 default = default_text
             colargs.append(default)
@@ -1690,9 +1593,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
             identity = sa_schema.Identity(**col_d["identity"])
             colargs.append(identity)
 
-        cols_by_orig_name[orig_name] = col = sa_schema.Column(
-            name, coltype, *colargs, **col_kw
-        )
+        cols_by_orig_name[orig_name] = col = sa_schema.Column(name, coltype, *colargs, **col_kw)
 
         if col.key in table.primary_key:
             col.primary_key = True
@@ -1743,17 +1644,13 @@ class Inspector(inspection.Inspectable["Inspector"]):
             # look for columns by orig name in cols_by_orig_name,
             # but support columns that are in-Python only as fallback
             constrained_columns = [
-                cols_by_orig_name[c].key if c in cols_by_orig_name else c
-                for c in fkey_d["constrained_columns"]
+                cols_by_orig_name[c].key if c in cols_by_orig_name else c for c in fkey_d["constrained_columns"]
             ]
 
             if (
                 exclude_columns
                 and set(constrained_columns).intersection(exclude_columns)
-                or (
-                    include_columns
-                    and set(constrained_columns).difference(include_columns)
-                )
+                or (include_columns and set(constrained_columns).difference(include_columns))
             ):
                 continue
 
@@ -1773,9 +1670,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
                         **reflection_options,
                     )
                 for column in referred_columns:
-                    refspec.append(
-                        ".".join([referred_schema, referred_table, column])
-                    )
+                    refspec.append(".".join([referred_schema, referred_table, column]))
             else:
                 if resolve_fks:
                     sa_schema.Table(
@@ -1868,10 +1763,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
                         else:
                             idx_element = table.c[c]
                     except KeyError:
-                        util.warn(
-                            f"{flavor} key {c!r} was not located in "
-                            f"columns for table {table.name!r}"
-                        )
+                        util.warn(f"{flavor} key {c!r} was not located in " f"columns for table {table.name!r}")
                         continue
                     for option in column_sorting.get(c, ()):
                         if option in self._index_sort_exprs:
@@ -1914,15 +1806,10 @@ class Inspector(inspection.Inspectable["Inspector"]):
             constrained_cols = []
             for c in columns:
                 try:
-                    constrained_col = (
-                        cols_by_orig_name[c]
-                        if c in cols_by_orig_name
-                        else table.c[c]
-                    )
+                    constrained_col = cols_by_orig_name[c] if c in cols_by_orig_name else table.c[c]
                 except KeyError:
                     util.warn(
-                        "unique constraint key '%s' was not located in "
-                        "columns for table '%s'" % (c, table.name)
+                        "unique constraint key '%s' was not located in " "columns for table '%s'" % (c, table.name)
                     )
                 else:
                     constrained_cols.append(constrained_col)
@@ -1992,11 +1879,7 @@ class Inspector(inspection.Inspectable["Inspector"]):
             # if more than 50% of the tables in the db are in filter_names
             # load all the tables, since it's most likely faster to avoid
             # a filter on that many tables.
-            if (
-                fraction is None
-                or fraction <= 0.5
-                or not self.dialect._overrides_default(meth.__name__)
-            ):
+            if fraction is None or fraction <= 0.5 or not self.dialect._overrides_default(meth.__name__):
                 _fn = filter_names
             else:
                 _fn = None
@@ -2016,19 +1899,13 @@ class Inspector(inspection.Inspectable["Inspector"]):
             return res
 
         info = _ReflectionInfo(
-            columns=run(
-                self.get_multi_columns, check_filter_names_from_meth=True
-            ),
+            columns=run(self.get_multi_columns, check_filter_names_from_meth=True),
             pk_constraint=run(self.get_multi_pk_constraint),
             foreign_keys=run(self.get_multi_foreign_keys),
             indexes=run(self.get_multi_indexes),
-            unique_constraints=run(
-                self.get_multi_unique_constraints, optional=True
-            ),
+            unique_constraints=run(self.get_multi_unique_constraints, optional=True),
             table_comment=run(self.get_multi_table_comment, optional=True),
-            check_constraints=run(
-                self.get_multi_check_constraints, optional=True
-            ),
+            check_constraints=run(self.get_multi_check_constraints, optional=True),
             table_options=run(self.get_multi_table_options, optional=True),
             unreflectable=unreflectable,
         )

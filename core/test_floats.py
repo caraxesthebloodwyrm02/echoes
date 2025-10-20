@@ -132,9 +132,7 @@ class TestFloatIndexers:
         expected = 3
         assert result == expected
 
-    @pytest.mark.parametrize(
-        "index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)]
-    )
+    @pytest.mark.parametrize("index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)])
     def test_scalar_integer(self, index, frame_or_series, indexer_sl):
         getitem = indexer_sl is not tm.loc
 
@@ -171,9 +169,7 @@ class TestFloatIndexers:
         result = indexer_sl(s2)[3]
         compare(result, expected)
 
-    @pytest.mark.parametrize(
-        "index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)]
-    )
+    @pytest.mark.parametrize("index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)])
     def test_scalar_integer_contains_float(self, index, frame_or_series):
         # contains
         # integer index
@@ -299,9 +295,7 @@ class TestFloatIndexers:
 
             # positional indexing
             msg = (
-                "cannot do slice indexing "
-                rf"on {type(index).__name__} with these indexers \[-6\.0\] of "
-                "type float"
+                "cannot do slice indexing " rf"on {type(index).__name__} with these indexers \[-6\.0\] of " "type float"
             )
             with pytest.raises(TypeError, match=msg):
                 s[slice(-6.0, 6.0)]
@@ -351,9 +345,7 @@ class TestFloatIndexers:
         with pytest.raises(TypeError, match=msg):
             s.iloc[idx]
 
-    @pytest.mark.parametrize(
-        "index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)]
-    )
+    @pytest.mark.parametrize("index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)])
     def test_slice_integer_frame_getitem(self, index):
         # similar to above, but on the getitem dim (of a DataFrame)
         s = DataFrame(np.random.default_rng(2).standard_normal((5, 2)), index=index)
@@ -379,11 +371,7 @@ class TestFloatIndexers:
             self.check(result, s, slice(-10, 10), True)
 
         # positional indexing
-        msg = (
-            "cannot do slice indexing "
-            rf"on {type(index).__name__} with these indexers \[-10\.0\] of "
-            "type float"
-        )
+        msg = "cannot do slice indexing " rf"on {type(index).__name__} with these indexers \[-10\.0\] of " "type float"
         with pytest.raises(TypeError, match=msg):
             s[slice(-10.0, 10.0)]
 
@@ -398,17 +386,13 @@ class TestFloatIndexers:
 
             # positional indexing
             msg = (
-                "cannot do slice indexing "
-                rf"on {type(index).__name__} with these indexers \[0\.5\] of "
-                "type float"
+                "cannot do slice indexing " rf"on {type(index).__name__} with these indexers \[0\.5\] of " "type float"
             )
             with pytest.raises(TypeError, match=msg):
                 s[idx]
 
     @pytest.mark.parametrize("idx", [slice(3.0, 4), slice(3, 4.0), slice(3.0, 4.0)])
-    @pytest.mark.parametrize(
-        "index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)]
-    )
+    @pytest.mark.parametrize("index", [Index(np.arange(5), dtype=np.int64), RangeIndex(5)])
     def test_float_slice_getitem_with_integer_index_raises(self, idx, index):
         # similar to above, but on the getitem dim (of a DataFrame)
         s = DataFrame(np.random.default_rng(2).standard_normal((5, 2)), index=index)
@@ -421,9 +405,7 @@ class TestFloatIndexers:
 
         # positional indexing
         msg = (
-            "cannot do slice indexing "
-            rf"on {type(index).__name__} with these indexers \[(3|4)\.0\] of "
-            "type float"
+            "cannot do slice indexing " rf"on {type(index).__name__} with these indexers \[(3|4)\.0\] of " "type float"
         )
         with pytest.raises(TypeError, match=msg):
             s[idx] = 0

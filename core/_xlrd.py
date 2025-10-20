@@ -76,9 +76,7 @@ class XlrdReader(BaseExcelReader["Book"]):
         self.raise_if_bad_sheet_by_index(index)
         return self.book.sheet_by_index(index)
 
-    def get_sheet_data(
-        self, sheet, file_rows_needed: int | None = None
-    ) -> list[list[Scalar]]:
+    def get_sheet_data(self, sheet, file_rows_needed: int | None = None) -> list[list[Scalar]]:
         from xlrd import (
             XL_CELL_BOOLEAN,
             XL_CELL_DATE,
@@ -104,9 +102,7 @@ class XlrdReader(BaseExcelReader["Book"]):
                 # so we treat dates on the epoch as times only.
                 # Also, Excel supports 1900 and 1904 epochs.
                 year = (cell_contents.timetuple())[0:3]
-                if (not epoch1904 and year == (1899, 12, 31)) or (
-                    epoch1904 and year == (1904, 1, 1)
-                ):
+                if (not epoch1904 and year == (1899, 12, 31)) or (epoch1904 and year == (1904, 1, 1)):
                     cell_contents = time(
                         cell_contents.hour,
                         cell_contents.minute,
@@ -134,10 +130,7 @@ class XlrdReader(BaseExcelReader["Book"]):
         if file_rows_needed is not None:
             nrows = min(nrows, file_rows_needed)
         for i in range(nrows):
-            row = [
-                _parse_cell(value, typ)
-                for value, typ in zip(sheet.row_values(i), sheet.row_types(i))
-            ]
+            row = [_parse_cell(value, typ) for value, typ in zip(sheet.row_values(i), sheet.row_types(i))]
             data.append(row)
 
         return data

@@ -54,9 +54,7 @@ class TableauProver(Prover):
             debugger = Debug(verbose)
             result = self._attempt_proof(agenda, set(), set(), debugger)
         except RuntimeError as e:
-            if self._assume_false and str(e).startswith(
-                "maximum recursion depth exceeded"
-            ):
+            if self._assume_false and str(e).startswith("maximum recursion depth exceeded"):
                 result = False
             else:
                 if verbose:
@@ -100,9 +98,7 @@ class TableauProver(Prover):
         debug.line((current, context))
         return proof_method(current, context, agenda, accessible_vars, atoms, debug)
 
-    def _attempt_proof_atom(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_atom(self, current, context, agenda, accessible_vars, atoms, debug):
         # Check if the branch is closed.  Return 'True' if it is
         if (current, True) in atoms:
             debug.line("CLOSED", 1)
@@ -123,9 +119,7 @@ class TableauProver(Prover):
                 debug + 1,
             )
 
-    def _attempt_proof_n_atom(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_atom(self, current, context, agenda, accessible_vars, atoms, debug):
         # Check if the branch is closed.  Return 'True' if it is
         if (current.term, False) in atoms:
             debug.line("CLOSED", 1)
@@ -146,9 +140,7 @@ class TableauProver(Prover):
                 debug + 1,
             )
 
-    def _attempt_proof_prop(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_prop(self, current, context, agenda, accessible_vars, atoms, debug):
         # Check if the branch is closed.  Return 'True' if it is
         if (current, True) in atoms:
             debug.line("CLOSED", 1)
@@ -156,13 +148,9 @@ class TableauProver(Prover):
 
         # mark all AllExpressions as 'not exhausted' into the agenda since we are (potentially) adding new accessible vars
         agenda.mark_alls_fresh()
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms | {(current, False)}, debug + 1
-        )
+        return self._attempt_proof(agenda, accessible_vars, atoms | {(current, False)}, debug + 1)
 
-    def _attempt_proof_n_prop(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_prop(self, current, context, agenda, accessible_vars, atoms, debug):
         # Check if the branch is closed.  Return 'True' if it is
         if (current.term, False) in atoms:
             debug.line("CLOSED", 1)
@@ -170,13 +158,9 @@ class TableauProver(Prover):
 
         # mark all AllExpressions as 'not exhausted' into the agenda since we are (potentially) adding new accessible vars
         agenda.mark_alls_fresh()
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms | {(current.term, True)}, debug + 1
-        )
+        return self._attempt_proof(agenda, accessible_vars, atoms | {(current.term, True)}, debug + 1)
 
-    def _attempt_proof_app(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_app(self, current, context, agenda, accessible_vars, atoms, debug):
         f, args = current.uncurry()
         for i, arg in enumerate(args):
             if not TableauProver.is_atom(arg):
@@ -191,9 +175,7 @@ class TableauProver(Prover):
                 return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
         raise Exception("If this method is called, there must be a non-atomic argument")
 
-    def _attempt_proof_n_app(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_app(self, current, context, agenda, accessible_vars, atoms, debug):
         f, args = current.term.uncurry()
         for i, arg in enumerate(args):
             if not TableauProver.is_atom(arg):
@@ -209,9 +191,7 @@ class TableauProver(Prover):
                 return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
         raise Exception("If this method is called, there must be a non-atomic argument")
 
-    def _attempt_proof_n_eq(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_eq(self, current, context, agenda, accessible_vars, atoms, debug):
         ###########################################################################
         # Since 'current' is of type '~(a=b)', the path is closed if 'a' == 'b'
         ###########################################################################
@@ -228,106 +208,78 @@ class TableauProver(Prover):
             debug + 1,
         )
 
-    def _attempt_proof_d_neg(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_d_neg(self, current, context, agenda, accessible_vars, atoms, debug):
         agenda.put(current.term.term, context)
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_n_all(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
-        agenda[Categories.EXISTS].add(
-            (ExistsExpression(current.term.variable, -current.term.term), context)
-        )
+    def _attempt_proof_n_all(self, current, context, agenda, accessible_vars, atoms, debug):
+        agenda[Categories.EXISTS].add((ExistsExpression(current.term.variable, -current.term.term), context))
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_n_some(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
-        agenda[Categories.ALL].add(
-            (AllExpression(current.term.variable, -current.term.term), context)
-        )
+    def _attempt_proof_n_some(self, current, context, agenda, accessible_vars, atoms, debug):
+        agenda[Categories.ALL].add((AllExpression(current.term.variable, -current.term.term), context))
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_and(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_and(self, current, context, agenda, accessible_vars, atoms, debug):
         agenda.put(current.first, context)
         agenda.put(current.second, context)
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_n_or(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_or(self, current, context, agenda, accessible_vars, atoms, debug):
         agenda.put(-current.term.first, context)
         agenda.put(-current.term.second, context)
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_n_imp(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_imp(self, current, context, agenda, accessible_vars, atoms, debug):
         agenda.put(current.term.first, context)
         agenda.put(-current.term.second, context)
         return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
-    def _attempt_proof_or(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_or(self, current, context, agenda, accessible_vars, atoms, debug):
         new_agenda = agenda.clone()
         agenda.put(current.first, context)
         new_agenda.put(current.second, context)
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms, debug + 1
-        ) and self._attempt_proof(new_agenda, accessible_vars, atoms, debug + 1)
+        return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1) and self._attempt_proof(
+            new_agenda, accessible_vars, atoms, debug + 1
+        )
 
-    def _attempt_proof_imp(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_imp(self, current, context, agenda, accessible_vars, atoms, debug):
         new_agenda = agenda.clone()
         agenda.put(-current.first, context)
         new_agenda.put(current.second, context)
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms, debug + 1
-        ) and self._attempt_proof(new_agenda, accessible_vars, atoms, debug + 1)
+        return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1) and self._attempt_proof(
+            new_agenda, accessible_vars, atoms, debug + 1
+        )
 
-    def _attempt_proof_n_and(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_and(self, current, context, agenda, accessible_vars, atoms, debug):
         new_agenda = agenda.clone()
         agenda.put(-current.term.first, context)
         new_agenda.put(-current.term.second, context)
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms, debug + 1
-        ) and self._attempt_proof(new_agenda, accessible_vars, atoms, debug + 1)
+        return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1) and self._attempt_proof(
+            new_agenda, accessible_vars, atoms, debug + 1
+        )
 
-    def _attempt_proof_iff(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_iff(self, current, context, agenda, accessible_vars, atoms, debug):
         new_agenda = agenda.clone()
         agenda.put(current.first, context)
         agenda.put(current.second, context)
         new_agenda.put(-current.first, context)
         new_agenda.put(-current.second, context)
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms, debug + 1
-        ) and self._attempt_proof(new_agenda, accessible_vars, atoms, debug + 1)
+        return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1) and self._attempt_proof(
+            new_agenda, accessible_vars, atoms, debug + 1
+        )
 
-    def _attempt_proof_n_iff(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_n_iff(self, current, context, agenda, accessible_vars, atoms, debug):
         new_agenda = agenda.clone()
         agenda.put(current.term.first, context)
         agenda.put(-current.term.second, context)
         new_agenda.put(-current.term.first, context)
         new_agenda.put(current.term.second, context)
-        return self._attempt_proof(
-            agenda, accessible_vars, atoms, debug + 1
-        ) and self._attempt_proof(new_agenda, accessible_vars, atoms, debug + 1)
+        return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1) and self._attempt_proof(
+            new_agenda, accessible_vars, atoms, debug + 1
+        )
 
-    def _attempt_proof_eq(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_eq(self, current, context, agenda, accessible_vars, atoms, debug):
         #########################################################################
         # Since 'current' is of the form '(a = b)', replace ALL free instances
         # of 'a' with 'b'
@@ -338,19 +290,13 @@ class TableauProver(Prover):
         agenda.mark_neqs_fresh()
         return self._attempt_proof(agenda, accessible_vars, set(), debug + 1)
 
-    def _attempt_proof_some(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_some(self, current, context, agenda, accessible_vars, atoms, debug):
         new_unique_variable = VariableExpression(unique_variable())
         agenda.put(current.term.replace(current.variable, new_unique_variable), context)
         agenda.mark_alls_fresh()
-        return self._attempt_proof(
-            agenda, accessible_vars | {new_unique_variable}, atoms, debug + 1
-        )
+        return self._attempt_proof(agenda, accessible_vars | {new_unique_variable}, atoms, debug + 1)
 
-    def _attempt_proof_all(
-        self, current, context, agenda, accessible_vars, atoms, debug
-    ):
+    def _attempt_proof_all(self, current, context, agenda, accessible_vars, atoms, debug):
         try:
             current._used_vars
         except AttributeError:
@@ -365,9 +311,7 @@ class TableauProver(Prover):
                 variable_to_use = list(bv_available)[0]
                 debug.line("--> Using '%s'" % variable_to_use, 2)
                 current._used_vars |= {variable_to_use}
-                agenda.put(
-                    current.term.replace(current.variable, variable_to_use), context
-                )
+                agenda.put(current.term.replace(current.variable, variable_to_use), context)
                 agenda[Categories.ALL].add((current, context))
                 return self._attempt_proof(agenda, accessible_vars, atoms, debug + 1)
 
@@ -382,14 +326,10 @@ class TableauProver(Prover):
             new_unique_variable = VariableExpression(unique_variable())
             debug.line("--> Using '%s'" % new_unique_variable, 2)
             current._used_vars |= {new_unique_variable}
-            agenda.put(
-                current.term.replace(current.variable, new_unique_variable), context
-            )
+            agenda.put(current.term.replace(current.variable, new_unique_variable), context)
             agenda[Categories.ALL].add((current, context))
             agenda.mark_alls_fresh()
-            return self._attempt_proof(
-                agenda, accessible_vars | {new_unique_variable}, atoms, debug + 1
-            )
+            return self._attempt_proof(agenda, accessible_vars | {new_unique_variable}, atoms, debug + 1)
 
     @staticmethod
     def is_atom(e):
@@ -401,9 +341,7 @@ class TableauProver(Prover):
                 if not TableauProver.is_atom(arg):
                     return False
             return True
-        elif isinstance(e, AbstractVariableExpression) or isinstance(
-            e, LambdaExpression
-        ):
+        elif isinstance(e, AbstractVariableExpression) or isinstance(e, LambdaExpression):
             return True
         else:
             return False
@@ -444,10 +382,7 @@ class Agenda:
             new_allExs.add((new_allEx, None))
         set_list[Categories.ALL] = new_allExs
 
-        set_list[Categories.N_EQ] = {
-            (NegatedExpression(n_eq.term), ctx)
-            for (n_eq, ctx) in set_list[Categories.N_EQ]
-        }
+        set_list[Categories.N_EQ] = {(NegatedExpression(n_eq.term), ctx) for (n_eq, ctx) in set_list[Categories.N_EQ]}
 
         new_agenda.sets = tuple(set_list)
         return new_agenda
@@ -586,9 +521,7 @@ class Debug:
 
             if isinstance(ex, AllExpression):
                 try:
-                    used_vars = "[%s]" % (
-                        ",".join("%s" % ve.variable.name for ve in ex._used_vars)
-                    )
+                    used_vars = "[%s]" % (",".join("%s" % ve.variable.name for ve in ex._used_vars))
                     data += ":   %s" % used_vars
                 except AttributeError:
                     data += ":   []"
@@ -679,9 +612,7 @@ def testTableauProver():
 def testHigherOrderTableauProver():
     tableau_test("believe(j, -lie(b))", ["believe(j, -lie(b) & -cheat(b))"])
     tableau_test("believe(j, lie(b) & cheat(b))", ["believe(j, lie(b))"])
-    tableau_test(
-        "believe(j, lie(b))", ["lie(b)"]
-    )  # how do we capture that John believes all things that are true
+    tableau_test("believe(j, lie(b))", ["lie(b)"])  # how do we capture that John believes all things that are true
     tableau_test(
         "believe(j, know(b, cheat(b)))",
         ["believe(j, know(b, lie(b)) & know(b, steals(b) & cheat(b)))"],
@@ -697,10 +628,7 @@ def tableau_test(c, ps=None, verbose=False):
     pps = [Expression.fromstring(p) for p in ps] if ps else []
     if not ps:
         ps = []
-    print(
-        "%s |- %s: %s"
-        % (", ".join(ps), pc, TableauProver().prove(pc, pps, verbose=verbose))
-    )
+    print("%s |- %s: %s" % (", ".join(ps), pc, TableauProver().prove(pc, pps, verbose=verbose)))
 
 
 def demo():

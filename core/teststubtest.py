@@ -205,9 +205,7 @@ def run_stubtest_with_stderr(
     return filtered_output, filtered_outerr
 
 
-def run_stubtest(
-    stub: str, runtime: str, options: list[str], config_file: str | None = None
-) -> str:
+def run_stubtest(stub: str, runtime: str, options: list[str], config_file: str | None = None) -> str:
     return run_stubtest_with_stderr(stub, runtime, options, config_file)[0]
 
 
@@ -287,9 +285,7 @@ class StubtestUnit(unittest.TestCase):
             runtime="class mistyped_class: pass",
             error="mistyped_class",
         )
-        yield Case(
-            stub="class mistyped_fn: ...", runtime="def mistyped_fn(): pass", error="mistyped_fn"
-        )
+        yield Case(stub="class mistyped_fn: ...", runtime="def mistyped_fn(): pass", error="mistyped_fn")
         yield Case(
             stub="""
             class X:
@@ -308,9 +304,7 @@ class StubtestUnit(unittest.TestCase):
         # Don't error for this one -- we get false positives otherwise
         yield Case(stub="async def foo() -> int: ...", runtime="def foo(): return 5", error=None)
         yield Case(stub="def baz() -> int: ...", runtime="def baz(): return 5", error=None)
-        yield Case(
-            stub="async def bingo() -> int: ...", runtime="async def bingo(): return 5", error=None
-        )
+        yield Case(stub="async def bingo() -> int: ...", runtime="async def bingo(): return 5", error=None)
 
     @collect_cases
     def test_arg_name(self) -> Iterator[Case]:
@@ -479,9 +473,7 @@ class StubtestUnit(unittest.TestCase):
             runtime="def f1(text = 'asdf'): pass",
             error=None,
         )
-        yield Case(
-            stub="def f2(text: str = ...) -> None: ...", runtime="def f2(text): pass", error="f2"
-        )
+        yield Case(stub="def f2(text: str = ...) -> None: ...", runtime="def f2(text): pass", error="f2")
         yield Case(
             stub="def f3(text: str) -> None: ...",
             runtime="def f3(text = 'asdf'): pass",
@@ -649,21 +641,11 @@ class StubtestUnit(unittest.TestCase):
 
     @collect_cases
     def test_arg_mismatch(self) -> Iterator[Case]:
-        yield Case(
-            stub="def f1(a, *, b, c) -> None: ...", runtime="def f1(a, *, b, c): pass", error=None
-        )
-        yield Case(
-            stub="def f2(a, *, b) -> None: ...", runtime="def f2(a, *, b, c): pass", error="f2"
-        )
-        yield Case(
-            stub="def f3(a, *, b, c) -> None: ...", runtime="def f3(a, *, b): pass", error="f3"
-        )
-        yield Case(
-            stub="def f4(a, *, b, c) -> None: ...", runtime="def f4(a, b, *, c): pass", error="f4"
-        )
-        yield Case(
-            stub="def f5(a, b, *, c) -> None: ...", runtime="def f5(a, *, b, c): pass", error="f5"
-        )
+        yield Case(stub="def f1(a, *, b, c) -> None: ...", runtime="def f1(a, *, b, c): pass", error=None)
+        yield Case(stub="def f2(a, *, b) -> None: ...", runtime="def f2(a, *, b, c): pass", error="f2")
+        yield Case(stub="def f3(a, *, b, c) -> None: ...", runtime="def f3(a, *, b): pass", error="f3")
+        yield Case(stub="def f4(a, *, b, c) -> None: ...", runtime="def f4(a, b, *, c): pass", error="f4")
+        yield Case(stub="def f5(a, b, *, c) -> None: ...", runtime="def f5(a, *, b, c): pass", error="f5")
 
     @collect_cases
     def test_varargs_varkwargs(self) -> Iterator[Case]:
@@ -677,37 +659,23 @@ class StubtestUnit(unittest.TestCase):
             runtime="def f2(**kwargs): pass",
             error="f2",
         )
-        yield Case(
-            stub="def g1(a, b, c, d) -> None: ...", runtime="def g1(a, *args): pass", error=None
-        )
-        yield Case(
-            stub="def g2(a, b, c, d, *args) -> None: ...", runtime="def g2(a): pass", error="g2"
-        )
+        yield Case(stub="def g1(a, b, c, d) -> None: ...", runtime="def g1(a, *args): pass", error=None)
+        yield Case(stub="def g2(a, b, c, d, *args) -> None: ...", runtime="def g2(a): pass", error="g2")
         yield Case(
             stub="def g3(a, b, c, d, *args) -> None: ...",
             runtime="def g3(a, *args): pass",
             error=None,
         )
-        yield Case(
-            stub="def h1(a) -> None: ...", runtime="def h1(a, b, c, d, *args): pass", error="h1"
-        )
-        yield Case(
-            stub="def h2(a, *args) -> None: ...", runtime="def h2(a, b, c, d): pass", error="h2"
-        )
+        yield Case(stub="def h1(a) -> None: ...", runtime="def h1(a, b, c, d, *args): pass", error="h1")
+        yield Case(stub="def h2(a, *args) -> None: ...", runtime="def h2(a, b, c, d): pass", error="h2")
         yield Case(
             stub="def h3(a, *args) -> None: ...",
             runtime="def h3(a, b, c, d, *args): pass",
             error="h3",
         )
-        yield Case(
-            stub="def j1(a: int, *args) -> None: ...", runtime="def j1(a): pass", error="j1"
-        )
-        yield Case(
-            stub="def j2(a: int) -> None: ...", runtime="def j2(a, *args): pass", error="j2"
-        )
-        yield Case(
-            stub="def j3(a, b, c) -> None: ...", runtime="def j3(a, *args, c): pass", error="j3"
-        )
+        yield Case(stub="def j1(a: int, *args) -> None: ...", runtime="def j1(a): pass", error="j1")
+        yield Case(stub="def j2(a: int) -> None: ...", runtime="def j2(a, *args): pass", error="j2")
+        yield Case(stub="def j3(a, b, c) -> None: ...", runtime="def j3(a, *args, c): pass", error="j3")
         yield Case(stub="def k1(a, **kwargs) -> None: ...", runtime="def k1(a): pass", error="k1")
         yield Case(
             # In theory an error, but led to worse results in practice
@@ -715,12 +683,8 @@ class StubtestUnit(unittest.TestCase):
             runtime="def k2(a, **kwargs): pass",
             error=None,
         )
-        yield Case(
-            stub="def k3(a, b) -> None: ...", runtime="def k3(a, **kwargs): pass", error="k3"
-        )
-        yield Case(
-            stub="def k4(a, *, b) -> None: ...", runtime="def k4(a, **kwargs): pass", error=None
-        )
+        yield Case(stub="def k3(a, b) -> None: ...", runtime="def k3(a, **kwargs): pass", error="k3")
+        yield Case(stub="def k4(a, *, b) -> None: ...", runtime="def k4(a, **kwargs): pass", error=None)
         yield Case(
             stub="def k5(a, *, b) -> None: ...",
             runtime="def k5(a, *, b, c, **kwargs): pass",
@@ -1543,9 +1507,7 @@ class StubtestUnit(unittest.TestCase):
         yield Case(stub="", runtime="__all__ += ['y']\ny = 5", error="y")
         yield Case(stub="", runtime="__all__ += ['g']\ndef g(): pass", error="g")
         # Here we should only check that runtime has B, since the stub explicitly re-exports it
-        yield Case(
-            stub="from mystery import A, B as B, C as D  # type: ignore", runtime="", error="B"
-        )
+        yield Case(stub="from mystery import A, B as B, C as D  # type: ignore", runtime="", error="B")
         yield Case(
             stub="class Y: ...",
             runtime="__all__ += ['Y']\nclass Y:\n  def __or__(self, other): return self|other",
@@ -1614,9 +1576,7 @@ assert annotations
 
     @collect_cases
     def test_non_public_1(self) -> Iterator[Case]:
-        yield Case(
-            stub="__all__: list[str]", runtime="", error=f"{TEST_MODULE_NAME}.__all__"
-        )  # dummy case
+        yield Case(stub="__all__: list[str]", runtime="", error=f"{TEST_MODULE_NAME}.__all__")  # dummy case
         yield Case(stub="_f: int", runtime="def _f(): ...", error="_f")
 
     @collect_cases
@@ -1639,10 +1599,7 @@ assert annotations
         )
         yield Case(
             stub=(
-                "class C:\n"
-                "  def __init_subclass__(\n"
-                "    cls, e: int = ..., **kwargs: int\n"
-                "  ) -> None: ...\n"
+                "class C:\n" "  def __init_subclass__(\n" "    cls, e: int = ..., **kwargs: int\n" "  ) -> None: ...\n"
             ),
             runtime="class C:\n  def __init_subclass__(cls, e=1, **kwargs): pass",
             error=None,
@@ -1655,9 +1612,7 @@ assert annotations
 
     @collect_cases
     def test_not_subclassable(self) -> Iterator[Case]:
-        yield Case(
-            stub="class CanBeSubclassed: ...", runtime="class CanBeSubclassed: ...", error=None
-        )
+        yield Case(stub="class CanBeSubclassed: ...", runtime="class CanBeSubclassed: ...", error=None)
         yield Case(
             stub="class CannotBeSubclassed:\n  def __init_subclass__(cls) -> None: ...",
             runtime="class CannotBeSubclassed:\n  def __init_subclass__(cls): raise TypeError",
@@ -2318,9 +2273,7 @@ assert annotations
 
     @collect_cases
     def test_type_var(self) -> Iterator[Case]:
-        yield Case(
-            stub="from typing import TypeVar", runtime="from typing import TypeVar", error=None
-        )
+        yield Case(stub="from typing import TypeVar", runtime="from typing import TypeVar", error=None)
         yield Case(stub="A = TypeVar('A')", runtime="A = TypeVar('A')", error=None)
         yield Case(stub="B = TypeVar('B')", runtime="B = 5", error="B")
         if sys.version_info >= (3, 10):
@@ -2688,26 +2641,19 @@ class StubtestMiscUnit(unittest.TestCase):
             runtime="def bad(num, text): pass",
             options=["--concise"],
         )
-        expected = (
-            "{}.bad is inconsistent, "
-            'stub parameter "number" differs from runtime parameter "num"\n'.format(
-                TEST_MODULE_NAME
-            )
+        expected = "{}.bad is inconsistent, " 'stub parameter "number" differs from runtime parameter "num"\n'.format(
+            TEST_MODULE_NAME
         )
         assert output == expected
 
     def test_ignore_flags(self) -> None:
-        output = run_stubtest(
-            stub="", runtime="__all__ = ['f']\ndef f(): pass", options=["--ignore-missing-stub"]
-        )
+        output = run_stubtest(stub="", runtime="__all__ = ['f']\ndef f(): pass", options=["--ignore-missing-stub"])
         assert output == "Success: no issues found in 1 module\n"
 
         output = run_stubtest(stub="", runtime="def f(): pass", options=["--ignore-missing-stub"])
         assert output == "Success: no issues found in 1 module\n"
 
-        output = run_stubtest(
-            stub="def f(__a): ...", runtime="def f(a): pass", options=["--ignore-positional-only"]
-        )
+        output = run_stubtest(stub="def f(__a): ...", runtime="def f(a): pass", options=["--ignore-positional-only"])
         assert output == "Success: no issues found in 1 module\n"
 
     def test_allowlist(self) -> None:
@@ -2727,8 +2673,7 @@ class StubtestMiscUnit(unittest.TestCase):
             # test unused entry detection
             output = run_stubtest(stub="", runtime="", options=["--allowlist", allowlist.name])
             assert output == (
-                f"note: unused allowlist entry {TEST_MODULE_NAME}.bad\n"
-                "Found 1 error (checked 1 module)\n"
+                f"note: unused allowlist entry {TEST_MODULE_NAME}.bad\n" "Found 1 error (checked 1 module)\n"
             )
 
             output = run_stubtest(
@@ -2765,9 +2710,7 @@ class StubtestMiscUnit(unittest.TestCase):
                 ),
                 options=["--allowlist", allowlist.name, "--generate-allowlist"],
             )
-            assert output == (
-                f"note: unused allowlist entry unused.*\n{TEST_MODULE_NAME}.also_bad\n"
-            )
+            assert output == (f"note: unused allowlist entry unused.*\n{TEST_MODULE_NAME}.also_bad\n")
         finally:
             os.unlink(allowlist.name)
 
@@ -2834,10 +2777,7 @@ class StubtestMiscUnit(unittest.TestCase):
     def test_builtin_signature_with_unrepresentable_default(self) -> None:
         sig = mypy.stubtest.safe_inspect_signature(bytes.hex)
         assert sig is not None
-        assert (
-            str(mypy.stubtest.Signature.from_inspect_signature(sig))
-            == "def (self, sep = ..., bytes_per_sep = ...)"
-        )
+        assert str(mypy.stubtest.Signature.from_inspect_signature(sig)) == "def (self, sep = ..., bytes_per_sep = ...)"
 
     def test_overload_signature(self) -> None:
         # The same argument as both positional-only and pos-or-kw in
@@ -2888,13 +2828,10 @@ class StubtestMiscUnit(unittest.TestCase):
         runtime = "temp = 5\n"
         stub = "temp: int\n"
         config_file = "[mypy]\ndisable_error_code = not-a-valid-name\n"
-        output, outerr = run_stubtest_with_stderr(
-            stub=stub, runtime=runtime, options=[], config_file=config_file
-        )
+        output, outerr = run_stubtest_with_stderr(stub=stub, runtime=runtime, options=[], config_file=config_file)
         assert output == "Success: no issues found in 1 module\n"
         assert outerr == (
-            "test_module_config.ini: [mypy]: disable_error_code: "
-            "Invalid error code(s): not-a-valid-name\n"
+            "test_module_config.ini: [mypy]: disable_error_code: " "Invalid error code(s): not-a-valid-name\n"
         )
 
     def test_config_file_wrong_incomplete_feature(self) -> None:
@@ -2903,8 +2840,7 @@ class StubtestMiscUnit(unittest.TestCase):
         config_file = "[mypy]\nenable_incomplete_feature = Unpack\n"
         output = run_stubtest(stub=stub, runtime=runtime, options=[], config_file=config_file)
         assert output == (
-            "warning: Warning: Unpack is already enabled by default\n"
-            "Success: no issues found in 1 module\n"
+            "warning: Warning: Unpack is already enabled by default\n" "Success: no issues found in 1 module\n"
         )
 
         config_file = "[mypy]\nenable_incomplete_feature = not-a-valid-name\n"

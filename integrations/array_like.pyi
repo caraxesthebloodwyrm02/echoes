@@ -3,8 +3,8 @@ from numpy._typing import ArrayLike
 
 class A: ...
 
-x1: ArrayLike = (i for i in range(10))  # type: ignore[assignment]
-x2: ArrayLike = A()  # type: ignore[assignment]
+x1: ArrayLike = ...  # type: ignore[assignment]
+x2: ArrayLike = ...  # type: ignore[assignment]
 x3: ArrayLike = {1: "foo", 2: "bar"}  # type: ignore[assignment]
 
 scalar = np.int64(1)

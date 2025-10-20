@@ -78,14 +78,14 @@ class PyXrefMixin:
         )
         if isinstance(result, pending_xref):
             assert env is not None
-            result['refspecific'] = True
-            result['py:module'] = env.ref_context.get('py:module')
-            result['py:class'] = env.ref_context.get('py:class')
+            result["refspecific"] = True
+            result["py:module"] = env.ref_context.get("py:module")
+            result["py:class"] = env.ref_context.get("py:class")
 
             reftype, reftarget, reftitle, _ = parse_reftarget(target)
             if reftarget != reftitle:
-                result['reftype'] = reftype
-                result['reftarget'] = reftarget
+                result["reftype"] = reftype
+                result["reftarget"] = reftarget
 
                 result.clear()
                 result += innernode(reftitle, reftitle)  # type: ignore[call-arg]
@@ -93,19 +93,17 @@ class PyXrefMixin:
                 children = result.children
                 result.clear()
 
-                shortname = target.split('.')[-1]
-                textnode = innernode('', shortname)  # type: ignore[call-arg]
+                shortname = target.split(".")[-1]
+                textnode = innernode("", shortname)  # type: ignore[call-arg]
                 contnodes = [
-                    pending_xref_condition('', '', textnode, condition='resolved'),
-                    pending_xref_condition('', '', *children, condition='*'),
+                    pending_xref_condition("", "", textnode, condition="resolved"),
+                    pending_xref_condition("", "", *children, condition="*"),
                 ]
                 result.extend(contnodes)
 
         return result
 
-    _delimiters_re = re.compile(
-        r'(\s*[\[\]\(\),](?:\s*o[rf]\s)?\s*|\s+o[rf]\s+|\s*\|\s*|\.\.\.)'
-    )
+    _delimiters_re = re.compile(r"(\s*[\[\]\(\),](?:\s*o[rf]\s)?\s*|\s+o[rf]\s+|\s*\|\s*|\.\.\.)")
 
     def make_xrefs(
         self,
@@ -144,7 +142,7 @@ class PyXrefMixin:
                     )
                 )
 
-            if sub_target in {'Literal', 'typing.Literal', '~typing.Literal'}:
+            if sub_target in {"Literal", "typing.Literal", "~typing.Literal"}:
                 in_literal = True
 
         return results
@@ -170,64 +168,64 @@ class PyObject(ObjectDescription[tuple[str, str]]):
     """
 
     option_spec: ClassVar[OptionSpec] = {
-        'no-index': directives.flag,
-        'no-index-entry': directives.flag,
-        'no-contents-entry': directives.flag,
-        'no-typesetting': directives.flag,
-        'noindex': directives.flag,
-        'noindexentry': directives.flag,
-        'nocontentsentry': directives.flag,
-        'single-line-parameter-list': directives.flag,
-        'single-line-type-parameter-list': directives.flag,
-        'module': directives.unchanged,
-        'canonical': directives.unchanged,
-        'annotation': directives.unchanged,
+        "no-index": directives.flag,
+        "no-index-entry": directives.flag,
+        "no-contents-entry": directives.flag,
+        "no-typesetting": directives.flag,
+        "noindex": directives.flag,
+        "noindexentry": directives.flag,
+        "nocontentsentry": directives.flag,
+        "single-line-parameter-list": directives.flag,
+        "single-line-type-parameter-list": directives.flag,
+        "module": directives.unchanged,
+        "canonical": directives.unchanged,
+        "annotation": directives.unchanged,
     }
 
     doc_field_types = [
         PyTypedField(
-            'parameter',
-            label=_('Parameters'),
+            "parameter",
+            label=_("Parameters"),
             names=(
-                'param',
-                'parameter',
-                'arg',
-                'argument',
-                'keyword',
-                'kwarg',
-                'kwparam',
+                "param",
+                "parameter",
+                "arg",
+                "argument",
+                "keyword",
+                "kwarg",
+                "kwparam",
             ),
-            typerolename='class',
-            typenames=('paramtype', 'type'),
+            typerolename="class",
+            typenames=("paramtype", "type"),
             can_collapse=True,
         ),
         PyTypedField(
-            'variable',
-            label=_('Variables'),
-            names=('var', 'ivar', 'cvar'),
-            typerolename='class',
-            typenames=('vartype',),
+            "variable",
+            label=_("Variables"),
+            names=("var", "ivar", "cvar"),
+            typerolename="class",
+            typenames=("vartype",),
             can_collapse=True,
         ),
         PyGroupedField(
-            'exceptions',
-            label=_('Raises'),
-            rolename='exc',
-            names=('raises', 'raise', 'exception', 'except'),
+            "exceptions",
+            label=_("Raises"),
+            rolename="exc",
+            names=("raises", "raise", "exception", "except"),
             can_collapse=True,
         ),
         Field(
-            'returnvalue',
-            label=_('Returns'),
+            "returnvalue",
+            label=_("Returns"),
             has_arg=False,
-            names=('returns', 'return'),
+            names=("returns", "return"),
         ),
         PyField(
-            'returntype',
-            label=_('Return type'),
+            "returntype",
+            label=_("Return type"),
             has_arg=False,
-            names=('rtype',),
-            bodyrolename='class',
+            names=("rtype",),
+            bodyrolename="class",
         ),
     ]
 
@@ -260,39 +258,35 @@ class PyObject(ObjectDescription[tuple[str, str]]):
         prefix, name, tp_list, arglist, retann = m.groups()
 
         # determine module and class name (if applicable), as well as full name
-        modname = self.options.get('module', self.env.ref_context.get('py:module'))
-        classname = self.env.ref_context.get('py:class')
+        modname = self.options.get("module", self.env.ref_context.get("py:module"))
+        classname = self.env.ref_context.get("py:class")
         if classname:
             add_module = False
-            if prefix and (prefix == classname or prefix.startswith(f'{classname}.')):
+            if prefix and (prefix == classname or prefix.startswith(f"{classname}.")):
                 fullname = prefix + name
                 # class name is given again in the signature
-                prefix = prefix[len(classname) :].lstrip('.')
+                prefix = prefix[len(classname) :].lstrip(".")
             elif prefix:
                 # class name is given in the signature, but different
                 # (shouldn't happen)
-                fullname = f'{classname}.{prefix}{name}'
+                fullname = f"{classname}.{prefix}{name}"
             else:
                 # class name is not given in the signature
-                fullname = f'{classname}.{name}'
+                fullname = f"{classname}.{name}"
         else:
             add_module = True
             if prefix:
-                classname = prefix.rstrip('.')
+                classname = prefix.rstrip(".")
                 fullname = prefix + name
             else:
-                classname = ''
+                classname = ""
                 fullname = name
 
-        signode['module'] = modname
-        signode['class'] = classname
-        signode['fullname'] = fullname
+        signode["module"] = modname
+        signode["class"] = classname
+        signode["fullname"] = fullname
 
-        max_len = (
-            self.config.python_maximum_signature_line_length
-            or self.config.maximum_signature_line_length
-            or 0
-        )
+        max_len = self.config.python_maximum_signature_line_length or self.config.maximum_signature_line_length or 0
 
         # determine if the function arguments (without its type parameters)
         # should be formatted on a multiline or not by removing the width of
@@ -300,14 +294,14 @@ class PyObject(ObjectDescription[tuple[str, str]]):
         sig_len = len(sig)
         tp_list_span = m.span(3)
         multi_line_parameter_list = (
-            'single-line-parameter-list' not in self.options
+            "single-line-parameter-list" not in self.options
             and (sig_len - (tp_list_span[1] - tp_list_span[0])) > max_len > 0
         )
 
         # determine whether the type parameter list must be wrapped or not
         arglist_span = m.span(4)
         multi_line_type_parameter_list = (
-            'single-line-type-parameter-list' not in self.options
+            "single-line-type-parameter-list" not in self.options
             and (sig_len - (arglist_span[1] - arglist_span[0])) > max_len > 0
         )
 
@@ -316,17 +310,17 @@ class PyObject(ObjectDescription[tuple[str, str]]):
         if sig_prefix:
             if type(sig_prefix) is str:
                 msg = (
-                    'Python directive method get_signature_prefix()'
-                    ' must return a list of nodes.'
+                    "Python directive method get_signature_prefix()"
+                    " must return a list of nodes."
                     f" Return value was '{sig_prefix}'."
                 )
                 raise TypeError(msg)
-            signode += addnodes.desc_annotation(str(sig_prefix), '', *sig_prefix)
+            signode += addnodes.desc_annotation(str(sig_prefix), "", *sig_prefix)
 
         if prefix:
             signode += addnodes.desc_addname(prefix, prefix)
         elif modname and add_module and self.config.add_module_names:
-            nodetext = f'{modname}.'
+            nodetext = f"{modname}."
             signode += addnodes.desc_addname(nodetext, nodetext)
 
         signode += addnodes.desc_name(name, name)
@@ -340,9 +334,7 @@ class PyObject(ObjectDescription[tuple[str, str]]):
                     trailing_comma,
                 )
             except Exception as exc:
-                logger.warning(
-                    'could not parse tp_list (%r): %s', tp_list, exc, location=signode
-                )
+                logger.warning("could not parse tp_list (%r): %s", tp_list, exc, location=signode)
 
         if arglist:
             try:
@@ -357,9 +349,7 @@ class PyObject(ObjectDescription[tuple[str, str]]):
                 # (this may happen if the argument list is incorrectly used
                 # as a list of bases when documenting a class)
                 # it supports to represent optional arguments (ex. "func(foo [, bar])")
-                logger.debug(
-                    'syntax error in arglist (%r): %s', arglist, exc, location=signode
-                )
+                logger.debug("syntax error in arglist (%r): %s", arglist, exc, location=signode)
                 _pseudo_parse_arglist(
                     signode,
                     arglist,
@@ -368,9 +358,7 @@ class PyObject(ObjectDescription[tuple[str, str]]):
                 )
             except (NotImplementedError, ValueError) as exc:
                 # duplicated parameter names raise ValueError and not a SyntaxError
-                logger.warning(
-                    'could not parse arglist (%r): %s', arglist, exc, location=signode
-                )
+                logger.warning("could not parse arglist (%r): %s", arglist, exc, location=signode)
                 _pseudo_parse_arglist(
                     signode,
                     arglist,
@@ -384,59 +372,55 @@ class PyObject(ObjectDescription[tuple[str, str]]):
 
         if retann:
             children = _parse_annotation(retann, self.env)
-            signode += addnodes.desc_returns(retann, '', *children)
+            signode += addnodes.desc_returns(retann, "", *children)
 
-        anno = self.options.get('annotation')
+        anno = self.options.get("annotation")
         if anno:
-            signode += addnodes.desc_annotation(
-                f' {anno}', '', addnodes.desc_sig_space(), nodes.Text(anno)
-            )
+            signode += addnodes.desc_annotation(f" {anno}", "", addnodes.desc_sig_space(), nodes.Text(anno))
 
         return fullname, prefix
 
     def _object_hierarchy_parts(self, sig_node: desc_signature) -> tuple[str, ...]:
-        if 'fullname' not in sig_node:
+        if "fullname" not in sig_node:
             return ()
-        modname = sig_node.get('module')
-        fullname = sig_node['fullname']
+        modname = sig_node.get("module")
+        fullname = sig_node["fullname"]
 
         if modname:
-            return (modname, *fullname.split('.'))
+            return (modname, *fullname.split("."))
         else:
-            return tuple(fullname.split('.'))
+            return tuple(fullname.split("."))
 
     def get_index_text(self, modname: str, name: tuple[str, str]) -> str:
         """Return the text for the index entry of the object."""
-        msg = 'must be implemented in subclasses'
+        msg = "must be implemented in subclasses"
         raise NotImplementedError(msg)
 
-    def add_target_and_index(
-        self, name_cls: tuple[str, str], sig: str, signode: desc_signature
-    ) -> None:
-        mod_name = self.options.get('module', self.env.ref_context.get('py:module'))
-        fullname = (f'{mod_name}.' if mod_name else '') + name_cls[0]
-        node_id = make_id(self.env, self.state.document, '', fullname)
-        signode['ids'].append(node_id)
+    def add_target_and_index(self, name_cls: tuple[str, str], sig: str, signode: desc_signature) -> None:
+        mod_name = self.options.get("module", self.env.ref_context.get("py:module"))
+        fullname = (f"{mod_name}." if mod_name else "") + name_cls[0]
+        node_id = make_id(self.env, self.state.document, "", fullname)
+        signode["ids"].append(node_id)
         self.state.document.note_explicit_target(signode)
 
         domain = self.env.domains.python_domain
         domain.note_object(fullname, self.objtype, node_id, location=signode)
 
-        canonical_name = self.options.get('canonical')
+        canonical_name = self.options.get("canonical")
         if canonical_name:
-            domain.note_object(
-                canonical_name, self.objtype, node_id, aliased=True, location=signode
-            )
+            domain.note_object(canonical_name, self.objtype, node_id, aliased=True, location=signode)
 
-        if 'no-index-entry' not in self.options:
+        if "no-index-entry" not in self.options:
             if index_text := self.get_index_text(mod_name, name_cls):
-                self.indexnode['entries'].append((
-                    'single',
-                    index_text,
-                    node_id,
-                    '',
-                    None,
-                ))
+                self.indexnode["entries"].append(
+                    (
+                        "single",
+                        index_text,
+                        node_id,
+                        "",
+                        None,
+                    )
+                )
 
     def before_content(self) -> None:
         """Handle object nesting before content
@@ -460,16 +444,16 @@ class PyObject(ObjectDescription[tuple[str, str]]):
             if self.allow_nesting:
                 prefix = fullname
             elif name_prefix:
-                prefix = name_prefix.strip('.')
+                prefix = name_prefix.strip(".")
         if prefix:
-            self.env.ref_context['py:class'] = prefix
+            self.env.ref_context["py:class"] = prefix
             if self.allow_nesting:
-                classes = self.env.ref_context.setdefault('py:classes', [])
+                classes = self.env.ref_context.setdefault("py:classes", [])
                 classes.append(prefix)
-        if 'module' in self.options:
-            modules = self.env.ref_context.setdefault('py:modules', [])
-            modules.append(self.env.ref_context.get('py:module'))
-            self.env.ref_context['py:module'] = self.options['module']
+        if "module" in self.options:
+            modules = self.env.ref_context.setdefault("py:modules", [])
+            modules.append(self.env.ref_context.get("py:module"))
+            self.env.ref_context["py:module"] = self.options["module"]
 
     def after_content(self) -> None:
         """Handle object de-nesting after content
@@ -481,34 +465,34 @@ class PyObject(ObjectDescription[tuple[str, str]]):
         be altered as we didn't affect the nesting levels in
         :py:meth:`before_content`.
         """
-        classes = self.env.ref_context.setdefault('py:classes', [])
+        classes = self.env.ref_context.setdefault("py:classes", [])
         if self.allow_nesting:
             with contextlib.suppress(IndexError):
                 classes.pop()
 
-        self.env.ref_context['py:class'] = classes[-1] if len(classes) > 0 else None
-        if 'module' in self.options:
-            modules = self.env.ref_context.setdefault('py:modules', [])
+        self.env.ref_context["py:class"] = classes[-1] if len(classes) > 0 else None
+        if "module" in self.options:
+            modules = self.env.ref_context.setdefault("py:modules", [])
             if modules:
-                self.env.ref_context['py:module'] = modules.pop()
+                self.env.ref_context["py:module"] = modules.pop()
             else:
-                self.env.ref_context.pop('py:module')
+                self.env.ref_context.pop("py:module")
 
     def _toc_entry_name(self, sig_node: desc_signature) -> str:
-        if not sig_node.get('_toc_parts'):
-            return ''
+        if not sig_node.get("_toc_parts"):
+            return ""
 
         config = self.config
-        objtype = sig_node.parent.get('objtype')
-        if config.add_function_parentheses and objtype in {'function', 'method'}:
-            parens = '()'
+        objtype = sig_node.parent.get("objtype")
+        if config.add_function_parentheses and objtype in {"function", "method"}:
+            parens = "()"
         else:
-            parens = ''
-        *parents, name = sig_node['_toc_parts']
-        if config.toc_object_entries_show_parents == 'domain':
-            return sig_node.get('fullname', name) + parens
-        if config.toc_object_entries_show_parents == 'hide':
+            parens = ""
+        *parents, name = sig_node["_toc_parts"]
+        if config.toc_object_entries_show_parents == "domain":
+            return sig_node.get("fullname", name) + parens
+        if config.toc_object_entries_show_parents == "hide":
             return name + parens
-        if config.toc_object_entries_show_parents == 'all':
-            return '.'.join([*parents, name + parens])
-        return ''
+        if config.toc_object_entries_show_parents == "all":
+            return ".".join([*parents, name + parens])
+        return ""

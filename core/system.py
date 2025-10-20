@@ -117,45 +117,31 @@ class PromptingSystem:
             self.logger.info(f"Processing prompt in {detected_mode.value} mode")
 
             # Step 2: Get context for the mode
-            mode_context = self.context_manager.get_context_for_mode(
-                detected_mode.value
-            )
+            mode_context = self.context_manager.get_context_for_mode(detected_mode.value)
             if context:
                 mode_context.update(context)
 
             # Step 3: Route to processor
-            routing_info = self.router.route_to_processor(
-                prompt, detected_mode, mode_context
-            )
+            routing_info = self.router.route_to_processor(prompt, detected_mode, mode_context)
 
             # Step 4: Run inference engine
-            inference_result = self.inference_engine.process_prompt(
-                routing_info, mode_context
-            )
+            inference_result = self.inference_engine.process_prompt(routing_info, mode_context)
 
             # Step 5: Data integration loop (if enabled)
             if enable_data_loop:
-                loop_result = await self._run_data_loop(
-                    prompt, inference_result, mode_context
-                )
+                loop_result = await self._run_data_loop(prompt, inference_result, mode_context)
                 inference_result["data_loop_result"] = loop_result
 
             # Step 6: Format response using mode handler
             mode_handler = self.mode_registry.get_mode(detected_mode.value)
             if mode_handler:
-                formatted_response = mode_handler.format_response(
-                    inference_result, mode_context
-                )
+                formatted_response = mode_handler.format_response(inference_result, mode_context)
             else:
                 formatted_response = str(inference_result.get("response", {}))
 
             # Step 7: Add to conversation history
-            self.context_manager.add_conversation_entry(
-                "user", prompt, detected_mode.value
-            )
-            self.context_manager.add_conversation_entry(
-                "assistant", formatted_response, detected_mode.value
-            )
+            self.context_manager.add_conversation_entry("user", prompt, detected_mode.value)
+            self.context_manager.add_conversation_entry("assistant", formatted_response, detected_mode.value)
 
             # Step 8: Generate insights
             if enable_data_loop and "data_loop_result" in inference_result:
@@ -174,12 +160,8 @@ class PromptingSystem:
                     "session_id": self.session_id,
                     "processing_time": duration,
                     "reasoning_chain": inference_result.get("reasoning_chain", []),
-                    "data_sources_used": len(
-                        inference_result.get("data_loop_result", {}).get("sources", {})
-                    ),
-                    "insights_generated": len(
-                        inference_result.get("insights", {}).get("insights", [])
-                    ),
+                    "data_sources_used": len(inference_result.get("data_loop_result", {}).get("sources", {})),
+                    "insights_generated": len(inference_result.get("insights", {}).get("insights", [])),
                 },
                 "raw_inference": inference_result,
             }
@@ -199,9 +181,7 @@ class PromptingSystem:
         """Run the data integration and refinement loop"""
 
         # Validation function for loop controller
-        async def validate_data(
-            data: Dict[str, Any], ctx: Dict[str, Any]
-        ) -> Dict[str, Any]:
+        async def validate_data(data: Dict[str, Any], ctx: Dict[str, Any]) -> Dict[str, Any]:
             quality_score = 0.5  # Base score
             issues = []
 
@@ -216,9 +196,7 @@ class PromptingSystem:
                 )
                 quality_score = 0.1
             else:
-                successful_sources = sum(
-                    1 for s in sources.values() if s.get("status") == "success"
-                )
+                successful_sources = sum(1 for s in sources.values() if s.get("status") == "success")
                 if len(sources) > 0:
                     quality_score = successful_sources / len(sources)
                 else:
@@ -248,20 +226,13 @@ class PromptingSystem:
             refinements = []
 
             # If insufficient data, try different search mode
-            if any(
-                issue["type"] == "insufficient_data"
-                for issue in validation_result.get("issues", [])
-            ):
+            if any(issue["type"] == "insufficient_data" for issue in validation_result.get("issues", [])):
                 # Switch search strategy
                 current_mode = data.get("mode", "technical")
                 new_mode = "community" if current_mode == "technical" else "general"
 
-                refined_data = await self.data_integration.gather_data(
-                    prompt, ctx, new_mode
-                )
-                refinements.append(
-                    f"Switched search mode from {current_mode} to {new_mode}"
-                )
+                refined_data = await self.data_integration.gather_data(prompt, ctx, new_mode)
+                refinements.append(f"Switched search mode from {current_mode} to {new_mode}")
 
                 # Clean the refined data
                 cleaned_data = self.data_laundry.clean_and_filter(refined_data)
@@ -308,9 +279,7 @@ class PromptingSystem:
             "available_modes": list(self.mode_registry.list_modes().keys()),
         }
 
-    def create_automation_task(
-        self, task_name: str, prompt: str, mode: str = "ide"
-    ) -> Dict[str, Any]:
+    def create_automation_task(self, task_name: str, prompt: str, mode: str = "ide") -> Dict[str, Any]:
         """
         Create an automation task that can be integrated with the existing framework
 
@@ -351,16 +320,12 @@ class PromptingSystem:
         self.automation_context = context
 
         # Process the prompt
-        result = await self.process_prompt(
-            prompt=prompt, mode=mode, enable_data_loop=enable_data_loop
-        )
+        result = await self.process_prompt(prompt=prompt, mode=mode, enable_data_loop=enable_data_loop)
 
         # Log results
         if context.dry_run:
             self.logger.info(f"[DRY-RUN] Would process prompt: {prompt}")
-            self.logger.info(
-                f"[DRY-RUN] Mode: {mode}, Response length: {len(result['response'])}"
-            )
+            self.logger.info(f"[DRY-RUN] Mode: {mode}, Response length: {len(result['response'])}")
         else:
             self.logger.success("Processed prompt successfully")
             print(f"\n{'=' * 60}")
@@ -382,9 +347,7 @@ class PromptingSystem:
         """
         integration_config = {
             "phases": [],
-            "deterministic_merge_config": {
-                "priority_map": {"D": 3, "C": 2, "B": 1, "A": 0}
-            },
+            "deterministic_merge_config": {"priority_map": {"D": 3, "C": 2, "B": 1, "A": 0}},
         }
 
         for phase_name, prompt in phases.items():
@@ -401,9 +364,7 @@ class PromptingSystem:
     def _create_phase_validator(self, phase_name: str):
         """Create a validator function for a specific phase"""
 
-        async def validator(
-            data: Dict[str, Any], context: Dict[str, Any]
-        ) -> Dict[str, Any]:
+        async def validator(data: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
             # Phase-specific validation logic
             quality_score = 0.8  # Default good quality
             issues = []

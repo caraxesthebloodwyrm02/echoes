@@ -3,6 +3,7 @@ Tests for the following offsets:
 - QuarterBegin
 - QuarterEnd
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -31,12 +32,7 @@ def test_quarterly_dont_normalize(klass):
 @pytest.mark.parametrize("offset", [QuarterBegin(), QuarterEnd()])
 @pytest.mark.parametrize(
     "date",
-    [
-        datetime(2016, m, d)
-        for m in [10, 11, 12]
-        for d in [1, 2, 3, 28, 29, 30, 31]
-        if not (m == 11 and d == 31)
-    ],
+    [datetime(2016, m, d) for m in [10, 11, 12] for d in [1, 2, 3, 28, 29, 30, 31] if not (m == 11 and d == 31)],
 )
 def test_on_offset(offset, date):
     res = offset.is_on_offset(date)

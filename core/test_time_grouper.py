@@ -99,10 +99,7 @@ def test_fails_on_no_datetime_index(index):
     name = type(index).__name__
     df = DataFrame({"a": range(len(index))}, index=index)
 
-    msg = (
-        "Only valid with DatetimeIndex, TimedeltaIndex "
-        f"or PeriodIndex, but got an instance of '{name}'"
-    )
+    msg = "Only valid with DatetimeIndex, TimedeltaIndex " f"or PeriodIndex, but got an instance of '{name}'"
     with pytest.raises(TypeError, match=msg):
         df.groupby(Grouper(freq="D"))
 
@@ -347,17 +344,10 @@ def test_groupby_resample_interpolate():
 
     msg = "DataFrameGroupBy.resample operated on the grouping columns"
     with tm.assert_produces_warning(FutureWarning, match=msg):
-        result = (
-            df.set_index("week_starting")
-            .groupby("volume")
-            .resample("1D")
-            .interpolate(method="linear")
-        )
+        result = df.set_index("week_starting").groupby("volume").resample("1D").interpolate(method="linear")
 
     volume = [50] * 15 + [60]
-    week_starting = list(date_range("2018-01-07", "2018-01-21")) + [
-        Timestamp("2018-01-14")
-    ]
+    week_starting = list(date_range("2018-01-07", "2018-01-21")) + [Timestamp("2018-01-14")]
     expected_ind = pd.MultiIndex.from_arrays(
         [volume, week_starting],
         names=["volume", "week_starting"],

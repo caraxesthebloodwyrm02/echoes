@@ -17,9 +17,7 @@ if TYPE_CHECKING:
     )
 
 
-def quantile_compat(
-    values: ArrayLike, qs: npt.NDArray[np.float64], interpolation: str
-) -> ArrayLike:
+def quantile_compat(values: ArrayLike, qs: npt.NDArray[np.float64], interpolation: str) -> ArrayLike:
     """
     Compute the quantiles of the given values for each quantile in `qs`.
 

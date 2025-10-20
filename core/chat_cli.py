@@ -21,8 +21,9 @@ from typing import List, Dict
 # --------------------------------------------------------------------------- #
 try:
     from dotenv import load_dotenv
-    load_dotenv(override=True)            # respects .env even if already in env
-except Exception as exc:                 # pragma: no cover
+
+    load_dotenv(override=True)  # respects .env even if already in env
+except Exception as exc:  # pragma: no cover
     print(f"[ERROR] Could not load .env: {exc}")
     sys.exit(1)
 
@@ -31,7 +32,7 @@ except Exception as exc:                 # pragma: no cover
 # --------------------------------------------------------------------------- #
 try:
     from openai import OpenAI, OpenAIError
-except Exception as exc:                 # pragma: no cover
+except Exception as exc:  # pragma: no cover
     print(f"[ERROR] openai library missing: {exc}")
     print("Install with: pip install openai")
     sys.exit(1)
@@ -40,7 +41,7 @@ except Exception as exc:                 # pragma: no cover
 # 3. API key & optional project ID
 # --------------------------------------------------------------------------- #
 API_KEY = os.getenv("OPENAI_API_KEY")
-PROJECT_ID = os.getenv("OPENAI_PROJECT_ID")   # None if you’re not using a project key
+PROJECT_ID = os.getenv("OPENAI_PROJECT_ID")  # None if you’re not using a project key
 
 if not API_KEY:
     print("[ERROR] No OPENAI_API_KEY found in environment.")
@@ -59,11 +60,12 @@ temperature: float = 1.0
 conversation: List[Dict[str, str]] = []
 
 ALLOWED_MODELS = {
-    "gpt-4o":          "⚡️ Gpt‑4o (default)",
-    "gpt-4o-mini":     "🚀 Gpt‑4o‑mini (smaller, cheaper)",
-    "gpt-4o-1-mini":   "📦 Gpt‑4o‑1‑mini (tiny, still good)",
-    "gpt-3.5-turbo":   "🤖 Gpt‑3.5‑turbo (classic, inexpensive)",
+    "gpt-4o": "⚡️ Gpt‑4o (default)",
+    "gpt-4o-mini": "🚀 Gpt‑4o‑mini (smaller, cheaper)",
+    "gpt-4o-1-mini": "📦 Gpt‑4o‑1‑mini (tiny, still good)",
+    "gpt-3.5-turbo": "🤖 Gpt‑3.5‑turbo (classic, inexpensive)",
 }
+
 
 # --------------------------------------------------------------------------- #
 # 5. Helpers
@@ -71,12 +73,14 @@ ALLOWED_MODELS = {
 def clear_screen() -> None:  # pragma: no cover (terminal dependent)
     os.system("cls" if os.name == "nt" else "clear")
 
+
 def banner() -> None:
     clear_screen()
     print("=== OpenAI 4‑family Chat CLI ===")
     print(f"Model      : {current_model}")
     print(f"Temperature: {temperature:.2f}")
     print("Type '/help' for commands. Press Ctrl‑D to exit.\n")
+
 
 def list_models() -> None:
     """Print all models we can try out."""
@@ -90,6 +94,7 @@ def list_models() -> None:
     except Exception as exc:  # pragma: no cover
         print(f"[ERROR] Cannot list models: {exc}")
 
+
 def switch_model(name: str) -> None:
     """Attempt to set a new model."""
     global current_model
@@ -98,11 +103,12 @@ def switch_model(name: str) -> None:
         print(f"[ERROR] '{name}' not in allowed list. Use /list to see options.")
         return
     try:
-        client.models.retrieve(name)          # quick check – throws if the model is unreachable
+        client.models.retrieve(name)  # quick check – throws if the model is unreachable
         current_model = name
         print(f"[INFO] Switched to {name} ({ALLOWED_MODELS[name]})")
     except Exception as exc:  # pragma: no cover
         print(f"[ERROR] Cannot switch to '{name}': {exc}")
+
 
 def set_temperature(tok: str) -> None:
     """Set the temperature (0‑2)."""
@@ -117,11 +123,13 @@ def set_temperature(tok: str) -> None:
     except ValueError:
         print("[ERROR] Provide a numeric temperature (e.g., /temp 1.2)")
 
+
 def reset_conversation() -> None:
     """Clear chat history."""
     global conversation
     conversation.clear()
     print("[INFO] Conversation history cleared.")
+
 
 def help_msg() -> None:
     print(
@@ -137,6 +145,7 @@ Commands (start with a slash /):
 """
     )
 
+
 def parse_prompt(prompt: str) -> tuple[str, str]:
     """
     Return (prompt_text, model_override).
@@ -147,6 +156,7 @@ def parse_prompt(prompt: str) -> tuple[str, str]:
         return text.strip(), mdl.strip()
     return prompt.strip(), ""
 
+
 # --------------------------------------------------------------------------- #
 # 6. Signal handling
 # --------------------------------------------------------------------------- #
@@ -154,7 +164,9 @@ def handle_sigint(signum: int, frame) -> None:  # pragma: no cover
     print("\n[INFO] Interrupt received. Exiting.")
     sys.exit(0)
 
+
 signal.signal(signal.SIGINT, handle_sigint)
+
 
 # --------------------------------------------------------------------------- #
 # 7. Chat loop
@@ -218,11 +230,11 @@ def chat_loop() -> None:
                 model=current_model,
                 messages=conversation,
                 temperature=temperature,
-                stream=True,   # stream reply live
+                stream=True,  # stream reply live
             )
 
             full_text = ""
-            for chunk in resp:                 # each chunk is a ChatCompletionChunk
+            for chunk in resp:  # each chunk is a ChatCompletionChunk
                 content = chunk.choices[0].delta.content
                 if content:
                     print(content, end="", flush=True)
@@ -234,6 +246,7 @@ def chat_loop() -> None:
             print(f"\n[ERROR] OpenAI API error: {exc}")
         except Exception as exc:  # pragma: no cover
             print(f"\n[ERROR] Unexpected error: {exc}")
+
 
 if __name__ == "__main__":
     chat_loop()

@@ -26,14 +26,14 @@ class SphinxStyle(Style):
     background.
     """
 
-    background_color = '#eeffcc'
-    default_style = ''
+    background_color = "#eeffcc"
+    default_style = ""
 
     styles = {
         **FriendlyStyle.styles,
-        Generic.Output: '#333',
-        Comment: 'italic #408090',
-        Number: '#208050',
+        Generic.Output: "#333",
+        Comment: "italic #408090",
+        Number: "#208050",
     }
 
 
@@ -42,8 +42,8 @@ class PyramidStyle(Style):
 
     # work in progress...
 
-    background_color = '#f8f8f8'
-    default_style = ''
+    background_color = "#f8f8f8"
+    default_style = ""
 
     styles = {
         Whitespace:         '#bbbbbb',

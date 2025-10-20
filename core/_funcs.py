@@ -270,10 +270,7 @@ def broadcast_shapes(*shapes: tuple[float | None, ...]) -> tuple[int | None, ...
         none_size = None in sizes or math.nan in sizes
         sizes -= {1, None, math.nan}
         if len(sizes) > 1:
-            msg = (
-                "shape mismatch: objects cannot be broadcast to a single shape: "
-                f"{shapes}."
-            )
+            msg = "shape mismatch: objects cannot be broadcast to a single shape: " f"{shapes}."
             raise ValueError(msg)
         out.append(None if none_size else cast(int, sizes.pop()) if sizes else 1)
 
@@ -348,9 +345,7 @@ def cov(m: Array, /, *, xp: ModuleType | None = None) -> Array:
         xp = array_namespace(m)
 
     m = xp.asarray(m, copy=True)
-    dtype = (
-        xp.float64 if xp.isdtype(m.dtype, "integral") else xp.result_type(m, xp.float64)
-    )
+    dtype = xp.float64 if xp.isdtype(m.dtype, "integral") else xp.result_type(m, xp.float64)
 
     m = atleast_nd(m, ndim=2, xp=xp)
     m = xp.astype(m, dtype)
@@ -374,9 +369,7 @@ def cov(m: Array, /, *, xp: ModuleType | None = None) -> Array:
     return xp.squeeze(c, axis=axes)
 
 
-def create_diagonal(
-    x: Array, /, *, offset: int = 0, xp: ModuleType | None = None
-) -> Array:
+def create_diagonal(x: Array, /, *, offset: int = 0, xp: ModuleType | None = None) -> Array:
     """
     Construct a diagonal array.
 
@@ -437,9 +430,7 @@ def create_diagonal(
     return xp.reshape(diag, (*batch_dims, n, n))
 
 
-def expand_dims(
-    a: Array, /, *, axis: int | tuple[int, ...] = (0,), xp: ModuleType | None = None
-) -> Array:
+def expand_dims(a: Array, /, *, axis: int | tuple[int, ...] = (0,), xp: ModuleType | None = None) -> Array:
     """
     Expand the shape of an array.
 
@@ -510,9 +501,7 @@ def expand_dims(
         axis = (axis,)
     ndim = a.ndim + len(axis)
     if axis != () and (min(axis) < -ndim or max(axis) >= ndim):
-        err_msg = (
-            f"a provided axis position is out of bounds for array of dimension {a.ndim}"
-        )
+        err_msg = f"a provided axis position is out of bounds for array of dimension {a.ndim}"
         raise IndexError(err_msg)
     axis = tuple(dim % ndim for dim in axis)
     if len(set(axis)) != len(axis):
@@ -543,7 +532,9 @@ def isclose(
         out = apply_where(
             xp.isinf(a) | xp.isinf(b),
             (a, b),
-            lambda a, b: mxp.isinf(a) & mxp.isinf(b) & (mxp.sign(a) == mxp.sign(b)),  # pyright: ignore[reportUnknownArgumentType]
+            lambda a, b: mxp.isinf(a)
+            & mxp.isinf(b)
+            & (mxp.sign(a) == mxp.sign(b)),  # pyright: ignore[reportUnknownArgumentType]
             # Note: inf <= inf is True!
             lambda a, b: mxp.abs(a - b) <= (atol + rtol * mxp.abs(b)),  # pyright: ignore[reportUnknownArgumentType]
             xp=xp,
@@ -729,11 +720,7 @@ def pad(
     # make pad_width a list of length-2 tuples of ints
     if isinstance(pad_width, int):
         pad_width_seq = [(pad_width, pad_width)] * x.ndim
-    elif (
-        isinstance(pad_width, tuple)
-        and len(pad_width) == 2
-        and all(isinstance(i, int) for i in pad_width)
-    ):
+    elif isinstance(pad_width, tuple) and len(pad_width) == 2 and all(isinstance(i, int) for i in pad_width):
         pad_width_seq = [cast(tuple[int, int], pad_width)] * x.ndim
     else:
         pad_width_seq = cast(list[tuple[int, int]], list(pad_width))

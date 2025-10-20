@@ -97,9 +97,7 @@ def from_dataframe(df, allow_copy: bool = True) -> pd.DataFrame:
     if not hasattr(df, "__dataframe__"):
         raise ValueError("`df` does not support __dataframe__")
 
-    return _from_dataframe(
-        df.__dataframe__(allow_copy=allow_copy), allow_copy=allow_copy
-    )
+    return _from_dataframe(df.__dataframe__(allow_copy=allow_copy), allow_copy=allow_copy)
 
 
 def _from_dataframe(df: DataFrameXchg, allow_copy: bool = True):
@@ -124,9 +122,7 @@ def _from_dataframe(df: DataFrameXchg, allow_copy: bool = True):
         pandas_dfs.append(pandas_df)
 
     if not allow_copy and len(pandas_dfs) > 1:
-        raise RuntimeError(
-            "To join chunks a copy is required which is forbidden by allow_copy=False"
-        )
+        raise RuntimeError("To join chunks a copy is required which is forbidden by allow_copy=False")
     if not pandas_dfs:
         pandas_df = protocol_df_chunk_to_pandas(df)
     elif len(pandas_dfs) == 1:
@@ -204,9 +200,7 @@ def primitive_column_to_ndarray(col: Column) -> tuple[np.ndarray, Any]:
     buffers = col.get_buffers()
 
     data_buff, data_dtype = buffers["data"]
-    data = buffer_to_ndarray(
-        data_buff, data_dtype, offset=col.offset, length=col.size()
-    )
+    data = buffer_to_ndarray(data_buff, data_dtype, offset=col.offset, length=col.size())
 
     data = set_nulls(data, col, buffers["validity"])
     return data, buffers
@@ -244,9 +238,7 @@ def categorical_column_to_series(col: Column) -> tuple[pd.Series, Any]:
     buffers = col.get_buffers()
 
     codes_buff, codes_dtype = buffers["data"]
-    codes = buffer_to_ndarray(
-        codes_buff, codes_dtype, offset=col.offset, length=col.size()
-    )
+    codes = buffer_to_ndarray(codes_buff, codes_dtype, offset=col.offset, length=col.size())
 
     # Doing module in order to not get ``IndexError`` for
     # out-of-bounds sentinel values in `codes`
@@ -255,9 +247,7 @@ def categorical_column_to_series(col: Column) -> tuple[pd.Series, Any]:
     else:
         values = codes
 
-    cat = pd.Categorical(
-        values, categories=categories, ordered=categorical["is_ordered"]
-    )
+    cat = pd.Categorical(values, categories=categories, ordered=categorical["is_ordered"])
     data = pd.Series(cat)
 
     data = set_nulls(data, col, buffers["validity"])
@@ -285,9 +275,7 @@ def string_column_to_ndarray(col: Column) -> tuple[np.ndarray, Any]:
         ColumnNullType.USE_BITMASK,
         ColumnNullType.USE_BYTEMASK,
     ):
-        raise NotImplementedError(
-            f"{null_kind} null kind is not yet supported for string columns."
-        )
+        raise NotImplementedError(f"{null_kind} null kind is not yet supported for string columns.")
 
     buffers = col.get_buffers()
 
@@ -316,18 +304,14 @@ def string_column_to_ndarray(col: Column) -> tuple[np.ndarray, Any]:
     # Offsets buffer contains start-stop positions of strings in the data buffer,
     # meaning that it has more elements than in the data buffer, do `col.size() + 1`
     # here to pass a proper offsets buffer size
-    offsets = buffer_to_ndarray(
-        offset_buff, offset_dtype, offset=col.offset, length=col.size() + 1
-    )
+    offsets = buffer_to_ndarray(offset_buff, offset_dtype, offset=col.offset, length=col.size() + 1)
 
     null_pos = None
     if null_kind in (ColumnNullType.USE_BITMASK, ColumnNullType.USE_BYTEMASK):
         validity = buffers["validity"]
         if validity is not None:
             valid_buff, valid_dtype = validity
-            null_pos = buffer_to_ndarray(
-                valid_buff, valid_dtype, offset=col.offset, length=col.size()
-            )
+            null_pos = buffer_to_ndarray(valid_buff, valid_dtype, offset=col.offset, length=col.size())
             if sentinel_val == 0:
                 null_pos = ~null_pos
 
@@ -483,9 +467,7 @@ def buffer_to_ndarray(
         )
         return np.asarray(arr)
     else:
-        data_pointer = ctypes.cast(
-            buffer.ptr + (offset * bit_width // 8), ctypes.POINTER(ctypes_type)
-        )
+        data_pointer = ctypes.cast(buffer.ptr + (offset * bit_width // 8), ctypes.POINTER(ctypes_type))
         if length > 0:
             return np.ctypeslib.as_array(data_pointer, shape=(length,))
         return np.array([], dtype=ctypes_type)
@@ -528,9 +510,7 @@ def set_nulls(
     elif null_kind in (ColumnNullType.USE_BITMASK, ColumnNullType.USE_BYTEMASK):
         assert validity, "Expected to have a validity buffer for the mask"
         valid_buff, valid_dtype = validity
-        null_pos = buffer_to_ndarray(
-            valid_buff, valid_dtype, offset=col.offset, length=col.size()
-        )
+        null_pos = buffer_to_ndarray(valid_buff, valid_dtype, offset=col.offset, length=col.size())
         if sentinel_val == 0:
             null_pos = ~null_pos
     elif null_kind in (ColumnNullType.NON_NULLABLE, ColumnNullType.USE_NAN):

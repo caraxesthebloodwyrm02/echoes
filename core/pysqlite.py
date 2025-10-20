@@ -429,9 +429,7 @@ if TYPE_CHECKING:
 
 
 class _SQLite_pysqliteTimeStamp(DATETIME):
-    def bind_processor(  # type: ignore[override]
-        self, dialect: SQLiteDialect
-    ) -> Optional[_BindProcessorType[Any]]:
+    def bind_processor(self, dialect: SQLiteDialect) -> Optional[_BindProcessorType[Any]]:  # type: ignore[override]
         if dialect.native_datetime:
             return None
         else:
@@ -447,9 +445,7 @@ class _SQLite_pysqliteTimeStamp(DATETIME):
 
 
 class _SQLite_pysqliteDate(DATE):
-    def bind_processor(  # type: ignore[override]
-        self, dialect: SQLiteDialect
-    ) -> Optional[_BindProcessorType[Any]]:
+    def bind_processor(self, dialect: SQLiteDialect) -> Optional[_BindProcessorType[Any]]:  # type: ignore[override]
         if dialect.native_datetime:
             return None
         else:
@@ -489,9 +485,7 @@ class SQLiteDialect_pysqlite(SQLiteDialect):
 
     @classmethod
     def _is_url_file_db(cls, url: URL) -> bool:
-        if (url.database and url.database != ":memory:") and (
-            url.query.get("mode", None) != "memory"
-        ):
+        if (url.database and url.database != ":memory:") and (url.query.get("mode", None) != "memory"):
             return True
         else:
             return False
@@ -512,9 +506,7 @@ class SQLiteDialect_pysqlite(SQLiteDialect):
         }
     )
 
-    def set_isolation_level(
-        self, dbapi_connection: DBAPIConnection, level: IsolationLevel
-    ) -> None:
+    def set_isolation_level(self, dbapi_connection: DBAPIConnection, level: IsolationLevel) -> None:
         if level == "AUTOCOMMIT":
             dbapi_connection.isolation_level = None
         else:
@@ -540,18 +532,14 @@ class SQLiteDialect_pysqlite(SQLiteDialect):
             create_func_kw = {}
 
         def set_regexp(dbapi_connection: DBAPIConnection) -> None:
-            dbapi_connection.create_function(
-                "regexp", 2, regexp, **create_func_kw
-            )
+            dbapi_connection.create_function("regexp", 2, regexp, **create_func_kw)
 
         def floor_func(dbapi_connection: DBAPIConnection) -> None:
             # NOTE: floor is optionally present in sqlite 3.35+ , however
             # as it is normally non-present we deliver floor() unconditionally
             # for now.
             # https://www.sqlite.org/lang_mathfunc.html
-            dbapi_connection.create_function(
-                "floor", 1, math.floor, **create_func_kw
-            )
+            dbapi_connection.create_function("floor", 1, math.floor, **create_func_kw)
 
         fns = [set_regexp, floor_func]
 
@@ -606,20 +594,13 @@ class SQLiteDialect_pysqlite(SQLiteDialect):
             filename: str = url.database  # type: ignore[assignment]
             if uri_opts:
                 # sorting of keys is for unit test support
-                filename += "?" + (
-                    "&".join(
-                        "%s=%s" % (key, uri_opts[key])
-                        for key in sorted(uri_opts)
-                    )
-                )
+                filename += "?" + ("&".join("%s=%s" % (key, uri_opts[key]) for key in sorted(uri_opts)))
         else:
             filename = url.database or ":memory:"
             if filename != ":memory:":
                 filename = os.path.abspath(filename)
 
-        pysqlite_opts.setdefault(
-            "check_same_thread", not self._is_url_file_db(url)
-        )
+        pysqlite_opts.setdefault("check_same_thread", not self._is_url_file_db(url))
 
         return ([filename], pysqlite_opts)
 
@@ -630,9 +611,7 @@ class SQLiteDialect_pysqlite(SQLiteDialect):
         cursor: Optional[DBAPICursor],
     ) -> bool:
         self.dbapi = cast("DBAPIModule", self.dbapi)
-        return isinstance(
-            e, self.dbapi.ProgrammingError
-        ) and "Cannot operate on a closed database." in str(e)
+        return isinstance(e, self.dbapi.ProgrammingError) and "Cannot operate on a closed database." in str(e)
 
 
 dialect = SQLiteDialect_pysqlite
@@ -683,9 +662,7 @@ class _SQLiteDialect_pysqlite_numeric(SQLiteDialect_pysqlite):
         ) -> Union[dict[str, Any], tuple[Any, ...]]:
             if parameters:
                 assert isinstance(parameters, tuple)
-                return {
-                    str(idx): value for idx, value in enumerate(parameters, 1)
-                }
+                return {str(idx): value for idx, value in enumerate(parameters, 1)}
             else:
                 return ()
 
@@ -699,9 +676,7 @@ class _SQLiteDialect_pysqlite_numeric(SQLiteDialect_pysqlite):
             def executemany(self, sql: str, parameters: Any) -> Self:
                 _test_sql(sql)
                 if first_bind in sql:
-                    parameters = [
-                        _numeric_param_as_dict(p) for p in parameters
-                    ]
+                    parameters = [_numeric_param_as_dict(p) for p in parameters]
                 return super().executemany(sql, parameters)
 
         class SQLiteFix99953Connection(sqlite3.Connection):
@@ -709,17 +684,13 @@ class _SQLiteDialect_pysqlite_numeric(SQLiteDialect_pysqlite):
 
             def cursor(
                 self,
-                factory: Optional[
-                    Callable[[sqlite3.Connection], _CursorT]
-                ] = None,
+                factory: Optional[Callable[[sqlite3.Connection], _CursorT]] = None,
             ) -> _CursorT:
                 if factory is None:
                     factory = SQLiteFix99953Cursor  # type: ignore[assignment]
                 return super().cursor(factory=factory)  # type: ignore[return-value]  # noqa[E501]
 
-            def execute(
-                self, sql: str, parameters: Any = ()
-            ) -> sqlite3.Cursor:
+            def execute(self, sql: str, parameters: Any = ()) -> sqlite3.Cursor:
                 _test_sql(sql)
                 if first_bind in sql:
                     parameters = _numeric_param_as_dict(parameters)
@@ -728,9 +699,7 @@ class _SQLiteDialect_pysqlite_numeric(SQLiteDialect_pysqlite):
             def executemany(self, sql: str, parameters: Any) -> sqlite3.Cursor:
                 _test_sql(sql)
                 if first_bind in sql:
-                    parameters = [
-                        _numeric_param_as_dict(p) for p in parameters
-                    ]
+                    parameters = [_numeric_param_as_dict(p) for p in parameters]
                 return super().executemany(sql, parameters)
 
         return SQLiteFix99953Connection

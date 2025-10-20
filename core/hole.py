@@ -190,9 +190,7 @@ class HoleSemantics:
             (node, ancestors) = queue[0]
             if node in self.holes:
                 # The node is a hole, try to plug it.
-                self._plug_hole(
-                    node, ancestors, queue[1:], potential_labels, plug_acc, record
-                )
+                self._plug_hole(node, ancestors, queue[1:], potential_labels, plug_acc, record)
             else:
                 assert node in self.labels
                 # The node is a label.  Replace it in the queue by the holes and
@@ -242,9 +240,7 @@ class HoleSemantics:
                 # before filling level i+1.
                 # A depth-first search would work as well since the trees must
                 # be finite but the bookkeeping would be harder.
-                self._plug_nodes(
-                    queue + [(l, ancestors)], potential_labels, plug_acc, record
-                )
+                self._plug_nodes(queue + [(l, ancestors)], potential_labels, plug_acc, record)
 
     def _violates_constraints(self, label, ancestors):
         """

@@ -1,6 +1,7 @@
 """
 Tests of pandas.tseries.offsets
 """
+
 from __future__ import annotations
 
 from datetime import (
@@ -106,8 +107,7 @@ def _create_offset(klass, value=1, normalize=False):
     params=[
         getattr(offsets, o)
         for o in offsets.__all__
-        if issubclass(getattr(offsets, o), liboffsets.MonthOffset)
-        and o != "MonthOffset"
+        if issubclass(getattr(offsets, o), liboffsets.MonthOffset) and o != "MonthOffset"
     ]
 )
 def month_classes(request):
@@ -117,11 +117,7 @@ def month_classes(request):
     return request.param
 
 
-@pytest.fixture(
-    params=[
-        getattr(offsets, o) for o in offsets.__all__ if o not in ("Tick", "BaseOffset")
-    ]
-)
+@pytest.fixture(params=[getattr(offsets, o) for o in offsets.__all__ if o not in ("Tick", "BaseOffset")])
 def offset_types(request):
     """
     Fixture for all the datetime offsets available for a time series.
@@ -312,9 +308,7 @@ class TestCommon:
         for dt in [sdt, ndt]:
             self._check_offsetfunc_works(offset_types, "_apply", dt, expected)
 
-            self._check_offsetfunc_works(
-                offset_types, "_apply", dt, expected_norm, normalize=True
-            )
+            self._check_offsetfunc_works(offset_types, "_apply", dt, expected_norm, normalize=True)
 
     def test_rollforward(self, offset_types, expecteds):
         expecteds = expecteds.copy()
@@ -367,9 +361,7 @@ class TestCommon:
             expected = expecteds[offset_types.__name__]
             self._check_offsetfunc_works(offset_types, "rollforward", dt, expected)
             expected = norm_expected[offset_types.__name__]
-            self._check_offsetfunc_works(
-                offset_types, "rollforward", dt, expected, normalize=True
-            )
+            self._check_offsetfunc_works(offset_types, "rollforward", dt, expected, normalize=True)
 
     def test_rollback(self, offset_types):
         expecteds = {
@@ -442,9 +434,7 @@ class TestCommon:
             self._check_offsetfunc_works(offset_types, "rollback", dt, expected)
 
             expected = norm_expected[offset_types.__name__]
-            self._check_offsetfunc_works(
-                offset_types, "rollback", dt, expected, normalize=True
-            )
+            self._check_offsetfunc_works(offset_types, "rollback", dt, expected, normalize=True)
 
     def test_is_on_offset(self, offset_types, expecteds):
         dt = expecteds[offset_types.__name__]
@@ -571,9 +561,7 @@ class TestCommon:
         assert hash(off) is not None
 
     # TODO: belongs in arithmetic tests?
-    @pytest.mark.filterwarnings(
-        "ignore:Non-vectorized DateOffset being applied to Series or DatetimeIndex"
-    )
+    @pytest.mark.filterwarnings("ignore:Non-vectorized DateOffset being applied to Series or DatetimeIndex")
     @pytest.mark.parametrize("unit", ["s", "ms", "us"])
     def test_add_dt64_ndarray_non_nano(self, offset_types, unit):
         # check that the result with non-nano matches nano
@@ -613,8 +601,7 @@ class TestDateOffset:
             request.applymarker(
                 pytest.mark.xfail(
                     raises=NotImplementedError,
-                    reason="Constructing DateOffset object with `millisecond` is not "
-                    "yet supported.",
+                    reason="Constructing DateOffset object with `millisecond` is not " "yet supported.",
                 )
             )
         offset = DateOffset(**{kwd: 2})
@@ -798,10 +785,7 @@ def test_get_offset():
 
     for name, expected in pairs:
         offset = _get_offset(name)
-        assert offset == expected, (
-            f"Expected {repr(name)} to yield {repr(expected)} "
-            f"(actual: {repr(offset)})"
-        )
+        assert offset == expected, f"Expected {repr(name)} to yield {repr(expected)} " f"(actual: {repr(offset)})"
 
 
 def test_get_offset_legacy():
@@ -930,8 +914,7 @@ def test_valid_relativedelta_kwargs(kwd, request):
         request.applymarker(
             pytest.mark.xfail(
                 raises=NotImplementedError,
-                reason="Constructing DateOffset object with `millisecond` is not "
-                "yet supported.",
+                reason="Constructing DateOffset object with `millisecond` is not " "yet supported.",
             )
         )
     # Check that all the arguments specified in liboffsets._relativedelta_kwds
@@ -1100,9 +1083,7 @@ def test_dateoffset_add_sub_timestamp_series_with_nano(offset, expected):
         (2, -1, "2020-01-30", "2019-11-30"),
     ],
 )
-def test_offset_multiplication(
-    n_months, scaling_factor, start_timestamp, expected_timestamp
-):
+def test_offset_multiplication(n_months, scaling_factor, start_timestamp, expected_timestamp):
     # GH 47953
     mo1 = DateOffset(months=n_months)
 

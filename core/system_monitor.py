@@ -87,13 +87,9 @@ class SystemMonitor:
             return
 
         self._monitoring = True
-        self._monitor_thread = threading.Thread(
-            target=self._monitor_loop, daemon=True, name="SystemMonitor"
-        )
+        self._monitor_thread = threading.Thread(target=self._monitor_loop, daemon=True, name="SystemMonitor")
         self._monitor_thread.start()
-        self.logger.info(
-            f"System monitoring started (interval: {self.interval_seconds}s)"
-        )
+        self.logger.info(f"System monitoring started (interval: {self.interval_seconds}s)")
 
     def stop(self):
         """Stop background monitoring"""
@@ -151,11 +147,7 @@ class SystemMonitor:
         process_count = len(psutil.pids())
 
         # Threads
-        thread_count = sum(
-            p.num_threads()
-            for p in psutil.process_iter(["num_threads"])
-            if p.info["num_threads"]
-        )
+        thread_count = sum(p.num_threads() for p in psutil.process_iter(["num_threads"]) if p.info["num_threads"])
 
         return SystemMetrics(
             timestamp=datetime.now(),
@@ -205,9 +197,7 @@ class SystemMonitor:
         """List all processes or filter by name"""
         processes = []
 
-        for proc in psutil.process_iter(
-            ["pid", "name", "cpu_percent", "memory_percent"]
-        ):
+        for proc in psutil.process_iter(["pid", "name", "cpu_percent", "memory_percent"]):
             try:
                 info = proc.info
                 if filter_name and filter_name.lower() not in info["name"].lower():
@@ -244,9 +234,7 @@ class ProcessManager:
         import subprocess
 
         try:
-            result = subprocess.run(
-                command, shell=shell, capture_output=True, text=True, timeout=30
-            )
+            result = subprocess.run(command, shell=shell, capture_output=True, text=True, timeout=30)
 
             return {
                 "stdout": result.stdout,

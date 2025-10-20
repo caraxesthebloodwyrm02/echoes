@@ -76,9 +76,7 @@ def _download_20newsgroups(target_dir, cache_path, n_retries, delay):
     os.makedirs(target_dir, exist_ok=True)
 
     logger.info("Downloading dataset from %s (14 MB)", ARCHIVE.url)
-    archive_path = _fetch_remote(
-        ARCHIVE, dirname=target_dir, n_retries=n_retries, delay=delay
-    )
+    archive_path = _fetch_remote(ARCHIVE, dirname=target_dir, n_retries=n_retries, delay=delay)
 
     logger.debug("Decompressing %s", archive_path)
     with tarfile.open(archive_path, "r:gz") as fp:
@@ -114,9 +112,7 @@ def strip_newsgroup_header(text):
     return after
 
 
-_QUOTE_RE = re.compile(
-    r"(writes in|writes:|wrote:|says:|said:|^In article|^Quoted from|^\||^>)"
-)
+_QUOTE_RE = re.compile(r"(writes in|writes:|wrote:|says:|said:|^In article|^Quoted from|^\||^>)")
 
 
 def strip_newsgroup_quoting(text):

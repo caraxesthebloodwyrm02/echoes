@@ -212,9 +212,7 @@ def test_validate_plot_params(pyplot):
         name=name,
         pos_label=None,
     )
-    fpr_out, tpr_out, roc_auc_out, name_out = display._validate_plot_params(
-        ax=None, name=None
-    )
+    fpr_out, tpr_out, roc_auc_out, name_out = display._validate_plot_params(ax=None, name=None)
 
     assert isinstance(fpr_out, list)
     assert isinstance(tpr_out, list)
@@ -229,9 +227,7 @@ def test_roc_curve_from_cv_results_param_validation(pyplot, data_binary):
     X, y = data_binary
 
     # `cv_results` missing key
-    cv_results_no_est = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=False
-    )
+    cv_results_no_est = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=False)
     cv_results_no_indices = cross_validate(
         LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=False
     )
@@ -242,9 +238,7 @@ def test_roc_curve_from_cv_results_param_validation(pyplot, data_binary):
         ):
             RocCurveDisplay.from_cv_results(cv_results, X, y)
 
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True)
 
     # `X` wrong length
     with pytest.raises(ValueError, match="`X` does not contain the correct"):
@@ -284,24 +278,18 @@ def test_roc_curve_from_cv_results_param_validation(pyplot, data_binary):
 
     # `curve_kwargs` both alias provided
     with pytest.raises(TypeError, match="Got both c and"):
-        RocCurveDisplay.from_cv_results(
-            cv_results, X, y, curve_kwargs={"c": "blue", "color": "red"}
-        )
+        RocCurveDisplay.from_cv_results(cv_results, X, y, curve_kwargs={"c": "blue", "color": "red"})
 
 
 @pytest.mark.parametrize(
     "curve_kwargs",
     [None, {"alpha": 0.2}, [{"alpha": 0.2}, {"alpha": 0.3}, {"alpha": 0.4}]],
 )
-def test_roc_curve_display_from_cv_results_curve_kwargs(
-    pyplot, data_binary, curve_kwargs
-):
+def test_roc_curve_display_from_cv_results_curve_kwargs(pyplot, data_binary, curve_kwargs):
     """Check `curve_kwargs` correctly passed."""
     X, y = data_binary
     n_cv = 3
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True)
     display = RocCurveDisplay.from_cv_results(
         cv_results,
         X,
@@ -316,10 +304,7 @@ def test_roc_curve_display_from_cv_results_curve_kwargs(
         assert all(line.get_alpha() == 0.2 for line in display.line_)
     else:
         # Different `alpha` used for each curve
-        assert all(
-            line.get_alpha() == curve_kwargs[i]["alpha"]
-            for i, line in enumerate(display.line_)
-        )
+        assert all(line.get_alpha() == curve_kwargs[i]["alpha"] for i, line in enumerate(display.line_))
 
 
 # TODO(1.9): Remove in 1.9
@@ -332,9 +317,7 @@ def test_roc_curve_display_estimator_name_deprecation(pyplot):
 
 
 # TODO(1.9): Remove in 1.9
-@pytest.mark.parametrize(
-    "constructor_name", ["from_estimator", "from_predictions", "plot"]
-)
+@pytest.mark.parametrize("constructor_name", ["from_estimator", "from_predictions", "plot"])
 def test_roc_curve_display_kwargs_deprecation(pyplot, data_binary, constructor_name):
     """Check **kwargs deprecated correctly in favour of `curve_kwargs`."""
     X, y = data_binary
@@ -346,17 +329,11 @@ def test_roc_curve_display_kwargs_deprecation(pyplot, data_binary, constructor_n
     # Error when both `curve_kwargs` and `**kwargs` provided
     with pytest.raises(ValueError, match="Cannot provide both `curve_kwargs`"):
         if constructor_name == "from_estimator":
-            RocCurveDisplay.from_estimator(
-                lr, X, y, curve_kwargs={"alpha": 1}, label="test"
-            )
+            RocCurveDisplay.from_estimator(lr, X, y, curve_kwargs={"alpha": 1}, label="test")
         elif constructor_name == "from_predictions":
-            RocCurveDisplay.from_predictions(
-                y, y, curve_kwargs={"alpha": 1}, label="test"
-            )
+            RocCurveDisplay.from_predictions(y, y, curve_kwargs={"alpha": 1}, label="test")
         else:
-            RocCurveDisplay(fpr=fpr, tpr=tpr).plot(
-                curve_kwargs={"alpha": 1}, label="test"
-            )
+            RocCurveDisplay(fpr=fpr, tpr=tpr).plot(curve_kwargs={"alpha": 1}, label="test")
 
     # Warning when `**kwargs`` provided
     with pytest.warns(FutureWarning, match=r"`\*\*kwargs` is deprecated and will be"):
@@ -403,9 +380,7 @@ def test_roc_curve_display_plotting_from_cv_results(
     else:
         sample_weight = None
 
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True)
     display = RocCurveDisplay.from_cv_results(
         cv_results,
         X,
@@ -417,9 +392,7 @@ def test_roc_curve_display_plotting_from_cv_results(
         curve_kwargs=curve_kwargs,
     )
 
-    for idx, (estimator, test_indices) in enumerate(
-        zip(cv_results["estimator"], cv_results["indices"]["test"])
-    ):
+    for idx, (estimator, test_indices) in enumerate(zip(cv_results["estimator"], cv_results["indices"]["test"])):
         y_true = _safe_indexing(y, test_indices)
         y_pred = _get_response_values_binary(
             estimator,
@@ -427,11 +400,7 @@ def test_roc_curve_display_plotting_from_cv_results(
             response_method=response_method,
             pos_label=pos_label,
         )[0]
-        sample_weight_fold = (
-            None
-            if sample_weight is None
-            else _safe_indexing(sample_weight, test_indices)
-        )
+        sample_weight_fold = None if sample_weight is None else _safe_indexing(sample_weight, test_indices)
         fpr, tpr, _ = roc_curve(
             y_true,
             y_pred,
@@ -476,14 +445,10 @@ def test_roc_curve_plot_legend_label(pyplot, data_binary, name, curve_kwargs, ro
     tpr = [np.array([0, 0.5, 1]), np.array([0, 0.5, 1]), np.array([0, 0.5, 1])]
     if not isinstance(curve_kwargs, list) and isinstance(name, list):
         with pytest.raises(ValueError, match="To avoid labeling individual curves"):
-            RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot(
-                name=name, curve_kwargs=curve_kwargs
-            )
+            RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot(name=name, curve_kwargs=curve_kwargs)
 
     else:
-        display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot(
-            name=name, curve_kwargs=curve_kwargs
-        )
+        display = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc).plot(name=name, curve_kwargs=curve_kwargs)
         legend = display.ax_.get_legend()
         if legend is None:
             # No legend is created, exit test early
@@ -505,9 +470,7 @@ def test_roc_curve_plot_legend_label(pyplot, data_binary, name, curve_kwargs, ro
                     assert label == expected_label
                 else:
                     # `name` is a list of different strings
-                    expected_label = (
-                        f"{name[idx]} (AUC = 1.00)" if roc_auc else f"{name[idx]}"
-                    )
+                    expected_label = f"{name[idx]} (AUC = 1.00)" if roc_auc else f"{name[idx]}"
                     assert label == expected_label
         else:
             # Single label in legend
@@ -526,25 +489,17 @@ def test_roc_curve_plot_legend_label(pyplot, data_binary, name, curve_kwargs, ro
     [None, {"color": "red"}, [{"c": "red"}, {"c": "green"}, {"c": "yellow"}]],
 )
 @pytest.mark.parametrize("name", [None, "single", ["one", "two", "three"]])
-def test_roc_curve_from_cv_results_legend_label(
-    pyplot, data_binary, name, curve_kwargs
-):
+def test_roc_curve_from_cv_results_legend_label(pyplot, data_binary, name, curve_kwargs):
     """Check legend label correct with all `curve_kwargs`, `name` combinations."""
     X, y = data_binary
     n_cv = 3
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True)
 
     if not isinstance(curve_kwargs, list) and isinstance(name, list):
         with pytest.raises(ValueError, match="To avoid labeling individual curves"):
-            RocCurveDisplay.from_cv_results(
-                cv_results, X, y, name=name, curve_kwargs=curve_kwargs
-            )
+            RocCurveDisplay.from_cv_results(cv_results, X, y, name=name, curve_kwargs=curve_kwargs)
     else:
-        display = RocCurveDisplay.from_cv_results(
-            cv_results, X, y, name=name, curve_kwargs=curve_kwargs
-        )
+        display = RocCurveDisplay.from_cv_results(cv_results, X, y, name=name, curve_kwargs=curve_kwargs)
 
         legend = display.ax_.get_legend()
         legend_labels = [text.get_text() for text in legend.get_texts()]
@@ -578,12 +533,8 @@ def test_roc_curve_from_cv_results_curve_kwargs(pyplot, data_binary, curve_kwarg
     """Check line kwargs passed correctly in `from_cv_results`."""
 
     X, y = data_binary
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True
-    )
-    display = RocCurveDisplay.from_cv_results(
-        cv_results, X, y, curve_kwargs=curve_kwargs
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True)
+    display = RocCurveDisplay.from_cv_results(cv_results, X, y, curve_kwargs=curve_kwargs)
 
     for idx, line in enumerate(display.line_):
         color = line.get_color()
@@ -719,9 +670,7 @@ def test_roc_curve_chance_level_line_from_cv_results(
     """Check chance level plotting behavior with `from_cv_results`."""
     X, y = data_binary
     n_cv = 3
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=n_cv, return_estimator=True, return_indices=True)
 
     display = RocCurveDisplay.from_cv_results(
         cv_results,
@@ -759,9 +708,7 @@ def test_roc_curve_chance_level_line_from_cv_results(
     [
         LogisticRegression(),
         make_pipeline(StandardScaler(), LogisticRegression()),
-        make_pipeline(
-            make_column_transformer((StandardScaler(), [0, 1])), LogisticRegression()
-        ),
+        make_pipeline(make_column_transformer((StandardScaler(), [0, 1])), LogisticRegression()),
     ],
 )
 @pytest.mark.parametrize("constructor_name", ["from_estimator", "from_predictions"])
@@ -802,15 +749,11 @@ def test_roc_curve_display_complex_pipeline(pyplot, data_binary, clf, constructo
         (None, ["fold1", "fold2"], [{"c": "blue"}, {"c": "red"}], ["fold1", "fold2"]),
     ],
 )
-def test_roc_curve_display_default_labels(
-    pyplot, roc_auc, name, curve_kwargs, expected_labels
-):
+def test_roc_curve_display_default_labels(pyplot, roc_auc, name, curve_kwargs, expected_labels):
     """Check the default labels used in the display."""
     fpr = [np.array([0, 0.5, 1]), np.array([0, 0.3, 1])]
     tpr = [np.array([0, 0.5, 1]), np.array([0, 0.3, 1])]
-    disp = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc, name=name).plot(
-        curve_kwargs=curve_kwargs
-    )
+    disp = RocCurveDisplay(fpr=fpr, tpr=tpr, roc_auc=roc_auc, name=name).plot(curve_kwargs=curve_kwargs)
     for idx, expected_label in enumerate(expected_labels):
         assert disp.line_[idx].get_label() == expected_label
 
@@ -828,9 +771,7 @@ def _check_auc(display, constructor_name):
 
 
 @pytest.mark.parametrize("response_method", ["predict_proba", "decision_function"])
-@pytest.mark.parametrize(
-    "constructor_name", ["from_estimator", "from_predictions", "from_cv_results"]
-)
+@pytest.mark.parametrize("constructor_name", ["from_estimator", "from_predictions", "from_cv_results"])
 def test_plot_roc_curve_pos_label(pyplot, response_method, constructor_name):
     # check that we can provide the positive label and display the proper
     # statistics
@@ -853,9 +794,7 @@ def test_plot_roc_curve_pos_label(pyplot, response_method, constructor_name):
 
     classifier = LogisticRegression()
     classifier.fit(X_train, y_train)
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True)
 
     # Sanity check to be sure the positive class is `classes_[0]`
     # Class imbalance ensures a large difference in prediction values between classes,
@@ -930,9 +869,7 @@ def test_y_score_and_y_pred_specified_error():
     y_score = np.array([0.1, 0.4, 0.35, 0.8])
     y_pred = np.array([0.2, 0.3, 0.5, 0.1])
 
-    with pytest.raises(
-        ValueError, match="`y_pred` and `y_score` cannot be both specified"
-    ):
+    with pytest.raises(ValueError, match="`y_pred` and `y_score` cannot be both specified"):
         RocCurveDisplay.from_predictions(y_true, y_score=y_score, y_pred=y_pred)
 
 
@@ -954,18 +891,14 @@ def test_y_pred_deprecation_warning(pyplot):
 
 
 @pytest.mark.parametrize("despine", [True, False])
-@pytest.mark.parametrize(
-    "constructor_name", ["from_estimator", "from_predictions", "from_cv_results"]
-)
+@pytest.mark.parametrize("constructor_name", ["from_estimator", "from_predictions", "from_cv_results"])
 def test_plot_roc_curve_despine(pyplot, data_binary, despine, constructor_name):
     # Check that the despine keyword is working correctly
     X, y = data_binary
 
     lr = LogisticRegression().fit(X, y)
     lr.fit(X, y)
-    cv_results = cross_validate(
-        LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True
-    )
+    cv_results = cross_validate(LogisticRegression(), X, y, cv=3, return_estimator=True, return_indices=True)
 
     y_pred = lr.decision_function(X)
 

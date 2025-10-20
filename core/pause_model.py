@@ -173,9 +173,7 @@ def predict_pause_label(model: Dict[str, Any], features: Dict[str, float]) -> st
     """
     pause_after = float(features.get("pause_after_s", 0.0))
     thresholds = model.get("thresholds", {})
-    order: List[str] = thresholds.get(
-        "order", ["handoff", "rhetorical", "cognitive_load"]
-    )  # low->high
+    order: List[str] = thresholds.get("order", ["handoff", "rhetorical", "cognitive_load"])  # low->high
     low_mid = float(thresholds.get("low_mid", 0.5))
     high_mid = float(thresholds.get("high_mid", 1.25))
 

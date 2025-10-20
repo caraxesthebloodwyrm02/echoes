@@ -15,6 +15,7 @@ This module provides a set of commonly used default arguments for functions and
 methods that are spread throughout the codebase. This module will make it
 easier to adjust to future upstream changes in the analogous numpy signatures.
 """
+
 from __future__ import annotations
 
 from typing import (
@@ -73,11 +74,7 @@ class CompatValidator:
             return None
 
         fname = self.fname if fname is None else fname
-        max_fname_arg_count = (
-            self.max_fname_arg_count
-            if max_fname_arg_count is None
-            else max_fname_arg_count
-        )
+        max_fname_arg_count = self.max_fname_arg_count if max_fname_arg_count is None else max_fname_arg_count
         method = self.method if method is None else method
 
         if method == "args":
@@ -85,20 +82,14 @@ class CompatValidator:
         elif method == "kwargs":
             validate_kwargs(fname, kwargs, self.defaults)
         elif method == "both":
-            validate_args_and_kwargs(
-                fname, args, kwargs, max_fname_arg_count, self.defaults
-            )
+            validate_args_and_kwargs(fname, args, kwargs, max_fname_arg_count, self.defaults)
         else:
             raise ValueError(f"invalid validation method '{method}'")
 
 
 ARGMINMAX_DEFAULTS = {"out": None}
-validate_argmin = CompatValidator(
-    ARGMINMAX_DEFAULTS, fname="argmin", method="both", max_fname_arg_count=1
-)
-validate_argmax = CompatValidator(
-    ARGMINMAX_DEFAULTS, fname="argmax", method="both", max_fname_arg_count=1
-)
+validate_argmin = CompatValidator(ARGMINMAX_DEFAULTS, fname="argmin", method="both", max_fname_arg_count=1)
+validate_argmax = CompatValidator(ARGMINMAX_DEFAULTS, fname="argmax", method="both", max_fname_arg_count=1)
 
 
 def process_skipna(skipna: bool | ndarray | None, args) -> tuple[bool, Any]:
@@ -141,9 +132,7 @@ ARGSORT_DEFAULTS["kind"] = None
 ARGSORT_DEFAULTS["stable"] = None
 
 
-validate_argsort = CompatValidator(
-    ARGSORT_DEFAULTS, fname="argsort", max_fname_arg_count=0, method="both"
-)
+validate_argsort = CompatValidator(ARGSORT_DEFAULTS, fname="argsort", max_fname_arg_count=0, method="both")
 
 # two different signatures of argsort, this second validation for when the
 # `kind` param is supported
@@ -151,9 +140,7 @@ ARGSORT_DEFAULTS_KIND: dict[str, int | None] = {}
 ARGSORT_DEFAULTS_KIND["axis"] = -1
 ARGSORT_DEFAULTS_KIND["order"] = None
 ARGSORT_DEFAULTS_KIND["stable"] = None
-validate_argsort_kind = CompatValidator(
-    ARGSORT_DEFAULTS_KIND, fname="argsort", max_fname_arg_count=0, method="both"
-)
+validate_argsort_kind = CompatValidator(ARGSORT_DEFAULTS_KIND, fname="argsort", max_fname_arg_count=0, method="both")
 
 
 def validate_argsort_with_ascending(ascending: bool | int | None, args, kwargs) -> bool:
@@ -173,24 +160,18 @@ def validate_argsort_with_ascending(ascending: bool | int | None, args, kwargs) 
 
 
 CLIP_DEFAULTS: dict[str, Any] = {"out": None}
-validate_clip = CompatValidator(
-    CLIP_DEFAULTS, fname="clip", method="both", max_fname_arg_count=3
-)
+validate_clip = CompatValidator(CLIP_DEFAULTS, fname="clip", method="both", max_fname_arg_count=3)
 
 
 @overload
-def validate_clip_with_axis(axis: ndarray, args, kwargs) -> None:
-    ...
+def validate_clip_with_axis(axis: ndarray, args, kwargs) -> None: ...
 
 
 @overload
-def validate_clip_with_axis(axis: AxisNoneT, args, kwargs) -> AxisNoneT:
-    ...
+def validate_clip_with_axis(axis: AxisNoneT, args, kwargs) -> AxisNoneT: ...
 
 
-def validate_clip_with_axis(
-    axis: ndarray | AxisNoneT, args, kwargs
-) -> AxisNoneT | None:
+def validate_clip_with_axis(axis: ndarray | AxisNoneT, args, kwargs) -> AxisNoneT | None:
     """
     If 'NDFrame.clip' is called via the numpy library, the third parameter in
     its signature is 'out', which can takes an ndarray, so check if the 'axis'
@@ -212,12 +193,8 @@ def validate_clip_with_axis(
 CUM_FUNC_DEFAULTS: dict[str, Any] = {}
 CUM_FUNC_DEFAULTS["dtype"] = None
 CUM_FUNC_DEFAULTS["out"] = None
-validate_cum_func = CompatValidator(
-    CUM_FUNC_DEFAULTS, method="both", max_fname_arg_count=1
-)
-validate_cumsum = CompatValidator(
-    CUM_FUNC_DEFAULTS, fname="cumsum", method="both", max_fname_arg_count=1
-)
+validate_cum_func = CompatValidator(CUM_FUNC_DEFAULTS, method="both", max_fname_arg_count=1)
+validate_cumsum = CompatValidator(CUM_FUNC_DEFAULTS, fname="cumsum", method="both", max_fname_arg_count=1)
 
 
 def validate_cum_func_with_skipna(skipna: bool, args, kwargs, name) -> bool:
@@ -241,38 +218,24 @@ ALLANY_DEFAULTS["dtype"] = None
 ALLANY_DEFAULTS["out"] = None
 ALLANY_DEFAULTS["keepdims"] = False
 ALLANY_DEFAULTS["axis"] = None
-validate_all = CompatValidator(
-    ALLANY_DEFAULTS, fname="all", method="both", max_fname_arg_count=1
-)
-validate_any = CompatValidator(
-    ALLANY_DEFAULTS, fname="any", method="both", max_fname_arg_count=1
-)
+validate_all = CompatValidator(ALLANY_DEFAULTS, fname="all", method="both", max_fname_arg_count=1)
+validate_any = CompatValidator(ALLANY_DEFAULTS, fname="any", method="both", max_fname_arg_count=1)
 
 LOGICAL_FUNC_DEFAULTS = {"out": None, "keepdims": False}
 validate_logical_func = CompatValidator(LOGICAL_FUNC_DEFAULTS, method="kwargs")
 
 MINMAX_DEFAULTS = {"axis": None, "dtype": None, "out": None, "keepdims": False}
-validate_min = CompatValidator(
-    MINMAX_DEFAULTS, fname="min", method="both", max_fname_arg_count=1
-)
-validate_max = CompatValidator(
-    MINMAX_DEFAULTS, fname="max", method="both", max_fname_arg_count=1
-)
+validate_min = CompatValidator(MINMAX_DEFAULTS, fname="min", method="both", max_fname_arg_count=1)
+validate_max = CompatValidator(MINMAX_DEFAULTS, fname="max", method="both", max_fname_arg_count=1)
 
 RESHAPE_DEFAULTS: dict[str, str] = {"order": "C"}
-validate_reshape = CompatValidator(
-    RESHAPE_DEFAULTS, fname="reshape", method="both", max_fname_arg_count=1
-)
+validate_reshape = CompatValidator(RESHAPE_DEFAULTS, fname="reshape", method="both", max_fname_arg_count=1)
 
 REPEAT_DEFAULTS: dict[str, Any] = {"axis": None}
-validate_repeat = CompatValidator(
-    REPEAT_DEFAULTS, fname="repeat", method="both", max_fname_arg_count=1
-)
+validate_repeat = CompatValidator(REPEAT_DEFAULTS, fname="repeat", method="both", max_fname_arg_count=1)
 
 ROUND_DEFAULTS: dict[str, Any] = {"out": None}
-validate_round = CompatValidator(
-    ROUND_DEFAULTS, fname="round", method="both", max_fname_arg_count=1
-)
+validate_round = CompatValidator(ROUND_DEFAULTS, fname="round", method="both", max_fname_arg_count=1)
 
 SORT_DEFAULTS: dict[str, int | str | None] = {}
 SORT_DEFAULTS["axis"] = -1
@@ -300,18 +263,10 @@ MEDIAN_DEFAULTS["keepdims"] = False
 STAT_FUNC_DEFAULTS["keepdims"] = False
 
 validate_stat_func = CompatValidator(STAT_FUNC_DEFAULTS, method="kwargs")
-validate_sum = CompatValidator(
-    SUM_DEFAULTS, fname="sum", method="both", max_fname_arg_count=1
-)
-validate_prod = CompatValidator(
-    PROD_DEFAULTS, fname="prod", method="both", max_fname_arg_count=1
-)
-validate_mean = CompatValidator(
-    MEAN_DEFAULTS, fname="mean", method="both", max_fname_arg_count=1
-)
-validate_median = CompatValidator(
-    MEDIAN_DEFAULTS, fname="median", method="both", max_fname_arg_count=1
-)
+validate_sum = CompatValidator(SUM_DEFAULTS, fname="sum", method="both", max_fname_arg_count=1)
+validate_prod = CompatValidator(PROD_DEFAULTS, fname="prod", method="both", max_fname_arg_count=1)
+validate_mean = CompatValidator(MEAN_DEFAULTS, fname="mean", method="both", max_fname_arg_count=1)
+validate_median = CompatValidator(MEDIAN_DEFAULTS, fname="median", method="both", max_fname_arg_count=1)
 
 STAT_DDOF_FUNC_DEFAULTS: dict[str, bool | None] = {}
 STAT_DDOF_FUNC_DEFAULTS["dtype"] = None
@@ -340,9 +295,7 @@ def validate_take_with_convert(convert: ndarray | bool | None, args, kwargs) -> 
 
 
 TRANSPOSE_DEFAULTS = {"axes": None}
-validate_transpose = CompatValidator(
-    TRANSPOSE_DEFAULTS, fname="transpose", method="both", max_fname_arg_count=0
-)
+validate_transpose = CompatValidator(TRANSPOSE_DEFAULTS, fname="transpose", method="both", max_fname_arg_count=0)
 
 
 def validate_groupby_func(name: str, args, kwargs, allowed=None) -> None:
@@ -358,8 +311,7 @@ def validate_groupby_func(name: str, args, kwargs, allowed=None) -> None:
 
     if len(args) + len(kwargs) > 0:
         raise UnsupportedFunctionCall(
-            "numpy operations are not valid with groupby. "
-            f"Use .groupby(...).{name}() instead"
+            "numpy operations are not valid with groupby. " f"Use .groupby(...).{name}() instead"
         )
 
 
@@ -374,8 +326,7 @@ def validate_resampler_func(method: str, args, kwargs) -> None:
     if len(args) + len(kwargs) > 0:
         if method in RESAMPLER_NUMPY_OPS:
             raise UnsupportedFunctionCall(
-                "numpy operations are not valid with resample. "
-                f"Use .resample(...).{method}() instead"
+                "numpy operations are not valid with resample. " f"Use .resample(...).{method}() instead"
             )
         raise TypeError("too many arguments passed in")
 

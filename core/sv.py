@@ -6,7 +6,8 @@ import snowballstemmer
 
 from sphinx.search import SearchLanguage, parse_stop_word
 
-swedish_stopwords = parse_stop_word("""
+swedish_stopwords = parse_stop_word(
+    """
 | source: https://snowball.tartarus.org/algorithms/swedish/stop.txt
 och            | and
 det            | it, this/that
@@ -122,17 +123,18 @@ våra           | our
 ert            | your
 era            | your
 vilkas         | whose
-""")
+"""
+)
 
 
 class SearchSwedish(SearchLanguage):
-    lang = 'sv'
-    language_name = 'Swedish'
-    js_stemmer_rawcode = 'swedish-stemmer.js'
+    lang = "sv"
+    language_name = "Swedish"
+    js_stemmer_rawcode = "swedish-stemmer.js"
     stopwords = swedish_stopwords
 
     def init(self, options: dict[str, str]) -> None:
-        self.stemmer = snowballstemmer.stemmer('swedish')
+        self.stemmer = snowballstemmer.stemmer("swedish")
 
     def stem(self, word: str) -> str:
         return self.stemmer.stemWord(word.lower())

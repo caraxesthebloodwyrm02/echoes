@@ -27,9 +27,7 @@ from datetime import datetime
 from pathlib import Path
 
 # Setup logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger("verification")
 
 
@@ -71,13 +69,9 @@ class SystemVerification:
         for file_name in config_files:
             file_path = self.codeium_dir / file_name
             if not file_path.exists():
-                self.results["issues"].append(
-                    f"Missing configuration file: {file_name}"
-                )
+                self.results["issues"].append(f"Missing configuration file: {file_name}")
             else:
-                self.results["checks"].append(
-                    f"Configuration file present: {file_name}"
-                )
+                self.results["checks"].append(f"Configuration file present: {file_name}")
 
     def check_permissions(self):
         """Verify directory permissions"""
@@ -110,17 +104,11 @@ class SystemVerification:
         if self.results["issues"]:
             for issue in self.results["issues"]:
                 if "Missing directory" in issue:
-                    self.results["recommendations"].append(
-                        f"Create missing directory: {issue.split(': ')[1]}"
-                    )
+                    self.results["recommendations"].append(f"Create missing directory: {issue.split(': ')[1]}")
                 elif "Permission issue" in issue:
-                    self.results["recommendations"].append(
-                        "Check and fix directory permissions"
-                    )
+                    self.results["recommendations"].append("Check and fix directory permissions")
                 elif "Missing configuration" in issue:
-                    self.results["recommendations"].append(
-                        f"Restore configuration file: {issue.split(': ')[1]}"
-                    )
+                    self.results["recommendations"].append(f"Restore configuration file: {issue.split(': ')[1]}")
 
     def run_verification(self):
         """Run all verification checks"""

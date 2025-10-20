@@ -155,9 +155,7 @@ class TestMelt:
             ),
         ],
     )
-    def test_single_vars_work_with_multiindex(
-        self, id_vars, value_vars, col_level, expected, df1
-    ):
+    def test_single_vars_work_with_multiindex(self, id_vars, value_vars, col_level, expected, df1):
         result = df1.melt(id_vars, value_vars, col_level=col_level)
         tm.assert_frame_equal(result, expected)
 
@@ -190,9 +188,7 @@ class TestMelt:
         result8 = df.melt(id_vars=["id1", "id2"], value_vars="A", var_name=var_name)
         assert result8.columns.tolist() == ["id1", "id2", "var", "value"]
 
-        result9 = df.melt(
-            id_vars=["id1", "id2"], value_vars=["A", "B"], var_name=var_name
-        )
+        result9 = df.melt(id_vars=["id1", "id2"], value_vars=["A", "B"], var_name=var_name)
         expected9 = DataFrame(
             {
                 "id1": df["id1"].tolist() * 2,
@@ -214,14 +210,10 @@ class TestMelt:
         result12 = df.melt(id_vars=["id1", "id2"], value_name=value_name)
         assert result12.columns.tolist() == ["id1", "id2", "variable", "val"]
 
-        result13 = df.melt(
-            id_vars=["id1", "id2"], value_vars="A", value_name=value_name
-        )
+        result13 = df.melt(id_vars=["id1", "id2"], value_vars="A", value_name=value_name)
         assert result13.columns.tolist() == ["id1", "id2", "variable", "val"]
 
-        result14 = df.melt(
-            id_vars=["id1", "id2"], value_vars=["A", "B"], value_name=value_name
-        )
+        result14 = df.melt(id_vars=["id1", "id2"], value_vars=["A", "B"], value_name=value_name)
         expected14 = DataFrame(
             {
                 "id1": df["id1"].tolist() * 2,
@@ -240,9 +232,7 @@ class TestMelt:
         result16 = df.melt(id_vars=["id1"], var_name=var_name, value_name=value_name)
         assert result16.columns.tolist() == ["id1", "var", "val"]
 
-        result17 = df.melt(
-            id_vars=["id1", "id2"], var_name=var_name, value_name=value_name
-        )
+        result17 = df.melt(id_vars=["id1", "id2"], var_name=var_name, value_name=value_name)
         assert result17.columns.tolist() == ["id1", "id2", "var", "val"]
 
         result18 = df.melt(
@@ -294,13 +284,9 @@ class TestMelt:
     )
     def test_pandas_dtypes(self, col):
         # GH 15785
-        df = DataFrame(
-            {"klass": range(5), "col": col, "attr1": [1, 0, 0, 0, 0], "attr2": col}
-        )
+        df = DataFrame({"klass": range(5), "col": col, "attr1": [1, 0, 0, 0, 0], "attr2": col})
         expected_value = pd.concat([pd.Series([1, 0, 0, 0, 0]), col], ignore_index=True)
-        result = melt(
-            df, id_vars=["klass", "col"], var_name="attribute", value_name="value"
-        )
+        result = melt(df, id_vars=["klass", "col"], var_name="attribute", value_name="value")
         expected = DataFrame(
             {
                 0: list(range(5)) * 2,
@@ -316,9 +302,7 @@ class TestMelt:
         # GH 15853
         data = DataFrame({"A": [1, 2], "B": pd.Categorical(["X", "Y"])})
         result = melt(data, ["B"], ["A"])
-        expected = DataFrame(
-            {"B": pd.Categorical(["X", "Y"]), "variable": ["A", "A"], "value": [1, 2]}
-        )
+        expected = DataFrame({"B": pd.Categorical(["X", "Y"]), "variable": ["A", "A"], "value": [1, 2]})
 
         tm.assert_frame_equal(result, expected)
 
@@ -328,9 +312,7 @@ class TestMelt:
         # attempted with column names absent from the dataframe
 
         # Generate data
-        df = DataFrame(
-            np.random.default_rng(2).standard_normal((5, 4)), columns=list("abcd")
-        )
+        df = DataFrame(np.random.default_rng(2).standard_normal((5, 4)), columns=list("abcd"))
 
         # Try to melt with missing `value_vars` column name
         msg = "The following id_vars or value_vars are not present in the DataFrame:"
@@ -361,9 +343,7 @@ class TestMelt:
         # GH 29718
         df = DataFrame({0: ["foo"], "a": ["bar"], "b": [1], "d": [2]})
         result = melt(df, id_vars=[0, "a"], value_vars=["b", "d"])
-        expected = DataFrame(
-            {0: ["foo"] * 2, "a": ["bar"] * 2, "variable": list("bd"), "value": [1, 2]}
-        )
+        expected = DataFrame({0: ["foo"] * 2, "a": ["bar"] * 2, "variable": list("bd"), "value": [1, 2]})
         # the df's columns are mixed type and thus object -> preserves object dtype
         expected["variable"] = expected["variable"].astype(object)
         tm.assert_frame_equal(result, expected)
@@ -379,16 +359,12 @@ class TestMelt:
         # GH 17440
         df = DataFrame({"foo": [0], "bar": [1]}, index=["first"])
         result = melt(df, ignore_index=False)
-        expected = DataFrame(
-            {"variable": ["foo", "bar"], "value": [0, 1]}, index=["first", "first"]
-        )
+        expected = DataFrame({"variable": ["foo", "bar"], "value": [0, 1]}, index=["first", "first"])
         tm.assert_frame_equal(result, expected)
 
     def test_ignore_multiindex(self):
         # GH 17440
-        index = pd.MultiIndex.from_tuples(
-            [("first", "second"), ("first", "third")], names=["baz", "foobar"]
-        )
+        index = pd.MultiIndex.from_tuples([("first", "second"), ("first", "third")], names=["baz", "foobar"])
         df = DataFrame({"foo": [0, 1], "bar": [2, 3]}, index=index)
         result = melt(df, ignore_index=False)
 
@@ -420,9 +396,7 @@ class TestMelt:
         # GH#41951
         df = DataFrame([["id", 2, 3]], columns=["a", "b", "b"])
         result = df.melt(id_vars=["a"], value_vars=["b"])
-        expected = DataFrame(
-            [["id", "b", 2], ["id", "b", 3]], columns=["a", "variable", "value"]
-        )
+        expected = DataFrame([["id", "b", 2], ["id", "b", 3]], columns=["a", "variable", "value"])
         tm.assert_frame_equal(result, expected)
 
     @pytest.mark.parametrize("dtype", ["Int8", "Int64"])
@@ -848,9 +822,7 @@ class TestWideToLong:
             "id": [0, 1, 2, 0, 1, 2],
         }
         expected = DataFrame(exp_data)
-        expected = expected.set_index(["id", "year"])[
-            ["X", "A(quarterly)", "B(quarterly)"]
-        ]
+        expected = expected.set_index(["id", "year"])[["X", "A(quarterly)", "B(quarterly)"]]
         result = wide_to_long(df, ["A(quarterly)", "B(quarterly)"], i="id", j="year")
         tm.assert_frame_equal(result, expected)
 
@@ -930,9 +902,7 @@ class TestWideToLong:
             "B": [],
         }
         expected = DataFrame(exp_data).astype({"year": np.int64})
-        expected = expected.set_index(["id", "year"])[
-            ["X", "A2010", "A2011", "B2010", "A", "B"]
-        ]
+        expected = expected.set_index(["id", "year"])[["X", "A2010", "A2011", "B2010", "A", "B"]]
         expected.index = expected.index.set_levels([0, 1], level=0)
         result = wide_to_long(df, ["A", "B"], i="id", j="year", sep=sep)
         tm.assert_frame_equal(result.sort_index(axis=1), expected.sort_index(axis=1))
@@ -964,9 +934,7 @@ class TestWideToLong:
                 "year": [11, 11, 11, 12, 12, 12],
             }
         )
-        expected = expected.set_index(["id", "year"])[
-            ["Arating", "Arating_old", "A", "B", "BB"]
-        ]
+        expected = expected.set_index(["id", "year"])[["Arating", "Arating_old", "A", "B", "BB"]]
         result = wide_to_long(df, ["A", "B", "BB"], i="id", j="year")
         tm.assert_frame_equal(result.sort_index(axis=1), expected.sort_index(axis=1))
 
@@ -1043,9 +1011,7 @@ class TestWideToLong:
     def test_non_unique_idvars(self):
         # GH16382
         # Raise an error message if non unique id vars (i) are passed
-        df = DataFrame(
-            {"A_A1": [1, 2, 3, 4, 5], "B_B1": [1, 2, 3, 4, 5], "x": [1, 1, 1, 1, 1]}
-        )
+        df = DataFrame({"A_A1": [1, 2, 3, 4, 5], "B_B1": [1, 2, 3, 4, 5], "x": [1, 1, 1, 1, 1]})
         msg = "the id variables need to uniquely identify each row"
         with pytest.raises(ValueError, match=msg):
             wide_to_long(df, ["A_A", "B_B"], i="x", j="colname")
@@ -1083,9 +1049,7 @@ class TestWideToLong:
                 ],
             }
         ).set_index(["title", "num"])
-        result = wide_to_long(
-            df, ["actor", "actor_fb_likes"], i="title", j="num", sep="_"
-        )
+        result = wide_to_long(df, ["actor", "actor_fb_likes"], i="title", j="num", sep="_")
 
         tm.assert_frame_equal(result, expected)
 
@@ -1120,9 +1084,7 @@ class TestWideToLong:
             }
         )
         expected = expected.set_index(["A", "colname"])
-        result = wide_to_long(
-            df, ["result", "treatment"], i="A", j="colname", suffix="[a-z]+", sep="_"
-        )
+        result = wide_to_long(df, ["result", "treatment"], i="A", j="colname", suffix="[a-z]+", sep="_")
         tm.assert_frame_equal(result, expected)
 
     def test_mixed_type_suffix(self):
@@ -1143,9 +1105,7 @@ class TestWideToLong:
                 "treatment": [1.0, 2.0, 3.0, 4.0],
             }
         ).set_index(["A", "colname"])
-        result = wide_to_long(
-            df, ["result", "treatment"], i="A", j="colname", suffix=".+", sep="_"
-        )
+        result = wide_to_long(df, ["result", "treatment"], i="A", j="colname", suffix=".+", sep="_")
         tm.assert_frame_equal(result, expected)
 
     def test_float_suffix(self):
@@ -1167,9 +1127,7 @@ class TestWideToLong:
             }
         )
         expected = expected.set_index(["A", "colname"])
-        result = wide_to_long(
-            df, ["result", "treatment"], i="A", j="colname", suffix="[0-9.]+", sep="_"
-        )
+        result = wide_to_long(df, ["result", "treatment"], i="A", j="colname", suffix="[0-9.]+", sep="_")
         tm.assert_frame_equal(result, expected)
 
     def test_col_substring_of_stubname(self):
@@ -1194,9 +1152,7 @@ class TestWideToLong:
         # a name in the dataframe already (default name is "value")
         df = DataFrame({"col": list("ABC"), "value": range(10, 16, 2)})
 
-        with pytest.raises(
-            ValueError, match=re.escape("value_name (value) cannot match")
-        ):
+        with pytest.raises(ValueError, match=re.escape("value_name (value) cannot match")):
             df.melt(id_vars="value", value_name="value")
 
     def test_missing_stubname(self, request, any_string_dtype, using_infer_string):
@@ -1241,9 +1197,7 @@ def test_wide_to_long_string_columns(string_storage):
         }
     )
     df.columns = df.columns.astype(string_dtype)
-    result = wide_to_long(
-        df, stubnames="R", i="ID", j="UNPIVOTED", sep="_", suffix=".*"
-    )
+    result = wide_to_long(df, stubnames="R", i="ID", j="UNPIVOTED", sep="_", suffix=".*")
     expected = DataFrame(
         [[1, 1], [1, 1], [1, 2]],
         columns=Index(["D", "R"]),

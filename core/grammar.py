@@ -282,9 +282,7 @@ class Production:
         :type rhs: sequence(Nonterminal and terminal)
         """
         if isinstance(rhs, str):
-            raise TypeError(
-                "production right hand side should be a list, " "not a string"
-            )
+            raise TypeError("production right hand side should be a list, " "not a string")
         self._lhs = lhs
         self._rhs = tuple(rhs)
 
@@ -352,11 +350,7 @@ class Production:
 
         :rtype: bool
         """
-        return (
-            type(self) == type(other)
-            and self._lhs == other._lhs
-            and self._rhs == other._rhs
-        )
+        return type(self) == type(other) and self._lhs == other._lhs and self._rhs == other._rhs
 
     def __ne__(self, other):
         return not self == other
@@ -419,9 +413,7 @@ class ProbabilisticProduction(Production, ImmutableProbabilisticMixIn):
         Production.__init__(self, lhs, rhs)
 
     def __str__(self):
-        return super().__str__() + (
-            " [1.0]" if (self.prob() == 1.0) else " [%g]" % self.prob()
-        )
+        return super().__str__() + (" [1.0]" if (self.prob() == 1.0) else " [%g]" % self.prob())
 
     def __eq__(self, other):
         return (
@@ -467,10 +459,7 @@ class CFG:
         :type calculate_leftcorners: bool
         """
         if not is_nonterminal(start):
-            raise TypeError(
-                "start should be a Nonterminal object,"
-                " not a %s" % type(start).__name__
-            )
+            raise TypeError("start should be a Nonterminal object," " not a %s" % type(start).__name__)
 
         self._start = start
         self._productions = productions
@@ -521,9 +510,7 @@ class CFG:
         self._leftcorners = lc
         self._leftcorner_parents = invert_graph(lc)
 
-        nr_leftcorner_categories = sum(
-            map(len, self._immediate_leftcorner_categories.values())
-        )
+        nr_leftcorner_categories = sum(map(len, self._immediate_leftcorner_categories.values()))
         nr_leftcorner_words = sum(map(len, self._immediate_leftcorner_words.values()))
         if nr_leftcorner_words > nr_leftcorner_categories > 10000:
             # If the grammar is big, the leftcorner-word dictionary will be too large.
@@ -545,9 +532,7 @@ class CFG:
 
         :param input: a grammar, either in the form of a string or as a list of strings.
         """
-        start, productions = read_grammar(
-            input, standard_nonterm_parser, encoding=encoding
-        )
+        start, productions = read_grammar(input, standard_nonterm_parser, encoding=encoding)
         return cls(start, productions)
 
     def start(self):
@@ -573,9 +558,7 @@ class CFG:
         :rtype: list(Production)
         """
         if rhs and empty:
-            raise ValueError(
-                "You cannot select empty and non-empty " "productions at the same time."
-            )
+            raise ValueError("You cannot select empty and non-empty " "productions at the same time.")
 
         # no constraints so return everything
         if not lhs and not rhs:
@@ -599,11 +582,7 @@ class CFG:
 
         # intersect
         else:
-            return [
-                prod
-                for prod in self._lhs_index.get(lhs, [])
-                if prod in self._rhs_index.get(rhs, [])
-            ]
+            return [prod for prod in self._lhs_index.get(lhs, []) if prod in self._rhs_index.get(rhs, [])]
 
     def leftcorners(self, cat):
         """
@@ -636,10 +615,7 @@ class CFG:
         elif self._leftcorner_words:
             return left in self._leftcorner_words.get(cat, set())
         else:
-            return any(
-                left in self._immediate_leftcorner_words.get(parent, set())
-                for parent in self.leftcorners(cat)
-            )
+            return any(left in self._immediate_leftcorner_words.get(parent, set()) for parent in self.leftcorners(cat))
 
     def leftcorner_parents(self, cat):
         """
@@ -663,9 +639,7 @@ class CFG:
         missing = [tok for tok in tokens if not self._lexical_index.get(tok)]
         if missing:
             missing = ", ".join(f"{w!r}" for w in missing)
-            raise ValueError(
-                "Grammar does not cover some of the " "input words: %r." % missing
-            )
+            raise ValueError("Grammar does not cover some of the " "input words: %r." % missing)
 
     def _calculate_grammar_forms(self):
         """
@@ -746,9 +720,7 @@ class CFG:
         if self.is_chomsky_normal_form():
             return self
         if self.productions(empty=True):
-            raise ValueError(
-                "Grammar has Empty rules. " "Cannot deal with them at the moment"
-            )
+            raise ValueError("Grammar has Empty rules. " "Cannot deal with them at the moment")
 
         step1 = CFG.eliminate_start(self)
         step2 = CFG.binarize(step1, new_token_padding)
@@ -864,12 +836,8 @@ class CFG:
                     new_rhs.append(item)
                 else:
                     if item not in dummy_nonterms:
-                        sanitized_term = "".join(
-                            _STANDARD_NONTERM_RE.findall(item.upper())
-                        )
-                        dummy_nonterm_symbol = (
-                            f"{sanitized_term}{padding}{sanitized_term}"
-                        )
+                        sanitized_term = "".join(_STANDARD_NONTERM_RE.findall(item.upper()))
+                        dummy_nonterm_symbol = f"{sanitized_term}{padding}{sanitized_term}"
                         dummy_nonterms[item] = Nonterminal(dummy_nonterm_symbol)
 
                     new_rhs.append(dummy_nonterms[item])
@@ -948,9 +916,7 @@ class FeatureGrammar(CFG):
                     self._lexical_index.setdefault(token, set()).add(prod)
 
     @classmethod
-    def fromstring(
-        cls, input, features=None, logic_parser=None, fstruct_reader=None, encoding=None
-    ):
+    def fromstring(cls, input, features=None, logic_parser=None, fstruct_reader=None, encoding=None):
         """
         Return a feature structure based grammar.
 
@@ -966,17 +932,11 @@ class FeatureGrammar(CFG):
             features = (SLASH, TYPE)
 
         if fstruct_reader is None:
-            fstruct_reader = FeatStructReader(
-                features, FeatStructNonterminal, logic_parser=logic_parser
-            )
+            fstruct_reader = FeatStructReader(features, FeatStructNonterminal, logic_parser=logic_parser)
         elif logic_parser is not None:
-            raise Exception(
-                "'logic_parser' and 'fstruct_reader' must " "not both be set"
-            )
+            raise Exception("'logic_parser' and 'fstruct_reader' must " "not both be set")
 
-        start, productions = read_grammar(
-            input, fstruct_reader.read_partial, encoding=encoding
-        )
+        start, productions = read_grammar(input, fstruct_reader.read_partial, encoding=encoding)
         return cls(start, productions)
 
     def productions(self, lhs=None, rhs=None, empty=False):
@@ -991,9 +951,7 @@ class FeatureGrammar(CFG):
         :rtype: list(Production)
         """
         if rhs and empty:
-            raise ValueError(
-                "You cannot select empty and non-empty " "productions at the same time."
-            )
+            raise ValueError("You cannot select empty and non-empty " "productions at the same time.")
 
         # no constraints so return everything
         if not lhs and not rhs:
@@ -1136,9 +1094,7 @@ class DependencyGrammar:
         try:
             head, mod = head_mod
         except ValueError as e:
-            raise ValueError(
-                "Must use a tuple of strings, e.g. `('price', 'of') in grammar`"
-            ) from e
+            raise ValueError("Must use a tuple of strings, e.g. `('price', 'of') in grammar`") from e
         return self.contains(head, mod)
 
     #   # should be rewritten, the set comp won't work in all comparisons
@@ -1201,9 +1157,7 @@ class ProbabilisticDependencyGrammar:
 
         :rtype: str
         """
-        str = "Statistical dependency grammar with %d productions" % len(
-            self._productions
-        )
+        str = "Statistical dependency grammar with %d productions" % len(self._productions)
         for production in self._productions:
             str += "\n  %s" % production
         str += "\nEvents:"
@@ -1218,9 +1172,7 @@ class ProbabilisticDependencyGrammar:
         """
         Return a concise string representation of the ``ProbabilisticDependencyGrammar``
         """
-        return "Statistical Dependency grammar with %d productions" % len(
-            self._productions
-        )
+        return "Statistical Dependency grammar with %d productions" % len(self._productions)
 
 
 class PCFG(CFG):
@@ -1280,9 +1232,7 @@ class PCFG(CFG):
         :param input: a grammar, either in the form of a string or else
              as a list of strings.
         """
-        start, productions = read_grammar(
-            input, standard_nonterm_parser, probabilistic=True, encoding=encoding
-        )
+        start, productions = read_grammar(input, standard_nonterm_parser, probabilistic=True, encoding=encoding)
         return cls(start, productions)
 
 
@@ -1318,10 +1268,7 @@ def induce_pcfg(start, productions):
         lcount[prod.lhs()] = lcount.get(prod.lhs(), 0) + 1
         pcount[prod] = pcount.get(prod, 0) + 1
 
-    prods = [
-        ProbabilisticProduction(p.lhs(), p.rhs(), prob=pcount[p] / lcount[p.lhs()])
-        for p in pcount
-    ]
+    prods = [ProbabilisticProduction(p.lhs(), p.rhs(), prob=pcount[p] / lcount[p.lhs()]) for p in pcount]
     return PCFG(start, prods)
 
 
@@ -1385,10 +1332,7 @@ def _read_production(line, nonterm_parser, probabilistic=False):
             pos = m.end()
             probabilities[-1] = float(m.group(1)[1:-1])
             if probabilities[-1] > 1.0:
-                raise ValueError(
-                    "Production probability %f, "
-                    "should not be greater than 1.0" % (probabilities[-1],)
-                )
+                raise ValueError("Production probability %f, " "should not be greater than 1.0" % (probabilities[-1],))
 
         # String -- add terminal.
         elif line[pos] in "'\"":
@@ -1412,8 +1356,7 @@ def _read_production(line, nonterm_parser, probabilistic=False):
 
     if probabilistic:
         return [
-            ProbabilisticProduction(lhs, rhs, prob=probability)
-            for (rhs, probability) in zip(rhsides, probabilities)
+            ProbabilisticProduction(lhs, rhs, prob=probability) for (rhs, probability) in zip(rhsides, probabilities)
         ]
     else:
         return [Production(lhs, rhs) for rhs in rhsides]
@@ -1574,7 +1517,7 @@ def pcfg_demo():
     A demonstration showing how a ``PCFG`` can be created and used.
     """
 
-    from nltk import induce_pcfg, treetransforms
+    from nltk import induce_pcfg
     from nltk.corpus import treebank
     from nltk.parse import pchart
 

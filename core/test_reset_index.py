@@ -121,9 +121,7 @@ class TestResetIndex:
         s = Series(range(2), name="A", dtype="int64")
         series_result = s.reset_index()
         assert isinstance(series_result.index, RangeIndex)
-        series_expected = DataFrame(
-            [[0, 0], [1, 1]], columns=["index", "A"], index=RangeIndex(stop=2)
-        )
+        series_expected = DataFrame([[0, 0], [1, 1]], columns=["index", "A"], index=RangeIndex(stop=2))
         tm.assert_frame_equal(series_result, series_expected)
 
     def test_reset_index_drop_errors(self):
@@ -187,9 +185,7 @@ class TestResetIndex:
         ),
     ],
 )
-def test_reset_index_dtypes_on_empty_series_with_multiindex(
-    array, dtype, using_infer_string
-):
+def test_reset_index_dtypes_on_empty_series_with_multiindex(array, dtype, using_infer_string):
     # GH 19602 - Preserve dtype on empty Series with MultiIndex
     idx = MultiIndex.from_product([[0, 1], [0.5, 1.0], array])
     result = Series(dtype=object, index=idx)[:0].reset_index().dtypes

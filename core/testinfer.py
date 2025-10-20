@@ -45,9 +45,7 @@ class MapActualsToFormalsSuite(Suite):
     def test_tuple_star(self) -> None:
         any_type = AnyType(TypeOfAny.special_form)
         self.assert_vararg_map([ARG_STAR], [ARG_POS], [[0]], self.make_tuple(any_type))
-        self.assert_vararg_map(
-            [ARG_STAR], [ARG_POS, ARG_POS], [[0], [0]], self.make_tuple(any_type, any_type)
-        )
+        self.assert_vararg_map([ARG_STAR], [ARG_POS, ARG_POS], [[0], [0]], self.make_tuple(any_type, any_type))
         self.assert_vararg_map(
             [ARG_STAR],
             [ARG_POS, ARG_OPT, ARG_OPT],
@@ -160,9 +158,7 @@ class OperandDisjointDictSuite(Suite):
         d.add_mapping({2, 3, 4}, {"group2"})
         d.add_mapping({5, 6, 7}, {"group3"})
 
-        self.assertEqual(
-            d.items(), [({0, 1}, {"group1"}), ({2, 3, 4}, {"group2"}), ({5, 6, 7}, {"group3"})]
-        )
+        self.assertEqual(d.items(), [({0, 1}, {"group1"}), ({2, 3, 4}, {"group2"}), ({5, 6, 7}, {"group3"})])
 
     def test_partial_merging(self) -> None:
         d = self.new()
@@ -314,16 +310,12 @@ class OperandComparisonGroupingSuite(Suite):
             "All vars are assignable, everything is combined",
         )
         self.assertEqual(
-            group_comparison_operands(
-                two_groups, self.literal_keymap({1: x1, 2: x2, 3: x3, 4: x4}), {"=="}
-            ),
+            group_comparison_operands(two_groups, self.literal_keymap({1: x1, 2: x2, 3: x3, 4: x4}), {"=="}),
             nothing_combined,
             "x0 is unassignable, so no combining",
         )
         self.assertEqual(
-            group_comparison_operands(
-                two_groups, self.literal_keymap({0: x0, 1: x1, 3: x3, 5: x0}), {"=="}
-            ),
+            group_comparison_operands(two_groups, self.literal_keymap({0: x0, 1: x1, 3: x3, 5: x0}), {"=="}),
             everything_combined,
             "Some vars are unassignable but x0 is, so we combine",
         )

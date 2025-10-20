@@ -173,14 +173,10 @@ def generate_slots(cl: ClassIR, table: SlotTable, emitter: Emitter) -> dict[str,
     return fields
 
 
-def generate_class_type_decl(
-    cl: ClassIR, c_emitter: Emitter, external_emitter: Emitter, emitter: Emitter
-) -> None:
+def generate_class_type_decl(cl: ClassIR, c_emitter: Emitter, external_emitter: Emitter, emitter: Emitter) -> None:
     context = c_emitter.context
     name = emitter.type_struct_name(cl)
-    context.declarations[name] = HeaderDeclaration(
-        f"PyTypeObject *{emitter.type_struct_name(cl)};", needs_export=True
-    )
+    context.declarations[name] = HeaderDeclaration(f"PyTypeObject *{emitter.type_struct_name(cl)};", needs_export=True)
 
     # If this is a non-extension class, all we want is the type object decl.
     if not cl.is_ext_class:
@@ -194,9 +190,7 @@ def generate_class_type_decl(
         )
 
 
-def generate_class_reuse(
-    cl: ClassIR, c_emitter: Emitter, external_emitter: Emitter, emitter: Emitter
-) -> None:
+def generate_class_reuse(cl: ClassIR, c_emitter: Emitter, external_emitter: Emitter, emitter: Emitter) -> None:
     """Generate a definition of a single-object per-class free "list".
 
     This speeds up object allocation and freeing when there are many short-lived
@@ -212,9 +206,7 @@ def generate_class_reuse(
     context = c_emitter.context
     name = cl.name_prefix(c_emitter.names) + "_free_instance"
     struct_name = cl.struct_name(c_emitter.names)
-    context.declarations[name] = HeaderDeclaration(
-        f"CPyThreadLocal {struct_name} *{name};", needs_export=True
-    )
+    context.declarations[name] = HeaderDeclaration(f"CPyThreadLocal {struct_name} *{name};", needs_export=True)
 
 
 def generate_class(cl: ClassIR, module: str, emitter: Emitter) -> None:
@@ -362,9 +354,7 @@ def generate_class(cl: ClassIR, module: str, emitter: Emitter) -> None:
     if generate_full:
         flags.append("Py_TPFLAGS_HAVE_GC")
     if cl.has_method("__call__"):
-        fields["tp_vectorcall_offset"] = "offsetof({}, vectorcall)".format(
-            cl.struct_name(emitter.names)
-        )
+        fields["tp_vectorcall_offset"] = "offsetof({}, vectorcall)".format(cl.struct_name(emitter.names))
         flags.append("_Py_TPFLAGS_HAVE_VECTORCALL")
         if not fields.get("tp_vectorcall"):
             # This is just a placeholder to please CPython. It will be
@@ -381,11 +371,7 @@ def generate_class(cl: ClassIR, module: str, emitter: Emitter) -> None:
     for field, value in fields.items():
         emitter.emit_line(f".{field} = {value},")
     emitter.emit_line("};")
-    emitter.emit_line(
-        "static PyTypeObject *{t}_template = &{t}_template_;".format(
-            t=emitter.type_struct_name(cl)
-        )
-    )
+    emitter.emit_line("static PyTypeObject *{t}_template = &{t}_template_;".format(t=emitter.type_struct_name(cl)))
 
     emitter.emit_line()
     if generate_full:
@@ -432,14 +418,10 @@ def generate_object_struct(cl: ClassIR, emitter: Emitter) -> None:
 
     lines.append(f"}} {cl.struct_name(emitter.names)};")
     lines.append("")
-    emitter.context.declarations[cl.struct_name(emitter.names)] = HeaderDeclaration(
-        lines, is_type=True
-    )
+    emitter.context.declarations[cl.struct_name(emitter.names)] = HeaderDeclaration(lines, is_type=True)
 
 
-def generate_vtables(
-    base: ClassIR, vtable_setup_name: str, vtable_name: str, emitter: Emitter, shadow: bool
-) -> str:
+def generate_vtables(base: ClassIR, vtable_setup_name: str, vtable_name: str, emitter: Emitter, shadow: bool) -> str:
     """Emit the vtables and vtable setup functions for a class.
 
     This includes both the primary vtable and any trait implementation vtables.
@@ -476,9 +458,7 @@ def generate_vtables(
         )
 
     def trait_offset_table_name(trait: ClassIR) -> str:
-        return "{}_{}_offset_table".format(
-            base.name_prefix(emitter.names), trait.name_prefix(emitter.names)
-        )
+        return "{}_{}_offset_table".format(base.name_prefix(emitter.names), trait.name_prefix(emitter.names))
 
     # Emit array definitions with enough space for all the entries
     emitter.emit_line(
@@ -489,15 +469,9 @@ def generate_vtables(
 
     for trait, vtable in base.trait_vtables.items():
         # Trait methods entry (vtable index -> method implementation).
-        emitter.emit_line(
-            f"static CPyVTableItem {trait_vtable_name(trait)}[{max(1, len(vtable))}];"
-        )
+        emitter.emit_line(f"static CPyVTableItem {trait_vtable_name(trait)}[{max(1, len(vtable))}];")
         # Trait attributes entry (attribute number in trait -> offset in actual struct).
-        emitter.emit_line(
-            "static size_t {}[{}];".format(
-                trait_offset_table_name(trait), max(1, len(trait.attributes))
-            )
-        )
+        emitter.emit_line("static size_t {}[{}];".format(trait_offset_table_name(trait), max(1, len(trait.attributes))))
 
     # Emit vtable setup function
     emitter.emit_line("static bool")
@@ -523,9 +497,7 @@ def generate_vtables(
     return vtable_name if not subtables else f"{vtable_name} + {len(subtables) * 3}"
 
 
-def generate_offset_table(
-    trait_offset_table_name: str, emitter: Emitter, trait: ClassIR, cl: ClassIR
-) -> None:
+def generate_offset_table(trait_offset_table_name: str, emitter: Emitter, trait: ClassIR, cl: ClassIR) -> None:
     """Generate attribute offset row of a trait vtable."""
     emitter.emit_line(f"size_t {trait_offset_table_name}_scratch[] = {{")
     for attr in trait.attributes:
@@ -534,9 +506,7 @@ def generate_offset_table(
         # This is for msvc.
         emitter.emit_line("0")
     emitter.emit_line("};")
-    emitter.emit_line(
-        "memcpy({name}, {name}_scratch, sizeof({name}));".format(name=trait_offset_table_name)
-    )
+    emitter.emit_line("memcpy({name}, {name}_scratch, sizeof({name}));".format(name=trait_offset_table_name))
 
 
 def generate_vtable(
@@ -651,9 +621,7 @@ def emit_attr_defaults_func_call(defaults_fn: FuncIR, self_name: str, emitter: E
     The code returns NULL on a raised exception.
     """
     emitter.emit_lines(
-        "if ({}{}((PyObject *){}) == 0) {{".format(
-            NATIVE_PREFIX, defaults_fn.cname(emitter.names), self_name
-        ),
+        "if ({}{}((PyObject *){}) == 0) {{".format(NATIVE_PREFIX, defaults_fn.cname(emitter.names), self_name),
         "Py_DECREF(self);",
         "return NULL;",
         "}",
@@ -758,9 +726,7 @@ def generate_init_for_class(cl: ClassIR, init_fn: FuncIR, emitter: Emitter) -> s
     emitter.emit_line("{")
     if cl.allow_interpreted_subclasses or cl.builtin_base or cl.has_method("__new__"):
         emitter.emit_line(
-            "return {}{}(self, args, kwds) != NULL ? 0 : -1;".format(
-                PREFIX, init_fn.cname(emitter.names)
-            )
+            "return {}{}(self, args, kwds) != NULL ? 0 : -1;".format(PREFIX, init_fn.cname(emitter.names))
         )
     else:
         emitter.emit_line("return 0;")
@@ -783,9 +749,7 @@ def generate_new_for_class(
     # TODO: Check and unbox arguments
     if not cl.allow_interpreted_subclasses:
         emitter.emit_line(f"if (type != {emitter.type_struct_name(cl)}) {{")
-        emitter.emit_line(
-            'PyErr_SetString(PyExc_TypeError, "interpreted classes cannot inherit from compiled");'
-        )
+        emitter.emit_line('PyErr_SetString(PyExc_TypeError, "interpreted classes cannot inherit from compiled");')
         emitter.emit_line("return NULL;")
         emitter.emit_line("}")
 
@@ -805,9 +769,7 @@ def generate_new_for_class(
         # __new__ of a native class implicitly calls __init__ so that we
         # can enforce that instances are always properly initialized. This
         # is needed to support always defined attributes.
-        emitter.emit_line(
-            f"PyObject *ret = {PREFIX}{init_fn.cname(emitter.names)}(self, args, kwds);"
-        )
+        emitter.emit_line(f"PyObject *ret = {PREFIX}{init_fn.cname(emitter.names)}(self, args, kwds);")
         emitter.emit_lines("if (ret == NULL)", "    return NULL;")
         emitter.emit_line("return self;")
     emitter.emit_line("}")
@@ -818,10 +780,7 @@ def generate_new_for_trait(cl: ClassIR, func_name: str, emitter: Emitter) -> Non
     emitter.emit_line(f"{func_name}(PyTypeObject *type, PyObject *args, PyObject *kwds)")
     emitter.emit_line("{")
     emitter.emit_line(f"if (type != {emitter.type_struct_name(cl)}) {{")
-    emitter.emit_line(
-        "PyErr_SetString(PyExc_TypeError, "
-        '"interpreted classes cannot inherit from compiled traits");'
-    )
+    emitter.emit_line("PyErr_SetString(PyExc_TypeError, " '"interpreted classes cannot inherit from compiled traits");')
     emitter.emit_line("} else {")
     emitter.emit_line('PyErr_SetString(PyExc_TypeError, "traits may not be directly created");')
     emitter.emit_line("}")
@@ -832,9 +791,7 @@ def generate_new_for_trait(cl: ClassIR, func_name: str, emitter: Emitter) -> Non
 def generate_traverse_for_class(cl: ClassIR, func_name: str, emitter: Emitter) -> None:
     """Emit function that performs cycle GC traversal of an instance."""
     emitter.emit_line("static int")
-    emitter.emit_line(
-        f"{func_name}({cl.struct_name(emitter.names)} *self, visitproc visit, void *arg)"
-    )
+    emitter.emit_line(f"{func_name}({cl.struct_name(emitter.names)} *self, visitproc visit, void *arg)")
     emitter.emit_line("{")
     for base in reversed(cl.base_mro):
         for attr, rtype in base.attributes.items():
@@ -844,9 +801,7 @@ def generate_traverse_for_class(cl: ClassIR, func_name: str, emitter: Emitter) -
     elif cl.has_dict:
         struct_name = cl.struct_name(emitter.names)
         # __dict__ lives right after the struct and __weakref__ lives right after that
-        emitter.emit_gc_visit(
-            f"*((PyObject **)((char *)self + sizeof({struct_name})))", object_rprimitive
-        )
+        emitter.emit_gc_visit(f"*((PyObject **)((char *)self + sizeof({struct_name})))", object_rprimitive)
         emitter.emit_gc_visit(
             f"*((PyObject **)((char *)self + sizeof(PyObject *) + sizeof({struct_name})))",
             object_rprimitive,
@@ -867,9 +822,7 @@ def generate_clear_for_class(cl: ClassIR, func_name: str, emitter: Emitter) -> N
     elif cl.has_dict:
         struct_name = cl.struct_name(emitter.names)
         # __dict__ lives right after the struct and __weakref__ lives right after that
-        emitter.emit_gc_clear(
-            f"*((PyObject **)((char *)self + sizeof({struct_name})))", object_rprimitive
-        )
+        emitter.emit_gc_clear(f"*((PyObject **)((char *)self + sizeof({struct_name})))", object_rprimitive)
         emitter.emit_gc_clear(
             f"*((PyObject **)((char *)self + sizeof(PyObject *) + sizeof({struct_name})))",
             object_rprimitive,
@@ -924,9 +877,7 @@ def emit_reuse_dealloc(cl: ClassIR, emitter: Emitter) -> None:
     emitter.emit_line("}")
 
 
-def generate_finalize_for_class(
-    del_method: FuncIR, finalize_func_name: str, emitter: Emitter
-) -> None:
+def generate_finalize_for_class(del_method: FuncIR, finalize_func_name: str, emitter: Emitter) -> None:
     emitter.emit_line("static void")
     emitter.emit_line(f"{finalize_func_name}(PyObject *self)")
     emitter.emit_line("{")
@@ -941,9 +892,7 @@ def generate_finalize_for_class(
     )
     emitter.emit_line("if (PyErr_Occurred() != NULL) {")
     emitter.emit_line('PyObject *del_str = PyUnicode_FromString("__del__");')
-    emitter.emit_line(
-        "PyObject *del_method = (del_str == NULL) ? NULL : _PyType_Lookup(Py_TYPE(self), del_str);"
-    )
+    emitter.emit_line("PyObject *del_method = (del_str == NULL) ? NULL : _PyType_Lookup(Py_TYPE(self), del_str);")
     # CPython interpreter uses PyErr_WriteUnraisable: https://docs.python.org/3/c-api/exceptions.html#c.PyErr_WriteUnraisable
     # However, the message is slightly different due to the way mypyc compiles classes.
     # CPython interpreter prints: Exception ignored in: <function F.__del__ at 0x100aed940>
@@ -1018,9 +967,7 @@ def generate_getseter_declarations(cl: ClassIR, emitter: Emitter) -> None:
         # Generate getter declaration
         emitter.emit_line("static PyObject *")
         emitter.emit_line(
-            "{}({} *self, void *closure);".format(
-                getter_name(cl, prop, emitter.names), cl.struct_name(emitter.names)
-            )
+            "{}({} *self, void *closure);".format(getter_name(cl, prop, emitter.names), cl.struct_name(emitter.names))
         )
 
         # Generate property setter declaration if a setter exists
@@ -1089,9 +1036,7 @@ def generate_getter(cl: ClassIR, attr: str, rtype: RType, emitter: Emitter) -> N
     attr_field = emitter.attr(attr)
     emitter.emit_line("static PyObject *")
     emitter.emit_line(
-        "{}({} *self, void *closure)".format(
-            getter_name(cl, attr, emitter.names), cl.struct_name(emitter.names)
-        )
+        "{}({} *self, void *closure)".format(getter_name(cl, attr, emitter.names), cl.struct_name(emitter.names))
     )
     emitter.emit_line("{")
     attr_expr = f"self->{attr_field}"
@@ -1127,9 +1072,7 @@ def generate_setter(cl: ClassIR, attr: str, rtype: RType, emitter: Emitter) -> N
     if not deletable:
         emitter.emit_line("if (value == NULL) {")
         emitter.emit_line("PyErr_SetString(PyExc_AttributeError,")
-        emitter.emit_line(
-            f'    "{repr(cl.name)} object attribute {repr(attr)} cannot be deleted");'
-        )
+        emitter.emit_line(f'    "{repr(cl.name)} object attribute {repr(attr)} cannot be deleted");')
         emitter.emit_line("return -1;")
         emitter.emit_line("}")
 
@@ -1170,14 +1113,10 @@ def generate_setter(cl: ClassIR, attr: str, rtype: RType, emitter: Emitter) -> N
     emitter.emit_line("}")
 
 
-def generate_readonly_getter(
-    cl: ClassIR, attr: str, rtype: RType, func_ir: FuncIR, emitter: Emitter
-) -> None:
+def generate_readonly_getter(cl: ClassIR, attr: str, rtype: RType, func_ir: FuncIR, emitter: Emitter) -> None:
     emitter.emit_line("static PyObject *")
     emitter.emit_line(
-        "{}({} *self, void *closure)".format(
-            getter_name(cl, attr, emitter.names), cl.struct_name(emitter.names)
-        )
+        "{}({} *self, void *closure)".format(getter_name(cl, attr, emitter.names), cl.struct_name(emitter.names))
     )
     emitter.emit_line("{")
     if rtype.is_unboxed:
@@ -1190,15 +1129,11 @@ def generate_readonly_getter(
         emitter.emit_box("retval", "retbox", rtype, declare_dest=True)
         emitter.emit_line("return retbox;")
     else:
-        emitter.emit_line(
-            f"return {NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self);"
-        )
+        emitter.emit_line(f"return {NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self);")
     emitter.emit_line("}")
 
 
-def generate_property_setter(
-    cl: ClassIR, attr: str, arg_type: RType, func_ir: FuncIR, emitter: Emitter
-) -> None:
+def generate_property_setter(cl: ClassIR, attr: str, arg_type: RType, func_ir: FuncIR, emitter: Emitter) -> None:
     emitter.emit_line("static int")
     emitter.emit_line(
         "{}({} *self, PyObject *value, void *closure)".format(
@@ -1208,13 +1143,9 @@ def generate_property_setter(
     emitter.emit_line("{")
     if arg_type.is_unboxed:
         emitter.emit_unbox("value", "tmp", arg_type, error=ReturnHandler("-1"), declare_dest=True)
-        emitter.emit_line(
-            f"{NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self, tmp);"
-        )
+        emitter.emit_line(f"{NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self, tmp);")
     else:
-        emitter.emit_line(
-            f"{NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self, value);"
-        )
+        emitter.emit_line(f"{NATIVE_PREFIX}{func_ir.cname(emitter.names)}((PyObject *) self, value);")
     emitter.emit_line("return 0;")
     emitter.emit_line("}")
 
@@ -1224,11 +1155,7 @@ def has_managed_dict(cl: ClassIR, emitter: Emitter) -> bool:
     # On 3.11 and earlier the flag doesn't exist and we use
     # tp_dictoffset instead.  If a class inherits from Exception, the
     # flag conflicts with tp_dictoffset set in the base class.
-    return (
-        emitter.capi_version >= (3, 12)
-        and cl.has_dict
-        and cl.builtin_base != "PyBaseExceptionObject"
-    )
+    return emitter.capi_version >= (3, 12) and cl.has_dict and cl.builtin_base != "PyBaseExceptionObject"
 
 
 def native_class_doc_initializer(cl: ClassIR) -> str:

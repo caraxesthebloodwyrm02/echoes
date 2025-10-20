@@ -46,9 +46,7 @@ class MultimodalProcessor:
 
         # CLIP for image-text understanding
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-        self.clip_processor = CLIPProcessor.from_pretrained(
-            "openai/clip-vit-base-patch32"
-        )
+        self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
         self.clip_model.to(self.device)
 
         # ResNet for image classification
@@ -62,15 +60,11 @@ class MultimodalProcessor:
                 transforms.Resize(256),
                 transforms.CenterCrop(224),
                 transforms.ToTensor(),
-                transforms.Normalize(
-                    mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]
-                ),
+                transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225]),
             ]
         )
 
-    def process_image(
-        self, image_input: Union[str, bytes, Image.Image]
-    ) -> Dict[str, Any]:
+    def process_image(self, image_input: Union[str, bytes, Image.Image]) -> Dict[str, Any]:
         """Process image input and extract features"""
         # Load image
         if isinstance(image_input, str):
@@ -115,17 +109,13 @@ class MultimodalProcessor:
             "word_count": len(text.split()),
         }
 
-    def cross_modal_similarity(
-        self, image_features: np.ndarray, text_features: np.ndarray
-    ) -> float:
+    def cross_modal_similarity(self, image_features: np.ndarray, text_features: np.ndarray) -> float:
         """Calculate similarity between image and text features"""
         # Cosine similarity
         similarity = np.dot(image_features.flatten(), text_features.flatten())
         return float(similarity)
 
-    def multimodal_reasoning(
-        self, image_path: str, text_queries: List[str]
-    ) -> Dict[str, Any]:
+    def multimodal_reasoning(self, image_path: str, text_queries: List[str]) -> Dict[str, Any]:
         """Perform cross-modal reasoning between image and text"""
         # Process image
         image_data = self.process_image(image_path)
@@ -136,9 +126,7 @@ class MultimodalProcessor:
 
         for query in text_queries:
             text_data = self.process_text(query)
-            similarity = self.cross_modal_similarity(
-                image_data["clip_features"], text_data["text_features"]
-            )
+            similarity = self.cross_modal_similarity(image_data["clip_features"], text_data["text_features"])
 
             text_results.append(text_data)
             similarities.append(similarity)
@@ -174,9 +162,7 @@ class AudioProcessor:
 
             # Resample if needed
             if sample_rate != self.sample_rate:
-                resampler = torchaudio.transforms.Resample(
-                    sample_rate, self.sample_rate
-                )
+                resampler = torchaudio.transforms.Resample(sample_rate, self.sample_rate)
                 waveform = resampler(waveform)
 
             # Convert to mono if stereo

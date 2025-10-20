@@ -113,15 +113,9 @@ class TestSparseArray(base.ExtensionTests):
             "skew",
             "kurt",
         ]:
-            mark = pytest.mark.xfail(
-                reason="This should be viable but is not implemented"
-            )
+            mark = pytest.mark.xfail(reason="This should be viable but is not implemented")
             request.node.add_marker(mark)
-        elif (
-            all_numeric_reductions in ["sum", "max", "min", "mean"]
-            and data.dtype.kind == "f"
-            and not skipna
-        ):
+        elif all_numeric_reductions in ["sum", "max", "min", "mean"] and data.dtype.kind == "f" and not skipna:
             mark = pytest.mark.xfail(reason="getting a non-nan float")
             request.node.add_marker(mark)
 
@@ -138,15 +132,9 @@ class TestSparseArray(base.ExtensionTests):
             "skew",
             "kurt",
         ]:
-            mark = pytest.mark.xfail(
-                reason="This should be viable but is not implemented"
-            )
+            mark = pytest.mark.xfail(reason="This should be viable but is not implemented")
             request.node.add_marker(mark)
-        elif (
-            all_numeric_reductions in ["sum", "max", "min", "mean"]
-            and data.dtype.kind == "f"
-            and not skipna
-        ):
+        elif all_numeric_reductions in ["sum", "max", "min", "mean"] and data.dtype.kind == "f" and not skipna:
             mark = pytest.mark.xfail(reason="ExtensionArray NA mask are different")
             request.node.add_marker(mark)
 
@@ -166,21 +154,15 @@ class TestSparseArray(base.ExtensionTests):
 
         # dataframes
         result = pd.concat(dfs)
-        expected = pd.concat(
-            [x.apply(lambda s: np.asarray(s).astype(object)) for x in dfs]
-        )
+        expected = pd.concat([x.apply(lambda s: np.asarray(s).astype(object)) for x in dfs])
         tm.assert_frame_equal(result, expected)
 
-    @pytest.mark.filterwarnings(
-        "ignore:The previous implementation of stack is deprecated"
-    )
+    @pytest.mark.filterwarnings("ignore:The previous implementation of stack is deprecated")
     @pytest.mark.parametrize(
         "columns",
         [
             ["A", "B"],
-            pd.MultiIndex.from_tuples(
-                [("A", "a"), ("A", "b")], names=["outer", "inner"]
-            ),
+            pd.MultiIndex.from_tuples([("A", "a"), ("A", "b")], names=["outer", "inner"]),
         ],
     )
     @pytest.mark.parametrize("future_stack", [True, False])
@@ -243,9 +225,7 @@ class TestSparseArray(base.ExtensionTests):
 
     def test_fillna_no_op_returns_copy(self, data, request):
         if np.isnan(data.fill_value):
-            request.applymarker(
-                pytest.mark.xfail(reason="returns array with different fill value")
-            )
+            request.applymarker(pytest.mark.xfail(reason="returns array with different fill value"))
         super().test_fillna_no_op_returns_copy(data)
 
     @pytest.mark.xfail(reason="Unsupported")
@@ -320,9 +300,7 @@ class TestSparseArray(base.ExtensionTests):
         result = ser.where(cond)
 
         new_dtype = SparseDtype("float", 0.0)
-        expected = pd.Series(
-            cls._from_sequence([a, a, na_value, na_value], dtype=new_dtype)
-        )
+        expected = pd.Series(cls._from_sequence([a, a, na_value, na_value], dtype=new_dtype))
         tm.assert_series_equal(result, expected)
 
         other = cls._from_sequence([a, b, a, b], dtype=data.dtype)
@@ -422,9 +400,7 @@ class TestSparseArray(base.ExtensionTests):
             request.applymarker(mark)
         super().test_arith_frame_with_scalar(data, all_arithmetic_operators)
 
-    def _compare_other(
-        self, ser: pd.Series, data_for_compare: SparseArray, comparison_op, other
-    ):
+    def _compare_other(self, ser: pd.Series, data_for_compare: SparseArray, comparison_op, other):
         op = comparison_op
 
         result = op(data_for_compare, other)
@@ -444,9 +420,7 @@ class TestSparseArray(base.ExtensionTests):
             )
 
         else:
-            fill_value = np.all(
-                op(np.asarray(data_for_compare.fill_value), np.asarray(other))
-            )
+            fill_value = np.all(op(np.asarray(data_for_compare.fill_value), np.asarray(other)))
 
             expected = SparseArray(
                 op(data_for_compare.to_dense(), np.asarray(other)),

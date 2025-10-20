@@ -103,9 +103,7 @@ class StanfordSegmenter(TokenizerI):
 
         # This is passed to java as the -cp option, the old version of segmenter needs slf4j.
         # The new version of stanford-segmenter-2016-10-31 doesn't need slf4j
-        self._stanford_jar = os.pathsep.join(
-            _ for _ in [stanford_segmenter, slf4j] if _ is not None
-        )
+        self._stanford_jar = os.pathsep.join(_ for _ in [stanford_segmenter, slf4j] if _ is not None)
 
         self._java_class = java_class
         self._model = path_to_model
@@ -117,9 +115,7 @@ class StanfordSegmenter(TokenizerI):
         self._encoding = encoding
         self.java_options = java_options
         options = {} if options is None else options
-        self._options_cmd = ",".join(
-            f"{key}={json.dumps(val)}" for key, val in options.items()
-        )
+        self._options_cmd = ",".join(f"{key}={json.dumps(val)}" for key, val in options.items())
 
     def default_config(self, lang):
         """
@@ -137,9 +133,7 @@ class StanfordSegmenter(TokenizerI):
         self._sihan_post_processing = "false"
 
         if lang == "ar":
-            self._java_class = (
-                "edu.stanford.nlp.international.arabic.process.ArabicSegmenter"
-            )
+            self._java_class = "edu.stanford.nlp.international.arabic.process.ArabicSegmenter"
             model = "arabic-segmenter-atb+bn+arztrain.ser.gz"
 
         elif lang == "zh":
@@ -159,8 +153,7 @@ class StanfordSegmenter(TokenizerI):
             except LookupError as e:
                 raise LookupError(
                     "Could not find '%s' (tried using env. "
-                    "variables STANFORD_MODELS and <STANFORD_SEGMENTER>/data/)"
-                    % path_to_dict
+                    "variables STANFORD_MODELS and <STANFORD_SEGMENTER>/data/)" % path_to_dict
                 ) from e
 
             sihan_dir = "./data/"
@@ -174,8 +167,7 @@ class StanfordSegmenter(TokenizerI):
                 self._sihan_corpora_dict = os.path.join(path_to_sihan_dir, sihan_dir)
             except LookupError as e:
                 raise LookupError(
-                    "Could not find '%s' (tried using the "
-                    "STANFORD_SEGMENTER environment variable)" % sihan_dir
+                    "Could not find '%s' (tried using the " "STANFORD_SEGMENTER environment variable)" % sihan_dir
                 ) from e
         else:
             raise LookupError(f"Unsupported language {lang}")
@@ -281,9 +273,7 @@ class StanfordSegmenter(TokenizerI):
         # Configure java.
         config_java(options=self.java_options, verbose=verbose)
 
-        stdout, _stderr = java(
-            cmd, classpath=self._stanford_jar, stdout=PIPE, stderr=PIPE
-        )
+        stdout, _stderr = java(cmd, classpath=self._stanford_jar, stdout=PIPE, stderr=PIPE)
         stdout = stdout.decode(encoding)
 
         # Return java configurations to their default values.

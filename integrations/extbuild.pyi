@@ -13,8 +13,6 @@ def build_and_import_extension(
     include_dirs: Sequence[str] | None = None,
     more_init: str = "",
 ) -> types.ModuleType: ...
-
-#
 def compile_extension_module(
     name: str,
     builddir: pathlib.Path,

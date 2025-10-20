@@ -72,9 +72,7 @@ def test_label_binarizer():
 
     # multi-class case
     inp = ["spam", "ham", "eggs", "ham", "0"]
-    expected = np.array(
-        [[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0]]
-    )
+    expected = np.array([[0, 0, 0, 1], [0, 0, 1, 0], [0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0]])
     got = lb.fit_transform(inp)
     assert_array_equal(lb.classes_, ["0", "eggs", "ham", "spam"])
     assert_array_equal(expected, got)
@@ -88,9 +86,7 @@ def test_label_binarizer_unseen_labels():
     got = lb.fit_transform(["b", "d", "e"])
     assert_array_equal(expected, got)
 
-    expected = np.array(
-        [[0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 0]]
-    )
+    expected = np.array([[0, 0, 0], [1, 0, 0], [0, 0, 0], [0, 1, 0], [0, 0, 1], [0, 0, 0]])
     got = lb.transform(["a", "b", "c", "d", "e", "f"])
     assert_array_equal(expected, got)
 
@@ -266,9 +262,7 @@ def test_label_encoder_negative_ints():
     le.fit([1, 1, 4, 5, -1, 0])
     assert_array_equal(le.classes_, [-1, 0, 1, 4, 5])
     assert_array_equal(le.transform([0, 1, 4, 4, 5, -1, -1]), [1, 2, 3, 3, 4, 0, 0])
-    assert_array_equal(
-        le.inverse_transform([1, 2, 3, 3, 4, 0, 0]), [0, 1, 4, 4, 5, -1, -1]
-    )
+    assert_array_equal(le.inverse_transform([1, 2, 3, 3, 4, 0, 0]), [0, 1, 4, 4, 5, -1, -1])
     with pytest.raises(ValueError):
         le.transform([0, 6])
 
@@ -368,9 +362,7 @@ def test_sparse_output_multilabel_binarizer_errors(csr_container):
     mlb = MultiLabelBinarizer(sparse_output=False)
     mlb.fit(inp)
     with pytest.raises(ValueError):
-        mlb.inverse_transform(
-            csr_container(np.array([[0, 1, 1], [2, 0, 0], [1, 1, 0]]))
-        )
+        mlb.inverse_transform(csr_container(np.array([[0, 1, 1], [2, 0, 0], [1, 1, 0]])))
 
 
 def test_multilabel_binarizer():
@@ -435,9 +427,7 @@ def test_multilabel_binarizer_given_classes():
 
     # ensure works with extra class
     mlb = MultiLabelBinarizer(classes=[4, 1, 3, 2])
-    assert_array_equal(
-        mlb.fit_transform(inp), np.hstack(([[0], [0], [0]], indicator_mat))
-    )
+    assert_array_equal(mlb.fit_transform(inp), np.hstack(([[0], [0], [0]], indicator_mat)))
     assert_array_equal(mlb.classes_, [4, 1, 3, 2])
 
     # ensure fit is no-op as iterable is not consumed
@@ -594,9 +584,7 @@ def check_binarized_results(y, classes, pos_label, neg_label, expected):
         assert_array_equal(toarray(inversed), toarray(y))
 
         # Check label binarizer
-        lb = LabelBinarizer(
-            neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output
-        )
+        lb = LabelBinarizer(neg_label=neg_label, pos_label=pos_label, sparse_output=sparse_output)
         binarized = lb.fit_transform(y)
         assert_array_equal(toarray(binarized), expected)
         assert issparse(binarized) == sparse_output
@@ -634,19 +622,12 @@ def test_label_binarize_multiclass():
     check_binarized_results(y, classes, pos_label, neg_label, expected)
 
     with pytest.raises(ValueError):
-        label_binarize(
-            y, classes=classes, neg_label=-1, pos_label=pos_label, sparse_output=True
-        )
+        label_binarize(y, classes=classes, neg_label=-1, pos_label=pos_label, sparse_output=True)
 
 
 @pytest.mark.parametrize(
     "arr_type",
-    [np.array]
-    + COO_CONTAINERS
-    + CSC_CONTAINERS
-    + CSR_CONTAINERS
-    + DOK_CONTAINERS
-    + LIL_CONTAINERS,
+    [np.array] + COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS + DOK_CONTAINERS + LIL_CONTAINERS,
 )
 def test_label_binarize_multilabel(arr_type):
     y_ind = np.array([[0, 1, 0], [1, 1, 1], [0, 0, 0]])
@@ -659,9 +640,7 @@ def test_label_binarize_multilabel(arr_type):
     check_binarized_results(y, classes, pos_label, neg_label, expected)
 
     with pytest.raises(ValueError):
-        label_binarize(
-            y, classes=classes, neg_label=-1, pos_label=pos_label, sparse_output=True
-        )
+        label_binarize(y, classes=classes, neg_label=-1, pos_label=pos_label, sparse_output=True)
 
 
 def test_invalid_input_label_binarize():
@@ -675,9 +654,7 @@ def test_invalid_input_label_binarize():
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
 def test_inverse_binarize_multiclass(csr_container):
-    got = _inverse_binarize_multiclass(
-        csr_container([[0, 1, 0], [-1, 0, -1], [0, 0, 0]]), np.arange(3)
-    )
+    got = _inverse_binarize_multiclass(csr_container([[0, 1, 0], [-1, 0, -1], [0, 0, 0]]), np.arange(3))
     assert_array_equal(got, np.array([1, 1, 0]))
 
 
@@ -693,9 +670,7 @@ def test_nan_label_encoder():
     assert_array_equal(y_trans, [2])
 
 
-@pytest.mark.parametrize(
-    "encoder", [LabelEncoder(), LabelBinarizer(), MultiLabelBinarizer()]
-)
+@pytest.mark.parametrize("encoder", [LabelEncoder(), LabelBinarizer(), MultiLabelBinarizer()])
 def test_label_encoders_do_not_have_set_output(encoder):
     """Check that label encoders do not define set_output and work with y as a kwarg.
 

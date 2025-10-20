@@ -148,9 +148,7 @@ class RecursiveDescentApp:
         # Grammar view.
         self._prodframe = listframe = Frame(parent)
         self._prodframe.pack(fill="both", side="left", padx=2)
-        self._prodlist_label = Label(
-            self._prodframe, font=self._boldfont, text="Available Expansions"
-        )
+        self._prodlist_label = Label(self._prodframe, font=self._boldfont, text="Available Expansions")
         self._prodlist_label.pack()
         self._prodlist = Listbox(
             self._prodframe,
@@ -271,15 +269,11 @@ class RecursiveDescentApp:
     def _init_feedback(self, parent):
         self._feedbackframe = feedbackframe = Frame(parent)
         feedbackframe.pack(fill="x", side="bottom", padx=3, pady=3)
-        self._lastoper_label = Label(
-            feedbackframe, text="Last Operation:", font=self._font
-        )
+        self._lastoper_label = Label(feedbackframe, text="Last Operation:", font=self._font)
         self._lastoper_label.pack(side="left")
         lastoperframe = Frame(feedbackframe, relief="sunken", border=1)
         lastoperframe.pack(fill="x", side="right", expand=1, padx=5)
-        self._lastoper1 = Label(
-            lastoperframe, foreground="#007070", background="#f0f0f0", font=self._font
-        )
+        self._lastoper1 = Label(lastoperframe, foreground="#007070", background="#f0f0f0", font=self._font)
         self._lastoper2 = Label(
             lastoperframe,
             anchor="w",
@@ -312,18 +306,14 @@ class RecursiveDescentApp:
         menubar = Menu(parent)
 
         filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(
-            label="Reset Parser", underline=0, command=self.reset, accelerator="Del"
-        )
+        filemenu.add_command(label="Reset Parser", underline=0, command=self.reset, accelerator="Del")
         filemenu.add_command(
             label="Print to Postscript",
             underline=0,
             command=self.postscript,
             accelerator="Ctrl-p",
         )
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         editmenu = Menu(menubar, tearoff=0)
@@ -342,20 +332,12 @@ class RecursiveDescentApp:
         menubar.add_cascade(label="Edit", underline=0, menu=editmenu)
 
         rulemenu = Menu(menubar, tearoff=0)
-        rulemenu.add_command(
-            label="Step", underline=1, command=self.step, accelerator="Space"
-        )
+        rulemenu.add_command(label="Step", underline=1, command=self.step, accelerator="Space")
         rulemenu.add_separator()
-        rulemenu.add_command(
-            label="Match", underline=0, command=self.match, accelerator="Ctrl-m"
-        )
-        rulemenu.add_command(
-            label="Expand", underline=0, command=self.expand, accelerator="Ctrl-e"
-        )
+        rulemenu.add_command(label="Match", underline=0, command=self.match, accelerator="Ctrl-m")
+        rulemenu.add_command(label="Expand", underline=0, command=self.expand, accelerator="Ctrl-e")
         rulemenu.add_separator()
-        rulemenu.add_command(
-            label="Backtrack", underline=0, command=self.backtrack, accelerator="Ctrl-b"
-        )
+        rulemenu.add_command(label="Backtrack", underline=0, command=self.backtrack, accelerator="Ctrl-b")
         menubar.add_cascade(label="Apply", underline=0, menu=rulemenu)
 
         viewmenu = Menu(menubar, tearoff=0)
@@ -404,9 +386,7 @@ class RecursiveDescentApp:
         menubar.add_cascade(label="View", underline=0, menu=viewmenu)
 
         animatemenu = Menu(menubar, tearoff=0)
-        animatemenu.add_radiobutton(
-            label="No Animation", underline=0, variable=self._animation_frames, value=0
-        )
+        animatemenu.add_radiobutton(label="No Animation", underline=0, variable=self._animation_frames, value=0)
         animatemenu.add_radiobutton(
             label="Slow Animation",
             underline=0,
@@ -432,9 +412,7 @@ class RecursiveDescentApp:
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="About", underline=0, command=self.about)
-        helpmenu.add_command(
-            label="Instructions", underline=0, command=self.help, accelerator="F1"
-        )
+        helpmenu.add_command(label="Instructions", underline=0, command=self.help, accelerator="F1")
         menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
 
         parent.config(menu=menubar)
@@ -481,9 +459,7 @@ class RecursiveDescentApp:
         # Draw the text.
         helv = ("helvetica", -self._size.get())
         bottom = y = self._cframe.scrollregion()[3]
-        self._textwidgets = [
-            TextWidget(canvas, word, font=self._font) for word in self._sent
-        ]
+        self._textwidgets = [TextWidget(canvas, word, font=self._font) for word in self._sent]
         for twidget in self._textwidgets:
             self._cframe.add_widget(twidget, 0, 0)
             twidget.move(0, bottom - twidget.bbox()[3] - 5)
@@ -700,9 +676,7 @@ class RecursiveDescentApp:
             return False
 
     def about(self, *e):
-        ABOUT = (
-            "NLTK Recursive Descent Parser Application\n" + "Written by Edward Loper"
-        )
+        ABOUT = "NLTK Recursive Descent Parser Application\n" + "Written by Edward Loper"
         TITLE = "About: Recursive Descent Parser Application"
         try:
             from tkinter.messagebox import Message
@@ -761,9 +735,7 @@ class RecursiveDescentApp:
 
     def _toggle_grammar(self, *e):
         if self._show_grammar.get():
-            self._prodframe.pack(
-                fill="both", side="left", padx=2, after=self._feedbackframe
-            )
+            self._prodframe.pack(fill="both", side="left", padx=2, after=self._feedbackframe)
             self._lastoper1["text"] = "Show Grammar"
         else:
             self._prodframe.pack_forget()
@@ -958,17 +930,13 @@ class RecursiveDescentApp:
     def _animate_match_backtrack(self, treeloc):
         widget = self._get(self._tree, treeloc)
         node = widget.parent().label()
-        dy = (node.bbox()[3] - widget.bbox()[1] + 14) / max(
-            1, self._animation_frames.get()
-        )
+        dy = (node.bbox()[3] - widget.bbox()[1] + 14) / max(1, self._animation_frames.get())
         self._animate_match_backtrack_frame(self._animation_frames.get(), widget, dy)
 
     def _animate_match(self, treeloc):
         widget = self._get(self._tree, treeloc)
 
-        dy = (self._textwidgets[0].bbox()[1] - widget.bbox()[3] - 10.0) / max(
-            1, self._animation_frames.get()
-        )
+        dy = (self._textwidgets[0].bbox()[1] - widget.bbox()[3] - 10.0) / max(1, self._animation_frames.get())
         self._animate_match_frame(self._animation_frames.get(), widget, dy)
 
     def _animate_match_frame(self, frame, widget, dy):
@@ -987,9 +955,7 @@ class RecursiveDescentApp:
         if frame > 0:
             self._animating_lock = 1
             widget.move(0, dy)
-            self._top.after(
-                10, self._animate_match_backtrack_frame, frame - 1, widget, dy
-            )
+            self._top.after(10, self._animate_match_backtrack_frame, frame - 1, widget, dy)
         else:
             widget.parent().remove_child(widget)
             widget.destroy()

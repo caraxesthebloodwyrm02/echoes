@@ -2,6 +2,7 @@
 Tests that work on both the Python and C engines but do not have a
 specific classification into the other test modules.
 """
+
 from io import (
     BytesIO,
     StringIO,
@@ -26,9 +27,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
@@ -87,9 +86,7 @@ def test_path_local_path(all_parsers):
         columns=Index(list("ABCD")),
         index=Index([f"i-{i}" for i in range(30)]),
     )
-    result = tm.round_trip_localpath(
-        df.to_csv, lambda p: parser.read_csv(p, index_col=0)
-    )
+    result = tm.round_trip_localpath(df.to_csv, lambda p: parser.read_csv(p, index_col=0))
     tm.assert_frame_equal(df, result)
 
 
@@ -464,9 +461,7 @@ def test_memory_map(all_parsers, csv_dir_path):
     mmap_file = os.path.join(csv_dir_path, "test_mmap.csv")
     parser = all_parsers
 
-    expected = DataFrame(
-        {"a": [1, 2, 3], "b": ["one", "two", "three"], "c": ["I", "II", "III"]}
-    )
+    expected = DataFrame({"a": [1, 2, 3], "b": ["one", "two", "three"], "c": ["I", "II", "III"]})
 
     if parser.engine == "pyarrow":
         msg = "The 'memory_map' option is not supported with the 'pyarrow' engine"

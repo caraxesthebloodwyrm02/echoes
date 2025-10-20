@@ -80,7 +80,7 @@ import warnings
 from collections import defaultdict
 from math import factorial
 
-from nltk.translate import AlignedSent, Alignment, IBMModel, IBMModel2
+from nltk.translate import Alignment, IBMModel, IBMModel2
 from nltk.translate.ibm_model import Counts
 
 
@@ -181,9 +181,7 @@ class IBMModel3(IBMModel):
     def reset_probabilities(self):
         super().reset_probabilities()
         self.distortion_table = defaultdict(
-            lambda: defaultdict(
-                lambda: defaultdict(lambda: defaultdict(lambda: self.MIN_PROB))
-            )
+            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: self.MIN_PROB)))
         )
         """
         dict[int][int][int][int]: float. Probability(j | i,l,m).
@@ -200,11 +198,7 @@ class IBMModel3(IBMModel):
                 l_m_combinations.add((l, m))
                 initial_prob = 1 / m
                 if initial_prob < IBMModel.MIN_PROB:
-                    warnings.warn(
-                        "A target sentence is too long ("
-                        + str(m)
-                        + " words). Results may be less accurate."
-                    )
+                    warnings.warn("A target sentence is too long (" + str(m) + " words). Results may be less accurate.")
                 for j in range(1, m + 1):
                     for i in range(0, l + 1):
                         self.distortion_table[j][i][l][m] = initial_prob
@@ -230,9 +224,7 @@ class IBMModel3(IBMModel):
             # Sample the alignment space
             sampled_alignments, best_alignment = self.sample(aligned_sentence)
             # Record the most probable alignment
-            aligned_sentence.alignment = Alignment(
-                best_alignment.zero_indexed_alignment()
-            )
+            aligned_sentence.alignment = Alignment(best_alignment.zero_indexed_alignment())
 
             # E step (a): Compute normalization factors to weigh counts
             total_count = self.prob_of_alignments(sampled_alignments)
@@ -243,9 +235,7 @@ class IBMModel3(IBMModel):
                 normalized_count = count / total_count
 
                 for j in range(1, m + 1):
-                    counts.update_lexical_translation(
-                        normalized_count, alignment_info, j
-                    )
+                    counts.update_lexical_translation(normalized_count, alignment_info, j)
                     counts.update_distortion(normalized_count, alignment_info, j, l, m)
 
                 counts.update_null_generation(normalized_count, alignment_info)
@@ -268,10 +258,7 @@ class IBMModel3(IBMModel):
             for i, src_sentence_lengths in i_s.items():
                 for l, trg_sentence_lengths in src_sentence_lengths.items():
                     for m in trg_sentence_lengths:
-                        estimate = (
-                            counts.distortion[j][i][l][m]
-                            / counts.distortion_for_any_j[i][l][m]
-                        )
+                        estimate = counts.distortion[j][i][l][m] / counts.distortion_for_any_j[i][l][m]
                         self.distortion_table[j][i][l][m] = max(estimate, MIN_PROB)
 
     def prob_t_a_given_s(self, alignment_info):
@@ -304,9 +291,7 @@ class IBMModel3(IBMModel):
         # Combine fertility probabilities
         for i in range(1, l + 1):
             fertility = alignment_info.fertility_of_i(i)
-            probability *= (
-                factorial(fertility) * self.fertility_table[fertility][src_sentence[i]]
-            )
+            probability *= factorial(fertility) * self.fertility_table[fertility][src_sentence[i]]
             if probability < MIN_PROB:
                 return MIN_PROB
 
@@ -316,9 +301,7 @@ class IBMModel3(IBMModel):
             i = alignment_info.alignment[j]
             s = src_sentence[i]
 
-            probability *= (
-                self.translation_table[t][s] * self.distortion_table[j][i][l][m]
-            )
+            probability *= self.translation_table[t][s] * self.distortion_table[j][i][l][m]
             if probability < MIN_PROB:
                 return MIN_PROB
 
@@ -333,12 +316,8 @@ class Model3Counts(Counts):
 
     def __init__(self):
         super().__init__()
-        self.distortion = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
-        )
-        self.distortion_for_any_j = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(float))
-        )
+        self.distortion = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
+        self.distortion_for_any_j = defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
 
     def update_distortion(self, count, alignment_info, j, l, m):
         i = alignment_info.alignment[j]

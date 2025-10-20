@@ -83,15 +83,9 @@ def run_command(cmd, description, cwd=None, check=True):
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Complete Echoes Development Environment Setup"
-    )
-    parser.add_argument(
-        "--quick", action="store_true", help="Quick setup (skip profile alignment)"
-    )
-    parser.add_argument(
-        "--no-validation", action="store_true", help="Skip final validation"
-    )
+    parser = argparse.ArgumentParser(description="Complete Echoes Development Environment Setup")
+    parser.add_argument("--quick", action="store_true", help="Quick setup (skip profile alignment)")
+    parser.add_argument("--no-validation", action="store_true", help="Skip final validation")
 
     args = parser.parse_args()
 

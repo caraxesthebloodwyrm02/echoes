@@ -65,14 +65,10 @@ class PatternDetector:
         self.detection_history: List[Dict[str, Any]] = []
         self.threshold_checks = 5  # Consecutive checks before alert
 
-    def detect_infinite_loop(
-        self, execution_time_ms: float, iterations: int, threshold_ms: float = 30000
-    ) -> bool:
+    def detect_infinite_loop(self, execution_time_ms: float, iterations: int, threshold_ms: float = 30000) -> bool:
         """Detect infinite loop pattern"""
         if execution_time_ms > threshold_ms and iterations > 1000:
-            self.logger.warning(
-                f"Infinite loop detected: {execution_time_ms}ms, {iterations} iterations"
-            )
+            self.logger.warning(f"Infinite loop detected: {execution_time_ms}ms, {iterations} iterations")
             return True
         return False
 
@@ -83,15 +79,11 @@ class PatternDetector:
 
         recent_scores = security_score_history[-5:]
         avg_recent = sum(recent_scores) / len(recent_scores)
-        avg_previous = sum(security_score_history[:-5]) / (
-            len(security_score_history) - 5
-        )
+        avg_previous = sum(security_score_history[:-5]) / (len(security_score_history) - 5)
 
         degradation = avg_previous - avg_recent
         if degradation > 0.15:  # 15% drop
-            self.logger.warning(
-                f"Security degradation detected: {degradation:.2%} drop"
-            )
+            self.logger.warning(f"Security degradation detected: {degradation:.2%} drop")
             return True
         return False
 
@@ -101,9 +93,7 @@ class PatternDetector:
 
         # Check test coverage
         if quality_metrics.get("test_coverage", 100) < 80:
-            issues.append(
-                f"Test coverage below 80%: {quality_metrics['test_coverage']:.1f}%"
-            )
+            issues.append(f"Test coverage below 80%: {quality_metrics['test_coverage']:.1f}%")
 
         # Check complexity
         if quality_metrics.get("avg_complexity", 0) > 10:
@@ -111,46 +101,35 @@ class PatternDetector:
 
         # Check technical debt
         if quality_metrics.get("technical_debt_ratio", 0) > 0.2:
-            issues.append(
-                f"High technical debt: {quality_metrics['technical_debt_ratio']:.1%}"
-            )
+            issues.append(f"High technical debt: {quality_metrics['technical_debt_ratio']:.1%}")
 
         if issues:
             self.logger.warning(f"Quality degradation: {'; '.join(issues)}")
             return True
         return False
 
-    def detect_trajectory_halt(
-        self, progress_history: List[float], window_size: int = 10
-    ) -> bool:
+    def detect_trajectory_halt(self, progress_history: List[float], window_size: int = 10) -> bool:
         """Detect trajectory halt (no progress)"""
         if len(progress_history) < window_size:
             return False
 
         recent = progress_history[-window_size:]
         if all(p == recent[0] for p in recent):
-            self.logger.warning(
-                f"Trajectory halt detected: no progress in {window_size} iterations"
-            )
+            self.logger.warning(f"Trajectory halt detected: no progress in {window_size} iterations")
             return True
         return False
 
-    def detect_rate_limit_cascade(
-        self, error_history: List[Dict[str, Any]], window_minutes: int = 5
-    ) -> bool:
+    def detect_rate_limit_cascade(self, error_history: List[Dict[str, Any]], window_minutes: int = 5) -> bool:
         """Detect cascading rate limit errors"""
         cutoff = datetime.now() - timedelta(minutes=window_minutes)
         recent_errors = [
             e
             for e in error_history
-            if e.get("timestamp", datetime.now()) > cutoff
-            and e.get("error_type") == "rate_limit"
+            if e.get("timestamp", datetime.now()) > cutoff and e.get("error_type") == "rate_limit"
         ]
 
         if len(recent_errors) >= 3:
-            self.logger.warning(
-                f"Rate limit cascade: {len(recent_errors)} errors in {window_minutes}min"
-            )
+            self.logger.warning(f"Rate limit cascade: {len(recent_errors)} errors in {window_minutes}min")
             return True
         return False
 
@@ -293,9 +272,7 @@ class AssistantIntegration:
             "response": response,
         }
 
-    def _call_openai(
-        self, prompt: str, pattern_type: str, max_tokens: int = 1000
-    ) -> str:
+    def _call_openai(self, prompt: str, pattern_type: str, max_tokens: int = 1000) -> str:
         """Call OpenAI API with retry logic"""
         retries = 0
         last_error = None
@@ -317,17 +294,13 @@ class AssistantIntegration:
                 )
 
                 content = response.choices[0].message.content
-                self.logger.info(
-                    f"OpenAI response for {pattern_type}: {len(content)} chars"
-                )
+                self.logger.info(f"OpenAI response for {pattern_type}: {len(content)} chars")
                 return content
 
             except openai.RateLimitError as e:
                 retries += 1
                 wait_time = 2**retries
-                self.logger.warning(
-                    f"Rate limit hit (attempt {retries}), waiting {wait_time}s: {e}"
-                )
+                self.logger.warning(f"Rate limit hit (attempt {retries}), waiting {wait_time}s: {e}")
                 last_error = e
                 if retries < self.config.max_retries:
                     import time
@@ -351,9 +324,7 @@ class AssistantIntegration:
         self.logger.error(error_msg)
         return f"Error: {error_msg}"
 
-    def process_pattern(
-        self, pattern_type: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def process_pattern(self, pattern_type: str, context: Dict[str, Any]) -> Dict[str, Any]:
         """Process detected pattern and trigger appropriate response"""
         handlers = {
             "infinite_loop": self.handle_infinite_loop,

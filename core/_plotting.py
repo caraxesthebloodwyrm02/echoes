@@ -34,9 +34,7 @@ class _BinaryClassifierCurveDisplayMixin:
         return ax, ax.figure, name
 
     @classmethod
-    def _validate_and_get_response_values(
-        cls, estimator, X, y, *, response_method="auto", pos_label=None, name=None
-    ):
+    def _validate_and_get_response_values(cls, estimator, X, y, *, response_method="auto", pos_label=None, name=None):
         check_matplotlib_support(f"{cls.__name__}.from_estimator")
 
         name = estimator.__class__.__name__ if name is None else name
@@ -51,16 +49,11 @@ class _BinaryClassifierCurveDisplayMixin:
         return y_pred, pos_label, name
 
     @classmethod
-    def _validate_from_predictions_params(
-        cls, y_true, y_pred, *, sample_weight=None, pos_label=None, name=None
-    ):
+    def _validate_from_predictions_params(cls, y_true, y_pred, *, sample_weight=None, pos_label=None, name=None):
         check_matplotlib_support(f"{cls.__name__}.from_predictions")
 
         if type_of_target(y_true) != "binary":
-            raise ValueError(
-                f"The target y is not binary. Got {type_of_target(y_true)} type of"
-                " target."
-            )
+            raise ValueError(f"The target y is not binary. Got {type_of_target(y_true)} type of" " target.")
 
         check_consistent_length(y_true, y_pred, sample_weight)
         pos_label = _check_pos_label_consistency(pos_label, y_true)
@@ -102,9 +95,7 @@ class _BinaryClassifierCurveDisplayMixin:
             )
 
         if type_of_target(y) != "binary":
-            raise ValueError(
-                f"The target `y` is not binary. Got {type_of_target(y)} type of target."
-            )
+            raise ValueError(f"The target `y` is not binary. Got {type_of_target(y)} type of target.")
         check_consistent_length(X, y, sample_weight)
 
         try:
@@ -181,16 +172,11 @@ class _BinaryClassifierCurveDisplayMixin:
 
         if isinstance(curve_kwargs, list) and len(curve_kwargs) != n_curves:
             raise ValueError(
-                f"`curve_kwargs` must be None, a dictionary or a list of length "
-                f"{n_curves}. Got: {curve_kwargs}."
+                f"`curve_kwargs` must be None, a dictionary or a list of length " f"{n_curves}. Got: {curve_kwargs}."
             )
 
         # Ensure valid `name` and `curve_kwargs` combination.
-        if (
-            isinstance(name, list)
-            and len(name) != 1
-            and not isinstance(curve_kwargs, list)
-        ):
+        if isinstance(name, list) and len(name) != 1 and not isinstance(curve_kwargs, list):
             raise ValueError(
                 "To avoid labeling individual curves that have the same appearance, "
                 f"`curve_kwargs` should be a list of {n_curves} dictionaries. "
@@ -226,13 +212,9 @@ class _BinaryClassifierCurveDisplayMixin:
             if legend_metric["std"] is not None:
                 # Add the "+/- std" to the end (in brackets if name provided)
                 if name[0] is not None:
-                    label_aggregate = (
-                        label_aggregate[:-1] + f" +/- {legend_metric['std']:0.2f})"
-                    )
+                    label_aggregate = label_aggregate[:-1] + f" +/- {legend_metric['std']:0.2f})"
                 else:
-                    label_aggregate = (
-                        label_aggregate + f" +/- {legend_metric['std']:0.2f}"
-                    )
+                    label_aggregate = label_aggregate + f" +/- {legend_metric['std']:0.2f}"
             # Add `label` for first curve only, set to `None` for remaining curves
             labels.extend([label_aggregate] + [None] * (n_curves - 1))
         else:
@@ -244,8 +226,7 @@ class _BinaryClassifierCurveDisplayMixin:
                 )
 
         curve_kwargs_ = [
-            _validate_style_kwargs({"label": label}, curve_kwargs[fold_idx])
-            for fold_idx, label in enumerate(labels)
+            _validate_style_kwargs({"label": label}, curve_kwargs[fold_idx]) for fold_idx, label in enumerate(labels)
         ]
         return curve_kwargs_
 
@@ -336,10 +317,7 @@ def _validate_style_kwargs(default_style_kwargs, user_style_kwargs):
     }
     for invalid_key, valid_key in invalid_to_valid_kw.items():
         if invalid_key in user_style_kwargs and valid_key in user_style_kwargs:
-            raise TypeError(
-                f"Got both {invalid_key} and {valid_key}, which are aliases of one "
-                "another"
-            )
+            raise TypeError(f"Got both {invalid_key} and {valid_key}, which are aliases of one " "another")
     valid_style_kwargs = default_style_kwargs.copy()
 
     for key in user_style_kwargs.keys():
@@ -410,9 +388,7 @@ def _check_param_lengths(required, optional, class_name):
         or_plot = ""
         if "'name' (or self.name)" in param_keys:
             or_plot = " (or `plot`)"
-        lengths_formatted = ", ".join(
-            f"{key}: {len(value)}" for key, value in all_params.items()
-        )
+        lengths_formatted = ", ".join(f"{key}: {len(value)}" for key, value in all_params.items())
         raise ValueError(
             f"{params_formatted} from `{class_name}` initialization{or_plot}, "
             f"should all be lists of the same length. Got: {lengths_formatted}"

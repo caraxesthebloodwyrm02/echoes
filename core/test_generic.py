@@ -77,10 +77,7 @@ class TestGeneric:
 
     def test_get_numeric_data(self, frame_or_series):
         n = 4
-        kwargs = {
-            frame_or_series._get_axis_name(i): list(range(n))
-            for i in range(frame_or_series._AXIS_LEN)
-        }
+        kwargs = {frame_or_series._get_axis_name(i): list(range(n)) for i in range(frame_or_series._AXIS_LEN)}
 
         # get the numeric data
         o = construct(frame_or_series, n, **kwargs)
@@ -158,10 +155,7 @@ class TestGeneric:
         def f(dtype):
             return construct(frame_or_series, shape=3, value=1, dtype=dtype)
 
-        msg = (
-            "compound dtypes are not implemented "
-            f"in the {frame_or_series.__name__} constructor"
-        )
+        msg = "compound dtypes are not implemented " f"in the {frame_or_series.__name__} constructor"
 
         with pytest.raises(NotImplementedError, match=msg):
             f([("A", "datetime64[h]"), ("B", "str"), ("C", "int32")])
@@ -232,9 +226,7 @@ class TestGeneric:
     def test_split_compat(self, frame_or_series):
         # xref GH8846
         o = construct(frame_or_series, shape=10)
-        with tm.assert_produces_warning(
-            FutureWarning, match=".swapaxes' is deprecated", check_stacklevel=False
-        ):
+        with tm.assert_produces_warning(FutureWarning, match=".swapaxes' is deprecated", check_stacklevel=False):
             assert len(np.array_split(o, 5)) == 5
             assert len(np.array_split(o, 2)) == 2
 
@@ -496,9 +488,6 @@ class TestNDFrame:
 
     def test_bool_dep(self) -> None:
         # GH-51749
-        msg_warn = (
-            "DataFrame.bool is now deprecated and will be removed "
-            "in future version of pandas"
-        )
+        msg_warn = "DataFrame.bool is now deprecated and will be removed " "in future version of pandas"
         with tm.assert_produces_warning(FutureWarning, match=msg_warn):
             DataFrame({"col": [False]}).bool()

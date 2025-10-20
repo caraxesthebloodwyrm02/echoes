@@ -2,6 +2,7 @@
 Provide user facing operators for doing the split part of the
 split-apply-combine paradigm.
 """
+
 from __future__ import annotations
 
 from typing import (
@@ -297,9 +298,7 @@ class Grouper:
         self._grouper = None
         self._indexer: npt.NDArray[np.intp] | None = None
 
-    def _get_grouper(
-        self, obj: NDFrameT, validate: bool = True
-    ) -> tuple[ops.BaseGrouper, NDFrameT]:
+    def _get_grouper(self, obj: NDFrameT, validate: bool = True) -> tuple[ops.BaseGrouper, NDFrameT]:
         """
         Parameters
         ----------
@@ -400,9 +399,7 @@ class Grouper:
         if (self.sort or sort) and not ax.is_monotonic_increasing:
             # use stable sort to support first, last, nth
             # TODO: why does putting na_position="first" fix datetimelike cases?
-            indexer = self._indexer_deprecated = ax.array.argsort(
-                kind="mergesort", na_position="first"
-            )
+            indexer = self._indexer_deprecated = ax.array.argsort(kind="mergesort", na_position="first")
             ax = ax.take(indexer)
             obj = obj.take(indexer, axis=self.axis)
 
@@ -592,9 +589,7 @@ class Grouping:
                 # use Index instead of ndarray so we can recover the name
                 grouping_vector = Index(ng, name=newgrouper.result_index.name)
 
-        elif not isinstance(
-            grouping_vector, (Series, Index, ExtensionArray, np.ndarray)
-        ):
+        elif not isinstance(grouping_vector, (Series, Index, ExtensionArray, np.ndarray)):
             # no level passed
             if getattr(grouping_vector, "ndim", 1) != 1:
                 t = str(type(grouping_vector))
@@ -602,15 +597,9 @@ class Grouping:
 
             grouping_vector = index.map(grouping_vector)
 
-            if not (
-                hasattr(grouping_vector, "__len__")
-                and len(grouping_vector) == len(index)
-            ):
+            if not (hasattr(grouping_vector, "__len__") and len(grouping_vector) == len(index)):
                 grper = pprint_thing(grouping_vector)
-                errmsg = (
-                    "Grouper result violates len(labels) == "
-                    f"len(data)\nresult: {grper}"
-                )
+                errmsg = "Grouper result violates len(labels) == " f"len(data)\nresult: {grper}"
                 raise AssertionError(errmsg)
 
         if isinstance(grouping_vector, np.ndarray):
@@ -623,9 +612,7 @@ class Grouping:
         elif isinstance(getattr(grouping_vector, "dtype", None), CategoricalDtype):
             # a passed Categorical
             self._orig_cats = grouping_vector.categories
-            grouping_vector, self._all_grouper = recode_for_groupby(
-                grouping_vector, sort, observed
-            )
+            grouping_vector, self._all_grouper = recode_for_groupby(grouping_vector, sort, observed)
 
         self.grouping_vector = grouping_vector
 
@@ -712,8 +699,7 @@ class Grouping:
         we can retain ExtensionDtypes.
         """
         warnings.warn(
-            "group_arraylike is deprecated and will be removed in a future "
-            "version of pandas",
+            "group_arraylike is deprecated and will be removed in a future " "version of pandas",
             category=FutureWarning,
             stacklevel=find_stack_level(),
         )
@@ -734,8 +720,7 @@ class Grouping:
     @property
     def result_index(self) -> Index:
         warnings.warn(
-            "result_index is deprecated and will be removed in a future "
-            "version of pandas",
+            "result_index is deprecated and will be removed in a future " "version of pandas",
             category=FutureWarning,
             stacklevel=find_stack_level(),
         )
@@ -748,9 +733,7 @@ class Grouping:
             assert isinstance(uniques, Categorical)
             if self._sort and (codes == len(uniques)).any():
                 # Add NA value on the end when sorting
-                uniques = Categorical.from_codes(
-                    np.append(uniques.codes, [-1]), uniques.categories, validate=False
-                )
+                uniques = Categorical.from_codes(np.append(uniques.codes, [-1]), uniques.categories, validate=False)
             elif len(codes) > 0:
                 # Need to determine proper placement of NA value when not sorting
                 cat = self.grouping_vector
@@ -759,16 +742,13 @@ class Grouping:
                     # count number of unique codes that comes before the nan value
                     na_unique_idx = algorithms.nunique_ints(cat.codes[:na_idx])
                     new_codes = np.insert(uniques.codes, na_unique_idx, -1)
-                    uniques = Categorical.from_codes(
-                        new_codes, uniques.categories, validate=False
-                    )
+                    uniques = Categorical.from_codes(new_codes, uniques.categories, validate=False)
         return Index._with_infer(uniques, name=self.name)
 
     @property
     def group_index(self) -> Index:
         warnings.warn(
-            "group_index is deprecated and will be removed in a future "
-            "version of pandas",
+            "group_index is deprecated and will be removed in a future " "version of pandas",
             category=FutureWarning,
             stacklevel=find_stack_level(),
         )
@@ -792,9 +772,7 @@ class Grouping:
             else:
                 ucodes = np.arange(len(categories))
 
-            uniques = Categorical.from_codes(
-                codes=ucodes, categories=categories, ordered=cat.ordered, validate=False
-            )
+            uniques = Categorical.from_codes(codes=ucodes, categories=categories, ordered=cat.ordered, validate=False)
 
             codes = cat.codes
             if not self._dropna:
@@ -912,10 +890,7 @@ def get_grouper(
 
             if isinstance(level, str):
                 if obj._get_axis(axis).name != level:
-                    raise ValueError(
-                        f"level name {level} is not the name "
-                        f"of the {obj._get_axis_name(axis)}"
-                    )
+                    raise ValueError(f"level name {level} is not the name " f"of the {obj._get_axis_name(axis)}")
             elif level > 0 or level < -1:
                 raise ValueError("level > 0 or level < -1 only valid with MultiIndex")
 
@@ -946,22 +921,12 @@ def get_grouper(
     # what are we after, exactly?
     any_callable = any(callable(g) or isinstance(g, dict) for g in keys)
     any_groupers = any(isinstance(g, (Grouper, Grouping)) for g in keys)
-    any_arraylike = any(
-        isinstance(g, (list, tuple, Series, Index, np.ndarray)) for g in keys
-    )
+    any_arraylike = any(isinstance(g, (list, tuple, Series, Index, np.ndarray)) for g in keys)
 
     # is this an index replacement?
-    if (
-        not any_callable
-        and not any_arraylike
-        and not any_groupers
-        and match_axis_length
-        and level is None
-    ):
+    if not any_callable and not any_arraylike and not any_groupers and match_axis_length and level is None:
         if isinstance(obj, DataFrame):
-            all_in_columns_index = all(
-                g in obj.columns or g in obj.index.names for g in keys
-            )
+            all_in_columns_index = all(g in obj.columns or g in obj.index.names for g in keys)
         else:
             assert isinstance(obj, Series)
             all_in_columns_index = all(g in obj.index.names for g in keys)

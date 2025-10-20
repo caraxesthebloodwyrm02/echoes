@@ -41,6 +41,7 @@ def run_text_demo():
     print("\n🚀 Launching Glimpse Text Editor Demo...\n")
     try:
         import demo_text_editor
+
         demo_text_editor.simulate_writing_session()
         print("\n" + "=" * 70)
         input("\nPress Enter to return to menu...")
@@ -54,6 +55,7 @@ def run_code_demo():
     print("\n🚀 Launching Glimpse Code Editor Demo...\n")
     try:
         import demo_code_editor
+
         demo_code_editor.simulate_coding_session()
         print("\n" + "=" * 70)
         input("\nPress Enter to return to menu...")
@@ -67,10 +69,12 @@ def run_gui():
     print("\n🚀 Launching Glimpse Tk + SSE Live Preview UI...\n")
     try:
         import ui_tk
+
         ui_tk.main()
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         input("\nPress Enter to continue...")
 
@@ -80,6 +84,7 @@ def run_tests():
     print("\n🧪 Running Glimpse Test Suite...\n")
     try:
         import test_suite
+
         test_suite.run_all_tests()
         print("\n" + "=" * 70)
         input("\nPress Enter to return to menu...")
@@ -93,42 +98,40 @@ def security_check():
     print("\n🔒 Running Glimpse Security Check...\n")
     try:
         from security_integration import SecurityManager
-        
-        security = SecurityManager(
-            base_path=Path(__file__).parent,
-            enable_thon_integration=True
-        )
-        
+
+        security = SecurityManager(base_path=Path(__file__).parent, enable_thon_integration=True)
+
         print("Assessing security context...")
         context = security.assess_security_context()
-        
+
         print("\n" + "=" * 70)
         print("SECURITY REPORT")
         print("=" * 70)
         print(f"\nShield Factor: {context.shield_factor:.3f}")
         print(f"Risk Level: {context.risk_level.upper()}")
         print(f"Safety Status: {'✓ SAFE' if context.is_safe else '✗ UNSAFE'}")
-        print(f"\nAllowed Operations:")
+        print("\nAllowed Operations:")
         for op in context.allowed_operations:
             print(f"  ✓ {op}")
-        
+
         metrics = security.get_security_metrics()
         print(f"\nThon Integration: {'✓ Active' if metrics['thon_integrated'] else '✗ Inactive'}")
         print(f"Detector: {'✓ Active' if metrics['detector_active'] else '✗ Inactive'}")
-        
-        if 'thon_metrics' in metrics:
-            tm = metrics['thon_metrics']
-            print(f"\nThon Metrics:")
+
+        if "thon_metrics" in metrics:
+            tm = metrics["thon_metrics"]
+            print("\nThon Metrics:")
             print(f"  Attractor Strength: {tm['avg_attractor_strength']:.3f}")
             print(f"  High Aggressive Jammers: {tm['high_aggressive_jammers']}")
             print(f"  Consecutive Jam Alert: {tm['consecutive_jam_alert']}")
-        
+
         print("\n" + "=" * 70)
         input("\nPress Enter to return to menu...")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         input("\nPress Enter to continue...")
 
@@ -138,10 +141,10 @@ def interactive_playground():
     print("\n🎮 Interactive Playground")
     print("=" * 70)
     print()
-    
+
     try:
         from realtime_preview import create_glimpse
-        
+
         # Choose mode
         print("Select visualization mode:")
         print("1. Timeline")
@@ -149,29 +152,29 @@ def interactive_playground():
         print("3. Flow")
         print("4. Heatmap")
         mode_choice = input("\nEnter choice (1-4): ").strip()
-        
+
         modes = {"1": "timeline", "2": "tree", "3": "flow", "4": "heatmap"}
         mode = modes.get(mode_choice, "timeline")
-        
+
         print(f"\n✓ Creating system with {mode} mode...")
         system = create_glimpse(mode=mode, enable_security=True)
-        
+
         if not system.start():
             print("❌ Failed to start system")
             input("\nPress Enter to continue...")
             return
-        
+
         print("✓ System started!")
         print("\nType text (or 'quit' to exit, 'preview' to see visualization):")
         print("-" * 70)
-        
+
         position = 0
         while True:
             user_input = input("\n> ")
-            
-            if user_input.lower() == 'quit':
+
+            if user_input.lower() == "quit":
                 break
-            elif user_input.lower() == 'preview':
+            elif user_input.lower() == "preview":
                 preview = system.get_current_preview()
                 if preview:
                     print("\nCurrent Preview:")
@@ -179,38 +182,35 @@ def interactive_playground():
                 else:
                     print("\nNo preview available yet")
                 continue
-            elif user_input.lower() == 'state':
+            elif user_input.lower() == "state":
                 state = system.get_full_state()
                 print(f"\nTotal Events: {state['system']['total_events']}")
                 print(f"Direction: {state['trajectory']['current_direction']}")
                 print(f"Health: {state['trajectory']['trajectory_health']:.2f}")
                 continue
-            
+
             # Process input
-            result = system.process_input(
-                action="insert",
-                position=position,
-                text=user_input + " "
-            )
-            
+            result = system.process_input(action="insert", position=position, text=user_input + " ")
+
             if result.get("success"):
                 traj = result.get("trajectory", {})
                 print(f"  Direction: {traj.get('current_direction', '?')}")
                 print(f"  Confidence: {traj.get('confidence', 0):.2f}")
-                
+
                 suggestions = result.get("suggestions", [])
                 if suggestions:
                     print(f"  Suggestions: {', '.join(suggestions[:3])}")
-                
+
                 position += len(user_input) + 1
-        
+
         system.stop()
         print("\n✓ Session complete!")
         input("\nPress Enter to return to menu...")
-        
+
     except Exception as e:
         print(f"❌ Error: {e}")
         import traceback
+
         traceback.print_exc()
         input("\nPress Enter to continue...")
 
@@ -220,23 +220,23 @@ def view_documentation():
     print("\n📖 Documentation")
     print("=" * 70)
     print()
-    
+
     readme_path = Path(__file__).parent / "README.md"
-    
+
     if readme_path.exists():
         print("README.md contents:\n")
-        with open(readme_path, 'r', encoding='utf-8') as f:
+        with open(readme_path, "r", encoding="utf-8") as f:
             content = f.read()
             # Show first 50 lines
             lines = content.splitlines()[:50]
             for line in lines:
                 print(line)
-            
+
             if len(content.splitlines()) > 50:
                 print("\n... (see README.md for full documentation)")
     else:
         print("README.md not found")
-    
+
     print("\n" + "=" * 70)
     print("\nKey Files:")
     print("  - README.md: Full documentation")
@@ -245,7 +245,7 @@ def view_documentation():
     print("  - visual_renderer.py: Visualization")
     print("  - security_integration.py: Security features")
     print("  - realtime_preview.py: Glimpse orchestrator")
-    
+
     input("\nPress Enter to return to menu...")
 
 
@@ -254,11 +254,11 @@ def system_info():
     print("\n💡 System Information")
     print("=" * 70)
     print()
-    
+
     print(f"Python Version: {sys.version}")
     print(f"Base Path: {Path(__file__).parent}")
     print()
-    
+
     # Check components
     components = [
         ("Core Trajectory", "core_trajectory.py"),
@@ -270,19 +270,19 @@ def system_info():
         ("Code Demo", "demo_code_editor.py"),
         ("Test Suite", "test_suite.py"),
     ]
-    
+
     print("Components:")
     for name, filename in components:
         path = Path(__file__).parent / filename
         status = "✓" if path.exists() else "✗"
         print(f"  {status} {name:<25} ({filename})")
-    
+
     print()
-    
+
     # Check parent thon.py
     thon_path = Path(__file__).parent.parent / "thon.py"
     print(f"Security Module (thon.py): {'✓ Found' if thon_path.exists() else '✗ Not Found'}")
-    
+
     print("\n" + "=" * 70)
     print("\nConfiguration:")
     print("  - Pure Python (no external dependencies)")
@@ -290,18 +290,18 @@ def system_info():
     print("  - Integrated security system")
     print("  - Multiple visualization modes")
     print("  - Real-time trajectory tracking")
-    
+
     input("\nPress Enter to return to menu...")
 
 
 def main():
     """Main launcher loop"""
     print_header()
-    
+
     while True:
         print_menu()
         choice = input("Enter your choice (0-7): ").strip()
-        
+
         if choice == "0":
             print("\n👋 Thank you for using Glimpse!")
             print("May your trajectories be clear and your predictions accurate.\n")
@@ -335,4 +335,5 @@ if __name__ == "__main__":
     except Exception as e:
         print(f"\n❌ Unexpected error: {e}")
         import traceback
+
         traceback.print_exc()

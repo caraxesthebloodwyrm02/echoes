@@ -151,10 +151,7 @@ class StackDecoder:
         """
         sentence = tuple(src_sentence)  # prevent accidental modification
         sentence_length = len(sentence)
-        stacks = [
-            _Stack(self.stack_size, self.beam_threshold)
-            for _ in range(0, sentence_length + 1)
-        ]
+        stacks = [_Stack(self.stack_size, self.beam_threshold) for _ in range(0, sentence_length + 1)]
         empty_hypothesis = _Hypothesis()
         stacks[0].push(empty_hypothesis)
 
@@ -162,17 +159,11 @@ class StackDecoder:
         future_score_table = self.compute_future_scores(sentence)
         for stack in stacks:
             for hypothesis in stack:
-                possible_expansions = StackDecoder.valid_phrases(
-                    all_phrases, hypothesis
-                )
+                possible_expansions = StackDecoder.valid_phrases(all_phrases, hypothesis)
                 for src_phrase_span in possible_expansions:
                     src_phrase = sentence[src_phrase_span[0] : src_phrase_span[1]]
-                    for translation_option in self.phrase_table.translations_for(
-                        src_phrase
-                    ):
-                        raw_score = self.expansion_score(
-                            hypothesis, translation_option, src_phrase_span
-                        )
+                    for translation_option in self.phrase_table.translations_for(src_phrase):
+                        raw_score = self.expansion_score(hypothesis, translation_option, src_phrase_span)
                         new_hypothesis = _Hypothesis(
                             raw_score=raw_score,
                             src_phrase_span=src_phrase_span,
@@ -187,9 +178,7 @@ class StackDecoder:
 
         if not stacks[sentence_length]:
             warnings.warn(
-                "Unable to translate all words. "
-                "The source sentence contains words not in "
-                "the phrase table"
+                "Unable to translate all words. " "The source sentence contains words not in " "the phrase table"
             )
             # Instead of returning empty output, perhaps a partial
             # translation could be returned
@@ -243,9 +232,7 @@ class StackDecoder:
                 end = start + seq_length
                 phrase = src_sentence[start:end]
                 if phrase in self.phrase_table:
-                    score = self.phrase_table.translations_for(phrase)[
-                        0
-                    ].log_prob  # pick best (first) translation
+                    score = self.phrase_table.translations_for(phrase)[0].log_prob  # pick best (first) translation
                     # Warning: API of language_model is subject to change
                     score += self.language_model.probability(phrase)
                     scores[start][end] = score
@@ -286,9 +273,7 @@ class StackDecoder:
         score += translation_option.log_prob
         # The API of language_model is subject to change; it could accept
         # a string, a list of words, and/or some other type
-        score += self.language_model.probability_change(
-            hypothesis, translation_option.trg_phrase
-        )
+        score += self.language_model.probability_change(hypothesis, translation_option.trg_phrase)
         score += self.distortion_score(hypothesis, src_phrase_span)
         score -= self.word_penalty * len(translation_option.trg_phrase)
         return score

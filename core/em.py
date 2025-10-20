@@ -79,14 +79,11 @@ class EMClusterer(VectorSpaceClusterer):
         means = self._means
         priors = self._priors
         if not priors:
-            priors = self._priors = (
-                numpy.ones(self._num_clusters, numpy.float64) / self._num_clusters
-            )
+            priors = self._priors = numpy.ones(self._num_clusters, numpy.float64) / self._num_clusters
         covariances = self._covariance_matrices
         if not covariances:
             covariances = self._covariance_matrices = [
-                numpy.identity(dimensions, numpy.float64)
-                for i in range(self._num_clusters)
+                numpy.identity(dimensions, numpy.float64) for i in range(self._num_clusters)
             ]
 
         # do the E and M steps until the likelihood plateaus
@@ -100,9 +97,7 @@ class EMClusterer(VectorSpaceClusterer):
             h = numpy.zeros((len(vectors), self._num_clusters), numpy.float64)
             for i in range(len(vectors)):
                 for j in range(self._num_clusters):
-                    h[i, j] = priors[j] * self._gaussian(
-                        means[j], covariances[j], vectors[i]
-                    )
+                    h[i, j] = priors[j] * self._gaussian(means[j], covariances[j], vectors[i])
                 h[i, :] /= sum(h[i, :])
 
             # M-step, update parameters - cvm, p, mean
@@ -134,18 +129,14 @@ class EMClusterer(VectorSpaceClusterer):
     def classify_vectorspace(self, vector):
         best = None
         for j in range(self._num_clusters):
-            p = self._priors[j] * self._gaussian(
-                self._means[j], self._covariance_matrices[j], vector
-            )
+            p = self._priors[j] * self._gaussian(self._means[j], self._covariance_matrices[j], vector)
             if not best or p > best[0]:
                 best = (p, j)
         return best[1]
 
     def likelihood_vectorspace(self, vector, cluster):
         cid = self.cluster_names().index(cluster)
-        return self._priors[cluster] * self._gaussian(
-            self._means[cluster], self._covariance_matrices[cluster], vector
-        )
+        return self._priors[cluster] * self._gaussian(self._means[cluster], self._covariance_matrices[cluster], vector)
 
     def _gaussian(self, mean, cvm, x):
         m = len(mean)

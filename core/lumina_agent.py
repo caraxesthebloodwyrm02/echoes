@@ -86,9 +86,7 @@ class Lumina:
             self.active_tasks[task_id]["error"] = str(e)
             raise
 
-    async def _execute_organize_task(
-        self, task_id: str, project_root: str, dry_run: bool = True
-    ) -> Dict:
+    async def _execute_organize_task(self, task_id: str, project_root: str, dry_run: bool = True) -> Dict:
         """Execute codebase organization with real actions."""
         # Simulate actual work
         self.active_tasks[task_id]["progress"] = 25
@@ -111,9 +109,7 @@ class Lumina:
             "status": "completed",
         }
 
-    async def _execute_upgrade_task(
-        self, task_id: str, project_root: str, upgrade_type: str = "dependencies"
-    ) -> Dict:
+    async def _execute_upgrade_task(self, task_id: str, project_root: str, upgrade_type: str = "dependencies") -> Dict:
         """Execute codebase upgrade with real actions."""
         self.active_tasks[task_id]["progress"] = 25
 
@@ -140,9 +136,7 @@ class Lumina:
             "status": "completed",
         }
 
-    async def _execute_workflow_analysis_task(
-        self, task_id: str, project_root: str
-    ) -> Dict:
+    async def _execute_workflow_analysis_task(self, task_id: str, project_root: str) -> Dict:
         """Execute workflow analysis with real insights."""
         self.active_tasks[task_id]["progress"] = 25
 
@@ -162,9 +156,7 @@ class Lumina:
             "status": "completed",
         }
 
-    async def _execute_refactor_task(
-        self, task_id: str, file_path: str, refactor_goal: str
-    ) -> Dict:
+    async def _execute_refactor_task(self, task_id: str, file_path: str, refactor_goal: str) -> Dict:
         """Execute smart refactoring with real code changes."""
         self.active_tasks[task_id]["progress"] = 25
 
@@ -296,17 +288,13 @@ class Lumina:
             Response from the agent
         """
         # Add to conversation history
-        self.conversation_history.append(
-            {"role": "user", "content": message, "timestamp": datetime.now()}
-        )
+        self.conversation_history.append({"role": "user", "content": message, "timestamp": datetime.now()})
 
         # Process the message
         response = self._process_message(message, context)
 
         # Add to conversation history
-        self.conversation_history.append(
-            {"role": "assistant", "content": response, "timestamp": datetime.now()}
-        )
+        self.conversation_history.append({"role": "assistant", "content": response, "timestamp": datetime.now()})
 
         return {
             "response": response,
@@ -320,15 +308,9 @@ class Lumina:
         if "organize" in message.lower():
             return "I can help organize your codebase. Please provide the project path."
         elif "upgrade" in message.lower():
-            return (
-                "I can upgrade dependencies or Python version. What would you like to "
-                "upgrade?"
-            )
+            return "I can upgrade dependencies or Python version. What would you like to " "upgrade?"
         elif "refactor" in message.lower():
-            return (
-                "I can refactor code for better structure and readability. "
-                "Please share the file."
-            )
+            return "I can refactor code for better structure and readability. " "Please share the file."
         else:
             return (
                 "I'm here to help with code organization, upgrades, refactoring, and "

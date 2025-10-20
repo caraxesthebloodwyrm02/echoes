@@ -2,6 +2,7 @@
 The tests in this package are to ensure the proper resultant dtypes of
 set operations.
 """
+
 from datetime import datetime
 import operator
 
@@ -70,16 +71,8 @@ def test_union_different_types(index_flat, index_flat2, request, using_infer_str
     idx1 = index_flat
     idx2 = index_flat2
 
-    if (
-        not idx1.is_unique
-        and not idx2.is_unique
-        and idx1.dtype.kind == "i"
-        and idx2.dtype.kind == "b"
-    ) or (
-        not idx2.is_unique
-        and not idx1.is_unique
-        and idx2.dtype.kind == "i"
-        and idx1.dtype.kind == "b"
+    if (not idx1.is_unique and not idx2.is_unique and idx1.dtype.kind == "i" and idx2.dtype.kind == "b") or (
+        not idx2.is_unique and not idx1.is_unique and idx2.dtype.kind == "i" and idx1.dtype.kind == "b"
     ):
         # Each condition had idx[1|2].is_monotonic_decreasing
         # but failed when e.g.
@@ -87,18 +80,14 @@ def test_union_different_types(index_flat, index_flat2, request, using_infer_str
         # [True, True, True, True, True, True, True, True, False, False], dtype='bool'
         # )
         # idx2 = Index([0, 0, 1, 1, 2, 2], dtype='int64')
-        mark = pytest.mark.xfail(
-            reason="GH#44000 True==1", raises=ValueError, strict=False
-        )
+        mark = pytest.mark.xfail(reason="GH#44000 True==1", raises=ValueError, strict=False)
         request.applymarker(mark)
 
     common_dtype = find_common_type([idx1.dtype, idx2.dtype])
     if using_infer_string:
         if len(idx1) == 0 and (idx1.dtype.kind == "O" or isinstance(idx1, RangeIndex)):
             common_dtype = idx2.dtype
-        elif len(idx2) == 0 and (
-            idx2.dtype.kind == "O" or isinstance(idx2, RangeIndex)
-        ):
+        elif len(idx2) == 0 and (idx2.dtype.kind == "O" or isinstance(idx2, RangeIndex)):
             common_dtype = idx1.dtype
 
     warn = None
@@ -110,9 +99,7 @@ def test_union_different_types(index_flat, index_flat2, request, using_infer_str
     ):
         # complex objects non-sortable
         warn = RuntimeWarning
-    elif (
-        isinstance(idx1.dtype, PeriodDtype) and isinstance(idx2.dtype, CategoricalDtype)
-    ) or (
+    elif (isinstance(idx1.dtype, PeriodDtype) and isinstance(idx2.dtype, CategoricalDtype)) or (
         isinstance(idx2.dtype, PeriodDtype) and isinstance(idx1.dtype, CategoricalDtype)
     ):
         warn = FutureWarning
@@ -212,9 +199,7 @@ def test_intersection_duplicates(values):
 class TestSetOps:
     # Set operation tests shared by all indexes in the `index` fixture
     @pytest.mark.parametrize("case", [0.5, "xxx"])
-    @pytest.mark.parametrize(
-        "method", ["intersection", "union", "difference", "symmetric_difference"]
-    )
+    @pytest.mark.parametrize("method", ["intersection", "union", "difference", "symmetric_difference"])
     def test_set_ops_error_cases(self, case, method, index):
         # non-iterable input
         msg = "Input must be Index or array-like"
@@ -301,11 +286,7 @@ class TestSetOps:
 
     @pytest.mark.filterwarnings(r"ignore:PeriodDtype\[B\] is deprecated:FutureWarning")
     def test_symmetric_difference(self, index, using_infer_string, request):
-        if (
-            using_infer_string
-            and index.dtype == "object"
-            and index.inferred_type == "string"
-        ):
+        if using_infer_string and index.dtype == "object" and index.inferred_type == "string":
             request.applymarker(pytest.mark.xfail(reason="TODO: infer_string"))
         if isinstance(index, CategoricalIndex):
             pytest.skip(f"Not relevant for {type(index).__name__}")
@@ -528,9 +509,7 @@ class TestSetOps:
 
 @pytest.mark.filterwarnings("ignore:invalid value encountered in cast:RuntimeWarning")
 @pytest.mark.filterwarnings(r"ignore:PeriodDtype\[B\] is deprecated:FutureWarning")
-@pytest.mark.parametrize(
-    "method", ["intersection", "union", "difference", "symmetric_difference"]
-)
+@pytest.mark.parametrize("method", ["intersection", "union", "difference", "symmetric_difference"])
 def test_setop_with_categorical(index_flat, sort, method, using_infer_string):
     # MultiIndex tested separately in tests.indexes.multi.test_setops
     index = index_flat
@@ -540,21 +519,13 @@ def test_setop_with_categorical(index_flat, sort, method, using_infer_string):
 
     result = getattr(index, method)(other, sort=sort)
     expected = getattr(index, method)(index, sort=sort)
-    if (
-        using_infer_string
-        and index.empty
-        and method in ("union", "symmetric_difference")
-    ):
+    if using_infer_string and index.empty and method in ("union", "symmetric_difference"):
         expected = expected.astype("category")
     tm.assert_index_equal(result, expected, exact=exact)
 
     result = getattr(index, method)(other[:5], sort=sort)
     expected = getattr(index, method)(index[:5], sort=sort)
-    if (
-        using_infer_string
-        and index.empty
-        and method in ("union", "symmetric_difference")
-    ):
+    if using_infer_string and index.empty and method in ("union", "symmetric_difference"):
         expected = expected.astype("category")
     tm.assert_index_equal(result, expected, exact=exact)
 
@@ -753,9 +724,7 @@ class TestSetOpsUnsorted:
         "first_name,second_name,expected_name",
         [("A", "A", "A"), ("A", "B", None), (None, "B", None)],
     )
-    def test_intersection_name_preservation2(
-        self, index, first_name, second_name, expected_name, sort
-    ):
+    def test_intersection_name_preservation2(self, index, first_name, second_name, expected_name, sort):
         first = index[5:20]
         second = index[:10]
         first.name = first_name

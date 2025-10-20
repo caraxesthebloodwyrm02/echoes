@@ -38,7 +38,7 @@ if TYPE_CHECKING:
         tuple[InventoryName, tuple[InventoryURI, tuple[InventoryLocation, ...]]],
     ]
 
-LOGGER: Final[logging.SphinxLoggerAdapter] = logging.getLogger('sphinx.ext.intersphinx')
+LOGGER: Final[logging.SphinxLoggerAdapter] = logging.getLogger("sphinx.ext.intersphinx")
 
 
 class _IntersphinxProject:
@@ -64,50 +64,43 @@ class _IntersphinxProject:
         locations: Sequence[InventoryLocation],
     ) -> None:
         if not name or not isinstance(name, str):
-            msg = 'name must be a non-empty string'
+            msg = "name must be a non-empty string"
             raise ValueError(msg)
         if not target_uri or not isinstance(target_uri, str):
-            msg = 'target_uri must be a non-empty string'
+            msg = "target_uri must be a non-empty string"
             raise ValueError(msg)
         if not locations or not isinstance(locations, tuple):
-            msg = 'locations must be a non-empty tuple'
+            msg = "locations must be a non-empty tuple"
             raise ValueError(msg)
-        if any(
-            location is not None and (not location or not isinstance(location, str))
-            for location in locations
-        ):
-            msg = 'locations must be a tuple of strings or None'
+        if any(location is not None and (not location or not isinstance(location, str)) for location in locations):
+            msg = "locations must be a tuple of strings or None"
             raise ValueError(msg)
-        object.__setattr__(self, 'name', name)
-        object.__setattr__(self, 'target_uri', target_uri)
-        object.__setattr__(self, 'locations', tuple(locations))
+        object.__setattr__(self, "name", name)
+        object.__setattr__(self, "target_uri", target_uri)
+        object.__setattr__(self, "locations", tuple(locations))
 
     def __repr__(self) -> str:
         return (
-            f'{self.__class__.__name__}('
-            f'name={self.name!r}, '
-            f'target_uri={self.target_uri!r}, '
-            f'locations={self.locations!r})'
+            f"{self.__class__.__name__}("
+            f"name={self.name!r}, "
+            f"target_uri={self.target_uri!r}, "
+            f"locations={self.locations!r})"
         )
 
     def __eq__(self, other: object) -> bool:
         if not isinstance(other, _IntersphinxProject):
             return NotImplemented
-        return (
-            self.name == other.name
-            and self.target_uri == other.target_uri
-            and self.locations == other.locations
-        )
+        return self.name == other.name and self.target_uri == other.target_uri and self.locations == other.locations
 
     def __hash__(self) -> int:
         return hash((self.name, self.target_uri, self.locations))
 
     def __setattr__(self, key: str, value: Any) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
     def __delattr__(self, key: str) -> NoReturn:
-        msg = f'{self.__class__.__name__} is immutable'
+        msg = f"{self.__class__.__name__} is immutable"
         raise AttributeError(msg)
 
 
@@ -117,7 +110,7 @@ class InventoryAdapter:
     def __init__(self, env: BuildEnvironment) -> None:
         self.env = env
 
-        if not hasattr(env, 'intersphinx_cache'):
+        if not hasattr(env, "intersphinx_cache"):
             # initial storage when fetching inventories before processing
             self.env.intersphinx_cache = {}  # type: ignore[attr-defined]
 

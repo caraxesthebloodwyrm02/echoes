@@ -211,11 +211,7 @@ def add_skipped_file_notifications(skips, invocation):
             message=om.Message(text=reason),
             locations=[
                 om.Location(
-                    physical_location=om.PhysicalLocation(
-                        artifact_location=om.ArtifactLocation(
-                            uri=to_uri(file_name)
-                        )
-                    )
+                    physical_location=om.PhysicalLocation(artifact_location=om.ArtifactLocation(uri=to_uri(file_name)))
                 )
             ],
         )
@@ -242,11 +238,7 @@ def create_result(issue, rules, rule_indices):
 
     rule, rule_index = create_or_find_rule(issue_dict, rules, rule_indices)
 
-    physical_location = om.PhysicalLocation(
-        artifact_location=om.ArtifactLocation(
-            uri=to_uri(issue_dict["filename"])
-        )
-    )
+    physical_location = om.PhysicalLocation(artifact_location=om.ArtifactLocation(uri=to_uri(issue_dict["filename"])))
 
     add_region_and_context_region(
         physical_location,
@@ -280,9 +272,7 @@ def level_from_severity(severity):
         return "warning"
 
 
-def add_region_and_context_region(
-    physical_location, line_range, col_offset, end_col_offset, code
-):
+def add_region_and_context_region(physical_location, line_range, col_offset, end_col_offset, code):
     if code:
         first_line_number, snippet_lines = parse_code(code)
         snippet_line = snippet_lines[line_range[0] - first_line_number]

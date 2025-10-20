@@ -59,9 +59,7 @@ def demo_optimization_comparison():
     print(f"  Average Quality:     {comparison['data_driven']['avg_quality']:.3f}")
     print(f"  Final Quality:       {comparison['data_driven']['final_quality']:.3f}")
     print(f"  Average Time:        {comparison['data_driven']['avg_time']:.2f}s")
-    print(
-        f"  Cognitive Load:      {comparison['data_driven']['avg_cognitive_load']:.2f}"
-    )
+    print(f"  Cognitive Load:      {comparison['data_driven']['avg_cognitive_load']:.2f}")
     print(f"  Efficiency Ratio:    {comparison['data_driven']['efficiency_ratio']:.3f}")
     print(f"  Learning Slope:      {comparison['data_driven']['learning_slope']:.4f}")
 
@@ -69,12 +67,8 @@ def demo_optimization_comparison():
     print(f"  Average Quality:     {comparison['fast_compound']['avg_quality']:.3f}")
     print(f"  Final Quality:       {comparison['fast_compound']['final_quality']:.3f}")
     print(f"  Average Time:        {comparison['fast_compound']['avg_time']:.2f}s")
-    print(
-        f"  Cognitive Load:      {comparison['fast_compound']['avg_cognitive_load']:.2f}"
-    )
-    print(
-        f"  Efficiency Ratio:    {comparison['fast_compound']['efficiency_ratio']:.3f}"
-    )
+    print(f"  Cognitive Load:      {comparison['fast_compound']['avg_cognitive_load']:.2f}")
+    print(f"  Efficiency Ratio:    {comparison['fast_compound']['efficiency_ratio']:.3f}")
     print(f"  Learning Slope:      {comparison['fast_compound']['learning_slope']:.4f}")
     print(f"  Compound Gain:       {comparison['fast_compound']['compound_gain']:.3f}")
 
@@ -85,12 +79,8 @@ def demo_optimization_comparison():
     print(
         f"  Cognitive Load Saved: {comparison['advantages']['fc_cognitive_saved']:.2f} ({comparison['advantages']['fc_cognitive_saved'] / comparison['data_driven']['avg_cognitive_load'] * 100:.1f}%)"
     )
-    print(
-        f"  Efficiency Gain:     +{comparison['advantages']['fc_efficiency_gain']:.1f}%"
-    )
-    print(
-        f"  Learning Advantage:  +{comparison['advantages']['fc_learning_advantage']:.1f}%"
-    )
+    print(f"  Efficiency Gain:     +{comparison['advantages']['fc_efficiency_gain']:.1f}%")
+    print(f"  Learning Advantage:  +{comparison['advantages']['fc_learning_advantage']:.1f}%")
 
 
 def demo_against_the_clock():
@@ -122,9 +112,7 @@ def demo_against_the_clock():
     print(
         f"  FC completed {fc.total_steps - dda.total_steps} more steps (+{(fc.total_steps / dda.total_steps - 1) * 100:.1f}%)"
     )
-    print(
-        f"  FC quality/second is {fc.quality_per_second / dda.quality_per_second:.2f}x higher"
-    )
+    print(f"  FC quality/second is {fc.quality_per_second / dda.quality_per_second:.2f}x higher")
 
 
 def demo_trajectory_length_impact():
@@ -135,18 +123,12 @@ def demo_trajectory_length_impact():
 
     lengths = [10, 20, 50, 100]
 
-    print(
-        f"{'Length':<10} {'DDA Avg':<12} {'FC Avg':<12} {'FC Final':<12} {'FC Advantage':<15}"
-    )
+    print(f"{'Length':<10} {'DDA Avg':<12} {'FC Avg':<12} {'FC Final':<12} {'FC Advantage':<15}")
     print("-" * 70)
 
     for length in lengths:
-        dda = optimizer.simulate_trajectory(
-            OptimizationMethod.DATA_DRIVEN, num_steps=length
-        )
-        fc = optimizer.simulate_trajectory(
-            OptimizationMethod.FAST_COMPOUND, num_steps=length
-        )
+        dda = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=length)
+        fc = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=length)
 
         advantage = fc.final_quality - dda.final_quality
 
@@ -246,40 +228,24 @@ def demo_conceptual_scenarios():
     print("\nScenario 2: Crisis Response (5 critical decisions)")
     print("-" * 50)
 
-    dda_crisis = optimizer.simulate_trajectory(
-        OptimizationMethod.DATA_DRIVEN, num_steps=5
-    )
-    fc_crisis = optimizer.simulate_trajectory(
-        OptimizationMethod.FAST_COMPOUND, num_steps=5
-    )
+    dda_crisis = optimizer.simulate_trajectory(OptimizationMethod.DATA_DRIVEN, num_steps=5)
+    fc_crisis = optimizer.simulate_trajectory(OptimizationMethod.FAST_COMPOUND, num_steps=5)
 
-    print(
-        f"Data-Driven:  quality={dda_crisis.average_quality:.3f}, time={dda_crisis.total_time:.1f}s"
-    )
-    print(
-        f"Fast Compound: quality={fc_crisis.average_quality:.3f}, time={fc_crisis.total_time:.1f}s"
-    )
-    print(
-        f"Result: FC is {dda_crisis.total_time / fc_crisis.total_time:.1f}x faster (critical in crisis)"
-    )
+    print(f"Data-Driven:  quality={dda_crisis.average_quality:.3f}, time={dda_crisis.total_time:.1f}s")
+    print(f"Fast Compound: quality={fc_crisis.average_quality:.3f}, time={fc_crisis.total_time:.1f}s")
+    print(f"Result: FC is {dda_crisis.total_time / fc_crisis.total_time:.1f}x faster (critical in crisis)")
 
     # Scenario 3: Product Sprint
     print("\nScenario 3: 2-Week Sprint (80 hour budget)")
     print("-" * 50)
 
-    sprint_results = optimizer.against_the_clock(
-        time_budget=80.0, decision_time_limit=5.0
-    )
+    sprint_results = optimizer.against_the_clock(time_budget=80.0, decision_time_limit=5.0)
 
     dda_sprint = sprint_results["data_driven"]
     fc_sprint = sprint_results["fast_compound"]
 
-    print(
-        f"Data-Driven:  {dda_sprint.total_steps} iterations, quality={dda_sprint.final_quality:.3f}"
-    )
-    print(
-        f"Fast Compound: {fc_sprint.total_steps} iterations, quality={fc_sprint.final_quality:.3f}"
-    )
+    print(f"Data-Driven:  {dda_sprint.total_steps} iterations, quality={dda_sprint.final_quality:.3f}")
+    print(f"Fast Compound: {fc_sprint.total_steps} iterations, quality={fc_sprint.final_quality:.3f}")
     print(
         f"Result: FC completes {fc_sprint.total_steps - dda_sprint.total_steps} more iterations (+{(fc_sprint.total_steps / dda_sprint.total_steps - 1) * 100:.1f}%)"
     )

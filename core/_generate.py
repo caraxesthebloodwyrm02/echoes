@@ -21,38 +21,33 @@ if TYPE_CHECKING:
 
 
 # automodule options
-if 'SPHINX_APIDOC_OPTIONS' in os.environ:
-    OPTIONS = set(os.environ['SPHINX_APIDOC_OPTIONS'].split(','))
+if "SPHINX_APIDOC_OPTIONS" in os.environ:
+    OPTIONS = set(os.environ["SPHINX_APIDOC_OPTIONS"].split(","))
 else:
     OPTIONS = {
-        'members',
-        'undoc-members',
+        "members",
+        "undoc-members",
         # 'inherited-members', # disabled because there's a bug in sphinx
-        'show-inheritance',
+        "show-inheritance",
     }
 
-PY_SUFFIXES = ('.py', '.pyx', *EXTENSION_SUFFIXES)
+PY_SUFFIXES = (".py", ".pyx", *EXTENSION_SUFFIXES)
 
-template_dir = package_dir.joinpath('templates', 'apidoc')
+template_dir = package_dir.joinpath("templates", "apidoc")
 
 
 def is_initpy(filename: str | Path) -> bool:
     """Check *filename* is __init__ file or not."""
     basename = Path(filename).name
-    return any(
-        basename == '__init__' + suffix
-        for suffix in sorted(PY_SUFFIXES, key=len, reverse=True)
-    )
+    return any(basename == "__init__" + suffix for suffix in sorted(PY_SUFFIXES, key=len, reverse=True))
 
 
 def module_join(*modnames: str | None) -> str:
     """Join module names with dots."""
-    return '.'.join(filter(None, modnames))
+    return ".".join(filter(None, modnames))
 
 
-def is_package_dir(
-    files: Iterable[Path | str] = (), *, dir_path: Path | None = None
-) -> bool:
+def is_package_dir(files: Iterable[Path | str] = (), *, dir_path: Path | None = None) -> bool:
     """Check given *files* contains __init__ file."""
     if files != ():
         return any(map(is_initpy, files))
@@ -63,17 +58,17 @@ def is_package_dir(
 
 def write_file(name: str, text: str, opts: ApidocOptions) -> Path:
     """Write the output file for module/package <name>."""
-    fname = Path(opts.dest_dir, f'{name}.{opts.suffix}')
+    fname = Path(opts.dest_dir, f"{name}.{opts.suffix}")
     if opts.dry_run:
         if not opts.quiet:
-            LOGGER.info(__('Would create file %s.'), fname)
+            LOGGER.info(__("Would create file %s."), fname)
         return fname
     if not opts.force and fname.is_file():
         if not opts.quiet:
-            LOGGER.info(__('File %s already exists, skipping.'), fname)
+            LOGGER.info(__("File %s already exists, skipping."), fname)
     else:
         if not opts.quiet:
-            LOGGER.info(__('Creating file %s.'), fname)
+            LOGGER.info(__("Creating file %s."), fname)
         with FileAvoidWrite(fname) as f:
             f.write(text)
     return fname
@@ -88,21 +83,21 @@ def create_module_file(
     """Build the text of the file and write the file."""
     options = set(OPTIONS if not opts.automodule_options else opts.automodule_options)
     if opts.include_private:
-        options.add('private-members')
+        options.add("private-members")
 
     qualname = module_join(package, basename)
     context = {
-        'show_headings': not opts.no_headings,
-        'basename': basename,
-        'qualname': qualname,
-        'automodule_options': sorted(options),
+        "show_headings": not opts.no_headings,
+        "basename": basename,
+        "qualname": qualname,
+        "automodule_options": sorted(options),
     }
     template_path: Sequence[str | os.PathLike[str]]
     if user_template_dir is not None:
         template_path = [user_template_dir, template_dir]
     else:
         template_path = [template_dir]
-    text = ReSTRenderer(template_path).render('module.rst.jinja', context)
+    text = ReSTRenderer(template_path).render("module.rst.jinja", context)
     return write_file(qualname, text, opts)
 
 
@@ -131,29 +126,27 @@ def create_package_file(
     ]
     # build a list of sub modules
     submodules = [
-        sub.split('.')[0]
+        sub.split(".")[0]
         for sub in py_files
         if not is_skipped_module(Path(root, sub), opts, excludes) and not is_initpy(sub)
     ]
     submodules = sorted(set(submodules))
-    submodules = [
-        module_join(master_package, subroot, modname) for modname in submodules
-    ]
+    submodules = [module_join(master_package, subroot, modname) for modname in submodules]
     options = OPTIONS.copy()
     if opts.include_private:
-        options.add('private-members')
+        options.add("private-members")
 
     pkgname = module_join(master_package, subroot)
     context = {
-        'pkgname': pkgname,
-        'subpackages': subpackages,
-        'submodules': submodules,
-        'is_namespace': is_namespace,
-        'modulefirst': opts.module_first,
-        'separatemodules': opts.separate_modules,
-        'automodule_options': sorted(options),
-        'show_headings': not opts.no_headings,
-        'maxdepth': opts.max_depth,
+        "pkgname": pkgname,
+        "subpackages": subpackages,
+        "submodules": submodules,
+        "is_namespace": is_namespace,
+        "modulefirst": opts.module_first,
+        "separatemodules": opts.separate_modules,
+        "automodule_options": sorted(options),
+        "show_headings": not opts.no_headings,
+        "maxdepth": opts.max_depth,
     }
     if user_template_dir is not None:
         template_path = [user_template_dir, template_dir]
@@ -162,14 +155,11 @@ def create_package_file(
 
     written: list[Path] = []
 
-    text = ReSTRenderer(template_path).render('package.rst.jinja', context)
+    text = ReSTRenderer(template_path).render("package.rst.jinja", context)
     written.append(write_file(pkgname, text, opts))
 
     if submodules and opts.separate_modules:
-        written.extend([
-            create_module_file(None, submodule, opts, user_template_dir)
-            for submodule in submodules
-        ])
+        written.extend([create_module_file(None, submodule, opts, user_template_dir) for submodule in submodules])
 
     return written
 
@@ -177,41 +167,39 @@ def create_package_file(
 def create_modules_toc_file(
     modules: list[str],
     opts: ApidocOptions,
-    name: str = 'modules',
+    name: str = "modules",
     user_template_dir: str | os.PathLike[str] | None = None,
 ) -> Path:
     """Create the module's index."""
     modules.sort()
-    prev_module = ''
+    prev_module = ""
     for module in modules.copy():
         # look if the module is a subpackage and, if yes, ignore it
-        if module.startswith(prev_module + '.'):
+        if module.startswith(prev_module + "."):
             modules.remove(module)
         else:
             prev_module = module
 
     context = {
-        'header': opts.header,
-        'maxdepth': opts.max_depth,
-        'docnames': modules,
+        "header": opts.header,
+        "maxdepth": opts.max_depth,
+        "docnames": modules,
     }
     template_path: Sequence[str | os.PathLike[str]]
     if user_template_dir is not None:
         template_path = [user_template_dir, template_dir]
     else:
         template_path = [template_dir]
-    text = ReSTRenderer(template_path).render('toc.rst.jinja', context)
+    text = ReSTRenderer(template_path).render("toc.rst.jinja", context)
     return write_file(name, text, opts)
 
 
-def is_skipped_package(
-    dirname: str | Path, opts: ApidocOptions, excludes: Sequence[re.Pattern[str]] = ()
-) -> bool:
+def is_skipped_package(dirname: str | Path, opts: ApidocOptions, excludes: Sequence[re.Pattern[str]] = ()) -> bool:
     """Check if we want to skip this module."""
     if not Path(dirname).is_dir():
         return False
 
-    files = glob.glob(str(Path(dirname, '*.py')))  # NoQA: PTH207
+    files = glob.glob(str(Path(dirname, "*.py")))  # NoQA: PTH207
     regular_package = any(f for f in files if is_initpy(f))
     if not regular_package and not opts.implicit_namespaces:
         # *dirname* is not both a regular package and an implicit namespace package
@@ -221,16 +209,14 @@ def is_skipped_package(
     return all(is_excluded(Path(dirname, f), excludes) for f in files)
 
 
-def is_skipped_module(
-    filename: str | Path, opts: ApidocOptions, _excludes: Sequence[re.Pattern[str]]
-) -> bool:
+def is_skipped_module(filename: str | Path, opts: ApidocOptions, _excludes: Sequence[re.Pattern[str]]) -> bool:
     """Check if we want to skip this module."""
     filename = Path(filename)
     if not filename.exists():
         # skip if the file doesn't exist
         return True
     # skip if the module has a "private" name
-    return filename.name.startswith('_') and not opts.include_private
+    return filename.name.startswith("_") and not opts.include_private
 
 
 def walk(
@@ -241,32 +227,23 @@ def walk(
     """Walk through the directory and list files and subdirectories up."""
     for root, subs, files in os.walk(root_path, followlinks=opts.follow_links):
         # document only Python module files (that aren't excluded)
-        files = sorted(
-            f
-            for f in files
-            if f.endswith(PY_SUFFIXES) and not is_excluded(Path(root, f), excludes)
-        )
+        files = sorted(f for f in files if f.endswith(PY_SUFFIXES) and not is_excluded(Path(root, f), excludes))
 
         # remove hidden ('.') and private ('_') directories, as well as
         # excluded dirs
         if opts.include_private:
-            exclude_prefixes: tuple[str, ...] = ('.',)
+            exclude_prefixes: tuple[str, ...] = (".",)
         else:
-            exclude_prefixes = ('.', '_')
+            exclude_prefixes = (".", "_")
 
         subs[:] = sorted(
-            sub
-            for sub in subs
-            if not sub.startswith(exclude_prefixes)
-            and not is_excluded(Path(root, sub), excludes)
+            sub for sub in subs if not sub.startswith(exclude_prefixes) and not is_excluded(Path(root, sub), excludes)
         )
 
         yield root, subs, files
 
 
-def has_child_module(
-    root_path: str | Path, excludes: Sequence[re.Pattern[str]], opts: ApidocOptions
-) -> bool:
+def has_child_module(root_path: str | Path, excludes: Sequence[re.Pattern[str]], opts: ApidocOptions) -> bool:
     """Check the given directory contains child module/s (at least one)."""
     return any(files for _root, _subs, files in walk(root_path, excludes, opts))
 
@@ -307,11 +284,7 @@ def recurse_tree(
         if is_pkg or is_namespace:
             # we are in a package with something to document
             if subs or len(files) > 1 or not is_skipped_package(root, opts):
-                subpackage = (
-                    root.removeprefix(str(root_path))
-                    .lstrip(os.path.sep)
-                    .replace(os.path.sep, '.')
-                )
+                subpackage = root.removeprefix(str(root_path)).lstrip(os.path.sep).replace(os.path.sep, ".")
                 # if this is not a namespace or
                 # a namespace and there is something there to document
                 if not is_namespace or has_child_module(root, excludes, opts):
@@ -335,12 +308,8 @@ def recurse_tree(
             assert root_package is None
             for py_file in files:
                 if not is_skipped_module(Path(root_path, py_file), opts, excludes):
-                    module = py_file.split('.')[0]
-                    written_files.append(
-                        create_module_file(
-                            root_package, module, opts, user_template_dir
-                        )
-                    )
+                    module = py_file.split(".")[0]
+                    written_files.append(create_module_file(root_package, module, opts, user_template_dir))
                     toplevels.append(module)
 
     return written_files, toplevels

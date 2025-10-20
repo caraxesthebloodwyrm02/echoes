@@ -81,13 +81,9 @@ def yield_namespace_device_dtype_combinations(include_numpy_namespaces=True):
         The name of the data type to use for arrays. Can be None to indicate
         that the default value should be used.
     """
-    for array_namespace in yield_namespaces(
-        include_numpy_namespaces=include_numpy_namespaces
-    ):
+    for array_namespace in yield_namespaces(include_numpy_namespaces=include_numpy_namespaces):
         if array_namespace == "torch":
-            for device, dtype in itertools.product(
-                ("cpu", "cuda"), ("float64", "float32")
-            ):
+            for device, dtype in itertools.product(("cpu", "cuda"), ("float64", "float32")):
                 yield array_namespace, device, dtype
             yield array_namespace, "mps", "float32"
 
@@ -189,9 +185,7 @@ def device(*array_list, remove_none=True, remove_types=(str,)):
     out : device
         `device` object (see the "Device Support" section of the array API spec).
     """
-    array_list = _remove_non_arrays(
-        *array_list, remove_none=remove_none, remove_types=remove_types
-    )
+    array_list = _remove_non_arrays(*array_list, remove_none=remove_none, remove_types=remove_types)
 
     if not array_list:
         return None
@@ -205,9 +199,7 @@ def device(*array_list, remove_none=True, remove_types=(str,)):
     for array in array_list[1:]:
         device_other = _single_array_device(array)
         if device_ != device_other:
-            raise ValueError(
-                f"Input arrays use different devices: {device_}, {device_other}"
-            )
+            raise ValueError(f"Input arrays use different devices: {device_}, {device_other}")
 
     return device_
 
@@ -265,10 +257,7 @@ def _isdtype_single(dtype, kind, *, xp):
         elif kind == "unsigned integer":
             return dtype in {xp.uint8, xp.uint16, xp.uint32, xp.uint64}
         elif kind == "integral":
-            return any(
-                _isdtype_single(dtype, k, xp=xp)
-                for k in ("signed integer", "unsigned integer")
-            )
+            return any(_isdtype_single(dtype, k, xp=xp) for k in ("signed integer", "unsigned integer"))
         elif kind == "real floating":
             return dtype in supported_float_dtypes(xp)
         elif kind == "complex floating":
@@ -280,10 +269,7 @@ def _isdtype_single(dtype, kind, *, xp):
                 complex_dtypes.add(xp.complex128)
             return dtype in complex_dtypes
         elif kind == "numeric":
-            return any(
-                _isdtype_single(dtype, k, xp=xp)
-                for k in ("integral", "real floating", "complex floating")
-            )
+            return any(_isdtype_single(dtype, k, xp=xp) for k in ("integral", "real floating", "complex floating"))
         else:
             raise ValueError(f"Unrecognized data type kind: {kind!r}")
     else:
@@ -462,17 +448,13 @@ def get_namespace(*arrays, remove_none=True, remove_types=(str,), xp=None):
 
     namespace, is_array_api_compliant = array_api_compat.get_namespace(*arrays), True
 
-    if namespace.__name__ == "array_api_strict" and hasattr(
-        namespace, "set_array_api_strict_flags"
-    ):
+    if namespace.__name__ == "array_api_strict" and hasattr(namespace, "set_array_api_strict_flags"):
         namespace.set_array_api_strict_flags(api_version="2024.12")
 
     return namespace, is_array_api_compliant
 
 
-def get_namespace_and_device(
-    *array_list, remove_none=True, remove_types=(str,), xp=None
-):
+def get_namespace_and_device(*array_list, remove_none=True, remove_types=(str,), xp=None):
     """Combination into one single function of `get_namespace` and `device`.
 
     Parameters
@@ -540,9 +522,7 @@ def _fill_or_add_to_diagonal(array, value, xp, add_value=True, wrap=False):
     https://github.com/numpy/numpy/blob/v2.0.0/numpy/lib/_index_tricks_impl.py#L799-L929
     """
     if array.ndim != 2:
-        raise ValueError(
-            f"array should be 2-d. Got array with shape {tuple(array.shape)}"
-        )
+        raise ValueError(f"array should be 2-d. Got array with shape {tuple(array.shape)}")
 
     value = xp.asarray(value, dtype=array.dtype, device=device(array))
     end = None
@@ -571,9 +551,7 @@ def _max_precision_float_dtype(xp, device):
     """Return the float dtype with the highest precision supported by the device."""
     # TODO: Update to use `__array_namespace__info__()` from array-api v2023.12
     # when/if that becomes more widespread.
-    if _is_xp_namespace(xp, "torch") and str(device).startswith(
-        "mps"
-    ):  # pragma: no cover
+    if _is_xp_namespace(xp, "torch") and str(device).startswith("mps"):  # pragma: no cover
         return xp.float32
     return xp.float64
 
@@ -590,9 +568,7 @@ def _find_matching_floating_dtype(*arrays, xp):
     instance), return the default floating point dtype for the namespace.
     """
     dtyped_arrays = [xp.asarray(a) for a in arrays if hasattr(a, "dtype")]
-    floating_dtypes = [
-        a.dtype for a in dtyped_arrays if xp.isdtype(a.dtype, "real floating")
-    ]
+    floating_dtypes = [a.dtype for a in dtyped_arrays if xp.isdtype(a.dtype, "real floating")]
     if floating_dtypes:
         # Return the floating dtype with the highest precision:
         return xp.result_type(*floating_dtypes)
@@ -641,13 +617,9 @@ def _average(a, axis=None, weights=None, normalize=True, xp=None):
         weights = xp.reshape(weights, tuple(shape))
 
     if xp.isdtype(a.dtype, "complex floating"):
-        raise NotImplementedError(
-            "Complex floating point values are not supported by average."
-        )
+        raise NotImplementedError("Complex floating point values are not supported by average.")
     if weights is not None and xp.isdtype(weights.dtype, "complex floating"):
-        raise NotImplementedError(
-            "Complex floating point values are not supported by average."
-        )
+        raise NotImplementedError("Complex floating point values are not supported by average.")
 
     output_dtype = _find_matching_floating_dtype(a, weights, xp=xp)
     a = xp.astype(a, output_dtype)
@@ -726,16 +698,12 @@ def _nanmean(X, axis=None, xp=None):
         return xp.asarray(numpy.nanmean(X, axis=axis))
     else:
         mask = xp.isnan(X)
-        total = xp.sum(
-            xp.where(mask, xp.asarray(0.0, dtype=X.dtype, device=device_), X), axis=axis
-        )
+        total = xp.sum(xp.where(mask, xp.asarray(0.0, dtype=X.dtype, device=device_), X), axis=axis)
         count = xp.sum(xp.astype(xp.logical_not(mask), X.dtype), axis=axis)
         return total / count
 
 
-def _asarray_with_order(
-    array, dtype=None, order=None, copy=None, *, xp=None, device=None
-):
+def _asarray_with_order(array, dtype=None, order=None, copy=None, *, xp=None, device=None):
     """Helper to support the order kwarg only for NumPy-backed arrays
 
     Memory layout parameter `order` is not exposed in the Array API standard,

@@ -110,12 +110,7 @@ def test_multi_target_regression_one_target():
 
 @pytest.mark.parametrize(
     "sparse_container",
-    CSR_CONTAINERS
-    + CSC_CONTAINERS
-    + COO_CONTAINERS
-    + LIL_CONTAINERS
-    + DOK_CONTAINERS
-    + BSR_CONTAINERS,
+    CSR_CONTAINERS + CSC_CONTAINERS + COO_CONTAINERS + LIL_CONTAINERS + DOK_CONTAINERS + BSR_CONTAINERS,
 )
 def test_multi_target_sparse_regression(sparse_container):
     X, y = datasets.make_regression(n_targets=3, random_state=0)
@@ -128,9 +123,7 @@ def test_multi_target_sparse_regression(sparse_container):
     rgr.fit(X_train, y_train)
     rgr_sparse.fit(sparse_container(X_train), y_train)
 
-    assert_almost_equal(
-        rgr.predict(X_test), rgr_sparse.predict(sparse_container(X_test))
-    )
+    assert_almost_equal(rgr.predict(X_test), rgr_sparse.predict(sparse_container(X_test)))
 
 
 def test_multi_target_sample_weights_api():
@@ -290,9 +283,7 @@ def test_multi_output_classification_partial_fit():
     for i in range(3):
         # create a clone with the same state
         sgd_linear_clf = clone(sgd_linear_clf)
-        sgd_linear_clf.partial_fit(
-            X[:half_index], y[:half_index, i], classes=classes[i]
-        )
+        sgd_linear_clf.partial_fit(X[:half_index], y[:half_index, i], classes=classes[i])
         assert_array_equal(sgd_linear_clf.predict(X), first_predictions[:, i])
         sgd_linear_clf.partial_fit(X[half_index:], y[half_index:, i])
         assert_array_equal(sgd_linear_clf.predict(X), second_predictions[:, i])
@@ -498,9 +489,7 @@ def generate_multilabel_dataset_with_correlations():
     # Generate a multilabel data set from a multiclass dataset as a way of
     # by representing the integer number of the original class using a binary
     # encoding.
-    X, y = make_classification(
-        n_samples=1000, n_features=100, n_classes=16, n_informative=10, random_state=0
-    )
+    X, y = make_classification(n_samples=1000, n_features=100, n_classes=16, n_informative=10, random_state=0)
 
     Y_multi = np.array([[int(yyy) for yyy in format(yy, "#06b")[2:]] for yy in y])
     return X, Y_multi
@@ -558,9 +547,7 @@ def test_classifier_chain_vs_independent_models():
     chain.fit(X_train, Y_train)
     Y_pred_chain = chain.predict(X_test)
 
-    assert jaccard_score(Y_test, Y_pred_chain, average="samples") > jaccard_score(
-        Y_test, Y_pred_ovr, average="samples"
-    )
+    assert jaccard_score(Y_test, Y_pred_chain, average="samples") > jaccard_score(Y_test, Y_pred_ovr, average="samples")
 
 
 @pytest.mark.parametrize(
@@ -575,9 +562,7 @@ def test_classifier_chain_fit_and_predict(chain_method, response_method):
     chain.fit(X, Y)
     Y_pred = chain.predict(X)
     assert Y_pred.shape == Y.shape
-    assert [c.coef_.size for c in chain.estimators_] == list(
-        range(X.shape[1], X.shape[1] + Y.shape[1])
-    )
+    assert [c.coef_.size for c in chain.estimators_] == list(range(X.shape[1], X.shape[1] + Y.shape[1]))
 
     Y_prob = getattr(chain, response_method)(X)
     if response_method == "predict_log_proba":
@@ -595,9 +580,7 @@ def test_regressor_chain_fit_and_predict():
     chain.fit(X, Y)
     Y_pred = chain.predict(X)
     assert Y_pred.shape == Y.shape
-    assert [c.coef_.size for c in chain.estimators_] == list(
-        range(X.shape[1], X.shape[1] + Y.shape[1])
-    )
+    assert [c.coef_.size for c in chain.estimators_] == list(range(X.shape[1], X.shape[1] + Y.shape[1]))
 
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
@@ -763,9 +746,7 @@ def test_classifier_chain_tuple_order(order_type):
     y = [[3, 2], [2, 3], [3, 2]]
     order = order_type([1, 0])
 
-    chain = ClassifierChain(
-        RandomForestClassifier(n_estimators=2, random_state=0), order=order
-    )
+    chain = ClassifierChain(RandomForestClassifier(n_estimators=2, random_state=0), order=order)
 
     chain.fit(X, y)
     X_test = [[1.5, 2.5, 3.5]]
@@ -785,9 +766,7 @@ def test_classifier_chain_tuple_invalid_order():
 
 
 def test_classifier_chain_verbose(capsys):
-    X, y = make_multilabel_classification(
-        n_samples=100, n_features=5, n_classes=3, n_labels=3, random_state=0
-    )
+    X, y = make_multilabel_classification(n_samples=100, n_features=5, n_classes=3, n_labels=3, random_state=0)
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
     pattern = (
@@ -841,9 +820,7 @@ def test_multioutputregressor_ducktypes_fitted_estimator():
     reg.predict(X)
 
 
-@pytest.mark.parametrize(
-    "Cls, method", [(ClassifierChain, "fit"), (MultiOutputClassifier, "partial_fit")]
-)
+@pytest.mark.parametrize("Cls, method", [(ClassifierChain, "fit"), (MultiOutputClassifier, "partial_fit")])
 def test_fit_params_no_routing(Cls, method):
     """Check that we raise an error when passing metadata not requested by the
     underlying classifier.

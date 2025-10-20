@@ -243,17 +243,9 @@ class PeriodConverter(mdates.DateConverter):
             raise TypeError("Axis must have `freq` set to convert to Periods")
         valid_types = (str, datetime, Period, pydt.date, pydt.time, np.datetime64)
         with warnings.catch_warnings():
-            warnings.filterwarnings(
-                "ignore", "Period with BDay freq is deprecated", category=FutureWarning
-            )
-            warnings.filterwarnings(
-                "ignore", r"PeriodDtype\[B\] is deprecated", category=FutureWarning
-            )
-            if (
-                isinstance(values, valid_types)
-                or is_integer(values)
-                or is_float(values)
-            ):
+            warnings.filterwarnings("ignore", "Period with BDay freq is deprecated", category=FutureWarning)
+            warnings.filterwarnings("ignore", r"PeriodDtype\[B\] is deprecated", category=FutureWarning)
+            if isinstance(values, valid_types) or is_integer(values) or is_float(values):
                 return get_datevalue(values, axis.freq)
             elif isinstance(values, PeriodIndex):
                 return values.asfreq(axis.freq).asi8
@@ -273,11 +265,7 @@ def get_datevalue(date, freq):
         return date.asfreq(freq).ordinal
     elif isinstance(date, (str, datetime, pydt.date, pydt.time, np.datetime64)):
         return Period(date, freq).ordinal
-    elif (
-        is_integer(date)
-        or is_float(date)
-        or (isinstance(date, (np.ndarray, Index)) and (date.size == 1))
-    ):
+    elif is_integer(date) or is_float(date) or (isinstance(date, (np.ndarray, Index)) and (date.size == 1)):
         return date
     elif date is None:
         return None
@@ -346,9 +334,7 @@ class DatetimeConverter(mdates.DateConverter):
         datemin = pydt.date(2000, 1, 1)
         datemax = pydt.date(2010, 1, 1)
 
-        return munits.AxisInfo(
-            majloc=majloc, majfmt=majfmt, label="", default_limits=(datemin, datemax)
-        )
+        return munits.AxisInfo(majloc=majloc, majfmt=majfmt, label="", default_limits=(datemin, datemax))
 
 
 class PandasAutoDateFormatter(mdates.AutoDateFormatter):
@@ -470,9 +456,7 @@ def _from_ordinal(x, tz: tzinfo | None = None) -> datetime:
     microsecond = int(1_000_000 * remainder)
     if microsecond < 10:
         microsecond = 0  # compensate for rounding errors
-    dt = datetime(
-        dt.year, dt.month, dt.day, int(hour), int(minute), int(second), microsecond
-    )
+    dt = datetime(dt.year, dt.month, dt.day, int(hour), int(minute), int(second), microsecond)
     if tz is not None:
         dt = dt.astimezone(tz)
 
@@ -540,9 +524,7 @@ def has_level_label(label_flags: npt.NDArray[np.intp], vmin: float) -> bool:
     if the minimum view limit is not an exact integer, then the first tick
     label won't be shown, so we must adjust for that.
     """
-    if label_flags.size == 0 or (
-        label_flags.size == 1 and label_flags[0] == 0 and vmin % 1 > 0.0
-    ):
+    if label_flags.size == 0 or (label_flags.size == 1 and label_flags[0] == 0 and vmin % 1 > 0.0):
         return False
     else:
         return True
@@ -597,12 +579,8 @@ def _daily_finder(vmin: float, vmax: float, freq: BaseOffset) -> np.ndarray:
     span = vmax - vmin + 1
 
     with warnings.catch_warnings():
-        warnings.filterwarnings(
-            "ignore", "Period with BDay freq is deprecated", category=FutureWarning
-        )
-        warnings.filterwarnings(
-            "ignore", r"PeriodDtype\[B\] is deprecated", category=FutureWarning
-        )
+        warnings.filterwarnings("ignore", "Period with BDay freq is deprecated", category=FutureWarning)
+        warnings.filterwarnings("ignore", r"PeriodDtype\[B\] is deprecated", category=FutureWarning)
         dates_ = period_range(
             start=Period(ordinal=vmin, freq=freq),
             end=Period(ordinal=vmax, freq=freq),
@@ -610,9 +588,7 @@ def _daily_finder(vmin: float, vmax: float, freq: BaseOffset) -> np.ndarray:
         )
 
     # Initialize the output
-    info = np.zeros(
-        span, dtype=[("val", np.int64), ("maj", bool), ("min", bool), ("fmt", "|S20")]
-    )
+    info = np.zeros(span, dtype=[("val", np.int64), ("maj", bool), ("min", bool), ("fmt", "|S20")])
     info["val"][:] = dates_.asi8
     info["fmt"][:] = ""
     info["maj"][[0, -1]] = True
@@ -793,9 +769,7 @@ def _monthly_finder(vmin: float, vmax: float, freq: BaseOffset) -> np.ndarray:
     span = vmax - vmin + 1
 
     # Initialize the output
-    info = np.zeros(
-        span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")]
-    )
+    info = np.zeros(span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")])
     info["val"] = np.arange(vmin, vmax + 1)
     dates_ = info["val"]
     info["fmt"] = ""
@@ -863,9 +837,7 @@ def _quarterly_finder(vmin: float, vmax: float, freq: BaseOffset) -> np.ndarray:
     (vmin, vmax) = (int(vmin), int(vmax))
     span = vmax - vmin + 1
 
-    info = np.zeros(
-        span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")]
-    )
+    info = np.zeros(span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")])
     info["val"] = np.arange(vmin, vmax + 1)
     info["fmt"] = ""
     dates_ = info["val"]
@@ -910,9 +882,7 @@ def _annual_finder(vmin: float, vmax: float, freq: BaseOffset) -> np.ndarray:
     (vmin, vmax) = (int(vmin), int(vmax + 1))
     span = vmax - vmin + 1
 
-    info = np.zeros(
-        span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")]
-    )
+    info = np.zeros(span, dtype=[("val", int), ("maj", bool), ("min", bool), ("fmt", "|S8")])
     info["val"] = np.arange(vmin, vmax + 1)
     info["fmt"] = ""
     dates_ = info["val"]

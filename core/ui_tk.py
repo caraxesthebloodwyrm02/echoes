@@ -6,6 +6,7 @@ Glimpse Tkinter Live Preview UI (SSE client).
 
 Pure stdlib implementation.
 """
+
 from __future__ import annotations
 
 import json
@@ -43,7 +44,7 @@ class SSEListener(threading.Thread):
         super().__init__(name="SSEListener", daemon=True)
         self.url = url
         self.on_preview = on_preview  # callable(dict)
-        self.on_status = on_status    # callable(str)
+        self.on_status = on_status  # callable(str)
         self._stop = threading.Event()
 
     def stop(self):
@@ -243,6 +244,7 @@ def main():
             app.close()
         finally:
             root.destroy()
+
     root.protocol("WM_DELETE_WINDOW", on_close)
     root.geometry("1000x700")
     root.mainloop()

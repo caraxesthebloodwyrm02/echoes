@@ -90,9 +90,7 @@ def test_budget_initialization():
         from utils.budget_guard import load_budget
 
         data = load_budget()
-        print(
-            f"[OK] Budget initialized: ${data['spent']:.2f} spent, {data['calls']} calls"
-        )
+        print(f"[OK] Budget initialized: ${data['spent']:.2f} spent, {data['calls']} calls")
         return True
     except Exception as e:
         print(f"[ERROR] Budget initialization error: {e}")

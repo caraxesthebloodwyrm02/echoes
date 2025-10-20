@@ -61,9 +61,7 @@ _has_gr_context = hasattr(getcurrent(), "gr_context")
 def is_exit_exception(e: BaseException) -> bool:
     # note asyncio.CancelledError is already BaseException
     # so was an exit exception in any case
-    return not isinstance(e, Exception) or isinstance(
-        e, (asyncio.TimeoutError, asyncio.CancelledError)
-    )
+    return not isinstance(e, Exception) or isinstance(e, (asyncio.TimeoutError, asyncio.CancelledError))
 
 
 # implementation based on snaury gist at
@@ -263,9 +261,7 @@ else:
         def close(self) -> None:
             if self._loop:
                 try:
-                    self._loop.run_until_complete(
-                        self._loop.shutdown_asyncgens()
-                    )
+                    self._loop.run_until_complete(self._loop.shutdown_asyncgens())
                 finally:
                     self._loop.close()
                     self._loop = False

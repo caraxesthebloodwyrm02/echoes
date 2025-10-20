@@ -37,9 +37,7 @@ class Param(FieldInfo):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -138,9 +136,7 @@ class Path(Param):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -224,9 +220,7 @@ class Query(Param):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -309,9 +303,7 @@ class Header(Param):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -394,9 +386,7 @@ class Cookie(Param):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -478,9 +468,7 @@ class Body(FieldInfo):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -581,9 +569,7 @@ class Form(Body):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,
@@ -665,9 +651,7 @@ class File(Form):  # type: ignore[misc]
         pattern: Optional[str] = None,
         regex: Annotated[
             Optional[str],
-            deprecated(
-                "Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."
-            ),
+            deprecated("Deprecated in FastAPI 0.100.0 and Pydantic v2, use `pattern` instead."),
         ] = None,
         discriminator: Union[str, None] = None,
         strict: Union[bool, None] = _Unset,

@@ -43,9 +43,7 @@ MEM_PROFILE: Final = False  # If True, dump memory profile after initialization
 if sys.platform == "win32":
     from subprocess import STARTUPINFO
 
-    def daemonize(
-        options: Options, status_file: str, timeout: int | None = None, log_file: str | None = None
-    ) -> int:
+    def daemonize(options: Options, status_file: str, timeout: int | None = None, log_file: str | None = None) -> int:
         """Create the daemon process via "dmypy daemon" and pass options via command line
 
         When creating the daemon grandchild, we create it in a new console, which is
@@ -119,9 +117,7 @@ else:
             # Make sure we never get back into the caller.
             os._exit(1)
 
-    def daemonize(
-        options: Options, status_file: str, timeout: int | None = None, log_file: str | None = None
-    ) -> int:
+    def daemonize(options: Options, status_file: str, timeout: int | None = None, log_file: str | None = None) -> int:
         """Run the mypy daemon in a grandchild of the current process
 
         Return 0 for success, exit status for failure, negative if
@@ -136,9 +132,7 @@ CONNECTION_NAME: Final = "dmypy"
 
 
 def process_start_options(flags: list[str], allow_sources: bool) -> Options:
-    _, options = mypy.main.process_options(
-        ["-i"] + flags, require_targets=False, server_options=True
-    )
+    _, options = mypy.main.process_options(["-i"] + flags, require_targets=False, server_options=True)
     if options.report_dirs:
         print("dmypy: Ignoring report generation settings. Start/restart cannot generate reports.")
     if options.junit_xml:
@@ -400,14 +394,10 @@ class Server:
         old_export_types = self.options.export_types
         self.options.export_types = self.options.export_types or export_types
         if not self.following_imports():
-            messages = self.fine_grained_increment(
-                sources, remove, update, explicit_export_types=export_types
-            )
+            messages = self.fine_grained_increment(sources, remove, update, explicit_export_types=export_types)
         else:
             assert remove is None and update is None
-            messages = self.fine_grained_increment_follow_imports(
-                sources, explicit_export_types=export_types
-            )
+            messages = self.fine_grained_increment_follow_imports(sources, explicit_export_types=export_types)
         res = self.increment_output(messages, sources, is_tty, terminal_width)
         self.flush_caches()
         self.update_stats(res)
@@ -430,9 +420,7 @@ class Server:
             if not self.following_imports():
                 messages = self.fine_grained_increment(sources, explicit_export_types=export_types)
             else:
-                messages = self.fine_grained_increment_follow_imports(
-                    sources, explicit_export_types=export_types
-                )
+                messages = self.fine_grained_increment_follow_imports(sources, explicit_export_types=export_types)
             res = self.increment_output(messages, sources, is_tty, terminal_width)
         self.flush_caches()
         self.update_stats(res)
@@ -456,9 +444,7 @@ class Server:
         # TODO: What about silent?
         return self.options.follow_imports == "normal"
 
-    def initialize_fine_grained(
-        self, sources: list[BuildSource], is_tty: bool, terminal_width: int
-    ) -> dict[str, Any]:
+    def initialize_fine_grained(self, sources: list[BuildSource], is_tty: bool, terminal_width: int) -> dict[str, Any]:
         self.fswatcher = FileSystemWatcher(self.fscache)
         t0 = time.time()
         self.update_sources(sources)
@@ -580,9 +566,7 @@ class Server:
             # If --export-types is given, we need to force full re-checking of all
             # explicitly passed files, since we need to visit each expression.
             add_all_sources_to_changed(sources, changed)
-        changed += self.find_added_suppressed(
-            self.fine_grained_manager.graph, set(), manager.search_paths
-        )
+        changed += self.find_added_suppressed(self.fine_grained_manager.graph, set(), manager.search_paths)
         manager.search_paths = compute_search_paths(sources, manager.options, manager.data_dir)
         t1 = time.time()
         manager.log(f"fine-grained increment: find_changed: {t1 - t0:.3f}s")
@@ -626,9 +610,7 @@ class Server:
         seen = {source.module for source in sources}
 
         # Find changed modules reachable from roots (or in roots) already in graph.
-        changed, new_files = self.find_reachable_changed_modules(
-            sources, graph, seen, changed_paths
-        )
+        changed, new_files = self.find_reachable_changed_modules(sources, graph, seen, changed_paths)
         # Same as in fine_grained_increment().
         self.add_explicitly_new(sources, changed)
         if explicit_export_types:
@@ -650,9 +632,7 @@ class Server:
             # infinite looping if there are any self edges. (Self
             # edges are maybe a bug, but...)
             sources2 = [source for source in sources2 if source.module not in seen]
-            changed, new_files = self.find_reachable_changed_modules(
-                sources2, graph, seen, changed_paths
-            )
+            changed, new_files = self.find_reachable_changed_modules(sources2, graph, seen, changed_paths)
             self.update_sources(new_files)
             messages = fine_grained_manager.update(changed, [], followed=True)
             worklist.extend(changed)
@@ -768,9 +748,7 @@ class Server:
                         worklist.append(BuildSource(graph[dep].path, graph[dep].id, followed=True))
         return changed, new_files
 
-    def direct_imports(
-        self, module: tuple[str, str], graph: mypy.build.Graph
-    ) -> list[BuildSource]:
+    def direct_imports(self, module: tuple[str, str], graph: mypy.build.Graph) -> list[BuildSource]:
         """Return the direct imports of module not included in seen."""
         state = graph[module[0]]
         return [BuildSource(graph[dep].path, dep, followed=True) for dep in state.dependencies]
@@ -795,9 +773,7 @@ class Server:
         #
         # TODO: Figure out why these are treated as suppressed
         all_suppressed = {
-            module
-            for module in all_suppressed
-            if module not in graph and not ignore_suppressed_imports(module)
+            module for module in all_suppressed if module not in graph and not ignore_suppressed_imports(module)
         }
 
         # Optimization: skip top-level packages that are obviously not
@@ -844,16 +820,12 @@ class Server:
         use_color = self.options.color_output and is_tty
         fit_width = self.options.pretty and is_tty
         if fit_width:
-            messages = self.formatter.fit_in_terminal(
-                messages, fixed_terminal_width=terminal_width
-            )
+            messages = self.formatter.fit_in_terminal(messages, fixed_terminal_width=terminal_width)
         if self.options.error_summary:
             summary: str | None = None
             n_errors, n_notes, n_files = count_stats(messages)
             if n_errors:
-                summary = self.formatter.format_error(
-                    n_errors, n_files, n_sources, use_color=use_color
-                )
+                summary = self.formatter.format_error(n_errors, n_files, n_sources, use_color=use_color)
             elif not messages or n_notes == len(messages):
                 summary = self.formatter.format_success(n_sources, use_color)
             if summary:
@@ -870,9 +842,7 @@ class Server:
             paths = [path for path in paths if self.fscache.isfile(path)]
         self.fswatcher.add_watched_paths(paths)
 
-    def update_changed(
-        self, sources: list[BuildSource], remove: list[str], update: list[str]
-    ) -> ChangesAndRemovals:
+    def update_changed(self, sources: list[BuildSource], remove: list[str], update: list[str]) -> ChangesAndRemovals:
         changed_paths = self.fswatcher.update_changed(remove, update)
         return self._find_changed(sources, changed_paths)
 
@@ -880,15 +850,9 @@ class Server:
         changed_paths = self.fswatcher.find_changed()
         return self._find_changed(sources, changed_paths)
 
-    def _find_changed(
-        self, sources: list[BuildSource], changed_paths: AbstractSet[str]
-    ) -> ChangesAndRemovals:
+    def _find_changed(self, sources: list[BuildSource], changed_paths: AbstractSet[str]) -> ChangesAndRemovals:
         # Find anything that has been added or modified
-        changed = [
-            (source.module, source.path)
-            for source in sources
-            if source.path and source.path in changed_paths
-        ]
+        changed = [(source.module, source.path) for source in sources if source.path and source.path in changed_paths]
 
         # Now find anything that has been removed from the build
         modules = {source.module for source in sources}
@@ -912,9 +876,7 @@ class Server:
 
         return changed, removed
 
-    def add_explicitly_new(
-        self, sources: list[BuildSource], changed: list[tuple[str, str]]
-    ) -> None:
+    def add_explicitly_new(self, sources: list[BuildSource], changed: list[tuple[str, str]]) -> None:
         # Always add modules that were (re-)added, since they may be detected as not changed by
         # fswatcher (if they were actually not changed), but they may still need to be checked
         # in case they had errors before they were deleted from sources on previous runs.
@@ -945,8 +907,7 @@ class Server:
         """Locate and inspect expression(s)."""
         if not self.fine_grained_manager:
             return {
-                "error": 'Command "inspect" is only valid after a "check" command'
-                " (that produces no parse errors)"
+                "error": 'Command "inspect" is only valid after a "check" command' " (that produces no parse errors)"
             }
         engine = InspectionEngine(
             self.fine_grained_manager,
@@ -980,8 +941,7 @@ class Server:
         """Suggest a signature for a function."""
         if not self.fine_grained_manager:
             return {
-                "error": "Command 'suggest' is only valid after a 'check' command"
-                " (that produces no parse errors)"
+                "error": "Command 'suggest' is only valid after a 'check' command" " (that produces no parse errors)"
             }
         engine = SuggestionEngine(self.fine_grained_manager, **kwargs)
         try:
@@ -1018,8 +978,7 @@ def get_meminfo() -> dict[str, Any]:
         import psutil
     except ImportError:
         res["memory_psutil_missing"] = (
-            "psutil not found, run pip install mypy[dmypy] "
-            "to install the needed components for dmypy"
+            "psutil not found, run pip install mypy[dmypy] " "to install the needed components for dmypy"
         )
     else:
         process = psutil.Process()
@@ -1041,9 +1000,7 @@ def get_meminfo() -> dict[str, Any]:
     return res
 
 
-def find_all_sources_in_build(
-    graph: mypy.build.Graph, extra: Sequence[BuildSource] = ()
-) -> list[BuildSource]:
+def find_all_sources_in_build(graph: mypy.build.Graph, extra: Sequence[BuildSource] = ()) -> list[BuildSource]:
     result = list(extra)
     seen = {source.module for source in result}
     for module, state in graph.items():
@@ -1059,13 +1016,7 @@ def add_all_sources_to_changed(sources: list[BuildSource], changed: list[tuple[s
     the purpose of exporting types for inspections).
     """
     changed_set = set(changed)
-    changed.extend(
-        [
-            (bs.module, bs.path)
-            for bs in sources
-            if bs.path and (bs.module, bs.path) not in changed_set
-        ]
-    )
+    changed.extend([(bs.module, bs.path) for bs in sources if bs.path and (bs.module, bs.path) not in changed_set])
 
 
 def fix_module_deps(graph: mypy.build.Graph) -> None:
@@ -1100,12 +1051,7 @@ def filter_out_missing_top_level_packages(
     """
     # Start with a empty set and add all potential top-level packages.
     found = set()
-    paths = (
-        search_paths.python_path
-        + search_paths.mypy_path
-        + search_paths.package_path
-        + search_paths.typeshed_path
-    )
+    paths = search_paths.python_path + search_paths.mypy_path + search_paths.package_path + search_paths.typeshed_path
     for p in paths:
         try:
             entries = fscache.listdir(p)

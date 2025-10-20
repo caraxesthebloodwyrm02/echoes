@@ -243,9 +243,7 @@ class IncrementalPCA(_BasePCA):
         else:
             self.batch_size_ = self.batch_size
 
-        for batch in gen_batches(
-            n_samples, self.batch_size_, min_batch_size=self.n_components or 0
-        ):
+        for batch in gen_batches(n_samples, self.batch_size_, min_batch_size=self.n_components or 0):
             X_batch = X[batch]
             if sparse.issparse(X_batch):
                 X_batch = X_batch.toarray()
@@ -315,14 +313,11 @@ class IncrementalPCA(_BasePCA):
         else:
             self.n_components_ = self.n_components
 
-        if (self.components_ is not None) and (
-            self.components_.shape[0] != self.n_components_
-        ):
+        if (self.components_ is not None) and (self.components_.shape[0] != self.n_components_):
             raise ValueError(
                 "Number of input features has changed from %i "
                 "to %i between calls to partial_fit! Try "
-                "setting n_components to a fixed value."
-                % (self.components_.shape[0], self.n_components_)
+                "setting n_components to a fixed value." % (self.components_.shape[0], self.n_components_)
             )
 
         # This is the first partial_fit
@@ -348,9 +343,9 @@ class IncrementalPCA(_BasePCA):
             col_batch_mean = np.mean(X, axis=0)
             X -= col_batch_mean
             # Build matrix of combined previous basis and new data
-            mean_correction = np.sqrt(
-                (self.n_samples_seen_ / n_total_samples) * n_samples
-            ) * (self.mean_ - col_batch_mean)
+            mean_correction = np.sqrt((self.n_samples_seen_ / n_total_samples) * n_samples) * (
+                self.mean_ - col_batch_mean
+            )
             X = np.vstack(
                 (
                     self.singular_values_.reshape((-1, 1)) * self.components_,
@@ -411,9 +406,7 @@ class IncrementalPCA(_BasePCA):
         if sparse.issparse(X):
             n_samples = X.shape[0]
             output = []
-            for batch in gen_batches(
-                n_samples, self.batch_size_, min_batch_size=self.n_components or 0
-            ):
+            for batch in gen_batches(n_samples, self.batch_size_, min_batch_size=self.n_components or 0):
                 output.append(super().transform(X[batch].toarray()))
             return np.vstack(output)
         else:

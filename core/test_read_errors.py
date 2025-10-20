@@ -2,6 +2,7 @@
 Tests that work on the Python, C and PyArrow engines but do not have a
 specific classification into the other test modules.
 """
+
 import codecs
 import csv
 from io import StringIO
@@ -35,10 +36,7 @@ def test_empty_decimal_marker(all_parsers):
     parser = all_parsers
 
     if parser.engine == "pyarrow":
-        msg = (
-            "only single character unicode strings can be "
-            "converted to Py_UCS4, got length 0"
-        )
+        msg = "only single character unicode strings can be " "converted to Py_UCS4, got length 0"
 
     with pytest.raises(ValueError, match=msg):
         parser.read_csv(StringIO(data), decimal="")
@@ -108,9 +106,7 @@ skip
         return
 
     msg = "Expected 3 fields in line 6, saw 5"
-    with parser.read_csv(
-        StringIO(data), header=1, comment="#", iterator=True, chunksize=1, skiprows=[2]
-    ) as reader:
+    with parser.read_csv(StringIO(data), header=1, comment="#", iterator=True, chunksize=1, skiprows=[2]) as reader:
         with pytest.raises(ParserError, match=msg):
             reader.read(nrows)
 
@@ -127,8 +123,7 @@ def test_catch_too_many_names(all_parsers):
     msg = (
         "Too many columns specified: expected 4 and found 3"
         if parser.engine == "c"
-        else "Number of passed names did not match "
-        "number of header fields in the file"
+        else "Number of passed names did not match " "number of header fields in the file"
     )
 
     with pytest.raises(ValueError, match=msg):
@@ -194,9 +189,7 @@ def test_warn_bad_lines(all_parsers):
         match_msg = "Expected 1 columns, but found 3: 1,2,3"
         expected_warning = (ParserWarning, DeprecationWarning)
 
-    with tm.assert_produces_warning(
-        expected_warning, match=match_msg, check_stacklevel=False
-    ):
+    with tm.assert_produces_warning(expected_warning, match=match_msg, check_stacklevel=False):
         result = parser.read_csv(StringIO(data), on_bad_lines="warn")
     tm.assert_frame_equal(result, expected)
 
@@ -227,11 +220,7 @@ def test_null_byte_char(request, all_parsers):
 
     if parser.engine == "c" or (parser.engine == "python" and PY311):
         if parser.engine == "python" and PY311:
-            request.applymarker(
-                pytest.mark.xfail(
-                    reason="In Python 3.11, this is read as an empty character not null"
-                )
-            )
+            request.applymarker(pytest.mark.xfail(reason="In Python 3.11, this is read as an empty character not null"))
         expected = DataFrame([[np.nan, "foo"]], columns=names)
         out = parser.read_csv(StringIO(data), names=names)
         tm.assert_frame_equal(out, expected)
@@ -257,9 +246,7 @@ def test_open_file(request, all_parsers):
         msg = "the 'c' engine does not support sep=None with delim_whitespace=False"
         err = ValueError
     elif parser.engine == "pyarrow":
-        msg = (
-            "the 'pyarrow' engine does not support sep=None with delim_whitespace=False"
-        )
+        msg = "the 'pyarrow' engine does not support sep=None with delim_whitespace=False"
         err = ValueError
 
     with tm.ensure_clean() as path:
@@ -284,10 +271,7 @@ def test_bad_header_uniform_error(all_parsers):
     data = "+++123456789...\ncol1,col2,col3,col4\n1,2,3,4\n"
     msg = "Expected 2 fields in line 2, saw 4"
     if parser.engine == "c":
-        msg = (
-            "Could not construct index. Requested to use 1 "
-            "number of columns, but 3 left to parse."
-        )
+        msg = "Could not construct index. Requested to use 1 " "number of columns, but 3 left to parse."
     elif parser.engine == "pyarrow":
         # "CSV parse error: Expected 1 columns, got 4: col1,col2,col3,col4"
         pytest.skip(reason="https://github.com/apache/arrow/issues/38676")
@@ -313,8 +297,6 @@ a,b
         match_msg = "Expected 2 columns, but found 3: a,b,c"
         expected_warning = (ParserWarning, DeprecationWarning)
 
-    with tm.assert_produces_warning(
-        expected_warning, match=match_msg, check_stacklevel=False
-    ):
+    with tm.assert_produces_warning(expected_warning, match=match_msg, check_stacklevel=False):
         result = parser.read_csv(StringIO(data), on_bad_lines="warn")
     tm.assert_frame_equal(result, expected)

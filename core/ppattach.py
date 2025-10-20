@@ -52,10 +52,13 @@ class PPAttachment:
         self.attachment = attachment
 
     def __repr__(self):
-        return (
-            "PPAttachment(sent=%r, verb=%r, noun1=%r, prep=%r, "
-            "noun2=%r, attachment=%r)"
-            % (self.sent, self.verb, self.noun1, self.prep, self.noun2, self.attachment)
+        return "PPAttachment(sent=%r, verb=%r, noun1=%r, prep=%r, " "noun2=%r, attachment=%r)" % (
+            self.sent,
+            self.verb,
+            self.noun1,
+            self.prep,
+            self.noun2,
+            self.attachment,
         )
 
 

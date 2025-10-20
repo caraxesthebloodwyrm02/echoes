@@ -2,6 +2,7 @@
 Tests that NA values are properly handled during
 parsing for all of the parsers defined in parsers.py
 """
+
 from io import StringIO
 
 import numpy as np
@@ -16,9 +17,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
@@ -49,9 +48,7 @@ foo,bar
 NA,baz
 NaN,nan
 """
-    expected = DataFrame(
-        [["foo", "bar"], [np.nan, "baz"], [np.nan, np.nan]], columns=["A", "B"]
-    )
+    expected = DataFrame([["foo", "bar"], [np.nan, "baz"], [np.nan, np.nan]], columns=["A", "B"])
     if parser.engine == "pyarrow":
         expected.loc[[1, 2], "A"] = None
         expected.loc[2, "B"] = None
@@ -101,9 +98,7 @@ def test_non_string_na_values(all_parsers, data, na_values, request):
         # bc the pyarrow engine does not include the float-ified version
         #  of "-999" -> -999, it does not match the entry with the trailing
         #  zeros, so "-999.000" is not treated as null.
-        mark = pytest.mark.xfail(
-            reason="pyarrow engined does not recognize equivalent floats"
-        )
+        mark = pytest.mark.xfail(reason="pyarrow engined does not recognize equivalent floats")
         request.applymarker(mark)
 
     result = parser.read_csv(StringIO(data), na_values=na_values)
@@ -167,9 +162,7 @@ ignore,this,row
 -1.#IND,5,baz
 7,8,NaN
 """
-    expected = DataFrame(
-        [[1.0, np.nan, 3], [np.nan, 5, np.nan], [7, 8, np.nan]], columns=["A", "B", "C"]
-    )
+    expected = DataFrame([[1.0, np.nan, 3], [np.nan, 5, np.nan], [7, 8, np.nan]], columns=["A", "B", "C"])
     if parser.engine == "pyarrow":
         msg = "skiprows argument must be an integer when using engine='pyarrow'"
         with pytest.raises(ValueError, match=msg):
@@ -303,9 +296,7 @@ a,b,c,d
         ),
     ],
 )
-def test_na_values_keep_default(
-    all_parsers, kwargs, expected, request, using_infer_string
-):
+def test_na_values_keep_default(all_parsers, kwargs, expected, request, using_infer_string):
     data = """\
 A,B,C
 a,1,one
@@ -365,14 +356,10 @@ def test_no_keep_default_na_dict_na_values(all_parsers):
     if parser.engine == "pyarrow":
         msg = "The pyarrow engine doesn't support passing a dict for na_values"
         with pytest.raises(ValueError, match=msg):
-            parser.read_csv(
-                StringIO(data), na_values={"b": ["2"]}, keep_default_na=False
-            )
+            parser.read_csv(StringIO(data), na_values={"b": ["2"]}, keep_default_na=False)
         return
 
-    result = parser.read_csv(
-        StringIO(data), na_values={"b": ["2"]}, keep_default_na=False
-    )
+    result = parser.read_csv(StringIO(data), na_values={"b": ["2"]}, keep_default_na=False)
     expected = DataFrame({"a": [""], "b": [np.nan]})
     tm.assert_frame_equal(result, expected)
 
@@ -442,9 +429,7 @@ def test_no_keep_default_na_dict_na_values_diff_reprs(all_parsers, col_zero_na_v
         (False, [["1", "A"], ["nan", "B"], ["3", "C"]]),
     ],
 )
-def test_na_values_na_filter_override(
-    request, all_parsers, na_filter, row_data, using_infer_string
-):
+def test_na_values_na_filter_override(request, all_parsers, na_filter, row_data, using_infer_string):
     parser = all_parsers
     if parser.engine == "pyarrow":
         # mismatched dtypes in both cases, FutureWarning in the True case
@@ -603,9 +588,7 @@ def test_empty_na_values_no_default_with_index(all_parsers):
     tm.assert_frame_equal(result, expected)
 
 
-@pytest.mark.parametrize(
-    "na_filter,index_data", [(False, ["", "5"]), (True, [np.nan, 5.0])]
-)
+@pytest.mark.parametrize("na_filter,index_data", [(False, ["", "5"]), (True, [np.nan, 5.0])])
 def test_no_na_filter_on_index(all_parsers, na_filter, index_data, request):
     # see gh-5239
     #
@@ -629,9 +612,7 @@ def test_inf_na_values_with_int_index(all_parsers):
 
     # Don't fail with OverflowError with inf's and integer index column.
     out = parser.read_csv(StringIO(data), index_col=[0], na_values=["inf", "-inf"])
-    expected = DataFrame(
-        {"col1": [3, np.nan], "col2": [4, np.nan]}, index=Index([1, 2], name="idx")
-    )
+    expected = DataFrame({"col1": [3, np.nan], "col2": [4, np.nan]}, index=Index([1, 2], name="idx"))
     tm.assert_frame_equal(out, expected)
 
 
@@ -668,8 +649,7 @@ def test_cast_NA_to_bool_raises_error(all_parsers, data, na_values):
     msg = "|".join(
         [
             "Bool column has NA values in column [0a]",
-            "cannot safely convert passed user dtype of "
-            "bool for object dtyped data in column 0",
+            "cannot safely convert passed user dtype of " "bool for object dtyped data in column 0",
         ]
     )
 
@@ -722,14 +702,10 @@ def test_nan_multi_index(all_parsers):
     if parser.engine == "pyarrow":
         msg = "The pyarrow engine doesn't support passing a dict for na_values"
         with pytest.raises(ValueError, match=msg):
-            parser.read_csv(
-                StringIO(data), header=list(range(2)), na_values={("B", "Z"): "inf"}
-            )
+            parser.read_csv(StringIO(data), header=list(range(2)), na_values={("B", "Z"): "inf"})
         return
 
-    result = parser.read_csv(
-        StringIO(data), header=list(range(2)), na_values={("B", "Z"): "inf"}
-    )
+    result = parser.read_csv(StringIO(data), header=list(range(2)), na_values={("B", "Z"): "inf"})
 
     expected = DataFrame(
         {

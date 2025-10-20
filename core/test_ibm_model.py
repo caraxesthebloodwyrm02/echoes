@@ -33,18 +33,14 @@ class TestIBMModel(unittest.TestCase):
 
     def test_best_model2_alignment(self):
         # arrange
-        sentence_pair = AlignedSent(
-            TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE
-        )
+        sentence_pair = AlignedSent(TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE)
         # None and 'bien' have zero fertility
         translation_table = {
             "i": {"j'": 0.9, "aime": 0.05, "bien": 0.02, "jambon": 0.03, None: 0},
             "love": {"j'": 0.05, "aime": 0.9, "bien": 0.01, "jambon": 0.01, None: 0.03},
             "ham": {"j'": 0, "aime": 0.01, "bien": 0, "jambon": 0.99, None: 0},
         }
-        alignment_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2)))
-        )
+        alignment_table = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2))))
 
         ibm_model = IBMModel([])
         ibm_model.translation_table = translation_table
@@ -59,17 +55,13 @@ class TestIBMModel(unittest.TestCase):
 
     def test_best_model2_alignment_does_not_change_pegged_alignment(self):
         # arrange
-        sentence_pair = AlignedSent(
-            TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE
-        )
+        sentence_pair = AlignedSent(TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE)
         translation_table = {
             "i": {"j'": 0.9, "aime": 0.05, "bien": 0.02, "jambon": 0.03, None: 0},
             "love": {"j'": 0.05, "aime": 0.9, "bien": 0.01, "jambon": 0.01, None: 0.03},
             "ham": {"j'": 0, "aime": 0.01, "bien": 0, "jambon": 0.99, None: 0},
         }
-        alignment_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2)))
-        )
+        alignment_table = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2))))
 
         ibm_model = IBMModel([])
         ibm_model.translation_table = translation_table
@@ -95,9 +87,7 @@ class TestIBMModel(unittest.TestCase):
             "love": {"j'": 0.05, "aime": 0.9, "bien": 0.01, "jambon": 0.01, None: 0.03},
             "ham": {"j'": 0, "aime": 0.01, "bien": 0, "jambon": 0.99, None: 0},
         }
-        alignment_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2)))
-        )
+        alignment_table = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: 0.2))))
 
         ibm_model = IBMModel([])
         ibm_model.translation_table = translation_table
@@ -256,9 +246,7 @@ class TestIBMModel(unittest.TestCase):
 
     def test_sample(self):
         # arrange
-        sentence_pair = AlignedSent(
-            TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE
-        )
+        sentence_pair = AlignedSent(TestIBMModel.__TEST_TRG_SENTENCE, TestIBMModel.__TEST_SRC_SENTENCE)
         ibm_model = IBMModel([])
         ibm_model.prob_t_a_given_s = lambda x: 0.001
 

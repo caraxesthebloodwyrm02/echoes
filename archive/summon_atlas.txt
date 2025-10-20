@@ -1,1 +1,0 @@
-Summon Atlas - AI Task Executor. Processes problem/fix pairs through structured AI reasoning. Manages task registry for environment configuration, ethical documentation, and system optimization challenges.

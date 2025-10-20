@@ -68,9 +68,7 @@ class ClientCredentialsGrant(BaseGrant, TokenEndpointMixin):
         log.debug("Validate token request of %r", client)
 
         if not client.check_grant_type(self.GRANT_TYPE):
-            raise UnauthorizedClientError(
-                f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'"
-            )
+            raise UnauthorizedClientError(f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'")
 
         self.request.client = client
         self.validate_requested_scope()
@@ -101,9 +99,7 @@ class ClientCredentialsGrant(BaseGrant, TokenEndpointMixin):
 
         :returns: (status_code, body, headers)
         """
-        token = self.generate_token(
-            scope=self.request.payload.scope, include_refresh_token=False
-        )
+        token = self.generate_token(scope=self.request.payload.scope, include_refresh_token=False)
         log.debug("Issue token %r to %r", token, self.client)
         self.save_token(token)
         return 200, token, self.TOKEN_RESPONSE_HEADER

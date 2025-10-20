@@ -248,17 +248,9 @@ if __name__ == "__main__":
     }
 
     os.makedirs("reports", exist_ok=True)
-    with open(
-        "reports/echoes_workflow_integration_analysis.json", "w", encoding="utf-8"
-    ) as f:
+    with open("reports/echoes_workflow_integration_analysis.json", "w", encoding="utf-8") as f:
         json.dump(results, f, indent=2, ensure_ascii=False)
 
-    print(
-        "Analysis completed and saved to reports/echoes_workflow_integration_analysis.json"
-    )
-    print(
-        f"Identified {len(workflow_analysis['workflows_identified'])} workflow patterns"
-    )
-    print(
-        f"Found {len(workflow_analysis['integration_opportunities'])} integration opportunities"
-    )
+    print("Analysis completed and saved to reports/echoes_workflow_integration_analysis.json")
+    print(f"Identified {len(workflow_analysis['workflows_identified'])} workflow patterns")
+    print(f"Found {len(workflow_analysis['integration_opportunities'])} integration opportunities")

@@ -4,6 +4,7 @@ and Index.__new__.
 
 These should not depend on core.internals.
 """
+
 from __future__ import annotations
 
 from collections.abc import Sequence
@@ -351,10 +352,7 @@ def array(
             return IntegerArray._from_sequence(data, copy=copy)
         elif inferred_dtype == "empty" and not hasattr(data, "dtype") and not len(data):
             return FloatingArray._from_sequence(data, copy=copy)
-        elif (
-            inferred_dtype in ("floating", "mixed-integer-float")
-            and getattr(data, "dtype", None) != np.float16
-        ):
+        elif inferred_dtype in ("floating", "mixed-integer-float") and getattr(data, "dtype", None) != np.float16:
             # GH#44715 Exclude np.float16 bc FloatingArray does not support it;
             #  we will fall back to NumpyExtensionArray.
             return FloatingArray._from_sequence(data, copy=copy)
@@ -400,22 +398,14 @@ _typs = frozenset(
 
 
 @overload
-def extract_array(
-    obj: Series | Index, extract_numpy: bool = ..., extract_range: bool = ...
-) -> ArrayLike:
-    ...
+def extract_array(obj: Series | Index, extract_numpy: bool = ..., extract_range: bool = ...) -> ArrayLike: ...
 
 
 @overload
-def extract_array(
-    obj: T, extract_numpy: bool = ..., extract_range: bool = ...
-) -> T | ArrayLike:
-    ...
+def extract_array(obj: T, extract_numpy: bool = ..., extract_range: bool = ...) -> T | ArrayLike: ...
 
 
-def extract_array(
-    obj: T, extract_numpy: bool = False, extract_range: bool = False
-) -> T | ArrayLike:
+def extract_array(obj: T, extract_numpy: bool = False, extract_range: bool = False) -> T | ArrayLike:
     """
     Extract the ndarray or ExtensionArray from a Series or Index.
 
@@ -712,9 +702,7 @@ def _sanitize_ndim(
         if isinstance(data, np.ndarray):
             if allow_2d:
                 return result
-            raise ValueError(
-                f"Data must be 1-dimensional, got ndarray of shape {data.shape} instead"
-            )
+            raise ValueError(f"Data must be 1-dimensional, got ndarray of shape {data.shape} instead")
         if is_object_dtype(dtype) and isinstance(dtype, ExtensionDtype):
             # i.e. NumpyEADtype("O")
 
@@ -729,9 +717,7 @@ def _sanitize_ndim(
     return result
 
 
-def _sanitize_str_dtypes(
-    result: np.ndarray, data, dtype: np.dtype | None, copy: bool
-) -> np.ndarray:
+def _sanitize_str_dtypes(result: np.ndarray, data, dtype: np.dtype | None, copy: bool) -> np.ndarray:
     """
     Ensure we have a dtype that is supported by pandas.
     """
@@ -800,9 +786,7 @@ def _try_cast(
                 arr = arr.ravel()
         else:
             shape = (len(arr),)
-        return lib.ensure_string_array(arr, convert_na_value=False, copy=copy).reshape(
-            shape
-        )
+        return lib.ensure_string_array(arr, convert_na_value=False, copy=copy).reshape(shape)
 
     elif dtype.kind in "mM":
         return maybe_cast_to_datetime(arr, dtype)

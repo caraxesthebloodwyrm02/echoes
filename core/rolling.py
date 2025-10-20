@@ -2,6 +2,7 @@
 Provide a generic structure to support window functions,
 similar to how we have a Groupby object.
 """
+
 from __future__ import annotations
 
 import copy
@@ -161,10 +162,7 @@ class BaseWindow(SelectionMixin):
         elif isinstance(self.obj, ABCDataFrame) and self.on in self.obj.columns:
             self._on = Index(self.obj[self.on])
         else:
-            raise ValueError(
-                f"invalid on specified as {self.on}, "
-                "must be a column (of DataFrame), an Index or None"
-            )
+            raise ValueError(f"invalid on specified as {self.on}, " "must be a column (of DataFrame), an Index or None")
 
         self._selection = selection
         self._validate()
@@ -178,9 +176,7 @@ class BaseWindow(SelectionMixin):
             if self.min_periods < 0:
                 raise ValueError("min_periods must be >= 0")
             if is_integer(self.window) and self.min_periods > self.window:
-                raise ValueError(
-                    f"min_periods {self.min_periods} must be <= window {self.window}"
-                )
+                raise ValueError(f"min_periods {self.min_periods} must be <= window {self.window}")
         if self.closed is not None and self.closed not in [
             "right",
             "both",
@@ -193,16 +189,11 @@ class BaseWindow(SelectionMixin):
         if isinstance(self.window, BaseIndexer):
             # Validate that the passed BaseIndexer subclass has
             # a get_window_bounds with the correct signature.
-            get_window_bounds_signature = inspect.signature(
-                self.window.get_window_bounds
-            ).parameters.keys()
-            expected_signature = inspect.signature(
-                BaseIndexer().get_window_bounds
-            ).parameters.keys()
+            get_window_bounds_signature = inspect.signature(self.window.get_window_bounds).parameters.keys()
+            expected_signature = inspect.signature(BaseIndexer().get_window_bounds).parameters.keys()
             if get_window_bounds_signature != expected_signature:
                 raise ValueError(
-                    f"{type(self.window).__name__} does not implement "
-                    f"the correct signature for get_window_bounds"
+                    f"{type(self.window).__name__} does not implement " f"the correct signature for get_window_bounds"
                 )
         if self.method not in ["table", "single"]:
             raise ValueError("method must be 'table' or 'single")
@@ -212,14 +203,9 @@ class BaseWindow(SelectionMixin):
             if self.step < 0:
                 raise ValueError("step must be >= 0")
 
-    def _check_window_bounds(
-        self, start: np.ndarray, end: np.ndarray, num_vals: int
-    ) -> None:
+    def _check_window_bounds(self, start: np.ndarray, end: np.ndarray, num_vals: int) -> None:
         if len(start) != len(end):
-            raise ValueError(
-                f"start ({len(start)}) and end ({len(end)}) bounds must be the "
-                f"same length"
-            )
+            raise ValueError(f"start ({len(start)}) and end ({len(end)}) bounds must be the " f"same length")
         if len(start) != (num_vals + (self.step or 1) - 1) // (self.step or 1):
             raise ValueError(
                 f"start and end bounds ({len(start)}) must be the same length "
@@ -231,11 +217,7 @@ class BaseWindow(SelectionMixin):
         """
         Slices the index for a given result and the preset step.
         """
-        return (
-            index
-            if result is None or len(result) == len(index)
-            else index[:: self.step]
-        )
+        return index if result is None or len(result) == len(index) else index[:: self.step]
 
     def _validate_numeric_only(self, name: str, numeric_only: bool) -> None:
         """
@@ -248,14 +230,8 @@ class BaseWindow(SelectionMixin):
         numeric_only : bool
             Value passed by user.
         """
-        if (
-            self._selected_obj.ndim == 1
-            and numeric_only
-            and not is_numeric_dtype(self._selected_obj.dtype)
-        ):
-            raise NotImplementedError(
-                f"{type(self).__name__}.{name} does not implement numeric_only"
-            )
+        if self._selected_obj.ndim == 1 and numeric_only and not is_numeric_dtype(self._selected_obj.dtype):
+            raise NotImplementedError(f"{type(self).__name__}.{name} does not implement numeric_only")
 
     def _make_numeric_only(self, obj: NDFrameT) -> NDFrameT:
         """Subset DataFrame to numeric columns.
@@ -318,9 +294,7 @@ class BaseWindow(SelectionMixin):
         if attr in self.obj:
             return self[attr]
 
-        raise AttributeError(
-            f"'{type(self).__name__}' object has no attribute '{attr}'"
-        )
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{attr}'")
 
     def _dir_additions(self):
         return self.obj._dir_additions()
@@ -359,8 +333,7 @@ class BaseWindow(SelectionMixin):
         """Convert input to numpy arrays for Cython routines"""
         if needs_i8_conversion(values.dtype):
             raise NotImplementedError(
-                f"ops for {type(self).__name__} for this "
-                f"dtype {values.dtype} are not implemented"
+                f"ops for {type(self).__name__} for this " f"dtype {values.dtype} are not implemented"
             )
         # GH #12373 : rolling functions error on float32 data
         # make sure the data is coerced to float64
@@ -437,9 +410,7 @@ class BaseWindow(SelectionMixin):
             )
         return FixedWindowIndexer(window_size=self.window)
 
-    def _apply_series(
-        self, homogeneous_func: Callable[..., ArrayLike], name: str | None = None
-    ) -> Series:
+    def _apply_series(self, homogeneous_func: Callable[..., ArrayLike], name: str | None = None) -> Series:
         """
         Series version of _apply_columnwise
         """
@@ -488,16 +459,12 @@ class BaseWindow(SelectionMixin):
             try:
                 arr = self._prep_values(arr)
             except (TypeError, NotImplementedError) as err:
-                raise DataError(
-                    f"Cannot aggregate non-numeric type: {arr.dtype}"
-                ) from err
+                raise DataError(f"Cannot aggregate non-numeric type: {arr.dtype}") from err
             res = homogeneous_func(arr)
             res_values.append(res)
             taker.append(i)
 
-        index = self._slice_axis_for_step(
-            obj.index, res_values[0] if len(res_values) > 0 else None
-        )
+        index = self._slice_axis_for_step(obj.index, res_values[0] if len(res_values) > 0 else None)
         df = type(obj)._from_arrays(
             res_values,
             index=index,
@@ -527,11 +494,7 @@ class BaseWindow(SelectionMixin):
         result = homogeneous_func(values)
         result = result.T if self.axis == 1 else result
         index = self._slice_axis_for_step(obj.index, result)
-        columns = (
-            obj.columns
-            if result.shape[1] == len(obj.columns)
-            else obj.columns[:: self.step]
-        )
+        columns = obj.columns if result.shape[1] == len(obj.columns) else obj.columns[:: self.step]
         out = obj._constructor(result, index=index, columns=columns)
 
         return self._resolve_output(out, obj)
@@ -586,11 +549,7 @@ class BaseWindow(SelectionMixin):
         y : type of input
         """
         window_indexer = self._get_window_indexer()
-        min_periods = (
-            self.min_periods
-            if self.min_periods is not None
-            else window_indexer.window_size
-        )
+        min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
 
         def homogeneous_func(values: np.ndarray):
             # calculation function
@@ -627,11 +586,7 @@ class BaseWindow(SelectionMixin):
         **func_kwargs,
     ):
         window_indexer = self._get_window_indexer()
-        min_periods = (
-            self.min_periods
-            if self.min_periods is not None
-            else window_indexer.window_size
-        )
+        min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
         obj = self._create_data(self._selected_obj)
         if self.axis == 1:
             obj = obj.T
@@ -657,9 +612,7 @@ class BaseWindow(SelectionMixin):
             is_grouped_kernel=False,
             **get_jit_arguments(engine_kwargs),
         )
-        result = aggregator(
-            values.T, start=start, end=end, min_periods=min_periods, **func_kwargs
-        ).T
+        result = aggregator(values.T, start=start, end=end, min_periods=min_periods, **func_kwargs).T
         result = result.T if self.axis == 1 else result
         index = self._slice_axis_for_step(obj.index, result)
         if obj.ndim == 1:
@@ -735,11 +688,7 @@ class BaseWindowGroupby(BaseWindow):
         groupby_keys = copy.copy(self._grouper.names)
         result_index_names = groupby_keys + grouped_index_name
 
-        drop_columns = [
-            key
-            for key in self._grouper.names
-            if key not in self.obj.index.names or key is None
-        ]
+        drop_columns = [key for key in self._grouper.names if key not in self.obj.index.names or key is None]
 
         if len(drop_columns) != len(groupby_keys):
             # Our result will have still kept the column in the result
@@ -764,9 +713,7 @@ class BaseWindowGroupby(BaseWindow):
             codes.extend(list(idx.codes))
             levels.extend(list(idx.levels))
 
-        result_index = MultiIndex(
-            levels, codes, names=result_index_names, verify_integrity=False
-        )
+        result_index = MultiIndex(levels, codes, names=result_index_names, verify_integrity=False)
 
         result.index = result_index
         if not self._as_index:
@@ -788,24 +735,17 @@ class BaseWindowGroupby(BaseWindow):
         target = target.drop(columns=self._grouper.names, errors="ignore")
         result = super()._apply_pairwise(target, other, pairwise, func, numeric_only)
         # 1) Determine the levels + codes of the groupby levels
-        if other is not None and not all(
-            len(group) == len(other) for group in self._grouper.indices.values()
-        ):
+        if other is not None and not all(len(group) == len(other) for group in self._grouper.indices.values()):
             # GH 42915
             # len(other) != len(any group), so must reindex (expand) the result
             # from flex_binary_moment to a "transform"-like result
             # per groupby combination
             old_result_len = len(result)
             result = concat(
-                [
-                    result.take(gb_indices).reindex(result.index)
-                    for gb_indices in self._grouper.indices.values()
-                ]
+                [result.take(gb_indices).reindex(result.index) for gb_indices in self._grouper.indices.values()]
             )
 
-            gb_pairs = (
-                com.maybe_make_list(pair) for pair in self._grouper.indices.keys()
-            )
+            gb_pairs = (com.maybe_make_list(pair) for pair in self._grouper.indices.keys())
             groupby_codes = []
             groupby_levels = []
             # e.g. [[1, 2], [4, 5]] as [[1, 4], [2, 5]]
@@ -832,9 +772,7 @@ class BaseWindowGroupby(BaseWindow):
                 repeat_by = 1
             else:
                 repeat_by = len(target.columns)
-            groupby_codes = [
-                np.repeat(c.take(indexer), repeat_by) for c in groupby_codes
-            ]
+            groupby_codes = [np.repeat(c.take(indexer), repeat_by) for c in groupby_codes]
         # 2) Determine the levels + codes of the result from super()._apply_pairwise
         if isinstance(result.index, MultiIndex):
             result_codes = list(result.index.codes)
@@ -851,9 +789,7 @@ class BaseWindowGroupby(BaseWindow):
         result_levels = groupby_levels + result_levels
         result_names = self._grouper.names + result_names
 
-        result_index = MultiIndex(
-            result_levels, result_codes, names=result_names, verify_integrity=False
-        )
+        result_index = MultiIndex(result_levels, result_codes, names=result_names, verify_integrity=False)
         result.index = result_index
         return result
 
@@ -865,9 +801,7 @@ class BaseWindowGroupby(BaseWindow):
         # to the groups
         # GH 36197
         if not obj.empty:
-            groupby_order = np.concatenate(list(self._grouper.indices.values())).astype(
-                np.int64
-            )
+            groupby_order = np.concatenate(list(self._grouper.indices.values())).astype(np.int64)
             obj = obj.take(groupby_order)
         return super()._create_data(obj, numeric_only)
 
@@ -1158,9 +1092,7 @@ class Window(BaseWindow):
             raise ValueError(f"Invalid win_type {self.win_type}")
 
         if isinstance(self.window, BaseIndexer):
-            raise NotImplementedError(
-                "BaseIndexer subclasses not implemented with win_types."
-            )
+            raise NotImplementedError("BaseIndexer subclasses not implemented with win_types.")
         if not is_integer(self.window) or self.window < 0:
             raise ValueError("window must be an integer 0 or greater")
 
@@ -1205,9 +1137,7 @@ class Window(BaseWindow):
         y : type of input
         """
         # "None" not callable  [misc]
-        window = self._scipy_weight_generator(  # type: ignore[misc]
-            self.window, **kwargs
-        )
+        window = self._scipy_weight_generator(self.window, **kwargs)  # type: ignore[misc]
         offset = (len(window) - 1) // 2 if self.center else 0
 
         def homogeneous_func(values: np.ndarray):
@@ -1234,9 +1164,7 @@ class Window(BaseWindow):
 
             return result
 
-        return self._apply_columnwise(homogeneous_func, name, numeric_only)[
-            :: self.step
-        ]
+        return self._apply_columnwise(homogeneous_func, name, numeric_only)[:: self.step]
 
     @doc(
         _shared_docs["aggregate"],
@@ -1458,9 +1386,7 @@ class Window(BaseWindow):
         agg_method="std",
     )
     def std(self, ddof: int = 1, numeric_only: bool = False, **kwargs):
-        return zsqrt(
-            self.var(ddof=ddof, name="std", numeric_only=numeric_only, **kwargs)
-        )
+        return zsqrt(self.var(ddof=ddof, name="std", numeric_only=numeric_only, **kwargs))
 
 
 class RollingAndExpandingMixin(BaseWindow):
@@ -1491,13 +1417,9 @@ class RollingAndExpandingMixin(BaseWindow):
                 raise ValueError("raw must be `True` when using the numba engine")
             numba_args = args
             if self.method == "single":
-                apply_func = generate_numba_apply_func(
-                    func, **get_jit_arguments(engine_kwargs, kwargs)
-                )
+                apply_func = generate_numba_apply_func(func, **get_jit_arguments(engine_kwargs, kwargs))
             else:
-                apply_func = generate_numba_table_func(
-                    func, **get_jit_arguments(engine_kwargs, kwargs)
-                )
+                apply_func = generate_numba_table_func(func, **get_jit_arguments(engine_kwargs, kwargs))
         elif engine in ("cython", None):
             if engine_kwargs is not None:
                 raise ValueError("cython engine does not accept engine_kwargs")
@@ -1700,9 +1622,7 @@ class RollingAndExpandingMixin(BaseWindow):
     def sem(self, ddof: int = 1, numeric_only: bool = False):
         # Raise here so error message says sem instead of std
         self._validate_numeric_only("sem", numeric_only)
-        return self.std(numeric_only=numeric_only) / (
-            self.count(numeric_only=numeric_only) - ddof
-        ).pow(0.5)
+        return self.std(numeric_only=numeric_only) / (self.count(numeric_only=numeric_only) - ddof).pow(0.5)
 
     def kurt(self, numeric_only: bool = False):
         window_func = window_aggregations.roll_kurt
@@ -1764,11 +1684,7 @@ class RollingAndExpandingMixin(BaseWindow):
             x_array = self._prep_values(x)
             y_array = self._prep_values(y)
             window_indexer = self._get_window_indexer()
-            min_periods = (
-                self.min_periods
-                if self.min_periods is not None
-                else window_indexer.window_size
-            )
+            min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
             start, end = window_indexer.get_window_bounds(
                 num_values=len(x_array),
                 min_periods=min_periods,
@@ -1779,20 +1695,14 @@ class RollingAndExpandingMixin(BaseWindow):
             self._check_window_bounds(start, end, len(x_array))
 
             with np.errstate(all="ignore"):
-                mean_x_y = window_aggregations.roll_mean(
-                    x_array * y_array, start, end, min_periods
-                )
+                mean_x_y = window_aggregations.roll_mean(x_array * y_array, start, end, min_periods)
                 mean_x = window_aggregations.roll_mean(x_array, start, end, min_periods)
                 mean_y = window_aggregations.roll_mean(y_array, start, end, min_periods)
-                count_x_y = window_aggregations.roll_sum(
-                    notna(x_array + y_array).astype(np.float64), start, end, 0
-                )
+                count_x_y = window_aggregations.roll_sum(notna(x_array + y_array).astype(np.float64), start, end, 0)
                 result = (mean_x_y - mean_x * mean_y) * (count_x_y / (count_x_y - ddof))
             return Series(result, index=x.index, name=x.name, copy=False)
 
-        return self._apply_pairwise(
-            self._selected_obj, other, pairwise, cov_func, numeric_only
-        )
+        return self._apply_pairwise(self._selected_obj, other, pairwise, cov_func, numeric_only)
 
     def corr(
         self,
@@ -1811,11 +1721,7 @@ class RollingAndExpandingMixin(BaseWindow):
             x_array = self._prep_values(x)
             y_array = self._prep_values(y)
             window_indexer = self._get_window_indexer()
-            min_periods = (
-                self.min_periods
-                if self.min_periods is not None
-                else window_indexer.window_size
-            )
+            min_periods = self.min_periods if self.min_periods is not None else window_indexer.window_size
             start, end = window_indexer.get_window_bounds(
                 num_values=len(x_array),
                 min_periods=min_periods,
@@ -1826,30 +1732,18 @@ class RollingAndExpandingMixin(BaseWindow):
             self._check_window_bounds(start, end, len(x_array))
 
             with np.errstate(all="ignore"):
-                mean_x_y = window_aggregations.roll_mean(
-                    x_array * y_array, start, end, min_periods
-                )
+                mean_x_y = window_aggregations.roll_mean(x_array * y_array, start, end, min_periods)
                 mean_x = window_aggregations.roll_mean(x_array, start, end, min_periods)
                 mean_y = window_aggregations.roll_mean(y_array, start, end, min_periods)
-                count_x_y = window_aggregations.roll_sum(
-                    notna(x_array + y_array).astype(np.float64), start, end, 0
-                )
-                x_var = window_aggregations.roll_var(
-                    x_array, start, end, min_periods, ddof
-                )
-                y_var = window_aggregations.roll_var(
-                    y_array, start, end, min_periods, ddof
-                )
-                numerator = (mean_x_y - mean_x * mean_y) * (
-                    count_x_y / (count_x_y - ddof)
-                )
+                count_x_y = window_aggregations.roll_sum(notna(x_array + y_array).astype(np.float64), start, end, 0)
+                x_var = window_aggregations.roll_var(x_array, start, end, min_periods, ddof)
+                y_var = window_aggregations.roll_var(y_array, start, end, min_periods, ddof)
+                numerator = (mean_x_y - mean_x * mean_y) * (count_x_y / (count_x_y - ddof))
                 denominator = (x_var * y_var) ** 0.5
                 result = numerator / denominator
             return Series(result, index=x.index, name=x.name, copy=False)
 
-        return self._apply_pairwise(
-            self._selected_obj, other, pairwise, corr_func, numeric_only
-        )
+        return self._apply_pairwise(self._selected_obj, other, pairwise, corr_func, numeric_only)
 
 
 class Rolling(RollingAndExpandingMixin):
@@ -1880,16 +1774,11 @@ class Rolling(RollingAndExpandingMixin):
             try:
                 freq = to_offset(self.window)
             except (TypeError, ValueError) as err:
-                raise ValueError(
-                    f"passed window {self.window} is not "
-                    "compatible with a datetimelike index"
-                ) from err
+                raise ValueError(f"passed window {self.window} is not " "compatible with a datetimelike index") from err
             if isinstance(self._on, PeriodIndex):
                 # error: Incompatible types in assignment (expression has type
                 # "float", variable has type "Optional[int]")
-                self._win_freq_i8 = freq.nanos / (  # type: ignore[assignment]
-                    self._on.freq.nanos / self._on.freq.n
-                )
+                self._win_freq_i8 = freq.nanos / (self._on.freq.nanos / self._on.freq.n)  # type: ignore[assignment]
             else:
                 try:
                     unit = dtype_to_unit(self._on.dtype)  # type: ignore[arg-type]
@@ -1903,9 +1792,7 @@ class Rolling(RollingAndExpandingMixin):
                 self.min_periods = 1
 
             if self.step is not None:
-                raise NotImplementedError(
-                    "step is not supported with frequency windows"
-                )
+                raise NotImplementedError("step is not supported with frequency windows")
 
         elif isinstance(self.window, BaseIndexer):
             # Passed BaseIndexer subclass should handle all other rolling kwargs
@@ -2494,9 +2381,7 @@ class Rolling(RollingAndExpandingMixin):
     def sem(self, ddof: int = 1, numeric_only: bool = False):
         # Raise here so error message says sem instead of std
         self._validate_numeric_only("sem", numeric_only)
-        return self.std(numeric_only=numeric_only) / (
-            self.count(numeric_only) - ddof
-        ).pow(0.5)
+        return self.std(numeric_only=numeric_only) / (self.count(numeric_only) - ddof).pow(0.5)
 
     @doc(
         template_header,
@@ -2920,11 +2805,6 @@ class RollingGroupby(BaseWindowGroupby, Rolling):
             self._raise_monotonic_error("values must not have NaT")
         for group_indices in self._grouper.indices.values():
             group_on = self._on.take(group_indices)
-            if not (
-                group_on.is_monotonic_increasing or group_on.is_monotonic_decreasing
-            ):
+            if not (group_on.is_monotonic_increasing or group_on.is_monotonic_decreasing):
                 on = "index" if self.on is None else self.on
-                raise ValueError(
-                    f"Each group within {on} must be monotonic. "
-                    f"Sort the values in {on} first."
-                )
+                raise ValueError(f"Each group within {on} must be monotonic. " f"Sort the values in {on} first.")

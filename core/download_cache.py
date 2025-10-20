@@ -76,9 +76,7 @@ class DownloadCache:
                     for key in ["downloaded", "transcribed", "file_paths"]:
                         if key not in self._cache:
                             self._cache[key] = {}
-                    logger.debug(
-                        f"Loaded cache from {self.cache_file} with {len(self._cache['downloaded'])} entries"
-                    )
+                    logger.debug(f"Loaded cache from {self.cache_file} with {len(self._cache['downloaded'])} entries")
         except (json.JSONDecodeError, IOError) as e:
             logger.warning(f"Failed to load cache from {self.cache_file}: {e}")
             # Reset to default cache on error

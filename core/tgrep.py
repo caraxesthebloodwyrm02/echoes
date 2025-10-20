@@ -344,28 +344,16 @@ def _tgrep_node_action(_s, _l, tokens):
         elif tokens[0].startswith('"'):
             assert tokens[0].endswith('"')
             node_lit = tokens[0][1:-1].replace('\\"', '"').replace("\\\\", "\\")
-            return (
-                lambda s: lambda n, m=None, l=None: _tgrep_node_literal_value(n) == s
-            )(node_lit)
+            return (lambda s: lambda n, m=None, l=None: _tgrep_node_literal_value(n) == s)(node_lit)
         elif tokens[0].startswith("/"):
             assert tokens[0].endswith("/")
             node_lit = tokens[0][1:-1]
-            return (
-                lambda r: lambda n, m=None, l=None: r.search(
-                    _tgrep_node_literal_value(n)
-                )
-            )(re.compile(node_lit))
+            return (lambda r: lambda n, m=None, l=None: r.search(_tgrep_node_literal_value(n)))(re.compile(node_lit))
         elif tokens[0].startswith("i@"):
             node_func = _tgrep_node_action(_s, _l, [tokens[0][2:].lower()])
-            return (
-                lambda f: lambda n, m=None, l=None: f(
-                    _tgrep_node_literal_value(n).lower()
-                )
-            )(node_func)
+            return (lambda f: lambda n, m=None, l=None: f(_tgrep_node_literal_value(n).lower()))(node_func)
         else:
-            return (
-                lambda s: lambda n, m=None, l=None: _tgrep_node_literal_value(n) == s
-            )(tokens[0])
+            return (lambda s: lambda n, m=None, l=None: _tgrep_node_literal_value(n) == s)(tokens[0])
 
 
 def _tgrep_parens_action(_s, _l, tokens):
@@ -388,11 +376,9 @@ def _tgrep_nltk_tree_pos_action(_s, _l, tokens):
     # recover the tuple from the parsed string
     node_tree_position = tuple(int(x) for x in tokens if x.isdigit())
     # capture the node's tree position
-    return (
-        lambda i: lambda n, m=None, l=None: (
-            hasattr(n, "treeposition") and n.treeposition() == i
-        )
-    )(node_tree_position)
+    return (lambda i: lambda n, m=None, l=None: (hasattr(n, "treeposition") and n.treeposition() == i))(
+        node_tree_position
+    )
 
 
 def _tgrep_relation_action(_s, _l, tokens):
@@ -416,28 +402,19 @@ def _tgrep_relation_action(_s, _l, tokens):
         operator, predicate = tokens
         # A < B       A is the parent of (immediately dominates) B.
         if operator == "<":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and any(predicate(x, m, l) for x in n)
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and any(predicate(x, m, l) for x in n))
         # A > B       A is the child of B.
         elif operator == ">":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "parent")
-                and bool(n.parent())
-                and predicate(n.parent(), m, l)
+                hasattr(n, "parent") and bool(n.parent()) and predicate(n.parent(), m, l)
             )
         # A <, B      Synonymous with A <1 B.
         elif operator == "<," or operator == "<1":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and bool(list(n)) and predicate(n[0], m, l)
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and bool(list(n)) and predicate(n[0], m, l))
         # A >, B      Synonymous with A >1 B.
         elif operator == ">," or operator == ">1":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "parent")
-                and bool(n.parent())
-                and (n is n.parent()[0])
-                and predicate(n.parent(), m, l)
+                hasattr(n, "parent") and bool(n.parent()) and (n is n.parent()[0]) and predicate(n.parent(), m, l)
             )
         # A <N B      B is the Nth child of A (the first child is <1).
         elif operator[0] == "<" and operator[1:].isdigit():
@@ -445,10 +422,7 @@ def _tgrep_relation_action(_s, _l, tokens):
             # capture the index parameter
             retval = (
                 lambda i: lambda n, m=None, l=None: (
-                    _istree(n)
-                    and bool(list(n))
-                    and 0 <= i < len(n)
-                    and predicate(n[i], m, l)
+                    _istree(n) and bool(list(n)) and 0 <= i < len(n) and predicate(n[i], m, l)
                 )
             )(idx - 1)
         # A >N B      A is the Nth child of B (the first child is >1).
@@ -467,17 +441,12 @@ def _tgrep_relation_action(_s, _l, tokens):
         # A <' B      B is the last child of A (also synonymous with A <-1 B).
         # A <- B      B is the last child of A (synonymous with A <-1 B).
         elif operator == "<'" or operator == "<-" or operator == "<-1":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and bool(list(n)) and predicate(n[-1], m, l)
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and bool(list(n)) and predicate(n[-1], m, l))
         # A >' B      A is the last child of B (also synonymous with A >-1 B).
         # A >- B      A is the last child of B (synonymous with A >-1 B).
         elif operator == ">'" or operator == ">-" or operator == ">-1":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "parent")
-                and bool(n.parent())
-                and (n is n.parent()[-1])
-                and predicate(n.parent(), m, l)
+                hasattr(n, "parent") and bool(n.parent()) and (n is n.parent()[-1]) and predicate(n.parent(), m, l)
             )
         # A <-N B 	  B is the N th-to-last child of A (the last child is <-1).
         elif operator[:2] == "<-" and operator[2:].isdigit():
@@ -485,10 +454,7 @@ def _tgrep_relation_action(_s, _l, tokens):
             # capture the index parameter
             retval = (
                 lambda i: lambda n, m=None, l=None: (
-                    _istree(n)
-                    and bool(list(n))
-                    and 0 <= (i + len(n)) < len(n)
-                    and predicate(n[i + len(n)], m, l)
+                    _istree(n) and bool(list(n)) and 0 <= (i + len(n)) < len(n) and predicate(n[i + len(n)], m, l)
                 )
             )(idx)
         # A >-N B 	  A is the N th-to-last child of B (the last child is >-1).
@@ -506,27 +472,18 @@ def _tgrep_relation_action(_s, _l, tokens):
             )(idx)
         # A <: B      B is the only child of A
         elif operator == "<:":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and len(n) == 1 and predicate(n[0], m, l)
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and len(n) == 1 and predicate(n[0], m, l))
         # A >: B      A is the only child of B.
         elif operator == ">:":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "parent")
-                and bool(n.parent())
-                and len(n.parent()) == 1
-                and predicate(n.parent(), m, l)
+                hasattr(n, "parent") and bool(n.parent()) and len(n.parent()) == 1 and predicate(n.parent(), m, l)
             )
         # A << B      A dominates B (A is an ancestor of B).
         elif operator == "<<":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and any(predicate(x, m, l) for x in _descendants(n))
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and any(predicate(x, m, l) for x in _descendants(n)))
         # A >> B      A is dominated by B (A is a descendant of B).
         elif operator == ">>":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in ancestors(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in ancestors(n))
         # A <<, B     B is a left-most descendant of A.
         elif operator == "<<," or operator == "<<1":
             retval = lambda n, m=None, l=None: (
@@ -535,71 +492,50 @@ def _tgrep_relation_action(_s, _l, tokens):
         # A >>, B     A is a left-most descendant of B.
         elif operator == ">>,":
             retval = lambda n, m=None, l=None: any(
-                (predicate(x, m, l) and n in _leftmost_descendants(x))
-                for x in ancestors(n)
+                (predicate(x, m, l) and n in _leftmost_descendants(x)) for x in ancestors(n)
             )
         # A <<' B     B is a right-most descendant of A.
         elif operator == "<<'":
             retval = lambda n, m=None, l=None: (
-                _istree(n)
-                and any(predicate(x, m, l) for x in _rightmost_descendants(n))
+                _istree(n) and any(predicate(x, m, l) for x in _rightmost_descendants(n))
             )
         # A >>' B     A is a right-most descendant of B.
         elif operator == ">>'":
             retval = lambda n, m=None, l=None: any(
-                (predicate(x, m, l) and n in _rightmost_descendants(x))
-                for x in ancestors(n)
+                (predicate(x, m, l) and n in _rightmost_descendants(x)) for x in ancestors(n)
             )
         # A <<: B     There is a single path of descent from A and B is on it.
         elif operator == "<<:":
-            retval = lambda n, m=None, l=None: (
-                _istree(n) and any(predicate(x, m, l) for x in _unique_descendants(n))
-            )
+            retval = lambda n, m=None, l=None: (_istree(n) and any(predicate(x, m, l) for x in _unique_descendants(n)))
         # A >>: B     There is a single path of descent from B and A is on it.
         elif operator == ">>:":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in unique_ancestors(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in unique_ancestors(n))
         # A . B       A immediately precedes B.
         elif operator == ".":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in _immediately_after(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in _immediately_after(n))
         # A , B       A immediately follows B.
         elif operator == ",":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in _immediately_before(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in _immediately_before(n))
         # A .. B      A precedes B.
         elif operator == "..":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in _after(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in _after(n))
         # A ,, B      A follows B.
         elif operator == ",,":
-            retval = lambda n, m=None, l=None: any(
-                predicate(x, m, l) for x in _before(n)
-            )
+            retval = lambda n, m=None, l=None: any(predicate(x, m, l) for x in _before(n))
         # A $ B       A is a sister of B (and A != B).
         elif operator == "$" or operator == "%":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "parent")
-                and bool(n.parent())
-                and any(predicate(x, m, l) for x in n.parent() if x is not n)
+                hasattr(n, "parent") and bool(n.parent()) and any(predicate(x, m, l) for x in n.parent() if x is not n)
             )
         # A $. B      A is a sister of and immediately precedes B.
         elif operator == "$." or operator == "%.":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "right_sibling")
-                and bool(n.right_sibling())
-                and predicate(n.right_sibling(), m, l)
+                hasattr(n, "right_sibling") and bool(n.right_sibling()) and predicate(n.right_sibling(), m, l)
             )
         # A $, B      A is a sister of and immediately follows B.
         elif operator == "$," or operator == "%,":
             retval = lambda n, m=None, l=None: (
-                hasattr(n, "left_sibling")
-                and bool(n.left_sibling())
-                and predicate(n.left_sibling(), m, l)
+                hasattr(n, "left_sibling") and bool(n.left_sibling()) and predicate(n.left_sibling(), m, l)
             )
         # A $.. B     A is a sister of and precedes B.
         elif operator == "$.." or operator == "%..":
@@ -654,11 +590,7 @@ def _tgrep_conjunction_action(_s, _l, tokens, join_char="&"):
     if len(tokens) == 1:
         return tokens[0]
     else:
-        return (
-            lambda ts: lambda n, m=None, l=None: all(
-                predicate(n, m, l) for predicate in ts
-            )
-        )(tokens)
+        return (lambda ts: lambda n, m=None, l=None: all(predicate(n, m, l) for predicate in ts))(tokens)
 
 
 def _tgrep_segmented_pattern_action(_s, _l, tokens):
@@ -777,11 +709,7 @@ def _tgrep_bind_node_label_action(_s, _l, tokens):
             if node_pred(n, m, l):
                 # bind `n` into the dictionary `l`
                 if l is None:
-                    raise TgrepException(
-                        "cannot bind node_label {}: label_dict is None".format(
-                            node_label
-                        )
-                    )
+                    raise TgrepException("cannot bind node_label {}: label_dict is None".format(node_label))
                 l[node_label] = n
                 return True
             else:
@@ -800,9 +728,7 @@ def _tgrep_rel_disjunction_action(_s, _l, tokens):
     if len(tokens) == 1:
         return tokens[0]
     elif len(tokens) == 2:
-        return (lambda a, b: lambda n, m=None, l=None: a(n, m, l) or b(n, m, l))(
-            tokens[0], tokens[1]
-        )
+        return (lambda a, b: lambda n, m=None, l=None: a(n, m, l) or b(n, m, l))(tokens[0], tokens[1])
 
 
 def _macro_defn_action(_s, _l, tokens):
@@ -852,12 +778,8 @@ def _build_tgrep_parser(set_parse_actions=True):
     interpreting tgrep search strings.
     """
     tgrep_op = pyparsing.Optional("!") + pyparsing.Regex("[$%,.<>][%,.<>0-9-':]*")
-    tgrep_qstring = pyparsing.QuotedString(
-        quoteChar='"', escChar="\\", unquoteResults=False
-    )
-    tgrep_node_regex = pyparsing.QuotedString(
-        quoteChar="/", escChar="\\", unquoteResults=False
-    )
+    tgrep_qstring = pyparsing.QuotedString(quoteChar='"', escChar="\\", unquoteResults=False)
+    tgrep_node_regex = pyparsing.QuotedString(quoteChar="/", escChar="\\", unquoteResults=False)
     tgrep_qstring_icase = pyparsing.Regex('i@\\"(?:[^"\\n\\r\\\\]|(?:\\\\.))*\\"')
     tgrep_node_regex_icase = pyparsing.Regex("i@\\/(?:[^/\\n\\r\\\\]|(?:\\\\.))*\\/")
     tgrep_node_literal = pyparsing.Regex("[^][ \r\t\n;:.,&|<>()$!@%'^=]+")
@@ -870,8 +792,7 @@ def _build_tgrep_parser(set_parse_actions=True):
             pyparsing.Word(pyparsing.nums)
             + ","
             + pyparsing.Optional(
-                pyparsing.delimitedList(pyparsing.Word(pyparsing.nums), delim=",")
-                + pyparsing.Optional(",")
+                pyparsing.delimitedList(pyparsing.Word(pyparsing.nums), delim=",") + pyparsing.Optional(",")
             )
         )
         + ")"
@@ -895,31 +816,20 @@ def _build_tgrep_parser(set_parse_actions=True):
         | tgrep_node_literal
     )
     tgrep_node_expr2 = (
-        tgrep_node_expr
-        + pyparsing.Literal("=").setWhitespaceChars("")
-        + tgrep_node_label.copy().setWhitespaceChars("")
+        tgrep_node_expr + pyparsing.Literal("=").setWhitespaceChars("") + tgrep_node_label.copy().setWhitespaceChars("")
     ) | tgrep_node_expr
     tgrep_node = tgrep_parens | (
-        pyparsing.Optional("'")
-        + tgrep_node_expr2
-        + pyparsing.ZeroOrMore("|" + tgrep_node_expr)
+        pyparsing.Optional("'") + tgrep_node_expr2 + pyparsing.ZeroOrMore("|" + tgrep_node_expr)
     )
     tgrep_brackets = pyparsing.Optional("!") + "[" + tgrep_relations + "]"
     tgrep_relation = tgrep_brackets | (tgrep_op + tgrep_node)
     tgrep_rel_conjunction = pyparsing.Forward()
-    tgrep_rel_conjunction << (
-        tgrep_relation
-        + pyparsing.ZeroOrMore(pyparsing.Optional("&") + tgrep_rel_conjunction)
-    )
-    tgrep_relations << tgrep_rel_conjunction + pyparsing.ZeroOrMore(
-        "|" + tgrep_relations
-    )
+    tgrep_rel_conjunction << (tgrep_relation + pyparsing.ZeroOrMore(pyparsing.Optional("&") + tgrep_rel_conjunction))
+    tgrep_relations << tgrep_rel_conjunction + pyparsing.ZeroOrMore("|" + tgrep_relations)
     tgrep_expr << tgrep_node + pyparsing.Optional(tgrep_relations)
     tgrep_expr_labeled = tgrep_node_label_use + pyparsing.Optional(tgrep_relations)
     tgrep_expr2 = tgrep_expr + pyparsing.ZeroOrMore(":" + tgrep_expr_labeled)
-    macro_defn = (
-        pyparsing.Literal("@") + pyparsing.White().suppress() + macro_name + tgrep_expr2
-    )
+    macro_defn = pyparsing.Literal("@") + pyparsing.White().suppress() + macro_name + tgrep_expr2
     tgrep_exprs = (
         pyparsing.Optional(macro_defn + pyparsing.ZeroOrMore(";" + macro_defn) + ";")
         + tgrep_expr2
@@ -943,9 +853,7 @@ def _build_tgrep_parser(set_parse_actions=True):
         # relation predicates
         tgrep_expr.setParseAction(_tgrep_conjunction_action)
         tgrep_expr_labeled.setParseAction(_tgrep_segmented_pattern_action)
-        tgrep_expr2.setParseAction(
-            functools.partial(_tgrep_conjunction_action, join_char=":")
-        )
+        tgrep_expr2.setParseAction(functools.partial(_tgrep_conjunction_action, join_char=":"))
         tgrep_exprs.setParseAction(_tgrep_exprs_action)
     return tgrep_exprs.ignore("#" + pyparsing.restOfLine)
 

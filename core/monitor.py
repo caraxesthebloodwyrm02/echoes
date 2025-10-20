@@ -64,9 +64,7 @@ class SafetyMonitor:
     Provides live visibility into safety operations and system health.
     """
 
-    def __init__(
-        self, audit_logger: AuditLogger, rate_limiter: Optional[TokenBucket] = None
-    ):
+    def __init__(self, audit_logger: AuditLogger, rate_limiter: Optional[TokenBucket] = None):
         self.audit = audit_logger
         self.rate_limiter = rate_limiter
         self.circuit_breaker = None  # Will be set if available
@@ -149,33 +147,16 @@ class SafetyMonitor:
         last_24h = now - timedelta(hours=24)
 
         # Filter events by time
-        events_24h = [
-            e
-            for e in events
-            if datetime.fromisoformat(e.get("timestamp") or e.get("ts", "")) > last_24h
-        ]
+        events_24h = [e for e in events if datetime.fromisoformat(e.get("timestamp") or e.get("ts", "")) > last_24h]
 
         # Calculate metrics
-        total_evaluations = len(
-            [e for e in events_24h if e["operation"] == "bias_evaluation"]
-        )
+        total_evaluations = len([e for e in events_24h if e["operation"] == "bias_evaluation"])
         safety_events = len(
-            [
-                e
-                for e in events_24h
-                if e["safety_status"]
-                in ["rate_limited", "input_blocked", "circuit_breaker"]
-            ]
+            [e for e in events_24h if e["safety_status"] in ["rate_limited", "input_blocked", "circuit_breaker"]]
         )
-        rate_limited = len(
-            [e for e in events_24h if e["safety_status"] == "rate_limited"]
-        )
-        blocked_injections = len(
-            [e for e in events_24h if e["safety_status"] == "input_blocked"]
-        )
-        cb_trips = len(
-            [e for e in events_24h if e["safety_status"] == "circuit_breaker"]
-        )
+        rate_limited = len([e for e in events_24h if e["safety_status"] == "rate_limited"])
+        blocked_injections = len([e for e in events_24h if e["safety_status"] == "input_blocked"])
+        cb_trips = len([e for e in events_24h if e["safety_status"] == "circuit_breaker"])
 
         # Calculate active users (unique user hashes in last 24h)
         active_users = len(set(e["user_id"] for e in events_24h))
@@ -213,9 +194,7 @@ class SafetyMonitor:
 
         # Rate limiting alert
         if metrics.total_evaluations > 0:
-            rate_limit_percent = (
-                metrics.rate_limited_requests / metrics.total_evaluations
-            ) * 100
+            rate_limit_percent = (metrics.rate_limited_requests / metrics.total_evaluations) * 100
             if rate_limit_percent > self._alert_thresholds["rate_limit_percent"]:
                 alerts.append(
                     {
@@ -229,9 +208,7 @@ class SafetyMonitor:
 
         # Injection blocking alert
         if metrics.total_evaluations > 0:
-            injection_percent = (
-                metrics.blocked_injections / metrics.total_evaluations
-            ) * 100
+            injection_percent = (metrics.blocked_injections / metrics.total_evaluations) * 100
             if injection_percent > self._alert_thresholds["injection_block_percent"]:
                 alerts.append(
                     {
@@ -244,10 +221,7 @@ class SafetyMonitor:
                 )
 
         # Circuit breaker alert
-        if (
-            metrics.circuit_breaker_trips
-            > self._alert_thresholds["circuit_breaker_trips"]
-        ):
+        if metrics.circuit_breaker_trips > self._alert_thresholds["circuit_breaker_trips"]:
             alerts.append(
                 {
                     "level": "critical",
@@ -292,14 +266,10 @@ class SafetyMonitor:
             "threat_level": threat_level,
             "rate_limited_percent": round(rate_limited_percent, 2),
             "blocked_injections_percent": round(blocked_percent, 2),
-            "analysis": self._generate_threat_analysis(
-                threat_level, rate_limited_percent, blocked_percent
-            ),
+            "analysis": self._generate_threat_analysis(threat_level, rate_limited_percent, blocked_percent),
         }
 
-    def _generate_threat_analysis(
-        self, level: str, rate_limited: float, blocked: float
-    ) -> str:
+    def _generate_threat_analysis(self, level: str, rate_limited: float, blocked: float) -> str:
         """Generate human-readable threat analysis."""
         if level == "high":
             return f"High threat activity detected. {rate_limited:.1f}% rate limiting and {blocked:.1f}% injection blocks suggest active abuse attempts."
@@ -347,9 +317,7 @@ class SafetyMonitor:
 _monitor_instance = None
 
 
-def get_safety_monitor(
-    audit_logger: AuditLogger = None, rate_limiter: TokenBucket = None
-) -> SafetyMonitor:
+def get_safety_monitor(audit_logger: AuditLogger = None, rate_limiter: TokenBucket = None) -> SafetyMonitor:
     """Get or create global safety monitor instance."""
     global _monitor_instance
 

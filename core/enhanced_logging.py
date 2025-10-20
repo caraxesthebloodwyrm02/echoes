@@ -32,9 +32,7 @@ LOG_DIR.mkdir(exist_ok=True)
 
 def setup_logger(name, log_file, level=logging.INFO):
     """Function to setup a custom logger"""
-    formatter = logging.Formatter(
-        "%(asctime)s %(levelname)s [%(name)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S"
-    )
+    formatter = logging.Formatter("%(asctime)s %(levelname)s [%(name)s] %(message)s", datefmt="%Y-%m-%d %H:%M:%S")
 
     handler = logging.FileHandler(log_file)
     handler.setFormatter(formatter)
@@ -74,10 +72,7 @@ def log_performance_metrics():
 
         # Process specific metrics
         for proc in psutil.process_iter(["name", "cpu_percent", "memory_percent"]):
-            if (
-                "codeium" in proc.info["name"].lower()
-                or "windsurf" in proc.info["name"].lower()
-            ):
+            if "codeium" in proc.info["name"].lower() or "windsurf" in proc.info["name"].lower():
                 performance_logger.info(
                     f"Process: {proc.info['name']}, "
                     f"CPU: {proc.info['cpu_percent']}%, "

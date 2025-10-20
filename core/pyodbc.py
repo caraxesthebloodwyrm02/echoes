@@ -69,9 +69,7 @@ if TYPE_CHECKING:
 
 
 class _pyodbcTIME(TIME):
-    def result_processor(
-        self, dialect: Dialect, coltype: object
-    ) -> _ResultProcessorType[datetime.time]:
+    def result_processor(self, dialect: Dialect, coltype: object) -> _ResultProcessorType[datetime.time]:
         def process(value: Any) -> Union[datetime.time, None]:
             # pyodbc returns a datetime.time object; no need to convert
             return value  # type: ignore[no-any-return]
@@ -115,15 +113,10 @@ class MySQLDialect_pyodbc(PyODBCConnector, MySQLDialect):
         except exc.DBAPIError:
             pass
 
-        util.warn(
-            "Could not detect the connection character set.  "
-            "Assuming latin1."
-        )
+        util.warn("Could not detect the connection character set.  " "Assuming latin1.")
         return "latin1"
 
-    def _get_server_version_info(
-        self, connection: Connection
-    ) -> Tuple[int, ...]:
+    def _get_server_version_info(self, connection: Connection) -> Tuple[int, ...]:
         return MySQLDialect._get_server_version_info(self, connection)
 
     def _extract_error_code(self, exception: BaseException) -> Optional[int]:

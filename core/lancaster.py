@@ -228,10 +228,7 @@ class LancasterStemmer(StemmerI):
             last_letter_position = self.__getLastLetter(word)
 
             # Only stem the word if it has a last letter and a rule matching that last letter
-            if (
-                last_letter_position < 0
-                or word[last_letter_position] not in self.rule_dictionary
-            ):
+            if last_letter_position < 0 or word[last_letter_position] not in self.rule_dictionary:
                 proceed = False
 
             else:
@@ -256,20 +253,14 @@ class LancasterStemmer(StemmerI):
                         # Proceed if word's ending matches rule's word ending
                         if word.endswith(ending_string[::-1]):
                             if intact_flag:
-                                if word == intact_word and self.__isAcceptable(
-                                    word, remove_total
-                                ):
-                                    word = self.__applyRule(
-                                        word, remove_total, append_string
-                                    )
+                                if word == intact_word and self.__isAcceptable(word, remove_total):
+                                    word = self.__applyRule(word, remove_total, append_string)
                                     rule_was_applied = True
                                     if cont_flag == ".":
                                         proceed = False
                                     break
                             elif self.__isAcceptable(word, remove_total):
-                                word = self.__applyRule(
-                                    word, remove_total, append_string
-                                )
+                                word = self.__applyRule(word, remove_total, append_string)
                                 rule_was_applied = True
                                 if cont_flag == ".":
                                     proceed = False

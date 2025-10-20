@@ -45,9 +45,7 @@ class TestIndian(unittest.TestCase):
 
     def test_tagged_words(self):
         tagged_words = indian.tagged_words()[:3]
-        self.assertEqual(
-            tagged_words, [("মহিষের", "NN"), ("সন্তান", "NN"), (":", "SYM")]
-        )
+        self.assertEqual(tagged_words, [("মহিষের", "NN"), ("সন্তান", "NN"), (":", "SYM")])
 
 
 class TestCess(unittest.TestCase):
@@ -99,9 +97,7 @@ class TestCoNLL2007(unittest.TestCase):
 
     def test_sents(self):
         sents = conll2007.sents("esp.train")[0]
-        self.assertEqual(
-            sents[:6], ["El", "aumento", "del", "índice", "de", "desempleo"]
-        )
+        self.assertEqual(sents[:6], ["El", "aumento", "del", "índice", "de", "desempleo"])
 
     def test_parsed_sents(self):
         parsed_sents = conll2007.parsed_sents("esp.train")[0]
@@ -253,9 +249,7 @@ class TestPTB(unittest.TestCase):
 @pytest.mark.skip("Skipping test for mwa_ppdb.")
 class TestMWAPPDB(unittest.TestCase):
     def test_fileids(self):
-        self.assertEqual(
-            mwa_ppdb.fileids(), ["ppdb-1.0-xxxl-lexical.extended.synonyms.uniquepairs"]
-        )
+        self.assertEqual(mwa_ppdb.fileids(), ["ppdb-1.0-xxxl-lexical.extended.synonyms.uniquepairs"])
 
     def test_entries(self):
         self.assertEqual(

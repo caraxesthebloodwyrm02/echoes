@@ -16,7 +16,6 @@ from fontTools.ttLib import newTable
 from fontTools.ttLib.ttVisitor import TTVisitor
 from fontTools import ttLib
 import fontTools.ttLib.tables.otTables as otTables
-from fontTools.ttLib.tables import C_P_A_L_
 from . import DefaultTable
 import struct
 import logging
@@ -114,9 +113,7 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
         self.names.append(name)
         name.fromXML(name, attrs, content, ttFont)
 
-    def getName(
-        self, nameID: int, platformID: int, platEncID: int, langID: int | None = None
-    ) -> "NameRecord | None":
+    def getName(self, nameID: int, platformID: int, platEncID: int, langID: int | None = None) -> "NameRecord | None":
         for namerecord in self.names:
             if (
                 namerecord.nameID == nameID
@@ -199,14 +196,9 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
         """
         if not isinstance(string, str):
             if isinstance(string, bytes):
-                log.warning(
-                    "name string is bytes, ensure it's correctly encoded: %r", string
-                )
+                log.warning("name string is bytes, ensure it's correctly encoded: %r", string)
             else:
-                raise TypeError(
-                    "expected unicode or bytes, found %s: %r"
-                    % (type(string).__name__, string)
-                )
+                raise TypeError("expected unicode or bytes, found %s: %r" % (type(string).__name__, string))
         namerecord = self.getName(nameID, platformID, platEncID, langID)
         if namerecord:
             namerecord.string = string
@@ -231,11 +223,7 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
             # no arguments, nothing to do
             return
         self.names = [
-            rec
-            for rec in self.names
-            if any(
-                argValue != getattr(rec, argName) for argName, argValue in args.items()
-            )
+            rec for rec in self.names if any(argValue != getattr(rec, argName) for argName, argValue in args.items())
         ]
 
     @staticmethod
@@ -269,9 +257,7 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
             raise ValueError("nameID must be less than 32768")
         return nameID
 
-    def findMultilingualName(
-        self, names, windows=True, mac=True, minNameID=0, ttFont=None
-    ):
+    def findMultilingualName(self, names, windows=True, mac=True, minNameID=0, ttFont=None):
         """Return the name ID of an existing multilingual name that
         matches the 'names' dictionary, or None if not found.
 
@@ -335,9 +321,7 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
 
         return None  # not found
 
-    def addMultilingualName(
-        self, names, ttFont=None, nameID=None, windows=True, mac=True, minNameID=0
-    ):
+    def addMultilingualName(self, names, ttFont=None, nameID=None, windows=True, mac=True, minNameID=0):
         """Add a multilingual name, returning its name ID
 
         'names' is a dictionary with the name in multiple languages,
@@ -362,9 +346,7 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
         """
         if nameID is None:
             # Reuse nameID if possible
-            nameID = self.findMultilingualName(
-                names, windows=windows, mac=mac, minNameID=minNameID, ttFont=ttFont
-            )
+            nameID = self.findMultilingualName(names, windows=windows, mac=mac, minNameID=minNameID, ttFont=ttFont)
             if nameID is not None:
                 return nameID
             nameID = self._findUnusedNameID()
@@ -400,13 +382,9 @@ class table__n_a_m_e(DefaultTable.DefaultTable):
 
         Return the new nameID.
         """
-        assert (
-            len(platforms) > 0
-        ), "'platforms' must contain at least one (platformID, platEncID, langID) tuple"
+        assert len(platforms) > 0, "'platforms' must contain at least one (platformID, platEncID, langID) tuple"
         if not isinstance(string, str):
-            raise TypeError(
-                "expected str, found %s: %r" % (type(string).__name__, string)
-            )
+            raise TypeError("expected str, found %s: %r" % (type(string).__name__, string))
         nameID = self._findUnusedNameID(minNameID + 1)
         for platformID, platEncID, langID in platforms:
             self.names.append(makeName(string, nameID, platformID, platEncID, langID))
@@ -492,8 +470,7 @@ def _makeMacName(name, nameID, language, font=None):
         return makeName(name, nameID, 0, 4, ltag.addTag(language))
     else:
         log.warning(
-            "cannot store language %s into 'ltag' table "
-            "without having access to the TTFont object" % language
+            "cannot store language %s into 'ltag' table " "without having access to the TTFont object" % language
         )
         return None
 
@@ -514,9 +491,7 @@ class NameRecord(object):
         return self.toStr(errors="backslashreplace")
 
     def isUnicode(self):
-        return self.platformID == 0 or (
-            self.platformID == 3 and self.platEncID in [0, 1, 10]
-        )
+        return self.platformID == 0 or (self.platformID == 3 and self.platEncID in [0, 1, 10])
 
     def toUnicode(self, errors: str = "strict") -> str:
         """
@@ -544,11 +519,7 @@ class NameRecord(object):
         encoding = self.getEncoding()
         string = self.string
 
-        if (
-            isinstance(string, bytes)
-            and encoding == "utf_16_be"
-            and len(string) % 2 == 1
-        ):
+        if isinstance(string, bytes) and encoding == "utf_16_be" and len(string) % 2 == 1:
             # Recover badly encoded UTF-16 strings that have an odd number of bytes:
             # - If the last byte is zero, drop it.  Otherwise,
             # - If all the odd bytes are zero and all the even bytes are ASCII,
@@ -559,23 +530,16 @@ class NameRecord(object):
             # (Yes, I've seen all of these in the wild... sigh)
             if byteord(string[-1]) == 0:
                 string = string[:-1]
-            elif all(
-                byteord(b) == 0 if i % 2 else isascii(byteord(b))
-                for i, b in enumerate(string)
-            ):
+            elif all(byteord(b) == 0 if i % 2 else isascii(byteord(b)) for i, b in enumerate(string)):
                 string = b"\0" + string
-            elif byteord(string[0]) == 0 and all(
-                isascii(byteord(b)) for b in string[1:]
-            ):
+            elif byteord(string[0]) == 0 and all(isascii(byteord(b)) for b in string[1:]):
                 string = bytesjoin(b"\0" + bytechr(byteord(b)) for b in string[1:])
 
         string = tostr(string, encoding=encoding, errors=errors)
 
         # If decoded strings still looks like UTF-16BE, it suggests a double-encoding.
         # Fix it up.
-        if all(
-            ord(c) == 0 if i % 2 == 0 else isascii(ord(c)) for i, c in enumerate(string)
-        ):
+        if all(ord(c) == 0 if i % 2 == 0 else isascii(ord(c)) for i, c in enumerate(string)):
             # If string claims to be Mac encoding, but looks like UTF-16BE with ASCII text,
             # narrow it down.
             string = "".join(c for c in string[1::2])
@@ -629,9 +593,7 @@ class NameRecord(object):
         self.langID = safeEval(attrs["langID"])
         s = strjoin(content).strip()
         encoding = self.getEncoding()
-        if self.encodingIsUnicodeCompatible() or safeEval(
-            attrs.get("unicode", "False")
-        ):
+        if self.encodingIsUnicodeCompatible() or safeEval(attrs.get("unicode", "False")):
             self.string = s.encode(encoding)
         else:
             # This is the inverse of write8bit...
@@ -1031,9 +993,7 @@ _MAC_LANGUAGES = {
 }
 
 
-_WINDOWS_LANGUAGE_CODES = {
-    lang.lower(): code for code, lang in _WINDOWS_LANGUAGES.items()
-}
+_WINDOWS_LANGUAGE_CODES = {lang.lower(): code for code, lang in _WINDOWS_LANGUAGES.items()}
 _MAC_LANGUAGE_CODES = {lang.lower(): code for code, lang in _MAC_LANGUAGES.items()}
 
 

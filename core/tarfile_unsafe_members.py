@@ -78,8 +78,7 @@ def exec_issue(level, members=""):
             severity=bandit.HIGH,
             confidence=bandit.HIGH,
             cwe=issue.Cwe.PATH_TRAVERSAL,
-            text="tarfile.extractall used without any validation. "
-            "Please check and discard dangerous members.",
+            text="tarfile.extractall used without any validation. " "Please check and discard dangerous members.",
         )
 
 

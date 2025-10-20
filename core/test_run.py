@@ -231,11 +231,7 @@ class TestRun(MypycDataSuite):
         for source in sources:
             options.per_module_options.setdefault(source.module, {})["mypyc"] = True
 
-        separate = (
-            self.get_separate("\n".join(testcase.input), incremental_step)
-            if self.separate
-            else False
-        )
+        separate = self.get_separate("\n".join(testcase.input), incremental_step) if self.separate else False
 
         groups = construct_groups(sources, separate, len(module_names) > 1, None)
 
@@ -276,11 +272,7 @@ class TestRun(MypycDataSuite):
         setup_file = os.path.abspath(os.path.join(WORKDIR, "setup.py"))
         # We pass the C file information to the build script via setup.py unfortunately
         with open(setup_file, "w", encoding="utf-8") as f:
-            f.write(
-                setup_format.format(
-                    module_paths, separate, cfiles, self.multi_file, opt_level, native_libs
-                )
-            )
+            f.write(setup_format.format(module_paths, separate, cfiles, self.multi_file, opt_level, native_libs))
 
         if not run_setup(setup_file, ["build_ext", "--inplace"]):
             if testcase.config.getoption("--mypyc-showc"):
@@ -313,8 +305,7 @@ class TestRun(MypycDataSuite):
             # TODO: find a way to automatically disable capturing
             # stdin/stdout when in debugging mode
             assert False, (
-                "Test can't pass in debugging mode. "
-                "(Make sure to pass -s to pytest to interact with the debugger)"
+                "Test can't pass in debugging mode. " "(Make sure to pass -s to pytest to interact with the debugger)"
             )
         proc = subprocess.Popen(
             [sys.executable, driver_path],
@@ -344,9 +335,7 @@ class TestRun(MypycDataSuite):
                     debugger = "lldb"
                 else:
                     debugger = "gdb"
-                print(
-                    f'hint: Use "pytest -n0 -s --mypyc-debug={debugger} -k <name-substring>" to run test in debugger'
-                )
+                print(f'hint: Use "pytest -n0 -s --mypyc-debug={debugger} -k <name-substring>" to run test in debugger')
                 print("hint: You may need to build a debug version of Python first and use it")
                 print('hint: See also "Debugging Segfaults" in mypyc/doc/dev-intro.md')
             copy_output_files(mypyc_output_dir)
@@ -366,23 +355,17 @@ class TestRun(MypycDataSuite):
             if not expected:
                 # Tweak some line numbers, but only if the expected output is empty,
                 # as tweaked output might not match expected output.
-                outlines = [
-                    fix_native_line_number(line, testcase.file, testcase.line) for line in outlines
-                ]
+                outlines = [fix_native_line_number(line, testcase.file, testcase.line) for line in outlines]
             assert_test_output(testcase, outlines, msg, expected)
 
         if incremental_step > 1 and options.incremental:
             suffix = "" if incremental_step == 2 else str(incremental_step - 1)
             expected_rechecked = testcase.expected_rechecked_modules.get(incremental_step - 1)
             if expected_rechecked is not None:
-                assert_module_equivalence(
-                    "rechecked" + suffix, expected_rechecked, result.manager.rechecked_modules
-                )
+                assert_module_equivalence("rechecked" + suffix, expected_rechecked, result.manager.rechecked_modules)
             expected_stale = testcase.expected_stale_modules.get(incremental_step - 1)
             if expected_stale is not None:
-                assert_module_equivalence(
-                    "stale" + suffix, expected_stale, result.manager.stale_modules
-                )
+                assert_module_equivalence("stale" + suffix, expected_stale, result.manager.stale_modules)
 
         assert proc.returncode == 0
 
@@ -454,9 +437,7 @@ def fix_native_line_number(message: str, fnam: str, delta: int) -> str:
     Returns updated message (or original message if we couldn't find anything).
     """
     fnam = os.path.basename(fnam)
-    message = re.sub(
-        r"native\.py:([0-9]+):", lambda m: "%s:%d:" % (fnam, int(m.group(1)) + delta), message
-    )
+    message = re.sub(r"native\.py:([0-9]+):", lambda m: "%s:%d:" % (fnam, int(m.group(1)) + delta), message)
     message = re.sub(
         r'"native.py", line ([0-9]+),',
         lambda m: '"%s", line %d,' % (fnam, int(m.group(1)) + delta),

@@ -102,8 +102,7 @@ def _ensure_ascii(words):
             word.encode("ascii")
     except UnicodeEncodeError as e:
         raise ValueError(
-            f"Token {i} ({word!r}) is non-ASCII. BLLIP Parser "
-            "currently doesn't support non-ASCII inputs."
+            f"Token {i} ({word!r}) is non-ASCII. BLLIP Parser " "currently doesn't support non-ASCII inputs."
         ) from e
 
 
@@ -212,9 +211,7 @@ class BllipParser(ParserI):
             yield _scored_parse_to_nltk_tree(scored_parse)
 
     @classmethod
-    def from_unified_model_dir(
-        cls, model_dir, parser_options=None, reranker_options=None
-    ):
+    def from_unified_model_dir(cls, model_dir, parser_options=None, reranker_options=None):
         """
         Create a ``BllipParser`` object from a unified parsing model
         directory. Unified parsing model directories are a standardized

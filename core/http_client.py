@@ -48,12 +48,8 @@ class HTTPClient:
         self.logger = logging.getLogger(__name__)
 
         # Create httpx client
-        self.client = httpx.Client(
-            timeout=timeout, transport=httpx.HTTPTransport(retries=max_retries)
-        )
-        self.async_client = httpx.AsyncClient(
-            timeout=timeout, transport=httpx.AsyncHTTPTransport(retries=max_retries)
-        )
+        self.client = httpx.Client(timeout=timeout, transport=httpx.HTTPTransport(retries=max_retries))
+        self.async_client = httpx.AsyncClient(timeout=timeout, transport=httpx.AsyncHTTPTransport(retries=max_retries))
 
     def get(self, url: str, **kwargs) -> httpx.Response:
         """Synchronous GET request"""
@@ -125,17 +121,13 @@ class OpenAIClient:
             return None
 
         try:
-            response = self.client.chat.completions.create(
-                model=self.model, messages=messages, **kwargs
-            )
+            response = self.client.chat.completions.create(model=self.model, messages=messages, **kwargs)
             return response.choices[0].message.content
         except Exception as e:
             self.logger.error(f"OpenAI API error: {e}")
             return None
 
-    def orchestrate_command(
-        self, command: str, context: Optional[Dict] = None
-    ) -> Optional[str]:
+    def orchestrate_command(self, command: str, context: Optional[Dict] = None) -> Optional[str]:
         """Use OpenAI to orchestrate system commands intelligently"""
         if not self.client:
             return None

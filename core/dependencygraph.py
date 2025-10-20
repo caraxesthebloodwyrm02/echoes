@@ -207,9 +207,7 @@ class DependencyGraph:
         return f"<DependencyGraph with {len(self.nodes)} nodes>"
 
     @staticmethod
-    def load(
-        filename, zero_based=False, cell_separator=None, top_relation_label="ROOT"
-    ):
+    def load(filename, zero_based=False, cell_separator=None, top_relation_label="ROOT"):
         """
         :param filename: a name of a file in Malt-TAB format
         :param zero_based: nodes in the input file are numbered starting from 0
@@ -334,9 +332,7 @@ class DependencyGraph:
                     ) from e
 
             try:
-                index, word, lemma, ctag, tag, feats, head, rel = cell_extractor(
-                    cells, index
-                )
+                index, word, lemma, ctag, tag, feats, head, rel = cell_extractor(cells, index)
             except (TypeError, ValueError):
                 # cell_extractor doesn't take 2 arguments or doesn't return 8
                 # values; assume the cell_extractor is an older external
@@ -373,9 +369,7 @@ class DependencyGraph:
             self.root = self.nodes[root_address]
             self.top_relation_label = top_relation_label
         else:
-            warnings.warn(
-                "The graph doesn't contain a node " "that depends on the root element."
-            )
+            warnings.warn("The graph doesn't contain a node " "that depends on the root element.")
 
     def _word(self, node, filter=True):
         w = node["word"]
@@ -513,29 +507,20 @@ class DependencyGraph:
         elif style == 4:
             template = "{word}\t{tag}\t{head}\t{rel}\n"
         elif style == 10:
-            template = (
-                "{i}\t{word}\t{lemma}\t{ctag}\t{tag}\t{feats}\t{head}\t{rel}\t_\t_\n"
-            )
+            template = "{i}\t{word}\t{lemma}\t{ctag}\t{tag}\t{feats}\t{head}\t{rel}\t_\t_\n"
         else:
             raise ValueError(
-                "Number of tab-delimited fields ({}) not supported by "
-                "CoNLL(10) or Malt-Tab(4) format".format(style)
+                "Number of tab-delimited fields ({}) not supported by " "CoNLL(10) or Malt-Tab(4) format".format(style)
             )
 
-        return "".join(
-            template.format(i=i, **node)
-            for i, node in sorted(self.nodes.items())
-            if node["tag"] != "TOP"
-        )
+        return "".join(template.format(i=i, **node) for i, node in sorted(self.nodes.items()) if node["tag"] != "TOP")
 
     def nx_graph(self):
         """Convert the data in a ``nodelist`` into a networkx labeled directed graph."""
         import networkx
 
         nx_nodelist = list(range(1, len(self.nodes)))
-        nx_edgelist = [
-            (n, self._hd(n), self._rel(n)) for n in nx_nodelist if self._hd(n)
-        ]
+        nx_edgelist = [(n, self._hd(n), self._rel(n)) for n in nx_nodelist if self._hd(n)]
         self.nx_labels = {}
         for n in nx_nodelist:
             self.nx_labels[n] = self.nodes[n]["word"]
@@ -576,10 +561,7 @@ def dot2img(dot_string, t="svg"):
                 )
             return proc.stdout
         except:
-            raise Exception(
-                "Cannot create image representation by running dot from string: {}"
-                "".format(dot_string)
-            )
+            raise Exception("Cannot create image representation by running dot from string: {}" "".format(dot_string))
     except OSError as e:
         raise Exception("Cannot find the dot binary from Graphviz package") from e
 

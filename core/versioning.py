@@ -45,9 +45,7 @@ def add_uids(doctree: Node, condition: Callable[[Node], bool]) -> Iterator[Node]
         yield node
 
 
-def merge_doctrees(
-    old: Node, new: Node, condition: Callable[[Node], bool]
-) -> Iterator[Node]:
+def merge_doctrees(old: Node, new: Node, condition: Callable[[Node], bool]) -> Iterator[Node]:
     """Merge the `old` doctree with the `new` one while looking at nodes
     matching the `condition`.
 
@@ -68,7 +66,7 @@ def merge_doctrees(
         if old_node is None:
             new_nodes.append(new_node)
             continue
-        if not getattr(old_node, 'uid', None):
+        if not getattr(old_node, "uid", None):
             # maybe config.gettext_uuid has been changed.
             old_node.uid = uuid4().hex  # type: ignore[union-attr]
         if new_node is None:
@@ -160,9 +158,9 @@ class UIDTransform(SphinxTransform):
 
         if env.versioning_compare:
             # get old doctree
-            filename = env.doctreedir / f'{env.docname}.doctree'
+            filename = env.doctreedir / f"{env.docname}.doctree"
             try:
-                with open(filename, 'rb') as f:
+                with open(filename, "rb") as f:
                     old_doctree = pickle.load(f)
             except OSError:
                 pass
@@ -178,7 +176,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_transform(UIDTransform)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

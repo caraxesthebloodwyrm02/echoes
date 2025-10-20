@@ -95,9 +95,7 @@ class EdgeList(ColorizedList):
         textwidget.tag_config("terminal", foreground="#006000")
         textwidget.tag_config("arrow", font="symbol", underline="0")
         textwidget.tag_config("dot", foreground="#000000")
-        textwidget.tag_config(
-            "nonterminal", foreground="blue", font=("helvetica", -12, "bold")
-        )
+        textwidget.tag_config("nonterminal", foreground="blue", font=("helvetica", -12, "bold"))
 
     def _item_repr(self, item):
         contents = []
@@ -125,9 +123,7 @@ class ChartMatrixView:
     A view of a chart that displays the contents of the corresponding matrix.
     """
 
-    def __init__(
-        self, parent, chart, toplevel=True, title="Chart Matrix", show_numedges=False
-    ):
+    def __init__(self, parent, chart, toplevel=True, title="Chart Matrix", show_numedges=False):
         self._chart = chart
         self._cells = []
         self._marks = []
@@ -321,9 +317,7 @@ class ChartMatrixView:
 
         # Labels and dotted lines
         for i in range(N):
-            c.create_text(
-                LEFT_MARGIN - 2, i * dy + dy / 2 + TOP_MARGIN, text=repr(i), anchor="e"
-            )
+            c.create_text(LEFT_MARGIN - 2, i * dy + dy / 2 + TOP_MARGIN, text=repr(i), anchor="e")
             c.create_text(
                 i * dx + dx / 2 + LEFT_MARGIN,
                 N * dy + TOP_MARGIN + 1,
@@ -346,9 +340,7 @@ class ChartMatrixView:
             )
 
         # A box around the whole thing
-        c.create_rectangle(
-            LEFT_MARGIN, TOP_MARGIN, LEFT_MARGIN + dx * N, dy * N + TOP_MARGIN, width=2
-        )
+        c.create_rectangle(LEFT_MARGIN, TOP_MARGIN, LEFT_MARGIN + dx * N, dy * N + TOP_MARGIN, width=2)
 
         # Cells
         self._cells = [[None for i in range(N)] for j in range(N)]
@@ -416,9 +408,7 @@ class ChartResultsView:
             buttons.pack(side="bottom", expand=0, fill="x")
             Button(buttons, text="Quit", command=self.destroy).pack(side="right")
             Button(buttons, text="Print All", command=self.print_all).pack(side="left")
-            Button(buttons, text="Print Selection", command=self.print_selection).pack(
-                side="left"
-            )
+            Button(buttons, text="Print Selection", command=self.print_selection).pack(side="left")
 
         # Canvas frame.
         self._cframe = CanvasFrame(self._root, closeenough=20)
@@ -648,20 +638,14 @@ class ChartComparer:
             command=self.save_chart_dialog,
         )
         filemenu.add_separator()
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         # Compare menu
         opmenu = Menu(menubar, tearoff=0)
-        opmenu.add_command(
-            label="Intersection", command=self._intersection, accelerator="+"
-        )
+        opmenu.add_command(label="Intersection", command=self._intersection, accelerator="+")
         opmenu.add_command(label="Union", command=self._union, accelerator="*")
-        opmenu.add_command(
-            label="Difference", command=self._difference, accelerator="-"
-        )
+        opmenu.add_command(label="Difference", command=self._difference, accelerator="-")
         opmenu.add_separator()
         opmenu.add_command(label="Swap Charts", command=self._swapcharts)
         menubar.add_cascade(label="Compare", underline=0, menu=opmenu)
@@ -683,52 +667,38 @@ class ChartComparer:
         # The left matrix.
         cv1_frame = Frame(frame, border=3, relief="groove")
         cv1_frame.pack(side="left", padx=8, pady=7, expand=1, fill="both")
-        self._left_selector = MutableOptionMenu(
-            cv1_frame, list(self._charts.keys()), command=self._select_left
-        )
+        self._left_selector = MutableOptionMenu(cv1_frame, list(self._charts.keys()), command=self._select_left)
         self._left_selector.pack(side="top", pady=5, fill="x")
-        self._left_matrix = ChartMatrixView(
-            cv1_frame, self._emptychart, toplevel=False, show_numedges=True
-        )
+        self._left_matrix = ChartMatrixView(cv1_frame, self._emptychart, toplevel=False, show_numedges=True)
         self._left_matrix.pack(side="bottom", padx=5, pady=5, expand=1, fill="both")
         self._left_matrix.add_callback("select", self.select_edge)
         self._left_matrix.add_callback("select_cell", self.select_cell)
         self._left_matrix.inactivate()
 
         # The operator.
-        self._op_label = Label(
-            frame, text=" ", width=3, background="#c0c0c0", font=opfont
-        )
+        self._op_label = Label(frame, text=" ", width=3, background="#c0c0c0", font=opfont)
         self._op_label.pack(side="left", padx=5, pady=5)
 
         # The right matrix.
         cv2_frame = Frame(frame, border=3, relief="groove")
         cv2_frame.pack(side="left", padx=8, pady=7, expand=1, fill="both")
-        self._right_selector = MutableOptionMenu(
-            cv2_frame, list(self._charts.keys()), command=self._select_right
-        )
+        self._right_selector = MutableOptionMenu(cv2_frame, list(self._charts.keys()), command=self._select_right)
         self._right_selector.pack(side="top", pady=5, fill="x")
-        self._right_matrix = ChartMatrixView(
-            cv2_frame, self._emptychart, toplevel=False, show_numedges=True
-        )
+        self._right_matrix = ChartMatrixView(cv2_frame, self._emptychart, toplevel=False, show_numedges=True)
         self._right_matrix.pack(side="bottom", padx=5, pady=5, expand=1, fill="both")
         self._right_matrix.add_callback("select", self.select_edge)
         self._right_matrix.add_callback("select_cell", self.select_cell)
         self._right_matrix.inactivate()
 
         # The equals sign
-        Label(frame, text="=", width=3, background="#c0c0c0", font=eqfont).pack(
-            side="left", padx=5, pady=5
-        )
+        Label(frame, text="=", width=3, background="#c0c0c0", font=eqfont).pack(side="left", padx=5, pady=5)
 
         # The output matrix.
         out_frame = Frame(frame, border=3, relief="groove")
         out_frame.pack(side="left", padx=8, pady=7, expand=1, fill="both")
         self._out_label = Label(out_frame, text="Output")
         self._out_label.pack(side="top", pady=9)
-        self._out_matrix = ChartMatrixView(
-            out_frame, self._emptychart, toplevel=False, show_numedges=True
-        )
+        self._out_matrix = ChartMatrixView(out_frame, self._emptychart, toplevel=False, show_numedges=True)
         self._out_matrix.pack(side="bottom", padx=5, pady=5, expand=1, fill="both")
         self._out_matrix.add_callback("select", self.select_edge)
         self._out_matrix.add_callback("select_cell", self.select_cell)
@@ -737,17 +707,13 @@ class ChartComparer:
     def _init_buttons(self, root):
         buttons = Frame(root)
         buttons.pack(side="bottom", pady=5, fill="x", expand=0)
-        Button(buttons, text="Intersection", command=self._intersection).pack(
-            side="left"
-        )
+        Button(buttons, text="Intersection", command=self._intersection).pack(side="left")
         Button(buttons, text="Union", command=self._union).pack(side="left")
         Button(buttons, text="Difference", command=self._difference).pack(side="left")
         Frame(buttons, width=20).pack(side="left")
         Button(buttons, text="Swap Charts", command=self._swapcharts).pack(side="left")
 
-        Button(buttons, text="Detach Output", command=self._detach_out).pack(
-            side="right"
-        )
+        Button(buttons, text="Detach Output", command=self._detach_out).pack(side="right")
 
     def _init_bindings(self, root):
         # root.bind('<Control-s>', self.save_chart)
@@ -788,9 +754,7 @@ class ChartComparer:
     CHART_FILE_TYPES = [("Pickle file", ".pickle"), ("All files", "*")]
 
     def save_chart_dialog(self, *args):
-        filename = asksaveasfilename(
-            filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle"
-        )
+        filename = asksaveasfilename(filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle")
         if not filename:
             return
         try:
@@ -800,9 +764,7 @@ class ChartComparer:
             showerror("Error Saving Chart", f"Unable to open file: {filename!r}\n{e}")
 
     def load_chart_dialog(self, *args):
-        filename = askopenfilename(
-            filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle"
-        )
+        filename = askopenfilename(filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle")
         if not filename:
             return
         try:
@@ -1128,9 +1090,7 @@ class ChartView:
         """
         # Grow, if need-be
         N = self._chart.num_leaves()
-        width = max(
-            int(self._chart_canvas["width"]), N * self._unitsize + ChartView._MARGIN * 2
-        )
+        width = max(int(self._chart_canvas["width"]), N * self._unitsize + ChartView._MARGIN * 2)
 
         # It won't resize without the second (height) line, but I
         # don't understand why not.
@@ -1227,9 +1187,7 @@ class ChartView:
             rhs = ""
 
         for s in (lhs, rhs):
-            tag = c.create_text(
-                0, 0, text=s, font=self._boldfont, anchor="nw", justify="left"
-            )
+            tag = c.create_text(0, 0, text=s, font=self._boldfont, anchor="nw", justify="left")
             bbox = c.bbox(tag)
             c.delete(tag)
             width = bbox[2]  # + ChartView._LEAF_SPACING
@@ -1329,9 +1287,7 @@ class ChartView:
         doty = (c.bbox(rhstag1)[1] + c.bbox(rhstag1)[3]) / 2
         dottag = c.create_oval(dotx - 2, doty - 2, dotx + 2, doty + 2)
         rhstag2 = c.create_text(dotx + 6, y, text=rhs2, font=self._font, anchor="nw")
-        lhstag = c.create_text(
-            (x1 + x2) / 2, y, text=str(edge.lhs()), anchor="s", font=self._boldfont
-        )
+        lhstag = c.create_text((x1 + x2) / 2, y, text=str(edge.lhs()), anchor="s", font=self._boldfont)
 
         # Keep track of the edge's tags.
         self._edgetags[edge] = (linetag, rhstag1, dottag, rhstag2, lhstag)
@@ -1415,9 +1371,7 @@ class ChartView:
 
         # Check against all tokens
         for leaf in self._chart.leaves():
-            tag = c.create_text(
-                0, 0, text=repr(leaf), font=self._font, anchor="nw", justify="left"
-            )
+            tag = c.create_text(0, 0, text=repr(leaf), font=self._font, anchor="nw", justify="left")
             bbox = c.bbox(tag)
             c.delete(tag)
             width = bbox[2] + ChartView._LEAF_SPACING
@@ -1514,9 +1468,7 @@ class ChartView:
             x1 = i * self._unitsize + margin
             x2 = x1 + self._unitsize
             x = (x1 + x2) / 2
-            tag = c.create_text(
-                x, y, text=repr(leaf), font=self._font, anchor="n", justify="left"
-            )
+            tag = c.create_text(x, y, text=repr(leaf), font=self._font, anchor="n", justify="left")
             bbox = c.bbox(tag)
             rt = c.create_rectangle(
                 x1 + 2,
@@ -1591,9 +1543,7 @@ class ChartView:
                 fill = "#084"
             else:
                 fill = "#fff"
-            tag = c.create_polygon(
-                x, y + 10, x - 5, y, x - 10, y + 10, fill=fill, outline="black"
-            )
+            tag = c.create_polygon(x, y + 10, x - 5, y, x - 10, y + 10, fill=fill, outline="black")
             self._tree_tags.append(tag)
 
             # Set up a callback: show the tree if they click on its
@@ -1889,9 +1839,7 @@ class ChartParserApp:
         ruletxt = "Last edge generated by:"
 
         self._rulelabel1 = Label(parent, text=ruletxt, font=self._boldfont)
-        self._rulelabel2 = Label(
-            parent, width=40, relief="groove", anchor="w", font=self._boldfont
-        )
+        self._rulelabel2 = Label(parent, width=40, relief="groove", anchor="w", font=self._boldfont)
         self._rulelabel1.pack(side="left")
         self._rulelabel2.pack(side="left")
         step = Checkbutton(parent, variable=self._step, text="Step")
@@ -2023,16 +1971,12 @@ class ChartParserApp:
             command=self.load_chart,
             accelerator="Ctrl-o",
         )
-        filemenu.add_command(
-            label="Reset Chart", underline=0, command=self.reset, accelerator="Ctrl-r"
-        )
+        filemenu.add_command(label="Reset Chart", underline=0, command=self.reset, accelerator="Ctrl-r")
         filemenu.add_separator()
         filemenu.add_command(label="Save Grammar", command=self.save_grammar)
         filemenu.add_command(label="Load Grammar", command=self.load_grammar)
         filemenu.add_separator()
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         editmenu = Menu(menubar, tearoff=0)
@@ -2051,9 +1995,7 @@ class ChartParserApp:
         menubar.add_cascade(label="Edit", underline=0, menu=editmenu)
 
         viewmenu = Menu(menubar, tearoff=0)
-        viewmenu.add_command(
-            label="Chart Matrix", underline=6, command=self.view_matrix
-        )
+        viewmenu.add_command(label="Chart Matrix", underline=6, command=self.view_matrix)
         viewmenu.add_command(label="Results", underline=0, command=self.view_results)
         menubar.add_cascade(label="View", underline=0, menu=viewmenu)
 
@@ -2078,24 +2020,16 @@ class ChartParserApp:
         )
         rulemenu.add_separator()
         rulemenu.add_command(label="Bottom Up Rule", command=self.bottom_up)
-        rulemenu.add_command(
-            label="Bottom Up Left-Corner Rule", command=self.bottom_up_leftcorner
-        )
+        rulemenu.add_command(label="Bottom Up Left-Corner Rule", command=self.bottom_up_leftcorner)
         rulemenu.add_command(label="Top Down Init Rule", command=self.top_down_init)
-        rulemenu.add_command(
-            label="Top Down Predict Rule", command=self.top_down_predict
-        )
+        rulemenu.add_command(label="Top Down Predict Rule", command=self.top_down_predict)
         rulemenu.add_command(label="Fundamental Rule", command=self.fundamental)
         menubar.add_cascade(label="Apply", underline=0, menu=rulemenu)
 
         animatemenu = Menu(menubar, tearoff=0)
-        animatemenu.add_checkbutton(
-            label="Step", underline=0, variable=self._step, accelerator="s"
-        )
+        animatemenu.add_checkbutton(label="Step", underline=0, variable=self._step, accelerator="s")
         animatemenu.add_separator()
-        animatemenu.add_radiobutton(
-            label="No Animation", underline=0, variable=self._animate, value=0
-        )
+        animatemenu.add_radiobutton(label="No Animation", underline=0, variable=self._animate, value=0)
         animatemenu.add_radiobutton(
             label="Slow Animation",
             underline=0,
@@ -2159,9 +2093,7 @@ class ChartParserApp:
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="About", underline=0, command=self.about)
-        helpmenu.add_command(
-            label="Instructions", underline=0, command=self.help, accelerator="F1"
-        )
+        helpmenu.add_command(label="Instructions", underline=0, command=self.help, accelerator="F1")
         menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
 
         self._root.config(menu=menubar)
@@ -2262,9 +2194,7 @@ class ChartParserApp:
 
     def load_chart(self, *args):
         "Load a chart from a pickle file"
-        filename = askopenfilename(
-            filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle"
-        )
+        filename = askopenfilename(filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle")
         if not filename:
             return
         try:
@@ -2279,29 +2209,25 @@ class ChartParserApp:
             if self._results:
                 self._results.set_chart(chart)
             self._cp.set_chart(chart)
-        except Exception as e:
+        except Exception:
             raise
             showerror("Error Loading Chart", "Unable to open file: %r" % filename)
 
     def save_chart(self, *args):
         "Save a chart to a pickle file"
-        filename = asksaveasfilename(
-            filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle"
-        )
+        filename = asksaveasfilename(filetypes=self.CHART_FILE_TYPES, defaultextension=".pickle")
         if not filename:
             return
         try:
             with open(filename, "wb") as outfile:
                 pickle.dump(self._chart, outfile)
-        except Exception as e:
+        except Exception:
             raise
             showerror("Error Saving Chart", "Unable to open file: %r" % filename)
 
     def load_grammar(self, *args):
         "Load a grammar from a pickle file"
-        filename = askopenfilename(
-            filetypes=self.GRAMMAR_FILE_TYPES, defaultextension=".cfg"
-        )
+        filename = askopenfilename(filetypes=self.GRAMMAR_FILE_TYPES, defaultextension=".cfg")
         if not filename:
             return
         try:
@@ -2312,13 +2238,11 @@ class ChartParserApp:
                 with open(filename) as infile:
                     grammar = CFG.fromstring(infile.read())
             self.set_grammar(grammar)
-        except Exception as e:
+        except Exception:
             showerror("Error Loading Grammar", "Unable to open file: %r" % filename)
 
     def save_grammar(self, *args):
-        filename = asksaveasfilename(
-            filetypes=self.GRAMMAR_FILE_TYPES, defaultextension=".cfg"
-        )
+        filename = asksaveasfilename(filetypes=self.GRAMMAR_FILE_TYPES, defaultextension=".cfg")
         if not filename:
             return
         try:
@@ -2334,7 +2258,7 @@ class ChartParserApp:
                         outfile.write("%s\n" % prod)
                     for prod in rest:
                         outfile.write("%s\n" % prod)
-        except Exception as e:
+        except Exception:
             showerror("Error Saving Grammar", "Unable to open file: %r" % filename)
 
     def reset(self, *args):

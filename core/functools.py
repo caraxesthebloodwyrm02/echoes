@@ -72,10 +72,7 @@ def functools_total_ordering_maker_callback(
     ret_type: Type = bool_type
     if root_method.type.ret_type != ctx.api.named_type("builtins.bool"):
         proper_ret_type = get_proper_type(root_method.type.ret_type)
-        if not (
-            isinstance(proper_ret_type, UnboundType)
-            and proper_ret_type.name.split(".")[-1] == "bool"
-        ):
+        if not (isinstance(proper_ret_type, UnboundType) and proper_ret_type.name.split(".")[-1] == "bool"):
             ret_type = AnyType(TypeOfAny.implementation_artifact)
     for additional_op in _ORDERING_METHODS:
         # Either the method is not implemented
@@ -153,9 +150,7 @@ def handle_partial_with_callee(ctx: mypy.plugin.FunctionContext, callee: Type) -
         return ctx.default_return_type
 
     if isinstance(callee_proper := get_proper_type(callee), UnionType):
-        return UnionType.make_union(
-            [handle_partial_with_callee(ctx, item) for item in callee_proper.items]
-        )
+        return UnionType.make_union([handle_partial_with_callee(ctx, item) for item in callee_proper.items])
 
     fn_type = ctx.api.extract_callable_type(callee, ctx=ctx.default_return_type)
     if fn_type is None:
@@ -217,11 +212,7 @@ def handle_partial_with_callee(ctx: mypy.plugin.FunctionContext, callee: Type) -
     # special_sig="partial" allows omission of args/kwargs typed with ParamSpec
     defaulted = fn_type.copy_modified(
         arg_kinds=[
-            (
-                ArgKind.ARG_OPT
-                if k == ArgKind.ARG_POS
-                else (ArgKind.ARG_NAMED_OPT if k == ArgKind.ARG_NAMED else k)
-            )
+            (ArgKind.ARG_OPT if k == ArgKind.ARG_POS else (ArgKind.ARG_NAMED_OPT if k == ArgKind.ARG_NAMED else k))
             for k in fn_type.arg_kinds
         ],
         ret_type=ret_type,
@@ -376,9 +367,7 @@ def partial_call_callback(ctx: mypy.plugin.MethodContext) -> Type:
     passed_paramspec_parts = [
         arg.node.type
         for arg in actual_args
-        if isinstance(arg, NameExpr)
-        and isinstance(arg.node, Var)
-        and isinstance(arg.node.type, ParamSpecType)
+        if isinstance(arg, NameExpr) and isinstance(arg.node, Var) and isinstance(arg.node.type, ParamSpecType)
     ]
     # ensure *args: P.args
     args_passed = any(part.flavor == ParamSpecFlavor.ARGS for part in passed_paramspec_parts)

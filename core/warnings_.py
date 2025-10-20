@@ -66,9 +66,7 @@ class MystWarnings(Enum):
     """Substitution could not be resolved."""
 
 
-def _is_suppressed_warning(
-    type: str, subtype: str, suppress_warnings: Sequence[str]
-) -> bool:
+def _is_suppressed_warning(type: str, subtype: str, suppress_warnings: Sequence[str]) -> bool:
     """Check whether the warning is suppressed or not.
 
     Mirrors:
@@ -128,9 +126,7 @@ def create_warning(
             subtype=subtype_str,
             location=node if node is not None else (document["source"], line),
         )
-        if _is_suppressed_warning(
-            type_str, subtype_str, document.settings.env.config.suppress_warnings
-        ):
+        if _is_suppressed_warning(type_str, subtype_str, document.settings.env.config.suppress_warnings):
             return None
         if node is not None:
             _source, _line = utils.get_source_line(node)
@@ -139,9 +135,7 @@ def create_warning(
         msg_node = _create_warning_node(message_with_type, _source, _line)
     else:
         # docutils
-        if _is_suppressed_warning(
-            type_str, subtype_str, document.settings.myst_suppress_warnings or []
-        ):
+        if _is_suppressed_warning(type_str, subtype_str, document.settings.myst_suppress_warnings or []):
             return None
         kwargs = {}
         if node is not None:
@@ -155,8 +149,6 @@ def create_warning(
     return msg_node
 
 
-def _create_warning_node(
-    msg: str, source: str, line: int | None
-) -> nodes.system_message:
+def _create_warning_node(msg: str, source: str, line: int | None) -> nodes.system_message:
     kwargs = {"line": line} if line is not None else {}
     return nodes.system_message(msg, level=2, type="WARNING", source=source, **kwargs)

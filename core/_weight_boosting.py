@@ -138,9 +138,7 @@ class BaseWeightBoosting(BaseEnsemble, metaclass=ABCMeta):
             y_numeric=is_regressor(self),
         )
 
-        sample_weight = _check_sample_weight(
-            sample_weight, X, dtype=np.float64, copy=True, ensure_non_negative=True
-        )
+        sample_weight = _check_sample_weight(sample_weight, X, dtype=np.float64, copy=True, ensure_non_negative=True)
         sample_weight /= sample_weight.sum()
 
         # Check parameters
@@ -164,9 +162,7 @@ class BaseWeightBoosting(BaseEnsemble, metaclass=ABCMeta):
             sample_weight[zero_weight_mask] = 0.0
 
             # Boosting step
-            sample_weight, estimator_weight, estimator_error = self._boost(
-                iboost, X, y, sample_weight, random_state
-            )
+            sample_weight, estimator_weight, estimator_error = self._boost(iboost, X, y, sample_weight, random_state)
 
             # Early termination
             if sample_weight is None:
@@ -291,17 +287,12 @@ class BaseWeightBoosting(BaseEnsemble, metaclass=ABCMeta):
             The feature importances.
         """
         if self.estimators_ is None or len(self.estimators_) == 0:
-            raise ValueError(
-                "Estimator not fitted, call `fit` before `feature_importances_`."
-            )
+            raise ValueError("Estimator not fitted, call `fit` before `feature_importances_`.")
 
         try:
             norm = self.estimator_weights_.sum()
             return (
-                sum(
-                    weight * clf.feature_importances_
-                    for weight, clf in zip(self.estimator_weights_, self.estimators_)
-                )
+                sum(weight * clf.feature_importances_ for weight, clf in zip(self.estimator_weights_, self.estimators_))
                 / norm
             )
 
@@ -334,14 +325,10 @@ def _samme_proba(estimator, n_classes, X):
     np.clip(proba, np.finfo(proba.dtype).eps, None, out=proba)
     log_proba = np.log(proba)
 
-    return (n_classes - 1) * (
-        log_proba - (1.0 / n_classes) * log_proba.sum(axis=1)[:, np.newaxis]
-    )
+    return (n_classes - 1) * (log_proba - (1.0 / n_classes) * log_proba.sum(axis=1)[:, np.newaxis])
 
 
-class AdaBoostClassifier(
-    _RoutingNotSupportedMixin, ClassifierMixin, BaseWeightBoosting
-):
+class AdaBoostClassifier(_RoutingNotSupportedMixin, ClassifierMixin, BaseWeightBoosting):
     """An AdaBoost classifier.
 
     An AdaBoost [1]_ classifier is a meta-estimator that begins by fitting a
@@ -523,9 +510,7 @@ class AdaBoostClassifier(
             )
 
         if not has_fit_parameter(self.estimator_, "sample_weight"):
-            raise ValueError(
-                f"{self.estimator.__class__.__name__} doesn't support sample_weight."
-            )
+            raise ValueError(f"{self.estimator.__class__.__name__} doesn't support sample_weight.")
 
     def _boost(self, iboost, X, y, sample_weight, random_state):
         """Implement a single boost.
@@ -592,9 +577,7 @@ class AdaBoostClassifier(
             self.estimators_.pop(-1)
             if len(self.estimators_) == 0:
                 raise ValueError(
-                    "BaseClassifier in AdaBoostClassifier "
-                    "ensemble is worse than random, ensemble "
-                    "can not be fit."
+                    "BaseClassifier in AdaBoostClassifier " "ensemble is worse than random, ensemble " "can not be fit."
                 )
             return None, None, None
 
@@ -606,10 +589,7 @@ class AdaBoostClassifier(
         # Only boost the weights if it will fit again
         if not iboost == self.n_estimators - 1:
             # Only boost positive weights
-            sample_weight = np.exp(
-                np.log(sample_weight)
-                + estimator_weight * incorrect * (sample_weight > 0)
-            )
+            sample_weight = np.exp(np.log(sample_weight) + estimator_weight * incorrect * (sample_weight > 0))
 
         return sample_weight, estimator_weight, estimator_error
 
@@ -1101,9 +1081,7 @@ class AdaBoostRegressor(_RoutingNotSupportedMixin, RegressorMixin, BaseWeightBoo
         estimator_weight = self.learning_rate * np.log(1.0 / beta)
 
         if not iboost == self.n_estimators - 1:
-            sample_weight[sample_mask] *= np.power(
-                beta, (1.0 - masked_error_vector) * self.learning_rate
-            )
+            sample_weight[sample_mask] *= np.power(beta, (1.0 - masked_error_vector) * self.learning_rate)
 
         return sample_weight, estimator_weight, estimator_error
 

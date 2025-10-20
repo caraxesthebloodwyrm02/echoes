@@ -47,18 +47,14 @@ iris.data, iris.target = shuffle(iris.data, iris.target, random_state=rng)
 
 # Load the diabetes dataset and randomly permute it
 diabetes = datasets.load_diabetes()
-diabetes.data, diabetes.target = shuffle(
-    diabetes.data, diabetes.target, random_state=rng
-)
+diabetes.data, diabetes.target = shuffle(diabetes.data, diabetes.target, random_state=rng)
 
 
 def test_samme_proba():
     # Test the `_samme_proba` helper function.
 
     # Define some example (bad) `predict_proba` output.
-    probs = np.array(
-        [[1, 1e-6, 0], [0.19, 0.6, 0.2], [-999, 0.51, 0.5], [1e-6, 1, 1e-9]]
-    )
+    probs = np.array([[1, 1e-6, 0], [0.19, 0.6, 0.2], [-999, 0.51, 0.5], [1e-6, 1, 1e-9]])
     probs /= np.abs(probs.sum(axis=1))[:, np.newaxis]
 
     # _samme_proba calls estimator.predict_proba.
@@ -157,9 +153,7 @@ def test_staged_predict():
     proba = clf.predict_proba(iris.data)
     staged_probas = [p for p in clf.staged_predict_proba(iris.data)]
     score = clf.score(iris.data, iris.target, sample_weight=iris_weights)
-    staged_scores = [
-        s for s in clf.staged_score(iris.data, iris.target, sample_weight=iris_weights)
-    ]
+    staged_scores = [s for s in clf.staged_score(iris.data, iris.target, sample_weight=iris_weights)]
 
     assert len(staged_predictions) == 10
     assert_array_almost_equal(predictions, staged_predictions[-1])
@@ -175,12 +169,7 @@ def test_staged_predict():
     predictions = clf.predict(diabetes.data)
     staged_predictions = [p for p in clf.staged_predict(diabetes.data)]
     score = clf.score(diabetes.data, diabetes.target, sample_weight=diabetes_weights)
-    staged_scores = [
-        s
-        for s in clf.staged_score(
-            diabetes.data, diabetes.target, sample_weight=diabetes_weights
-        )
-    ]
+    staged_scores = [s for s in clf.staged_score(diabetes.data, diabetes.target, sample_weight=diabetes_weights)]
 
     assert len(staged_predictions) == 10
     assert_array_almost_equal(predictions, staged_predictions[-1])
@@ -322,9 +311,7 @@ def test_sparse_classification(sparse_container, expected_internal_type):
             self.data_type_ = type(X)
             return self
 
-    X, y = datasets.make_multilabel_classification(
-        n_classes=1, n_samples=15, n_features=5, random_state=42
-    )
+    X, y = datasets.make_multilabel_classification(n_classes=1, n_samples=15, n_features=5, random_state=42)
     # Flatten y to a 1d array
     y = np.ravel(y)
 
@@ -425,9 +412,7 @@ def test_sparse_regression(sparse_container, expected_internal_type):
             self.data_type_ = type(X)
             return self
 
-    X, y = datasets.make_regression(
-        n_samples=15, n_features=50, n_targets=1, random_state=42
-    )
+    X, y = datasets.make_regression(n_samples=15, n_features=50, n_targets=1, random_state=42)
 
     X_train, X_test, y_train, y_test = train_test_split(X, y, random_state=0)
 
@@ -435,14 +420,10 @@ def test_sparse_regression(sparse_container, expected_internal_type):
     X_test_sparse = sparse_container(X_test)
 
     # Trained on sparse format
-    sparse_regressor = AdaBoostRegressor(estimator=CustomSVR(), random_state=1).fit(
-        X_train_sparse, y_train
-    )
+    sparse_regressor = AdaBoostRegressor(estimator=CustomSVR(), random_state=1).fit(X_train_sparse, y_train)
 
     # Trained on dense format
-    dense_regressor = AdaBoostRegressor(estimator=CustomSVR(), random_state=1).fit(
-        X_train, y_train
-    )
+    dense_regressor = AdaBoostRegressor(estimator=CustomSVR(), random_state=1).fit(X_train, y_train)
 
     # predict
     sparse_regr_results = sparse_regressor.predict(X_test_sparse)
@@ -522,9 +503,7 @@ def test_adaboostregressor_sample_weight():
     y[-1] = 10000
 
     # random_state=0 ensure that the underlying bootstrap will use the outlier
-    regr_no_outlier = AdaBoostRegressor(
-        estimator=LinearRegression(), n_estimators=1, random_state=0
-    )
+    regr_no_outlier = AdaBoostRegressor(estimator=LinearRegression(), n_estimators=1, random_state=0)
     regr_with_weight = clone(regr_no_outlier)
     regr_with_outlier = clone(regr_no_outlier)
 
@@ -551,15 +530,11 @@ def test_adaboost_consistent_predict():
     # check that predict_proba and predict give consistent results
     # regression test for:
     # https://github.com/scikit-learn/scikit-learn/issues/14084
-    X_train, X_test, y_train, y_test = train_test_split(
-        *datasets.load_digits(return_X_y=True), random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(*datasets.load_digits(return_X_y=True), random_state=42)
     model = AdaBoostClassifier(random_state=42)
     model.fit(X_train, y_train)
 
-    assert_array_equal(
-        np.argmax(model.predict_proba(X_test), axis=1), model.predict(X_test)
-    )
+    assert_array_equal(np.argmax(model.predict_proba(X_test), axis=1), model.predict(X_test))
 
 
 @pytest.mark.parametrize(
@@ -603,9 +578,7 @@ def test_adaboost_decision_function(global_random_seed):
     https://github.com/scikit-learn/scikit-learn/issues/26520
     """
     n_classes = 3
-    X, y = datasets.make_classification(
-        n_classes=n_classes, n_clusters_per_class=1, random_state=global_random_seed
-    )
+    X, y = datasets.make_classification(n_classes=n_classes, n_clusters_per_class=1, random_state=global_random_seed)
     clf = AdaBoostClassifier(n_estimators=1, random_state=global_random_seed).fit(X, y)
 
     y_score = clf.decision_function(X)

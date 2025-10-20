@@ -61,17 +61,12 @@ _LOGISTIC_SOLVER_CONVERGENCE_MSG = (
 
 def _check_solver(solver, penalty, dual):
     if solver not in ["liblinear", "saga"] and penalty not in ("l2", None):
-        raise ValueError(
-            f"Solver {solver} supports only 'l2' or None penalties, got {penalty} "
-            "penalty."
-        )
+        raise ValueError(f"Solver {solver} supports only 'l2' or None penalties, got {penalty} " "penalty.")
     if solver != "liblinear" and dual:
         raise ValueError(f"Solver {solver} supports only dual=False, got dual={dual}")
 
     if penalty == "elasticnet" and solver != "saga":
-        raise ValueError(
-            f"Only 'saga' solver supports elasticnet penalty, got solver={solver}."
-        )
+        raise ValueError(f"Only 'saga' solver supports elasticnet penalty, got solver={solver}.")
 
     if solver == "liblinear" and penalty is None:
         raise ValueError("penalty=None is not supported for the liblinear solver")
@@ -305,12 +300,8 @@ def _logistic_regression_path(
     # are assigned to the original labels. If it is "balanced", then
     # the class_weights are assigned after masking the labels with a OvR.
     le = LabelEncoder()
-    if isinstance(class_weight, dict) or (
-        multi_class == "multinomial" and class_weight is not None
-    ):
-        class_weight_ = compute_class_weight(
-            class_weight, classes=classes, y=y, sample_weight=sample_weight
-        )
+    if isinstance(class_weight, dict) or (multi_class == "multinomial" and class_weight is not None):
+        class_weight_ = compute_class_weight(class_weight, classes=classes, y=y, sample_weight=sample_weight)
         sample_weight *= class_weight_[le.fit_transform(y)]
 
     # For doing a ovr, we need to mask the labels first. For the
@@ -353,9 +344,7 @@ def _logistic_regression_path(
             if Y_multi.shape[1] == 1:
                 Y_multi = np.hstack([1 - Y_multi, Y_multi])
 
-        w0 = np.zeros(
-            (classes.size, n_features + int(fit_intercept)), order="F", dtype=X.dtype
-        )
+        w0 = np.zeros((classes.size, n_features + int(fit_intercept)), order="F", dtype=X.dtype)
 
     # IMPORTANT NOTE:
     # All solvers relying on LinearModelLoss need to scale the penalty with n_samples
@@ -375,8 +364,7 @@ def _logistic_regression_path(
         if multi_class == "ovr":
             if coef.size not in (n_features, w0.size):
                 raise ValueError(
-                    "Initialization coef is of shape %d, expected shape %d or %d"
-                    % (coef.size, n_features, w0.size)
+                    "Initialization coef is of shape %d, expected shape %d or %d" % (coef.size, n_features, w0.size)
                 )
             w0[: coef.size] = coef
         else:
@@ -431,21 +419,15 @@ def _logistic_regression_path(
     else:
         target = y_bin
         if solver == "lbfgs":
-            loss = LinearModelLoss(
-                base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept
-            )
+            loss = LinearModelLoss(base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept)
             func = loss.loss_gradient
         elif solver == "newton-cg":
-            loss = LinearModelLoss(
-                base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept
-            )
+            loss = LinearModelLoss(base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept)
             func = loss.loss
             grad = loss.gradient
             hess = loss.gradient_hessian_product  # hess = [gradient, hessp]
         elif solver == "newton-cholesky":
-            loss = LinearModelLoss(
-                base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept
-            )
+            loss = LinearModelLoss(base_loss=HalfBinomialLoss(), fit_intercept=fit_intercept)
         warm_start_sag = {"coef": np.expand_dims(w0, axis=1)}
 
     coefs = list()
@@ -453,9 +435,7 @@ def _logistic_regression_path(
     for i, C in enumerate(Cs):
         if solver == "lbfgs":
             l2_reg_strength = 1.0 / (C * sw_sum)
-            iprint = [-1, 50, 1, 100, 101][
-                np.searchsorted(np.array([0, 1, 2, 3]), verbose)
-            ]
+            iprint = [-1, 50, 1, 100, 101][np.searchsorted(np.array([0, 1, 2, 3]), verbose)]
             opt_res = optimize.minimize(
                 func,
                 w0,
@@ -576,8 +556,7 @@ def _logistic_regression_path(
 
         else:
             raise ValueError(
-                "solver must be one of {'liblinear', 'lbfgs', "
-                "'newton-cg', 'sag'}, got '%s' instead" % solver
+                "solver must be one of {'liblinear', 'lbfgs', " "'newton-cg', 'sag'}, got '%s' instead" % solver
             )
 
         if multi_class == "multinomial":
@@ -795,9 +774,7 @@ def _log_reg_scoring_path(
     elif multi_class == "multinomial":
         log_reg.classes_ = np.unique(y_train)
     else:
-        raise ValueError(
-            "multi_class should be either multinomial or ovr, got %d" % multi_class
-        )
+        raise ValueError("multi_class should be either multinomial or ovr, got %d" % multi_class)
 
     if pos_class is not None:
         mask = y_test == pos_class
@@ -1134,11 +1111,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         "intercept_scaling": [Interval(Real, 0, None, closed="neither")],
         "class_weight": [dict, StrOptions({"balanced"}), None],
         "random_state": ["random_state"],
-        "solver": [
-            StrOptions(
-                {"lbfgs", "liblinear", "newton-cg", "newton-cholesky", "sag", "saga"}
-            )
-        ],
+        "solver": [StrOptions({"lbfgs", "liblinear", "newton-cg", "newton-cholesky", "sag", "saga"})],
         "max_iter": [Interval(Integral, 0, None, closed="left")],
         "verbose": ["verbose"],
         "warm_start": ["boolean"],
@@ -1229,9 +1202,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
 
         if self.penalty is None:
             if self.C != 1.0:  # default values
-                warnings.warn(
-                    "Setting penalty=None will ignore the C and l1_ratio parameters"
-                )
+                warnings.warn("Setting penalty=None will ignore the C and l1_ratio parameters")
                 # Note that check for l1_ratio is done right above
             C_ = np.inf
             penalty = "l2"
@@ -1347,9 +1318,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         else:
             warm_start_coef = None
         if warm_start_coef is not None and self.fit_intercept:
-            warm_start_coef = np.append(
-                warm_start_coef, self.intercept_[:, np.newaxis], axis=1
-            )
+            warm_start_coef = np.append(warm_start_coef, self.intercept_[:, np.newaxis], axis=1)
 
         # Hack so that we iterate only once for the multinomial case.
         if multi_class == "multinomial":
@@ -1414,9 +1383,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
             self.coef_ = fold_coefs_[0][0]
         else:
             self.coef_ = np.asarray(fold_coefs_)
-            self.coef_ = self.coef_.reshape(
-                n_classes, n_features + int(self.fit_intercept)
-            )
+            self.coef_ = self.coef_.reshape(n_classes, n_features + int(self.fit_intercept))
 
         if self.fit_intercept:
             self.intercept_ = self.coef_[:, -1]
@@ -1455,8 +1422,7 @@ class LogisticRegression(LinearClassifierMixin, SparseCoefMixin, BaseEstimator):
         check_is_fitted(self)
 
         ovr = self.multi_class in ["ovr", "warn"] or (
-            self.multi_class in ["auto", "deprecated"]
-            and (self.classes_.size <= 2 or self.solver == "liblinear")
+            self.multi_class in ["auto", "deprecated"] and (self.classes_.size <= 2 or self.solver == "liblinear")
         )
         if ovr:
             return super()._predict_proba_lr(X)
@@ -1883,17 +1849,12 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
                 self.l1_ratios is None
                 or len(self.l1_ratios) == 0
                 or any(
-                    (
-                        not isinstance(l1_ratio, numbers.Number)
-                        or l1_ratio < 0
-                        or l1_ratio > 1
-                    )
+                    (not isinstance(l1_ratio, numbers.Number) or l1_ratio < 0 or l1_ratio > 1)
                     for l1_ratio in self.l1_ratios
                 )
             ):
                 raise ValueError(
-                    "l1_ratios must be a list of numbers between "
-                    "0 and 1; got (l1_ratios=%r)" % self.l1_ratios
+                    "l1_ratios must be a list of numbers between " "0 and 1; got (l1_ratios=%r)" % self.l1_ratios
                 )
             l1_ratios_ = self.l1_ratios
         else:
@@ -1922,9 +1883,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
         label_encoder = LabelEncoder().fit(y)
         y = label_encoder.transform(y)
         if isinstance(class_weight, dict):
-            class_weight = {
-                label_encoder.transform([cls])[0]: v for cls, v in class_weight.items()
-            }
+            class_weight = {label_encoder.transform([cls])[0]: v for cls, v in class_weight.items()}
 
         # The original class labels
         classes = self.classes_ = label_encoder.classes_
@@ -2084,9 +2043,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
             #                                                 (1, 2, 0, 3))
             coefs_paths = np.swapaxes(coefs_paths, 0, 1)
             coefs_paths = np.swapaxes(coefs_paths, 0, 2)
-            self.n_iter_ = np.reshape(
-                n_iter_, (1, len(folds), len(self.Cs_) * len(l1_ratios_))
-            )
+            self.n_iter_ = np.reshape(n_iter_, (1, len(folds), len(self.Cs_) * len(l1_ratios_)))
             # repeat same scores across all classes
             scores = np.tile(scores, (n_classes, 1, 1))
         else:
@@ -2094,9 +2051,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
                 coefs_paths,
                 (n_classes, len(folds), len(self.Cs_) * len(l1_ratios_), -1),
             )
-            self.n_iter_ = np.reshape(
-                n_iter_, (n_classes, len(folds), len(self.Cs_) * len(l1_ratios_))
-            )
+            self.n_iter_ = np.reshape(n_iter_, (n_classes, len(folds), len(self.Cs_) * len(l1_ratios_)))
         scores = np.reshape(scores, (n_classes, len(folds), -1))
         self.scores_ = dict(zip(classes, scores))
         self.coefs_paths_ = dict(zip(classes, coefs_paths))
@@ -2105,9 +2060,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
         self.l1_ratio_ = list()
         self.coef_ = np.empty((n_classes, X.shape[1]))
         self.intercept_ = np.zeros(n_classes)
-        for index, (cls, encoded_label) in enumerate(
-            zip(iter_classes, iter_encoded_labels)
-        ):
+        for index, (cls, encoded_label) in enumerate(zip(iter_classes, iter_encoded_labels)):
             if multi_class == "ovr":
                 scores = self.scores_[cls]
                 coefs_paths = self.coefs_paths_[cls]
@@ -2173,10 +2126,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
                     )
                 else:
                     w = np.mean(
-                        [
-                            coefs_paths[:, i, best_indices[i], :]
-                            for i in range(len(folds))
-                        ],
+                        [coefs_paths[:, i, best_indices[i], :] for i in range(len(folds))],
                         axis=0,
                     )
 
@@ -2217,21 +2167,13 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
             # We need to first reshape and then transpose.
             # The same goes for the other arrays
             for cls, coefs_path in self.coefs_paths_.items():
-                self.coefs_paths_[cls] = coefs_path.reshape(
-                    (len(folds), self.l1_ratios_.size, self.Cs_.size, -1)
-                )
-                self.coefs_paths_[cls] = np.transpose(
-                    self.coefs_paths_[cls], (0, 2, 1, 3)
-                )
+                self.coefs_paths_[cls] = coefs_path.reshape((len(folds), self.l1_ratios_.size, self.Cs_.size, -1))
+                self.coefs_paths_[cls] = np.transpose(self.coefs_paths_[cls], (0, 2, 1, 3))
             for cls, score in self.scores_.items():
-                self.scores_[cls] = score.reshape(
-                    (len(folds), self.l1_ratios_.size, self.Cs_.size)
-                )
+                self.scores_[cls] = score.reshape((len(folds), self.l1_ratios_.size, self.Cs_.size))
                 self.scores_[cls] = np.transpose(self.scores_[cls], (0, 2, 1))
 
-            self.n_iter_ = self.n_iter_.reshape(
-                (-1, len(folds), self.l1_ratios_.size, self.Cs_.size)
-            )
+            self.n_iter_ = self.n_iter_.reshape((-1, len(folds), self.l1_ratios_.size, self.Cs_.size))
             self.n_iter_ = np.transpose(self.n_iter_, (0, 1, 3, 2))
 
         return self
@@ -2307,9 +2249,7 @@ class LogisticRegressionCV(LogisticRegression, LinearClassifierMixin, BaseEstima
             )
             .add(
                 scorer=self._get_scorer(),
-                method_mapping=MethodMapping()
-                .add(caller="score", callee="score")
-                .add(caller="fit", callee="score"),
+                method_mapping=MethodMapping().add(caller="score", callee="score").add(caller="fit", callee="score"),
             )
         )
         return router

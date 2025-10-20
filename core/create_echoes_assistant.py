@@ -227,9 +227,7 @@ You have access to the complete ECHOES codebase and can analyze, modify, and opt
         }
 
         os.makedirs("assistants", exist_ok=True)
-        with open(
-            "assistants/echoes_assistant_config.json", "w", encoding="utf-8"
-        ) as f:
+        with open("assistants/echoes_assistant_config.json", "w", encoding="utf-8") as f:
             json.dump(assistant_config, f, indent=2, ensure_ascii=False)
 
         print("Configuration saved to assistants/echoes_assistant_config.json")

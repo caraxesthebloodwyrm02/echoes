@@ -56,9 +56,7 @@ def check_openai_usage():
         # Note: The usage endpoint may require different authentication
         # This is a simplified check - in production you'd use the billing API
         response = client.models.list()
-        print(
-            "API connection verified - {} models available".format(len(response.data))
-        )
+        print("API connection verified - {} models available".format(len(response.data)))
 
         # Try a minimal completion to test rate limits
         client.chat.completions.create(
@@ -107,9 +105,7 @@ def batch_code_chunks(chunks, batch_size=15):
 
 async def analyze_code_batch_with_caching(code_batch, analysis_type, batch_id):
     """Analyze code batch with intelligent caching to avoid redundant API calls"""
-    cache_key = "{}_{}".format(
-        analysis_type, hash(code_batch[:1000])
-    )  # Use first 1000 chars for cache key
+    cache_key = "{}_{}".format(analysis_type, hash(code_batch[:1000]))  # Use first 1000 chars for cache key
 
     # Check cache first
     if cache_key in result_cache:
@@ -210,24 +206,14 @@ async def throttled_batch_analysis(batches, analysis_type, requests_per_minute=3
     results = []
     request_count = 0
 
-    print(
-        "Starting throttled batch analysis for {} ({} batches)".format(
-            analysis_type, len(batches)
-        )
-    )
+    print("Starting throttled batch analysis for {} ({} batches)".format(analysis_type, len(batches)))
 
     for i, batch in enumerate(batches):
         batch_id = "batch_{}_{}".format(analysis_type, i + 1)
-        print(
-            "Analyzing {} - {} files ({} chars)".format(
-                batch_id, len(batch["files"]), batch["size"]
-            )
-        )
+        print("Analyzing {} - {} files ({} chars)".format(batch_id, len(batch["files"]), batch["size"]))
 
         # Analyze the batch
-        result = await analyze_code_batch_with_caching(
-            batch["code"], analysis_type, batch_id
-        )
+        result = await analyze_code_batch_with_caching(batch["code"], analysis_type, batch_id)
         results.append(
             {
                 "batch_id": batch_id,
@@ -283,9 +269,7 @@ def load_project_files(project_root="e:/Projects/Development"):
                         code = f.read()
                         if code.strip():  # Only include non-empty files
                             rel_path = os.path.relpath(filepath, project_root)
-                            python_files.append(
-                                {"path": rel_path, "code": code, "size": len(code)}
-                            )
+                            python_files.append({"path": rel_path, "code": code, "size": len(code)})
                             print(f"  Loaded: {rel_path} ({len(code)} chars)")
                 except Exception as e:
                     print(f"  Skipped: {filepath} - {e}")
@@ -294,9 +278,7 @@ def load_project_files(project_root="e:/Projects/Development"):
     return python_files
 
 
-def chunk_code_files(
-    files, max_chunk_size=15000
-):  # Conservative limit under 20K tokens
+def chunk_code_files(files, max_chunk_size=15000):  # Conservative limit under 20K tokens
     """Chunk code files to stay under token limits"""
     chunks = []
 
@@ -444,24 +426,14 @@ async def comprehensive_codebase_analysis():
     all_batch_results = []
 
     for analysis_type in analysis_types:
-        print(
-            "{} ANALYSIS ({})".format(
-                analysis_type.upper().replace("_", " "), len(code_batches)
-            )
-        )
+        print("{} ANALYSIS ({})".format(analysis_type.upper().replace("_", " "), len(code_batches)))
         print("-" * 50)
 
         # Perform throttled batch analysis
-        batch_results = await throttled_batch_analysis(
-            code_batches, analysis_type, requests_per_minute=3
-        )
+        batch_results = await throttled_batch_analysis(code_batches, analysis_type, requests_per_minute=3)
         all_batch_results.extend(batch_results)
 
-        print(
-            "Completed {} analysis: {} batches processed".format(
-                analysis_type, len(batch_results)
-            )
-        )
+        print("Completed {} analysis: {} batches processed".format(analysis_type, len(batch_results)))
         print()
 
     # Generate comprehensive synthesis report
@@ -479,25 +451,13 @@ async def comprehensive_codebase_analysis():
     # Display results by category
     for analysis_type, results in analysis_summaries.items():
         print()
-        print(
-            "{} ANALYSIS SUMMARY ({} batches)".format(
-                analysis_type.upper().replace("_", " "), len(results)
-            )
-        )
+        print("{} ANALYSIS SUMMARY ({} batches)".format(analysis_type.upper().replace("_", " "), len(results)))
         print("=" * 50)
 
         for result in results[:2]:  # Show first 2 batch results as examples
-            print(
-                "Batch {}: {} files analyzed".format(
-                    result["batch_id"], len(result["files"])
-                )
-            )
+            print("Batch {}: {} files analyzed".format(result["batch_id"], len(result["files"])))
             # Show first 200 chars of analysis
-            analysis_preview = (
-                result["result"][:200] + "..."
-                if len(result["result"]) > 200
-                else result["result"]
-            )
+            analysis_preview = result["result"][:200] + "..." if len(result["result"]) > 200 else result["result"]
             print("  {}".format(analysis_preview.replace("\n", " ")))
             print()
 
@@ -518,9 +478,7 @@ async def comprehensive_codebase_analysis():
     print()
 
     print("COMPREHENSIVE CODEBASE ANALYSIS COMPLETE")
-    print(
-        "Massive optimization achieved: batching + throttling + caching + single agent"
-    )
+    print("Massive optimization achieved: batching + throttling + caching + single agent")
     print()
 
     return {
@@ -556,14 +514,10 @@ async def gpt4o_mini_full_repo_review():
     print()
 
     # Use the optimized batching approach for the entire repo
-    code_chunks = chunk_code_files(
-        project_files, max_chunk_size=12000
-    )  # Smaller chunks for focused analysis
+    code_chunks = chunk_code_files(project_files, max_chunk_size=12000)  # Smaller chunks for focused analysis
     code_batches = batch_code_chunks(code_chunks, batch_size=12)  # 12 chunks per batch
 
-    print(
-        f"[PROCESSING] Processing {len(code_batches)} batches for comprehensive analysis"
-    )
+    print(f"[PROCESSING] Processing {len(code_batches)} batches for comprehensive analysis")
     print()
 
     # Analyze each batch with GPT-4o-mini
@@ -571,9 +525,7 @@ async def gpt4o_mini_full_repo_review():
 
     for i, batch in enumerate(code_batches):
         batch_id = f"repo_batch_{i + 1}"
-        print(
-            f"[ANALYZING] Batch {i + 1}/{len(code_batches)} - {len(batch['files'])} files ({batch['size']:,} chars)"
-        )
+        print(f"[ANALYZING] Batch {i + 1}/{len(code_batches)} - {len(batch['files'])} files ({batch['size']:,} chars)")
 
         try:
             # GPT-4o-mini comprehensive batch analysis
@@ -640,9 +592,7 @@ Be specific about file names when mentioning issues or strengths.""",
     print("=" * 70)
 
     # Compile and display the comprehensive review
-    successful_reviews = [
-        r for r in all_reviews if not r["review"].startswith("Failed")
-    ]
+    successful_reviews = [r for r in all_reviews if not r["review"].startswith("Failed")]
 
     print("[STATS] Analysis Summary:")
     print(f"   * Total batches processed: {len(all_reviews)}")
@@ -687,13 +637,8 @@ Be specific about file names when mentioning issues or strengths.""",
         ):
             concerns.append(f"Batch {review['batch_id']}: {review['review'][:200]}...")
 
-        if any(
-            word in review_text
-            for word in ["suggest", "recommend", "consider", "could", "should"]
-        ):
-            suggestions.append(
-                f"Batch {review['batch_id']}: {review['review'][:200]}..."
-            )
+        if any(word in review_text for word in ["suggest", "recommend", "consider", "could", "should"]):
+            suggestions.append(f"Batch {review['batch_id']}: {review['review'][:200]}...")
 
     print("[STRONG] STRENGTHS IDENTIFIED:")
     if strengths:
@@ -726,15 +671,11 @@ Be specific about file names when mentioning issues or strengths.""",
     print()
 
     print("[TARGET] OVERALL ASSESSMENT:")
-    print(
-        "   GPT-4o-mini has completed a comprehensive review of your entire Echoes repository,"
-    )
+    print("   GPT-4o-mini has completed a comprehensive review of your entire Echoes repository,")
     print(
         f"   analyzing {len(project_files)} files across {len(all_reviews)} batches. The assessment provides detailed insights"
     )
-    print(
-        "   into code quality, architecture, and potential improvements throughout your codebase."
-    )
+    print("   into code quality, architecture, and potential improvements throughout your codebase.")
     print()
     print("[SUCCESS] Full repository review complete!")
 
@@ -767,9 +708,7 @@ async def compare_ai_thoughts():
 
     # Use the same 3 files for both models
     comparison_files = project_files[:3]
-    code_content = "\n\n".join(
-        [f"=== {f['path']} ===\n{f['code']}" for f in comparison_files]
-    )
+    code_content = "\n\n".join([f"=== {f['path']} ===\n{f['code']}" for f in comparison_files])
 
     print(f"📁 Comparing analysis of {len(comparison_files)} files:")
     for f in comparison_files:
@@ -798,9 +737,7 @@ async def compare_ai_thoughts():
         )
 
         mini_thoughts = mini_response.choices[0].message.content.strip()
-        print(
-            mini_thoughts[:800] + "..." if len(mini_thoughts) > 800 else mini_thoughts
-        )
+        print(mini_thoughts[:800] + "..." if len(mini_thoughts) > 800 else mini_thoughts)
 
     except Exception as e:
         print(f"❌ GPT-4o-mini analysis failed: {e}")
@@ -827,9 +764,7 @@ async def compare_ai_thoughts():
         )
 
         gpt4_thoughts = gpt4_response.choices[0].message.content.strip()
-        print(
-            gpt4_thoughts[:800] + "..." if len(gpt4_thoughts) > 800 else gpt4_thoughts
-        )
+        print(gpt4_thoughts[:800] + "..." if len(gpt4_thoughts) > 800 else gpt4_thoughts)
 
     except Exception as e:
         print(f"❌ GPT-4o analysis failed: {e}")

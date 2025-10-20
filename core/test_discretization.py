@@ -83,9 +83,7 @@ X = [[-2, 1.5, -4, -1], [-1, 2.5, -3, -0.5], [0, 3.5, -2, 0.5], [1, 4.5, -1, 2]]
     ],
 )
 def test_fit_transform(strategy, quantile_method, expected, sample_weight):
-    est = KBinsDiscretizer(
-        n_bins=3, encode="ordinal", strategy=strategy, quantile_method=quantile_method
-    )
+    est = KBinsDiscretizer(n_bins=3, encode="ordinal", strategy=strategy, quantile_method=quantile_method)
     with ignore_warnings(category=UserWarning):
         # Ignore the warning on removed small bins.
         est.fit(X, sample_weight=sample_weight)
@@ -94,12 +92,8 @@ def test_fit_transform(strategy, quantile_method, expected, sample_weight):
 
 def test_valid_n_bins():
     KBinsDiscretizer(n_bins=2, quantile_method="averaged_inverted_cdf").fit_transform(X)
-    KBinsDiscretizer(
-        n_bins=np.array([2])[0], quantile_method="averaged_inverted_cdf"
-    ).fit_transform(X)
-    assert KBinsDiscretizer(n_bins=2, quantile_method="averaged_inverted_cdf").fit(
-        X
-    ).n_bins_.dtype == np.dtype(int)
+    KBinsDiscretizer(n_bins=np.array([2])[0], quantile_method="averaged_inverted_cdf").fit_transform(X)
+    assert KBinsDiscretizer(n_bins=2, quantile_method="averaged_inverted_cdf").fit(X).n_bins_.dtype == np.dtype(int)
 
 
 def test_invalid_n_bins_array():
@@ -286,16 +280,12 @@ def test_numeric_stability(i):
 
     # Test up to discretizing nano units
     X = X_init / 10**i
-    Xt = KBinsDiscretizer(
-        n_bins=2, encode="ordinal", quantile_method="averaged_inverted_cdf"
-    ).fit_transform(X)
+    Xt = KBinsDiscretizer(n_bins=2, encode="ordinal", quantile_method="averaged_inverted_cdf").fit_transform(X)
     assert_array_equal(Xt_expected, Xt)
 
 
 def test_encode_options():
-    est = KBinsDiscretizer(
-        n_bins=[2, 3, 3, 3], encode="ordinal", quantile_method="averaged_inverted_cdf"
-    ).fit(X)
+    est = KBinsDiscretizer(n_bins=[2, 3, 3, 3], encode="ordinal", quantile_method="averaged_inverted_cdf").fit(X)
     Xt_1 = est.transform(X)
     est = KBinsDiscretizer(
         n_bins=[2, 3, 3, 3],
@@ -305,20 +295,14 @@ def test_encode_options():
     Xt_2 = est.transform(X)
     assert not sp.issparse(Xt_2)
     assert_array_equal(
-        OneHotEncoder(
-            categories=[np.arange(i) for i in [2, 3, 3, 3]], sparse_output=False
-        ).fit_transform(Xt_1),
+        OneHotEncoder(categories=[np.arange(i) for i in [2, 3, 3, 3]], sparse_output=False).fit_transform(Xt_1),
         Xt_2,
     )
-    est = KBinsDiscretizer(
-        n_bins=[2, 3, 3, 3], encode="onehot", quantile_method="averaged_inverted_cdf"
-    ).fit(X)
+    est = KBinsDiscretizer(n_bins=[2, 3, 3, 3], encode="onehot", quantile_method="averaged_inverted_cdf").fit(X)
     Xt_3 = est.transform(X)
     assert sp.issparse(Xt_3)
     assert_array_equal(
-        OneHotEncoder(
-            categories=[np.arange(i) for i in [2, 3, 3, 3]], sparse_output=True
-        )
+        OneHotEncoder(categories=[np.arange(i) for i in [2, 3, 3, 3]], sparse_output=True)
         .fit_transform(Xt_1)
         .toarray(),
         Xt_3.toarray(),
@@ -339,29 +323,21 @@ def test_encode_options():
         ),
     ],
 )
-def test_nonuniform_strategies(
-    strategy, quantile_method, expected_2bins, expected_3bins, expected_5bins
-):
+def test_nonuniform_strategies(strategy, quantile_method, expected_2bins, expected_3bins, expected_5bins):
     X = np.array([0, 0.5, 2, 3, 9, 10]).reshape(-1, 1)
 
     # with 2 bins
-    est = KBinsDiscretizer(
-        n_bins=2, strategy=strategy, quantile_method=quantile_method, encode="ordinal"
-    )
+    est = KBinsDiscretizer(n_bins=2, strategy=strategy, quantile_method=quantile_method, encode="ordinal")
     Xt = est.fit_transform(X)
     assert_array_equal(expected_2bins, Xt.ravel())
 
     # with 3 bins
-    est = KBinsDiscretizer(
-        n_bins=3, strategy=strategy, quantile_method=quantile_method, encode="ordinal"
-    )
+    est = KBinsDiscretizer(n_bins=3, strategy=strategy, quantile_method=quantile_method, encode="ordinal")
     Xt = est.fit_transform(X)
     assert_array_equal(expected_3bins, Xt.ravel())
 
     # with 5 bins
-    est = KBinsDiscretizer(
-        n_bins=5, strategy=strategy, quantile_method=quantile_method, encode="ordinal"
-    )
+    est = KBinsDiscretizer(n_bins=5, strategy=strategy, quantile_method=quantile_method, encode="ordinal")
     Xt = est.fit_transform(X)
     assert_array_equal(expected_5bins, Xt.ravel())
 
@@ -403,9 +379,7 @@ def test_nonuniform_strategies(
 )
 @pytest.mark.parametrize("encode", ["ordinal", "onehot", "onehot-dense"])
 def test_inverse_transform(strategy, encode, expected_inv, quantile_method):
-    kbd = KBinsDiscretizer(
-        n_bins=3, strategy=strategy, quantile_method=quantile_method, encode=encode
-    )
+    kbd = KBinsDiscretizer(n_bins=3, strategy=strategy, quantile_method=quantile_method, encode=encode)
     Xt = kbd.fit_transform(X)
     Xinv = kbd.inverse_transform(Xt)
     assert_array_almost_equal(expected_inv, Xinv)
@@ -436,9 +410,7 @@ def test_overwrite():
     X = np.array([0, 1, 2, 3])[:, None]
     X_before = X.copy()
 
-    est = KBinsDiscretizer(
-        n_bins=3, quantile_method="averaged_inverted_cdf", encode="ordinal"
-    )
+    est = KBinsDiscretizer(n_bins=3, quantile_method="averaged_inverted_cdf", encode="ordinal")
     Xt = est.fit_transform(X)
     assert_array_equal(X, X_before)
 
@@ -457,9 +429,7 @@ def test_overwrite():
 )
 def test_redundant_bins(strategy, expected_bin_edges, quantile_method):
     X = [[0], [0], [0], [0], [3], [3]]
-    kbd = KBinsDiscretizer(
-        n_bins=3, strategy=strategy, quantile_method=quantile_method, subsample=None
-    )
+    kbd = KBinsDiscretizer(n_bins=3, strategy=strategy, quantile_method=quantile_method, subsample=None)
     warning_message = "Consider decreasing the number of bins."
     with pytest.warns(UserWarning, match=warning_message):
         kbd.fit(X)
@@ -570,19 +540,11 @@ def test_kbinsdiscretizer_subsample_default():
     [
         (
             "onehot",
-            [
-                f"feat{col_id}_{float(bin_id)}"
-                for col_id in range(3)
-                for bin_id in range(4)
-            ],
+            [f"feat{col_id}_{float(bin_id)}" for col_id in range(3) for bin_id in range(4)],
         ),
         (
             "onehot-dense",
-            [
-                f"feat{col_id}_{float(bin_id)}"
-                for col_id in range(3)
-                for bin_id in range(4)
-            ],
+            [f"feat{col_id}_{float(bin_id)}" for col_id in range(3) for bin_id in range(4)],
         ),
         ("ordinal", [f"feat{col_id}" for col_id in range(3)]),
     ],
@@ -593,9 +555,7 @@ def test_kbinsdiscrtizer_get_feature_names_out(encode, expected_names):
     """
     X = [[-2, 1, -4], [-1, 2, -3], [0, 3, -2], [1, 4, -1]]
 
-    kbd = KBinsDiscretizer(
-        n_bins=4, encode=encode, quantile_method="averaged_inverted_cdf"
-    ).fit(X)
+    kbd = KBinsDiscretizer(n_bins=4, encode=encode, quantile_method="averaged_inverted_cdf").fit(X)
     Xt = kbd.transform(X)
 
     input_features = [f"feat{i}" for i in range(3)]
@@ -618,9 +578,7 @@ def test_kbinsdiscretizer_subsample(strategy, global_random_seed):
             quantile_method="averaged_inverted_cdf",
         )
     else:
-        kbd_subsampling = KBinsDiscretizer(
-            strategy=strategy, subsample=50000, random_state=global_random_seed
-        )
+        kbd_subsampling = KBinsDiscretizer(strategy=strategy, subsample=50000, random_state=global_random_seed)
     kbd_subsampling.fit(X)
 
     kbd_no_subsampling = clone(kbd_subsampling)
@@ -629,9 +587,7 @@ def test_kbinsdiscretizer_subsample(strategy, global_random_seed):
 
     # We use a large tolerance because we can't expect the bin edges to be exactly the
     # same when subsampling is used.
-    assert_allclose(
-        kbd_subsampling.bin_edges_[0], kbd_no_subsampling.bin_edges_[0], rtol=1e-2
-    )
+    assert_allclose(kbd_subsampling.bin_edges_[0], kbd_no_subsampling.bin_edges_[0], rtol=1e-2)
 
 
 def test_quantile_method_future_warnings():

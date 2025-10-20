@@ -126,19 +126,14 @@ def expr_to_unanalyzed_type(
                     # losing all the annotations.
                     return expr_to_unanalyzed_type(args[0], options, allow_new_syntax, expr)
             base.args = tuple(
-                expr_to_unanalyzed_type(arg, options, allow_new_syntax, expr, allow_unpack=True)
-                for arg in args
+                expr_to_unanalyzed_type(arg, options, allow_new_syntax, expr, allow_unpack=True) for arg in args
             )
             if not base.args:
                 base.empty_tuple_index = True
             return base
         else:
             raise TypeTranslationError()
-    elif (
-        isinstance(expr, OpExpr)
-        and expr.op == "|"
-        and ((options.python_version >= (3, 10)) or allow_new_syntax)
-    ):
+    elif isinstance(expr, OpExpr) and expr.op == "|" and ((options.python_version >= (3, 10)) or allow_new_syntax):
         return UnionType(
             [
                 expr_to_unanalyzed_type(expr.left, options, allow_new_syntax),
@@ -191,10 +186,7 @@ def expr_to_unanalyzed_type(
         return CallableArgument(typ, name, arg_const, expr.line, expr.column)
     elif isinstance(expr, ListExpr):
         return TypeList(
-            [
-                expr_to_unanalyzed_type(t, options, allow_new_syntax, expr, allow_unpack=True)
-                for t in expr.items
-            ],
+            [expr_to_unanalyzed_type(t, options, allow_new_syntax, expr, allow_unpack=True) for t in expr.items],
             line=expr.line,
             column=expr.column,
         )
@@ -224,9 +216,7 @@ def expr_to_unanalyzed_type(
     elif isinstance(expr, EllipsisExpr):
         return EllipsisType(expr.line)
     elif allow_unpack and isinstance(expr, StarExpr):
-        return UnpackType(
-            expr_to_unanalyzed_type(expr.expr, options, allow_new_syntax), from_star_syntax=True
-        )
+        return UnpackType(expr_to_unanalyzed_type(expr.expr, options, allow_new_syntax), from_star_syntax=True)
     elif isinstance(expr, DictExpr):
         if not expr.items:
             raise TypeTranslationError()
@@ -235,17 +225,11 @@ def expr_to_unanalyzed_type(
         for item_name, value in expr.items:
             if not isinstance(item_name, StrExpr):
                 if item_name is None:
-                    extra_items_from.append(
-                        expr_to_unanalyzed_type(value, options, allow_new_syntax, expr)
-                    )
+                    extra_items_from.append(expr_to_unanalyzed_type(value, options, allow_new_syntax, expr))
                     continue
                 raise TypeTranslationError()
-            items[item_name.value] = expr_to_unanalyzed_type(
-                value, options, allow_new_syntax, expr
-            )
-        result = TypedDictType(
-            items, set(), set(), Instance(MISSING_FALLBACK, ()), expr.line, expr.column
-        )
+            items[item_name.value] = expr_to_unanalyzed_type(value, options, allow_new_syntax, expr)
+        result = TypedDictType(items, set(), set(), Instance(MISSING_FALLBACK, ()), expr.line, expr.column)
         result.extra_items_from = extra_items_from
         return result
     else:

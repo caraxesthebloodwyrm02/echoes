@@ -35,9 +35,7 @@ def clf_diabetes(diabetes):
 
 
 def custom_values_helper(feature, grid_resolution):
-    return np.linspace(
-        *mquantiles(feature, (0.05, 0.95), axis=0), num=grid_resolution, endpoint=True
-    )
+    return np.linspace(*mquantiles(feature, (0.05, 0.95), axis=0), num=grid_resolution, endpoint=True)
 
 
 @pytest.mark.filterwarnings("ignore:A Bunch will be returned")
@@ -276,9 +274,7 @@ def test_plot_partial_dependence_str_features(
 
 @pytest.mark.filterwarnings("ignore:A Bunch will be returned")
 @pytest.mark.parametrize("use_custom_values", [True, False])
-def test_plot_partial_dependence_custom_axes(
-    use_custom_values, pyplot, clf_diabetes, diabetes
-):
+def test_plot_partial_dependence_custom_axes(use_custom_values, pyplot, clf_diabetes, diabetes):
     grid_resolution = 25
     fig, (ax1, ax2) = pyplot.subplots(1, 2)
 
@@ -324,9 +320,7 @@ def test_plot_partial_dependence_custom_axes(
     assert ax.get_ylabel() == "bmi"
 
 
-@pytest.mark.parametrize(
-    "kind, lines", [("average", 1), ("individual", 50), ("both", 51)]
-)
+@pytest.mark.parametrize("kind, lines", [("average", 1), ("individual", 50), ("both", 51)])
 @pytest.mark.parametrize("use_custom_values", [True, False])
 def test_plot_partial_dependence_passing_numpy_axes(
     pyplot,
@@ -443,9 +437,7 @@ def test_plot_partial_dependence_incorrent_num_axes(
 
 @pytest.mark.filterwarnings("ignore:A Bunch will be returned")
 @pytest.mark.parametrize("use_custom_values", [True, False])
-def test_plot_partial_dependence_with_same_axes(
-    use_custom_values, pyplot, clf_diabetes, diabetes
-):
+def test_plot_partial_dependence_with_same_axes(use_custom_values, pyplot, clf_diabetes, diabetes):
     # The first call to plot_partial_dependence will create two new axes to
     # place in the space of the passed in axes, which results in a total of
     # three axes in the figure.
@@ -479,10 +471,7 @@ def test_plot_partial_dependence_with_same_axes(
         custom_values=custom_values,
     )
 
-    msg = (
-        "The ax was already used in another plot function, please set "
-        "ax=display.axes_ instead"
-    )
+    msg = "The ax was already used in another plot function, please set " "ax=display.axes_ instead"
 
     with pytest.raises(ValueError, match=msg):
         PartialDependenceDisplay.from_estimator(
@@ -498,9 +487,7 @@ def test_plot_partial_dependence_with_same_axes(
 
 @pytest.mark.filterwarnings("ignore:A Bunch will be returned")
 @pytest.mark.parametrize("use_custom_values", [True, False])
-def test_plot_partial_dependence_feature_name_reuse(
-    use_custom_values, pyplot, clf_diabetes, diabetes
-):
+def test_plot_partial_dependence_feature_name_reuse(use_custom_values, pyplot, clf_diabetes, diabetes):
     # second call to plot does not change the feature names from the first
     # call
     grid_resolution = 10
@@ -591,9 +578,7 @@ def test_plot_partial_dependence_multiclass(use_custom_values, pyplot):
     assert all(c is None for c in disp_symbol.contours_.flat)
     assert disp_symbol.target_idx == 0
 
-    for int_result, symbol_result in zip(
-        disp_target_0.pd_results, disp_symbol.pd_results
-    ):
+    for int_result, symbol_result in zip(disp_target_0.pd_results, disp_symbol.pd_results):
         assert_allclose(int_result.average, symbol_result.average)
         assert_allclose(int_result["grid_values"], symbol_result["grid_values"])
 
@@ -785,16 +770,12 @@ def test_plot_partial_dependence_multiclass_error(pyplot, params, err_msg):
         PartialDependenceDisplay.from_estimator(clf, iris.data, **params)
 
 
-def test_plot_partial_dependence_does_not_override_ylabel(
-    pyplot, clf_diabetes, diabetes
-):
+def test_plot_partial_dependence_does_not_override_ylabel(pyplot, clf_diabetes, diabetes):
     # Non-regression test to be sure to not override the ylabel if it has been
     # See https://github.com/scikit-learn/scikit-learn/issues/15772
     _, axes = pyplot.subplots(1, 2)
     axes[0].set_ylabel("Hello world")
-    PartialDependenceDisplay.from_estimator(
-        clf_diabetes, diabetes.data, [0, 1], ax=axes
-    )
+    PartialDependenceDisplay.from_estimator(clf_diabetes, diabetes.data, [0, 1], ax=axes)
 
     assert axes[0].get_ylabel() == "Hello world"
     assert axes[1].get_ylabel() == "Partial dependence"
@@ -808,9 +789,7 @@ def test_plot_partial_dependence_does_not_override_ylabel(
         ([True, False, True], "array"),
     ],
 )
-def test_plot_partial_dependence_with_categorical(
-    pyplot, categorical_features, array_type
-):
+def test_plot_partial_dependence_with_categorical(pyplot, categorical_features, array_type):
     X = [[1, 1, "A"], [2, 0, "C"], [3, 2, "B"]]
     column_name = ["col_A", "col_B", "col_C"]
     X = _convert_container(X, array_type, columns_name=column_name)
@@ -938,9 +917,7 @@ def test_plot_partial_dependence_subsampling(
     )
 
     assert disp1.lines_.shape == expected_shape
-    assert all(
-        [isinstance(line, matplotlib.lines.Line2D) for line in disp1.lines_.ravel()]
-    )
+    assert all([isinstance(line, matplotlib.lines.Line2D) for line in disp1.lines_.ravel()])
 
 
 @pytest.mark.parametrize(
@@ -1003,9 +980,7 @@ def test_grid_resolution_with_categorical(pyplot, categorical_features, array_ty
     model = make_pipeline(preprocessor, LinearRegression())
     model.fit(X, y)
 
-    err_msg = (
-        "resolution of the computed grid is less than the minimum number of categories"
-    )
+    err_msg = "resolution of the computed grid is less than the minimum number of categories"
     with pytest.raises(ValueError, match=err_msg):
         PartialDependenceDisplay.from_estimator(
             model,
@@ -1019,9 +994,7 @@ def test_grid_resolution_with_categorical(pyplot, categorical_features, array_ty
 
 @pytest.mark.parametrize("kind", ["individual", "average", "both"])
 @pytest.mark.parametrize("centered", [True, False])
-def test_partial_dependence_plot_limits_one_way(
-    pyplot, clf_diabetes, diabetes, kind, centered
-):
+def test_partial_dependence_plot_limits_one_way(pyplot, clf_diabetes, diabetes, kind, centered):
     """Check that the PD limit on the plots are properly set on one-way plots."""
     disp = PartialDependenceDisplay.from_estimator(
         clf_diabetes,
@@ -1052,9 +1025,7 @@ def test_partial_dependence_plot_limits_one_way(
 
 
 @pytest.mark.parametrize("centered", [True, False])
-def test_partial_dependence_plot_limits_two_way(
-    pyplot, clf_diabetes, diabetes, centered
-):
+def test_partial_dependence_plot_limits_two_way(pyplot, clf_diabetes, diabetes, centered):
     """Check that the PD limit on the plots are properly set on two-way plots."""
     disp = PartialDependenceDisplay.from_estimator(
         clf_diabetes,
@@ -1098,12 +1069,7 @@ def test_partial_dependence_kind_list(
     )
 
     for idx in [0, 1]:
-        assert all(
-            [
-                isinstance(line, matplotlib.lines.Line2D)
-                for line in disp.lines_[0, idx].ravel()
-            ]
-        )
+        assert all([isinstance(line, matplotlib.lines.Line2D) for line in disp.lines_[0, idx].ravel()])
         assert disp.contours_[0, idx] is None
 
     assert disp.contours_[0, 2] is not None
@@ -1186,9 +1152,9 @@ def test_plot_partial_dependence_lines_kw(
     )
 
     line = disp.lines_[0, 0, -1]
-    assert line.get_color() == expected_colors[0], (
-        f"{line.get_color()}!={expected_colors[0]}\n{line_kw} and {pd_line_kw}"
-    )
+    assert (
+        line.get_color() == expected_colors[0]
+    ), f"{line.get_color()}!={expected_colors[0]}\n{line_kw} and {pd_line_kw}"
     if pd_line_kw is not None:
         if "linestyle" in pd_line_kw:
             assert line.get_linestyle() == pd_line_kw["linestyle"]
@@ -1198,9 +1164,7 @@ def test_plot_partial_dependence_lines_kw(
         assert line.get_linestyle() == "--"
 
     line = disp.lines_[0, 0, 0]
-    assert line.get_color() == expected_colors[1], (
-        f"{line.get_color()}!={expected_colors[1]}"
-    )
+    assert line.get_color() == expected_colors[1], f"{line.get_color()}!={expected_colors[1]}"
     if ice_lines_kw is not None:
         if "linestyle" in ice_lines_kw:
             assert line.get_linestyle() == ice_lines_kw["linestyle"]
@@ -1289,14 +1253,10 @@ def test_partial_dependence_display_with_constant_sample_weight(
         method="brute",
     )
 
-    assert np.array_equal(
-        disp.pd_results[0]["average"], disp_sw.pd_results[0]["average"]
-    )
+    assert np.array_equal(disp.pd_results[0]["average"], disp_sw.pd_results[0]["average"])
 
 
-def test_subclass_named_constructors_return_type_is_subclass(
-    pyplot, diabetes, clf_diabetes
-):
+def test_subclass_named_constructors_return_type_is_subclass(pyplot, diabetes, clf_diabetes):
     """Check that named constructors return the correct type when subclassed.
 
     Non-regression test for:

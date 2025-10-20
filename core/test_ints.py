@@ -2,6 +2,7 @@
 Tests that work on both the Python and C engines but do not have a
 specific classification into the other test modules.
 """
+
 from io import StringIO
 
 import numpy as np
@@ -13,9 +14,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
@@ -181,9 +180,7 @@ def test_int64_overflow(all_parsers, conv, request):
 
 
 @skip_pyarrow  # CSV parse error: Empty CSV file or block
-@pytest.mark.parametrize(
-    "val", [np.iinfo(np.uint64).max, np.iinfo(np.int64).max, np.iinfo(np.int64).min]
-)
+@pytest.mark.parametrize("val", [np.iinfo(np.uint64).max, np.iinfo(np.int64).max, np.iinfo(np.int64).min])
 def test_int64_uint64_range(all_parsers, val):
     # These numbers fall right inside the int64-uint64
     # range, so they should be parsed as string.
@@ -195,9 +192,7 @@ def test_int64_uint64_range(all_parsers, val):
 
 
 @skip_pyarrow  # CSV parse error: Empty CSV file or block
-@pytest.mark.parametrize(
-    "val", [np.iinfo(np.uint64).max + 1, np.iinfo(np.int64).min - 1]
-)
+@pytest.mark.parametrize("val", [np.iinfo(np.uint64).max + 1, np.iinfo(np.int64).min - 1])
 def test_outside_int64_uint64_range(all_parsers, val):
     # These numbers fall just outside the int64-uint64
     # range, so they should be parsed as string.

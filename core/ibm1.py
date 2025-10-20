@@ -68,7 +68,7 @@ Translation: Parameter Estimation. Computational Linguistics, 19 (2),
 import warnings
 from collections import defaultdict
 
-from nltk.translate import AlignedSent, Alignment, IBMModel
+from nltk.translate import Alignment, IBMModel
 from nltk.translate.ibm_model import Counts
 
 
@@ -144,9 +144,7 @@ class IBMModel1(IBMModel):
         initial_prob = 1 / len(self.trg_vocab)
         if initial_prob < IBMModel.MIN_PROB:
             warnings.warn(
-                "Target language vocabulary is too large ("
-                + str(len(self.trg_vocab))
-                + " words). "
+                "Target language vocabulary is too large (" + str(len(self.trg_vocab)) + " words). "
                 "Results may be less accurate."
             )
 

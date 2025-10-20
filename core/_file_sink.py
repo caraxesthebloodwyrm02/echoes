@@ -118,9 +118,7 @@ class Rotation:
                 filepath = os.path.realpath(file.name)
                 creation_time = get_ctime(filepath)
                 set_ctime(filepath, creation_time)
-                start_time = datetime.datetime.fromtimestamp(
-                    creation_time, tz=datetime.timezone.utc
-                )
+                start_time = datetime.datetime.fromtimestamp(creation_time, tz=datetime.timezone.utc)
 
                 time_init = self._time_init
 
@@ -281,12 +279,7 @@ class FileSink:
                 self._compression_function(old_path)
 
             if self._retention_function is not None:
-                logs = {
-                    file
-                    for pattern in self._glob_patterns
-                    for file in glob.glob(pattern)
-                    if os.path.isfile(file)
-                }
+                logs = {file for pattern in self._glob_patterns for file in glob.glob(pattern) if os.path.isfile(file)}
                 self._retention_function(list(logs))
 
         if is_rotating:
@@ -356,9 +349,7 @@ class FileSink:
             return partial(Retention.retention_age, seconds=retention.total_seconds())
         if callable(retention):
             return retention
-        raise TypeError(
-            "Cannot infer retention for objects of type: '%s'" % type(retention).__name__
-        )
+        raise TypeError("Cannot infer retention for objects of type: '%s'" % type(retention).__name__)
 
     @staticmethod
     def _make_compression_function(compression):
@@ -379,16 +370,12 @@ class FileSink:
             elif ext == "xz":
                 import lzma
 
-                compress = partial(
-                    Compression.copy_compress, opener=lzma.open, mode="wb", format=lzma.FORMAT_XZ
-                )
+                compress = partial(Compression.copy_compress, opener=lzma.open, mode="wb", format=lzma.FORMAT_XZ)
 
             elif ext == "lzma":
                 import lzma
 
-                compress = partial(
-                    Compression.copy_compress, opener=lzma.open, mode="wb", format=lzma.FORMAT_ALONE
-                )
+                compress = partial(Compression.copy_compress, opener=lzma.open, mode="wb", format=lzma.FORMAT_ALONE)
             elif ext == "tar":
                 import tarfile
 
@@ -424,6 +411,4 @@ class FileSink:
             return partial(Compression.compression, ext="." + ext, compress_function=compress)
         if callable(compression):
             return compression
-        raise TypeError(
-            "Cannot infer compression for objects of type: '%s'" % type(compression).__name__
-        )
+        raise TypeError("Cannot infer compression for objects of type: '%s'" % type(compression).__name__)

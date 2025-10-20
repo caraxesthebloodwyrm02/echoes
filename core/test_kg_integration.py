@@ -130,9 +130,7 @@ class TestKnowledgeGraphBridge:
         kg_bridge.sync_insights_to_kg(sample_insights)
 
         # Search for authentication-related insights
-        results = kg_bridge.semantic_search(
-            query="authentication security", limit=3, min_confidence=0.6
-        )
+        results = kg_bridge.semantic_search(query="authentication security", limit=3, min_confidence=0.6)
 
         assert isinstance(results, list)
         # Should find at least some results or return empty gracefully
@@ -146,9 +144,7 @@ class TestKnowledgeGraphBridge:
         kg_bridge.sync_insights_to_kg(sample_insights)
 
         # Search only in security category
-        results = kg_bridge.semantic_search(
-            query="vulnerability", category="security", limit=5
-        )
+        results = kg_bridge.semantic_search(query="vulnerability", category="security", limit=5)
 
         assert isinstance(results, list)
         # All results should be security category if any returned
@@ -163,9 +159,7 @@ class TestKnowledgeGraphBridge:
         kg_bridge.sync_insights_to_kg(sample_insights)
 
         # Search with high confidence threshold
-        results = kg_bridge.semantic_search(
-            query="code quality", min_confidence=0.8, limit=5
-        )
+        results = kg_bridge.semantic_search(query="code quality", min_confidence=0.8, limit=5)
 
         # All results should meet confidence threshold
         for result in results:
@@ -217,9 +211,7 @@ class TestKnowledgeGraphBridge:
         kg_bridge.sync_insights_to_kg(sample_insights)
 
         # Find insights related to authentication
-        related = kg_bridge.find_related_insights(
-            insight_content="authentication", similarity_threshold=0.5, limit=3
-        )
+        related = kg_bridge.find_related_insights(insight_content="authentication", similarity_threshold=0.5, limit=3)
 
         assert isinstance(related, list)
         # Each result should be a tuple of (uri, similarity_score)
@@ -319,9 +311,7 @@ class TestContextManagerKGIntegration:
     def test_add_insight_syncs_to_kg(self, context_manager_with_kg):
         """Test that adding insights syncs to knowledge graph"""
         # Add some insights
-        context_manager_with_kg.add_insight(
-            "Test insight about code quality", category="quality", confidence=0.85
-        )
+        context_manager_with_kg.add_insight("Test insight about code quality", category="quality", confidence=0.85)
 
         context_manager_with_kg.add_insight(
             "Another insight about performance", category="performance", confidence=0.75
@@ -344,9 +334,7 @@ class TestContextManagerKGIntegration:
         )
 
         # Search for insights
-        results = context_manager_with_kg.get_relevant_insights(
-            query="database performance", limit=5
-        )
+        results = context_manager_with_kg.get_relevant_insights(query="database performance", limit=5)
 
         # Should return results (semantic or keyword fallback)
         assert isinstance(results, list)

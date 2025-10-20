@@ -152,9 +152,7 @@ def test_as_float_array():
         assert not np.isnan(M).any()
 
 
-@pytest.mark.parametrize(
-    "X", [np.random.random((10, 2)), sp.random(10, 2, format="csr")]
-)
+@pytest.mark.parametrize("X", [np.random.random((10, 2)), sp.random(10, 2, format="csr")])
 def test_as_float_array_nan(X):
     X[5, 0] = np.nan
     X[6, 1] = np.nan
@@ -237,9 +235,7 @@ def test_check_array_ensure_all_finite_valid(value, ensure_all_finite, retype):
     ],
 )
 @pytest.mark.parametrize("retype", [np.asarray, sp.csr_matrix])
-def test_check_array_ensure_all_finite_invalid(
-    value, input_name, ensure_all_finite, match_msg, retype
-):
+def test_check_array_ensure_all_finite_invalid(value, input_name, ensure_all_finite, match_msg, retype):
     X = retype(np.arange(4).reshape(2, 2).astype(np.float64))
     X[0, 0] = value
     with pytest.raises(ValueError, match=match_msg):
@@ -325,9 +321,7 @@ def test_check_array_ensure_all_finite_object():
     ],
 )
 @pytest.mark.parametrize("ensure_all_finite", [True, False])
-def test_check_array_ensure_all_finite_object_unsafe_casting(
-    X, err_msg, ensure_all_finite
-):
+def test_check_array_ensure_all_finite_object_unsafe_casting(X, err_msg, ensure_all_finite):
     # casting a float array containing NaN or inf to int dtype should
     # raise an error irrespective of the ensure_all_finite parameter.
     with pytest.raises(ValueError, match=err_msg):
@@ -423,10 +417,7 @@ def test_check_array():
     Xs.extend(
         [
             sparse_container(X_C)
-            for sparse_container in CSR_CONTAINERS
-            + CSC_CONTAINERS
-            + COO_CONTAINERS
-            + DOK_CONTAINERS
+            for sparse_container in CSR_CONTAINERS + CSC_CONTAINERS + COO_CONTAINERS + DOK_CONTAINERS
         ]
     )
     Xs.extend([Xs[0].astype(np.int64), Xs[0].astype(np.float64)])
@@ -435,9 +426,7 @@ def test_check_array():
     # scipy sparse matrices do not support the object dtype so
     # this dtype is skipped in this loop
     non_object_dtypes = [dt for dt in dtypes if dt is not object]
-    for X, dtype, accept_sparse, copy in product(
-        Xs, non_object_dtypes, accept_sparses, copys
-    ):
+    for X, dtype, accept_sparse, copy in product(Xs, non_object_dtypes, accept_sparses, copys):
         X_checked = check_array(X, dtype=dtype, accept_sparse=accept_sparse, copy=copy)
         if dtype is not None:
             assert X_checked.dtype == dtype
@@ -500,9 +489,7 @@ def test_check_array_numeric_error(X):
         check_array(X, dtype="numeric")
 
 
-@pytest.mark.parametrize(
-    "pd_dtype", ["Int8", "Int16", "UInt8", "UInt16", "Float32", "Float64"]
-)
+@pytest.mark.parametrize("pd_dtype", ["Int8", "Int16", "UInt8", "UInt16", "Float32", "Float64"])
 @pytest.mark.parametrize(
     "dtype, expected_dtype",
     [
@@ -519,9 +506,7 @@ def test_check_array_pandas_na_support(pd_dtype, dtype, expected_dtype):
         # Extension dtypes with Floats was added in 1.2
         pd = pytest.importorskip("pandas", minversion="1.2")
 
-    X_np = np.array(
-        [[1, 2, 3, np.nan, np.nan], [np.nan, np.nan, 8, 4, 6], [1, 2, 3, 4, 5]]
-    ).T
+    X_np = np.array([[1, 2, 3, np.nan, np.nan], [np.nan, np.nan, 8, 4, 6], [1, 2, 3, 4, 5]]).T
 
     # Creates dataframe with numerical extension arrays with pd.NA
     X = pd.DataFrame(X_np, dtype=pd_dtype, columns=["a", "b", "c"])
@@ -554,9 +539,7 @@ def test_check_array_panadas_na_support_series():
     assert_allclose(X_out, [1, 2, np.nan])
     assert X_out.dtype == np.float64
 
-    X_out = check_array(
-        X_int64, ensure_all_finite=False, ensure_2d=False, dtype=np.float32
-    )
+    X_out = check_array(X_int64, ensure_all_finite=False, ensure_2d=False, dtype=np.float32)
     assert_allclose(X_out, [1, 2, np.nan])
     assert X_out.dtype == np.float32
 
@@ -631,9 +614,7 @@ def test_check_array_dtype_warning():
             assert X_checked.dtype == np.float64
 
         for X in float32_data:
-            X_checked = check_array(
-                X, dtype=[np.float64, np.float32], accept_sparse=True
-            )
+            X_checked = check_array(X, dtype=[np.float64, np.float32], accept_sparse=True)
             assert X_checked.dtype == np.float32
             assert X_checked is X
 
@@ -663,23 +644,18 @@ def test_check_array_accept_sparse_type_exception():
     invalid_type = SVR()
 
     msg = (
-        "Sparse data was passed, but dense data is required. "
-        r"Use '.toarray\(\)' to convert to a dense numpy array."
+        "Sparse data was passed, but dense data is required. " r"Use '.toarray\(\)' to convert to a dense numpy array."
     )
     with pytest.raises(TypeError, match=msg):
         check_array(X_csr, accept_sparse=False)
 
     msg = (
-        "Parameter 'accept_sparse' should be a string, "
-        "boolean or list of strings. You provided 'accept_sparse=.*'."
+        "Parameter 'accept_sparse' should be a string, " "boolean or list of strings. You provided 'accept_sparse=.*'."
     )
     with pytest.raises(ValueError, match=msg):
         check_array(X_csr, accept_sparse=invalid_type)
 
-    msg = (
-        "When providing 'accept_sparse' as a tuple or list, "
-        "it must contain at least one string value."
-    )
+    msg = "When providing 'accept_sparse' as a tuple or list, " "it must contain at least one string value."
     with pytest.raises(ValueError, match=msg):
         check_array(X_csr, accept_sparse=[])
     with pytest.raises(ValueError, match=msg):
@@ -728,10 +704,7 @@ def test_check_array_accept_large_sparse_no_exception(X_64bit):
 
 def test_check_array_accept_large_sparse_raise_exception(X_64bit):
     # When large sparse are not allowed
-    msg = (
-        "Only sparse matrices with 32-bit integer indices "
-        "are accepted. Got int64 indices. Please do report"
-    )
+    msg = "Only sparse matrices with 32-bit integer indices " "are accepted. Got int64 indices. Please do report"
     with pytest.raises(ValueError, match=msg):
         check_array(X_64bit, accept_sparse=True, accept_large_sparse=False)
 
@@ -750,10 +723,7 @@ def test_check_array_min_samples_and_features_messages():
 
     # Invalid edge case when checking the default minimum sample of a scalar
     msg = re.escape(
-        (
-            "Input should have at least 1 dimension i.e. satisfy "
-            "`len(x.shape) > 0`, got scalar `array(42)` instead."
-        )
+        ("Input should have at least 1 dimension i.e. satisfy " "`len(x.shape) > 0`, got scalar `array(42)` instead.")
     )
     with pytest.raises(TypeError, match=msg):
         check_array(42, ensure_2d=False)
@@ -852,9 +822,9 @@ def test_has_fit_parameter():
         def fit(self, X, y, sample_weight=None):
             pass
 
-    assert has_fit_parameter(TestClassWithDeprecatedFitMethod, "sample_weight"), (
-        "has_fit_parameter fails for class with deprecated fit method."
-    )
+    assert has_fit_parameter(
+        TestClassWithDeprecatedFitMethod, "sample_weight"
+    ), "has_fit_parameter fails for class with deprecated fit method."
 
 
 def test_check_symmetric():
@@ -994,9 +964,7 @@ def test_check_is_fitted_attributes():
     check_is_fitted(est, attributes=["a_", "b_"], all_or_any=any)
 
 
-@pytest.mark.parametrize(
-    "wrap", [itemgetter(0), list, tuple], ids=["single", "list", "tuple"]
-)
+@pytest.mark.parametrize("wrap", [itemgetter(0), list, tuple], ids=["single", "list", "tuple"])
 def test_check_is_fitted_with_attributes(wrap):
     ard = ARDRegression()
     with pytest.raises(NotFittedError, match="is not fitted yet"):
@@ -1052,9 +1020,7 @@ def test_check_consistent_length_array_api(array_namespace, device, _):
         )
 
         with pytest.raises(ValueError, match="inconsistent numbers of samples"):
-            check_consistent_length(
-                xp.asarray([1, 2], device=device), xp.asarray([1], device=device)
-            )
+            check_consistent_length(xp.asarray([1, 2], device=device), xp.asarray([1], device=device))
 
 
 def test_check_dataframe_fit_attribute():
@@ -1093,9 +1059,7 @@ def test_check_array_series():
     assert_array_equal(res, np.array(["a", "b", "c"], dtype=object))
 
 
-@pytest.mark.parametrize(
-    "dtype", ((np.float64, np.float32), np.float64, None, "numeric")
-)
+@pytest.mark.parametrize("dtype", ((np.float64, np.float32), np.float64, None, "numeric"))
 @pytest.mark.parametrize("bool_dtype", ("bool", "boolean"))
 def test_check_dataframe_mixed_float_dtypes(dtype, bool_dtype):
     # pandas dataframe will coerce a boolean into a object, this is a mismatch
@@ -1117,9 +1081,7 @@ def test_check_dataframe_mixed_float_dtypes(dtype, bool_dtype):
 
     array = check_array(df, dtype=dtype)
     assert array.dtype == np.float64
-    expected_array = np.array(
-        [[1.0, 0.0, 1.0], [2.0, 0.1, 0.0], [3.0, 2.1, 1.0]], dtype=float
-    )
+    expected_array = np.array([[1.0, 0.0, 1.0], [2.0, 0.1, 0.0], [3.0, 2.1, 1.0]], dtype=float)
     assert_allclose_dense_sparse(array, expected_array)
 
 
@@ -1173,10 +1135,7 @@ def test_check_memory(tmp_path):
     memory = check_memory(dummy)
     assert memory is dummy
 
-    msg = (
-        "'memory' should be None, a string or have the same interface as"
-        " joblib.Memory. Got memory='1' instead."
-    )
+    msg = "'memory' should be None, a string or have the same interface as" " joblib.Memory. Got memory='1' instead."
     with pytest.raises(ValueError, match=msg):
         check_memory(1)
     dummy = WrongDummyMemory()
@@ -1216,9 +1175,7 @@ def test_check_array_memmap(copy):
         ),
         (
             "estimators_",
-            [
-                type("SubEstimator", (), {"attribute_present": True})
-            ],  # list of sub-estimators
+            [type("SubEstimator", (), {"attribute_present": True})],  # list of sub-estimators
             ["estimators_"],
             True,  # expected_result is True b/c delegate and attribute are present
             None,  # expected_exception not relevant for this case
@@ -1254,9 +1211,7 @@ def test_check_array_memmap(copy):
         "estimator_with_default_delegates_but_absent_attribute",
     ],
 )
-def test_estimator_has(
-    estimator_name, estimator_value, delegates, expected_result, expected_exception
-):
+def test_estimator_has(estimator_name, estimator_value, delegates, expected_result, expected_exception):
     """
     Tests the _estimator_has function by verifying:
     - Functionality with default and custom delegates.
@@ -1453,10 +1408,7 @@ def test_check_scalar_valid(x):
             None,
             4,
             "left",
-            ValueError(
-                "`include_boundaries`='left' without specifying explicitly `min_val` "
-                "is inconsistent."
-            ),
+            ValueError("`include_boundaries`='left' without specifying explicitly `min_val` " "is inconsistent."),
         ),
         (
             4,
@@ -1465,16 +1417,11 @@ def test_check_scalar_valid(x):
             2,
             None,
             "right",
-            ValueError(
-                "`include_boundaries`='right' without specifying explicitly `max_val` "
-                "is inconsistent."
-            ),
+            ValueError("`include_boundaries`='right' without specifying explicitly `max_val` " "is inconsistent."),
         ),
     ],
 )
-def test_check_scalar_invalid(
-    x, target_name, target_type, min_val, max_val, include_boundaries, err_msg
-):
+def test_check_scalar_invalid(x, target_name, target_type, min_val, max_val, include_boundaries, err_msg):
     """Test that check_scalar returns the right error if a wrong input is
     given"""
     with pytest.raises(Exception) as raised_error:
@@ -1527,9 +1474,7 @@ _psd_cases_valid = {
     ids=list(_psd_cases_valid.keys()),
 )
 @pytest.mark.parametrize("enable_warnings", [True, False])
-def test_check_psd_eigenvalues_valid(
-    lambdas, expected_lambdas, w_type, w_msg, enable_warnings
-):
+def test_check_psd_eigenvalues_valid(lambdas, expected_lambdas, w_type, w_msg, enable_warnings):
     # Test that ``_check_psd_eigenvalues`` returns the right output for valid
     # input, possibly raising the right warning
 
@@ -1539,14 +1484,10 @@ def test_check_psd_eigenvalues_valid(
     if w_type is None:
         with warnings.catch_warnings():
             warnings.simplefilter("error", PositiveSpectrumWarning)
-            lambdas_fixed = _check_psd_eigenvalues(
-                lambdas, enable_warnings=enable_warnings
-            )
+            lambdas_fixed = _check_psd_eigenvalues(lambdas, enable_warnings=enable_warnings)
     else:
         with pytest.warns(w_type, match=w_msg):
-            lambdas_fixed = _check_psd_eigenvalues(
-                lambdas, enable_warnings=enable_warnings
-            )
+            lambdas_fixed = _check_psd_eigenvalues(lambdas, enable_warnings=enable_warnings)
 
     assert_allclose(expected_lambdas, lambdas_fixed)
 
@@ -1693,9 +1634,7 @@ def test_deprecate_positional_args_warns_for_function_version():
     def f1(a, *, b):
         pass
 
-    with pytest.warns(
-        FutureWarning, match=r"From version 1.1 passing these as positional"
-    ):
+    with pytest.warns(FutureWarning, match=r"From version 1.1 passing these as positional"):
         f1(1, 2)
 
 
@@ -1743,9 +1682,7 @@ def test_check_method_params(indices):
 
     assert result["list"] == _safe_indexing(_params["list"], indices_)
     assert_array_equal(result["array"], _safe_indexing(_params["array"], indices_))
-    assert_allclose_dense_sparse(
-        result["sparse-col"], _safe_indexing(_params["sparse-col"], indices_)
-    )
+    assert_allclose_dense_sparse(result["sparse-col"], _safe_indexing(_params["sparse-col"], indices_))
 
 
 @pytest.mark.parametrize("sp_format", [True, "csr", "csc", "coo", "bsr"])
@@ -1859,9 +1796,7 @@ def test_num_features_errors_1d_containers(X, constructor_name):
         expected_type_name = "pandas.*Series"
     else:
         expected_type_name = constructor_name
-    message = (
-        f"Unable to find the number of features from X of type {expected_type_name}"
-    )
+    message = f"Unable to find the number of features from X of type {expected_type_name}"
     if hasattr(X, "shape"):
         message += re.escape(" with shape (3,)")
     elif isinstance(X[0], str):
@@ -1916,9 +1851,7 @@ def test_get_feature_names_dataframe_protocol(constructor_name, minversion):
     """Uses the dataframe exchange protocol to get feature names."""
     data = [[1, 4, 2], [3, 3, 6]]
     columns = ["col_0", "col_1", "col_2"]
-    df = _convert_container(
-        data, constructor_name, columns_name=columns, minversion=minversion
-    )
+    df = _convert_container(data, constructor_name, columns_name=columns, minversion=minversion)
     feature_names = _get_feature_names(df)
 
     assert_array_equal(feature_names, columns)
@@ -2059,22 +1992,16 @@ def test_check_feature_names_in_pandas():
 
 def test_check_response_method_unknown_method():
     """Check the error message when passing an unknown response method."""
-    err_msg = (
-        "RandomForestRegressor has none of the following attributes: unknown_method."
-    )
+    err_msg = "RandomForestRegressor has none of the following attributes: unknown_method."
     with pytest.raises(AttributeError, match=err_msg):
         _check_response_method(RandomForestRegressor(), "unknown_method")
 
 
-@pytest.mark.parametrize(
-    "response_method", ["decision_function", "predict_proba", "predict"]
-)
+@pytest.mark.parametrize("response_method", ["decision_function", "predict_proba", "predict"])
 def test_check_response_method_not_supported_response_method(response_method):
     """Check the error message when a response method is not supported by the
     estimator."""
-    err_msg = (
-        f"EstimatorWithFit has none of the following attributes: {response_method}."
-    )
+    err_msg = f"EstimatorWithFit has none of the following attributes: {response_method}."
     with pytest.raises(AttributeError, match=err_msg):
         _check_response_method(EstimatorWithFit(), response_method)
 
@@ -2088,10 +2015,7 @@ def test_check_response_method_list_str():
 
     # raise an error when no methods are defined
     response_method = ["decision_function", "predict"]
-    err_msg = (
-        "_MockEstimatorOnOffPrediction has none of the following attributes: "
-        f"{', '.join(response_method)}."
-    )
+    err_msg = "_MockEstimatorOnOffPrediction has none of the following attributes: " f"{', '.join(response_method)}."
     with pytest.raises(AttributeError, match=err_msg):
         _check_response_method(my_estimator, response_method)(X)
 
@@ -2163,9 +2087,7 @@ def test_check_array_array_api_has_non_finite():
     ],
 )
 @pytest.mark.parametrize("include_object", [True, False])
-def test_check_array_multiple_extensions(
-    extension_dtype, regular_dtype, include_object
-):
+def test_check_array_multiple_extensions(extension_dtype, regular_dtype, include_object):
     """Check pandas extension arrays give the same result as non-extension arrays."""
     pd = pytest.importorskip("pandas")
     X_regular = pd.DataFrame(
@@ -2359,8 +2281,7 @@ def test_force_all_finite_rename_warning():
         (
             np.array([[[1, 2], [3, 4]], [[1, 2], [3, 4]]]),
             RandomForestRegressor(),
-            "Found array with dim 3, while dim <= 2 is required by "
-            "RandomForestRegressor.",
+            "Found array with dim 3, while dim <= 2 is required by " "RandomForestRegressor.",
         ),
         (
             np.array([[[1, 2], [3, 4]], [[1, 2], [3, 4]]]),

@@ -77,9 +77,7 @@ class UnifiedVectorModule:
         self.compress_dim = compress_dim
         self.index: Optional[faiss.Index] = None
         self.compressed_vectors: Optional[np.ndarray] = None
-        self.quantization_params: Optional[Tuple[float, float]] = (
-            None  # min_val, max_val for dequantization
-        )
+        self.quantization_params: Optional[Tuple[float, float]] = None  # min_val, max_val for dequantization
         self.metadata: List[Dict[str, Any]] = []
         self.bm25: Optional[BM25Okapi] = None
         config = Config.from_env()
@@ -89,9 +87,7 @@ class UnifiedVectorModule:
             # Reuse Config-managed OpenAI client
             self.embedding_client = config.openai_client
 
-    def chunk_code_files(
-        self, code_texts: List[str], chunk_size: int = 256
-    ) -> List[str]:
+    def chunk_code_files(self, code_texts: List[str], chunk_size: int = 256) -> List[str]:
         """Chunk code by AST (functions/classes) for semantic granularity."""
         chunks = []
         for code in code_texts:
@@ -111,16 +107,11 @@ class UnifiedVectorModule:
                 # Fallback: split by lines
                 lines = code.splitlines()
                 chunks.extend(
-                    [
-                        "\n".join(lines[i : i + chunk_size // 10])
-                        for i in range(0, len(lines), chunk_size // 20)
-                    ]
+                    ["\n".join(lines[i : i + chunk_size // 10]) for i in range(0, len(lines), chunk_size // 20)]
                 )
         return chunks
 
-    def batch_embed(
-        self, texts: List[str], batch_size: Optional[int] = None
-    ) -> np.ndarray:
+    def batch_embed(self, texts: List[str], batch_size: Optional[int] = None) -> np.ndarray:
         """
         Generate embeddings for a batch of texts.
 
@@ -153,9 +144,7 @@ class UnifiedVectorModule:
             self.index_dim = embeddings.shape[1]
         return embeddings
 
-    def build_index(
-        self, vectors: np.ndarray, index_type: str = "IndexFlatIP"
-    ) -> faiss.Index:
+    def build_index(self, vectors: np.ndarray, index_type: str = "IndexFlatIP") -> faiss.Index:
         """
         Build a FAISS index for similarity search.
 
@@ -167,18 +156,14 @@ class UnifiedVectorModule:
             Trained FAISS index.
         """
         if self.index_dim is None:
-            raise ValueError(
-                "index_dim is unset. Ensure embeddings are generated before building the index."
-            )
+            raise ValueError("index_dim is unset. Ensure embeddings are generated before building the index.")
 
         logger.info(f"Building {index_type} index for {len(vectors)} vectors")
         if index_type == "IndexFlatIP":
             self.index = faiss.IndexFlatIP(self.index_dim)
         elif index_type == "IndexIVFFlat":
             quantizer = faiss.IndexFlatIP(self.index_dim)
-            self.index = faiss.IndexIVFFlat(
-                quantizer, self.index_dim, 100
-            )  # 100 clusters
+            self.index = faiss.IndexIVFFlat(quantizer, self.index_dim, 100)  # 100 clusters
             self.index.train(vectors)
         else:
             raise ValueError(f"Unsupported index type: {index_type}")
@@ -218,9 +203,7 @@ class UnifiedVectorModule:
 
         return self.compressed_vectors
 
-    def quantize_vectors(
-        self, vectors: np.ndarray, bits: int = 8
-    ) -> Tuple[np.ndarray, float, float]:
+    def quantize_vectors(self, vectors: np.ndarray, bits: int = 8) -> Tuple[np.ndarray, float, float]:
         """Scalar quantization for compression."""
         min_val, max_val = vectors.min(), vectors.max()
         scale = (2**bits - 1) / (max_val - min_val + 1e-8)
@@ -268,9 +251,7 @@ class UnifiedVectorModule:
             self.compressed_vectors = self.compress_vectors(embeddings, compress_method)
 
         # Store metadata and setup BM25
-        self.metadata = metadata or [
-            {"id": i, "content": text} for i, text in enumerate(texts)
-        ]
+        self.metadata = metadata or [{"id": i, "content": text} for i, text in enumerate(texts)]
         tokenized = [m["content"].split() for m in self.metadata]
         self.bm25 = BM25Okapi(tokenized)
 
@@ -281,14 +262,10 @@ class UnifiedVectorModule:
             "metadata": self.metadata,
         }
 
-    def hybrid_search(
-        self, query: str, top_k: int = 5, keyword_weight: float = 0.3
-    ) -> List[Dict[str, Any]]:
+    def hybrid_search(self, query: str, top_k: int = 5, keyword_weight: float = 0.3) -> List[Dict[str, Any]]:
         """Hybrid BM25 + vector search."""
         if not self.index or not self.bm25 or not self.metadata:
-            raise ValueError(
-                "Index and BM25 not initialized. Run unified_batch_process first."
-            )
+            raise ValueError("Index and BM25 not initialized. Run unified_batch_process first.")
 
         # BM25 scores
         bm25_scores = self.bm25.get_scores(query.split())
@@ -305,9 +282,7 @@ class UnifiedVectorModule:
         for score, idx in zip(vec_scores, vec_indices):
             if idx < len(self.metadata) and idx not in seen_ids:
                 bm25_score = bm25_scores[int(idx)]
-                combined_score = (
-                    keyword_weight * bm25_score + (1 - keyword_weight) * score
-                )
+                combined_score = keyword_weight * bm25_score + (1 - keyword_weight) * score
                 result = self.metadata[int(idx)].copy()
                 result["score"] = float(combined_score)
                 combined_results.append(result)
@@ -343,9 +318,7 @@ class UnifiedVectorModule:
 
         return results
 
-    def evaluate_quality(
-        self, queries: List[str], ground_truth: List[List[int]], top_k: int = 5
-    ) -> Dict[str, float]:
+    def evaluate_quality(self, queries: List[str], ground_truth: List[List[int]], top_k: int = 5) -> Dict[str, float]:
         """Evaluate retrieval quality with MRR and NDCG."""
         mrr_scores = []
         ndcg_scores = []
@@ -421,9 +394,7 @@ if __name__ == "__main__":
     ]
 
     # Unified processing with chunking and quantization
-    result = module.unified_batch_process(
-        code_texts, compress=True, compress_method="quantization", chunk_code=True
-    )
+    result = module.unified_batch_process(code_texts, compress=True, compress_method="quantization", chunk_code=True)
     print("Processing complete with optimizations.")
 
     # Hybrid search

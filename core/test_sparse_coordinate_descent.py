@@ -157,9 +157,7 @@ def test_sparse_enet_not_as_toy_dataset(csc_container, alpha, fit_intercept, pos
     n_samples, n_features, max_iter = 100, 100, 1000
     n_informative = 10
 
-    X, y = make_sparse_data(
-        csc_container, n_samples, n_features, n_informative, positive=positive
-    )
+    X, y = make_sparse_data(csc_container, n_samples, n_features, n_informative, positive=positive)
 
     X_train, X_test = X[n_samples // 2 :], X[: n_samples // 2]
     y_train, y_test = y[n_samples // 2 :], y[: n_samples // 2]
@@ -205,9 +203,7 @@ def test_sparse_lasso_not_as_toy_dataset(csc_container):
     n_samples = 100
     max_iter = 1000
     n_informative = 10
-    X, y = make_sparse_data(
-        csc_container, n_samples=n_samples, n_informative=n_informative
-    )
+    X, y = make_sparse_data(csc_container, n_samples=n_samples, n_informative=n_informative)
 
     X_train, X_test = X[n_samples // 2 :], X[: n_samples // 2]
     y_train, y_test = y[n_samples // 2 :], y[: n_samples // 2]
@@ -274,9 +270,7 @@ def test_path_parameters(csc_container):
 @pytest.mark.parametrize("n_samples, n_features", [(24, 6), (6, 24)])
 @pytest.mark.parametrize("with_sample_weight", [True, False])
 @pytest.mark.parametrize("csc_container", CSC_CONTAINERS)
-def test_sparse_dense_equality(
-    Model, fit_intercept, n_samples, n_features, with_sample_weight, csc_container
-):
+def test_sparse_dense_equality(Model, fit_intercept, n_samples, n_features, with_sample_weight, csc_container):
     X, y = make_regression(
         n_samples=n_samples,
         n_features=n_features,
@@ -297,9 +291,7 @@ def test_sparse_dense_equality(
     if fit_intercept:
         assert reg_sparse.intercept_ == pytest.approx(reg_dense.intercept_)
         # balance property
-        assert np.average(reg_sparse.predict(X), weights=sw) == pytest.approx(
-            np.average(y, weights=sw)
-        )
+        assert np.average(reg_sparse.predict(X), weights=sw) == pytest.approx(np.average(y, weights=sw))
     assert_allclose(reg_sparse.coef_, reg_dense.coef_)
 
 
@@ -361,10 +353,7 @@ def test_sparse_enet_coordinate_descent(csc_container):
     n_features = 2
     X = csc_container((n_samples, n_features)) * 1e50
     y = np.ones(n_samples)
-    warning_message = (
-        "Objective did not converge. You might want "
-        "to increase the number of iterations."
-    )
+    warning_message = "Objective did not converge. You might want " "to increase the number of iterations."
     with pytest.warns(ConvergenceWarning, match=warning_message):
         clf.fit(X, y)
 

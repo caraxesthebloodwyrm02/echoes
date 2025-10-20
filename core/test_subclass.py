@@ -4,9 +4,7 @@ import pytest
 import pandas as pd
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning")
 
 
 class TestSeriesSubclassing:

@@ -1,4 +1,5 @@
 """ Google BigQuery support """
+
 from __future__ import annotations
 
 from typing import (
@@ -20,8 +21,7 @@ def _try_import():
     # since pandas is a dependency of pandas-gbq
     # we need to import on first use
     msg = (
-        "pandas-gbq is required to load data from Google BigQuery. "
-        "See the docs: https://pandas-gbq.readthedocs.io."
+        "pandas-gbq is required to load data from Google BigQuery. " "See the docs: https://pandas-gbq.readthedocs.io."
     )
     pandas_gbq = import_optional_dependency("pandas_gbq", extra=msg)
     return pandas_gbq

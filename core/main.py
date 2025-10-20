@@ -108,9 +108,7 @@ class EchoesREPL:
                     self._handle_command(user_input)
                 else:
                     # Handle mode-specific input
-                    handler = self.commands.get(
-                        self.current_mode, self._handle_main_command
-                    )
+                    handler = self.commands.get(self.current_mode, self._handle_main_command)
                     handler(user_input)
 
             except KeyboardInterrupt:
@@ -394,9 +392,7 @@ NOTES:
             try:
                 data = load_budget()
                 print("\nRecent Activity:")
-                print(
-                    f"   Last {min(5, data['calls'])} calls used ${data['spent']:.2f}"
-                )
+                print(f"   Last {min(5, data['calls'])} calls used ${data['spent']:.2f}")
                 print(f"   Total Spent: ${data['spent']:.2f}")
                 print(f"   API Calls: {data['calls']}")
             except:
@@ -482,9 +478,7 @@ NOTES:
 
                 try:
                     response = openai_integration.create_chat_completion(
-                        messages=self._build_conversation_messages(
-                            user_input, conversation_history
-                        ),
+                        messages=self._build_conversation_messages(user_input, conversation_history),
                         model=openai_integration.model,
                         temperature=0.7,
                         max_tokens=1000,
@@ -494,12 +488,8 @@ NOTES:
                         print(f"\n🤖 {response}\n")
 
                         # Add to conversation history
-                        conversation_history.append(
-                            {"role": "user", "content": user_input}
-                        )
-                        conversation_history.append(
-                            {"role": "assistant", "content": response}
-                        )
+                        conversation_history.append({"role": "user", "content": user_input})
+                        conversation_history.append({"role": "assistant", "content": response})
 
                         # Keep only last 10 exchanges (20 messages)
                         if len(conversation_history) > 20:
@@ -601,11 +591,7 @@ TIPS:
 
         for i, msg in enumerate(history, 1):
             role = msg["role"].title()
-            content = (
-                msg["content"][:100] + "..."
-                if len(msg["content"]) > 100
-                else msg["content"]
-            )
+            content = msg["content"][:100] + "..." if len(msg["content"]) > 100 else msg["content"]
             print(f"{i:2d}. {role}: {content}")
 
         print()

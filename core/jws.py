@@ -193,9 +193,7 @@ class JsonWebSignature:
 
         if "signatures" not in obj:
             # flattened JSON JWS
-            jws_header, valid = self._validate_json_jws(
-                payload_segment, payload, obj, key
-            )
+            jws_header, valid = self._validate_json_jws(payload_segment, payload, obj, key)
 
             rv = JWSObject(jws_header, payload, "flat")
             if valid:
@@ -205,9 +203,7 @@ class JsonWebSignature:
         headers = []
         is_valid = True
         for header_obj in obj["signatures"]:
-            jws_header, valid = self._validate_json_jws(
-                payload_segment, payload, header_obj, key
-            )
+            jws_header, valid = self._validate_json_jws(payload_segment, payload, header_obj, key)
             headers.append(jws_header)
             if not valid:
                 is_valid = False
@@ -294,9 +290,7 @@ class JsonWebSignature:
         if "crit" in header:
             crit_headers = header["crit"]
             # Type enforcement for robustness and predictable errors
-            if not isinstance(crit_headers, list) or not all(
-                isinstance(x, str) for x in crit_headers
-            ):
+            if not isinstance(crit_headers, list) or not all(isinstance(x, str) for x in crit_headers):
                 raise InvalidHeaderParameterNameError("crit")
             names = self.REGISTERED_HEADER_PARAMETER_NAMES.copy()
             if self._private_headers:

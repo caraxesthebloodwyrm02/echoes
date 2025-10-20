@@ -233,8 +233,7 @@ responses = (
     (
         r"because (.*)",
         (
-            "Does knowning the reasons behind things help you to understand"
-            " the things themselves?",
+            "Does knowning the reasons behind things help you to understand" " the things themselves?",
             "If%1, what else must be true?",
         ),
     ),
@@ -258,8 +257,7 @@ responses = (
     (
         r"(.*)understand(.*)",
         (
-            "If you understand, things are just as they are;"
-            " if you do not understand, things are just as they are.",
+            "If you understand, things are just as they are;" " if you do not understand, things are just as they are.",
             "Imagination is more important than knowledge.",
         ),
     ),

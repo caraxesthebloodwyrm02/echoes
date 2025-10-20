@@ -35,9 +35,7 @@ class PyJWKClient:
             # Init jwt set cache with default or given lifespan.
             # Default lifespan is 300 seconds (5 minutes).
             if lifespan <= 0:
-                raise PyJWKClientError(
-                    f'Lifespan must be greater than 0, the input is "{lifespan}"'
-                )
+                raise PyJWKClientError(f'Lifespan must be greater than 0, the input is "{lifespan}"')
             self.jwk_set_cache = JWKSetCache(lifespan)
         else:
             self.jwk_set_cache = None
@@ -45,22 +43,16 @@ class PyJWKClient:
         if cache_keys:
             # Cache signing keys
             # Ignore mypy (https://github.com/python/mypy/issues/2427)
-            self.get_signing_key = lru_cache(maxsize=max_cached_keys)(
-                self.get_signing_key
-            )  # type: ignore
+            self.get_signing_key = lru_cache(maxsize=max_cached_keys)(self.get_signing_key)  # type: ignore
 
     def fetch_data(self) -> Any:
         jwk_set: Any = None
         try:
             r = urllib.request.Request(url=self.uri, headers=self.headers)
-            with urllib.request.urlopen(
-                r, timeout=self.timeout, context=self.ssl_context
-            ) as response:
+            with urllib.request.urlopen(r, timeout=self.timeout, context=self.ssl_context) as response:
                 jwk_set = json.load(response)
         except (URLError, TimeoutError) as e:
-            raise PyJWKClientConnectionError(
-                f'Fail to fetch data from the url, err: "{e}"'
-            ) from e
+            raise PyJWKClientConnectionError(f'Fail to fetch data from the url, err: "{e}"') from e
         else:
             return jwk_set
         finally:
@@ -103,9 +95,7 @@ class PyJWKClient:
             signing_key = self.match_kid(signing_keys, kid)
 
             if not signing_key:
-                raise PyJWKClientError(
-                    f'Unable to find a signing key that matches: "{kid}"'
-                )
+                raise PyJWKClientError(f'Unable to find a signing key that matches: "{kid}"')
 
         return signing_key
 

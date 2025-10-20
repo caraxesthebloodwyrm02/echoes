@@ -43,20 +43,10 @@ multilabel_explicit_zero[:, 0] = 0
 
 def _generate_sparse(
     data,
-    sparse_containers=tuple(
-        COO_CONTAINERS
-        + CSC_CONTAINERS
-        + CSR_CONTAINERS
-        + DOK_CONTAINERS
-        + LIL_CONTAINERS
-    ),
+    sparse_containers=tuple(COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS + DOK_CONTAINERS + LIL_CONTAINERS),
     dtypes=(bool, int, np.int8, np.uint8, float, np.float32),
 ):
-    return [
-        sparse_container(data, dtype=dtype)
-        for sparse_container in sparse_containers
-        for dtype in dtypes
-    ]
+    return [sparse_container(data, dtype=dtype) for sparse_container in sparse_containers for dtype in dtypes]
 
 
 EXAMPLES = {
@@ -70,9 +60,7 @@ EXAMPLES = {
         ),
         [[0, 1], [1, 0]],
         [[0, 1]],
-        *_generate_sparse(
-            multilabel_explicit_zero, sparse_containers=CSC_CONTAINERS, dtypes=(int,)
-        ),
+        *_generate_sparse(multilabel_explicit_zero, sparse_containers=CSC_CONTAINERS, dtypes=(int,)),
         *_generate_sparse([[0, 1], [1, 0]]),
         *_generate_sparse([[0, 0], [0, 0]]),
         *_generate_sparse([[0, 1]]),
@@ -276,9 +264,7 @@ def test_unique_labels():
     assert_array_equal(unique_labels([4, 0, 2]), np.array([0, 2, 4]))
 
     # Multilabel indicator
-    assert_array_equal(
-        unique_labels(np.array([[0, 0, 1], [1, 0, 1], [0, 0, 0]])), np.arange(3)
-    )
+    assert_array_equal(unique_labels(np.array([[0, 0, 1], [1, 0, 1], [0, 0, 0]])), np.arange(3))
 
     assert_array_equal(unique_labels(np.array([[0, 0, 1], [0, 0, 0]])), np.arange(3))
 
@@ -352,9 +338,7 @@ def test_unique_labels_non_specific():
 
 def test_unique_labels_mixed_types():
     # Mix with binary or multiclass and multilabel
-    mix_clf_format = product(
-        EXAMPLES["multilabel-indicator"], EXAMPLES["multiclass"] + EXAMPLES["binary"]
-    )
+    mix_clf_format = product(EXAMPLES["multilabel-indicator"], EXAMPLES["multiclass"] + EXAMPLES["binary"])
 
     for y_multilabel, y_multiclass in mix_clf_format:
         with pytest.raises(ValueError):
@@ -393,25 +377,19 @@ def test_is_multilabel():
                 examples_sparse = [
                     sparse_container(example)
                     for sparse_container in (
-                        COO_CONTAINERS
-                        + CSC_CONTAINERS
-                        + CSR_CONTAINERS
-                        + DOK_CONTAINERS
-                        + LIL_CONTAINERS
+                        COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS + DOK_CONTAINERS + LIL_CONTAINERS
                     )
                 ]
                 for exmpl_sparse in examples_sparse:
-                    assert sparse_exp == is_multilabel(exmpl_sparse), (
-                        f"is_multilabel({exmpl_sparse!r}) should be {sparse_exp}"
-                    )
+                    assert sparse_exp == is_multilabel(
+                        exmpl_sparse
+                    ), f"is_multilabel({exmpl_sparse!r}) should be {sparse_exp}"
 
             # Densify sparse examples before testing
             if issparse(example):
                 example = example.toarray()
 
-            assert dense_exp == is_multilabel(example), (
-                f"is_multilabel({example!r}) should be {dense_exp}"
-            )
+            assert dense_exp == is_multilabel(example), f"is_multilabel({example!r}) should be {dense_exp}"
 
 
 @pytest.mark.parametrize(
@@ -432,9 +410,7 @@ def test_is_multilabel_array_api_compliance(array_namespace, device, dtype_name)
             example = xp.asarray(example, device=device)
 
             with config_context(array_api_dispatch=True):
-                assert dense_exp == is_multilabel(example), (
-                    f"is_multilabel({example!r}) should be {dense_exp}"
-                )
+                assert dense_exp == is_multilabel(example), f"is_multilabel({example!r}) should be {dense_exp}"
 
 
 def test_check_classification_targets():
@@ -452,13 +428,10 @@ def test_check_classification_targets():
 def test_type_of_target():
     for group, group_examples in EXAMPLES.items():
         for example in group_examples:
-            assert type_of_target(example) == group, (
-                "type_of_target(%r) should be %r, got %r"
-                % (
-                    example,
-                    group,
-                    type_of_target(example),
-                )
+            assert type_of_target(example) == group, "type_of_target(%r) should be %r, got %r" % (
+                example,
+                group,
+                type_of_target(example),
             )
 
     for example in NON_ARRAY_LIKE_EXAMPLES:
@@ -555,12 +528,8 @@ def test_class_distribution(csc_container):
         assert_array_almost_equal(class_prior_sp[k], class_prior_expected[k])
 
     # Test again with explicit sample weights
-    (classes, n_classes, class_prior) = class_distribution(
-        y, [1.0, 2.0, 1.0, 2.0, 1.0, 2.0]
-    )
-    (classes_sp, n_classes_sp, class_prior_sp) = class_distribution(
-        y, [1.0, 2.0, 1.0, 2.0, 1.0, 2.0]
-    )
+    (classes, n_classes, class_prior) = class_distribution(y, [1.0, 2.0, 1.0, 2.0, 1.0, 2.0])
+    (classes_sp, n_classes_sp, class_prior_sp) = class_distribution(y, [1.0, 2.0, 1.0, 2.0, 1.0, 2.0])
     class_prior_expected = [[4 / 9, 3 / 9, 2 / 9], [2 / 9, 4 / 9, 3 / 9], [1.0], [1.0]]
 
     for k in range(y.shape[1]):
@@ -600,9 +569,7 @@ def test_ovr_decision_function():
 
     predictions = np.array([[0, 1, 1], [0, 1, 0], [0, 1, 1], [0, 1, 1]])
 
-    confidences = np.array(
-        [[-1e16, 0, -1e16], [1.0, 2.0, -3.0], [-5.0, 2.0, 5.0], [-0.5, 0.2, 0.5]]
-    )
+    confidences = np.array([[-1e16, 0, -1e16], [1.0, 2.0, -3.0], [-5.0, 2.0, 5.0], [-0.5, 0.2, 0.5]])
 
     n_classes = 3
 
@@ -625,10 +592,7 @@ def test_ovr_decision_function():
 
     # assert subset invariance.
     dec_values_one = [
-        _ovr_decision_function(
-            np.array([predictions[i]]), np.array([confidences[i]]), n_classes
-        )[0]
-        for i in range(4)
+        _ovr_decision_function(np.array([predictions[i]]), np.array([confidences[i]]), n_classes)[0] for i in range(4)
     ]
 
     assert_allclose(dec_values, dec_values_one, atol=1e-6)

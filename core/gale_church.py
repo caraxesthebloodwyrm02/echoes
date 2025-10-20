@@ -42,15 +42,7 @@ except ImportError:
                         * (
                             -0.18628806
                             + t
-                            * (
-                                0.27886807
-                                + t
-                                * (
-                                    -1.13520398
-                                    + t
-                                    * (1.48851587 + t * (-0.82215223 + t * 0.17087277))
-                                )
-                            )
+                            * (0.27886807 + t * (-1.13520398 + t * (1.48851587 + t * (-0.82215223 + t * 0.17087277))))
                         )
                     )
                 )
@@ -140,9 +132,7 @@ def align_log_prob(i, j, source_sents, target_sents, alignment, params):
         # actually, the paper says l_s * params.VARIANCE_CHARACTERS, this is based on the C
         # reference implementation. With l_s in the denominator, insertions are impossible.
         m = (l_s + l_t / params.AVERAGE_CHARACTERS) / 2
-        delta = (l_s * params.AVERAGE_CHARACTERS - l_t) / math.sqrt(
-            m * params.VARIANCE_CHARACTERS
-        )
+        delta = (l_s * params.AVERAGE_CHARACTERS - l_t) / math.sqrt(m * params.VARIANCE_CHARACTERS)
     except ZeroDivisionError:
         return float("-inf")
 
@@ -183,9 +173,7 @@ def align_blocks(source_sents_lens, target_sents_lens, params=LanguageIndependen
                 prev_j = j - a[1]
                 if prev_i < -len(D) or prev_j < 0:
                     continue
-                p = D[prev_i][prev_j] + align_log_prob(
-                    i, j, source_sents_lens, target_sents_lens, a, params
-                )
+                p = D[prev_i][prev_j] + align_log_prob(i, j, source_sents_lens, target_sents_lens, a, params)
                 if p < min_dist:
                     min_dist = p
                     min_align = a
@@ -219,9 +207,7 @@ def align_texts(source_blocks, target_blocks, params=LanguageIndependent):
     @returns: A list of sentence alignment lists
     """
     if len(source_blocks) != len(target_blocks):
-        raise ValueError(
-            "Source and target texts do not have the same number of blocks."
-        )
+        raise ValueError("Source and target texts do not have the same number of blocks.")
 
     return [
         align_blocks(source_block, target_block, params)
@@ -255,9 +241,6 @@ def parse_token_stream(stream, soft_delimiter, hard_delimiter):
     and blocks (using C{hard_delimiter} tokens) for use with the L{align_texts} function.
     """
     return [
-        [
-            sum(len(token) for token in sentence_it)
-            for sentence_it in split_at(block_it, soft_delimiter)
-        ]
+        [sum(len(token) for token in sentence_it) for sentence_it in split_at(block_it, soft_delimiter)]
         for block_it in split_at(stream, hard_delimiter)
     ]

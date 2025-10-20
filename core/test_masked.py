@@ -13,6 +13,7 @@ classes (if they are relevant for the extension interface for all dtypes), or
 be added to the array-specific tests in `pandas/tests/arrays/`.
 
 """
+
 import warnings
 
 import numpy as np
@@ -52,9 +53,7 @@ from pandas.tests.extension import base
 is_windows_or_32bit = (is_platform_windows() and not np_version_gt2) or not IS64
 
 pytestmark = [
-    pytest.mark.filterwarnings(
-        "ignore:invalid value encountered in divide:RuntimeWarning"
-    ),
+    pytest.mark.filterwarnings("ignore:invalid value encountered in divide:RuntimeWarning"),
     pytest.mark.filterwarnings("ignore:Mean of empty slice:RuntimeWarning"),
     # overflow only relevant for Floating dtype cases cases
     pytest.mark.filterwarnings("ignore:overflow encountered in reduce:RuntimeWarning"),
@@ -66,13 +65,7 @@ def make_data():
 
 
 def make_float_data():
-    return (
-        list(np.arange(0.1, 0.9, 0.1))
-        + [pd.NA]
-        + list(np.arange(1, 9.8, 0.1))
-        + [pd.NA]
-        + [9.9, 10.0]
-    )
+    return list(np.arange(0.1, 0.9, 0.1)) + [pd.NA] + list(np.arange(1, 9.8, 0.1)) + [pd.NA] + [9.9, 10.0]
 
 
 def make_bool_data():
@@ -317,17 +310,11 @@ class TestMaskedArrays(base.ExtensionTests):
         elif is_signed_integer_dtype(arr.dtype):
             # TODO: Why does Window Numpy 2.0 dtype depend on skipna?
             cmp_dtype = (
-                "Int32"
-                if (is_platform_windows() and (not np_version_gt2 or not skipna))
-                or not IS64
-                else "Int64"
+                "Int32" if (is_platform_windows() and (not np_version_gt2 or not skipna)) or not IS64 else "Int64"
             )
         elif is_unsigned_integer_dtype(arr.dtype):
             cmp_dtype = (
-                "UInt32"
-                if (is_platform_windows() and (not np_version_gt2 or not skipna))
-                or not IS64
-                else "UInt64"
+                "UInt32" if (is_platform_windows() and (not np_version_gt2 or not skipna)) or not IS64 else "UInt64"
             )
         elif arr.dtype.kind == "b":
             if op_name in ["mean", "median", "var", "std", "skew"]:
@@ -336,10 +323,7 @@ class TestMaskedArrays(base.ExtensionTests):
                 cmp_dtype = "boolean"
             elif op_name in ["sum", "prod"]:
                 cmp_dtype = (
-                    "Int32"
-                    if (is_platform_windows() and (not np_version_gt2 or not skipna))
-                    or not IS64
-                    else "Int64"
+                    "Int32" if (is_platform_windows() and (not np_version_gt2 or not skipna)) or not IS64 else "Int64"
                 )
             else:
                 raise TypeError("not supposed to reach this")
@@ -376,10 +360,7 @@ class TestMaskedArrays(base.ExtensionTests):
 
         if expected_dtype == "Float32" and op_name == "cumprod" and skipna:
             # TODO: xfail?
-            pytest.skip(
-                f"Float32 precision lead to large differences with op {op_name} "
-                f"and skipna={skipna}"
-            )
+            pytest.skip(f"Float32 precision lead to large differences with op {op_name} " f"and skipna={skipna}")
 
         if op_name == "cumsum":
             result = getattr(ser, op_name)(skipna=skipna)

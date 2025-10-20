@@ -385,3 +385,7 @@ access.log
 !Makefile
 !.vscode/tasks.json
 !.vscode/launch.json
+e:\Projects\Development\backup_pre_restructure
+
+# Ignore memory directory
+memory/

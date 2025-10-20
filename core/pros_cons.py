@@ -46,14 +46,7 @@ class ProsConsCorpusReader(CategorizedCorpusReader, CorpusReader):
 
     CorpusView = StreamBackedCorpusView
 
-    def __init__(
-        self,
-        root,
-        fileids,
-        word_tokenizer=WordPunctTokenizer(),
-        encoding="utf8",
-        **kwargs
-    ):
+    def __init__(self, root, fileids, word_tokenizer=WordPunctTokenizer(), encoding="utf8", **kwargs):
         """
         :param root: The root directory for the corpus.
         :param fileids: a list or regexp specifying the fileids in the corpus.

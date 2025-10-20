@@ -56,13 +56,9 @@ def df(request):
     elif data_type == "utf8":
         return DataFrame({"a": ["µasd", "Ωœ∑`"], "b": ["øπ∆˚¬", "œ∑`®"]})
     elif data_type == "utf16":
-        return DataFrame(
-            {"a": ["\U0001f44d\U0001f44d", "\U0001f44d\U0001f44d"], "b": ["abc", "def"]}
-        )
+        return DataFrame({"a": ["\U0001f44d\U0001f44d", "\U0001f44d\U0001f44d"], "b": ["abc", "def"]})
     elif data_type == "string":
-        return DataFrame(
-            np.array([f"i-{i}" for i in range(15)]).reshape(5, 3), columns=list("abc")
-        )
+        return DataFrame(np.array([f"i-{i}" for i in range(15)]).reshape(5, 3), columns=list("abc"))
     elif data_type == "long":
         max_rows = get_option("display.max_rows")
         return DataFrame(
@@ -73,9 +69,7 @@ def df(request):
         return DataFrame({"en": "in English".split(), "es": "en español".split()})
     elif data_type == "colwidth":
         _cw = get_option("display.max_colwidth") + 1
-        return DataFrame(
-            np.array(["x" * _cw for _ in range(15)]).reshape(5, 3), columns=list("abc")
-        )
+        return DataFrame(np.array(["x" * _cw for _ in range(15)]).reshape(5, 3), columns=list("abc"))
     elif data_type == "mixed":
         return DataFrame(
             {
@@ -87,9 +81,7 @@ def df(request):
     elif data_type == "float":
         return DataFrame(np.random.default_rng(2).random((5, 3)), columns=list("abc"))
     elif data_type == "int":
-        return DataFrame(
-            np.random.default_rng(2).integers(0, 10, (5, 3)), columns=list("abc")
-        )
+        return DataFrame(np.random.default_rng(2).integers(0, 10, (5, 3)), columns=list("abc"))
     else:
         raise ValueError
 
@@ -161,10 +153,7 @@ def test_stringify_text(text):
         result = _stringifyText(text)
         assert result == str(text)
     else:
-        msg = (
-            "only str, int, float, and bool values "
-            f"can be copied to the clipboard, not {type(text).__name__}"
-        )
+        msg = "only str, int, float, and bool values " f"can be copied to the clipboard, not {type(text).__name__}"
         with pytest.raises(PyperclipException, match=msg):
             _stringifyText(text)
 
@@ -285,9 +274,7 @@ class TestClipboard:
 
         clipboard.setText(text)
         df = read_clipboard()
-        df_expected = DataFrame(
-            data={"col1": [1, None, 2], "col2": ["red", "blue", "green"]}
-        )
+        df_expected = DataFrame(data={"col1": [1, None, 2], "col2": ["red", "blue", "green"]})
 
         # excel data is parsed correctly
         tm.assert_frame_equal(df, df_expected)
@@ -307,9 +294,7 @@ class TestClipboard:
                 [["A", "A", "B"], [0, 1, 0], [True, True, False]],
             ),
             (
-                "\n".join(
-                    ["\t\tcol1\tcol2", "A\t0\t1\tred", "A\t1\t\tblue", "B\t0\t2\tgreen"]
-                ),
+                "\n".join(["\t\tcol1\tcol2", "A\t0\t1\tred", "A\t1\t\tblue", "B\t0\t2\tgreen"]),
                 [["A", "A", "B"], [0, 1, 0]],
             ),
         ],
@@ -344,9 +329,7 @@ class TestClipboard:
         tm.assert_frame_equal(df, result)
 
     @pytest.mark.parametrize("engine", ["c", "python"])
-    def test_read_clipboard_dtype_backend(
-        self, clipboard, string_storage, dtype_backend, engine, using_infer_string
-    ):
+    def test_read_clipboard_dtype_backend(self, clipboard, string_storage, dtype_backend, engine, using_infer_string):
         # GH#50502
         if dtype_backend == "pyarrow":
             pa = pytest.importorskip("pyarrow")
@@ -383,34 +366,23 @@ y,2,5.0,,,,,False,"""
             from pandas.arrays import ArrowExtensionArray
 
             expected = DataFrame(
-                {
-                    col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True))
-                    for col in expected.columns
-                }
+                {col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True)) for col in expected.columns}
             )
             expected["g"] = ArrowExtensionArray(pa.array([None, None]))
 
         if using_infer_string:
-            expected.columns = expected.columns.astype(
-                pd.StringDtype(string_storage, na_value=np.nan)
-            )
+            expected.columns = expected.columns.astype(pd.StringDtype(string_storage, na_value=np.nan))
 
         tm.assert_frame_equal(result, expected)
 
     def test_invalid_dtype_backend(self):
-        msg = (
-            "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-            "'pyarrow' are allowed."
-        )
+        msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
         with pytest.raises(ValueError, match=msg):
             read_clipboard(dtype_backend="numpy")
 
     def test_to_clipboard_pos_args_deprecation(self):
         # GH-54229
         df = DataFrame({"a": [1, 2, 3]})
-        msg = (
-            r"Starting with pandas version 3.0 all arguments of to_clipboard "
-            r"will be keyword-only."
-        )
+        msg = r"Starting with pandas version 3.0 all arguments of to_clipboard " r"will be keyword-only."
         with tm.assert_produces_warning(FutureWarning, match=msg):
             df.to_clipboard(True, None)

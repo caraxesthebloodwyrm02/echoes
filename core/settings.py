@@ -60,9 +60,7 @@ class AppSettings(BaseSettings):
     batch_file_pattern: str = Field(default="*.txt", env="BATCH_FILE_PATTERN")
 
     # Security
-    secret_key: str = Field(
-        default_factory=lambda: secrets.token_urlsafe(32), env="SECRET_KEY"
-    )
+    secret_key: str = Field(default_factory=lambda: secrets.token_urlsafe(32), env="SECRET_KEY")
 
     model_config = SettingsConfigDict(
         env_file=".env",

@@ -2,6 +2,7 @@
 Functions for implementing 'astype' methods according to pandas conventions,
 particularly ones that differ from numpy.
 """
+
 from __future__ import annotations
 
 import inspect
@@ -40,22 +41,14 @@ _dtype_obj = np.dtype(object)
 
 
 @overload
-def _astype_nansafe(
-    arr: np.ndarray, dtype: np.dtype, copy: bool = ..., skipna: bool = ...
-) -> np.ndarray:
-    ...
+def _astype_nansafe(arr: np.ndarray, dtype: np.dtype, copy: bool = ..., skipna: bool = ...) -> np.ndarray: ...
 
 
 @overload
-def _astype_nansafe(
-    arr: np.ndarray, dtype: ExtensionDtype, copy: bool = ..., skipna: bool = ...
-) -> ExtensionArray:
-    ...
+def _astype_nansafe(arr: np.ndarray, dtype: ExtensionDtype, copy: bool = ..., skipna: bool = ...) -> ExtensionArray: ...
 
 
-def _astype_nansafe(
-    arr: np.ndarray, dtype: DtypeObj, copy: bool = True, skipna: bool = False
-) -> ArrayLike:
+def _astype_nansafe(arr: np.ndarray, dtype: DtypeObj, copy: bool = True, skipna: bool = False) -> ArrayLike:
     """
     Cast the elements of an array to a given dtype a nan-safe manner.
 
@@ -93,9 +86,7 @@ def _astype_nansafe(
         shape = arr.shape
         if arr.ndim > 1:
             arr = arr.ravel()
-        return lib.ensure_string_array(
-            arr, skipna=skipna, convert_na_value=False
-        ).reshape(shape)
+        return lib.ensure_string_array(arr, skipna=skipna, convert_na_value=False).reshape(shape)
 
     elif np.issubdtype(arr.dtype, np.floating) and dtype.kind in "iu":
         return _astype_float_to_int_nansafe(arr, dtype, copy)
@@ -122,10 +113,7 @@ def _astype_nansafe(
             return tda.astype(dtype, copy=False)._ndarray
 
     if dtype.name in ("datetime64", "timedelta64"):
-        msg = (
-            f"The '{dtype.name}' dtype has no unit. Please pass in "
-            f"'{dtype.name}[ns]' instead."
-        )
+        msg = f"The '{dtype.name}' dtype has no unit. Please pass in " f"'{dtype.name}[ns]' instead."
         raise ValueError(msg)
 
     if copy or arr.dtype == object or dtype == object:
@@ -135,16 +123,12 @@ def _astype_nansafe(
     return arr.astype(dtype, copy=copy)
 
 
-def _astype_float_to_int_nansafe(
-    values: np.ndarray, dtype: np.dtype, copy: bool
-) -> np.ndarray:
+def _astype_float_to_int_nansafe(values: np.ndarray, dtype: np.dtype, copy: bool) -> np.ndarray:
     """
     astype with a check preventing converting NaN to an meaningless integer value.
     """
     if not np.isfinite(values).all():
-        raise IntCastingNaNError(
-            "Cannot convert non-finite values (NA or inf) to integer"
-        )
+        raise IntCastingNaNError("Cannot convert non-finite values (NA or inf) to integer")
     if dtype.kind == "u":
         # GH#45151
         if not (values >= 0).all():
@@ -188,9 +172,7 @@ def astype_array(values: ArrayLike, dtype: DtypeObj, copy: bool = False) -> Arra
     return values
 
 
-def astype_array_safe(
-    values: ArrayLike, dtype, copy: bool = False, errors: IgnoreRaise = "raise"
-) -> ArrayLike:
+def astype_array_safe(values: ArrayLike, dtype, copy: bool = False, errors: IgnoreRaise = "raise") -> ArrayLike:
     """
     Cast array (ndarray or ExtensionArray) to the new dtype.
 
@@ -222,10 +204,7 @@ def astype_array_safe(
         raise ValueError(invalid_arg)
 
     if inspect.isclass(dtype) and issubclass(dtype, ExtensionDtype):
-        msg = (
-            f"Expected an instance of {dtype.__name__}, "
-            "but got the class instead. Try instantiating 'dtype'."
-        )
+        msg = f"Expected an instance of {dtype.__name__}, " "but got the class instead. Try instantiating 'dtype'."
         raise TypeError(msg)
 
     dtype = pandas_dtype(dtype)

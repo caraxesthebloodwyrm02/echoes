@@ -60,18 +60,14 @@ class TestTimedeltas:
     )
     def test_timedelta_units_H_T_S_L_U_N_deprecated(self, depr_unit, unit):
         # GH#52536
-        depr_msg = (
-            f"'{depr_unit}' is deprecated and will be removed in a future version."
-        )
+        depr_msg = f"'{depr_unit}' is deprecated and will be removed in a future version."
 
         expected = to_timedelta(np.arange(5), unit=unit)
         with tm.assert_produces_warning(FutureWarning, match=depr_msg):
             result = to_timedelta(np.arange(5), unit=depr_unit)
             tm.assert_index_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "periods, freq", [(3, "2D"), (5, "D"), (6, "19h12min"), (7, "16h"), (9, "12h")]
-    )
+    @pytest.mark.parametrize("periods, freq", [(3, "2D"), (5, "D"), (6, "19h12min"), (7, "16h"), (9, "12h")])
     def test_linspace_behavior(self, periods, freq):
         # GH 20976
         result = timedelta_range(start="0 days", end="4 days", periods=periods)
@@ -90,10 +86,7 @@ class TestTimedeltas:
 
     def test_errors(self):
         # not enough params
-        msg = (
-            "Of the four parameters: start, end, periods, and freq, "
-            "exactly three must be specified"
-        )
+        msg = "Of the four parameters: start, end, periods, and freq, " "exactly three must be specified"
         with pytest.raises(ValueError, match=msg):
             timedelta_range(start="0 days")
 
@@ -157,17 +150,11 @@ class TestTimedeltas:
             ),
         ],
     )
-    def test_timedelta_range_deprecated_freq(
-        self, freq_depr, start, end, expected_values, expected_freq
-    ):
+    def test_timedelta_range_deprecated_freq(self, freq_depr, start, end, expected_values, expected_freq):
         # GH#52536
-        msg = (
-            f"'{freq_depr[-1]}' is deprecated and will be removed in a future version."
-        )
+        msg = f"'{freq_depr[-1]}' is deprecated and will be removed in a future version."
 
         with tm.assert_produces_warning(FutureWarning, match=msg):
             result = timedelta_range(start=start, end=end, freq=freq_depr)
-        expected = TimedeltaIndex(
-            expected_values, dtype="timedelta64[ns]", freq=expected_freq
-        )
+        expected = TimedeltaIndex(expected_values, dtype="timedelta64[ns]", freq=expected_freq)
         tm.assert_index_equal(result, expected)

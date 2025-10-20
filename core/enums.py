@@ -131,11 +131,7 @@ def _implements_new(info: TypeInfo) -> bool:
     subclass. In the latter case, we must infer Any as long as mypy can't infer
     the type of _value_ from assignments in __new__.
     """
-    type_with_new = _first(
-        ti
-        for ti in info.mro
-        if ti.names.get("__new__") and not ti.fullname.startswith("builtins.")
-    )
+    type_with_new = _first(ti for ti in info.mro if ti.names.get("__new__") and not ti.fullname.startswith("builtins."))
     if type_with_new is None:
         return False
     return type_with_new.fullname not in ("enum.Enum", "enum.IntEnum", "enum.StrEnum")
@@ -201,16 +197,11 @@ def enum_value_callback(ctx: mypy.plugin.AttributeContext) -> Type:
             # Enums _can_ have methods, instance attributes, and `nonmember`s.
             # Omit methods and attributes created by assigning to self.*
             # for our value inference.
-            node_types = (
-                get_proper_type(n.type) if n else None
-                for n in stnodes
-                if n is None or not n.implicit
-            )
+            node_types = (get_proper_type(n.type) if n else None for n in stnodes if n is None or not n.implicit)
             proper_types = [
                 _infer_value_type_with_auto_fallback(ctx, t)
                 for t in node_types
-                if t is None
-                or (not isinstance(t, CallableType) and not is_named_instance(t, "enum.nonmember"))
+                if t is None or (not isinstance(t, CallableType) and not is_named_instance(t, "enum.nonmember"))
             ]
             underlying_type = _first(proper_types)
             if underlying_type is None:
@@ -221,8 +212,7 @@ def enum_value_callback(ctx: mypy.plugin.AttributeContext) -> Type:
             # If this is the case, we simply return this type.
             # See https://github.com/python/mypy/pull/9443
             all_same_value_type = all(
-                proper_type is not None and proper_type == underlying_type
-                for proper_type in proper_types
+                proper_type is not None and proper_type == underlying_type for proper_type in proper_types
             )
             if all_same_value_type:
                 if underlying_type is not None:
@@ -243,8 +233,7 @@ def enum_value_callback(ctx: mypy.plugin.AttributeContext) -> Type:
             # So, we unify them to make sure `.value` prediction still works.
             # Result will be `Literal[1] | Literal[2] | Literal[3]` for this case.
             all_equivalent_types = all(
-                proper_type is not None and is_equivalent(proper_type, underlying_type)
-                for proper_type in proper_types
+                proper_type is not None and is_equivalent(proper_type, underlying_type) for proper_type in proper_types
             )
             if all_equivalent_types:
                 return make_simplified_union(cast(Sequence[Type], proper_types))

@@ -7,7 +7,6 @@
 # For license information, see LICENSE.TXT
 
 import json
-import os
 import re
 import socket
 import time
@@ -134,8 +133,7 @@ class CoreNLPServer:
             _, stderrdata = self.popen.communicate()
             raise CoreNLPServerError(
                 returncode,
-                "Could not start the server. "
-                "The error was: {}".format(stderrdata.decode("ascii")),
+                "Could not start the server. " "The error was: {}".format(stderrdata.decode("ascii")),
             )
 
         for i in range(30):
@@ -228,18 +226,12 @@ class GenericCoreNLPParser(ParserI, TokenizerI, TaggerI):
         default_properties = {"tokenize.whitespace": "false"}
         default_properties.update(properties or {})
 
-        return next(
-            self.raw_parse_sents(
-                [sentence], properties=default_properties, *args, **kwargs
-            )
-        )
+        return next(self.raw_parse_sents([sentence], properties=default_properties, *args, **kwargs))
 
     def api_call(self, data, properties=None, timeout=60):
         default_properties = {
             "outputFormat": "json",
-            "annotators": "tokenize,pos,lemma,ssplit,{parser_annotator}".format(
-                parser_annotator=self.parser_annotator
-            ),
+            "annotators": "tokenize,pos,lemma,ssplit,{parser_annotator}".format(parser_annotator=self.parser_annotator),
         }
 
         default_properties.update(properties or {})
@@ -256,9 +248,7 @@ class GenericCoreNLPParser(ParserI, TokenizerI, TaggerI):
 
         return response.json(strict=self.strict_json)
 
-    def raw_parse_sents(
-        self, sentences, verbose=False, properties=None, *args, **kwargs
-    ):
+    def raw_parse_sents(self, sentences, verbose=False, properties=None, *args, **kwargs):
         """Parse multiple sentences.
 
         Takes multiple sentences as a list of strings. Each sentence will be
@@ -420,10 +410,7 @@ class GenericCoreNLPParser(ParserI, TokenizerI, TaggerI):
         for sentence in sentences:
             tagged_data = self.api_call(sentence, properties=default_properties)
             yield [
-                [
-                    (token["word"], token[self.tagtype])
-                    for token in tagged_sentence["tokens"]
-                ]
+                [(token["word"], token[self.tagtype]) for token in tagged_sentence["tokens"]]
                 for tagged_sentence in tagged_data["sentences"]
             ]
 
@@ -775,10 +762,7 @@ class CoreNLPDependencyParser(GenericCoreNLPParser):
 
     def make_tree(self, result):
         return DependencyGraph(
-            (
-                " ".join(n_items[1:])  # NLTK expects an iterable of strings...
-                for n_items in sorted(transform(result))
-            ),
+            (" ".join(n_items[1:]) for n_items in sorted(transform(result))),  # NLTK expects an iterable of strings...
             cell_separator=" ",  # To make sure that a non-breaking space is kept inside of a token.
         )
 

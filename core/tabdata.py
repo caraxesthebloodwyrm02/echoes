@@ -72,9 +72,7 @@ class MaxentEncoder(TabEncoder):
                 return f"repr-{b}"
             return b
 
-        return self.tups2tab(
-            [(a, rep(a, b), c, repr(d)) for ((a, b, c), d) in d.items()]
-        )
+        return self.tups2tab([(a, rep(a, b), c, repr(d)) for ((a, b, c), d) in d.items()])
 
 
 class MaxentDecoder(TabDecoder):

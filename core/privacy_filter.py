@@ -57,9 +57,7 @@ class PrivacyFilter:
         self.patterns = {
             "email": re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b"),
             "credit_card": re.compile(r"\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b"),
-            "phone": re.compile(
-                r"\b(\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b"
-            ),
+            "phone": re.compile(r"\b(\+?1[\s.-]?)?\(?\d{3}\)?[\s.-]?\d{3}[\s.-]?\d{4}\b"),
             "ssn": re.compile(r"\b\d{3}[\s.-]\d{2}[\s.-]\d{4}\b"),
             "ip_address": re.compile(r"\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b"),
             "date_of_birth": re.compile(r"\b\d{1,2}[/-]\d{1,2}[/-]\d{4}\b"),
@@ -163,17 +161,9 @@ class PrivacyFilter:
             # john.doe@example.com -> j***@e*******
             parts = entity.value.split("@")
             if len(parts) == 2:
-                username = (
-                    parts[0][:1] + "*" * (len(parts[0]) - 1)
-                    if len(parts[0]) > 1
-                    else "*"
-                )
+                username = parts[0][:1] + "*" * (len(parts[0]) - 1) if len(parts[0]) > 1 else "*"
                 domain_parts = parts[1].split(".")
-                domain = (
-                    domain_parts[0][:1] + "*" * (len(domain_parts[0]) - 1)
-                    if len(domain_parts[0]) > 1
-                    else "*"
-                )
+                domain = domain_parts[0][:1] + "*" * (len(domain_parts[0]) - 1) if len(domain_parts[0]) > 1 else "*"
                 return f"{username}@{domain}.{'*' * len('.'.join(domain_parts[1:]))}"
 
         elif entity.type == "phone":

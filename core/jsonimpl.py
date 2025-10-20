@@ -9,6 +9,7 @@ from typing import IO, Any
 
 class SphinxJSONEncoder(json.JSONEncoder):
     """JSONEncoder subclass that forces translation proxies."""
+
     def default(self, obj: Any) -> str:
         if isinstance(obj, UserString):
             return str(obj)
@@ -16,12 +17,12 @@ class SphinxJSONEncoder(json.JSONEncoder):
 
 
 def dump(obj: Any, file: IO[str] | IO[bytes], *args: Any, **kwds: Any) -> None:
-    kwds['cls'] = SphinxJSONEncoder
+    kwds["cls"] = SphinxJSONEncoder
     json.dump(obj, file, *args, **kwds)
 
 
 def dumps(obj: Any, *args: Any, **kwds: Any) -> str:
-    kwds['cls'] = SphinxJSONEncoder
+    kwds["cls"] = SphinxJSONEncoder
     return json.dumps(obj, *args, **kwds)
 
 

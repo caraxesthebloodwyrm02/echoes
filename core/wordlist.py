@@ -16,11 +16,7 @@ class WordListCorpusReader(CorpusReader):
     """
 
     def words(self, fileids=None, ignore_lines_startswith="\n"):
-        return [
-            line
-            for line in line_tokenize(self.raw(fileids))
-            if not line.startswith(ignore_lines_startswith)
-        ]
+        return [line for line in line_tokenize(self.raw(fileids)) if not line.startswith(ignore_lines_startswith)]
 
 
 class SwadeshCorpusReader(WordListCorpusReader):
@@ -87,11 +83,7 @@ class NonbreakingPrefixesCorpusReader(WordListCorpusReader):
         if lang in self.available_langs:
             lang = self.available_langs[lang]
             fileids = ["nonbreaking_prefix." + lang]
-        return [
-            line
-            for line in line_tokenize(self.raw(fileids))
-            if not line.startswith(ignore_lines_startswith)
-        ]
+        return [line for line in line_tokenize(self.raw(fileids)) if not line.startswith(ignore_lines_startswith)]
 
 
 class UnicharsCorpusReader(WordListCorpusReader):

@@ -28,9 +28,7 @@ class _LineSearchError(RuntimeError):
     pass
 
 
-def _line_search_wolfe12(
-    f, fprime, xk, pk, gfk, old_fval, old_old_fval, verbose=0, **kwargs
-):
+def _line_search_wolfe12(f, fprime, xk, pk, gfk, old_fval, old_old_fval, verbose=0, **kwargs):
     """
     Same as line_search_wolfe1, but fall back to line_search_wolfe2 if
     suitable step length is not found, and raise an exception if a
@@ -77,8 +75,7 @@ def _line_search_wolfe12(
             check = sum_abs_grad < sum_abs_grad_old
             if is_verbose:
                 print(
-                    "    check sum(|gradient|) < sum(|gradient_old|): "
-                    f"{sum_abs_grad} < {sum_abs_grad_old} {check}"
+                    "    check sum(|gradient|) < sum(|gradient_old|): " f"{sum_abs_grad} < {sum_abs_grad_old} {check}"
                 )
             if check:
                 ret = (
@@ -97,9 +94,7 @@ def _line_search_wolfe12(
         # trigger this "if branch" here and we can consider to remove it.
         if is_verbose:
             print("    last resort: try line search wolfe2")
-        ret = line_search_wolfe2(
-            f, fprime, xk, pk, gfk, old_fval, old_old_fval, **kwargs
-        )
+        ret = line_search_wolfe2(f, fprime, xk, pk, gfk, old_fval, old_old_fval, **kwargs)
         if is_verbose:
             _not_ = "not " if ret[0] is None else ""
             print("    wolfe2 line search was " + _not_ + "successful")
@@ -170,10 +165,7 @@ def _cg(fhess_p, fgrad, maxiter, tol, verbose=0):
         elif curv < 0:
             if i > 0:
                 if is_verbose:
-                    print(
-                        f"  Inner CG solver iteration {i} stopped with negative "
-                        f"curvature, curvature = {curv}"
-                    )
+                    print(f"  Inner CG solver iteration {i} stopped with negative " f"curvature, curvature = {curv}")
                 break
             else:
                 # fall back to steepest descent direction
@@ -192,10 +184,7 @@ def _cg(fhess_p, fgrad, maxiter, tol, verbose=0):
         i = i + 1
         dri0 = dri1  # update np.dot(ri,ri) for next time.
     if is_verbose and i > maxiter:
-        print(
-            f"  Inner CG solver stopped reaching maxiter={i - 1} with "
-            f"sum(|residuals|) = {np.sum(np.abs(ri))}"
-        )
+        print(f"  Inner CG solver stopped reaching maxiter={i - 1} with " f"sum(|residuals|) = {np.sum(np.abs(ri))}")
     return xsupi
 
 
@@ -317,10 +306,7 @@ def _newton_cg(
 
     if warn and k >= maxiter:
         warnings.warn(
-            (
-                f"newton-cg failed to converge at loss = {old_fval}. Increase the"
-                " number of iterations."
-            ),
+            (f"newton-cg failed to converge at loss = {old_fval}. Increase the" " number of iterations."),
             ConvergenceWarning,
         )
     elif is_verbose:
@@ -371,8 +357,7 @@ def _check_optimize_result(solver, result, max_iter=None, extra_warning_msg=None
             # terminated due to the iteration limit.
             if max_iter is not None and n_iter_i == max_iter:
                 warning_msg += (
-                    f"\nIncrease the number of iterations to improve the "
-                    f"convergence (max_iter={max_iter})."
+                    f"\nIncrease the number of iterations to improve the " f"convergence (max_iter={max_iter})."
                 )
             warning_msg += (
                 "\nYou might also want to scale the data as shown in:\n"

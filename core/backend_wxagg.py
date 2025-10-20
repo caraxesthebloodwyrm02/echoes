@@ -2,8 +2,7 @@ import wx
 
 from .backend_agg import FigureCanvasAgg
 from .backend_wx import _BackendWx, _FigureCanvasWxBase
-from .backend_wx import (  # noqa: F401 # pylint: disable=W0611
-    NavigationToolbar2Wx as NavigationToolbar2WxAgg)
+from .backend_wx import NavigationToolbar2Wx as NavigationToolbar2WxAgg  # noqa: F401 # pylint: disable=W0611
 
 
 class FigureCanvasWxAgg(FigureCanvasAgg, _FigureCanvasWxBase):

@@ -125,9 +125,7 @@ def native_function_doc_initializer(func: FuncIR) -> str:
     return c_string_initializer(docstring.encode("ascii", errors="backslashreplace"))
 
 
-def generate_native_function(
-    fn: FuncIR, emitter: Emitter, source_path: str, module_name: str
-) -> None:
+def generate_native_function(fn: FuncIR, emitter: Emitter, source_path: str, module_name: str) -> None:
     declarations = Emitter(emitter.context)
     names = generate_names_for_ir(fn.arg_regs, fn.blocks)
     body = Emitter(emitter.context, names)
@@ -148,9 +146,7 @@ def generate_native_function(
         ctype = emitter.ctype_spaced(r.type)
         init = ""
         declarations.emit_line(
-            "{ctype}{prefix}{name}{init};".format(
-                ctype=ctype, prefix=REG_PREFIX, name=names[r], init=init
-            )
+            "{ctype}{prefix}{name}{init};".format(ctype=ctype, prefix=REG_PREFIX, name=names[r], init=init)
         )
 
     # Before we emit the blocks, give them all labels
@@ -205,9 +201,7 @@ def generate_native_function(
 
 
 class FunctionEmitterVisitor(OpVisitor[None]):
-    def __init__(
-        self, emitter: Emitter, declarations: Emitter, source_path: str, module_name: str
-    ) -> None:
+    def __init__(self, emitter: Emitter, declarations: Emitter, source_path: str, module_name: str) -> None:
         self.emitter = emitter
         self.names = emitter.names
         self.declarations = declarations
@@ -233,9 +227,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
         typ = value.type
         if isinstance(typ, RTuple):
             # TODO: What about empty tuple?
-            return self.emitter.tuple_undefined_check_cond(
-                typ, self.reg(value), self.c_error_value, compare
-            )
+            return self.emitter.tuple_undefined_check_cond(typ, self.reg(value), self.c_error_value, compare)
         else:
             return f"{self.reg(value)} {compare} {self.c_error_value(typ)}"
 
@@ -340,9 +332,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
         if not is_int_rprimitive(op.type):
             self.emit_line("%s = CPyStatics[%d];" % (self.reg(op), index), ann=op.value)
         else:
-            self.emit_line(
-                "%s = (CPyTagged)CPyStatics[%d] | 1;" % (self.reg(op), index), ann=op.value
-            )
+            self.emit_line("%s = (CPyTagged)CPyStatics[%d] | 1;" % (self.reg(op), index), ann=op.value)
 
     def get_attr_expr(self, obj: str, op: GetAttr | SetAttr, decl_cl: ClassIR) -> str:
         """Generate attribute accessor for normal (non-property) access.
@@ -416,9 +406,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
             always_defined = cl.is_always_defined(op.attr)
             merged_branch = None
             if not always_defined:
-                self.emitter.emit_undefined_attr_check(
-                    attr_rtype, dest, "==", obj, op.attr, cl, unlikely=True
-                )
+                self.emitter.emit_undefined_attr_check(attr_rtype, dest, "==", obj, op.attr, cl, unlikely=True)
                 branch = self.next_branch()
                 if branch is not None:
                     if (
@@ -522,9 +510,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
                 # previously undefined), so decref the old value.
                 always_defined = cl.is_always_defined(op.attr)
                 if not always_defined:
-                    self.emitter.emit_undefined_attr_check(
-                        attr_rtype, attr_expr, "!=", obj, op.attr, cl
-                    )
+                    self.emitter.emit_undefined_attr_check(attr_rtype, attr_expr, "!=", obj, op.attr, cl)
                 self.emitter.emit_dec_ref(attr_expr, attr_rtype)
                 if not always_defined:
                     self.emitter.emit_line("}")
@@ -680,9 +666,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
                 )
                 self.op_index += 1
 
-        self.emitter.emit_cast(
-            self.reg(op.src), self.reg(op), op.type, src_type=op.src.type, error=handler
-        )
+        self.emitter.emit_cast(self.reg(op.src), self.reg(op), op.type, src_type=op.src.type, error=handler)
 
     def visit_unbox(self, op: Unbox) -> None:
         self.emitter.emit_unbox(self.reg(op.src), self.reg(op), op.type)
@@ -698,9 +682,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
                 self.emitter.emit_line(f'PyErr_SetString(PyExc_{op.class_name}, "{message}");')
             elif isinstance(op.value, Value):
                 self.emitter.emit_line(
-                    "PyErr_SetObject(PyExc_{}, {});".format(
-                        op.class_name, self.emitter.reg(op.value)
-                    )
+                    "PyErr_SetObject(PyExc_{}, {});".format(op.class_name, self.emitter.reg(op.value))
                 )
             else:
                 assert False, "op value type must be either str or Value"
@@ -717,9 +699,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
         self.emitter.emit_line(f"{dest}{op.function_name}({args});")
 
     def visit_primitive_op(self, op: PrimitiveOp) -> None:
-        raise RuntimeError(
-            f"unexpected PrimitiveOp {op.desc.name}: they must be lowered before codegen"
-        )
+        raise RuntimeError(f"unexpected PrimitiveOp {op.desc.name}: they must be lowered before codegen")
 
     def visit_truncate(self, op: Truncate) -> None:
         dest = self.reg(op)
@@ -817,11 +797,7 @@ class FunctionEmitterVisitor(OpVisitor[None]):
         # TODO: support tuple type
         assert isinstance(op.src_type, RStruct), op.src_type
         assert op.field in op.src_type.names, "Invalid field name."
-        self.emit_line(
-            "{} = ({})&(({} *){})->{};".format(
-                dest, op.type._ctype, op.src_type.name, src, op.field
-            )
-        )
+        self.emit_line("{} = ({})&(({} *){})->{};".format(dest, op.type._ctype, op.src_type.name, src, op.field))
 
     def visit_set_element(self, op: SetElement) -> None:
         dest = self.reg(op)

@@ -58,25 +58,17 @@ diabetes = load_diabetes()
 X_diabetes, y_diabetes = diabetes.data, diabetes.target
 iris = load_iris()
 X_iris, y_iris = iris.data, iris.target
-X_multilabel, y_multilabel = make_multilabel_classification(
-    n_classes=3, random_state=42
-)
+X_multilabel, y_multilabel = make_multilabel_classification(n_classes=3, random_state=42)
 X_binary, y_binary = make_classification(n_classes=2, random_state=42)
 
 
-@pytest.mark.parametrize(
-    "cv", [3, StratifiedKFold(n_splits=3, shuffle=True, random_state=42)]
-)
-@pytest.mark.parametrize(
-    "final_estimator", [None, RandomForestClassifier(random_state=42)]
-)
+@pytest.mark.parametrize("cv", [3, StratifiedKFold(n_splits=3, shuffle=True, random_state=42)])
+@pytest.mark.parametrize("final_estimator", [None, RandomForestClassifier(random_state=42)])
 @pytest.mark.parametrize("passthrough", [False, True])
 def test_stacking_classifier_iris(cv, final_estimator, passthrough):
     # prescale the data to avoid convergence warning without using a pipeline
     # for later assert
-    X_train, X_test, y_train, y_test = train_test_split(
-        scale(X_iris), y_iris, stratify=y_iris, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(scale(X_iris), y_iris, stratify=y_iris, random_state=42)
     estimators = [("lr", LogisticRegression()), ("svc", LinearSVC())]
     clf = StackingClassifier(
         estimators=estimators,
@@ -113,9 +105,7 @@ def test_stacking_classifier_iris(cv, final_estimator, passthrough):
 def test_stacking_classifier_drop_column_binary_classification():
     # check that a column is dropped in binary classification
     X, y = load_breast_cancer(return_X_y=True)
-    X_train, X_test, y_train, _ = train_test_split(
-        scale(X), y, stratify=y, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(scale(X), y, stratify=y, random_state=42)
 
     # both classifiers implement 'predict_proba' and will both drop one column
     estimators = [
@@ -140,9 +130,7 @@ def test_stacking_classifier_drop_column_binary_classification():
 def test_stacking_classifier_drop_estimator():
     # prescale the data to avoid convergence warning without using a pipeline
     # for later assert
-    X_train, X_test, y_train, _ = train_test_split(
-        scale(X_iris), y_iris, stratify=y_iris, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(scale(X_iris), y_iris, stratify=y_iris, random_state=42)
     estimators = [("lr", "drop"), ("svc", LinearSVC(random_state=0))]
     rf = RandomForestClassifier(n_estimators=10, random_state=42)
     clf = StackingClassifier(
@@ -162,9 +150,7 @@ def test_stacking_classifier_drop_estimator():
 def test_stacking_regressor_drop_estimator():
     # prescale the data to avoid convergence warning without using a pipeline
     # for later assert
-    X_train, X_test, y_train, _ = train_test_split(
-        scale(X_diabetes), y_diabetes, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(scale(X_diabetes), y_diabetes, random_state=42)
     estimators = [("lr", "drop"), ("svr", LinearSVR(random_state=0))]
     rf = RandomForestRegressor(n_estimators=10, random_state=42)
     reg = StackingRegressor(
@@ -193,9 +179,7 @@ def test_stacking_regressor_drop_estimator():
 def test_stacking_regressor_diabetes(cv, final_estimator, predict_params, passthrough):
     # prescale the data to avoid convergence warning without using a pipeline
     # for later assert
-    X_train, X_test, y_train, _ = train_test_split(
-        scale(X_diabetes), y_diabetes, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(scale(X_diabetes), y_diabetes, random_state=42)
     estimators = [("lr", LinearRegression()), ("svr", LinearSVR())]
     reg = StackingRegressor(
         estimators=estimators,
@@ -226,19 +210,13 @@ def test_stacking_regressor_diabetes(cv, final_estimator, predict_params, passth
         assert_allclose(X_test, X_trans[:, -10:])
 
 
-@pytest.mark.parametrize(
-    "sparse_container", COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS
-)
+@pytest.mark.parametrize("sparse_container", COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS)
 def test_stacking_regressor_sparse_passthrough(sparse_container):
     # Check passthrough behavior on a sparse X matrix
-    X_train, X_test, y_train, _ = train_test_split(
-        sparse_container(scale(X_diabetes)), y_diabetes, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(sparse_container(scale(X_diabetes)), y_diabetes, random_state=42)
     estimators = [("lr", LinearRegression()), ("svr", LinearSVR())]
     rf = RandomForestRegressor(n_estimators=10, random_state=42)
-    clf = StackingRegressor(
-        estimators=estimators, final_estimator=rf, cv=5, passthrough=True
-    )
+    clf = StackingRegressor(estimators=estimators, final_estimator=rf, cv=5, passthrough=True)
     clf.fit(X_train, y_train)
     X_trans = clf.transform(X_test)
     assert_allclose_dense_sparse(X_test, X_trans[:, -10:])
@@ -246,19 +224,13 @@ def test_stacking_regressor_sparse_passthrough(sparse_container):
     assert X_test.format == X_trans.format
 
 
-@pytest.mark.parametrize(
-    "sparse_container", COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS
-)
+@pytest.mark.parametrize("sparse_container", COO_CONTAINERS + CSC_CONTAINERS + CSR_CONTAINERS)
 def test_stacking_classifier_sparse_passthrough(sparse_container):
     # Check passthrough behavior on a sparse X matrix
-    X_train, X_test, y_train, _ = train_test_split(
-        sparse_container(scale(X_iris)), y_iris, random_state=42
-    )
+    X_train, X_test, y_train, _ = train_test_split(sparse_container(scale(X_iris)), y_iris, random_state=42)
     estimators = [("lr", LogisticRegression()), ("svc", LinearSVC())]
     rf = RandomForestClassifier(n_estimators=10, random_state=42)
-    clf = StackingClassifier(
-        estimators=estimators, final_estimator=rf, cv=5, passthrough=True
-    )
+    clf = StackingClassifier(estimators=estimators, final_estimator=rf, cv=5, passthrough=True)
     clf.fit(X_train, y_train)
     X_trans = clf.transform(X_test)
     assert_allclose_dense_sparse(X_test, X_trans[:, -4:])
@@ -402,15 +374,11 @@ def test_stacking_randomness(estimator, X, y):
     # checking that fixing the random state of the CV will lead to the same
     # results
     estimator_full = clone(estimator)
-    estimator_full.set_params(
-        cv=KFold(shuffle=True, random_state=np.random.RandomState(0))
-    )
+    estimator_full.set_params(cv=KFold(shuffle=True, random_state=np.random.RandomState(0)))
 
     estimator_drop = clone(estimator)
     estimator_drop.set_params(lr="drop")
-    estimator_drop.set_params(
-        cv=KFold(shuffle=True, random_state=np.random.RandomState(0))
-    )
+    estimator_drop.set_params(cv=KFold(shuffle=True, random_state=np.random.RandomState(0)))
 
     assert_allclose(
         estimator_full.fit(X, y).transform(X)[:, 1:],
@@ -465,12 +433,8 @@ def test_stacking_with_sample_weight(stacker, X, y):
     # note: ConvergenceWarning are catch since we are not worrying about the
     # convergence here
     n_half_samples = len(y) // 2
-    total_sample_weight = np.array(
-        [0.1] * n_half_samples + [0.9] * (len(y) - n_half_samples)
-    )
-    X_train, X_test, y_train, _, sample_weight_train, _ = train_test_split(
-        X, y, total_sample_weight, random_state=42
-    )
+    total_sample_weight = np.array([0.1] * n_half_samples + [0.9] * (len(y) - n_half_samples))
+    X_train, X_test, y_train, _, sample_weight_train, _ = train_test_split(X, y, total_sample_weight, random_state=42)
 
     with ignore_warnings(category=ConvergenceWarning):
         stacker.fit(X_train, y_train)
@@ -546,9 +510,7 @@ def test_stacking_cv_influence(stacker, X, y):
 
     # the final estimator should be different
     with pytest.raises(AssertionError, match="Not equal"):
-        assert_allclose(
-            stacker_cv_3.final_estimator_.coef_, stacker_cv_5.final_estimator_.coef_
-        )
+        assert_allclose(stacker_cv_3.final_estimator_.coef_, stacker_cv_5.final_estimator_.coef_)
 
 
 @pytest.mark.parametrize(
@@ -574,9 +536,7 @@ def test_stacking_cv_influence(stacker, X, y):
 )
 def test_stacking_prefit(Stacker, Estimator, stack_method, final_estimator, X, y):
     """Check the behaviour of stacking when `cv='prefit'`"""
-    X_train1, X_train2, y_train1, y_train2 = train_test_split(
-        X, y, random_state=42, test_size=0.5
-    )
+    X_train1, X_train2, y_train1, y_train2 = train_test_split(X, y, random_state=42, test_size=0.5)
     estimators = [
         ("d0", Estimator().fit(X_train1, y_train1)),
         ("d1", Estimator().fit(X_train1, y_train1)),
@@ -592,9 +552,7 @@ def test_stacking_prefit(Stacker, Estimator, stack_method, final_estimator, X, y
         predict_method_mocked.__name__ = stack_method
         setattr(estimator, stack_method, predict_method_mocked)
 
-    stacker = Stacker(
-        estimators=estimators, cv="prefit", final_estimator=final_estimator
-    )
+    stacker = Stacker(estimators=estimators, cv="prefit", final_estimator=final_estimator)
     stacker.fit(X_train2, y_train2)
 
     assert stacker.estimators_ == [estimator for _, estimator in estimators]
@@ -842,9 +800,7 @@ def test_stacking_classifier_multilabel_auto_predict(stack_method, passthrough):
     ],
 )
 @pytest.mark.parametrize("passthrough", [True, False])
-def test_get_feature_names_out(
-    stacker, feature_names, X, y, expected_names, passthrough
-):
+def test_get_feature_names_out(stacker, feature_names, X, y, expected_names, passthrough):
     """Check get_feature_names_out works for stacking."""
 
     stacker.set_params(passthrough=passthrough)
@@ -859,9 +815,7 @@ def test_get_feature_names_out(
 
 def test_stacking_classifier_base_regressor():
     """Check that a regressor can be used as the first layer in `StackingClassifier`."""
-    X_train, X_test, y_train, y_test = train_test_split(
-        scale(X_iris), y_iris, stratify=y_iris, random_state=42
-    )
+    X_train, X_test, y_train, y_test = train_test_split(scale(X_iris), y_iris, stratify=y_iris, random_state=42)
     clf = StackingClassifier(estimators=[("ridge", Ridge())])
     clf.fit(X_train, y_train)
     clf.predict(X_test)
@@ -886,9 +840,7 @@ def test_stacking_final_estimator_attribute_error():
     # RandomForestClassifier does not implement 'decision_function' and should raise
     # an AttributeError
     final_estimator = RandomForestClassifier(n_estimators=2, random_state=42)
-    clf = StackingClassifier(
-        estimators=estimators, final_estimator=final_estimator, cv=3
-    )
+    clf = StackingClassifier(estimators=estimators, final_estimator=final_estimator, cv=3)
 
     outer_msg = "This 'StackingClassifier' has no attribute 'decision_function'"
     inner_msg = "'RandomForestClassifier' object has no attribute 'decision_function'"
@@ -913,12 +865,8 @@ def test_routing_passed_metadata_not_supported(Estimator, Child):
     """Test that the right error message is raised when metadata is passed while
     not supported when `enable_metadata_routing=False`."""
 
-    with pytest.raises(
-        ValueError, match="is only supported if enable_metadata_routing=True"
-    ):
-        Estimator(["clf", Child()]).fit(
-            X_iris, y_iris, sample_weight=[1, 1, 1, 1, 1], metadata="a"
-        )
+    with pytest.raises(ValueError, match="is only supported if enable_metadata_routing=True"):
+        Estimator(["clf", Child()]).fit(X_iris, y_iris, sample_weight=[1, 1, 1, 1, 1], metadata="a")
 
 
 @pytest.mark.parametrize(
@@ -942,9 +890,7 @@ def test_get_metadata_routing_without_fit(Estimator, Child):
         (StackingRegressor, ConsumingRegressor),
     ],
 )
-@pytest.mark.parametrize(
-    "prop, prop_value", [("sample_weight", np.ones(X_iris.shape[0])), ("metadata", "a")]
-)
+@pytest.mark.parametrize("prop, prop_value", [("sample_weight", np.ones(X_iris.shape[0])), ("metadata", "a")])
 @config_context(enable_metadata_routing=True)
 def test_metadata_routing_for_stacking_estimators(Estimator, Child, prop, prop_value):
     """Test that metadata is routed correctly for Stacking*."""

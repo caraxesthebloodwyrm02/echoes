@@ -277,16 +277,12 @@ class CorrectNotFittedErrorClassifier(BaseBadClassifier):
 class NoSampleWeightPandasSeriesType(BaseEstimator):
     def fit(self, X, y, sample_weight=None):
         # Convert data
-        X, y = validate_data(
-            self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True
-        )
+        X, y = validate_data(self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True)
         # Function is only called after we verify that pandas is installed
         from pandas import Series
 
         if isinstance(sample_weight, Series):
-            raise ValueError(
-                "Estimator does not accept 'sample_weight'of type pandas.Series"
-            )
+            raise ValueError("Estimator does not accept 'sample_weight'of type pandas.Series")
         return self
 
     def predict(self, X):
@@ -330,9 +326,7 @@ class BadTransformerWithoutMixin(BaseEstimator):
 class NotInvariantPredict(BaseEstimator):
     def fit(self, X, y):
         # Convert data
-        X, y = validate_data(
-            self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True
-        )
+        X, y = validate_data(self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True)
         return self
 
     def predict(self, X):
@@ -345,9 +339,7 @@ class NotInvariantPredict(BaseEstimator):
 
 class NotInvariantSampleOrder(BaseEstimator):
     def fit(self, X, y):
-        X, y = validate_data(
-            self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True
-        )
+        X, y = validate_data(self, X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True)
         # store the original X to check for sample order later
         self._X = X
         return self
@@ -356,10 +348,7 @@ class NotInvariantSampleOrder(BaseEstimator):
         X = check_array(X)
         # if the input contains the same elements but different sample order,
         # then just return zeros.
-        if (
-            np.array_equiv(np.sort(X, axis=0), np.sort(self._X, axis=0))
-            and (X != self._X).any()
-        ):
+        if np.array_equiv(np.sort(X, axis=0), np.sort(self._X, axis=0)) and (X != self._X).any():
             return np.zeros(X.shape[0])
         return X[:, 0]
 
@@ -372,9 +361,7 @@ class OneClassSampleErrorClassifier(BaseBadClassifier):
         self.raise_when_single_class = raise_when_single_class
 
     def fit(self, X, y, sample_weight=None):
-        X, y = check_X_y(
-            X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True
-        )
+        X, y = check_X_y(X, y, accept_sparse=("csr", "csc"), multi_output=True, y_numeric=True)
 
         self.has_single_class_ = False
         self.classes_, y = np.unique(y, return_inverse=True)
@@ -494,10 +481,7 @@ class TaggedBinaryClassifier(UntaggedBinaryClassifier):
     def fit(self, X, y):
         y_type = type_of_target(y, input_name="y", raise_unknown=True)
         if y_type != "binary":
-            raise ValueError(
-                "Only binary classification is supported. The type of the target "
-                f"is {y_type}."
-            )
+            raise ValueError("Only binary classification is supported. The type of the target " f"is {y_type}.")
         return super().fit(X, y)
 
     # Toy classifier that only supports binary classification.
@@ -618,14 +602,9 @@ def test_check_estimator_with_class_removed():
 
 def test_mutable_default_params():
     """Test that constructor cannot have mutable default parameters."""
-    msg = (
-        "Parameter 'p' of estimator 'HasMutableParameters' is of type "
-        "object which is not allowed"
-    )
+    msg = "Parameter 'p' of estimator 'HasMutableParameters' is of type " "object which is not allowed"
     # check that the "default_constructible" test checks for mutable parameters
-    check_parameters_default_constructible(
-        "Immutable", HasImmutableParameters()
-    )  # should pass
+    check_parameters_default_constructible("Immutable", HasImmutableParameters())  # should pass
     with raises(AssertionError, match=msg):
         check_parameters_default_constructible("Mutable", HasMutableParameters())
 
@@ -670,9 +649,7 @@ def test_check_sample_weights_pandas_series():
             "'sample_weight' parameter is of type pandas.Series"
         )
         with raises(ValueError, match=msg):
-            check_sample_weights_pandas_series(
-                "NoSampleWeightPandasSeriesType", NoSampleWeightPandasSeriesType()
-            )
+            check_sample_weights_pandas_series("NoSampleWeightPandasSeriesType", NoSampleWeightPandasSeriesType())
     except ImportError:
         pass
 
@@ -685,9 +662,7 @@ def test_check_estimators_overwrite_params():
         "the parameter wrong_attribute from 0 to 1 during fit."
     )
     with raises(AssertionError, match=msg):
-        check_estimators_overwrite_params(
-            "ChangesWrongAttribute", ChangesWrongAttribute()
-        )
+        check_estimators_overwrite_params("ChangesWrongAttribute", ChangesWrongAttribute())
     check_estimators_overwrite_params("test", ChangesUnderscoreAttribute())
 
 
@@ -707,23 +682,18 @@ def test_check_methods_sample_order_invariance():
     # check for sample order invariance
     name = NotInvariantSampleOrder.__name__
     method = "predict"
-    msg = (
-        "{method} of {name} is not invariant when applied to a dataset"
-        "with different sample order."
-    ).format(method=method, name=name)
+    msg = ("{method} of {name} is not invariant when applied to a dataset" "with different sample order.").format(
+        method=method, name=name
+    )
     with raises(AssertionError, match=msg):
-        check_methods_sample_order_invariance(
-            "NotInvariantSampleOrder", NotInvariantSampleOrder()
-        )
+        check_methods_sample_order_invariance("NotInvariantSampleOrder", NotInvariantSampleOrder())
 
 
 def test_check_methods_subset_invariance():
     # check for invariant method
     name = NotInvariantPredict.__name__
     method = "predict"
-    msg = ("{method} of {name} is not invariant when applied to a subset.").format(
-        method=method, name=name
-    )
+    msg = ("{method} of {name} is not invariant when applied to a subset.").format(method=method, name=name)
     with raises(AssertionError, match=msg):
         check_methods_subset_invariance("NotInvariantPredict", NotInvariantPredict())
 
@@ -767,9 +737,7 @@ def test_check_classifiers_one_label_sample_weights():
         "'class'."
     )
     with raises(AssertionError, match=msg):
-        check_classifiers_one_label_sample_weights(
-            "OneClassSampleErrorClassifier", OneClassSampleErrorClassifier()
-        )
+        check_classifiers_one_label_sample_weights("OneClassSampleErrorClassifier", OneClassSampleErrorClassifier())
 
 
 def test_check_estimator_not_fail_fast():
@@ -916,9 +884,7 @@ def test_check_estimator_clones():
             est = Estimator()
             set_random_state(est)
             old_hash = joblib.hash(est)
-            check_estimator(
-                est, expected_failed_checks=_get_expected_failed_checks(est)
-            )
+            check_estimator(est, expected_failed_checks=_get_expected_failed_checks(est))
         assert old_hash == joblib.hash(est)
 
         # with fitting
@@ -927,9 +893,7 @@ def test_check_estimator_clones():
             set_random_state(est)
             est.fit(iris.data, iris.target)
             old_hash = joblib.hash(est)
-            check_estimator(
-                est, expected_failed_checks=_get_expected_failed_checks(est)
-            )
+            check_estimator(est, expected_failed_checks=_get_expected_failed_checks(est))
         assert old_hash == joblib.hash(est)
 
 
@@ -964,23 +928,14 @@ def test_check_no_attributes_set_in_init():
         r" Found attributes \['you_should_not_set_this_'\]."
     )
     with raises(AssertionError, match=msg):
-        check_no_attributes_set_in_init(
-            "estimator_name", NonConformantEstimatorPrivateSet()
-        )
+        check_no_attributes_set_in_init("estimator_name", NonConformantEstimatorPrivateSet())
 
-    msg = (
-        "Estimator estimator_name should store all parameters as an attribute"
-        " during init"
-    )
+    msg = "Estimator estimator_name should store all parameters as an attribute" " during init"
     with raises(AttributeError, match=msg):
-        check_no_attributes_set_in_init(
-            "estimator_name", NonConformantEstimatorNoParamSet()
-        )
+        check_no_attributes_set_in_init("estimator_name", NonConformantEstimatorNoParamSet())
 
     # a private class attribute is okay!
-    check_no_attributes_set_in_init(
-        "estimator_name", ConformantEstimatorClassAttribute()
-    )
+    check_no_attributes_set_in_init("estimator_name", ConformantEstimatorClassAttribute())
     # also check if cloning an estimator which has non-default set requests is
     # fine. Setting a non-default value via `set_{method}_request` sets the
     # private _metadata_request instance attribute which is copied in `clone`.
@@ -1006,16 +961,12 @@ def test_check_estimator_pairwise():
 
 def test_check_classifier_data_not_an_array():
     with raises(AssertionError, match="Not equal to tolerance"):
-        check_classifier_data_not_an_array(
-            "estimator_name", EstimatorInconsistentForPandas()
-        )
+        check_classifier_data_not_an_array("estimator_name", EstimatorInconsistentForPandas())
 
 
 def test_check_regressor_data_not_an_array():
     with raises(AssertionError, match="Not equal to tolerance"):
-        check_regressor_data_not_an_array(
-            "estimator_name", EstimatorInconsistentForPandas()
-        )
+        check_regressor_data_not_an_array("estimator_name", EstimatorInconsistentForPandas())
 
 
 def test_check_dataframe_column_names_consistency():
@@ -1027,9 +978,7 @@ def test_check_dataframe_column_names_consistency():
     lr = LogisticRegression()
     check_dataframe_column_names_consistency(lr.__class__.__name__, lr)
     lr.__doc__ = "Docstring that does not document the estimator's attributes"
-    err_msg = (
-        "Estimator LogisticRegression does not document its feature_names_in_ attribute"
-    )
+    err_msg = "Estimator LogisticRegression does not document its feature_names_in_ attribute"
     with raises(ValueError, match=err_msg):
         check_dataframe_column_names_consistency(lr.__class__.__name__, lr)
 
@@ -1067,25 +1016,18 @@ def test_check_classifiers_multilabel_output_format_predict():
     # 1. inconsistent array type
     clf = MultiLabelClassifierPredict(response_output=y_test.tolist())
     err_msg = (
-        r"MultiLabelClassifierPredict.predict is expected to output a "
-        r"NumPy array. Got <class 'list'> instead."
+        r"MultiLabelClassifierPredict.predict is expected to output a " r"NumPy array. Got <class 'list'> instead."
     )
     with raises(AssertionError, match=err_msg):
         check_classifiers_multilabel_output_format_predict(clf.__class__.__name__, clf)
     # 2. inconsistent shape
     clf = MultiLabelClassifierPredict(response_output=y_test[:, :-1])
-    err_msg = (
-        r"MultiLabelClassifierPredict.predict outputs a NumPy array of "
-        r"shape \(25, 4\) instead of \(25, 5\)."
-    )
+    err_msg = r"MultiLabelClassifierPredict.predict outputs a NumPy array of " r"shape \(25, 4\) instead of \(25, 5\)."
     with raises(AssertionError, match=err_msg):
         check_classifiers_multilabel_output_format_predict(clf.__class__.__name__, clf)
     # 3. inconsistent dtype
     clf = MultiLabelClassifierPredict(response_output=y_test.astype(np.float64))
-    err_msg = (
-        r"MultiLabelClassifierPredict.predict does not output the same "
-        r"dtype than the targets."
-    )
+    err_msg = r"MultiLabelClassifierPredict.predict does not output the same " r"dtype than the targets."
     with raises(AssertionError, match=err_msg):
         check_classifiers_multilabel_output_format_predict(clf.__class__.__name__, clf)
 
@@ -1147,9 +1089,7 @@ def test_check_classifiers_multilabel_output_format_predict_proba():
             clf,
         )
     # 2.3. array of inconsistent dtype
-    response_output = [
-        np.ones(shape=(y_test.shape[0], 2), dtype=np.int64) for _ in range(n_outputs)
-    ]
+    response_output = [np.ones(shape=(y_test.shape[0], 2), dtype=np.int64) for _ in range(n_outputs)]
     clf = MultiLabelClassifierPredictProba(response_output=response_output)
     err_msg = (
         "When MultiLabelClassifierPredictProba.predict_proba returns a list, "
@@ -1161,9 +1101,7 @@ def test_check_classifiers_multilabel_output_format_predict_proba():
             clf,
         )
     # 2.4. array does not contain probability (each row should sum to 1)
-    response_output = [
-        np.ones(shape=(y_test.shape[0], 2), dtype=np.float64) for _ in range(n_outputs)
-    ]
+    response_output = [np.ones(shape=(y_test.shape[0], 2), dtype=np.float64) for _ in range(n_outputs)]
     clf = MultiLabelClassifierPredictProba(response_output=response_output)
     err_msg = (
         r"When MultiLabelClassifierPredictProba.predict_proba returns a list, "
@@ -1256,10 +1194,7 @@ def test_check_classifiers_multilabel_output_format_decision_function():
         )
     # 3. inconsistent dtype
     clf = MultiLabelClassifierDecisionFunction(response_output=y_test)
-    err_msg = (
-        r"MultiLabelClassifierDecisionFunction.decision_function is expected "
-        r"to output a floating dtype."
-    )
+    err_msg = r"MultiLabelClassifierDecisionFunction.decision_function is expected " r"to output a floating dtype."
     with raises(AssertionError, match=err_msg):
         check_classifiers_multilabel_output_format_decision_function(
             clf.__class__.__name__,
@@ -1270,11 +1205,7 @@ def test_check_classifiers_multilabel_output_format_decision_function():
 def run_tests_without_pytest():
     """Runs the tests in this file without using pytest."""
     main_module = sys.modules["__main__"]
-    test_functions = [
-        getattr(main_module, name)
-        for name in dir(main_module)
-        if name.startswith("test_")
-    ]
+    test_functions = [getattr(main_module, name) for name in dir(main_module) if name.startswith("test_")]
     test_cases = [unittest.FunctionTestCase(fn) for fn in test_functions]
     suite = unittest.TestSuite()
     suite.addTests(test_cases)
@@ -1286,9 +1217,7 @@ def test_check_class_weight_balanced_linear_classifier():
     # check that ill-computed balanced weights raises an exception
     msg = "Classifier estimator_name is not computing class_weight=balanced properly"
     with raises(AssertionError, match=msg):
-        check_class_weight_balanced_linear_classifier(
-            "estimator_name", BadBalancedWeightsClassifier()
-        )
+        check_class_weight_balanced_linear_classifier("estimator_name", BadBalancedWeightsClassifier())
 
 
 def test_all_estimators_all_public():
@@ -1312,9 +1241,7 @@ def test_estimator_checks_generator_skipping_tests():
     # Make sure the checks generator skips tests that are expected to fail
     est = next(_construct_instances(NuSVC))
     expected_to_fail = _get_expected_failed_checks(est)
-    checks = estimator_checks_generator(
-        est, legacy=True, expected_failed_checks=expected_to_fail, mark="skip"
-    )
+    checks = estimator_checks_generator(est, legacy=True, expected_failed_checks=expected_to_fail, mark="skip")
     # making sure we use a class that has expected failures
     assert len(expected_to_fail) > 0
     skipped_checks = []
@@ -1384,9 +1311,7 @@ def test_check_estimator_callback():
     assert call_count["xfail"] == len(expected_failed_checks)
     assert call_count["passed"] > 0
     assert call_count["failed"] == 0
-    assert call_count["skipped"] == (
-        all_checks_count - call_count["xfail"] - call_count["passed"]
-    )
+    assert call_count["skipped"] == (all_checks_count - call_count["xfail"] - call_count["passed"])
 
 
 # FIXME: this test should be uncommented when the checks will be granular
@@ -1488,9 +1413,7 @@ def test_check_outlier_contamination():
         check_outlier_contamination(detector.__class__.__name__, detector)
 
     # Add a correct interval constraint and check that the test passes.
-    OutlierDetectorWithConstraint._parameter_constraints["contamination"] = [
-        Interval(Real, 0, 0.5, closed="right")
-    ]
+    OutlierDetectorWithConstraint._parameter_constraints["contamination"] = [Interval(Real, 0, 0.5, closed="right")]
     detector = OutlierDetectorWithConstraint()
     check_outlier_contamination(detector.__class__.__name__, detector)
 
@@ -1503,9 +1426,7 @@ def test_check_outlier_contamination():
 
     err_msg = r"contamination constraint should be an interval in \(0, 0.5\]"
     for interval in incorrect_intervals:
-        OutlierDetectorWithConstraint._parameter_constraints["contamination"] = [
-            interval
-        ]
+        OutlierDetectorWithConstraint._parameter_constraints["contamination"] = [interval]
         detector = OutlierDetectorWithConstraint()
         with raises(AssertionError, match=err_msg):
             check_outlier_contamination(detector.__class__.__name__, detector)
@@ -1632,9 +1553,7 @@ def test_estimator_checks_generator():
 
 def test_check_estimator_callback_with_fast_fail_error():
     """Check that check_estimator fails correctly with on_fail='raise' and callback."""
-    with raises(
-        ValueError, match="callback cannot be provided together with on_fail='raise'"
-    ):
+    with raises(ValueError, match="callback cannot be provided together with on_fail='raise'"):
         check_estimator(LogisticRegression(), on_fail="raise", callback=lambda: None)
 
 
@@ -1657,9 +1576,5 @@ def test_check_positive_only_tag_during_fit():
             tags.input_tags.positive_only = False
             return tags
 
-    with raises(
-        AssertionError, match="This happens when passing negative input values as X."
-    ):
-        check_positive_only_tag_during_fit(
-            "RequiresPositiveXBadTag", RequiresPositiveXBadTag()
-        )
+    with raises(AssertionError, match="This happens when passing negative input values as X."):
+        check_positive_only_tag_during_fit("RequiresPositiveXBadTag", RequiresPositiveXBadTag())

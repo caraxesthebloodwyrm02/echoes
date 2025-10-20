@@ -129,9 +129,7 @@ class ConfigLoader:
         for key, description in self._required_keys.items():
             value = os.getenv(key)
             if not value:
-                logger.warning(
-                    f"Missing required environment variable: {key} ({description})"
-                )
+                logger.warning(f"Missing required environment variable: {key} ({description})")
                 # Don't fail here - let validation handle it
             self.config[key.lower()] = value
 

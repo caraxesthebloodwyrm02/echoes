@@ -185,9 +185,7 @@ class ContextTagger(SequentialBackoffTagger):
                     continue
                 fd[context][tag] += 1
                 # If the backoff got it wrong, this context is useful:
-                if self.backoff is None or tag != self.backoff.tag_one(
-                    tokens, index, tags[:index]
-                ):
+                if self.backoff is None or tag != self.backoff.tag_one(tokens, index, tags[:index]):
                     useful_contexts.add(context)
 
         # Build the context_to_tag table -- for each context, figure
@@ -206,11 +204,7 @@ class ContextTagger(SequentialBackoffTagger):
             backoff = 100 - (hit_count * 100.0) / token_count
             pruning = 100 - (size * 100.0) / len(fd.conditions())
             print("[Trained Unigram tagger:", end=" ")
-            print(
-                "size={}, backoff={:.2f}%, pruning={:.2f}%]".format(
-                    size, backoff, pruning
-                )
-            )
+            print("size={}, backoff={:.2f}%, pruning={:.2f}%]".format(size, backoff, pruning))
 
 
 ######################################################################
@@ -284,9 +278,7 @@ class NgramTagger(ContextTagger):
 
     json_tag = "nltk.tag.sequential.NgramTagger"
 
-    def __init__(
-        self, n, train=None, model=None, backoff=None, cutoff=0, verbose=False
-    ):
+    def __init__(self, n, train=None, model=None, backoff=None, cutoff=0, verbose=False):
         self._n = n
         self._check_params(train, model)
 
@@ -533,18 +525,14 @@ class RegexpTagger(SequentialBackoffTagger):
 
     json_tag = "nltk.tag.sequential.RegexpTagger"
 
-    def __init__(
-        self, regexps: List[Tuple[str, str]], backoff: Optional[TaggerI] = None
-    ):
+    def __init__(self, regexps: List[Tuple[str, str]], backoff: Optional[TaggerI] = None):
         super().__init__(backoff)
         self._regexps = []
         for regexp, tag in regexps:
             try:
                 self._regexps.append((re.compile(regexp), tag))
             except Exception as e:
-                raise Exception(
-                    f"Invalid RegexpTagger regexp: {e}\n- regexp: {regexp!r}\n- tag: {tag!r}"
-                ) from e
+                raise Exception(f"Invalid RegexpTagger regexp: {e}\n- regexp: {regexp!r}\n- tag: {tag!r}") from e
 
     def encode_json_obj(self):
         return [(regexp.pattern, tag) for regexp, tag in self._regexps], self.backoff
@@ -622,9 +610,7 @@ class ClassifierBasedTagger(SequentialBackoffTagger, FeaturesetTaggerI):
         super().__init__(backoff)
 
         if (train and classifier) or (not train and not classifier):
-            raise ValueError(
-                "Must specify either training data or " "trained classifier."
-            )
+            raise ValueError("Must specify either training data or " "trained classifier.")
 
         if feature_detector is not None:
             self._feature_detector = feature_detector

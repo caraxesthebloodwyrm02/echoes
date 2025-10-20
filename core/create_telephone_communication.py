@@ -105,8 +105,7 @@ def create_telephone_communication() -> PodcastData:
             timestamp_end_s=end_time,
             speaker=speaker,
             utterance=utterance,
-            pause_after_s=0.3
-            + (0.2 if label == "handoff" else 0.0),  # Longer pauses for handoffs
+            pause_after_s=0.3 + (0.2 if label == "handoff" else 0.0),  # Longer pauses for handoffs
             label=label,
         )
         events.append(event)
@@ -185,9 +184,7 @@ def generate_telephone_report(podcast_data: PodcastData) -> str:
 
     report_lines.append("")
     report_lines.append("---")
-    report_lines.append(
-        "*Preserved in the red telephone boxes of London - a sentimental connection to our past.*"
-    )
+    report_lines.append("*Preserved in the red telephone boxes of London - a sentimental connection to our past.*")
 
     return "\n".join(report_lines)
 

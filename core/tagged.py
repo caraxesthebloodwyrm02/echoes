@@ -11,7 +11,6 @@
 A reader for corpora whose documents contain part-of-speech-tagged words.
 """
 
-import os
 
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.timit import read_timit_block
@@ -290,10 +289,7 @@ class TaggedCorpusView(StreamBackedCorpusView):
         for para_str in self._para_block_reader(stream):
             para = []
             for sent_str in self._sent_tokenizer.tokenize(para_str):
-                sent = [
-                    str2tuple(s, self._sep)
-                    for s in self._word_tokenizer.tokenize(sent_str)
-                ]
+                sent = [str2tuple(s, self._sep) for s in self._word_tokenizer.tokenize(sent_str)]
                 if self._tag_mapping_function:
                     sent = [(w, self._tag_mapping_function(t)) for (w, t) in sent]
                 if not self._tagged:
@@ -343,9 +339,7 @@ class TimitTaggedCorpusReader(TaggedCorpusReader):
     """
 
     def __init__(self, *args, **kwargs):
-        TaggedCorpusReader.__init__(
-            self, para_block_reader=read_timit_block, *args, **kwargs
-        )
+        TaggedCorpusReader.__init__(self, para_block_reader=read_timit_block, *args, **kwargs)
 
     def paras(self):
         raise NotImplementedError("use sents() instead")

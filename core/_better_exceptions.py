@@ -50,9 +50,7 @@ class SyntaxHighlighter:
     _punctuation = frozenset({"(", ")", "[", "]", "{", "}", ":", ",", ";"})
 
     if sys.version_info >= (3, 12):
-        _strings = frozenset(
-            {tokenize.STRING, tokenize.FSTRING_START, tokenize.FSTRING_MIDDLE, tokenize.FSTRING_END}
-        )
+        _strings = frozenset({tokenize.STRING, tokenize.FSTRING_START, tokenize.FSTRING_MIDDLE, tokenize.FSTRING_END})
         _fstring_middle = tokenize.FSTRING_MIDDLE
     else:
         _strings = frozenset({tokenize.STRING})
@@ -386,9 +384,7 @@ class ExceptionFormatter:
 
             yield frame
 
-    def _format_exception(
-        self, value, tb, *, seen=None, is_first=False, from_decorator=False, group_nesting=0
-    ):
+    def _format_exception(self, value, tb, *, seen=None, is_first=False, from_decorator=False, group_nesting=0):
         # Implemented from built-in traceback module:
         # https://github.com/python/cpython/blob/a5b76167/Lib/traceback.py#L468
         exc_type, exc_value, exc_traceback = type(value), value, tb

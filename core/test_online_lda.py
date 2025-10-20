@@ -118,9 +118,7 @@ def test_lda_dense_input(csr_container):
     # Test LDA with dense input.
     rng = np.random.RandomState(0)
     n_components, X = _build_sparse_array(csr_container)
-    lda = LatentDirichletAllocation(
-        n_components=n_components, learning_method="batch", random_state=rng
-    )
+    lda = LatentDirichletAllocation(n_components=n_components, learning_method="batch", random_state=rng)
     lda.fit(X.toarray())
 
     correct_idx_grps = [(0, 1, 2), (3, 4, 5), (6, 7, 8)]
@@ -142,9 +140,7 @@ def test_lda_transform():
     assert_array_almost_equal(np.sum(X_trans, axis=1), np.ones(X_trans.shape[0]))
 
     X_trans_unnormalized = lda.transform(X, normalize=False)
-    assert_array_almost_equal(
-        X_trans, X_trans_unnormalized / X_trans_unnormalized.sum(axis=1)[:, np.newaxis]
-    )
+    assert_array_almost_equal(X_trans, X_trans_unnormalized / X_trans_unnormalized.sum(axis=1)[:, np.newaxis])
 
 
 @pytest.mark.parametrize("method", ("online", "batch"))
@@ -153,9 +149,7 @@ def test_lda_fit_transform(method):
     # fit_transform and transform result should be the same
     rng = np.random.RandomState(0)
     X = rng.randint(10, size=(50, 20))
-    lda = LatentDirichletAllocation(
-        n_components=5, learning_method=method, random_state=rng
-    )
+    lda = LatentDirichletAllocation(n_components=5, learning_method=method, random_state=rng)
     X_fit = lda.fit_transform(X)
     X_trans = lda.transform(X)
     assert_array_almost_equal(X_fit, X_trans, 4)
@@ -333,9 +327,7 @@ def test_perplexity_input_format(csr_container):
 def test_lda_score_perplexity(csr_container):
     # Test the relationship between LDA score and perplexity
     n_components, X = _build_sparse_array(csr_container)
-    lda = LatentDirichletAllocation(
-        n_components=n_components, max_iter=10, random_state=0
-    )
+    lda = LatentDirichletAllocation(n_components=n_components, max_iter=10, random_state=0)
     lda.fit(X)
     perplexity_1 = lda.perplexity(X, sub_sampling=False)
 
@@ -373,9 +365,7 @@ def test_lda_empty_docs(csr_container):
     Z = np.zeros((5, 4))
     for X in [Z, csr_container(Z)]:
         lda = LatentDirichletAllocation(max_iter=750).fit(X)
-        assert_almost_equal(
-            lda.components_.sum(axis=0), np.ones(lda.components_.shape[1])
-        )
+        assert_almost_equal(lda.components_.sum(axis=0), np.ones(lda.components_.shape[1]))
 
 
 def test_dirichlet_expectation():
@@ -394,9 +384,7 @@ def test_dirichlet_expectation():
     )
 
 
-def check_verbosity(
-    verbose, evaluate_every, expected_lines, expected_perplexities, csr_container
-):
+def check_verbosity(verbose, evaluate_every, expected_lines, expected_perplexities, csr_container):
     n_components, X = _build_sparse_array(csr_container)
     lda = LatentDirichletAllocation(
         n_components=n_components,
@@ -430,12 +418,8 @@ def check_verbosity(
     ],
 )
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
-def test_verbosity(
-    verbose, evaluate_every, expected_lines, expected_perplexities, csr_container
-):
-    check_verbosity(
-        verbose, evaluate_every, expected_lines, expected_perplexities, csr_container
-    )
+def test_verbosity(verbose, evaluate_every, expected_lines, expected_perplexities, csr_container):
+    check_verbosity(verbose, evaluate_every, expected_lines, expected_perplexities, csr_container)
 
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
@@ -445,9 +429,7 @@ def test_lda_feature_names_out(csr_container):
     lda = LatentDirichletAllocation(n_components=n_components).fit(X)
 
     names = lda.get_feature_names_out()
-    assert_array_equal(
-        [f"latentdirichletallocation{i}" for i in range(n_components)], names
-    )
+    assert_array_equal([f"latentdirichletallocation{i}" for i in range(n_components)], names)
 
 
 @pytest.mark.parametrize("learning_method", ("batch", "online"))
@@ -456,9 +438,7 @@ def test_lda_dtype_match(learning_method, global_dtype):
     rng = np.random.RandomState(0)
     X = rng.uniform(size=(20, 10)).astype(global_dtype, copy=False)
 
-    lda = LatentDirichletAllocation(
-        n_components=5, random_state=0, learning_method=learning_method
-    )
+    lda = LatentDirichletAllocation(n_components=5, random_state=0, learning_method=learning_method)
     lda.fit(X)
     assert lda.components_.dtype == global_dtype
     assert lda.exp_dirichlet_component_.dtype == global_dtype

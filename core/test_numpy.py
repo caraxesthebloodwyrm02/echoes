@@ -15,6 +15,7 @@ be added to the array-specific tests in `pandas/tests/arrays/`.
 Note: we do not bother with base.BaseIndexTests because NumpyExtensionArray
 will never be held in an Index.
 """
+
 import numpy as np
 import pytest
 
@@ -133,9 +134,7 @@ def data_for_grouping(allow_in_pandas, dtype):
         a, b, c = (1,), (2,), (3,)
     else:
         a, b, c = np.arange(3)
-    return NumpyExtensionArray(
-        np.array([b, b, np.nan, np.nan, a, a, b, c], dtype=dtype.numpy_dtype)
-    )
+    return NumpyExtensionArray(np.array([b, b, np.nan, np.nan, a, a, b, c], dtype=dtype.numpy_dtype))
 
 
 @pytest.fixture
@@ -180,8 +179,7 @@ class TestNumpyExtensionArray(base.ExtensionTests):
         if data.dtype.numpy_dtype == "object":
             request.applymarker(
                 pytest.mark.xfail(
-                    reason=f"NumpyExtensionArray expectedly clashes with a "
-                    f"NumPy name: {data.dtype.numpy_dtype}"
+                    reason=f"NumpyExtensionArray expectedly clashes with a " f"NumPy name: {data.dtype.numpy_dtype}"
                 )
             )
         super().test_check_dtype(data)
@@ -262,9 +260,7 @@ class TestNumpyExtensionArray(base.ExtensionTests):
         series_scalar_exc = None
         if data.dtype.numpy_dtype == object:
             if opname in ["__mul__", "__rmul__"]:
-                mark = pytest.mark.xfail(
-                    reason="the Series.combine step raises but not the Series method."
-                )
+                mark = pytest.mark.xfail(reason="the Series.combine step raises but not the Series method.")
                 request.node.add_marker(mark)
             series_scalar_exc = TypeError
         self.series_scalar_exc = series_scalar_exc
@@ -283,9 +279,7 @@ class TestNumpyExtensionArray(base.ExtensionTests):
         frame_scalar_exc = None
         if data.dtype.numpy_dtype == object:
             if opname in ["__mul__", "__rmul__"]:
-                mark = pytest.mark.xfail(
-                    reason="the Series.combine step raises but not the Series method."
-                )
+                mark = pytest.mark.xfail(reason="the Series.combine step raises but not the Series method.")
                 request.node.add_marker(mark)
             frame_scalar_exc = TypeError
         self.frame_scalar_exc = frame_scalar_exc

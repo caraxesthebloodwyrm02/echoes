@@ -62,31 +62,24 @@ class ExternalLinksChecker(SphinxPostTransform):
         """If the URI in ``refnode`` has a replacement in ``extlinks``,
         emit a warning with a replacement suggestion.
         """
-        if 'internal' in refnode or 'refuri' not in refnode:
+        if "internal" in refnode or "refuri" not in refnode:
             return
 
-        uri = refnode['refuri']
+        uri = refnode["refuri"]
         title = refnode.astext()
 
         for alias, (base_uri, _caption) in self.app.config.extlinks.items():
-            uri_pattern = re.compile(re.escape(base_uri).replace('%s', '(?P<value>.+)'))
+            uri_pattern = re.compile(re.escape(base_uri).replace("%s", "(?P<value>.+)"))
 
             match = uri_pattern.match(uri)
-            if (
-                match
-                and match.groupdict().get('value')
-                and '/' not in match.groupdict()['value']
-            ):
+            if match and match.groupdict().get("value") and "/" not in match.groupdict()["value"]:
                 # build a replacement suggestion
-                msg = __(
-                    'hardcoded link %r could be replaced by an extlink '
-                    '(try using %r instead)'
-                )
-                value = match.groupdict().get('value')
+                msg = __("hardcoded link %r could be replaced by an extlink " "(try using %r instead)")
+                value = match.groupdict().get("value")
                 if uri != title:
-                    replacement = f':{alias}:`{rst.escape(title)} <{value}>`'
+                    replacement = f":{alias}:`{rst.escape(title)} <{value}>`"
                 else:
-                    replacement = f':{alias}:`{value}`'
+                    replacement = f":{alias}:`{value}`"
                 logger.warning(msg, uri, replacement, location=refnode)
 
 
@@ -114,7 +107,7 @@ def make_link_role(name: str, base_url: str, caption: str | None) -> RoleFunctio
             else:
                 title = caption % part
         pnode = nodes.reference(title, title, internal=False, refuri=full_url)
-        pnode['classes'].append(f'extlink-{name}')
+        pnode["classes"].append(f"extlink-{name}")
         return [pnode], []
 
     return role
@@ -126,14 +119,12 @@ def setup_link_roles(app: Sphinx) -> None:
 
 
 def setup(app: Sphinx) -> ExtensionMetadata:
-    app.add_config_value('extlinks', {}, 'env', types=frozenset({dict}))
-    app.add_config_value(
-        'extlinks_detect_hardcoded_links', False, 'env', types=frozenset({bool})
-    )
+    app.add_config_value("extlinks", {}, "env", types=frozenset({dict}))
+    app.add_config_value("extlinks_detect_hardcoded_links", False, "env", types=frozenset({bool}))
 
-    app.connect('builder-inited', setup_link_roles)
+    app.connect("builder-inited", setup_link_roles)
     app.add_post_transform(ExternalLinksChecker)
     return {
-        'version': sphinx.__display_version__,
-        'parallel_read_safe': True,
+        "version": sphinx.__display_version__,
+        "parallel_read_safe": True,
     }

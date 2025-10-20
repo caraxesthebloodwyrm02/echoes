@@ -91,9 +91,7 @@ class TextTilingTokenizer(TokenizerI):
         # Tokenization step starts here
 
         # Remove punctuation
-        nopunct_text = "".join(
-            c for c in lowercase_text if re.match(r"[a-z\-' \n\t]", c)
-        )
+        nopunct_text = "".join(c for c in lowercase_text if re.match(r"[a-z\-' \n\t]", c))
         nopunct_par_breaks = self._mark_paragraph_breaks(nopunct_text)
 
         tokseqs = self._divide_to_tokensequences(nopunct_text)
@@ -107,9 +105,7 @@ class TextTilingTokenizer(TokenizerI):
 
         # Filter stopwords
         for ts in tokseqs:
-            ts.wrdindex_list = [
-                wi for wi in ts.wrdindex_list if wi[0] not in self.stopwords
-            ]
+            ts.wrdindex_list = [wi for wi in ts.wrdindex_list if wi[0] not in self.stopwords]
 
         token_table = self._create_token_table(tokseqs, nopunct_par_breaks)
         # End of the Tokenization step
@@ -120,9 +116,7 @@ class TextTilingTokenizer(TokenizerI):
         elif self.similarity_method == VOCABULARY_INTRODUCTION:
             raise NotImplementedError("Vocabulary introduction not implemented")
         else:
-            raise ValueError(
-                f"Similarity method {self.similarity_method} not recognized"
-            )
+            raise ValueError(f"Similarity method {self.similarity_method} not recognized")
 
         if self.smoothing_method == DEFAULT_SMOOTHING:
             smooth_scores = self._smooth_scores(gap_scores)
@@ -134,9 +128,7 @@ class TextTilingTokenizer(TokenizerI):
         depth_scores = self._depth_scores(smooth_scores)
         segment_boundaries = self._identify_boundaries(depth_scores)
 
-        normalized_boundaries = self._normalize_boundaries(
-            text, segment_boundaries, paragraph_breaks
-        )
+        normalized_boundaries = self._normalize_boundaries(text, segment_boundaries, paragraph_breaks)
         # End of Boundary Identification
         segmented_text = []
         prevb = 0
@@ -197,9 +189,7 @@ class TextTilingTokenizer(TokenizerI):
 
     def _smooth_scores(self, gap_scores):
         "Wraps the smooth function from the SciPy Cookbook"
-        return list(
-            smooth(numpy.array(gap_scores[:]), window_len=self.smoothing_width + 1)
-        )
+        return list(smooth(numpy.array(gap_scores[:]), window_len=self.smoothing_width + 1))
 
     def _mark_paragraph_breaks(self, text):
         """Identifies indented text or line breaks as the beginning of
@@ -226,10 +216,7 @@ class TextTilingTokenizer(TokenizerI):
         matches = re.finditer(r"\w+", text)
         for match in matches:
             wrdindex_list.append((match.group(), match.start()))
-        return [
-            TokenSequence(i / w, wrdindex_list[i : i + w])
-            for i in range(0, len(wrdindex_list), w)
-        ]
+        return [TokenSequence(i / w, wrdindex_list[i : i + w]) for i in range(0, len(wrdindex_list), w)]
 
     def _create_token_table(self, token_sequences, par_breaks):
         "Creates a table of TokenTableFields"
@@ -242,9 +229,7 @@ class TextTilingTokenizer(TokenizerI):
             try:
                 current_par_break = next(pb_iter)  # skip break at 0
             except StopIteration as e:
-                raise ValueError(
-                    "No paragraph breaks were found(text too short perhaps?)"
-                ) from e
+                raise ValueError("No paragraph breaks were found(text too short perhaps?)") from e
         for ts in token_sequences:
             for word, index in ts.wrdindex_list:
                 try:
@@ -302,11 +287,7 @@ class TextTilingTokenizer(TokenizerI):
         for dt in hp:
             boundaries[dt[1]] = 1
             for dt2 in hp:  # undo if there is a boundary close already
-                if (
-                    dt[1] != dt2[1]
-                    and abs(dt2[1] - dt[1]) < 4
-                    and boundaries[dt2[1]] == 1
-                ):
+                if dt[1] != dt2[1] and abs(dt2[1] - dt[1]) < 4 and boundaries[dt2[1]] == 1:
                     boundaries[dt[1]] = 0
         return boundaries
 
@@ -355,9 +336,7 @@ class TextTilingTokenizer(TokenizerI):
                 word_count += 1
             if char not in " \t\n" and not seen_word:
                 seen_word = True
-            if gaps_seen < len(boundaries) and word_count > (
-                max(gaps_seen * self.w, self.w)
-            ):
+            if gaps_seen < len(boundaries) and word_count > (max(gaps_seen * self.w, self.w)):
                 if boundaries[gaps_seen] == 1:
                     # find closest paragraph break
                     best_fit = len(text)
@@ -438,9 +417,7 @@ def smooth(x, window_len=11, window="flat"):
         return x
 
     if window not in ["flat", "hanning", "hamming", "bartlett", "blackman"]:
-        raise ValueError(
-            "Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'"
-        )
+        raise ValueError("Window is on of 'flat', 'hanning', 'hamming', 'bartlett', 'blackman'")
 
     s = numpy.r_[2 * x[0] - x[window_len:1:-1], x, 2 * x[-1] - x[-1:-window_len:-1]]
 

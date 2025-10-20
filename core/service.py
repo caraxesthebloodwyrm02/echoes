@@ -59,9 +59,7 @@ async def transform(req: TransformRequest):
     """
     # Basic input validation
     if not req or not isinstance(req.text, str):
-        raise HTTPException(
-            status_code=400, detail="Invalid request: 'text' is required"
-        )
+        raise HTTPException(status_code=400, detail="Invalid request: 'text' is required")
 
     key = os.environ.get("OPENAI_API_KEY", "")
     if key:
@@ -84,9 +82,7 @@ async def transform(req: TransformRequest):
                     result = {"result": text.strip()}
                     # Apply privacy filtering if available
                     if privacy_middleware:
-                        result["result"] = privacy_middleware._filter_string(
-                            result["result"]
-                        )
+                        result["result"] = privacy_middleware._filter_string(result["result"])
                     return result
             # Fallback if OpenAI response shape unexpected
             logger.warning("OpenAI returned unexpected response shape, falling back")

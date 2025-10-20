@@ -224,11 +224,7 @@ class ARLSTem2(StemmerI):
         """
         # ^Alif, Alif, $Yaa
         if len(token) > 5:
-            if (
-                token.startswith("\u0627")
-                and token[-3] == "\u0627"
-                and token.endswith("\u064A")
-            ):
+            if token.startswith("\u0627") and token[-3] == "\u0627" and token.endswith("\u064A"):
                 return token[:-3] + token[-2]
 
     def suff(self, token):
@@ -267,18 +263,10 @@ class ARLSTem2(StemmerI):
         """
         if len(token) > 6:
             # ^Taa, Yaa, $Yaa and Taa Marbuta
-            if (
-                token.startswith("\u062A")
-                and token[-4] == "\u064A"
-                and token.endswith("\u064A\u0629")
-            ):
+            if token.startswith("\u062A") and token[-4] == "\u064A" and token.endswith("\u064A\u0629"):
                 return token[1:-4] + token[-3]
             # ^Alif, Yaa, $Yaa and Taa Marbuta
-            if (
-                token.startswith("\u0627")
-                and token[-4] == "\u0627"
-                and token.endswith("\u064A\u0629")
-            ):
+            if token.startswith("\u0627") and token[-4] == "\u0627" and token.endswith("\u064A\u0629"):
                 return token[:-4] + token[-3]
         # $Alif, Yaa and Taa Marbuta
         if token.endswith("\u0627\u064A\u0629") and len(token) > 5:
@@ -391,18 +379,10 @@ class ARLSTem2(StemmerI):
             if token.startswith(self.verb_pr2[1]) and token.endswith(self.pl_si2[2]):
                 return token[2:-2]
         # ^Siin Taa, Noon$
-        if (
-            len(token) > 5
-            and token.startswith(self.verb_pr2[0])
-            and token.endswith("\u0646")
-        ):
+        if len(token) > 5 and token.startswith(self.verb_pr2[0]) and token.endswith("\u0646"):
             return token[2:-1]
         # ^Siin Yaa, Noon$
-        if (
-            len(token) > 5
-            and token.startswith(self.verb_pr2[1])
-            and token.endswith("\u0646")
-        ):
+        if len(token) > 5 and token.startswith(self.verb_pr2[1]) and token.endswith("\u0646"):
             return token[2:-1]
 
     def verb_t3(self, token):

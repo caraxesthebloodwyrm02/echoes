@@ -70,9 +70,7 @@ class MaintenanceManager:
             logger.error(f"Error during temp file cleanup: {e}")
             return {"error": str(e), "success": False}
 
-    def cleanup_logs(
-        self, max_age_days: int = 30, max_size_mb: int = 100
-    ) -> Dict[str, Any]:
+    def cleanup_logs(self, max_age_days: int = 30, max_size_mb: int = 100) -> Dict[str, Any]:
         """Clean up old log files and manage log size."""
         logs_dir = self.settings.logs_dir
         if not logs_dir.exists():
@@ -173,9 +171,7 @@ class MaintenanceManager:
         results["operations"]["data_optimization"] = self.optimize_data_directory()
 
         # Summary
-        successful_ops = sum(
-            1 for op in results["operations"].values() if op.get("success", False)
-        )
+        successful_ops = sum(1 for op in results["operations"].values() if op.get("success", False))
         total_ops = len(results["operations"])
 
         results["summary"] = {
@@ -184,9 +180,7 @@ class MaintenanceManager:
             "overall_success": successful_ops == total_ops,
         }
 
-        logger.info(
-            f"Maintenance complete: {successful_ops}/{total_ops} operations successful"
-        )
+        logger.info(f"Maintenance complete: {successful_ops}/{total_ops} operations successful")
         return results
 
 
@@ -204,20 +198,14 @@ def main():
         default=7,
         help="Maximum age in days for cleanup operations",
     )
-    parser.add_argument(
-        "--max-size-mb", type=int, default=100, help="Maximum size in MB for log files"
-    )
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose logging"
-    )
+    parser.add_argument("--max-size-mb", type=int, default=100, help="Maximum size in MB for log files")
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose logging")
 
     args = parser.parse_args()
 
     # Configure logging
     log_level = logging.DEBUG if args.verbose else logging.INFO
-    logging.basicConfig(
-        level=log_level, format="%(asctime)s - %(levelname)s - %(message)s"
-    )
+    logging.basicConfig(level=log_level, format="%(asctime)s - %(levelname)s - %(message)s")
 
     # Run maintenance
     manager = MaintenanceManager()

@@ -4,7 +4,6 @@ from typing import Any, overload
 
 import numpy as np
 
-#
 @overload
 def dtype_from_ctypes_type(t: type[_ctypes.Array[Any] | _ctypes.Structure]) -> np.dtype[np.void]: ...
 @overload
@@ -43,7 +42,6 @@ def dtype_from_ctypes_type(t: type[ct.py_object[Any]]) -> np.dtype[np.object_]: 
 # NOTE: the complex ctypes on python>=3.14 are not yet supported at runtim, see
 # https://github.com/numpy/numpy/issues/28360
 
-#
 def _from_ctypes_array(t: type[_ctypes.Array[Any]]) -> np.dtype[np.void]: ...
 def _from_ctypes_structure(t: type[_ctypes.Structure]) -> np.dtype[np.void]: ...
 def _from_ctypes_union(t: type[_ctypes.Union]) -> np.dtype[np.void]: ...

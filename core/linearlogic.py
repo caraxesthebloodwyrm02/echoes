@@ -209,9 +209,7 @@ class ImpExpression(Expression):
         self.consequent = consequent
 
     def simplify(self, bindings=None):
-        return self.__class__(
-            self.antecedent.simplify(bindings), self.consequent.simplify(bindings)
-        )
+        return self.__class__(self.antecedent.simplify(bindings), self.consequent.simplify(bindings))
 
     def unify(self, other, bindings):
         """
@@ -309,9 +307,7 @@ class ApplicationExpression(Expression):
                 bindings += argument.bindings
             bindings += function_simp.antecedent.unify(argument_simp, bindings)
         except UnificationException as e:
-            raise LinearLogicApplicationException(
-                f"Cannot apply {function_simp} to {argument_simp}. {e}"
-            ) from e
+            raise LinearLogicApplicationException(f"Cannot apply {function_simp} to {argument_simp}. {e}") from e
 
         # If you are running it on complied premises, more conditions apply
         if argument_indices:
@@ -346,11 +342,7 @@ class ApplicationExpression(Expression):
         return self.function.simplify(bindings).consequent
 
     def __eq__(self, other):
-        return (
-            self.__class__ == other.__class__
-            and self.function == other.function
-            and self.argument == other.argument
-        )
+        return self.__class__ == other.__class__ and self.function == other.function and self.argument == other.argument
 
     def __ne__(self, other):
         return not self == other
@@ -397,9 +389,7 @@ class BindingDict:
         if not existing or binding == existing:
             self.d[variable] = binding
         else:
-            raise VariableBindingException(
-                "Variable %s already bound to another value" % (variable)
-            )
+            raise VariableBindingException("Variable %s already bound to another value" % (variable))
 
     def __getitem__(self, variable):
         """
@@ -432,8 +422,7 @@ class BindingDict:
             return combined
         except VariableBindingException as e:
             raise VariableBindingException(
-                "Attempting to add two contradicting"
-                " VariableBindingsLists: %s, %s" % (self, other)
+                "Attempting to add two contradicting" " VariableBindingsLists: %s, %s" % (self, other)
             ) from e
 
     def __ne__(self, other):

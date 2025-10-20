@@ -33,7 +33,7 @@ def import_azure_key_vault() -> None:
         from azure.keyvault.secrets import SecretClient
     except ImportError as e:  # pragma: no cover
         raise ImportError(
-            'Azure Key Vault dependencies are not installed, run `pip install pydantic-settings[azure-key-vault]`'
+            "Azure Key Vault dependencies are not installed, run `pip install pydantic-settings[azure-key-vault]`"
         ) from e
 
 
@@ -115,7 +115,7 @@ class AzureKeyVaultSettingsSource(EnvSettingsSource):
             settings_cls,
             case_sensitive=False if snake_case_conversion else case_sensitive,
             env_prefix=env_prefix,
-            env_nested_delimiter='__' if snake_case_conversion else '--',
+            env_nested_delimiter="__" if snake_case_conversion else "--",
             env_ignore_empty=False,
             env_parse_none_str=env_parse_none_str,
             env_parse_enums=env_parse_enums,
@@ -134,12 +134,12 @@ class AzureKeyVaultSettingsSource(EnvSettingsSource):
             return list((x[0], x[0], x[2]) for x in super()._extract_field_info(field, field_name))
 
         if self._dash_to_underscore:
-            return list((x[0], x[1].replace('_', '-'), x[2]) for x in super()._extract_field_info(field, field_name))
+            return list((x[0], x[1].replace("_", "-"), x[2]) for x in super()._extract_field_info(field, field_name))
 
         return super()._extract_field_info(field, field_name)
 
     def __repr__(self) -> str:
-        return f'{self.__class__.__name__}(url={self._url!r}, env_nested_delimiter={self.env_nested_delimiter!r})'
+        return f"{self.__class__.__name__}(url={self._url!r}, env_nested_delimiter={self.env_nested_delimiter!r})"
 
 
-__all__ = ['AzureKeyVaultMapping', 'AzureKeyVaultSettingsSource']
+__all__ = ["AzureKeyVaultMapping", "AzureKeyVaultSettingsSource"]

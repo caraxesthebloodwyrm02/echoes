@@ -1,6 +1,7 @@
 """
 Concat routines.
 """
+
 from __future__ import annotations
 
 from collections import abc
@@ -82,8 +83,7 @@ def concat(
     verify_integrity: bool = ...,
     sort: bool = ...,
     copy: bool | None = ...,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -99,8 +99,7 @@ def concat(
     verify_integrity: bool = ...,
     sort: bool = ...,
     copy: bool | None = ...,
-) -> Series:
-    ...
+) -> Series: ...
 
 
 @overload
@@ -116,8 +115,7 @@ def concat(
     verify_integrity: bool = ...,
     sort: bool = ...,
     copy: bool | None = ...,
-) -> DataFrame | Series:
-    ...
+) -> DataFrame | Series: ...
 
 
 @overload
@@ -133,8 +131,7 @@ def concat(
     verify_integrity: bool = ...,
     sort: bool = ...,
     copy: bool | None = ...,
-) -> DataFrame:
-    ...
+) -> DataFrame: ...
 
 
 @overload
@@ -150,8 +147,7 @@ def concat(
     verify_integrity: bool = ...,
     sort: bool = ...,
     copy: bool | None = ...,
-) -> DataFrame | Series:
-    ...
+) -> DataFrame | Series: ...
 
 
 def concat(
@@ -426,14 +422,10 @@ class _Concatenator:
         elif join == "inner":
             self.intersect = True
         else:  # pragma: no cover
-            raise ValueError(
-                "Only can inner (intersect) or outer (union) join the other axis"
-            )
+            raise ValueError("Only can inner (intersect) or outer (union) join the other axis")
 
         if not is_bool(sort):
-            raise ValueError(
-                f"The 'sort' keyword only accepts boolean values; {sort} was passed."
-            )
+            raise ValueError(f"The 'sort' keyword only accepts boolean values; {sort} was passed.")
         # Incompatible types in assignment (expression has type "Union[bool, bool_]",
         # variable has type "bool")
         self.sort = sort  # type: ignore[assignment]
@@ -482,10 +474,7 @@ class _Concatenator:
         ndims = set()
         for obj in objs:
             if not isinstance(obj, (ABCSeries, ABCDataFrame)):
-                msg = (
-                    f"cannot concatenate object of type '{type(obj)}'; "
-                    "only Series and DataFrame objs are valid"
-                )
+                msg = f"cannot concatenate object of type '{type(obj)}'; " "only Series and DataFrame objs are valid"
                 raise TypeError(msg)
 
             ndims.add(obj.ndim)
@@ -566,9 +555,7 @@ class _Concatenator:
             # note to keep empty Series as it affect to result columns / name
             non_empties = [obj for obj in objs if sum(obj.shape) > 0 or obj.ndim == 1]
 
-            if len(non_empties) and (
-                keys is None and names is None and levels is None and not self.intersect
-            ):
+            if len(non_empties) and (keys is None and names is None and levels is None and not self.intersect):
                 objs = non_empties
                 sample = objs[0]
 
@@ -596,9 +583,7 @@ class _Concatenator:
                 pass
 
             elif ndim != max_ndim - 1:
-                raise ValueError(
-                    "cannot concatenate unaligned mixed dimensional NDFrame objects"
-                )
+                raise ValueError("cannot concatenate unaligned mixed dimensional NDFrame objects")
 
             else:
                 name = getattr(obj, "name", None)
@@ -681,9 +666,7 @@ class _Concatenator:
 
                 mgrs_indexers.append((obj._mgr, indexers))
 
-            new_data = concatenate_managers(
-                mgrs_indexers, self.new_axes, concat_axis=self.bm_axis, copy=self.copy
-            )
+            new_data = concatenate_managers(mgrs_indexers, self.new_axes, concat_axis=self.bm_axis, copy=self.copy)
             if not self.copy and not using_copy_on_write():
                 new_data._consolidate_inplace()
 
@@ -699,10 +682,7 @@ class _Concatenator:
     @cache_readonly
     def new_axes(self) -> list[Index]:
         ndim = self._get_result_dim()
-        return [
-            self._get_concat_axis if i == self.bm_axis else self._get_comb_axis(i)
-            for i in range(ndim)
-        ]
+        return [self._get_concat_axis if i == self.bm_axis else self._get_comb_axis(i) for i in range(ndim)]
 
     def _get_comb_axis(self, i: AxisInt) -> Index:
         data_axis = self.objs[0]._get_block_manager_axis(i)
@@ -732,8 +712,7 @@ class _Concatenator:
                 for i, x in enumerate(self.objs):
                     if x.ndim != 1:
                         raise TypeError(
-                            f"Cannot concatenate type 'Series' with "
-                            f"object of type '{type(x).__name__}'"
+                            f"Cannot concatenate type 'Series' with " f"object of type '{type(x).__name__}'"
                         )
                     if x.name is not None:
                         names[i] = x.name
@@ -759,9 +738,7 @@ class _Concatenator:
                 raise ValueError("levels supported only when keys is not None")
             concat_axis = _concat_indexes(indexes)
         else:
-            concat_axis = _make_concat_multiindex(
-                indexes, self.keys, self.levels, self.names
-            )
+            concat_axis = _make_concat_multiindex(indexes, self.keys, self.levels, self.names)
 
         self._maybe_check_integrity(concat_axis)
 
@@ -779,9 +756,7 @@ def _concat_indexes(indexes) -> Index:
 
 
 def _make_concat_multiindex(indexes, keys, levels=None, names=None) -> MultiIndex:
-    if (levels is None and isinstance(keys[0], tuple)) or (
-        levels is not None and len(levels) > 1
-    ):
+    if (levels is None and isinstance(keys[0], tuple)) or (levels is not None and len(levels) > 1):
         zipped = list(zip(*keys))
         if names is None:
             names = [None] * len(zipped)
@@ -842,16 +817,12 @@ def _make_concat_multiindex(indexes, keys, levels=None, names=None) -> MultiInde
         else:
             # make sure that all of the passed indices have the same nlevels
             if not len({idx.nlevels for idx in indexes}) == 1:
-                raise AssertionError(
-                    "Cannot concat indices that do not have the same number of levels"
-                )
+                raise AssertionError("Cannot concat indices that do not have the same number of levels")
 
             # also copies
             names = list(names) + list(get_unanimous_names(*indexes))
 
-        return MultiIndex(
-            levels=levels, codes=codes_list, names=names, verify_integrity=False
-        )
+        return MultiIndex(levels=levels, codes=codes_list, names=names, verify_integrity=False)
 
     new_index = indexes[0]
     n = len(new_index)
@@ -872,9 +843,7 @@ def _make_concat_multiindex(indexes, keys, levels=None, names=None) -> MultiInde
 
         mask = mapped == -1
         if mask.any():
-            raise ValueError(
-                f"Values not found in passed level: {hlevel_index[mask]!s}"
-            )
+            raise ValueError(f"Values not found in passed level: {hlevel_index[mask]!s}")
 
         new_codes.append(np.repeat(mapped, n))
 
@@ -889,6 +858,4 @@ def _make_concat_multiindex(indexes, keys, levels=None, names=None) -> MultiInde
     if len(new_names) < len(new_levels):
         new_names.extend(new_index.names)
 
-    return MultiIndex(
-        levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False
-    )
+    return MultiIndex(levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False)

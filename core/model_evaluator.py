@@ -66,9 +66,7 @@ class ModelEvaluator:
         self.config = config
         self.logger = logging.getLogger(__name__)
 
-    def evaluate_models(
-        self, models: List[Dict[str, Any]], X: np.ndarray, y: np.ndarray
-    ) -> List[Dict[str, Any]]:
+    def evaluate_models(self, models: List[Dict[str, Any]], X: np.ndarray, y: np.ndarray) -> List[Dict[str, Any]]:
         """
         Evaluate multiple models and provide comprehensive rankings.
 
@@ -117,9 +115,7 @@ class ModelEvaluator:
 
         return evaluated_models
 
-    def _evaluate_single_model(
-        self, model_info: Dict[str, Any], X: np.ndarray, y: np.ndarray
-    ) -> Dict[str, Any]:
+    def _evaluate_single_model(self, model_info: Dict[str, Any], X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Evaluate a single model comprehensively."""
         model = model_info["model"]
         model_name = model_info["name"]
@@ -145,9 +141,7 @@ class ModelEvaluator:
             "tuning_time": model_info.get("tuning_time", 0),
         }
 
-    def _cross_validate_model(
-        self, model: BaseEstimator, X: np.ndarray, y: np.ndarray
-    ) -> Dict[str, Any]:
+    def _cross_validate_model(self, model: BaseEstimator, X: np.ndarray, y: np.ndarray) -> Dict[str, Any]:
         """Perform cross-validation and return detailed results."""
         scoring_metrics = self._get_scoring_metrics()
 
@@ -196,27 +190,17 @@ class ModelEvaluator:
 
         # Cross-validation summary
         metrics["cv_mean_score"] = np.mean(
-            cv_results[
-                "test_accuracy"
-                if self.config.task_type == "classification"
-                else "test_r2"
-            ]
+            cv_results["test_accuracy" if self.config.task_type == "classification" else "test_r2"]
         )
         metrics["cv_std_score"] = np.std(
-            cv_results[
-                "test_accuracy"
-                if self.config.task_type == "classification"
-                else "test_r2"
-            ]
+            cv_results["test_accuracy" if self.config.task_type == "classification" else "test_r2"]
         )
         metrics["cv_scores"] = cv_results[
             "test_accuracy" if self.config.task_type == "classification" else "test_r2"
         ].tolist()
 
         if self.config.task_type == "classification":
-            metrics.update(
-                self._calculate_classification_metrics(y_test, y_pred, model, X_test)
-            )
+            metrics.update(self._calculate_classification_metrics(y_test, y_pred, model, X_test))
         else:
             metrics.update(self._calculate_regression_metrics(y_test, y_pred))
 
@@ -234,12 +218,8 @@ class ModelEvaluator:
 
         # Basic metrics
         metrics["accuracy"] = accuracy_score(y_true, y_pred)
-        metrics["precision"] = precision_score(
-            y_true, y_pred, average="macro", zero_division=0
-        )
-        metrics["recall"] = recall_score(
-            y_true, y_pred, average="macro", zero_division=0
-        )
+        metrics["precision"] = precision_score(y_true, y_pred, average="macro", zero_division=0)
+        metrics["recall"] = recall_score(y_true, y_pred, average="macro", zero_division=0)
         metrics["f1_score"] = f1_score(y_true, y_pred, average="macro", zero_division=0)
 
         # Confusion matrix
@@ -247,9 +227,7 @@ class ModelEvaluator:
         metrics["confusion_matrix"] = cm.tolist()
 
         # Per-class metrics
-        class_report = classification_report(
-            y_true, y_pred, output_dict=True, zero_division=0
-        )
+        class_report = classification_report(y_true, y_pred, output_dict=True, zero_division=0)
         metrics["per_class_metrics"] = class_report
 
         # ROC-AUC if applicable
@@ -263,17 +241,13 @@ class ModelEvaluator:
                     # Multi-class - use one-vs-rest
                     y_bin = label_binarize(y_true, classes=np.unique(y_true))
                     if y_bin.shape[1] > 1:
-                        metrics["roc_auc"] = roc_auc_score(
-                            y_bin, y_prob, multi_class="ovr"
-                        )
+                        metrics["roc_auc"] = roc_auc_score(y_bin, y_prob, multi_class="ovr")
             except Exception:
                 pass  # ROC-AUC calculation failed
 
         return metrics
 
-    def _calculate_regression_metrics(
-        self, y_true: np.ndarray, y_pred: np.ndarray
-    ) -> Dict[str, Any]:
+    def _calculate_regression_metrics(self, y_true: np.ndarray, y_pred: np.ndarray) -> Dict[str, Any]:
         """Calculate detailed regression metrics."""
         metrics = {}
 
@@ -309,19 +283,13 @@ class ModelEvaluator:
             if self.config.metric == "r2":
                 return metrics.get("r2_score", 0)
             elif self.config.metric == "mse":
-                return -metrics.get(
-                    "mse", 0
-                )  # Negative for consistency (higher is better)
+                return -metrics.get("mse", 0)  # Negative for consistency (higher is better)
             elif self.config.metric == "mae":
-                return -metrics.get(
-                    "mae", 0
-                )  # Negative for consistency (higher is better)
+                return -metrics.get("mae", 0)  # Negative for consistency (higher is better)
             else:
                 return metrics.get("cv_mean_score", 0)
 
-    def compare_models(
-        self, model_results: List[Dict[str, Any]], statistical_test: bool = False
-    ) -> Dict[str, Any]:
+    def compare_models(self, model_results: List[Dict[str, Any]], statistical_test: bool = False) -> Dict[str, Any]:
         """
         Compare multiple models statistically and provide insights.
 
@@ -352,9 +320,7 @@ class ModelEvaluator:
                     "score": result["score"],
                     "score_diff": result["score"] - best_score,
                     "std_score": result.get("std_score", 0),
-                    "relative_performance": result["score"] / best_score
-                    if best_score > 0
-                    else 0,
+                    "relative_performance": result["score"] / best_score if best_score > 0 else 0,
                 }
             )
 
@@ -365,15 +331,11 @@ class ModelEvaluator:
         comparison["recommendations"] = self._generate_recommendations(model_results)
 
         if statistical_test:
-            comparison["statistical_tests"] = self._perform_statistical_tests(
-                model_results
-            )
+            comparison["statistical_tests"] = self._perform_statistical_tests(model_results)
 
         return comparison
 
-    def _generate_comparison_insights(
-        self, model_results: List[Dict[str, Any]]
-    ) -> List[str]:
+    def _generate_comparison_insights(self, model_results: List[Dict[str, Any]]) -> List[str]:
         """Generate insights about model performance differences."""
         insights = []
 
@@ -384,28 +346,20 @@ class ModelEvaluator:
             score_diff = best["score"] - second_best["score"]
 
             if score_diff < 0.01:
-                insights.append(
-                    "Models have very similar performance - consider simpler model for production"
-                )
+                insights.append("Models have very similar performance - consider simpler model for production")
             elif score_diff < 0.05:
-                insights.append(
-                    "Best model has slight edge - consider trade-offs between complexity and performance"
-                )
+                insights.append("Best model has slight edge - consider trade-offs between complexity and performance")
             else:
                 insights.append("Clear performance winner identified")
 
             # Check stability
             std_scores = [r.get("std_score", 0) for r in model_results[:3]]
             if any(s > 0.1 for s in std_scores):
-                insights.append(
-                    "Some top models show high variance - consider more stable alternatives"
-                )
+                insights.append("Some top models show high variance - consider more stable alternatives")
 
         return insights
 
-    def _generate_recommendations(
-        self, model_results: List[Dict[str, Any]]
-    ) -> List[str]:
+    def _generate_recommendations(self, model_results: List[Dict[str, Any]]) -> List[str]:
         """Generate deployment recommendations."""
         recommendations = []
 
@@ -416,29 +370,19 @@ class ModelEvaluator:
         complex_models = ["neural_network", "svm", "random_forest"]
 
         if best_model["name"] in simple_models:
-            recommendations.append(
-                "Best model is interpretable - good for production explainability"
-            )
+            recommendations.append("Best model is interpretable - good for production explainability")
         elif best_model["name"] in complex_models:
-            recommendations.append(
-                "Consider adding model explainability tools for complex model"
-            )
+            recommendations.append("Consider adding model explainability tools for complex model")
 
         # Performance recommendations
         if best_model["score"] < 0.7:
-            recommendations.append(
-                "Model performance below threshold - consider feature engineering or more data"
-            )
+            recommendations.append("Model performance below threshold - consider feature engineering or more data")
         elif best_model["score"] > 0.9:
-            recommendations.append(
-                "Excellent performance achieved - ready for production deployment"
-            )
+            recommendations.append("Excellent performance achieved - ready for production deployment")
 
         return recommendations
 
-    def _perform_statistical_tests(
-        self, model_results: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def _perform_statistical_tests(self, model_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Perform statistical significance tests between models."""
         # Simplified statistical testing
         # In a full implementation, this would use proper statistical tests
@@ -455,8 +399,6 @@ class ModelEvaluator:
             if all(best_score - score > 2 * max(stds) for score in other_scores):
                 tests["significance"] = "Best model significantly outperforms others"
             else:
-                tests["significance"] = (
-                    "Performance differences may not be statistically significant"
-                )
+                tests["significance"] = "Performance differences may not be statistically significant"
 
         return tests

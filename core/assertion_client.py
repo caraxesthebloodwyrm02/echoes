@@ -50,9 +50,7 @@ class AsyncAssertionClient(_AssertionClient, httpx.AsyncClient):
             **kwargs,
         )
 
-    async def request(
-        self, method, url, withhold_token=False, auth=USE_CLIENT_DEFAULT, **kwargs
-    ) -> Response:
+    async def request(self, method, url, withhold_token=False, auth=USE_CLIENT_DEFAULT, **kwargs) -> Response:
         """Send request with auto refresh token feature."""
         if not withhold_token and auth is USE_CLIENT_DEFAULT:
             if not self.token or self.token.is_expired():
@@ -62,9 +60,7 @@ class AsyncAssertionClient(_AssertionClient, httpx.AsyncClient):
         return await super().request(method, url, auth=auth, **kwargs)
 
     async def _refresh_token(self, data):
-        resp = await self.request(
-            "POST", self.token_endpoint, data=data, withhold_token=True
-        )
+        resp = await self.request("POST", self.token_endpoint, data=data, withhold_token=True)
 
         return self.parse_response_token(resp)
 
@@ -112,9 +108,7 @@ class AssertionClient(_AssertionClient, httpx.Client):
             **kwargs,
         )
 
-    def request(
-        self, method, url, withhold_token=False, auth=USE_CLIENT_DEFAULT, **kwargs
-    ):
+    def request(self, method, url, withhold_token=False, auth=USE_CLIENT_DEFAULT, **kwargs):
         """Send request with auto refresh token feature."""
         if not withhold_token and auth is USE_CLIENT_DEFAULT:
             if not self.token or self.token.is_expired():

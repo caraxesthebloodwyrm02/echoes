@@ -9,9 +9,7 @@ class ScaleBase:
     def __init__(self, axis: Axis | None) -> None: ...
     def get_transform(self) -> Transform: ...
     def set_default_locators_and_formatters(self, axis: Axis) -> None: ...
-    def limit_range_for_scale(
-        self, vmin: float, vmax: float, minpos: float
-    ) -> tuple[float, float]: ...
+    def limit_range_for_scale(self, vmin: float, vmax: float, minpos: float) -> tuple[float, float]: ...
 
 class LinearScale(ScaleBase):
     name: str
@@ -31,18 +29,14 @@ class FuncScale(ScaleBase):
     def __init__(
         self,
         axis: Axis | None,
-        functions: tuple[
-            Callable[[ArrayLike], ArrayLike], Callable[[ArrayLike], ArrayLike]
-        ],
+        functions: tuple[Callable[[ArrayLike], ArrayLike], Callable[[ArrayLike], ArrayLike]],
     ) -> None: ...
 
 class LogTransform(Transform):
     input_dims: int
     output_dims: int
     base: float
-    def __init__(
-        self, base: float, nonpositive: Literal["clip", "mask"] = ...
-    ) -> None: ...
+    def __init__(self, base: float, nonpositive: Literal["clip", "mask"] = ...) -> None: ...
     def inverted(self) -> InvertedLogTransform: ...
 
 class InvertedLogTransform(Transform):
@@ -71,9 +65,7 @@ class FuncScaleLog(LogScale):
     def __init__(
         self,
         axis: Axis | None,
-        functions: tuple[
-            Callable[[ArrayLike], ArrayLike], Callable[[ArrayLike], ArrayLike]
-        ],
+        functions: tuple[Callable[[ArrayLike], ArrayLike], Callable[[ArrayLike], ArrayLike]],
         base: float = ...,
     ) -> None: ...
     @property

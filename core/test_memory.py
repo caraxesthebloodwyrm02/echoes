@@ -615,12 +615,8 @@ def test_persistence(tmpdir):
 @pytest.mark.parametrize("consider_cache_valid", [True, False])
 def test_check_call_in_cache(tmpdir, consider_cache_valid):
     for func in (
-        MemorizedFunc(
-            f, tmpdir.strpath, cache_validation_callback=lambda _: consider_cache_valid
-        ),
-        Memory(location=tmpdir.strpath, verbose=0).cache(
-            f, cache_validation_callback=lambda _: consider_cache_valid
-        ),
+        MemorizedFunc(f, tmpdir.strpath, cache_validation_callback=lambda _: consider_cache_valid),
+        Memory(location=tmpdir.strpath, verbose=0).cache(f, cache_validation_callback=lambda _: consider_cache_valid),
     ):
         result = func.check_call_in_cache(2)
         assert isinstance(result, bool)
@@ -676,9 +672,7 @@ def test_call_and_shelve_lazily_load_stored_result(tmpdir):
     memory = Memory(location=tmpdir.strpath, verbose=0)
     func = memory.cache(f)
     args_id = func._get_args_id(2)
-    result_path = os.path.join(
-        memory.store_backend.location, func.func_id, args_id, "output.pkl"
-    )
+    result_path = os.path.join(memory.store_backend.location, func.func_id, args_id, "output.pkl")
     assert func(2) == 5
     first_access_time = os.stat(result_path).st_atime
     time.sleep(1)
@@ -884,10 +878,7 @@ def _setup_toy_cache(tmpdir, num_inputs=10):
     func_id = _build_func_identifier(get_1000_bytes)
     hash_dirnames = [get_1000_bytes._get_args_id(arg) for arg in inputs]
 
-    full_hashdirs = [
-        os.path.join(get_1000_bytes.store_backend.location, func_id, dirname)
-        for dirname in hash_dirnames
-    ]
+    full_hashdirs = [os.path.join(get_1000_bytes.store_backend.location, func_id, dirname) for dirname in hash_dirnames]
     return memory, full_hashdirs, get_1000_bytes
 
 
@@ -907,9 +898,7 @@ def test__get_items(tmpdir):
 
     output_filenames = [os.path.join(hash_dir, "output.pkl") for hash_dir in hash_dirs]
 
-    expected_last_accesses = [
-        datetime.datetime.fromtimestamp(os.path.getatime(fn)) for fn in output_filenames
-    ]
+    expected_last_accesses = [datetime.datetime.fromtimestamp(os.path.getatime(fn)) for fn in output_filenames]
     last_accesses = [ci.last_access for ci in items]
     assert last_accesses == expected_last_accesses
 
@@ -939,9 +928,7 @@ def test__get_items_to_delete(tmpdir):
 
     # All the cache items need to be deleted
     bytes_limit_too_small = 500
-    items_to_delete_500b = memory.store_backend._get_items_to_delete(
-        bytes_limit_too_small
-    )
+    items_to_delete_500b = memory.store_backend._get_items_to_delete(bytes_limit_too_small)
     assert set(items_to_delete_500b), set(items)
 
     # Test LRU property: surviving cache items should all have a more
@@ -949,9 +936,7 @@ def test__get_items_to_delete(tmpdir):
     items_to_delete_6000b = memory.store_backend._get_items_to_delete(6000)
     surviving_items = set(items).difference(items_to_delete_6000b)
 
-    assert max(ci.last_access for ci in items_to_delete_6000b) <= min(
-        ci.last_access for ci in surviving_items
-    )
+    assert max(ci.last_access for ci in items_to_delete_6000b) <= min(ci.last_access for ci in surviving_items)
 
 
 def test_memory_reduce_size_bytes_limit(tmpdir):
@@ -1096,9 +1081,7 @@ def test_cached_function_race_condition_when_persisting_output_2(tmpdir, capfd):
     memory = Memory(location=tmpdir.strpath)
     func_cached = memory.cache(fast_func_with_conditional_complex_output)
 
-    Parallel(n_jobs=2)(
-        delayed(func_cached)(True if i % 2 == 0 else False) for i in range(3)
-    )
+    Parallel(n_jobs=2)(delayed(func_cached)(True if i % 2 == 0 else False) for i in range(3))
 
     stdout, stderr = capfd.readouterr()
 
@@ -1147,9 +1130,7 @@ def test_memory_recomputes_after_an_error_while_loading_results(tmpdir, monkeypa
     reference = cached_func.call_and_shelve(arg)
     try:
         reference.get()
-        raise AssertionError(
-            "It normally not possible to load a corrupted MemorizedResult"
-        )
+        raise AssertionError("It normally not possible to load a corrupted MemorizedResult")
     except KeyError as e:
         message = "is corrupted"
         assert message in str(e.args)
@@ -1230,9 +1211,7 @@ def test_warning_on_unknown_location_type():
         _store_backend_factory("local", location=unsupported_location)
 
     expected_mesage = (
-        "Instantiating a backend using a "
-        "NonSupportedLocationClass as a location is not "
-        "supported by joblib"
+        "Instantiating a backend using a " "NonSupportedLocationClass as a location is not " "supported by joblib"
     )
     assert expected_mesage in str(warninfo[0].message)
 
@@ -1303,15 +1282,11 @@ def test_memory_objects_repr(tmpdir):
 
     memorized_func_repr = "MemorizedFunc(func={func}, location={location})"
 
-    assert str(memorized_func) == memorized_func_repr.format(
-        func=my_func, location=memory.store_backend.location
-    )
+    assert str(memorized_func) == memorized_func_repr.format(func=my_func, location=memory.store_backend.location)
 
     memorized_result = memorized_func.call_and_shelve(42, 42)
 
-    memorized_result_repr = (
-        'MemorizedResult(location="{location}", func="{func}", args_id="{args_id}")'
-    )
+    memorized_result_repr = 'MemorizedResult(location="{location}", func="{func}", args_id="{args_id}")'
 
     assert str(memorized_result) == memorized_result_repr.format(
         location=memory.store_backend.location,
@@ -1319,9 +1294,7 @@ def test_memory_objects_repr(tmpdir):
         args_id=memorized_result.args_id,
     )
 
-    assert str(memory) == "Memory(location={location})".format(
-        location=memory.store_backend.location
-    )
+    assert str(memory) == "Memory(location={location})".format(location=memory.store_backend.location)
 
 
 def test_memorized_result_pickle(tmpdir):
@@ -1339,10 +1312,7 @@ def test_memorized_result_pickle(tmpdir):
     memorized_result_pickle = pickle.dumps(memorized_result)
     memorized_result_loads = pickle.loads(memorized_result_pickle)
 
-    assert (
-        memorized_result.store_backend.location
-        == memorized_result_loads.store_backend.location
-    )
+    assert memorized_result.store_backend.location == memorized_result_loads.store_backend.location
     assert memorized_result.func == memorized_result_loads.func
     assert memorized_result.args_id == memorized_result_loads.args_id
     assert str(memorized_result) == str(memorized_result_loads)
@@ -1472,9 +1442,7 @@ class TestCacheValidationCallback:
             if duration > 0.1:
                 return True
 
-        f = memory.cache(
-            self.foo, cache_validation_callback=cache_validation_callback, ignore=["d"]
-        )
+        f = memory.cache(self.foo, cache_validation_callback=cache_validation_callback, ignore=["d"])
 
         # Short run are not cached
         d1, d2 = {"run": False}, {"run": False}
@@ -1493,9 +1461,7 @@ class TestCacheValidationCallback:
     def test_memory_expires_after(self, memory):
         "Test expiry of old cached results"
 
-        f = memory.cache(
-            self.foo, cache_validation_callback=expires_after(seconds=0.3), ignore=["d"]
-        )
+        f = memory.cache(self.foo, cache_validation_callback=expires_after(seconds=0.3), ignore=["d"])
 
         d1, d2, d3 = {"run": False}, {"run": False}, {"run": False}
         assert f(2, d1) == 4
@@ -1527,9 +1493,7 @@ class TestMemorizedFunc:
 
         x, meta = f.call(2, counter)
         assert x == 2, "f has not been called properly"
-        assert isinstance(meta, dict), (
-            "Metadata are not returned by MemorizedFunc.call."
-        )
+        assert isinstance(meta, dict), "Metadata are not returned by MemorizedFunc.call."
 
     def test_call_method_not_memorized(self, memory):
         "Test calling the function"
@@ -1542,9 +1506,7 @@ class TestMemorizedFunc:
 
         x, meta = f.call(2, counter)
         assert x == 3, "f has not been called properly"
-        assert isinstance(meta, dict), (
-            "Metadata are not returned by MemorizedFunc.call."
-        )
+        assert isinstance(meta, dict), "Metadata are not returned by MemorizedFunc.call."
 
 
 @with_numpy

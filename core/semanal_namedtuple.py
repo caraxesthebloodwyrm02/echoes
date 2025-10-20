@@ -96,9 +96,7 @@ SELF_TVAR_NAME: Final = "_NT"
 
 
 class NamedTupleAnalyzer:
-    def __init__(
-        self, options: Options, api: SemanticAnalyzerInterface, msg: MessageBuilder
-    ) -> None:
+    def __init__(self, options: Options, api: SemanticAnalyzerInterface, msg: MessageBuilder) -> None:
         self.options = options
         self.api = api
         self.msg = msg
@@ -200,17 +198,13 @@ class NamedTupleAnalyzer:
                     types.append(analyzed)
                 # ...despite possible minor failures that allow further analysis.
                 if name.startswith("_"):
-                    self.fail(
-                        f"NamedTuple field name cannot start with an underscore: {name}", stmt
-                    )
+                    self.fail(f"NamedTuple field name cannot start with an underscore: {name}", stmt)
                 if stmt.type is None or hasattr(stmt, "new_syntax") and not stmt.new_syntax:
                     self.fail(NAMEDTUP_CLASS_ERROR, stmt)
                 elif isinstance(stmt.rvalue, TempNode):
                     # x: int assigns rvalue to TempNode(AnyType())
                     if default_items:
-                        self.fail(
-                            "Non-default NamedTuple fields cannot follow default fields", stmt
-                        )
+                        self.fail("Non-default NamedTuple fields cannot follow default fields", stmt)
                 else:
                     default_items[name] = stmt.rvalue
         if defn.keywords:
@@ -290,18 +284,14 @@ class NamedTupleAnalyzer:
             #     and they will be stored in the same namespace (see below).
             name += "@" + str(call.line)
         if defaults:
-            default_items = {
-                arg_name: default for arg_name, default in zip(items[-len(defaults) :], defaults)
-            }
+            default_items = {arg_name: default for arg_name, default in zip(items[-len(defaults) :], defaults)}
         else:
             default_items = {}
 
         existing_info = None
         if isinstance(node.analyzed, NamedTupleExpr):
             existing_info = node.analyzed.info
-        info = self.build_namedtuple_typeinfo(
-            name, items, types, default_items, node.line, existing_info
-        )
+        info = self.build_namedtuple_typeinfo(name, items, types, default_items, node.line, existing_info)
 
         # If var_name is not None (i.e. this is not a base class expression), we always
         # store the generated TypeInfo under var_name in the current scope, so that
@@ -328,9 +318,7 @@ class NamedTupleAnalyzer:
             self.api.add_symbol_skip_local(name, info)
         return typename, info, tvar_defs
 
-    def store_namedtuple_info(
-        self, info: TypeInfo, name: str, call: CallExpr, is_typed: bool
-    ) -> None:
+    def store_namedtuple_info(self, info: TypeInfo, name: str, call: CallExpr, is_typed: bool) -> None:
         self.api.add_symbol(name, info, call)
         call.analyzed = NamedTupleExpr(info, is_typed=is_typed)
         call.analyzed.set_line(call)
@@ -372,8 +360,7 @@ class NamedTupleAnalyzer:
                         defaults = list(arg.items)
                     else:
                         self.fail(
-                            "List or tuple literal expected as the defaults argument to "
-                            "{}()".format(type_name),
+                            "List or tuple literal expected as the defaults argument to " "{}()".format(type_name),
                             arg,
                         )
                 elif arg_name == "rename":
@@ -401,9 +388,7 @@ class NamedTupleAnalyzer:
                 items = str_expr.value.replace(",", " ").split()
             else:
                 self.fail(
-                    'List or tuple literal expected as the second argument to "{}()"'.format(
-                        type_name
-                    ),
+                    'List or tuple literal expected as the second argument to "{}()"'.format(type_name),
                     call,
                 )
                 return None
@@ -416,11 +401,7 @@ class NamedTupleAnalyzer:
                     return None
                 items = [item.value for item in listexpr.items]
             else:
-                type_exprs = [
-                    t.items[1]
-                    for t in listexpr.items
-                    if isinstance(t, TupleExpr) and len(t.items) == 2
-                ]
+                type_exprs = [t.items[1] for t in listexpr.items if isinstance(t, TupleExpr) and len(t.items) == 2]
                 tvar_defs = self.api.get_and_bind_all_tvars(type_exprs)
                 # The fields argument contains (name, type) tuples.
                 result = self.parse_namedtuple_fields_with_types(listexpr.items, call)
@@ -527,9 +508,7 @@ class NamedTupleAnalyzer:
         info.is_named_tuple = True
         tuple_base = TupleType(types, fallback)
         if info.special_alias and has_placeholder(info.special_alias.target):
-            self.api.process_placeholder(
-                None, "NamedTuple item", info, force_progress=tuple_base != info.tuple_type
-            )
+            self.api.process_placeholder(None, "NamedTuple item", info, force_progress=tuple_base != info.tuple_type)
         info.update_tuple_type(tuple_base)
         info.line = line
         # For use by mypyc.
@@ -539,13 +518,9 @@ class NamedTupleAnalyzer:
         # analysis, since otherwise base classes might be incomplete. Postpone a
         # callback function that patches the fallback.
         if not has_placeholder(tuple_base) and not has_type_vars(tuple_base):
-            self.api.schedule_patch(
-                PRIORITY_FALLBACKS, lambda: calculate_tuple_fallback(tuple_base)
-            )
+            self.api.schedule_patch(PRIORITY_FALLBACKS, lambda: calculate_tuple_fallback(tuple_base))
 
-        def add_field(
-            var: Var, is_initialized_in_class: bool = False, is_property: bool = False
-        ) -> None:
+        def add_field(var: Var, is_initialized_in_class: bool = False, is_property: bool = False) -> None:
             var.info = info
             var.is_initialized_in_class = is_initialized_in_class
             var.is_property = is_property
@@ -590,9 +565,7 @@ class NamedTupleAnalyzer:
             is_new: bool = False,
         ) -> None:
             fullname = f"{info.fullname}.{funcname}"
-            self_type = shared_self_type.copy_modified(
-                id=TypeVarId(shared_self_type.id.raw_id, namespace=fullname)
-            )
+            self_type = shared_self_type.copy_modified(id=TypeVarId(shared_self_type.id.raw_id, namespace=fullname))
             if ret is None:
                 ret = self_type
             if is_classmethod or is_new:

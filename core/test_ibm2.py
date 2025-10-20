@@ -62,9 +62,7 @@ class TestIBMModel2(unittest.TestCase):
         translation_table["smoked"]["räucherschinken"] = 0.98
         translation_table["ham"]["räucherschinken"] = 0.98
 
-        alignment_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
-        )
+        alignment_table = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         alignment_table[0][3][5][6] = 0.97  # None -> to
         alignment_table[1][1][5][6] = 0.97  # ich -> i
         alignment_table[2][4][5][6] = 0.97  # esse -> eat
