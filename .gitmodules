@@ -1,0 +1,4 @@
+[submodule "crazy_diamonds/coffee_house"]
+    path = crazy_diamonds/coffee_house
+    url = https://github.com/caraxesthebloodwyrm02/coffee_house.git
+    fetchRecurseSubmodules = true
