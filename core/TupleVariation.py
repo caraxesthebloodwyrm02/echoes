@@ -8,7 +8,6 @@ from fontTools.misc.fixedTools import (
 from fontTools.misc.textTools import safeEval
 import array
 from collections import Counter, defaultdict
-import io
 import logging
 import struct
 import sys
@@ -42,9 +41,7 @@ class TupleVariation(object):
         self.coordinates = list(coordinates)
 
     def __repr__(self):
-        axes = ",".join(
-            sorted(["%s=%s" % (name, value) for (name, value) in self.axes.items()])
-        )
+        axes = ",".join(sorted(["%s=%s" % (name, value) for (name, value) in self.axes.items()]))
         return "<TupleVariation %s %s>" % (axes, self.coordinates)
 
     def __eq__(self, other):
@@ -129,9 +126,7 @@ class TupleVariation(object):
             else:
                 log.warning("bad delta format: %s" % ", ".join(sorted(attrs.keys())))
 
-    def compile(
-        self, axisTags, sharedCoordIndices={}, pointData=None, *, optimizeSize=True
-    ):
+    def compile(self, axisTags, sharedCoordIndices={}, pointData=None, *, optimizeSize=True):
         assert set(self.axes.keys()) <= set(axisTags), (
             "Unknown axis tag found.",
             self.axes.keys(),
@@ -318,10 +313,7 @@ class TupleVariation(object):
 
         badPoints = {str(p) for p in result if p < 0 or p >= numPoints}
         if badPoints:
-            log.warning(
-                "point %s out of range in '%s' table"
-                % (",".join(sorted(badPoints)), tableTag)
-            )
+            log.warning("point %s out of range in '%s' table" % (",".join(sorted(badPoints)), tableTag))
         return (result, pos)
 
     def compileDeltas(self, optimizeSize=True):
@@ -382,17 +374,11 @@ class TupleVariation(object):
             if minVal == 0 == maxVal:
                 pos = TupleVariation.encodeDeltaRunAsZeroes_(deltas, pos, bytearr)
             elif -128 <= minVal <= maxVal <= 127:
-                pos = TupleVariation.encodeDeltaRunAsBytes_(
-                    deltas, pos, bytearr, optimizeSize=False
-                )
+                pos = TupleVariation.encodeDeltaRunAsBytes_(deltas, pos, bytearr, optimizeSize=False)
             elif -32768 <= minVal <= maxVal <= 32767:
-                pos = TupleVariation.encodeDeltaRunAsWords_(
-                    deltas, pos, bytearr, optimizeSize=False
-                )
+                pos = TupleVariation.encodeDeltaRunAsWords_(deltas, pos, bytearr, optimizeSize=False)
             else:
-                pos = TupleVariation.encodeDeltaRunAsLongs_(
-                    deltas, pos, bytearr, optimizeSize=False
-                )
+                pos = TupleVariation.encodeDeltaRunAsLongs_(deltas, pos, bytearr, optimizeSize=False)
 
         assert pos == numDeltas, (pos, numDeltas)
 
@@ -428,12 +414,7 @@ class TupleVariation(object):
             # (04 0F 0F 00 0F 0F) when storing the zero value
             # literally, but 7 bytes (01 0F 0F 80 01 0F 0F)
             # when starting a new run.
-            if (
-                optimizeSize
-                and value == 0
-                and pos + 1 < numDeltas
-                and deltas[pos + 1] == 0
-            ):
+            if optimizeSize and value == 0 and pos + 1 < numDeltas and deltas[pos + 1] == 0:
                 break
             pos += 1
         runLength = pos - offset
@@ -470,12 +451,7 @@ class TupleVariation(object):
             # [0x6666, 2, 0x7777] becomes 7 bytes when storing
             # the value literally (42 66 66 00 02 77 77), but 8 bytes
             # when starting a new run (40 66 66 00 02 40 77 77).
-            if (
-                optimizeSize
-                and (-128 <= value <= 127)
-                and pos + 1 < numDeltas
-                and (-128 <= deltas[pos + 1] <= 127)
-            ):
+            if optimizeSize and (-128 <= value <= 127) and pos + 1 < numDeltas and (-128 <= deltas[pos + 1] <= 127):
                 break
 
             if not (-32768 <= value <= 32767):
@@ -576,8 +552,7 @@ class TupleVariation(object):
         if type(firstDelta) is tuple and len(firstDelta) == 2:
             return 2
         raise TypeError(
-            "invalid type of delta; expected (int or float) number, or "
-            "Tuple[number, number]: %r" % firstDelta
+            "invalid type of delta; expected (int or float) number, or " "Tuple[number, number]: %r" % firstDelta
         )
 
     def scaleDeltas(self, scalar):
@@ -585,22 +560,14 @@ class TupleVariation(object):
             return  # no change
         coordWidth = self.getCoordWidth()
         self.coordinates = [
-            (
-                None
-                if d is None
-                else d * scalar if coordWidth == 1 else (d[0] * scalar, d[1] * scalar)
-            )
+            (None if d is None else d * scalar if coordWidth == 1 else (d[0] * scalar, d[1] * scalar))
             for d in self.coordinates
         ]
 
     def roundDeltas(self):
         coordWidth = self.getCoordWidth()
         self.coordinates = [
-            (
-                None
-                if d is None
-                else otRound(d) if coordWidth == 1 else (otRound(d[0]), otRound(d[1]))
-            )
+            (None if d is None else otRound(d) if coordWidth == 1 else (otRound(d[0]), otRound(d[1])))
             for d in self.coordinates
         ]
 
@@ -611,10 +578,7 @@ class TupleVariation(object):
             raise TypeError("Only 'gvar' TupleVariation can have inferred deltas")
         if None in self.coordinates:
             if len(self.coordinates) != len(origCoords):
-                raise ValueError(
-                    "Expected len(origCoords) == %d; found %d"
-                    % (len(self.coordinates), len(origCoords))
-                )
+                raise ValueError("Expected len(origCoords) == %d; found %d" % (len(self.coordinates), len(origCoords)))
             self.coordinates = iup_delta(self.coordinates, origCoords, endPts)
 
     def optimize(self, origCoords, endPts, tolerance=0.5, isComposite=False):
@@ -623,9 +587,7 @@ class TupleVariation(object):
         if None in self.coordinates:
             return  # already optimized
 
-        deltaOpt = iup_delta_optimize(
-            self.coordinates, origCoords, endPts, tolerance=tolerance
-        )
+        deltaOpt = iup_delta_optimize(self.coordinates, origCoords, endPts, tolerance=tolerance)
         if None in deltaOpt:
             if isComposite and all(d is None for d in deltaOpt):
                 # Fix for macOS composites
@@ -690,9 +652,7 @@ def decompileSharedTuples(axisTags, sharedTupleCount, data, offset):
     return result
 
 
-def compileSharedTuples(
-    axisTags, variations, MAX_NUM_SHARED_COORDS=TUPLE_INDEX_MASK + 1
-):
+def compileSharedTuples(axisTags, variations, MAX_NUM_SHARED_COORDS=TUPLE_INDEX_MASK + 1):
     coordCount = Counter()
     for var in variations:
         coord = var.compileCoord(axisTags)
@@ -738,13 +698,9 @@ def compileTupleVariationStore(
         return (0, b"", b"")
 
     n = len(variations[0].coordinates)
-    assert all(
-        len(v.coordinates) == n for v in variations
-    ), "Variation sets have different sizes"
+    assert all(len(v.coordinates) == n for v in variations), "Variation sets have different sizes"
 
-    compiledPoints = {
-        pointSet: TupleVariation.compilePoints(pointSet) for pointSet in pointSetCount
-    }
+    compiledPoints = {pointSet: TupleVariation.compilePoints(pointSet) for pointSet in pointSetCount}
 
     tupleVariationCount = len(variations)
     tuples = []
@@ -763,15 +719,10 @@ def compileTupleVariationStore(
         tupleVariationCount |= TUPLES_SHARE_POINT_NUMBERS
 
     # b'' implies "use shared points"
-    pointDatas = [
-        compiledPoints[points] if points != sharedPoints else b""
-        for points in pointDatas
-    ]
+    pointDatas = [compiledPoints[points] if points != sharedPoints else b"" for points in pointDatas]
 
     for v, p in zip(variations, pointDatas):
-        thisTuple, thisData = v.compile(
-            axisTags, sharedTupleIndices, pointData=p, optimizeSize=optimizeSize
-        )
+        thisTuple, thisData = v.compile(axisTags, sharedTupleIndices, pointData=p, optimizeSize=optimizeSize)
 
         tuples.append(thisTuple)
         data.append(thisData)
@@ -794,9 +745,7 @@ def decompileTupleVariationStore(
     numAxes = len(axisTags)
     result = []
     if (tupleVariationCount & TUPLES_SHARE_POINT_NUMBERS) != 0:
-        sharedPoints, dataPos = TupleVariation.decompilePoints_(
-            pointCount, data, dataPos, tableTag
-        )
+        sharedPoints, dataPos = TupleVariation.decompilePoints_(pointCount, data, dataPos, tableTag)
     else:
         sharedPoints = []
     for _ in range(tupleVariationCount & TUPLE_COUNT_MASK):
@@ -820,9 +769,7 @@ def decompileTupleVariationStore(
     return result
 
 
-def decompileTupleVariation_(
-    pointCount, sharedTuples, sharedPoints, tableTag, axisTags, data, tupleData
-):
+def decompileTupleVariation_(pointCount, sharedTuples, sharedPoints, tableTag, axisTags, data, tupleData):
     assert tableTag in ("cvar", "gvar"), tableTag
     flags = struct.unpack(">H", data[2:4])[0]
     pos = 4
@@ -842,9 +789,7 @@ def decompileTupleVariation_(
             axes[axis] = region
     pos = 0
     if (flags & PRIVATE_POINT_NUMBERS) != 0:
-        points, pos = TupleVariation.decompilePoints_(
-            pointCount, tupleData, pos, tableTag
-        )
+        points, pos = TupleVariation.decompilePoints_(pointCount, tupleData, pos, tableTag)
     else:
         points = sharedPoints
 

@@ -55,21 +55,14 @@ def test_train_on_json_and_predict_thresholds():
         seed=7,
     )
     # Short pause should map to lowest-mean label (often handoff)
-    assert (
-        predict_pause_label(model, {"pause_after_s": 0.2})
-        in model["thresholds"]["order"]
-    )
+    assert predict_pause_label(model, {"pause_after_s": 0.2}) in model["thresholds"]["order"]
     # Medium pause should map to middle label
     assert (
-        predict_pause_label(
-            model, {"pause_after_s": model["thresholds"]["low_mid"] + 1e-6}
-        )
+        predict_pause_label(model, {"pause_after_s": model["thresholds"]["low_mid"] + 1e-6})
         in model["thresholds"]["order"]
     )
     # Long pause should map to highest label
     assert (
-        predict_pause_label(
-            model, {"pause_after_s": model["thresholds"]["high_mid"] + 0.5}
-        )
+        predict_pause_label(model, {"pause_after_s": model["thresholds"]["high_mid"] + 0.5})
         in model["thresholds"]["order"]
     )

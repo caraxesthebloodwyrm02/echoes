@@ -53,15 +53,11 @@ class BaseAPIClient(ABC):
                 last_exception = e
                 if attempt < self.max_retries - 1:
                     wait_time = self.retry_delay * (2**attempt)  # Exponential backoff
-                    self.logger.warning(
-                        f"Request failed (attempt {attempt + 1}/{self.max_retries}): {e}"
-                    )
+                    self.logger.warning(f"Request failed (attempt {attempt + 1}/{self.max_retries}): {e}")
                     self.logger.info(f"Retrying in {wait_time} seconds...")
                     time.sleep(wait_time)
                 else:
-                    self.logger.error(
-                        f"Request failed after {self.max_retries} attempts: {e}"
-                    )
+                    self.logger.error(f"Request failed after {self.max_retries} attempts: {e}")
             except Exception as e:
                 self.logger.error(f"Unexpected error: {e}")
                 raise
@@ -145,12 +141,7 @@ class OpenAIClient(BaseAPIClient):
                 # Simple parsing - in practice, you'd want more robust parsing
                 lines = response.strip().split("\n")
                 score_line = next(
-                    (
-                        line
-                        for line in lines
-                        if "score" in line.lower()
-                        or any(char.isdigit() for char in line)
-                    ),
+                    (line for line in lines if "score" in line.lower() or any(char.isdigit() for char in line)),
                     lines[0],
                 )
 

@@ -274,9 +274,7 @@ class TestPartialSetting:
 
     @pytest.mark.filterwarnings("ignore:Setting a value on a view:FutureWarning")
     def test_partial_setting_frame(self, using_array_manager):
-        df_orig = DataFrame(
-            np.arange(6).reshape(3, 2), columns=["A", "B"], dtype="int64"
-        )
+        df_orig = DataFrame(np.arange(6).reshape(3, 2), columns=["A", "B"], dtype="int64")
 
         # iloc/iat raise
         df = df_orig.copy()
@@ -346,9 +344,7 @@ class TestPartialSetting:
             columns=["A", "B", "C", "D"],
         )
 
-        expected = pd.concat(
-            [df_orig, DataFrame({"A": 7}, index=dates[-1:] + dates.freq)], sort=True
-        )
+        expected = pd.concat([df_orig, DataFrame({"A": 7}, index=dates[-1:] + dates.freq)], sort=True)
         df = df_orig.copy()
         df.loc[dates[-1] + dates.freq, "A"] = 7
         tm.assert_frame_equal(df, expected)
@@ -410,10 +406,7 @@ class TestPartialSetting:
         tm.assert_series_equal(result, expected, check_index_type=True)
 
         # raises as nothing is in the index
-        msg = (
-            rf"\"None of \[Index\(\[3, 3, 3\], dtype='{np.dtype(int)}'\)\] "
-            r"are in the \[index\]\""
-        )
+        msg = rf"\"None of \[Index\(\[3, 3, 3\], dtype='{np.dtype(int)}'\)\] " r"are in the \[index\]\""
         with pytest.raises(KeyError, match=msg):
             ser.loc[[3, 3, 3]]
 
@@ -491,10 +484,7 @@ class TestPartialSetting:
             ser.loc[[2, 2, "x", 1]]
 
         # raises as nothing is in the index
-        msg = (
-            rf"\"None of \[Index\(\[3, 3, 3\], dtype='{np.dtype(int)}', "
-            r"name='idx'\)\] are in the \[index\]\""
-        )
+        msg = rf"\"None of \[Index\(\[3, 3, 3\], dtype='{np.dtype(int)}', " r"name='idx'\)\] are in the \[index\]\""
         with pytest.raises(KeyError, match=msg):
             ser.loc[[3, 3, 3]]
 
@@ -591,9 +581,7 @@ class TestPartialSetting:
             ),
         ],
     )
-    def test_loc_with_list_of_strings_representing_datetimes(
-        self, idx, labels, expected_idx, frame_or_series
-    ):
+    def test_loc_with_list_of_strings_representing_datetimes(self, idx, labels, expected_idx, frame_or_series):
         # GH 11278
         obj = frame_or_series(range(20), index=idx)
 
@@ -618,9 +606,7 @@ class TestPartialSetting:
             (pd.timedelta_range(start="1 day", periods=20), ["3 day", "30 day"]),
         ],
     )
-    def test_loc_with_list_of_strings_representing_datetimes_missing_value(
-        self, idx, labels
-    ):
+    def test_loc_with_list_of_strings_representing_datetimes_missing_value(self, idx, labels):
         # GH 11278
         ser = Series(range(20), index=idx)
         df = DataFrame(range(20), index=idx)
@@ -639,32 +625,21 @@ class TestPartialSetting:
             (
                 period_range(start="2000", periods=20, freq="D"),
                 Index(["4D", "8D"], dtype=object),
-                (
-                    r"None of \[Index\(\['4D', '8D'\], dtype='object'\)\] "
-                    r"are in the \[index\]"
-                ),
+                (r"None of \[Index\(\['4D', '8D'\], dtype='object'\)\] " r"are in the \[index\]"),
             ),
             (
                 date_range(start="2000", periods=20, freq="D"),
                 Index(["4D", "8D"], dtype=object),
-                (
-                    r"None of \[Index\(\['4D', '8D'\], dtype='object'\)\] "
-                    r"are in the \[index\]"
-                ),
+                (r"None of \[Index\(\['4D', '8D'\], dtype='object'\)\] " r"are in the \[index\]"),
             ),
             (
                 pd.timedelta_range(start="1 day", periods=20),
                 Index(["2000-01-04", "2000-01-08"], dtype=object),
-                (
-                    r"None of \[Index\(\['2000-01-04', '2000-01-08'\], "
-                    r"dtype='object'\)\] are in the \[index\]"
-                ),
+                (r"None of \[Index\(\['2000-01-04', '2000-01-08'\], " r"dtype='object'\)\] are in the \[index\]"),
             ),
         ],
     )
-    def test_loc_with_list_of_strings_representing_datetimes_not_matched_type(
-        self, idx, labels, msg
-    ):
+    def test_loc_with_list_of_strings_representing_datetimes_not_matched_type(self, idx, labels, msg):
         # GH 11278
         ser = Series(range(20), index=idx)
         df = DataFrame(range(20), index=idx)

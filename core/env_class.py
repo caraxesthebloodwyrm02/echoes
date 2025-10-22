@@ -82,9 +82,7 @@ def finalize_env_class(builder: IRBuilder, prefix: str = "") -> None:
 
 def instantiate_env_class(builder: IRBuilder) -> Value:
     """Assign an environment class to a register named after the given function definition."""
-    curr_env_reg = builder.add(
-        Call(builder.fn_info.env_class.ctor, [], builder.fn_info.fitem.line)
-    )
+    curr_env_reg = builder.add(Call(builder.fn_info.env_class.ctor, [], builder.fn_info.fitem.line))
 
     if builder.fn_info.is_nested:
         builder.fn_info.callable_class._curr_env_reg = curr_env_reg
@@ -122,9 +120,7 @@ def load_env_registers(builder: IRBuilder, prefix: str = "") -> None:
             setup_func_for_recursive_call(builder, fitem, fn_info.callable_class, prefix=prefix)
 
 
-def load_outer_env(
-    builder: IRBuilder, base: Value, outer_env: dict[SymbolNode, SymbolTarget]
-) -> Value:
+def load_outer_env(builder: IRBuilder, base: Value, outer_env: dict[SymbolNode, SymbolTarget]) -> Value:
     """Load the environment class for a given base into a register.
 
     Additionally, iterates through all of the SymbolNode and
@@ -203,9 +199,7 @@ def add_args_to_env(
             if is_free_variable(builder, arg.variable) or fn_info.is_generator:
                 rtype = builder.type_to_rtype(arg.variable.type)
                 assert base is not None, "base cannot be None for adding nonlocal args"
-                builder.add_var_to_env_class(
-                    arg.variable, rtype, base, reassign=reassign, prefix=prefix
-                )
+                builder.add_var_to_env_class(arg.variable, rtype, base, reassign=reassign, prefix=prefix)
 
 
 def add_vars_to_env(builder: IRBuilder, prefix: str = "") -> None:
@@ -228,9 +222,7 @@ def add_vars_to_env(builder: IRBuilder, prefix: str = "") -> None:
         for var in sorted(builder.free_variables[builder.fn_info.fitem], key=lambda x: x.name):
             if isinstance(var, Var):
                 rtype = builder.type_to_rtype(var.type)
-                builder.add_var_to_env_class(
-                    var, rtype, env_for_func, reassign=False, prefix=prefix
-                )
+                builder.add_var_to_env_class(var, rtype, env_for_func, reassign=False, prefix=prefix)
 
     if builder.fn_info.fitem in builder.encapsulating_funcs:
         for nested_fn in builder.encapsulating_funcs[builder.fn_info.fitem]:
@@ -242,14 +234,10 @@ def add_vars_to_env(builder: IRBuilder, prefix: str = "") -> None:
                 # class that gets instantiated must be generic.
                 if nested_fn.is_generator:
                     prefix = GENERATOR_ATTRIBUTE_PREFIX
-                builder.add_var_to_env_class(
-                    nested_fn, object_rprimitive, env_for_func, reassign=False, prefix=prefix
-                )
+                builder.add_var_to_env_class(nested_fn, object_rprimitive, env_for_func, reassign=False, prefix=prefix)
 
 
-def setup_func_for_recursive_call(
-    builder: IRBuilder, fdef: FuncDef, base: ImplicitClass, prefix: str = ""
-) -> None:
+def setup_func_for_recursive_call(builder: IRBuilder, fdef: FuncDef, base: ImplicitClass, prefix: str = "") -> None:
     """Enable calling a nested function (with a callable class) recursively.
 
     Adds the instance of the callable class representing the given

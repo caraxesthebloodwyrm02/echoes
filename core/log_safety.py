@@ -86,23 +86,17 @@ class ErrorHandler:
             "KeyError": self._recover_key_error,
         }
 
-    def _recover_file_not_found(
-        self, error: Exception, context: ExecutionContext
-    ) -> Any:
+    def _recover_file_not_found(self, error: Exception, context: ExecutionContext) -> Any:
         """Recover from file not found errors."""
         logger.warning(f"File not found in {context.function_name}: {error}")
         return None
 
-    def _recover_connection_error(
-        self, error: Exception, context: ExecutionContext
-    ) -> Any:
+    def _recover_connection_error(self, error: Exception, context: ExecutionContext) -> Any:
         """Recover from connection errors."""
         logger.warning(f"Connection error in {context.function_name}: {error}")
         return None
 
-    def _recover_validation_error(
-        self, error: Exception, context: ExecutionContext
-    ) -> Any:
+    def _recover_validation_error(self, error: Exception, context: ExecutionContext) -> Any:
         """Recover from validation errors."""
         logger.warning(f"Validation error in {context.function_name}: {error}")
         return None
@@ -112,9 +106,7 @@ class ErrorHandler:
         logger.warning(f"Key error in {context.function_name}: {error}")
         return None
 
-    def handle_error(
-        self, error: Exception, context: ExecutionContext, reraise: bool = True
-    ) -> Any:
+    def handle_error(self, error: Exception, context: ExecutionContext, reraise: bool = True) -> Any:
         """Handle an error with optional recovery."""
         # Log the error
         self._log_error(error, context)
@@ -128,9 +120,7 @@ class ErrorHandler:
 
         # No recovery available
         if reraise:
-            raise SafeExecutionError(
-                f"Unhandled error in {context.function_name}: {error}"
-            ) from error
+            raise SafeExecutionError(f"Unhandled error in {context.function_name}: {error}") from error
 
         logger.error(f"Unhandled error in {context.function_name}: {error}")
         return None
@@ -168,9 +158,7 @@ class ErrorHandler:
             try:
                 return self.recovery_strategies[error_type](error, context)
             except Exception as recovery_error:
-                logger.error(
-                    f"Recovery strategy failed for {error_type}: {recovery_error}"
-                )
+                logger.error(f"Recovery strategy failed for {error_type}: {recovery_error}")
 
         return None
 
@@ -230,9 +218,7 @@ def safe_exec(
     return decorator
 
 
-def safe_call(
-    func: Callable, *args, context: Optional[str] = None, reraise: bool = True, **kwargs
-) -> Any:
+def safe_call(func: Callable, *args, context: Optional[str] = None, reraise: bool = True, **kwargs) -> Any:
     """Safely call a function with error handling.
 
     Args:

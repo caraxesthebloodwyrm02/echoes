@@ -340,18 +340,13 @@ def laplacian(
     if csgraph.ndim != 2 or csgraph.shape[0] != csgraph.shape[1]:
         raise ValueError("csgraph must be a square matrix or array")
 
-    if normed and (
-        np.issubdtype(csgraph.dtype, np.signedinteger)
-        or np.issubdtype(csgraph.dtype, np.uint)
-    ):
+    if normed and (np.issubdtype(csgraph.dtype, np.signedinteger) or np.issubdtype(csgraph.dtype, np.uint)):
         csgraph = csgraph.astype(np.float64)
 
     if form == "array":
         create_lap = _laplacian_sparse if issparse(csgraph) else _laplacian_dense
     else:
-        create_lap = (
-            _laplacian_sparse_flo if issparse(csgraph) else _laplacian_dense_flo
-        )
+        create_lap = _laplacian_sparse_flo if issparse(csgraph) else _laplacian_dense_flo
 
     degree_axis = 1 if use_out_degree else 0
 
@@ -384,11 +379,7 @@ def _laplace_normed(m, d, nd):
 
 
 def _laplace_sym(m, d):
-    return (
-        lambda v: v * d[:, np.newaxis]
-        - m @ v
-        - np.transpose(np.conjugate(np.transpose(np.conjugate(v)) @ m))
-    )
+    return lambda v: v * d[:, np.newaxis] - m @ v - np.transpose(np.conjugate(np.transpose(np.conjugate(v)) @ m))
 
 
 def _laplace_normed_sym(m, d, nd):

@@ -390,7 +390,7 @@ def clause2concepts(filename, rel_name, schema, closures=[]):
     # add a unary concept corresponding to the set of entities
     # in the primary key position
     # relations in 'not_unary' are more like ordinary binary relations
-    if not filename in not_unary:
+    if filename not in not_unary:
         concepts.append(unary_concept(pkey, subj, records))
 
     # add a binary concept for each non-key field
@@ -459,9 +459,7 @@ def sql_query(dbname, query):
     except (ValueError, sqlite3.OperationalError):
         import warnings
 
-        warnings.warn(
-            "Make sure the database file %s is installed and uncompressed." % dbname
-        )
+        warnings.warn("Make sure the database file %s is installed and uncompressed." % dbname)
         raise
 
 
@@ -748,9 +746,7 @@ Valuation object for use in the NLTK semantics package.
 
     opts = OptionParser(description=description)
     opts.set_defaults(verbose=True, lex=False, vocab=False)
-    opts.add_option(
-        "-s", "--store", dest="outdb", help="store a valuation in DB", metavar="DB"
-    )
+    opts.add_option("-s", "--store", dest="outdb", help="store a valuation in DB", metavar="DB")
     opts.add_option(
         "-l",
         "--load",

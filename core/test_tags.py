@@ -38,9 +38,7 @@ class EmptyRegressor(RegressorMixin, BaseEstimator):
 
 
 # TODO(1.8): Update when implementing __sklearn_tags__ is required
-@pytest.mark.filterwarnings(
-    "ignore:.*no attribute '__sklearn_tags__'.*:DeprecationWarning"
-)
+@pytest.mark.filterwarnings("ignore:.*no attribute '__sklearn_tags__'.*:DeprecationWarning")
 @pytest.mark.parametrize(
     "estimator, value",
     [
@@ -64,9 +62,7 @@ def test_no___sklearn_tags__with_more_tags():
         def _more_tags(self):
             return {"requires_y": True}  # pragma: no cover
 
-    with pytest.raises(
-        TypeError, match="has defined either `_more_tags` or `_get_tags`"
-    ):
+    with pytest.raises(TypeError, match="has defined either `_more_tags` or `_get_tags`"):
         check_estimator_tags_renamed("MoreTagsEstimator", MoreTagsEstimator())
 
 
@@ -78,10 +74,7 @@ def test_tag_test_passes_with_inheritance():
     class MyEstimator(BaseEstimator):
         def __sklearn_tags__(self):
             tags_orig = super().__sklearn_tags__()
-            as_dict = {
-                field.name: getattr(tags_orig, field.name)
-                for field in fields(tags_orig)
-            }
+            as_dict = {field.name: getattr(tags_orig, field.name) for field in fields(tags_orig)}
             tags = MyTags(**as_dict)
             tags.my_tag = True
             return tags

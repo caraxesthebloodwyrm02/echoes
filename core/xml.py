@@ -218,38 +218,23 @@ class _XMLFrameParser:
             if self.names:
                 dicts = [
                     {
-                        **(
-                            {el.tag: el.text}
-                            if el.text and not el.text.isspace()
-                            else {}
-                        ),
-                        **{
-                            nm: ch.text if ch.text else None
-                            for nm, ch in zip(self.names, el.findall("*"))
-                        },
+                        **({el.tag: el.text} if el.text and not el.text.isspace() else {}),
+                        **{nm: ch.text if ch.text else None for nm, ch in zip(self.names, el.findall("*"))},
                     }
                     for el in elems
                 ]
             else:
-                dicts = [
-                    {ch.tag: ch.text if ch.text else None for ch in el.findall("*")}
-                    for el in elems
-                ]
+                dicts = [{ch.tag: ch.text if ch.text else None for ch in el.findall("*")} for el in elems]
 
         elif self.attrs_only:
-            dicts = [
-                {k: v if v else None for k, v in el.attrib.items()} for el in elems
-            ]
+            dicts = [{k: v if v else None for k, v in el.attrib.items()} for el in elems]
 
         elif self.names:
             dicts = [
                 {
                     **el.attrib,
                     **({el.tag: el.text} if el.text and not el.text.isspace() else {}),
-                    **{
-                        nm: ch.text if ch.text else None
-                        for nm, ch in zip(self.names, el.findall("*"))
-                    },
+                    **{nm: ch.text if ch.text else None for nm, ch in zip(self.names, el.findall("*"))},
                 }
                 for el in elems
             ]
@@ -264,9 +249,7 @@ class _XMLFrameParser:
                 for el in elems
             ]
 
-        dicts = [
-            {k.split("}")[1] if "}" in k else k: v for k, v in d.items()} for d in dicts
-        ]
+        dicts = [{k.split("}")[1] if "}" in k else k: v for k, v in d.items()} for d in dicts]
 
         keys = list(dict.fromkeys([k for d in dicts for k in d.keys()]))
         dicts = [{k: d[k] if k in d.keys() else None for k in keys} for d in dicts]
@@ -303,25 +286,17 @@ class _XMLFrameParser:
         row: dict[str, str | None] | None = None
 
         if not isinstance(self.iterparse, dict):
-            raise TypeError(
-                f"{type(self.iterparse).__name__} is not a valid type for iterparse"
-            )
+            raise TypeError(f"{type(self.iterparse).__name__} is not a valid type for iterparse")
 
         row_node = next(iter(self.iterparse.keys())) if self.iterparse else ""
         if not is_list_like(self.iterparse[row_node]):
-            raise TypeError(
-                f"{type(self.iterparse[row_node])} is not a valid type "
-                "for value in iterparse"
-            )
+            raise TypeError(f"{type(self.iterparse[row_node])} is not a valid type " "for value in iterparse")
 
         if (not hasattr(self.path_or_buffer, "read")) and (
             not isinstance(self.path_or_buffer, (str, PathLike))
             or is_url(self.path_or_buffer)
             or is_fsspec_url(self.path_or_buffer)
-            or (
-                isinstance(self.path_or_buffer, str)
-                and self.path_or_buffer.startswith(("<?xml", "<"))
-            )
+            or (isinstance(self.path_or_buffer, str) and self.path_or_buffer.startswith(("<?xml", "<")))
             or infer_compression(self.path_or_buffer, "infer") is not None
         ):
             raise ParserError(
@@ -329,9 +304,7 @@ class _XMLFrameParser:
                 "local disk and not as compressed files or online sources."
             )
 
-        iterparse_repeats = len(self.iterparse[row_node]) != len(
-            set(self.iterparse[row_node])
-        )
+        iterparse_repeats = len(self.iterparse[row_node]) != len(set(self.iterparse[row_node]))
 
         for event, elem in iterparse(self.path_or_buffer, events=("start", "end")):
             curr_elem = elem.tag.split("}")[1] if "}" in elem.tag else elem.tag
@@ -365,9 +338,7 @@ class _XMLFrameParser:
 
                 elem.clear()
                 if hasattr(elem, "getprevious"):
-                    while (
-                        elem.getprevious() is not None and elem.getparent() is not None
-                    ):
+                    while elem.getprevious() is not None and elem.getparent() is not None:
                         del elem.getparent()[0]
 
         if dicts == []:
@@ -412,9 +383,7 @@ class _XMLFrameParser:
         """
         raise AbstractMethodError(self)
 
-    def _parse_doc(
-        self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]
-    ) -> Element | etree._Element:
+    def _parse_doc(self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]) -> Element | etree._Element:
         """
         Build tree from path_or_buffer.
 
@@ -434,9 +403,7 @@ class _EtreeFrameParser(_XMLFrameParser):
         from xml.etree.ElementTree import iterparse
 
         if self.stylesheet is not None:
-            raise ValueError(
-                "To use stylesheet, you need lxml installed and selected as parser."
-            )
+            raise ValueError("To use stylesheet, you need lxml installed and selected as parser.")
 
         if self.iterparse is None:
             self.xml_doc = self._parse_doc(self.path_or_buffer)
@@ -445,9 +412,7 @@ class _EtreeFrameParser(_XMLFrameParser):
         self._validate_names()
 
         xml_dicts: list[dict[str, str | None]] = (
-            self._parse_nodes(elems)
-            if self.iterparse is None
-            else self._iterparse_nodes(iterparse)
+            self._parse_nodes(elems) if self.iterparse is None else self._iterparse_nodes(iterparse)
         )
 
         return xml_dicts
@@ -505,17 +470,11 @@ class _EtreeFrameParser(_XMLFrameParser):
 
             if is_list_like(self.names):
                 if len(self.names) < len(children):
-                    raise ValueError(
-                        "names does not match length of child elements in xpath."
-                    )
+                    raise ValueError("names does not match length of child elements in xpath.")
             else:
-                raise TypeError(
-                    f"{type(self.names).__name__} is not a valid type for names"
-                )
+                raise TypeError(f"{type(self.names).__name__} is not a valid type for names")
 
-    def _parse_doc(
-        self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]
-    ) -> Element:
+    def _parse_doc(self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]) -> Element:
         from xml.etree.ElementTree import (
             XMLParser,
             parse,
@@ -564,9 +523,7 @@ class _LxmlFrameParser(_XMLFrameParser):
         self._validate_names()
 
         xml_dicts: list[dict[str, str | None]] = (
-            self._parse_nodes(elems)
-            if self.iterparse is None
-            else self._iterparse_nodes(iterparse)
+            self._parse_nodes(elems) if self.iterparse is None else self._iterparse_nodes(iterparse)
         )
 
         return xml_dicts
@@ -605,23 +562,15 @@ class _LxmlFrameParser(_XMLFrameParser):
             if self.iterparse:
                 children = self.iterparse[next(iter(self.iterparse))]
             else:
-                children = self.xml_doc.xpath(
-                    self.xpath + "[1]/*", namespaces=self.namespaces
-                )
+                children = self.xml_doc.xpath(self.xpath + "[1]/*", namespaces=self.namespaces)
 
             if is_list_like(self.names):
                 if len(self.names) < len(children):
-                    raise ValueError(
-                        "names does not match length of child elements in xpath."
-                    )
+                    raise ValueError("names does not match length of child elements in xpath.")
             else:
-                raise TypeError(
-                    f"{type(self.names).__name__} is not a valid type for names"
-                )
+                raise TypeError(f"{type(self.names).__name__} is not a valid type for names")
 
-    def _parse_doc(
-        self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]
-    ) -> etree._Element:
+    def _parse_doc(self, raw_doc: FilePath | ReadBuffer[bytes] | ReadBuffer[str]) -> etree._Element:
         from lxml.etree import (
             XMLParser,
             fromstring,
@@ -640,13 +589,9 @@ class _LxmlFrameParser(_XMLFrameParser):
 
             if isinstance(xml_data, io.StringIO):
                 if self.encoding is None:
-                    raise TypeError(
-                        "Can not pass encoding None when input is StringIO."
-                    )
+                    raise TypeError("Can not pass encoding None when input is StringIO.")
 
-                document = fromstring(
-                    xml_data.getvalue().encode(self.encoding), parser=curr_parser
-                )
+                document = fromstring(xml_data.getvalue().encode(self.encoding), parser=curr_parser)
             else:
                 document = parse(xml_data, parser=curr_parser)
 
@@ -688,10 +633,7 @@ def get_data_from_filepath(
     if not isinstance(filepath_or_buffer, bytes):
         filepath_or_buffer = stringify_path(filepath_or_buffer)
 
-    if (
-        isinstance(filepath_or_buffer, str)
-        and not filepath_or_buffer.startswith(("<?xml", "<"))
-    ) and (
+    if (isinstance(filepath_or_buffer, str) and not filepath_or_buffer.startswith(("<?xml", "<"))) and (
         not isinstance(filepath_or_buffer, str)
         or is_url(filepath_or_buffer)
         or is_fsspec_url(filepath_or_buffer)
@@ -704,11 +646,7 @@ def get_data_from_filepath(
             compression=compression,
             storage_options=storage_options,
         ) as handle_obj:
-            filepath_or_buffer = (
-                handle_obj.handle.read()
-                if hasattr(handle_obj.handle, "read")
-                else handle_obj.handle
-            )
+            filepath_or_buffer = handle_obj.handle.read() if hasattr(handle_obj.handle, "read") else handle_obj.handle
 
     return filepath_or_buffer
 

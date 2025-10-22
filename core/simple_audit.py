@@ -29,9 +29,7 @@ from openai import OpenAI
 # Load API key
 api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY_ECHOES")
 if not api_key:
-    raise EnvironmentError(
-        "Missing API key. Set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES"
-    )
+    raise EnvironmentError("Missing API key. Set OPENAI_API_KEY or OPENAI_API_KEY_ECHOES")
 
 client = OpenAI(api_key=api_key)
 
@@ -45,9 +43,7 @@ def safe_api_call(func, *args, **kwargs):
         except Exception as e:
             msg = str(e).lower()
             if "rate limit" in msg or "429" in msg:
-                print(
-                    f"[RATE_LIMIT] Rate limit hit (attempt {attempt}/5). Waiting {delay}s..."
-                )
+                print(f"[RATE_LIMIT] Rate limit hit (attempt {attempt}/5). Waiting {delay}s...")
                 time.sleep(delay + random.uniform(0, 3))
                 delay = min(delay * 2, 90)
                 continue

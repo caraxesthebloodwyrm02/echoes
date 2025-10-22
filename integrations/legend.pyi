@@ -15,7 +15,6 @@ from matplotlib.transforms import (
     Transform,
 )
 
-
 import pathlib
 from collections.abc import Iterable
 from typing import Any, Literal, overload
@@ -23,9 +22,7 @@ from .typing import ColorType
 
 class DraggableLegend(DraggableOffsetBox):
     legend: Legend
-    def __init__(
-        self, legend: Legend, use_blit: bool = ..., update: Literal["loc", "bbox"] = ...
-    ) -> None: ...
+    def __init__(self, legend: Legend, use_blit: bool = ..., update: Literal["loc", "bbox"] = ...) -> None: ...
     def finalize_offset(self) -> None: ...
 
 class Legend(Artist):
@@ -64,10 +61,12 @@ class Legend(Artist):
         scatteryoffsets: Iterable[float] | None = ...,
         prop: FontProperties | dict[str, Any] | None = ...,
         fontsize: float | str | None = ...,
-        labelcolor: ColorType
-        | Iterable[ColorType]
-        | Literal["linecolor", "markerfacecolor", "mfc", "markeredgecolor", "mec"]
-        | None = ...,
+        labelcolor: (
+            ColorType
+            | Iterable[ColorType]
+            | Literal["linecolor", "markerfacecolor", "mfc", "markeredgecolor", "mec"]
+            | None
+        ) = ...,
         borderpad: float | None = ...,
         labelspacing: float | None = ...,
         handlelength: float | None = ...,
@@ -84,10 +83,7 @@ class Legend(Artist):
         framealpha: float | None = ...,
         edgecolor: Literal["inherit"] | ColorType | None = ...,
         facecolor: Literal["inherit"] | ColorType | None = ...,
-        bbox_to_anchor: BboxBase
-        | tuple[float, float]
-        | tuple[float, float, float, float]
-        | None = ...,
+        bbox_to_anchor: BboxBase | tuple[float, float] | tuple[float, float, float, float] | None = ...,
         bbox_transform: Transform | None = ...,
         frameon: bool | None = ...,
         handler_map: dict[Artist | type, HandlerBase] | None = ...,
@@ -103,14 +99,10 @@ class Legend(Artist):
     @classmethod
     def set_default_handler_map(cls, handler_map: dict[type, HandlerBase]) -> None: ...
     @classmethod
-    def update_default_handler_map(
-        cls, handler_map: dict[type, HandlerBase]
-    ) -> None: ...
+    def update_default_handler_map(cls, handler_map: dict[type, HandlerBase]) -> None: ...
     def get_legend_handler_map(self) -> dict[type, HandlerBase]: ...
     @staticmethod
-    def get_legend_handler(
-        legend_handler_map: dict[type, HandlerBase], orig_handle: Any
-    ) -> HandlerBase | None: ...
+    def get_legend_handler(legend_handler_map: dict[type, HandlerBase], orig_handle: Any) -> HandlerBase | None: ...
     def get_children(self) -> list[Artist]: ...
     def get_frame(self) -> Rectangle: ...
     def get_lines(self) -> list[Line2D]: ...
@@ -119,9 +111,7 @@ class Legend(Artist):
     def set_alignment(self, alignment: Literal["center", "left", "right"]) -> None: ...
     def get_alignment(self) -> Literal["center", "left", "right"]: ...
     def set_loc(self, loc: str | tuple[float, float] | int | None = ...) -> None: ...
-    def set_title(
-        self, title: str, prop: FontProperties | str | pathlib.Path | None = ...
-    ) -> None: ...
+    def set_title(self, title: str, prop: FontProperties | str | pathlib.Path | None = ...) -> None: ...
     def get_title(self) -> Text: ...
     def get_frame_on(self) -> bool: ...
     def set_frame_on(self, b: bool) -> None: ...
@@ -129,11 +119,8 @@ class Legend(Artist):
     def get_bbox_to_anchor(self) -> BboxBase: ...
     def set_bbox_to_anchor(
         self,
-        bbox: BboxBase
-        | tuple[float, float]
-        | tuple[float, float, float, float]
-        | None,
-        transform: Transform | None = ...
+        bbox: BboxBase | tuple[float, float] | tuple[float, float, float, float] | None,
+        transform: Transform | None = ...,
     ) -> None: ...
     @overload
     def set_draggable(

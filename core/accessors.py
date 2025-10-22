@@ -1,6 +1,7 @@
 """
 datetimelike delegation
 """
+
 from __future__ import annotations
 
 from typing import (
@@ -58,9 +59,7 @@ class Properties(PandasDelegate, PandasObject, NoNewAttributesMixin):
 
     def __init__(self, data: Series, orig) -> None:
         if not isinstance(data, ABCSeries):
-            raise TypeError(
-                f"cannot convert an object of type {type(data)} to a datetimelike index"
-            )
+            raise TypeError(f"cannot convert an object of type {type(data)} to a datetimelike index")
 
         self._parent = data
         self.orig = orig
@@ -81,9 +80,7 @@ class Properties(PandasDelegate, PandasObject, NoNewAttributesMixin):
         elif isinstance(data.dtype, PeriodDtype):
             return PeriodArray(data, copy=False)
 
-        raise TypeError(
-            f"cannot convert an object of type {type(data)} to a datetimelike index"
-        )
+        raise TypeError(f"cannot convert an object of type {type(data)} to a datetimelike index")
 
     def _delegate_property_get(self, name: str):
         from pandas import Series
@@ -119,8 +116,7 @@ class Properties(PandasDelegate, PandasObject, NoNewAttributesMixin):
 
     def _delegate_property_set(self, name: str, value, *args, **kwargs):
         raise ValueError(
-            "modifications to a property of a datetimelike object are not supported. "
-            "Change values on the original."
+            "modifications to a property of a datetimelike object are not supported. " "Change values on the original."
         )
 
     def _delegate_method(self, name: str, *args, **kwargs):
@@ -134,9 +130,7 @@ class Properties(PandasDelegate, PandasObject, NoNewAttributesMixin):
         if not is_list_like(result):
             return result
 
-        result = Series(result, index=self._parent.index, name=self.name).__finalize__(
-            self._parent
-        )
+        result = Series(result, index=self._parent.index, name=self.name).__finalize__(self._parent)
 
         # setting this object will show a SettingWithCopyWarning/Error
         result._is_copy = (
@@ -179,9 +173,7 @@ class Properties(PandasDelegate, PandasObject, NoNewAttributesMixin):
 class ArrowTemporalProperties(PandasDelegate, PandasObject, NoNewAttributesMixin):
     def __init__(self, data: Series, orig) -> None:
         if not isinstance(data, ABCSeries):
-            raise TypeError(
-                f"cannot convert an object of type {type(data)} to a datetimelike index"
-            )
+            raise TypeError(f"cannot convert an object of type {type(data)} to a datetimelike index")
 
         self._parent = data
         self._orig = orig
@@ -189,9 +181,7 @@ class ArrowTemporalProperties(PandasDelegate, PandasObject, NoNewAttributesMixin
 
     def _delegate_property_get(self, name: str):
         if not hasattr(self._parent.array, f"_dt_{name}"):
-            raise NotImplementedError(
-                f"dt.{name} is not supported for {self._parent.dtype}"
-            )
+            raise NotImplementedError(f"dt.{name} is not supported for {self._parent.dtype}")
         result = getattr(self._parent.array, f"_dt_{name}")
 
         if not is_list_like(result):
@@ -202,17 +192,13 @@ class ArrowTemporalProperties(PandasDelegate, PandasObject, NoNewAttributesMixin
         else:
             index = self._parent.index
         # return the result as a Series, which is by definition a copy
-        result = type(self._parent)(
-            result, index=index, name=self._parent.name
-        ).__finalize__(self._parent)
+        result = type(self._parent)(result, index=index, name=self._parent.name).__finalize__(self._parent)
 
         return result
 
     def _delegate_method(self, name: str, *args, **kwargs):
         if not hasattr(self._parent.array, f"_dt_{name}"):
-            raise NotImplementedError(
-                f"dt.{name} is not supported for {self._parent.dtype}"
-            )
+            raise NotImplementedError(f"dt.{name} is not supported for {self._parent.dtype}")
 
         result = getattr(self._parent.array, f"_dt_{name}")(*args, **kwargs)
 
@@ -221,9 +207,7 @@ class ArrowTemporalProperties(PandasDelegate, PandasObject, NoNewAttributesMixin
         else:
             index = self._parent.index
         # return the result as a Series, which is by definition a copy
-        result = type(self._parent)(
-            result, index=index, name=self._parent.name
-        ).__finalize__(self._parent)
+        result = type(self._parent)(result, index=index, name=self._parent.name).__finalize__(self._parent)
 
         return result
 
@@ -245,11 +229,7 @@ class ArrowTemporalProperties(PandasDelegate, PandasObject, NoNewAttributesMixin
     def isocalendar(self) -> DataFrame:
         from pandas import DataFrame
 
-        result = (
-            cast(ArrowExtensionArray, self._parent.array)
-            ._dt_isocalendar()
-            ._pa_array.combine_chunks()
-        )
+        result = cast(ArrowExtensionArray, self._parent.array)._dt_isocalendar()._pa_array.combine_chunks()
         iso_calendar_df = DataFrame(
             {
                 col: type(self._parent.array)(result.field(i))  # type: ignore[call-arg]
@@ -431,9 +411,7 @@ class DatetimeProperties(Properties):
         return self._get_values().isocalendar().set_index(self._parent.index)
 
 
-@delegate_names(
-    delegate=TimedeltaArray, accessors=TimedeltaArray._datetimelike_ops, typ="property"
-)
+@delegate_names(delegate=TimedeltaArray, accessors=TimedeltaArray._datetimelike_ops, typ="property")
 @delegate_names(
     delegate=TimedeltaArray,
     accessors=TimedeltaArray._datetimelike_methods,
@@ -527,23 +505,15 @@ class TimedeltaProperties(Properties):
         3     0      0        0        3             0             0            0
         4     0      0        0        4             0             0            0
         """
-        return (
-            self._get_values()
-            .components.set_index(self._parent.index)
-            .__finalize__(self._parent)
-        )
+        return self._get_values().components.set_index(self._parent.index).__finalize__(self._parent)
 
     @property
     def freq(self):
         return self._get_values().inferred_freq
 
 
-@delegate_names(
-    delegate=PeriodArray, accessors=PeriodArray._datetimelike_ops, typ="property"
-)
-@delegate_names(
-    delegate=PeriodArray, accessors=PeriodArray._datetimelike_methods, typ="method"
-)
+@delegate_names(delegate=PeriodArray, accessors=PeriodArray._datetimelike_ops, typ="property")
+@delegate_names(delegate=PeriodArray, accessors=PeriodArray._datetimelike_methods, typ="method")
 class PeriodProperties(Properties):
     """
     Accessor object for datetimelike properties of the Series values.
@@ -605,9 +575,7 @@ class PeriodProperties(Properties):
     """
 
 
-class CombinedDatetimelikeProperties(
-    DatetimeProperties, TimedeltaProperties, PeriodProperties
-):
+class CombinedDatetimelikeProperties(DatetimeProperties, TimedeltaProperties, PeriodProperties):
     def __new__(cls, data: Series):  # pyright: ignore[reportInconsistentConstructor]
         # CombinedDatetimelikeProperties isn't really instantiated. Instead
         # we need to choose which parent (datetime or timedelta) is
@@ -615,9 +583,7 @@ class CombinedDatetimelikeProperties(
         # do all the validation here.
 
         if not isinstance(data, ABCSeries):
-            raise TypeError(
-                f"cannot convert an object of type {type(data)} to a datetimelike index"
-            )
+            raise TypeError(f"cannot convert an object of type {type(data)} to a datetimelike index")
 
         orig = data if isinstance(data.dtype, CategoricalDtype) else None
         if orig is not None:

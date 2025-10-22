@@ -44,9 +44,7 @@ class OSFS(FS):
             self._root.mkdir(parents=True, exist_ok=True)
         else:
             if not self._root.is_dir():
-                raise CreateFailed(
-                    f"unable to create OSFS: {root!r} does not exist or is not a directory"
-                )
+                raise CreateFailed(f"unable to create OSFS: {root!r} does not exist or is not a directory")
 
     def _abs(self, rel_path: str) -> Path:
         self.check()

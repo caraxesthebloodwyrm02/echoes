@@ -61,9 +61,7 @@ def test_pandas_adapter():
     X_df_2 = pd.DataFrame([[4], [5]], columns=["c"])
     X_stacked = adapter.hstack([X_df_1, X_df_2])
 
-    expected_df = pd.DataFrame(
-        [[1, 2, 5, 4], [3, 4, 6, 5]], columns=["a", "b", "e", "c"]
-    )
+    expected_df = pd.DataFrame([[1, 2, 5, 4], [3, 4, 6, 5]], columns=["a", "b", "e", "c"])
     pd.testing.assert_frame_equal(X_stacked, expected_df)
 
     # check that we update properly the columns even with duplicate column names
@@ -121,9 +119,7 @@ def test_polars_adapter():
     X_df_2 = pl.DataFrame([[4], [5]], schema=["c"], orient="row")
     X_stacked = adapter.hstack([X_df_1, X_df_2])
 
-    expected_df = pl.DataFrame(
-        [[1, 2, 5, 4], [3, 4, 6, 5]], schema=["a", "b", "e", "c"], orient="row"
-    )
+    expected_df = pl.DataFrame([[1, 2, 5, 4], [3, 4, 6, 5]], schema=["a", "b", "e", "c"], orient="row")
     from polars.testing import assert_frame_equal
 
     assert_frame_equal(X_stacked, expected_df)

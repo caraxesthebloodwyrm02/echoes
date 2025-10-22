@@ -107,10 +107,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in config_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in config_patterns):
                     config_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -135,9 +132,7 @@ class CodebaseAuditor:
                 content = py_file.read_text(encoding="utf-8")
 
                 # Find .env key references
-                env_matches = re.findall(
-                    r'os\.environ\.get\(["\']([^"\']+)["\']', content
-                )
+                env_matches = re.findall(r'os\.environ\.get\(["\']([^"\']+)["\']', content)
                 env_keys_in_code.update(env_matches)
 
                 getenv_matches = re.findall(r'os\.getenv\(["\']([^"\']+)["\']', content)
@@ -167,9 +162,7 @@ class CodebaseAuditor:
                 continue
 
         findings["env_keys"] = {
-            "referenced_but_unvalidated": list(
-                env_keys_in_code - set(["PATH", "HOME"])
-            ),  # Common exclusions
+            "referenced_but_unvalidated": list(env_keys_in_code - set(["PATH", "HOME"])),  # Common exclusions
             "validation_patterns": validation_patterns,
             "total_env_keys_found": len(env_keys_in_files),
         }
@@ -244,10 +237,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in budget_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in budget_patterns):
                     budget_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -270,10 +260,9 @@ class CodebaseAuditor:
                 for node in ast.walk(tree):
                     if isinstance(node, ast.FunctionDef):
                         # Check for type hints
-                        has_hints = any(
-                            arg.arg != "self" and arg.annotation
-                            for arg in node.args.args
-                        ) or (node.returns and str(node.returns) != "None")
+                        has_hints = any(arg.arg != "self" and arg.annotation for arg in node.args.args) or (
+                            node.returns and str(node.returns) != "None"
+                        )
 
                         if not has_hints:
                             functions_without_hints.append(
@@ -328,8 +317,7 @@ class CodebaseAuditor:
                         silent_exceptions.append(
                             {
                                 "file": str(py_file.relative_to(self.root_path)),
-                                "line": "around "
-                                + str(content[: content.find(block)].count("\n") + 1),
+                                "line": "around " + str(content[: content.find(block)].count("\n") + 1),
                             }
                         )
 
@@ -338,8 +326,7 @@ class CodebaseAuditor:
                         logged_exceptions.append(
                             {
                                 "file": str(py_file.relative_to(self.root_path)),
-                                "line": "around "
-                                + str(content[: content.find(block)].count("\n") + 1),
+                                "line": "around " + str(content[: content.find(block)].count("\n") + 1),
                             }
                         )
 
@@ -374,9 +361,7 @@ class CodebaseAuditor:
                     tree = ast.parse(content)
 
                     for node in ast.walk(tree):
-                        if isinstance(
-                            node, ast.FunctionDef
-                        ) and not node.name.startswith("_"):
+                        if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
                             bias_functions.append(
                                 {
                                     "file": str(py_file.relative_to(self.root_path)),
@@ -395,9 +380,7 @@ class CodebaseAuditor:
             findings["bias_test_coverage"] = {
                 "bias_functions": bias_functions,
                 "test_files": test_files,
-                "coverage_ratio": len(test_files) / len(bias_functions)
-                if bias_functions
-                else 0,
+                "coverage_ratio": len(test_files) / len(bias_functions) if bias_functions else 0,
             }
 
         # 2. Are integration tests using mocks or real API calls?
@@ -410,11 +393,7 @@ class CodebaseAuditor:
                     content = py_file.read_text(encoding="utf-8")
 
                     # Check for mock usage
-                    if (
-                        "mock" in content.lower()
-                        or "Mock" in content
-                        or "patch" in content.lower()
-                    ):
+                    if "mock" in content.lower() or "Mock" in content or "patch" in content.lower():
                         mock_usage.append(str(py_file.relative_to(self.root_path)))
 
                     # Check for API calls
@@ -447,16 +426,11 @@ class CodebaseAuditor:
             "ai_modules_files": len(ai_modules_files),
             "src_files": len(src_files),
             "ai_modules_test_ratio": (
-                len([f for f in ai_modules_files if "test" in f.lower()])
-                / len(ai_modules_files)
+                len([f for f in ai_modules_files if "test" in f.lower()]) / len(ai_modules_files)
                 if ai_modules_files
                 else 0
             ),
-            "src_test_ratio": (
-                len([f for f in src_files if "test" in f.lower()]) / len(src_files)
-                if src_files
-                else 0
-            ),
+            "src_test_ratio": (len([f for f in src_files if "test" in f.lower()]) / len(src_files) if src_files else 0),
         }
 
         self.findings["testing"] = findings
@@ -479,10 +453,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in validation_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in validation_patterns):
                     validation_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -506,10 +477,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in bias_scoring_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in bias_scoring_patterns):
                     scoring_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -540,8 +508,7 @@ class CodebaseAuditor:
 
                     # Check for deterministic patterns
                     has_deterministic = any(
-                        re.search(pattern, content, re.IGNORECASE)
-                        for pattern in deterministic_indicators
+                        re.search(pattern, content, re.IGNORECASE) for pattern in deterministic_indicators
                     )
 
                     if not hasattr(findings["batch_determinism"], "details"):
@@ -575,10 +542,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in dry_run_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in dry_run_patterns):
                     dry_run_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -601,10 +565,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in budget_modification_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in budget_modification_patterns):
                     budget_mod_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -632,10 +593,7 @@ class CodebaseAuditor:
                     log_files.append(str(py_file.relative_to(self.root_path)))
 
                     # Check for rotation patterns
-                    has_rotation = any(
-                        re.search(pattern, content, re.IGNORECASE)
-                        for pattern in log_rotation_patterns
-                    )
+                    has_rotation = any(re.search(pattern, content, re.IGNORECASE) for pattern in log_rotation_patterns)
 
                     if not hasattr(findings["log_rotation"], "details"):
                         findings["log_rotation"] = {"details": []}
@@ -671,9 +629,7 @@ class CodebaseAuditor:
                 tree = ast.parse(content, str(py_file))
 
                 for node in ast.walk(tree):
-                    if isinstance(node, ast.FunctionDef) and not node.name.startswith(
-                        "_"
-                    ):
+                    if isinstance(node, ast.FunctionDef) and not node.name.startswith("_"):
                         # Check for side effects
                         has_side_effects = False
 
@@ -742,13 +698,8 @@ class CodebaseAuditor:
                     r"getenv.*or",
                 ]
 
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in precedence_patterns
-                ):
-                    config_precedence_files.append(
-                        str(py_file.relative_to(self.root_path))
-                    )
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in precedence_patterns):
+                    config_precedence_files.append(str(py_file.relative_to(self.root_path)))
 
             except:
                 continue
@@ -771,10 +722,7 @@ class CodebaseAuditor:
         for py_file in self.python_files:
             try:
                 content = py_file.read_text(encoding="utf-8")
-                if any(
-                    re.search(pattern, content, re.IGNORECASE)
-                    for pattern in singleton_patterns
-                ):
+                if any(re.search(pattern, content, re.IGNORECASE) for pattern in singleton_patterns):
                     singleton_files.append(str(py_file.relative_to(self.root_path)))
             except:
                 continue
@@ -811,9 +759,7 @@ class CodebaseAuditor:
         self.audit_integration_readiness()
         print("[AUDIT] Integration readiness audit complete")
 
-        print(
-            f"\n[STATS] Audit complete! Analyzed {len(self.python_files)} Python files"
-        )
+        print(f"\n[STATS] Audit complete! Analyzed {len(self.python_files)} Python files")
 
         return self.findings
 
@@ -846,22 +792,16 @@ class CodebaseAuditor:
                         for subkey, subvalue in value.items():
                             if isinstance(subvalue, list) and len(subvalue) > 0:
                                 if isinstance(subvalue[0], dict):
-                                    report.append(
-                                        f"- **{subkey}**: {len(subvalue)} items\n"
-                                    )
+                                    report.append(f"- **{subkey}**: {len(subvalue)} items\n")
                                     for item in subvalue[:5]:  # Show first 5
                                         if isinstance(item, dict):
                                             report.append(f"  - {item}\n")
                                     if len(subvalue) > 5:
-                                        report.append(
-                                            f"  - ... and {len(subvalue) - 5} more\n"
-                                        )
+                                        report.append(f"  - ... and {len(subvalue) - 5} more\n")
                                 else:
                                     report.append(f"- **{subkey}**: {subvalue}\n")
                             elif isinstance(subvalue, bool):
-                                report.append(
-                                    f"- **{subkey}**: {'YES' if subvalue else 'NO'}\n"
-                                )
+                                report.append(f"- **{subkey}**: {'YES' if subvalue else 'NO'}\n")
                             else:
                                 report.append(f"- **{subkey}**: {subvalue}\n")
                     else:
@@ -875,9 +815,7 @@ def main():
     """Main entry point."""
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Audit Python codebase for intelligence gathering"
-    )
+    parser = argparse.ArgumentParser(description="Audit Python codebase for intelligence gathering")
     parser.add_argument(
         "--format",
         choices=["json", "markdown"],

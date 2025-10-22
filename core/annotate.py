@@ -84,23 +84,17 @@ op_hints: Final = {
 }
 
 stdlib_hints: Final = {
-    "functools.partial": Annotation(
-        '"functools.partial" is inefficient in compiled code.', priority=3
-    ),
+    "functools.partial": Annotation('"functools.partial" is inefficient in compiled code.', priority=3),
     "itertools.chain": Annotation(
         '"itertools.chain" is inefficient in compiled code (hint: replace with for loops).',
         priority=3,
     ),
-    "itertools.groupby": Annotation(
-        '"itertools.groupby" is inefficient in compiled code.', priority=3
-    ),
+    "itertools.groupby": Annotation('"itertools.groupby" is inefficient in compiled code.', priority=3),
     "itertools.islice": Annotation(
         '"itertools.islice" is inefficient in compiled code (hint: replace with for loop over index range).',
         priority=3,
     ),
-    "copy.deepcopy": Annotation(
-        '"copy.deepcopy" tends to be slow. Make a shallow copy if possible.', priority=2
-    ),
+    "copy.deepcopy": Annotation('"copy.deepcopy" tends to be slow. Make a shallow copy if possible.', priority=2),
 }
 
 CSS = """\
@@ -143,17 +137,13 @@ class AnnotatedSource:
         self.annotations = annotations
 
 
-def generate_annotated_html(
-    html_fnam: str, result: BuildResult, modules: dict[str, ModuleIR], mapper: Mapper
-) -> None:
+def generate_annotated_html(html_fnam: str, result: BuildResult, modules: dict[str, ModuleIR], mapper: Mapper) -> None:
     annotations = []
     for mod, mod_ir in modules.items():
         path = result.graph[mod].path
         tree = result.graph[mod].tree
         assert tree is not None
-        annotations.append(
-            generate_annotations(path or "<source>", tree, mod_ir, result.types, mapper)
-        )
+        annotations.append(generate_annotations(path or "<source>", tree, mod_ir, result.types, mapper))
     html = generate_html_report(annotations)
     with open(html_fnam, "w") as f:
         f.write(html)
@@ -225,12 +215,7 @@ def function_annotations(func_ir: FuncIR, tree: MypyFile) -> dict[int, list[Anno
                         load = op.args[0]
                         name = str(op.args[1].value)
                         sym = tree.names.get(name)
-                        if (
-                            sym
-                            and sym.node
-                            and load.namespace == "static"
-                            and load.identifier == "globals"
-                        ):
+                        if sym and sym.node and load.namespace == "static" and load.identifier == "globals":
                             if sym.node.fullname in stdlib_hints:
                                 ann = stdlib_hints[sym.node.fullname]
                             elif isinstance(sym.node, Var):
@@ -318,9 +303,7 @@ class ASTAnnotateVisitor(TraverserVisitor):
                 node = expr.callee.node
                 if isinstance(node, Decorator):
                     if any(
-                        isinstance(d, RefExpr)
-                        and d.node
-                        and d.node.fullname == "contextlib.contextmanager"
+                        isinstance(d, RefExpr) and d.node and d.node.fullname == "contextlib.contextmanager"
                         for d in node.decorators
                     ):
                         self.annotate(
@@ -338,9 +321,7 @@ class ASTAnnotateVisitor(TraverserVisitor):
             analyzed: Expression | None = o.rvalue
             if isinstance(o.rvalue, (CallExpr, IndexExpr, OpExpr)):
                 analyzed = o.rvalue.analyzed
-            if o.is_alias_def or isinstance(
-                analyzed, (TypeVarExpr, NamedTupleExpr, TypedDictExpr, NewTypeExpr)
-            ):
+            if o.is_alias_def or isinstance(analyzed, (TypeVarExpr, NamedTupleExpr, TypedDictExpr, NewTypeExpr)):
                 special_form = True
             if special_form:
                 # TODO: Ignore all lines if multi-line
@@ -358,11 +339,7 @@ class ASTAnnotateVisitor(TraverserVisitor):
 
     def visit_call_expr(self, o: CallExpr, /) -> None:
         super().visit_call_expr(o)
-        if (
-            isinstance(o.callee, RefExpr)
-            and o.callee.fullname == "builtins.isinstance"
-            and len(o.args) == 2
-        ):
+        if isinstance(o.callee, RefExpr) and o.callee.fullname == "builtins.isinstance" and len(o.args) == 2:
             arg = o.args[1]
             self.check_isinstance_arg(arg)
         elif isinstance(o.callee, RefExpr) and isinstance(o.callee.node, TypeInfo):
@@ -371,14 +348,11 @@ class ASTAnnotateVisitor(TraverserVisitor):
             if (class_ir and not class_ir.is_ext_class) or (
                 class_ir is None and not info.fullname.startswith("builtins.")
             ):
-                self.annotate(
-                    o, f'Creating an instance of non-native class "{info.name}" ' + "is slow.", 2
-                )
+                self.annotate(o, f'Creating an instance of non-native class "{info.name}" ' + "is slow.", 2)
             elif class_ir and class_ir.is_augmented:
                 self.annotate(
                     o,
-                    f'Class "{info.name}" is only partially native, and '
-                    + "constructing an instance is slow.",
+                    f'Class "{info.name}" is only partially native, and ' + "constructing an instance is slow.",
                     2,
                 )
         elif isinstance(o.callee, RefExpr) and isinstance(o.callee.node, Decorator):
@@ -393,9 +367,7 @@ class ASTAnnotateVisitor(TraverserVisitor):
     def check_isinstance_arg(self, arg: Expression) -> None:
         if isinstance(arg, RefExpr):
             if isinstance(arg.node, TypeInfo) and arg.node.is_protocol:
-                self.annotate(
-                    arg, f'Expensive isinstance() check against protocol "{arg.node.name}".'
-                )
+                self.annotate(arg, f'Expensive isinstance() check against protocol "{arg.node.name}".')
         elif isinstance(arg, TupleExpr):
             for item in arg.items:
                 self.check_isinstance_arg(item)

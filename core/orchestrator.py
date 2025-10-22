@@ -105,37 +105,27 @@ class AutoMLOrchestrator:
             self.logger.info("🚀 Starting AutoML pipeline execution")
 
             # Data preparation and validation
-            X_processed, y_processed, feature_info = self._prepare_data(
-                X, y, feature_names, categorical_features
-            )
+            X_processed, y_processed, feature_info = self._prepare_data(X, y, feature_names, categorical_features)
 
             # Model selection phase
-            candidate_models = self.model_selector.select_models(
-                X_processed, y_processed, self.config.task_type
-            )
+            candidate_models = self.model_selector.select_models(X_processed, y_processed, self.config.task_type)
 
             # Hyperparameter tuning phase
             tuned_models = []
             if self.config.enable_hyperparameter_tuning:
-                tuned_models = self._tune_hyperparameters(
-                    candidate_models, X_processed, y_processed
-                )
+                tuned_models = self._tune_hyperparameters(candidate_models, X_processed, y_processed)
             else:
                 tuned_models = candidate_models
 
             # Model evaluation and ranking
-            model_rankings = self.evaluator.evaluate_models(
-                tuned_models, X_processed, y_processed
-            )
+            model_rankings = self.evaluator.evaluate_models(tuned_models, X_processed, y_processed)
 
             # Select best model
             best_model_info = model_rankings[0]
             best_model = best_model_info["model"]
 
             # Additional analysis
-            feature_importance = self._analyze_feature_importance(
-                best_model, X_processed, feature_info
-            )
+            feature_importance = self._analyze_feature_importance(best_model, X_processed, feature_info)
 
             # Prepare comprehensive results
             training_time = time.time() - start_time
@@ -237,9 +227,7 @@ class AutoMLOrchestrator:
                 except Exception as e:
                     self.logger.warning(f"⚠️ Failed to tune {model_name}: {e}")
                     # Keep original model if tuning fails
-                    original_model = next(
-                        m for m in candidate_models if m["name"] == model_name
-                    )
+                    original_model = next(m for m in candidate_models if m["name"] == model_name)
                     tuned_models.append(original_model)
 
         return tuned_models
@@ -253,9 +241,7 @@ class AutoMLOrchestrator:
                 importances = model.feature_importances_
             elif hasattr(model, "coef_"):
                 # For linear models, use absolute coefficient values
-                importances = np.abs(
-                    model.coef_[0] if model.coef_.ndim > 1 else model.coef_
-                )
+                importances = np.abs(model.coef_[0] if model.coef_.ndim > 1 else model.coef_)
             else:
                 return None
 

@@ -1,4 +1,5 @@
 """ Test cases for .hist method """
+
 import re
 
 import numpy as np
@@ -67,10 +68,7 @@ class TestSeriesPlots:
 
     def test_hist_legacy_by_fig_error(self, ts):
         fig, _ = mpl.pyplot.subplots(1, 1)
-        msg = (
-            "Cannot pass 'figure' when using the 'by' argument, since a new 'Figure' "
-            "instance will be created"
-        )
+        msg = "Cannot pass 'figure' when using the 'by' argument, since a new 'Figure' " "instance will be created"
         with pytest.raises(ValueError, match=msg):
             ts.hist(by=ts.index, figure=fig)
 
@@ -163,9 +161,7 @@ class TestSeriesPlots:
         ax = ser.hist(histtype=histtype)
         _check_patches_all_filled(ax, filled=expected)
 
-    @pytest.mark.parametrize(
-        "by, expected_axes_num, expected_layout", [(None, 1, (1, 1)), ("b", 2, (1, 2))]
-    )
+    @pytest.mark.parametrize("by, expected_axes_num, expected_layout", [(None, 1, (1, 1)), ("b", 2, (1, 2))])
     def test_hist_with_legend(self, by, expected_axes_num, expected_layout):
         # GH 6279 - Series histogram can have a legend
         index = 15 * ["1"] + 15 * ["2"]
@@ -300,9 +296,7 @@ class TestDataFramePlots:
         _check_axes_shape(axes, axes_num=6, layout=(4, 2))
 
     @pytest.mark.slow
-    @pytest.mark.parametrize(
-        "kwargs", [{"sharex": True, "sharey": True}, {"figsize": (8, 10)}, {"bins": 5}]
-    )
+    @pytest.mark.parametrize("kwargs", [{"sharex": True, "sharey": True}, {"figsize": (8, 10)}, {"bins": 5}])
     def test_hist_df_legacy_layout_kwargs(self, kwargs):
         df = DataFrame(np.random.default_rng(2).standard_normal((10, 5)))
         df[5] = to_datetime(
@@ -359,14 +353,10 @@ class TestDataFramePlots:
                 "a": np.random.default_rng(2).random(10),
                 "b": np.random.default_rng(2).integers(0, 10, 10),
                 "c": to_datetime(
-                    np.random.default_rng(2).integers(
-                        1582800000000000000, 1583500000000000000, 10, dtype=np.int64
-                    )
+                    np.random.default_rng(2).integers(1582800000000000000, 1583500000000000000, 10, dtype=np.int64)
                 ),
                 "d": to_datetime(
-                    np.random.default_rng(2).integers(
-                        1582800000000000000, 1583500000000000000, 10, dtype=np.int64
-                    ),
+                    np.random.default_rng(2).integers(1582800000000000000, 1583500000000000000, 10, dtype=np.int64),
                     utc=True,
                 ),
             }
@@ -502,9 +492,7 @@ class TestDataFramePlots:
     )
     def test_histtype_argument(self, histtype, expected):
         # GH23992 Verify functioning of histtype argument
-        df = DataFrame(
-            np.random.default_rng(2).integers(1, 10, size=(100, 2)), columns=["a", "b"]
-        )
+        df = DataFrame(np.random.default_rng(2).integers(1, 10, size=(100, 2)), columns=["a", "b"])
         ax = df.hist(histtype=histtype)
         _check_patches_all_filled(ax, filled=expected)
 
@@ -584,9 +572,7 @@ class TestDataFramePlots:
 
     def test_hist_secondary_legend(self):
         # GH 9610
-        df = DataFrame(
-            np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd")
-        )
+        df = DataFrame(np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd"))
 
         # primary -> secondary
         _, ax = mpl.pyplot.subplots()
@@ -600,9 +586,7 @@ class TestDataFramePlots:
 
     def test_hist_secondary_secondary(self):
         # GH 9610
-        df = DataFrame(
-            np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd")
-        )
+        df = DataFrame(np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd"))
         # secondary -> secondary
         _, ax = mpl.pyplot.subplots()
         ax = df["a"].plot.hist(legend=True, secondary_y=True, ax=ax)
@@ -615,9 +599,7 @@ class TestDataFramePlots:
 
     def test_hist_secondary_primary(self):
         # GH 9610
-        df = DataFrame(
-            np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd")
-        )
+        df = DataFrame(np.random.default_rng(2).standard_normal((30, 4)), columns=list("abcd"))
         # secondary -> primary
         _, ax = mpl.pyplot.subplots()
         ax = df["a"].plot.hist(legend=True, secondary_y=True, ax=ax)
@@ -646,9 +628,7 @@ class TestDataFramePlots:
         heights = [rect.get_height() for rect in rects]
         _, ax1 = mpl.pyplot.subplots()
         no_nan_df.plot.hist(ax=ax1, weights=no_nan_weights)
-        no_nan_rects = [
-            x for x in ax1.get_children() if isinstance(x, mpl_patches.Rectangle)
-        ]
+        no_nan_rects = [x for x in ax1.get_children() if isinstance(x, mpl_patches.Rectangle)]
         no_nan_heights = [rect.get_height() for rect in no_nan_rects]
         assert all(h0 == h1 for h0, h1 in zip(heights, no_nan_heights))
 
@@ -851,9 +831,7 @@ class TestDataFrameGroupByPlots:
     def test_grouped_hist_layout_warning(self, hist_df):
         df = hist_df
         with tm.assert_produces_warning(UserWarning, check_stacklevel=False):
-            axes = _check_plot_works(
-                df.hist, column="height", by=df.gender, layout=(2, 1)
-            )
+            axes = _check_plot_works(df.hist, column="height", by=df.gender, layout=(2, 1))
         _check_axes_shape(axes, axes_num=2, layout=(2, 1))
 
     @pytest.mark.slow
@@ -964,8 +942,6 @@ class TestDataFrameGroupByPlots:
     )
     def test_histtype_argument(self, histtype, expected):
         # GH23992 Verify functioning of histtype argument
-        df = DataFrame(
-            np.random.default_rng(2).integers(1, 10, size=(10, 2)), columns=["a", "b"]
-        )
+        df = DataFrame(np.random.default_rng(2).integers(1, 10, size=(10, 2)), columns=["a", "b"])
         ax = df.hist(by="a", histtype=histtype)
         _check_patches_all_filled(ax, filled=expected)

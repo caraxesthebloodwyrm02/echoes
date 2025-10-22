@@ -72,9 +72,7 @@ notes_and_tasks = [
 ]
 
 
-def assign_task(
-    problem: str, fix: str, priority: str = "medium", tags: list = None
-) -> None:
+def assign_task(problem: str, fix: str, priority: str = "medium", tags: list = None) -> None:
     """Send a structured problem/fix pair to the API and print its reasoning."""
     tags = tags or []
     print(f"\n[Task Assigned :: {datetime.now().isoformat()}]")

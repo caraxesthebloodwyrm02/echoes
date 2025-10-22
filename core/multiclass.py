@@ -87,9 +87,7 @@ def _fit_binary(estimator, X, y, fit_params, classes=None):
                 c = 0
             else:
                 c = y[0]
-            warnings.warn(
-                "Label %s is present in all training examples." % str(classes[c])
-            )
+            warnings.warn("Label %s is present in all training examples." % str(classes[c]))
         estimator = _ConstantPredictor().fit(X, unique_y)
     else:
         estimator = clone(estimator)
@@ -128,12 +126,8 @@ class _ConstantPredictor(BaseEstimator):
     """Helper predictor to be used when only one class is present."""
 
     def fit(self, X, y):
-        check_params = dict(
-            ensure_all_finite=False, dtype=None, ensure_2d=False, accept_sparse=True
-        )
-        validate_data(
-            self, X, y, reset=True, validate_separately=(check_params, check_params)
-        )
+        check_params = dict(ensure_all_finite=False, dtype=None, ensure_2d=False, accept_sparse=True)
+        validate_data(self, X, y, reset=True, validate_separately=(check_params, check_params))
         self.y_ = y
         return self
 
@@ -455,9 +449,7 @@ class OneVsRestClassifier(
 
         if len(np.setdiff1d(y, self.classes_)):
             raise ValueError(
-                (
-                    "Mini-batch contains {0} while classes " + "must be subset of {1}"
-                ).format(np.unique(y), self.classes_)
+                ("Mini-batch contains {0} while classes " + "must be subset of {1}").format(np.unique(y), self.classes_)
             )
 
         Y = self.label_binarizer_.transform(y)
@@ -512,9 +504,7 @@ class OneVsRestClassifier(
                 indices.extend(np.where(_predict_binary(e, X) > thresh)[0])
                 indptr.append(len(indices))
             data = np.ones(len(indices), dtype=int)
-            indicator = sp.csc_matrix(
-                (data, indices, indptr), shape=(n_samples, len(self.estimators_))
-            )
+            indicator = sp.csc_matrix((data, indices, indptr), shape=(n_samples, len(self.estimators_)))
             return self.label_binarizer_.inverse_transform(indicator)
 
     @available_if(_estimators_has("predict_proba"))
@@ -585,9 +575,7 @@ class OneVsRestClassifier(
         check_is_fitted(self)
         if len(self.estimators_) == 1:
             return self.estimators_[0].decision_function(X)
-        return np.array(
-            [est.decision_function(X).ravel() for est in self.estimators_]
-        ).T
+        return np.array([est.decision_function(X).ravel() for est in self.estimators_]).T
 
     @property
     def multilabel_(self):
@@ -664,12 +652,8 @@ def _partial_fit_ovo_binary(estimator, X, y, i, j, partial_fit_params):
     if len(y) != 0:
         y_binary = np.zeros_like(y)
         y_binary[y == j] = 1
-        partial_fit_params_subset = _check_method_params(
-            X, params=partial_fit_params, indices=cond
-        )
-        return _partial_fit_binary(
-            estimator, X[cond], y_binary, partial_fit_params=partial_fit_params_subset
-        )
+        partial_fit_params_subset = _check_method_params(X, params=partial_fit_params, indices=cond)
+        return _partial_fit_binary(estimator, X[cond], y_binary, partial_fit_params=partial_fit_params_subset)
     return estimator
 
 
@@ -798,16 +782,12 @@ class OneVsOneClassifier(MetaEstimatorMixin, ClassifierMixin, BaseEstimator):
         )
 
         # We need to validate the data because we do a safe_indexing later.
-        X, y = validate_data(
-            self, X, y, accept_sparse=["csr", "csc"], ensure_all_finite=False
-        )
+        X, y = validate_data(self, X, y, accept_sparse=["csr", "csc"], ensure_all_finite=False)
         check_classification_targets(y)
 
         self.classes_ = np.unique(y)
         if len(self.classes_) == 1:
-            raise ValueError(
-                "OneVsOneClassifier can not be fit when only one class is present."
-            )
+            raise ValueError("OneVsOneClassifier can not be fit when only one class is present.")
         n_classes = self.classes_.shape[0]
         estimators_indices = list(
             zip(
@@ -886,16 +866,11 @@ class OneVsOneClassifier(MetaEstimatorMixin, ClassifierMixin, BaseEstimator):
 
         first_call = _check_partial_fit_first_call(self, classes)
         if first_call:
-            self.estimators_ = [
-                clone(self.estimator)
-                for _ in range(self.n_classes_ * (self.n_classes_ - 1) // 2)
-            ]
+            self.estimators_ = [clone(self.estimator) for _ in range(self.n_classes_ * (self.n_classes_ - 1) // 2)]
 
         if len(np.setdiff1d(y, self.classes_)):
             raise ValueError(
-                "Mini-batch contains {0} while it must be subset of {1}".format(
-                    np.unique(y), self.classes_
-                )
+                "Mini-batch contains {0} while it must be subset of {1}".format(np.unique(y), self.classes_)
             )
 
         X, y = validate_data(
@@ -987,12 +962,8 @@ class OneVsOneClassifier(MetaEstimatorMixin, ClassifierMixin, BaseEstimator):
         else:
             Xs = [X[:, idx] for idx in indices]
 
-        predictions = np.vstack(
-            [est.predict(Xi) for est, Xi in zip(self.estimators_, Xs)]
-        ).T
-        confidences = np.vstack(
-            [_predict_binary(est, Xi) for est, Xi in zip(self.estimators_, Xs)]
-        ).T
+        predictions = np.vstack([est.predict(Xi) for est, Xi in zip(self.estimators_, Xs)]).T
+        confidences = np.vstack([_predict_binary(est, Xi) for est, Xi in zip(self.estimators_, Xs)]).T
         Y = _ovr_decision_function(predictions, confidences, len(self.classes_))
         if self.n_classes_ == 2:
             return Y[:, 1]
@@ -1199,9 +1170,7 @@ class OutputCodeClassifier(MetaEstimatorMixin, ClassifierMixin, BaseEstimator):
         self.classes_ = np.unique(y)
         n_classes = self.classes_.shape[0]
         if n_classes == 0:
-            raise ValueError(
-                "OutputCodeClassifier can not be fit when no class is present."
-            )
+            raise ValueError("OutputCodeClassifier can not be fit when no class is present.")
         n_estimators = int(n_classes * self.code_size)
 
         # FIXME: there are more elaborate methods than generating the codebook
@@ -1222,9 +1191,7 @@ class OutputCodeClassifier(MetaEstimatorMixin, ClassifierMixin, BaseEstimator):
         )
 
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(
-            delayed(_fit_binary)(
-                self.estimator, X, Y[:, i], fit_params=routed_params.estimator.fit
-            )
+            delayed(_fit_binary)(self.estimator, X, Y[:, i], fit_params=routed_params.estimator.fit)
             for i in range(Y.shape[1])
         )
 

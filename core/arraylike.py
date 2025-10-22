@@ -4,6 +4,7 @@ Methods that can be shared by many array-like classes or subclasses:
     Index
     ExtensionArray
 """
+
 from __future__ import annotations
 
 import operator
@@ -284,10 +285,7 @@ def array_ufunc(self, ufunc: np.ufunc, method: str, *inputs: Any, **kwargs: Any)
     )
 
     for item in inputs:
-        higher_priority = (
-            hasattr(item, "__array_priority__")
-            and item.__array_priority__ > self.__array_priority__
-        )
+        higher_priority = hasattr(item, "__array_priority__") and item.__array_priority__ > self.__array_priority__
         has_array_ufunc = (
             hasattr(item, "__array_ufunc__")
             and type(item).__array_ufunc__ not in no_defer
@@ -310,9 +308,7 @@ def array_ufunc(self, ufunc: np.ufunc, method: str, *inputs: Any, **kwargs: Any)
             # We currently don't handle ufunc(DataFrame, Series)
             # well. Previously this raised an internal ValueError. We might
             # support it someday, so raise a NotImplementedError.
-            raise NotImplementedError(
-                f"Cannot apply ufunc {ufunc} to mixed DataFrame and Series inputs."
-            )
+            raise NotImplementedError(f"Cannot apply ufunc {ufunc} to mixed DataFrame and Series inputs.")
         axes = self.axes
         for obj in alignable[1:]:
             # this relies on the fact that we aren't handling mixed
@@ -321,10 +317,7 @@ def array_ufunc(self, ufunc: np.ufunc, method: str, *inputs: Any, **kwargs: Any)
                 axes[i] = ax1.union(ax2)
 
         reconstruct_axes = dict(zip(self._AXIS_ORDERS, axes))
-        inputs = tuple(
-            x.reindex(**reconstruct_axes) if issubclass(t, NDFrame) else x
-            for x, t in zip(inputs, types)
-        )
+        inputs = tuple(x.reindex(**reconstruct_axes) if issubclass(t, NDFrame) else x for x, t in zip(inputs, types))
     else:
         reconstruct_axes = dict(zip(self._AXIS_ORDERS, self.axes))
 
@@ -355,9 +348,7 @@ def array_ufunc(self, ufunc: np.ufunc, method: str, *inputs: Any, **kwargs: Any)
             result = self._constructor_from_mgr(result, axes=result.axes)
         else:
             # we converted an array, lost our axes
-            result = self._constructor(
-                result, **reconstruct_axes, **reconstruct_kwargs, copy=False
-            )
+            result = self._constructor(result, **reconstruct_axes, **reconstruct_kwargs, copy=False)
         # TODO: When we support multiple values in __finalize__, this
         # should pass alignable to `__finalize__` instead of self.
         # Then `np.add(a, b)` would consider attrs from both a and b

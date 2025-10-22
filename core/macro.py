@@ -35,9 +35,7 @@ def macro_parallel(
 ) -> Dict[str, Dict[str, Any]]:
     outputs: Dict[str, Dict[str, Any]] = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=len(layers)) as pool:
-        future_to_name = {
-            pool.submit(run_layer, name, fn): name for name, fn in layers.items()
-        }
+        future_to_name = {pool.submit(run_layer, name, fn): name for name, fn in layers.items()}
         for fut in concurrent.futures.as_completed(future_to_name):
             name = future_to_name[fut]
             outputs[name] = fut.result()

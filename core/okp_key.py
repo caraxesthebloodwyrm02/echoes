@@ -73,9 +73,7 @@ class OKPKey(AsymmetricKey):
 
     def dumps_private_key(self):
         obj = self.dumps_public_key(self.private_key.public_key())
-        d_bytes = self.private_key.private_bytes(
-            Encoding.Raw, PrivateFormat.Raw, NoEncryption()
-        )
+        d_bytes = self.private_key.private_bytes(Encoding.Raw, PrivateFormat.Raw, NoEncryption())
         obj["d"] = to_unicode(urlsafe_b64encode(d_bytes))
         return obj
 

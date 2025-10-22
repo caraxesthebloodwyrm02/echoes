@@ -85,9 +85,7 @@ async def test_hybrid_assistant():
             print(f"\nTest {i}: {task_data['description'][:50]}...")
 
             try:
-                response = await assistant.process_task(
-                    task_data["description"], context=task_data["context"]
-                )
+                response = await assistant.process_task(task_data["description"], context=task_data["context"])
 
                 print(f"  Assistant used: {response.assistant_type.value}")
                 print(".2f")
@@ -95,9 +93,7 @@ async def test_hybrid_assistant():
                 print(f"  Response preview: {response.response[:80]}...")
 
                 # Store result for analysis
-                results.append(
-                    {"task": task_data, "response": response, "success": True}
-                )
+                results.append({"task": task_data, "response": response, "success": True})
 
             except Exception as e:
                 print(f"  [FAILED] {str(e)}")
@@ -111,9 +107,7 @@ async def test_hybrid_assistant():
         successful_tests = sum(1 for r in results if r.get("success", False))
         total_tests = len(results)
 
-        print(
-            f"Overall Success Rate: {successful_tests}/{total_tests} ({successful_tests / total_tests * 100:.1f}%)"
-        )
+        print(f"Overall Success Rate: {successful_tests}/{total_tests} ({successful_tests / total_tests * 100:.1f}%)")
 
         # Assistant usage statistics
         assistant_usage = {}
@@ -124,9 +118,7 @@ async def test_hybrid_assistant():
             if result.get("success"):
                 resp = result["response"]
                 assistant_name = resp.assistant_type.value
-                assistant_usage[assistant_name] = (
-                    assistant_usage.get(assistant_name, 0) + 1
-                )
+                assistant_usage[assistant_name] = assistant_usage.get(assistant_name, 0) + 1
                 total_cost += resp.cost
                 total_time += resp.processing_time
 
@@ -197,9 +189,7 @@ async def test_routing_logic():
         for description, expected in test_cases:
             assessed = router.assess_task_complexity(description)
             status = "[PASS]" if assessed == expected else "[FAIL]"
-            print(
-                f"  {status} '{description}' -> {assessed.value} (expected: {expected.value})"
-            )
+            print(f"  {status} '{description}' -> {assessed.value} (expected: {expected.value})")
 
         # Test assistant selection
         print("\nAssistant Selection:")

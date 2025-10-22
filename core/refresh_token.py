@@ -41,9 +41,7 @@ class RefreshTokenGrant(BaseGrant, TokenEndpointMixin):
         log.debug("Validate token request of %r", client)
 
         if not client.check_grant_type(self.GRANT_TYPE):
-            raise UnauthorizedClientError(
-                f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'"
-            )
+            raise UnauthorizedClientError(f"The client is not authorized to use 'grant_type={self.GRANT_TYPE}'")
 
         return client
 

@@ -109,9 +109,7 @@ class EnvironmentValidator:
             if not endpoint or not api_key:
                 test_result["status"] = "warning"
                 test_result["details"]["configured"] = False
-                test_result["details"]["message"] = (
-                    "Azure AI not configured (optional for hybrid setup)"
-                )
+                test_result["details"]["message"] = "Azure AI not configured (optional for hybrid setup)"
                 return test_result
 
             test_result["details"]["endpoint_configured"] = bool(endpoint)
@@ -122,9 +120,7 @@ class EnvironmentValidator:
             from azure.ai.inference import ChatCompletionsClient
             from azure.core.credentials import AzureKeyCredential
 
-            client = ChatCompletionsClient(
-                endpoint=endpoint, credential=AzureKeyCredential(api_key)
-            )
+            client = ChatCompletionsClient(endpoint=endpoint, credential=AzureKeyCredential(api_key))
 
             # Simple test call
             response = client.complete(
@@ -217,32 +213,24 @@ class EnvironmentValidator:
             try:
                 threshold_val = float(threshold)
                 if not 0.0 <= threshold_val <= 1.0:
-                    test_result["errors"].append(
-                        f"Invalid complexity threshold: {threshold}"
-                    )
+                    test_result["errors"].append(f"Invalid complexity threshold: {threshold}")
                     test_result["status"] = "failed"
                     return test_result
             except ValueError:
-                test_result["errors"].append(
-                    f"Invalid complexity threshold format: {threshold}"
-                )
+                test_result["errors"].append(f"Invalid complexity threshold format: {threshold}")
                 test_result["status"] = "failed"
                 return test_result
 
             test_result["details"]["routing_strategy"] = strategy
             test_result["details"]["complexity_threshold"] = threshold
-            test_result["details"]["cross_validation_enabled"] = (
-                cross_validation.lower() == "true"
-            )
+            test_result["details"]["cross_validation_enabled"] = cross_validation.lower() == "true"
             test_result["details"]["monitoring_enabled"] = monitoring.lower() == "true"
 
             test_result["status"] = "passed"
 
         except Exception as e:
             test_result["status"] = "failed"
-            test_result["errors"].append(
-                f"Hybrid configuration validation failed: {str(e)}"
-            )
+            test_result["errors"].append(f"Hybrid configuration validation failed: {str(e)}")
 
         return test_result
 
@@ -266,9 +254,7 @@ class EnvironmentValidator:
                     test_result["details"][dir_path] = "exists"
                 else:
                     test_result["details"][dir_path] = "missing"
-                    test_result["errors"].append(
-                        f"Required directory missing: {dir_path}"
-                    )
+                    test_result["errors"].append(f"Required directory missing: {dir_path}")
 
             # Check for configuration files
             config_files = [".env", "pyproject.toml", "requirements.txt"]
@@ -279,9 +265,7 @@ class EnvironmentValidator:
                     test_result["details"][file_path] = "exists"
                 else:
                     test_result["details"][file_path] = "missing"
-                    test_result["errors"].append(
-                        f"Configuration file missing: {file_path}"
-                    )
+                    test_result["errors"].append(f"Configuration file missing: {file_path}")
 
             if not test_result["errors"]:
                 test_result["status"] = "passed"
@@ -395,9 +379,7 @@ class EnvironmentValidator:
         # Check directory structure
         dir_test = self.results["tests"].get("directory_structure", {})
         if dir_test.get("status") in ["failed", "warning"]:
-            missing_items = [
-                k for k, v in dir_test.get("details", {}).items() if v == "missing"
-            ]
+            missing_items = [k for k, v in dir_test.get("details", {}).items() if v == "missing"]
             if missing_items:
                 recommendations.append(
                     {
@@ -436,12 +418,8 @@ def main():
     if results["recommendations"]:
         print("\nRECOMMENDATIONS:")
         for rec in results["recommendations"]:
-            priority_icon = {"high": "[HIGH]", "medium": "[MED]", "low": "[LOW]"}.get(
-                rec["priority"], "[UNK]"
-            )
-            print(
-                f"   {priority_icon} [{rec['priority'].upper()}] {rec['component']}: {rec['action']}"
-            )
+            priority_icon = {"high": "[HIGH]", "medium": "[MED]", "low": "[LOW]"}.get(rec["priority"], "[UNK]")
+            print(f"   {priority_icon} [{rec['priority'].upper()}] {rec['component']}: {rec['action']}")
             if rec.get("details"):
                 print(f"      {rec['details']}")
 

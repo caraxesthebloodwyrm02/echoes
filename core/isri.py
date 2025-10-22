@@ -184,20 +184,12 @@ class ISRIStemmer(StemmerI):
         """
         Stemming a word token using the ISRI stemmer.
         """
-        token = self.norm(
-            token, 1
-        )  # remove diacritics which representing Arabic short vowels
+        token = self.norm(token, 1)  # remove diacritics which representing Arabic short vowels
         if token in self.stop_words:
             return token  # exclude stop words from being processed
-        token = self.pre32(
-            token
-        )  # remove length three and length two prefixes in this order
-        token = self.suf32(
-            token
-        )  # remove length three and length two suffixes in this order
-        token = self.waw(
-            token
-        )  # remove connective ‘و’ if it precedes a word beginning with ‘و’
+        token = self.pre32(token)  # remove length three and length two prefixes in this order
+        token = self.suf32(token)  # remove length three and length two suffixes in this order
+        token = self.waw(token)  # remove connective ‘و’ if it precedes a word beginning with ‘و’
         token = self.norm(token, 2)  # normalize initial hamza to bare alif
         # if 4 <= word length <= 7, then stem; otherwise, no stemming
         if len(token) == 4:  # length 4 word
@@ -337,25 +329,15 @@ class ISRIStemmer(StemmerI):
 
     def pro_w6(self, word):
         """process length six patterns and extract length three roots"""
-        if word.startswith("\u0627\u0633\u062a") or word.startswith(
-            "\u0645\u0633\u062a"
-        ):  # مستفعل - استفعل
+        if word.startswith("\u0627\u0633\u062a") or word.startswith("\u0645\u0633\u062a"):  # مستفعل - استفعل
             word = word[3:]
-        elif (
-            word[0] == "\u0645" and word[3] == "\u0627" and word[5] == "\u0629"
-        ):  # مفعالة
+        elif word[0] == "\u0645" and word[3] == "\u0627" and word[5] == "\u0629":  # مفعالة
             word = word[1:3] + word[4]
-        elif (
-            word[0] == "\u0627" and word[2] == "\u062a" and word[4] == "\u0627"
-        ):  # افتعال
+        elif word[0] == "\u0627" and word[2] == "\u062a" and word[4] == "\u0627":  # افتعال
             word = word[1] + word[3] + word[5]
-        elif (
-            word[0] == "\u0627" and word[3] == "\u0648" and word[2] == word[4]
-        ):  # افعوعل
+        elif word[0] == "\u0627" and word[3] == "\u0648" and word[2] == word[4]:  # افعوعل
             word = word[1] + word[4:]
-        elif (
-            word[0] == "\u062a" and word[2] == "\u0627" and word[4] == "\u064a"
-        ):  # تفاعيل   new pattern
+        elif word[0] == "\u062a" and word[2] == "\u0627" and word[4] == "\u064a":  # تفاعيل   new pattern
             word = word[1] + word[3] + word[5]
         else:
             word = self.suf1(word)  # do - normalize short sufix

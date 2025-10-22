@@ -77,12 +77,9 @@ class TestBase:
             pytest.skip("RangeIndex() is a valid constructor")
         msg = "|".join(
             [
-                r"Index\(\.\.\.\) must be called with a collection of some "
-                r"kind, None was passed",
-                r"DatetimeIndex\(\) must be called with a collection of some "
-                r"kind, None was passed",
-                r"TimedeltaIndex\(\) must be called with a collection of some "
-                r"kind, None was passed",
+                r"Index\(\.\.\.\) must be called with a collection of some " r"kind, None was passed",
+                r"DatetimeIndex\(\) must be called with a collection of some " r"kind, None was passed",
+                r"TimedeltaIndex\(\) must be called with a collection of some " r"kind, None was passed",
                 r"__new__\(\) missing 1 required positional argument: 'data'",
                 r"__new__\(\) takes at least 2 arguments \(1 given\)",
             ]
@@ -170,9 +167,7 @@ class TestBase:
         assert not isinstance(idx, MultiIndex)
         if type(idx) is Index:
             pytest.skip("Not applicable for Index")
-        if is_numeric_dtype(simple_index.dtype) or isinstance(
-            simple_index, TimedeltaIndex
-        ):
+        if is_numeric_dtype(simple_index.dtype) or isinstance(simple_index, TimedeltaIndex):
             pytest.skip("Tested elsewhere.")
 
         typ = type(idx._data).__name__
@@ -180,8 +175,7 @@ class TestBase:
         lmsg = "|".join(
             [
                 rf"unsupported operand type\(s\) for \*: '{typ}' and 'int'",
-                "cannot perform (__mul__|__truediv__|__floordiv__) with "
-                f"this index type: ({cls}|{typ})",
+                "cannot perform (__mul__|__truediv__|__floordiv__) with " f"this index type: ({cls}|{typ})",
             ]
         )
         with pytest.raises(TypeError, match=lmsg):
@@ -189,8 +183,7 @@ class TestBase:
         rmsg = "|".join(
             [
                 rf"unsupported operand type\(s\) for \*: 'int' and '{typ}'",
-                "cannot perform (__rmul__|__rtruediv__|__rfloordiv__) with "
-                f"this index type: ({cls}|{typ})",
+                "cannot perform (__rmul__|__rtruediv__|__rfloordiv__) with " f"this index type: ({cls}|{typ})",
             ]
         )
         with pytest.raises(TypeError, match=rmsg):
@@ -222,10 +215,7 @@ class TestBase:
         else:
             msg = "cannot perform (any|all)"
             if isinstance(idx, IntervalIndex):
-                msg = (
-                    r"'IntervalArray' with dtype interval\[.*\] does "
-                    "not support reduction '(any|all)'"
-                )
+                msg = r"'IntervalArray' with dtype interval\[.*\] does " "not support reduction '(any|all)'"
             with pytest.raises(TypeError, match=msg):
                 idx.all()
             with pytest.raises(TypeError, match=msg):
@@ -257,8 +247,7 @@ class TestBase:
             init_kwargs["freq"] = index.freq
         elif isinstance(index, (RangeIndex, MultiIndex, CategoricalIndex)):
             pytest.skip(
-                "RangeIndex cannot be initialized from data, "
-                "MultiIndex and CategoricalIndex are tested separately"
+                "RangeIndex cannot be initialized from data, " "MultiIndex and CategoricalIndex are tested separately"
             )
         elif index.dtype == object and index.inferred_type in ["boolean", "string"]:
             init_kwargs["dtype"] = index.dtype
@@ -287,24 +276,13 @@ class TestBase:
 
             if isinstance(index._values, BaseMaskedArray):
                 assert np.shares_memory(index._values._data, result._values._data)
-                tm.assert_numpy_array_equal(
-                    index._values._data, result._values._data, check_same="same"
-                )
+                tm.assert_numpy_array_equal(index._values._data, result._values._data, check_same="same")
                 assert np.shares_memory(index._values._mask, result._values._mask)
-                tm.assert_numpy_array_equal(
-                    index._values._mask, result._values._mask, check_same="same"
-                )
-            elif (
-                isinstance(index.dtype, StringDtype) and index.dtype.storage == "python"
-            ):
+                tm.assert_numpy_array_equal(index._values._mask, result._values._mask, check_same="same")
+            elif isinstance(index.dtype, StringDtype) and index.dtype.storage == "python":
                 assert np.shares_memory(index._values._ndarray, result._values._ndarray)
-                tm.assert_numpy_array_equal(
-                    index._values._ndarray, result._values._ndarray, check_same="same"
-                )
-            elif (
-                isinstance(index.dtype, StringDtype)
-                and index.dtype.storage == "pyarrow"
-            ):
+                tm.assert_numpy_array_equal(index._values._ndarray, result._values._ndarray, check_same="same")
+            elif isinstance(index.dtype, StringDtype) and index.dtype.storage == "pyarrow":
                 assert tm.shares_memory(result._values, index._values)
             else:
                 raise NotImplementedError(index.dtype)
@@ -392,9 +370,7 @@ class TestBase:
             np.repeat(idx, rep, axis=0)
 
     def test_where(self, listlike_box, simple_index):
-        if isinstance(simple_index, (IntervalIndex, PeriodIndex)) or is_numeric_dtype(
-            simple_index.dtype
-        ):
+        if isinstance(simple_index, (IntervalIndex, PeriodIndex)) or is_numeric_dtype(simple_index.dtype):
             pytest.skip("Tested elsewhere.")
         klass = listlike_box
 
@@ -578,9 +554,7 @@ class TestBase:
 
     def test_format(self, simple_index):
         # GH35439
-        if is_numeric_dtype(simple_index.dtype) or isinstance(
-            simple_index, DatetimeIndex
-        ):
+        if is_numeric_dtype(simple_index.dtype) or isinstance(simple_index, DatetimeIndex):
             pytest.skip("Tested elsewhere.")
         idx = simple_index
         expected = [str(x) for x in idx]
@@ -823,9 +797,7 @@ class TestBase:
     def test_index_groupby(self, simple_index):
         idx = simple_index[:5]
         to_groupby = np.array([1, 2, np.nan, 2, 1])
-        tm.assert_dict_equal(
-            idx.groupby(to_groupby), {1.0: idx[[0, 4]], 2.0: idx[[1, 3]]}
-        )
+        tm.assert_dict_equal(idx.groupby(to_groupby), {1.0: idx[[0, 4]], 2.0: idx[[1, 3]]})
 
         to_groupby = DatetimeIndex(
             [

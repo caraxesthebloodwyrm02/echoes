@@ -2,6 +2,7 @@
 Tests that work on both the Python and C engines but do not have a
 specific classification into the other test modules.
 """
+
 from io import StringIO
 
 import numpy as np
@@ -16,9 +17,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 @pytest.mark.parametrize("index_col", [0, "index"])
@@ -190,9 +189,7 @@ def test_read_chunksize_jagged_names(all_parsers):
     if parser.engine == "pyarrow":
         msg = "The 'chunksize' option is not supported with the 'pyarrow' engine"
         with pytest.raises(ValueError, match=msg):
-            with parser.read_csv(
-                StringIO(data), names=range(10), chunksize=4
-            ) as reader:
+            with parser.read_csv(StringIO(data), names=range(10), chunksize=4) as reader:
                 concat(reader)
         return
 
@@ -252,8 +249,7 @@ def test_warn_if_chunks_have_mismatched_type(all_parsers, using_infer_string):
     else:
         df = parser.read_csv_check_warnings(
             warning_type,
-            r"Columns \(0\) have mixed types. "
-            "Specify dtype option on import or set low_memory=False.",
+            r"Columns \(0\) have mixed types. " "Specify dtype option on import or set low_memory=False.",
             buf,
         )
     if parser.engine == "c" and parser.low_memory:
@@ -274,9 +270,7 @@ def test_empty_with_nrows_chunksize(all_parsers, iterator):
     data = StringIO("foo,bar\n")
 
     if parser.engine == "pyarrow":
-        msg = (
-            "The '(nrows|chunksize)' option is not supported with the 'pyarrow' engine"
-        )
+        msg = "The '(nrows|chunksize)' option is not supported with the 'pyarrow' engine"
         with pytest.raises(ValueError, match=msg):
             if iterator:
                 with parser.read_csv(data, chunksize=nrows) as reader:

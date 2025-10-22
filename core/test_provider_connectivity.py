@@ -101,9 +101,7 @@ def test_provider_connectivity() -> bool:
     print("\n🔧 Client Initialization:")
     try:
         client = LLMClient()
-        print(
-            f"  ✓ LLMClient initialized: provider={client.provider}, model={client.model}"
-        )
+        print(f"  ✓ LLMClient initialized: provider={client.provider}, model={client.model}")
     except Exception as e:
         print(f"  ✗ LLMClient initialization failed: {e}")
         return False

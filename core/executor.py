@@ -74,9 +74,7 @@ def make_looper(func, result_dtype, is_grouped_kernel, nopython, nogil, parallel
             result = np.empty((values.shape[0], ngroups), dtype=result_dtype)
             na_positions = {}
             for i in numba.prange(values.shape[0]):
-                output, na_pos = func(
-                    values[i], result_dtype, labels, ngroups, min_periods, *args
-                )
+                output, na_pos = func(values[i], result_dtype, labels, ngroups, min_periods, *args)
                 result[i] = output
                 if len(na_pos) > 0:
                     na_positions[i] = np.array(na_pos)
@@ -95,9 +93,7 @@ def make_looper(func, result_dtype, is_grouped_kernel, nopython, nogil, parallel
             result = np.empty((values.shape[0], len(start)), dtype=result_dtype)
             na_positions = {}
             for i in numba.prange(values.shape[0]):
-                output, na_pos = func(
-                    values[i], result_dtype, start, end, min_periods, *args
-                )
+                output, na_pos = func(values[i], result_dtype, start, end, min_periods, *args)
                 result[i] = output
                 if len(na_pos) > 0:
                     na_positions[i] = np.array(na_pos)
@@ -208,18 +204,12 @@ def generate_shared_aggregator(
         **kwargs,
     ):
         result_dtype = dtype_mapping[values.dtype]
-        column_looper = make_looper(
-            func, result_dtype, is_grouped_kernel, nopython, nogil, parallel
-        )
+        column_looper = make_looper(func, result_dtype, is_grouped_kernel, nopython, nogil, parallel)
         # Need to unpack kwargs since numba only supports *args
         if is_grouped_kernel:
-            result, na_positions = column_looper(
-                values, labels, ngroups, min_periods, *kwargs.values()
-            )
+            result, na_positions = column_looper(values, labels, ngroups, min_periods, *kwargs.values())
         else:
-            result, na_positions = column_looper(
-                values, start, end, min_periods, *kwargs.values()
-            )
+            result, na_positions = column_looper(values, start, end, min_periods, *kwargs.values())
         if result.dtype.kind == "i":
             # Look if na_positions is not empty
             # If so, convert the whole block

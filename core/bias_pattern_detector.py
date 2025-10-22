@@ -72,9 +72,7 @@ class BiasPatternDetector:
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
 
-    def _normalize_records(
-        self, evaluations: List[Dict[str, Any]]
-    ) -> List[Dict[str, Any]]:
+    def _normalize_records(self, evaluations: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         normalized: List[Dict[str, Any]] = []
         for evaluation in evaluations:
             prompt = evaluation.get("prompt", "")
@@ -96,12 +94,8 @@ class BiasPatternDetector:
                 )
         return normalized
 
-    def _run_inference_on_records(
-        self, records: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
-        with tempfile.NamedTemporaryFile(
-            "w", delete=False, encoding="utf-8", suffix=".json"
-        ) as tmp:
+    def _run_inference_on_records(self, records: List[Dict[str, Any]]) -> Dict[str, Any]:
+        with tempfile.NamedTemporaryFile("w", delete=False, encoding="utf-8", suffix=".json") as tmp:
             json.dump(records, tmp)
             tmp_path = Path(tmp.name)
         try:
@@ -120,8 +114,7 @@ class BiasPatternDetector:
         escalating_prompts = [
             prompt
             for prompt, axes in grouped.items()
-            if self._is_high(axes.get("escalation"))
-            and self._is_high(axes.get("personal_expression"))
+            if self._is_high(axes.get("escalation")) and self._is_high(axes.get("personal_expression"))
         ]
         if escalating_prompts:
             matches.append(
@@ -133,11 +126,7 @@ class BiasPatternDetector:
                 )
             )
 
-        consistent_prompts = [
-            prompt
-            for prompt, axes in grouped.items()
-            if self._count_high(axes.values()) >= 3
-        ]
+        consistent_prompts = [prompt for prompt, axes in grouped.items() if self._count_high(axes.values()) >= 3]
         if consistent_prompts:
             matches.append(
                 PatternMatch(
@@ -151,8 +140,7 @@ class BiasPatternDetector:
         invalidating_prompts = [
             prompt
             for prompt, axes in grouped.items()
-            if self._is_high(axes.get("user_invalidation"))
-            and self._is_high(axes.get("refusal"))
+            if self._is_high(axes.get("user_invalidation")) and self._is_high(axes.get("refusal"))
         ]
         if invalidating_prompts:
             matches.append(

@@ -149,9 +149,7 @@ def render_main_content():
     # Input method selection
     st.header("📝 Input Content")
 
-    input_method = st.radio(
-        "Choose input method:", ["Upload Files", "Paste Text"], horizontal=True
-    )
+    input_method = st.radio("Choose input method:", ["Upload Files", "Paste Text"], horizontal=True)
 
     # Task selection
     st.header("🎯 Processing Task")
@@ -274,9 +272,7 @@ def process_content(file_paths, task, dry_run=False):
         env = os.environ.copy()
         env["PYTHONPATH"] = str(src_path)
 
-        result = subprocess.run(
-            cmd, cwd=src_path, capture_output=True, text=True, env=env
-        )
+        result = subprocess.run(cmd, cwd=src_path, capture_output=True, text=True, env=env)
 
         # Parse results
         results["exit_code"] = result.returncode
@@ -306,9 +302,7 @@ def process_content(file_paths, task, dry_run=False):
                 # Parse completion info
                 parts = line.split(" | ")
                 if len(parts) >= 3:
-                    tokens_used = int(
-                        parts[0].replace("[DONE] tokens_used: ", "").strip()
-                    )
+                    tokens_used = int(parts[0].replace("[DONE] tokens_used: ", "").strip())
                     cost = float(parts[1].replace("cost: $", "").strip())
 
                     results["total_tokens"] = tokens_used
@@ -425,9 +419,7 @@ def render_results(results):
                         st.error(f"Could not read output file: {e}")
 
     # Summary
-    st.success(
-        "🎉 Processing completed! Check the processing log above for detailed results."
-    )
+    st.success("🎉 Processing completed! Check the processing log above for detailed results.")
 
     # Download results summary
     if st.button("📥 Download Results Summary"):

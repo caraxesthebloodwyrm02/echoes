@@ -1,4 +1,4 @@
-#-*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 # Generated from danish.sbl by Snowball 3.0.1 - https://snowballstem.org/
 
 from .basestemmer import BaseStemmer
@@ -6,16 +6,16 @@ from .among import Among
 
 
 class DanishStemmer(BaseStemmer):
-    '''
+    """
     This class implements the stemming algorithm defined by a snowball script.
     Generated from danish.sbl by Snowball 3.0.1 - https://snowballstem.org/
-    '''
+    """
 
-    g_c = {u"b", u"c", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u"m", u"n", u"p", u"q", u"r", u"s", u"t", u"v", u"w", u"x", u"z"}
+    g_c = {"b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "p", "q", "r", "s", "t", "v", "w", "x", "z"}
 
-    g_v = {u"a", u"e", u"i", u"o", u"u", u"y", u"æ", u"å", u"ø"}
+    g_v = {"a", "e", "i", "o", "u", "y", "æ", "å", "ø"}
 
-    g_s_ending = {u"a", u"b", u"c", u"d", u"f", u"g", u"h", u"j", u"k", u"l", u"m", u"n", u"o", u"p", u"r", u"t", u"v", u"y", u"z", u"å"}
+    g_s_ending = {"a", "b", "c", "d", "f", "g", "h", "j", "k", "l", "m", "n", "o", "p", "r", "t", "v", "y", "z", "å"}
 
     I_x = 0
     I_p1 = 0
@@ -41,7 +41,8 @@ class DanishStemmer(BaseStemmer):
             if self.I_p1 >= self.I_x:
                 raise lab0()
             self.I_p1 = self.I_x
-        except lab0: pass
+        except lab0:
+            pass
         return True
 
     def __r_main_suffix(self):
@@ -94,15 +95,16 @@ class DanishStemmer(BaseStemmer):
         v_1 = self.limit - self.cursor
         try:
             self.ket = self.cursor
-            if not self.eq_s_b(u"st"):
+            if not self.eq_s_b("st"):
                 raise lab0()
             self.bra = self.cursor
-            if not self.eq_s_b(u"ig"):
+            if not self.eq_s_b("ig"):
                 raise lab0()
             if not self.slice_del():
                 return False
 
-        except lab0: pass
+        except lab0:
+            pass
         self.cursor = self.limit - v_1
         if self.cursor < self.I_p1:
             return False
@@ -123,7 +125,7 @@ class DanishStemmer(BaseStemmer):
             self.__r_consonant_pair()
             self.cursor = self.limit - v_4
         else:
-            if not self.slice_from(u"løs"):
+            if not self.slice_from("løs"):
                 return False
         return True
 
@@ -138,7 +140,7 @@ class DanishStemmer(BaseStemmer):
             return False
         self.bra = self.cursor
         self.S_ch = self.slice_to()
-        if self.S_ch == '':
+        if self.S_ch == "":
             return False
         self.limit_backward = v_2
         if not self.eq_s_b(self.S_ch):
@@ -170,54 +172,44 @@ class DanishStemmer(BaseStemmer):
         return True
 
     a_0 = [
-        Among(u"hed", -1, 1),
-        Among(u"ethed", 0, 1),
-        Among(u"ered", -1, 1),
-        Among(u"e", -1, 1),
-        Among(u"erede", 3, 1),
-        Among(u"ende", 3, 1),
-        Among(u"erende", 5, 1),
-        Among(u"ene", 3, 1),
-        Among(u"erne", 3, 1),
-        Among(u"ere", 3, 1),
-        Among(u"en", -1, 1),
-        Among(u"heden", 10, 1),
-        Among(u"eren", 10, 1),
-        Among(u"er", -1, 1),
-        Among(u"heder", 13, 1),
-        Among(u"erer", 13, 1),
-        Among(u"s", -1, 2),
-        Among(u"heds", 16, 1),
-        Among(u"es", 16, 1),
-        Among(u"endes", 18, 1),
-        Among(u"erendes", 19, 1),
-        Among(u"enes", 18, 1),
-        Among(u"ernes", 18, 1),
-        Among(u"eres", 18, 1),
-        Among(u"ens", 16, 1),
-        Among(u"hedens", 24, 1),
-        Among(u"erens", 24, 1),
-        Among(u"ers", 16, 1),
-        Among(u"ets", 16, 1),
-        Among(u"erets", 28, 1),
-        Among(u"et", -1, 1),
-        Among(u"eret", 30, 1)
+        Among("hed", -1, 1),
+        Among("ethed", 0, 1),
+        Among("ered", -1, 1),
+        Among("e", -1, 1),
+        Among("erede", 3, 1),
+        Among("ende", 3, 1),
+        Among("erende", 5, 1),
+        Among("ene", 3, 1),
+        Among("erne", 3, 1),
+        Among("ere", 3, 1),
+        Among("en", -1, 1),
+        Among("heden", 10, 1),
+        Among("eren", 10, 1),
+        Among("er", -1, 1),
+        Among("heder", 13, 1),
+        Among("erer", 13, 1),
+        Among("s", -1, 2),
+        Among("heds", 16, 1),
+        Among("es", 16, 1),
+        Among("endes", 18, 1),
+        Among("erendes", 19, 1),
+        Among("enes", 18, 1),
+        Among("ernes", 18, 1),
+        Among("eres", 18, 1),
+        Among("ens", 16, 1),
+        Among("hedens", 24, 1),
+        Among("erens", 24, 1),
+        Among("ers", 16, 1),
+        Among("ets", 16, 1),
+        Among("erets", 28, 1),
+        Among("et", -1, 1),
+        Among("eret", 30, 1),
     ]
 
-    a_1 = [
-        Among(u"gd", -1, -1),
-        Among(u"dt", -1, -1),
-        Among(u"gt", -1, -1),
-        Among(u"kt", -1, -1)
-    ]
+    a_1 = [Among("gd", -1, -1), Among("dt", -1, -1), Among("gt", -1, -1), Among("kt", -1, -1)]
 
-    a_2 = [
-        Among(u"ig", -1, 1),
-        Among(u"lig", 0, 1),
-        Among(u"elig", 1, 1),
-        Among(u"els", -1, 1),
-        Among(u"løst", -1, 2)
-    ]
+    a_2 = [Among("ig", -1, 1), Among("lig", 0, 1), Among("elig", 1, 1), Among("els", -1, 1), Among("løst", -1, 2)]
 
 
-class lab0(BaseException): pass
+class lab0(BaseException):
+    pass

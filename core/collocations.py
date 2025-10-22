@@ -35,11 +35,7 @@ import itertools as _itertools
 # these two unused imports are referenced in collocations.doctest
 from nltk.metrics import (
     BigramAssocMeasures,
-    ContingencyMeasures,
-    QuadgramAssocMeasures,
-    TrigramAssocMeasures,
 )
-from nltk.metrics.spearman import ranks_from_scores, spearman_correlation
 from nltk.probability import FreqDist
 from nltk.util import ngrams
 
@@ -61,21 +57,15 @@ class AbstractCollocationFinder:
         self.ngram_fd = ngram_fd
 
     @classmethod
-    def _build_new_documents(
-        cls, documents, window_size, pad_left=False, pad_right=False, pad_symbol=None
-    ):
+    def _build_new_documents(cls, documents, window_size, pad_left=False, pad_right=False, pad_symbol=None):
         """
         Pad the document with the place holder according to the window_size
         """
         padding = (pad_symbol,) * (window_size - 1)
         if pad_right:
-            return _itertools.chain.from_iterable(
-                _itertools.chain(doc, padding) for doc in documents
-            )
+            return _itertools.chain.from_iterable(_itertools.chain(doc, padding) for doc in documents)
         if pad_left:
-            return _itertools.chain.from_iterable(
-                _itertools.chain(padding, doc) for doc in documents
-            )
+            return _itertools.chain.from_iterable(_itertools.chain(padding, doc) for doc in documents)
 
     @classmethod
     def from_documents(cls, documents):
@@ -83,9 +73,7 @@ class AbstractCollocationFinder:
         each of which is a list (or iterable) of tokens.
         """
         # return cls.from_words(_itertools.chain(*documents))
-        return cls.from_words(
-            cls._build_new_documents(documents, cls.default_ws, pad_right=True)
-        )
+        return cls.from_words(cls._build_new_documents(documents, cls.default_ws, pad_right=True))
 
     @staticmethod
     def _ngram_freqdist(words, n):
@@ -354,7 +342,6 @@ class QuadgramCollocationFinder(AbstractCollocationFinder):
 def demo(scorer=None, compare_scorer=None):
     """Finds bigram collocations in the files of the WebText corpus."""
     from nltk.metrics import (
-        BigramAssocMeasures,
         ranks_from_scores,
         spearman_correlation,
     )
@@ -391,8 +378,6 @@ def demo(scorer=None, compare_scorer=None):
 
 if __name__ == "__main__":
     import sys
-
-    from nltk.metrics import BigramAssocMeasures
 
     try:
         scorer = eval("BigramAssocMeasures." + sys.argv[1])

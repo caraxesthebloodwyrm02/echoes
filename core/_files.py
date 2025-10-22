@@ -35,7 +35,7 @@ class FilenameUniqDict(dict[str, tuple[set[str], str]]):  # NoQA: FURB189
         i = 0
         while unique_name in self._existing:
             i += 1
-            unique_name = f'{base}{i}{ext}'
+            unique_name = f"{base}{i}{ext}"
         self[newfile] = ({docname}, unique_name)
         self._existing.add(unique_name)
         return unique_name
@@ -47,9 +47,7 @@ class FilenameUniqDict(dict[str, tuple[set[str], str]]):  # NoQA: FURB189
                 del self[filename]
                 self._existing.discard(unique)
 
-    def merge_other(
-        self, docnames: Set[str], other: dict[str, tuple[set[str], str]]
-    ) -> None:
+    def merge_other(self, docnames: Set[str], other: dict[str, tuple[set[str], str]]) -> None:
         for filename, (docs, _unique) in other.items():
             for doc in docs & set(docnames):
                 self.add_file(doc, filename)
@@ -71,9 +69,7 @@ class DownloadFiles(dict[Path, tuple[set[str], _StrPath]]):  # NoQA: FURB189
     def add_file(self, docname: str, filename: str | os.PathLike[str]) -> _StrPath:
         filename = Path(filename)
         if filename not in self:
-            digest = hashlib.md5(
-                filename.as_posix().encode(), usedforsecurity=False
-            ).hexdigest()
+            digest = hashlib.md5(filename.as_posix().encode(), usedforsecurity=False).hexdigest()
             dest_path = _StrPath(digest, filename.name)
             self[filename] = ({docname}, dest_path)
             return dest_path
@@ -88,9 +84,7 @@ class DownloadFiles(dict[Path, tuple[set[str], _StrPath]]):  # NoQA: FURB189
             if not docs:
                 del self[filename]
 
-    def merge_other(
-        self, docnames: Set[str], other: dict[Path, tuple[set[str], _StrPath]]
-    ) -> None:
+    def merge_other(self, docnames: Set[str], other: dict[Path, tuple[set[str], _StrPath]]) -> None:
         for filename, (docs, _dest) in other.items():
             for docname in docs & set(docnames):
                 self.add_file(docname, filename)

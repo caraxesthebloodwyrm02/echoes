@@ -21,8 +21,6 @@ class _HasModule(Protocol):
 def set_module(module: None) -> IdentityFunction: ...
 @overload
 def set_module(module: str) -> Callable[[_HasModuleT], _HasModuleT]: ...
-
-#
 def _rename_parameter(
     old_names: Iterable[str],
     new_names: Iterable[str],

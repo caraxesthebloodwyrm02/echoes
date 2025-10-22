@@ -12,6 +12,7 @@ import sys
 import types
 from typing import Any
 import unittest
+import pdb  # needed for type hints only
 
 from _pytest import outcomes
 from _pytest._code import ExceptionInfo
@@ -32,9 +33,7 @@ def _validate_usepdb_cls(value: str) -> tuple[str, str]:
     try:
         modname, classname = value.split(":")
     except ValueError as e:
-        raise argparse.ArgumentTypeError(
-            f"{value!r} is not in the format 'modname:classname'"
-        ) from e
+        raise argparse.ArgumentTypeError(f"{value!r} is not in the format 'modname:classname'") from e
     return (modname, classname)
 
 
@@ -63,16 +62,12 @@ def pytest_addoption(parser: Parser) -> None:
 
 
 def pytest_configure(config: Config) -> None:
-    import pdb
-
     if config.getvalue("trace"):
         config.pluginmanager.register(PdbTrace(), "pdbtrace")
     if config.getvalue("usepdb"):
         config.pluginmanager.register(PdbInvoke(), "pdbinvoke")
 
-    pytestPDB._saved.append(
-        (pdb.set_trace, pytestPDB._pluginmanager, pytestPDB._config)
-    )
+    pytestPDB._saved.append((pdb.set_trace, pytestPDB._pluginmanager, pytestPDB._config))
     pdb.set_trace = pytestPDB.set_trace
     pytestPDB._pluginmanager = config.pluginmanager
     pytestPDB._config = config
@@ -94,9 +89,7 @@ class pytestPDB:
 
     _pluginmanager: PytestPluginManager | None = None
     _config: Config | None = None
-    _saved: list[
-        tuple[Callable[..., None], PytestPluginManager | None, Config | None]
-    ] = []
+    _saved: list[tuple[Callable[..., None], PytestPluginManager | None, Config | None]] = []
     _recursive_debug = 0
     _wrapped_pdb_cls: tuple[type[Any], type[Any]] | None = None
 
@@ -109,10 +102,8 @@ class pytestPDB:
     @classmethod
     def _import_pdb_cls(cls, capman: CaptureManager | None):
         if not cls._config:
-            import pdb
-
             # Happens when using pytest.set_trace outside of a test.
-            return pdb.Pdb
+            return None
 
         usepdb_cls = cls._config.getvalue("usepdb_cls")
 
@@ -133,9 +124,7 @@ class pytestPDB:
                     pdb_cls = getattr(pdb_cls, part)
             except Exception as exc:
                 value = ":".join((modname, classname))
-                raise UsageError(
-                    f"--pdbcls: could not import {value!r}: {exc}"
-                ) from exc
+                raise UsageError(f"--pdbcls: could not import {value!r}: {exc}") from exc
         else:
             import pdb
 
@@ -285,9 +274,7 @@ class pytestPDB:
 
 
 class PdbInvoke:
-    def pytest_exception_interact(
-        self, node: Node, call: CallInfo[Any], report: BaseReport
-    ) -> None:
+    def pytest_exception_interact(self, node: Node, call: CallInfo[Any], report: BaseReport) -> None:
         capman = node.config.pluginmanager.getplugin("capturemanager")
         if capman:
             capman.suspend_global_capture(in_=True)
@@ -337,9 +324,7 @@ def maybe_wrap_pytest_function_for_tracing(pyfuncitem) -> None:
         wrap_pytest_function_for_tracing(pyfuncitem)
 
 
-def _enter_pdb(
-    node: Node, excinfo: ExceptionInfo[BaseException], rep: BaseReport
-) -> BaseReport:
+def _enter_pdb(node: Node, excinfo: ExceptionInfo[BaseException], rep: BaseReport) -> BaseReport:
     # XXX we reuse the TerminalReporter's terminalwriter
     # because this seems to avoid some encoding related troubles
     # for not completely clear reasons.

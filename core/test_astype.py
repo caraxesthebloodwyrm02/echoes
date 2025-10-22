@@ -34,9 +34,7 @@ def rand_str(nchars: int) -> str:
     """
     Generate one random byte string.
     """
-    RANDS_CHARS = np.array(
-        list(string.ascii_letters + string.digits), dtype=(np.str_, 1)
-    )
+    RANDS_CHARS = np.array(list(string.ascii_letters + string.digits), dtype=(np.str_, 1))
     return "".join(np.random.default_rng(2).choice(RANDS_CHARS, nchars))
 
 
@@ -60,10 +58,7 @@ class TestAstypeAPI:
         # see GH#14878
         ser = Series([1, 2, 3])
 
-        msg = (
-            r"Expected value of kwarg 'errors' to be one of \['raise', "
-            r"'ignore'\]\. Supplied value is 'False'"
-        )
+        msg = r"Expected value of kwarg 'errors' to be one of \['raise', " r"'ignore'\]\. Supplied value is 'False'"
         with pytest.raises(ValueError, match=msg):
             ser.astype(np.float64, errors=False)
 
@@ -85,10 +80,7 @@ class TestAstypeAPI:
         tm.assert_series_equal(result, expected)
 
         dt3 = dtype_class({"abc": str, "def": str})
-        msg = (
-            "Only the Series name can be used for the key in Series dtype "
-            r"mappings\."
-        )
+        msg = "Only the Series name can be used for the key in Series dtype " r"mappings\."
         with pytest.raises(KeyError, match=msg):
             ser.astype(dt3)
 
@@ -205,10 +197,7 @@ class TestAstype:
             mark = pytest.mark.xfail(reason="GH#33890 Is assigned ns unit")
             request.applymarker(mark)
 
-        msg = (
-            rf"The '{dtype.__name__}' dtype has no unit\. "
-            rf"Please pass in '{dtype.__name__}\[ns\]' instead."
-        )
+        msg = rf"The '{dtype.__name__}' dtype has no unit\. " rf"Please pass in '{dtype.__name__}\[ns\]' instead."
         with pytest.raises(ValueError, match=msg):
             ser.astype(dtype)
 
@@ -244,9 +233,7 @@ class TestAstype:
         ser = ser.astype("O")
         assert ser.dtype == np.object_
 
-        ser = Series(
-            [datetime(2001, 1, 2, 0, 0) for i in range(3)], dtype=f"M8[{unit}]"
-        )
+        ser = Series([datetime(2001, 1, 2, 0, 0) for i in range(3)], dtype=f"M8[{unit}]")
 
         ser[1] = np.nan
         assert ser.dtype == f"M8[{unit}]"
@@ -366,9 +353,7 @@ class TestAstype:
         # https://github.com/pandas-dev/pandas/issues/36904
         ser = Series(["a", "b", value], dtype=object)
         result = ser.astype(str)
-        expected = Series(
-            ["a", "b", None if using_infer_string else string_value], dtype="str"
-        )
+        expected = Series(["a", "b", None if using_infer_string else string_value], dtype="str")
         tm.assert_series_equal(result, expected)
 
     @pytest.mark.parametrize("dtype", ["float32", "float64", "int64", "int32"])
@@ -396,9 +381,7 @@ class TestAstype:
         with pytest.raises(ValueError, match=msg):
             arr.astype(dtype)
 
-    def test_astype_float_to_uint_negatives_raise(
-        self, float_numpy_dtype, any_unsigned_int_numpy_dtype
-    ):
+    def test_astype_float_to_uint_negatives_raise(self, float_numpy_dtype, any_unsigned_int_numpy_dtype):
         # GH#45151 We don't cast negative numbers to nonsense values
         # TODO: same for EA float/uint dtypes, signed integers?
         arr = np.arange(5).astype(float_numpy_dtype) - 3  # includes negatives
@@ -517,13 +500,9 @@ class TestAstypeString:
             # currently no way to parse IntervalArray from a list of strings
         ],
     )
-    def test_astype_string_to_extension_dtype_roundtrip(
-        self, data, dtype, request, nullable_string_dtype
-    ):
+    def test_astype_string_to_extension_dtype_roundtrip(self, data, dtype, request, nullable_string_dtype):
         if dtype == "boolean":
-            mark = pytest.mark.xfail(
-                reason="TODO StringArray.astype() with missing values #GH40566"
-            )
+            mark = pytest.mark.xfail(reason="TODO StringArray.astype() with missing values #GH40566")
             request.applymarker(mark)
         # GH-40351
         ser = Series(data, dtype=dtype)
@@ -570,9 +549,7 @@ class TestAstypeCategorical:
         tm.assert_series_equal(ser.astype("category"), ser)
         tm.assert_series_equal(ser.astype(CategoricalDtype()), ser)
 
-        roundtrip_expected = ser.cat.set_categories(
-            ser.cat.categories.sort_values()
-        ).cat.remove_unused_categories()
+        roundtrip_expected = ser.cat.set_categories(ser.cat.categories.sort_values()).cat.remove_unused_categories()
         result = ser.astype("object").astype("category")
         tm.assert_series_equal(result, roundtrip_expected)
         result = ser.astype("object").astype(CategoricalDtype())
@@ -584,10 +561,7 @@ class TestAstypeCategorical:
         ser = Series(np.random.default_rng(2).integers(0, 10000, 100)).sort_values()
         ser = cut(ser, range(0, 10500, 500), right=False, labels=cat)
 
-        msg = (
-            "dtype '<class 'pandas.core.arrays.categorical.Categorical'>' "
-            "not understood"
-        )
+        msg = "dtype '<class 'pandas.core.arrays.categorical.Categorical'>' " "not understood"
         with pytest.raises(TypeError, match=msg):
             ser.astype(Categorical)
         with pytest.raises(TypeError, match=msg):
@@ -604,18 +578,14 @@ class TestAstypeCategorical:
         tm.assert_series_equal(result, expected)
 
         result = ser.astype(CategoricalDtype(["a", "b", "c"], ordered=False))
-        expected = Series(
-            Categorical(["a", "b", "a"], categories=["a", "b", "c"], ordered=False)
-        )
+        expected = Series(Categorical(["a", "b", "a"], categories=["a", "b", "c"], ordered=False))
         tm.assert_series_equal(result, expected)
         tm.assert_index_equal(result.cat.categories, Index(["a", "b", "c"]))
 
     @pytest.mark.parametrize("name", [None, "foo"])
     @pytest.mark.parametrize("dtype_ordered", [True, False])
     @pytest.mark.parametrize("series_ordered", [True, False])
-    def test_astype_categorical_to_categorical(
-        self, name, dtype_ordered, series_ordered
-    ):
+    def test_astype_categorical_to_categorical(self, name, dtype_ordered, series_ordered):
         # GH#10696, GH#18593
         s_data = list("abcaacbab")
         s_dtype = CategoricalDtype(list("bac"), ordered=series_ordered)

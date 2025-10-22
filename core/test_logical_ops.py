@@ -91,10 +91,7 @@ class TestSeriesLogicalOps:
         # GH#9016: support bitwise op for integer types
         s_0123 = Series(range(4), dtype="int64")
 
-        warn_msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        warn_msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
 
         msg = "Cannot perform.+with a dtyped.+array and scalar of type"
         with pytest.raises(TypeError, match=msg):
@@ -113,10 +110,7 @@ class TestSeriesLogicalOps:
     def test_logical_operators_int_dtype_with_str(self):
         s_1111 = Series([1] * 4, dtype="int8")
 
-        warn_msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        warn_msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
 
         msg = "Cannot perform 'and_' with a dtyped.+array and scalar of type"
         with pytest.raises(TypeError, match=msg):
@@ -134,10 +128,7 @@ class TestSeriesLogicalOps:
         result = s_0123 & False
         tm.assert_series_equal(result, expected)
 
-        warn_msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        warn_msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
         with tm.assert_produces_warning(FutureWarning, match=warn_msg):
             result = s_0123 & [False]
         tm.assert_series_equal(result, expected)
@@ -159,9 +150,7 @@ class TestSeriesLogicalOps:
         tm.assert_series_equal(result, expected)
 
         s_abNd = Series(["a", "b", np.nan, "d"])
-        with pytest.raises(
-            TypeError, match="unsupported.* 'int' and 'str'|'rand_' not supported"
-        ):
+        with pytest.raises(TypeError, match="unsupported.* 'int' and 'str'|'rand_' not supported"):
             s_0123 & s_abNd
 
     def test_logical_operators_bool_dtype_with_int(self):
@@ -183,10 +172,7 @@ class TestSeriesLogicalOps:
         left = Series([True, True, True, False, True])
         right = [True, False, None, True, np.nan]
 
-        msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
 
         expected = Series([True, False, False, False, False])
         with tm.assert_produces_warning(FutureWarning, match=msg):
@@ -270,10 +256,7 @@ class TestSeriesLogicalOps:
         expected = Series(True, index=s.index)
         expected[::2] = False
 
-        msg = (
-            r"Logical ops \(and, or, xor\) between Pandas objects and "
-            "dtype-less sequences"
-        )
+        msg = r"Logical ops \(and, or, xor\) between Pandas objects and " "dtype-less sequences"
         with tm.assert_produces_warning(FutureWarning, match=msg):
             result = s & list(s)
         tm.assert_series_equal(result, expected)
@@ -432,9 +415,7 @@ class TestSeriesLogicalOps:
             if using_infer_string:
                 # TODO(infer_string) should this behave differently?
                 # -> https://github.com/pandas-dev/pandas/issues/60234
-                with pytest.raises(
-                    TypeError, match="not supported for dtype|unsupported operand type"
-                ):
+                with pytest.raises(TypeError, match="not supported for dtype|unsupported operand type"):
                     result = a[a | e]
             else:
                 result = a[a | e]

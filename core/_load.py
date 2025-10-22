@@ -57,8 +57,8 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         if not isinstance(name, str) or not name:
             errors += 1
             msg = __(
-                'Invalid intersphinx project identifier `%r` in intersphinx_mapping. '
-                'Project identifiers must be non-empty strings.'
+                "Invalid intersphinx project identifier `%r` in intersphinx_mapping. "
+                "Project identifiers must be non-empty strings."
             )
             LOGGER.error(msg, name)
             del config.intersphinx_mapping[name]
@@ -67,10 +67,7 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         # ensure values are properly formatted
         if not isinstance(value, (tuple | list)):
             errors += 1
-            msg = __(
-                'Invalid value `%r` in intersphinx_mapping[%r]. '
-                'Expected a two-element tuple or list.'
-            )
+            msg = __("Invalid value `%r` in intersphinx_mapping[%r]. " "Expected a two-element tuple or list.")
             LOGGER.error(msg, value, name)
             del config.intersphinx_mapping[name]
             continue
@@ -79,8 +76,8 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         except (TypeError, ValueError, Exception):
             errors += 1
             msg = __(
-                'Invalid value `%r` in intersphinx_mapping[%r]. '
-                'Values must be a (target URI, inventory locations) pair.'
+                "Invalid value `%r` in intersphinx_mapping[%r]. "
+                "Values must be a (target URI, inventory locations) pair."
             )
             LOGGER.error(msg, value, name)  # NoQA: TRY400
             del config.intersphinx_mapping[name]
@@ -90,8 +87,8 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         if not uri or not isinstance(uri, str):
             errors += 1
             msg = __(
-                'Invalid target URI value `%r` in intersphinx_mapping[%r][0]. '
-                'Target URIs must be unique non-empty strings.'
+                "Invalid target URI value `%r` in intersphinx_mapping[%r][0]. "
+                "Target URIs must be unique non-empty strings."
             )
             LOGGER.error(msg, uri, name)
             del config.intersphinx_mapping[name]
@@ -99,8 +96,8 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         if uri in seen:
             errors += 1
             msg = __(
-                'Invalid target URI value `%r` in intersphinx_mapping[%r][0]. '
-                'Target URIs must be unique (other instance in intersphinx_mapping[%r]).'
+                "Invalid target URI value `%r` in intersphinx_mapping[%r][0]. "
+                "Target URIs must be unique (other instance in intersphinx_mapping[%r])."
             )
             LOGGER.error(msg, uri, name, seen[uri])
             del config.intersphinx_mapping[name]
@@ -118,8 +115,8 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
             else:
                 errors += 1
                 msg = __(
-                    'Invalid inventory location value `%r` in intersphinx_mapping[%r][1]. '
-                    'Inventory locations must be non-empty strings or None.'
+                    "Invalid inventory location value `%r` in intersphinx_mapping[%r][1]. "
+                    "Inventory locations must be non-empty strings or None."
                 )
                 LOGGER.error(msg, target, name)
                 del config.intersphinx_mapping[name]
@@ -128,10 +125,10 @@ def validate_intersphinx_mapping(app: Sphinx, config: Config) -> None:
         config.intersphinx_mapping[name] = (name, (uri, tuple(targets)))
 
     if errors == 1:
-        msg = __('Invalid `intersphinx_mapping` configuration (1 error).')
+        msg = __("Invalid `intersphinx_mapping` configuration (1 error).")
         raise ConfigError(msg)
     if errors > 1:
-        msg = __('Invalid `intersphinx_mapping` configuration (%s errors).')
+        msg = __("Invalid `intersphinx_mapping` configuration (%s errors).")
         raise ConfigError(msg % errors)
 
 
@@ -149,13 +146,9 @@ def load_mappings(app: Sphinx) -> None:
     projects = []
     for name, (uri, locations) in intersphinx_mapping.values():
         try:
-            project = _IntersphinxProject(
-                name=name, target_uri=uri, locations=locations
-            )
+            project = _IntersphinxProject(name=name, target_uri=uri, locations=locations)
         except ValueError as err:
-            msg = __(
-                'An invalid intersphinx_mapping entry was added after normalisation.'
-            )
+            msg = __("An invalid intersphinx_mapping entry was added after normalisation.")
             raise ConfigError(msg) from err
         else:
             projects.append(project)
@@ -252,11 +245,7 @@ def _fetch_inventory_group(
 
         # decide whether the inventory must be read: always read local
         # files; remote ones only if the cache time is expired
-        if (
-            '://' not in inv_location
-            or project.target_uri not in cache
-            or cache[project.target_uri][1] < cache_time
-        ):
+        if "://" not in inv_location or project.target_uri not in cache or cache[project.target_uri][1] < cache_time:
             LOGGER.info(
                 __("loading intersphinx inventory '%s' from %s ..."),
                 project.name,
@@ -282,19 +271,14 @@ def _fetch_inventory_group(
     if not failures:
         pass
     elif len(failures) < len(project.locations):
-        LOGGER.info(
-            __(
-                'encountered some issues with some of the inventories,'
-                ' but they had working alternatives:'
-            )
-        )
+        LOGGER.info(__("encountered some issues with some of the inventories," " but they had working alternatives:"))
         for fail in failures:
             LOGGER.info(*fail)
     else:
-        issues = '\n'.join(f[0] % f[1:] for f in failures)
+        issues = "\n".join(f[0] % f[1:] for f in failures)
         LOGGER.warning(
-            '%s\n%s',
-            __('failed to reach any of the inventories with the following issues:'),
+            "%s\n%s",
+            __("failed to reach any of the inventories with the following issues:"),
             issues,
         )
     return updated
@@ -310,34 +294,28 @@ def fetch_inventory(app: Sphinx, uri: InventoryURI, inv: str) -> Inventory:
     ).data
 
 
-def _fetch_inventory(
-    *, target_uri: InventoryURI, inv_location: str, config: _InvConfig, srcdir: Path
-) -> _Inventory:
+def _fetch_inventory(*, target_uri: InventoryURI, inv_location: str, config: _InvConfig, srcdir: Path) -> _Inventory:
     """Fetch, parse and return an intersphinx inventory file."""
     # both *target_uri* (base URI of the links to generate)
     # and *inv_location* (actual location of the inventory file)
     # can be local or remote URIs
-    if '://' in target_uri:
+    if "://" in target_uri:
         # inv URI points to remote resource; strip any existing auth
         target_uri = _strip_basic_auth(target_uri)
-    if '://' in inv_location:
-        raw_data, target_uri = _fetch_inventory_url(
-            target_uri=target_uri, inv_location=inv_location, config=config
-        )
+    if "://" in inv_location:
+        raw_data, target_uri = _fetch_inventory_url(target_uri=target_uri, inv_location=inv_location, config=config)
     else:
         raw_data = _fetch_inventory_file(inv_location=inv_location, srcdir=srcdir)
 
     try:
         inv = InventoryFile.loads(raw_data, uri=target_uri)
     except ValueError as exc:
-        msg = f'unknown or unsupported inventory version: {exc!r}'
+        msg = f"unknown or unsupported inventory version: {exc!r}"
         raise ValueError(msg) from exc
     return inv
 
 
-def _fetch_inventory_url(
-    *, target_uri: InventoryURI, inv_location: str, config: _InvConfig
-) -> tuple[bytes, str]:
+def _fetch_inventory_url(*, target_uri: InventoryURI, inv_location: str, config: _InvConfig) -> tuple[bytes, str]:
     try:
         with requests.get(
             inv_location,
@@ -350,7 +328,7 @@ def _fetch_inventory_url(
             new_inv_location = r.url
     except Exception as err:
         err.args = (
-            'intersphinx inventory %r not fetchable due to %s: %s',
+            "intersphinx inventory %r not fetchable due to %s: %s",
             inv_location,
             err.__class__,
             str(err),
@@ -358,13 +336,13 @@ def _fetch_inventory_url(
         raise
 
     if inv_location != new_inv_location:
-        msg = __('intersphinx inventory has moved: %s -> %s')
+        msg = __("intersphinx inventory has moved: %s -> %s")
         LOGGER.info(msg, inv_location, new_inv_location)
 
         if target_uri in {
             inv_location,
             os.path.dirname(inv_location),
-            os.path.dirname(inv_location) + '/',
+            os.path.dirname(inv_location) + "/",
         }:
             target_uri = os.path.dirname(new_inv_location)
 
@@ -373,11 +351,11 @@ def _fetch_inventory_url(
 
 def _fetch_inventory_file(*, inv_location: str, srcdir: Path) -> bytes:
     try:
-        with open(srcdir / inv_location, 'rb') as f:
+        with open(srcdir / inv_location, "rb") as f:
             raw_data = f.read()
     except Exception as err:
         err.args = (
-            'intersphinx inventory %r not readable due to %s: %s',
+            "intersphinx inventory %r not readable due to %s: %s",
             inv_location,
             err.__class__.__name__,
             str(err),
@@ -404,9 +382,9 @@ def _get_safe_url(url: str) -> str:
     else:
         frags = list(parts)
         if parts.port:
-            frags[1] = f'{parts.username}@{parts.hostname}:{parts.port}'
+            frags[1] = f"{parts.username}@{parts.hostname}:{parts.port}"
         else:
-            frags[1] = f'{parts.username}@{parts.hostname}'
+            frags[1] = f"{parts.username}@{parts.hostname}"
 
         return urlunsplit(frags)
 
@@ -427,6 +405,6 @@ def _strip_basic_auth(url: str) -> str:
     """
     frags = list(urlsplit(url))
     # swap out 'user[:pass]@hostname' for 'hostname'
-    if '@' in frags[1]:
-        frags[1] = frags[1].split('@')[1]
+    if "@" in frags[1]:
+        frags[1] = frags[1].split("@")[1]
     return urlunsplit(frags)

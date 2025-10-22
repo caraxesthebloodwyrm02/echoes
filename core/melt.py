@@ -31,9 +31,7 @@ def ensure_list_vars(arg_vars, variable: str, columns) -> list:
         if not is_list_like(arg_vars):
             return [arg_vars]
         elif isinstance(columns, MultiIndex) and not isinstance(arg_vars, list):
-            raise ValueError(
-                f"{variable} must be a list of tuples when columns are a MultiIndex"
-            )
+            raise ValueError(f"{variable} must be a list of tuples when columns are a MultiIndex")
         else:
             return list(arg_vars)
     else:
@@ -51,10 +49,7 @@ def melt(
     ignore_index: bool = True,
 ) -> DataFrame:
     if value_name in frame.columns:
-        raise ValueError(
-            f"value_name ({value_name}) cannot match an element in "
-            "the DataFrame columns."
-        )
+        raise ValueError(f"value_name ({value_name}) cannot match an element in " "the DataFrame columns.")
     id_vars = ensure_list_vars(id_vars, "id_vars", frame.columns)
     value_vars_was_not_none = value_vars is not None
     value_vars = ensure_list_vars(value_vars, "value_vars", frame.columns)
@@ -68,13 +63,8 @@ def melt(
         idx = level.get_indexer_for(labels)
         missing = idx == -1
         if missing.any():
-            missing_labels = [
-                lab for lab, not_found in zip(labels, missing) if not_found
-            ]
-            raise KeyError(
-                "The following id_vars or value_vars are not present in "
-                f"the DataFrame: {missing_labels}"
-            )
+            missing_labels = [lab for lab, not_found in zip(labels, missing) if not_found]
+            raise KeyError("The following id_vars or value_vars are not present in " f"the DataFrame: {missing_labels}")
         if value_vars_was_not_none:
             frame = frame.iloc[:, algos.unique(idx)]
         else:
@@ -93,9 +83,7 @@ def melt(
             else:
                 var_name = [f"variable_{i}" for i in range(len(frame.columns.names))]
         else:
-            var_name = [
-                frame.columns.name if frame.columns.name is not None else "variable"
-            ]
+            var_name = [frame.columns.name if frame.columns.name is not None else "variable"]
     elif is_list_like(var_name):
         raise ValueError(f"{var_name=} must be a scalar.")
     else:
@@ -119,12 +107,8 @@ def melt(
 
     mcolumns = id_vars + var_name + [value_name]
 
-    if frame.shape[1] > 0 and not any(
-        not isinstance(dt, np.dtype) and dt._supports_2d for dt in frame.dtypes
-    ):
-        mdata[value_name] = concat(
-            [frame.iloc[:, i] for i in range(frame.shape[1])]
-        ).values
+    if frame.shape[1] > 0 and not any(not isinstance(dt, np.dtype) and dt._supports_2d for dt in frame.dtypes):
+        mdata[value_name] = concat([frame.iloc[:, i] for i in range(frame.shape[1])]).values
     else:
         mdata[value_name] = frame._values.ravel("F")
     for i, col in enumerate(var_name):
@@ -218,9 +202,7 @@ def lreshape(data: DataFrame, groups: dict, dropna: bool = True) -> DataFrame:
     return data._constructor(mdata, columns=id_cols + pivot_cols)
 
 
-def wide_to_long(
-    df: DataFrame, stubnames, i, j, sep: str = "", suffix: str = r"\d+"
-) -> DataFrame:
+def wide_to_long(df: DataFrame, stubnames, i, j, sep: str = "", suffix: str = r"\d+") -> DataFrame:
     r"""
     Unpivot a DataFrame from wide to long format.
 

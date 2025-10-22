@@ -18,9 +18,7 @@ from pandas import (
 )
 import pandas._testing as tm
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 xfail_pyarrow = pytest.mark.usefixtures("pyarrow_xfail")
 skip_pyarrow = pytest.mark.usefixtures("pyarrow_skip")
@@ -45,8 +43,7 @@ def test_negative_header(all_parsers):
 """
     with pytest.raises(
         ValueError,
-        match="Passing negative integer to header is invalid. "
-        "For no header, use header=None instead",
+        match="Passing negative integer to header is invalid. " "For no header, use header=None instead",
     ):
         parser.read_csv(StringIO(data), header=-1)
 
@@ -59,9 +56,7 @@ def test_negative_multi_index_header(all_parsers, header):
         6,7,8,9,10
         11,12,13,14,15
         """
-    with pytest.raises(
-        ValueError, match="cannot specify multi-index header with negative integers"
-    ):
+    with pytest.raises(ValueError, match="cannot specify multi-index header with negative integers"):
         parser.read_csv(StringIO(data), header=header)
 
 
@@ -161,11 +156,7 @@ R_l0_g4,R_l1_g4,R4C0,R4C1,R4C2
     [
         (
             {"index_col": ["foo", "bar"]},
-            (
-                "index_col must only contain "
-                "row numbers when specifying "
-                "a multi-index header"
-            ),
+            ("index_col must only contain " "row numbers when specifying " "a multi-index header"),
         ),
         (
             {"index_col": [0, 1], "names": ["foo", "bar"]},
@@ -234,9 +225,7 @@ def test_header_multi_index_common_format1(all_parsers, kwargs):
     expected = DataFrame(
         [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
         index=["one", "two"],
-        columns=MultiIndex.from_tuples(
-            [("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]
-        ),
+        columns=MultiIndex.from_tuples([("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]),
     )
     data = """,a,a,a,b,c,c
 ,q,r,s,t,u,v
@@ -282,9 +271,7 @@ def test_header_multi_index_common_format2(all_parsers, kwargs):
     expected = DataFrame(
         [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
         index=["one", "two"],
-        columns=MultiIndex.from_tuples(
-            [("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]
-        ),
+        columns=MultiIndex.from_tuples([("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]),
     )
     data = """,a,a,a,b,c,c
 ,q,r,s,t,u,v
@@ -329,9 +316,7 @@ def test_header_multi_index_common_format3(all_parsers, kwargs):
     expected = DataFrame(
         [[1, 2, 3, 4, 5, 6], [7, 8, 9, 10, 11, 12]],
         index=["one", "two"],
-        columns=MultiIndex.from_tuples(
-            [("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]
-        ),
+        columns=MultiIndex.from_tuples([("a", "q"), ("a", "r"), ("a", "s"), ("b", "t"), ("c", "u"), ("c", "v")]),
     )
     expected = expected.reset_index(drop=True)
     data = """a,a,a,b,c,c
@@ -419,9 +404,7 @@ def test_header_multi_index_blank_line(all_parsers):
     tm.assert_frame_equal(expected, result)
 
 
-@pytest.mark.parametrize(
-    "data,header", [("1,2,3\n4,5,6", None), ("foo,bar,baz\n1,2,3\n4,5,6", 0)]
-)
+@pytest.mark.parametrize("data,header", [("1,2,3\n4,5,6", None), ("foo,bar,baz\n1,2,3\n4,5,6", 0)])
 def test_header_names_backward_compat(all_parsers, data, header, request):
     # see gh-2539
     parser = all_parsers
@@ -463,9 +446,7 @@ def test_no_header(all_parsers, kwargs, names):
 6,7,8,9,10
 11,12,13,14,15
 """
-    expected = DataFrame(
-        [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15]], columns=names
-    )
+    expected = DataFrame([[1, 2, 3, 4, 5], [6, 7, 8, 9, 10], [11, 12, 13, 14, 15]], columns=names)
     result = parser.read_csv(StringIO(data), header=None, **kwargs)
     tm.assert_frame_equal(result, expected)
 
@@ -500,18 +481,14 @@ def test_singleton_header(all_parsers):
             "A,A,A,B\none,one,one,two\n0,40,34,0.1",
             DataFrame(
                 [[0, 40, 34, 0.1]],
-                columns=MultiIndex.from_tuples(
-                    [("A", "one"), ("A", "one.1"), ("A", "one.2"), ("B", "two")]
-                ),
+                columns=MultiIndex.from_tuples([("A", "one"), ("A", "one.1"), ("A", "one.2"), ("B", "two")]),
             ),
         ),
         (
             "A,A,A,B\none,one,one.1,two\n0,40,34,0.1",
             DataFrame(
                 [[0, 40, 34, 0.1]],
-                columns=MultiIndex.from_tuples(
-                    [("A", "one"), ("A", "one.1"), ("A", "one.1.1"), ("B", "two")]
-                ),
+                columns=MultiIndex.from_tuples([("A", "one"), ("A", "one.1"), ("A", "one.1.1"), ("B", "two")]),
             ),
         ),
         (
@@ -541,9 +518,7 @@ def test_mangles_multi_index(all_parsers, data, expected):
 
 @xfail_pyarrow  # TypeError: an integer is requireds
 @pytest.mark.parametrize("index_col", [None, [0]])
-@pytest.mark.parametrize(
-    "columns", [None, (["", "Unnamed"]), (["Unnamed", ""]), (["Unnamed", "NotUnnamed"])]
-)
+@pytest.mark.parametrize("columns", [None, (["", "Unnamed"]), (["Unnamed", ""]), (["Unnamed", "NotUnnamed"])])
 def test_multi_index_unnamed(all_parsers, index_col, columns):
     # see gh-23687
     #
@@ -597,12 +572,7 @@ def test_read_csv_multiindex_columns(all_parsers):
     parser = all_parsers
 
     s1 = "Male, Male, Male, Female, Female\nR, R, L, R, R\n.86, .67, .88, .78, .81"
-    s2 = (
-        "Male, Male, Male, Female, Female\n"
-        "R, R, L, R, R\n"
-        ".86, .67, .88, .78, .81\n"
-        ".86, .67, .88, .78, .82"
-    )
+    s2 = "Male, Male, Male, Female, Female\n" "R, R, L, R, R\n" ".86, .67, .88, .78, .81\n" ".86, .67, .88, .78, .82"
 
     mi = MultiIndex.from_tuples(
         [
@@ -613,9 +583,7 @@ def test_read_csv_multiindex_columns(all_parsers):
             (" Female", " R.1"),
         ]
     )
-    expected = DataFrame(
-        [[0.86, 0.67, 0.88, 0.78, 0.81], [0.86, 0.67, 0.88, 0.78, 0.82]], columns=mi
-    )
+    expected = DataFrame([[0.86, 0.67, 0.88, 0.78, 0.81], [0.86, 0.67, 0.88, 0.78, 0.82]], columns=mi)
 
     df1 = parser.read_csv(StringIO(s1), header=[0, 1])
     tm.assert_frame_equal(df1, expected.iloc[:1])
@@ -633,9 +601,7 @@ row21,row22, row23
 row31,row32
 """
 
-    with pytest.raises(
-        ParserError, match="Header rows must have an equal number of columns."
-    ):
+    with pytest.raises(ParserError, match="Header rows must have an equal number of columns."):
         parser.read_csv(StringIO(case), header=[0, 2])
 
 
@@ -645,9 +611,7 @@ def test_header_none_and_implicit_index(all_parsers):
     parser = all_parsers
     data = "x,1,5\ny,2\nz,3\n"
     result = parser.read_csv(StringIO(data), names=["a", "b"], header=None)
-    expected = DataFrame(
-        {"a": [1, 2, 3], "b": [5, np.nan, np.nan]}, index=["x", "y", "z"]
-    )
+    expected = DataFrame({"a": [1, 2, 3], "b": [5, np.nan, np.nan]}, index=["x", "y", "z"])
     tm.assert_frame_equal(result, expected)
 
 
@@ -664,9 +628,7 @@ def test_header_none_and_on_bad_lines_skip(all_parsers):
     # GH#22144
     parser = all_parsers
     data = "x,1\ny,2,5\nz,3\n"
-    result = parser.read_csv(
-        StringIO(data), names=["a", "b"], header=None, on_bad_lines="skip"
-    )
+    result = parser.read_csv(StringIO(data), names=["a", "b"], header=None, on_bad_lines="skip")
     expected = DataFrame({"a": ["x", "z"], "b": [1, 3]})
     tm.assert_frame_equal(result, expected)
 
@@ -707,9 +669,7 @@ def test_header_delim_whitespace(all_parsers):
     """
 
     depr_msg = "The 'delim_whitespace' keyword in pd.read_csv is deprecated"
-    with tm.assert_produces_warning(
-        FutureWarning, match=depr_msg, check_stacklevel=False
-    ):
+    with tm.assert_produces_warning(FutureWarning, match=depr_msg, check_stacklevel=False):
         result = parser.read_csv(StringIO(data), delim_whitespace=True)
     expected = DataFrame({"a,b": ["1,2", "3,4"]})
     tm.assert_frame_equal(result, expected)

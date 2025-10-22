@@ -223,14 +223,11 @@ class CheckingClassifier(ClassifierMixin, BaseEstimator):
         if self.expected_fit_params:
             missing = set(self.expected_fit_params) - set(fit_params)
             if missing:
-                raise AssertionError(
-                    f"Expected fit parameter(s) {list(missing)} not seen."
-                )
+                raise AssertionError(f"Expected fit parameter(s) {list(missing)} not seen.")
             for key, value in fit_params.items():
                 if _num_samples(value) != _num_samples(X):
                     raise AssertionError(
-                        f"Fit parameter {key} has length {_num_samples(value)}"
-                        f"; expected {_num_samples(X)}."
+                        f"Fit parameter {key} has length {_num_samples(value)}" f"; expected {_num_samples(X)}."
                     )
         if self.expected_sample_weight:
             if sample_weight is None:
@@ -295,10 +292,7 @@ class CheckingClassifier(ClassifierMixin, BaseEstimator):
                 else (n_samples, n_classes)
             Confidence score.
         """
-        if (
-            self.methods_to_check == "all"
-            or "decision_function" in self.methods_to_check
-        ):
+        if self.methods_to_check == "all" or "decision_function" in self.methods_to_check:
             X, y = self._check_X_y(X)
         rng = check_random_state(self.random_state)
         if len(self.classes_) == 2:

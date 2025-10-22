@@ -48,12 +48,7 @@ class SensevalInstance:
 
 class SensevalCorpusReader(CorpusReader):
     def instances(self, fileids=None):
-        return concat(
-            [
-                SensevalCorpusView(fileid, enc)
-                for (fileid, enc) in self.abspaths(fileids, True)
-            ]
-        )
+        return concat([SensevalCorpusView(fileid, enc) for (fileid, enc) in self.abspaths(fileids, True)])
 
     def _entry(self, tree):
         elts = []
@@ -189,8 +184,6 @@ def _fixXML(text):
     # and remove the & for those patterns that aren't regular XML
     text = re.sub(r"&(?!amp|gt|lt|apos|quot)", r"", text)
     # fix 'abc <p="foo"/>' style tags - now <wf pos="foo">abc</wf>
-    text = re.sub(
-        r'[ \t]*([^<>\s]+?)[ \t]*<p="([^"]*"?)"/>', r' <wf pos="\2">\1</wf>', text
-    )
+    text = re.sub(r'[ \t]*([^<>\s]+?)[ \t]*<p="([^"]*"?)"/>', r' <wf pos="\2">\1</wf>', text)
     text = re.sub(r'\s*"\s*<p=\'"\'/>', " <wf pos='\"'>\"</wf>", text)
     return text

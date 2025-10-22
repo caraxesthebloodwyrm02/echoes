@@ -26,9 +26,7 @@ from ..utils.sparsefuncs import csc_median_axis_0
 from ..utils.validation import check_is_fitted, validate_data
 
 
-class NearestCentroid(
-    DiscriminantAnalysisPredictionMixin, ClassifierMixin, BaseEstimator
-):
+class NearestCentroid(DiscriminantAnalysisPredictionMixin, ClassifierMixin, BaseEstimator):
     """Nearest centroid classifier.
 
     Each class is represented by its centroid, with test samples classified to
@@ -173,9 +171,7 @@ class NearestCentroid(
         if self.metric == "manhattan":
             X, y = validate_data(self, X, y, accept_sparse=["csc"])
         else:
-            ensure_all_finite = (
-                "allow-nan" if get_tags(self).input_tags.allow_nan else True
-            )
+            ensure_all_finite = "allow-nan" if get_tags(self).input_tags.allow_nan else True
             X, y = validate_data(
                 self,
                 X,
@@ -192,10 +188,7 @@ class NearestCentroid(
         self.classes_ = classes = le.classes_
         n_classes = classes.size
         if n_classes < 2:
-            raise ValueError(
-                "The number of classes has to be greater than one; got %d class"
-                % (n_classes)
-            )
+            raise ValueError("The number of classes has to be greater than one; got %d class" % (n_classes))
 
         if self.priors == "empirical":  # estimate priors from sample
             _, class_counts = np.unique(y, return_inverse=True)  # non-negative ints
@@ -237,9 +230,7 @@ class NearestCentroid(
 
         # Compute within-class std_dev with unshrunked centroids
         variance = np.array(X - self.centroids_[y_ind], copy=False) ** 2
-        self.within_class_std_dev_ = np.array(
-            np.sqrt(variance.sum(axis=0) / (n_samples - n_classes)), copy=False
-        )
+        self.within_class_std_dev_ = np.array(np.sqrt(variance.sum(axis=0) / (n_samples - n_classes)), copy=False)
         if any(self.within_class_std_dev_ == 0):
             warnings.warn(
                 "self.within_class_std_dev_ has at least 1 zero standard deviation."
@@ -260,9 +251,7 @@ class NearestCentroid(
         s = self.within_class_std_dev_ + np.median(self.within_class_std_dev_)
         mm = m.reshape(len(m), 1)  # Reshape to allow broadcasting.
         ms = mm * s
-        self.deviations_ = np.array(
-            (self.centroids_ - dataset_centroid_) / ms, copy=False
-        )
+        self.deviations_ = np.array((self.centroids_ - dataset_centroid_) / ms, copy=False)
         # Soft thresholding: if the deviation crosses 0 during shrinking,
         # it becomes zero.
         if self.shrink_threshold:
@@ -293,9 +282,7 @@ class NearestCentroid(
         check_is_fitted(self)
         if np.isclose(self.class_prior_, 1 / len(self.classes_)).all():
             # `validate_data` is called here since we are not calling `super()`
-            ensure_all_finite = (
-                "allow-nan" if get_tags(self).input_tags.allow_nan else True
-            )
+            ensure_all_finite = "allow-nan" if get_tags(self).input_tags.allow_nan else True
             X = validate_data(
                 self,
                 X,
@@ -303,9 +290,7 @@ class NearestCentroid(
                 accept_sparse="csr",
                 reset=False,
             )
-            return self.classes_[
-                pairwise_distances_argmin(X, self.centroids_, metric=self.metric)
-            ]
+            return self.classes_[pairwise_distances_argmin(X, self.centroids_, metric=self.metric)]
         else:
             return super().predict(X)
 
@@ -313,13 +298,9 @@ class NearestCentroid(
         # return discriminant scores, see eq. (18.2) p. 652 of the ESL.
         check_is_fitted(self, "centroids_")
 
-        X_normalized = validate_data(
-            self, X, copy=True, reset=False, accept_sparse="csr", dtype=np.float64
-        )
+        X_normalized = validate_data(self, X, copy=True, reset=False, accept_sparse="csr", dtype=np.float64)
 
-        discriminant_score = np.empty(
-            (X_normalized.shape[0], self.classes_.size), dtype=np.float64
-        )
+        discriminant_score = np.empty((X_normalized.shape[0], self.classes_.size), dtype=np.float64)
 
         mask = self.within_class_std_dev_ != 0
         X_normalized[:, mask] /= self.within_class_std_dev_[mask]
@@ -327,30 +308,20 @@ class NearestCentroid(
         centroids_normalized[:, mask] /= self.within_class_std_dev_[mask]
 
         for class_idx in range(self.classes_.size):
-            distances = pairwise_distances(
-                X_normalized, centroids_normalized[[class_idx]], metric=self.metric
-            ).ravel()
+            distances = pairwise_distances(X_normalized, centroids_normalized[[class_idx]], metric=self.metric).ravel()
             distances **= 2
-            discriminant_score[:, class_idx] = np.squeeze(
-                -distances + 2.0 * np.log(self.class_prior_[class_idx])
-            )
+            discriminant_score[:, class_idx] = np.squeeze(-distances + 2.0 * np.log(self.class_prior_[class_idx]))
 
         return discriminant_score
 
     def _check_euclidean_metric(self):
         return self.metric == "euclidean"
 
-    decision_function = available_if(_check_euclidean_metric)(
-        DiscriminantAnalysisPredictionMixin.decision_function
-    )
+    decision_function = available_if(_check_euclidean_metric)(DiscriminantAnalysisPredictionMixin.decision_function)
 
-    predict_proba = available_if(_check_euclidean_metric)(
-        DiscriminantAnalysisPredictionMixin.predict_proba
-    )
+    predict_proba = available_if(_check_euclidean_metric)(DiscriminantAnalysisPredictionMixin.predict_proba)
 
-    predict_log_proba = available_if(_check_euclidean_metric)(
-        DiscriminantAnalysisPredictionMixin.predict_log_proba
-    )
+    predict_log_proba = available_if(_check_euclidean_metric)(DiscriminantAnalysisPredictionMixin.predict_log_proba)
 
     def __sklearn_tags__(self):
         tags = super().__sklearn_tags__()

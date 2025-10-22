@@ -22,7 +22,6 @@ except ImportError:
     pass
 
 from nltk.chunk.api import ChunkParserI
-from nltk.chunk.util import ChunkScore
 from nltk.data import find
 from nltk.tokenize import word_tokenize
 from nltk.tree import Tree
@@ -323,7 +322,6 @@ class Maxent_NE_Chunker(NEChunkParser):
     """
 
     def __init__(self, fmt="multiclass"):
-        from nltk.data import find
 
         self._fmt = fmt
         self._tab_dir = find(f"chunkers/maxent_ne_chunker_tab/english_ace_{fmt}/")
@@ -333,9 +331,7 @@ class Maxent_NE_Chunker(NEChunkParser):
         from nltk.classify.maxent import BinaryMaxentFeatureEncoding, load_maxent_params
 
         wgt, mpg, lab, aon = load_maxent_params(self._tab_dir)
-        mc = MaxentClassifier(
-            BinaryMaxentFeatureEncoding(lab, mpg, alwayson_features=aon), wgt
-        )
+        mc = MaxentClassifier(BinaryMaxentFeatureEncoding(lab, mpg, alwayson_features=aon), wgt)
         self._tagger = NEChunkParserTagger(classifier=mc)
 
     def save_params(self):

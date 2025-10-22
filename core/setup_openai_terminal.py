@@ -54,9 +54,7 @@ def check_prerequisites():
     print("🔍 Checking prerequisites...")
 
     # Check Python
-    python_version = (
-        f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
-    )
+    python_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
     print(f"✅ Python {python_version} detected")
 
     # Check pip
@@ -138,9 +136,7 @@ def run_api_test():
         "Say 'Hello from OpenAI API!' and nothing else.",
     ]
 
-    print(
-        'Testing: python -m openai api completions.create -m gpt-3.5-turbo-instruct -p "Say Hello"'
-    )
+    print('Testing: python -m openai api completions.create -m gpt-3.5-turbo-instruct -p "Say Hello"')
     result = run_command(test_cmd, "Running completion test")
 
     if result:
@@ -190,19 +186,13 @@ python -m openai api embeddings.create -m text-embedding-ada-002 -i "Artificial 
 echo -e "\n✅ Examples completed!"
 """
 
-    script_name = (
-        "openai_examples.sh"
-        if platform.system() != "Windows"
-        else "openai_examples.ps1"
-    )
+    script_name = "openai_examples.sh" if platform.system() != "Windows" else "openai_examples.ps1"
 
     try:
         with open(script_name, "w") as f:
             if platform.system() == "Windows":
                 # Convert to PowerShell
-                script_content = script_content.replace(
-                    "#!/bin/bash", "# PowerShell OpenAI Examples"
-                )
+                script_content = script_content.replace("#!/bin/bash", "# PowerShell OpenAI Examples")
                 script_content = script_content.replace("export ", "$env:")
                 script_content = script_content.replace("python -m", "python -m")
                 f.write(script_content)
@@ -272,9 +262,7 @@ def main():
     print("📚 Next Steps:")
     print("   1. Restart your terminal (to load environment variables)")
     print("   2. Run: python -m openai --help")
-    print(
-        '   3. Try: python -m openai api completions.create -m gpt-3.5-turbo-instruct -p "Hello world"'
-    )
+    print('   3. Try: python -m openai api completions.create -m gpt-3.5-turbo-instruct -p "Hello world"')
 
 
 if __name__ == "__main__":

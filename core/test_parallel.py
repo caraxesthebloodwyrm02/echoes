@@ -28,9 +28,7 @@ def test_configuration_passes_through_to_joblib(n_jobs, backend):
     # Tests that the global global configuration is passed to joblib jobs
 
     with config_context(working_memory=123):
-        results = Parallel(n_jobs=n_jobs, backend=backend)(
-            delayed(get_working_memory)() for _ in range(2)
-        )
+        results = Parallel(n_jobs=n_jobs, backend=backend)(delayed(get_working_memory)() for _ in range(2))
 
     assert_array_equal(results, [123] * 2)
 
@@ -115,9 +113,7 @@ def test_filter_warning_propagates(n_jobs, backend):
         warnings.simplefilter("error", category=ConvergenceWarning)
 
         with pytest.raises(ConvergenceWarning):
-            Parallel(n_jobs=n_jobs, backend=backend)(
-                delayed(raise_warning)() for _ in range(2)
-            )
+            Parallel(n_jobs=n_jobs, backend=backend)(delayed(raise_warning)() for _ in range(2))
 
 
 def get_warnings():
@@ -132,9 +128,7 @@ def test_check_warnings_threading():
         filters = warnings.filters
         assert ("error", None, ConvergenceWarning, None, 0) in filters
 
-        all_warnings = Parallel(n_jobs=2, backend="threading")(
-            delayed(get_warnings)() for _ in range(2)
-        )
+        all_warnings = Parallel(n_jobs=2, backend="threading")(delayed(get_warnings)() for _ in range(2))
 
         assert all(w == filters for w in all_warnings)
 
@@ -150,6 +144,5 @@ def test_filter_warning_propagates_no_side_effect_with_loky_backend():
         # warnings filters have been reset to their original value. Using joblib
         # directly should not turn ConvergenceWarning into an error.
         joblib.Parallel(n_jobs=2, backend="loky")(
-            joblib.delayed(warnings.warn)("Convergence warning", ConvergenceWarning)
-            for _ in range(10)
+            joblib.delayed(warnings.warn)("Convergence warning", ConvergenceWarning) for _ in range(10)
         )

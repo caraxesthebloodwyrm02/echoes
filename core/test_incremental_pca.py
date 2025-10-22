@@ -41,14 +41,10 @@ def test_incremental_pca():
         ipca.fit(X)
         cov = ipca.get_covariance()
         precision = ipca.get_precision()
-        np.testing.assert_allclose(
-            np.dot(cov, precision), np.eye(X.shape[1]), atol=1e-13
-        )
+        np.testing.assert_allclose(np.dot(cov, precision), np.eye(X.shape[1]), atol=1e-13)
 
 
-@pytest.mark.parametrize(
-    "sparse_container", CSC_CONTAINERS + CSR_CONTAINERS + LIL_CONTAINERS
-)
+@pytest.mark.parametrize("sparse_container", CSC_CONTAINERS + CSR_CONTAINERS + LIL_CONTAINERS)
 def test_incremental_pca_sparse(sparse_container):
     # Incremental PCA on sparse arrays.
     X = iris.data
@@ -72,9 +68,7 @@ def test_incremental_pca_sparse(sparse_container):
         ipca.fit(X_sparse)
         cov = ipca.get_covariance()
         precision = ipca.get_precision()
-        np.testing.assert_allclose(
-            np.dot(cov, precision), np.eye(X_sparse.shape[1]), atol=1e-13
-        )
+        np.testing.assert_allclose(np.dot(cov, precision), np.eye(X_sparse.shape[1]), atol=1e-13)
 
     with pytest.raises(
         TypeError,
@@ -331,20 +325,14 @@ def test_incremental_pca_against_pca_random_data(global_random_seed):
 
 def test_explained_variances():
     # Test that PCA and IncrementalPCA calculations match
-    X = datasets.make_low_rank_matrix(
-        1000, 100, tail_strength=0.0, effective_rank=10, random_state=1999
-    )
+    X = datasets.make_low_rank_matrix(1000, 100, tail_strength=0.0, effective_rank=10, random_state=1999)
     prec = 3
     n_samples, n_features = X.shape
     for nc in [None, 99]:
         pca = PCA(n_components=nc).fit(X)
         ipca = IncrementalPCA(n_components=nc, batch_size=100).fit(X)
-        assert_almost_equal(
-            pca.explained_variance_, ipca.explained_variance_, decimal=prec
-        )
-        assert_almost_equal(
-            pca.explained_variance_ratio_, ipca.explained_variance_ratio_, decimal=prec
-        )
+        assert_almost_equal(pca.explained_variance_, ipca.explained_variance_, decimal=prec)
+        assert_almost_equal(pca.explained_variance_ratio_, ipca.explained_variance_ratio_, decimal=prec)
         assert_almost_equal(pca.noise_variance_, ipca.noise_variance_, decimal=prec)
 
 
@@ -355,9 +343,7 @@ def test_singular_values(global_random_seed):
     n_samples = 1000
     n_features = 100
 
-    X = datasets.make_low_rank_matrix(
-        n_samples, n_features, tail_strength=0.0, effective_rank=10, random_state=rng
-    )
+    X = datasets.make_low_rank_matrix(n_samples, n_features, tail_strength=0.0, effective_rank=10, random_state=rng)
 
     pca = PCA(n_components=10, svd_solver="full", random_state=rng).fit(X)
     ipca = IncrementalPCA(n_components=10, batch_size=150).fit(X)
@@ -366,29 +352,19 @@ def test_singular_values(global_random_seed):
     # Compare to the Frobenius norm
     X_pca = pca.transform(X)
     X_ipca = ipca.transform(X)
-    assert_array_almost_equal(
-        np.sum(pca.singular_values_**2.0), np.linalg.norm(X_pca, "fro") ** 2.0, 12
-    )
-    assert_array_almost_equal(
-        np.sum(ipca.singular_values_**2.0), np.linalg.norm(X_ipca, "fro") ** 2.0, 2
-    )
+    assert_array_almost_equal(np.sum(pca.singular_values_**2.0), np.linalg.norm(X_pca, "fro") ** 2.0, 12)
+    assert_array_almost_equal(np.sum(ipca.singular_values_**2.0), np.linalg.norm(X_ipca, "fro") ** 2.0, 2)
 
     # Compare to the 2-norms of the score vectors
-    assert_array_almost_equal(
-        pca.singular_values_, np.sqrt(np.sum(X_pca**2.0, axis=0)), 12
-    )
-    assert_array_almost_equal(
-        ipca.singular_values_, np.sqrt(np.sum(X_ipca**2.0, axis=0)), 2
-    )
+    assert_array_almost_equal(pca.singular_values_, np.sqrt(np.sum(X_pca**2.0, axis=0)), 12)
+    assert_array_almost_equal(ipca.singular_values_, np.sqrt(np.sum(X_ipca**2.0, axis=0)), 2)
 
     # Set the singular values and see what we get back
     rng = np.random.RandomState(global_random_seed)
     n_samples = 100
     n_features = 110
 
-    X = datasets.make_low_rank_matrix(
-        n_samples, n_features, tail_strength=0.0, effective_rank=3, random_state=rng
-    )
+    X = datasets.make_low_rank_matrix(n_samples, n_features, tail_strength=0.0, effective_rank=3, random_state=rng)
 
     pca = PCA(n_components=3, svd_solver="full", random_state=rng)
     ipca = IncrementalPCA(n_components=3, batch_size=100)
@@ -407,9 +383,7 @@ def test_singular_values(global_random_seed):
 
 def test_whitening(global_random_seed):
     # Test that PCA and IncrementalPCA transforms match to sign flip.
-    X = datasets.make_low_rank_matrix(
-        1000, 10, tail_strength=0.0, effective_rank=2, random_state=global_random_seed
-    )
+    X = datasets.make_low_rank_matrix(1000, 10, tail_strength=0.0, effective_rank=2, random_state=global_random_seed)
     atol = 1e-3
     for nc in [None, 9]:
         pca = PCA(whiten=True, n_components=nc).fit(X)
@@ -459,9 +433,7 @@ def test_incremental_pca_partial_fit_float_division():
     pca2.partial_fit(B)
     singular_vals_int_samples_seen = pca2.singular_values_
 
-    np.testing.assert_allclose(
-        singular_vals_float_samples_seen, singular_vals_int_samples_seen
-    )
+    np.testing.assert_allclose(singular_vals_float_samples_seen, singular_vals_int_samples_seen)
 
 
 def test_incremental_pca_fit_overflow_error():

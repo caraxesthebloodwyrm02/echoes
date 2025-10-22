@@ -37,8 +37,6 @@ def send_slack_message(text: str, webhook_url: Optional[str] = None) -> int:
     if not url:
         raise ValueError("Missing Slack webhook URL (env SLACK_WEBHOOK_URL)")
     data = json.dumps({"text": text}).encode("utf-8")
-    req = urllib.request.Request(
-        url, data=data, headers={"Content-Type": "application/json"}
-    )
+    req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
     with urllib.request.urlopen(req) as resp:  # nosec - controlled webhook
         return resp.getcode()

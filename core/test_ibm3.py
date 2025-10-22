@@ -55,9 +55,7 @@ class TestIBMModel3(unittest.TestCase):
             [[3], [1], [4], [], [2], [5, 6]],
         )
 
-        distortion_table = defaultdict(
-            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float)))
-        )
+        distortion_table = defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(float))))
         distortion_table[1][1][5][6] = 0.97  # i -> ich
         distortion_table[2][4][5][6] = 0.97  # love -> gern
         distortion_table[3][0][5][6] = 0.97  # to -> NULL
@@ -99,7 +97,5 @@ class TestIBMModel3(unittest.TestCase):
         fertility = 1 * 0.99 * 1 * 0.99 * 1 * 0.99 * 1 * 0.99 * 2 * 0.999
         lexical_translation = 0.98 * 0.98 * 0.98 * 0.98 * 0.98 * 0.98
         distortion = 0.97 * 0.97 * 0.97 * 0.97 * 0.97 * 0.97
-        expected_probability = (
-            null_generation * fertility * lexical_translation * distortion
-        )
+        expected_probability = null_generation * fertility * lexical_translation * distortion
         self.assertEqual(round(probability, 4), round(expected_probability, 4))

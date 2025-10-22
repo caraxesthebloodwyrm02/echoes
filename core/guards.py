@@ -46,10 +46,7 @@ class CircuitBreaker:
         self.max_failures, self.reset_timeout = max_failures, reset_timeout
 
     def call(self, func, *a, **k):
-        if (
-            time.time() - self.last_fail < self.reset_timeout
-            and self.failures >= self.max_failures
-        ):
+        if time.time() - self.last_fail < self.reset_timeout and self.failures >= self.max_failures:
             raise RuntimeError("Circuit breaker open")
         try:
             r = func(*a, **k)

@@ -1,4 +1,4 @@
-from nltk.internals import find_binary, find_jar
+from nltk.internals import find_binary
 
 
 def check_binary(binary: str, **args):
@@ -21,6 +21,4 @@ def check_jar(name_pattern: str, **args):
     """
     import pytest
 
-    pytest.skip(
-        "Skipping test because the doctests requiring jars are inconsistent on the CI."
-    )
+    pytest.skip("Skipping test because the doctests requiring jars are inconsistent on the CI.")

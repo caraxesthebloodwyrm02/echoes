@@ -1,6 +1,7 @@
 """
 Define extension dtypes.
 """
+
 from __future__ import annotations
 
 from datetime import (
@@ -221,9 +222,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
         self._finalize(categories, ordered, fastpath=False)
 
     @classmethod
-    def _from_fastpath(
-        cls, categories=None, ordered: bool | None = None
-    ) -> CategoricalDtype:
+    def _from_fastpath(cls, categories=None, ordered: bool | None = None) -> CategoricalDtype:
         self = cls.__new__(cls)
         self._finalize(categories, ordered, fastpath=True)
         return self
@@ -320,17 +319,13 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
                 else:
                     raise ValueError(f"Unknown dtype {repr(dtype)}")
             elif categories is not None or ordered is not None:
-                raise ValueError(
-                    "Cannot specify `categories` or `ordered` together with `dtype`."
-                )
+                raise ValueError("Cannot specify `categories` or `ordered` together with `dtype`.")
             elif not isinstance(dtype, CategoricalDtype):
                 raise ValueError(f"Cannot not construct CategoricalDtype from {dtype}")
         elif cls.is_dtype(values):
             # If no "dtype" was passed, use the one from "values", but honor
             # the "ordered" and "categories" arguments
-            dtype = values.dtype._from_categorical_dtype(
-                values.dtype, categories, ordered
-            )
+            dtype = values.dtype._from_categorical_dtype(values.dtype, categories, ordered)
         else:
             # If dtype=None and values is not categorical, create a new dtype.
             # Note: This could potentially have categories=None and
@@ -360,9 +355,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
             If a CategoricalDtype cannot be constructed from the input.
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
         if string != cls.name:
             raise TypeError(f"Cannot construct a 'CategoricalDtype' from '{string}'")
 
@@ -425,9 +418,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
         elif self.ordered or other.ordered:
             # At least one has ordered=True; equal if both have ordered=True
             # and the same values for categories in the same order.
-            return (self.ordered == other.ordered) and self.categories.equals(
-                other.categories
-            )
+            return (self.ordered == other.ordered) and self.categories.equals(other.categories)
         else:
             # Neither has ordered=True; equal if both have the same categories,
             # but same order is not necessary.  There is no distinction between
@@ -470,10 +461,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
             data = data.rstrip(", ")
             dtype = self.categories.dtype
 
-        return (
-            f"CategoricalDtype(categories={data}, ordered={self.ordered}, "
-            f"categories_dtype={dtype})"
-        )
+        return f"CategoricalDtype(categories={data}, ordered={self.ordered}, " f"categories_dtype={dtype})"
 
     @cache_readonly
     def _hash_categories(self) -> int:
@@ -507,9 +495,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
 
             cat_array = hash_array(np.asarray(categories), categorize=False)
         if ordered:
-            cat_array = np.vstack(
-                [cat_array, np.arange(len(cat_array), dtype=cat_array.dtype)]
-            )
+            cat_array = np.vstack([cat_array, np.arange(len(cat_array), dtype=cat_array.dtype)])
         else:
             cat_array = np.array([cat_array])
         combined_hashed = combine_hash_arrays(iter(cat_array), num_items=len(cat_array))
@@ -565,9 +551,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
         from pandas.core.indexes.base import Index
 
         if not fastpath and not is_list_like(categories):
-            raise TypeError(
-                f"Parameter 'categories' must be list-like, was {repr(categories)}"
-            )
+            raise TypeError(f"Parameter 'categories' must be list-like, was {repr(categories)}")
         if not isinstance(categories, ABCIndex):
             categories = Index._with_infer(categories, tupleize_cols=False)
 
@@ -600,18 +584,13 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
             # dtype='category' should not change anything
             return self
         elif not self.is_dtype(dtype):
-            raise ValueError(
-                f"a CategoricalDtype must be passed to perform an update, "
-                f"got {repr(dtype)}"
-            )
+            raise ValueError(f"a CategoricalDtype must be passed to perform an update, " f"got {repr(dtype)}")
         else:
             # from here on, dtype is a CategoricalDtype
             dtype = cast(CategoricalDtype, dtype)
 
         # update categories/ordered unless they've been explicitly passed as None
-        new_categories = (
-            dtype.categories if dtype.categories is not None else self.categories
-        )
+        new_categories = dtype.categories if dtype.categories is not None else self.categories
         new_ordered = dtype.ordered if dtype.ordered is not None else self.ordered
 
         return CategoricalDtype(new_categories, new_ordered)
@@ -661,9 +640,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
 
         # special case non-initialized categorical
         # TODO we should figure out the expected return value in general
-        non_init_cats = [
-            isinstance(x, CategoricalDtype) and x.categories is None for x in dtypes
-        ]
+        non_init_cats = [isinstance(x, CategoricalDtype) and x.categories is None for x in dtypes]
         if all(non_init_cats):
             return self
         elif any(non_init_cats):
@@ -672,9 +649,7 @@ class CategoricalDtype(PandasExtensionDtype, ExtensionDtype):
         # categorical is aware of Sparse -> extract sparse subdtypes
         dtypes = [x.subtype if isinstance(x, SparseDtype) else x for x in dtypes]
         # extract the categories' dtype
-        non_cat_dtypes = [
-            x.categories.dtype if isinstance(x, CategoricalDtype) else x for x in dtypes
-        ]
+        non_cat_dtypes = [x.categories.dtype if isinstance(x, CategoricalDtype) else x for x in dtypes]
         # TODO should categorical always give an answer?
         from pandas.core.dtypes.cast import find_common_type
 
@@ -846,9 +821,7 @@ class DatetimeTZDtype(PandasExtensionDtype):
         datetime64[ns, UTC]
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
 
         msg = f"Cannot construct a 'DatetimeTZDtype' from '{string}'"
         match = cls._match.match(string)
@@ -883,11 +856,7 @@ class DatetimeTZDtype(PandasExtensionDtype):
                 other = f"datetime64[{other[3:]}"
             return other == self.name
 
-        return (
-            isinstance(other, DatetimeTZDtype)
-            and self.unit == other.unit
-            and tz_compare(self.tz, other.tz)
-        )
+        return isinstance(other, DatetimeTZDtype) and self.unit == other.unit and tz_compare(self.tz, other.tz)
 
     def __from_arrow__(self, array: pa.Array | pa.ChunkedArray) -> DatetimeArray:
         """
@@ -1046,10 +1015,7 @@ class PeriodDtype(PeriodDtypeBase, PandasExtensionDtype):
             if freq_offset is not None:
                 return freq_offset
 
-        raise TypeError(
-            "PeriodDtype argument should be string or BaseOffset, "
-            f"got {type(freq).__name__}"
-        )
+        raise TypeError("PeriodDtype argument should be string or BaseOffset, " f"got {type(freq).__name__}")
 
     @classmethod
     def construct_from_string(cls, string: str_type) -> PeriodDtype:
@@ -1057,11 +1023,7 @@ class PeriodDtype(PeriodDtypeBase, PandasExtensionDtype):
         Strict construction from a string, raise a TypeError if not
         possible
         """
-        if (
-            isinstance(string, str)
-            and (string.startswith(("period[", "Period[")))
-            or isinstance(string, BaseOffset)
-        ):
+        if isinstance(string, str) and (string.startswith(("period[", "Period["))) or isinstance(string, BaseOffset):
             # do not parse string like U as period[U]
             # avoid tuple to be regarded as freq
             try:
@@ -1197,10 +1159,7 @@ class IntervalDtype(PandasExtensionDtype):
         "closed",
     )
 
-    _match = re.compile(
-        r"(I|i)nterval\[(?P<subtype>[^,]+(\[.+\])?)"
-        r"(, (?P<closed>(right|left|both|neither)))?\]"
-    )
+    _match = re.compile(r"(I|i)nterval\[(?P<subtype>[^,]+(\[.+\])?)" r"(, (?P<closed>(right|left|both|neither)))?\]")
 
     _cache_dtypes: dict[str_type, PandasExtensionDtype] = {}
     _subtype: None | np.dtype
@@ -1218,8 +1177,7 @@ class IntervalDtype(PandasExtensionDtype):
         if isinstance(subtype, IntervalDtype):
             if closed is not None and closed != subtype.closed:
                 raise ValueError(
-                    "dtype.closed and 'closed' do not match. "
-                    "Try IntervalDtype(dtype.subtype, closed) instead."
+                    "dtype.closed and 'closed' do not match. " "Try IntervalDtype(dtype.subtype, closed) instead."
                 )
             self._subtype = subtype._subtype
             self._closed = subtype._closed
@@ -1240,10 +1198,7 @@ class IntervalDtype(PandasExtensionDtype):
                     if gd.get("closed", None) is not None:
                         if closed is not None:
                             if closed != gd["closed"]:
-                                raise ValueError(
-                                    "'closed' keyword does not match value "
-                                    "specified in dtype string"
-                                )
+                                raise ValueError("'closed' keyword does not match value " "specified in dtype string")
                         closed = gd["closed"]  # type: ignore[assignment]
 
             try:
@@ -1252,10 +1207,7 @@ class IntervalDtype(PandasExtensionDtype):
                 raise TypeError("could not construct IntervalDtype") from err
             if CategoricalDtype.is_dtype(subtype) or is_string_dtype(subtype):
                 # GH 19016
-                msg = (
-                    "category, object, and string subtypes are not supported "
-                    "for IntervalDtype"
-                )
+                msg = "category, object, and string subtypes are not supported " "for IntervalDtype"
                 raise TypeError(msg)
             self._subtype = subtype
             self._closed = closed
@@ -1265,9 +1217,7 @@ class IntervalDtype(PandasExtensionDtype):
         subtype = self._subtype
         if subtype is None:
             # partially-initialized
-            raise NotImplementedError(
-                "_can_hold_na is not defined for partially-initialized IntervalDtype"
-            )
+            raise NotImplementedError("_can_hold_na is not defined for partially-initialized IntervalDtype")
         if subtype.kind in "iu":
             return False
         return True
@@ -1309,9 +1259,7 @@ class IntervalDtype(PandasExtensionDtype):
         if its not possible
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
 
         if string.lower() == "interval" or cls._match.search(string) is not None:
             return cls(string)
@@ -1593,10 +1541,7 @@ class BaseMaskedDtype(ExtensionDtype):
         from pandas.core.dtypes.cast import find_common_type
 
         new_dtype = find_common_type(
-            [
-                dtype.numpy_dtype if isinstance(dtype, BaseMaskedDtype) else dtype
-                for dtype in dtypes
-            ]
+            [dtype.numpy_dtype if isinstance(dtype, BaseMaskedDtype) else dtype for dtype in dtypes]
         )
         if not isinstance(new_dtype, np.dtype):
             # If we ever support e.g. Masked[DatetimeArray] then this will change
@@ -1747,9 +1692,7 @@ class SparseDtype(ExtensionDtype):
 
     def _check_fill_value(self) -> None:
         if not lib.is_scalar(self._fill_value):
-            raise ValueError(
-                f"fill_value must be a scalar. Got {self._fill_value} instead"
-            )
+            raise ValueError(f"fill_value must be a scalar. Got {self._fill_value} instead")
 
         from pandas.core.dtypes.cast import can_hold_element
         from pandas.core.dtypes.missing import (
@@ -1860,9 +1803,7 @@ class SparseDtype(ExtensionDtype):
         SparseDtype
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
         msg = f"Cannot construct a 'SparseDtype' from '{string}'"
         if string.startswith("Sparse"):
             try:
@@ -2017,10 +1958,7 @@ class SparseDtype(ExtensionDtype):
         # with other compatible extension dtypes
         from pandas.core.dtypes.cast import np_find_common_type
 
-        if any(
-            isinstance(x, ExtensionDtype) and not isinstance(x, SparseDtype)
-            for x in dtypes
-        ):
+        if any(isinstance(x, ExtensionDtype) and not isinstance(x, SparseDtype) for x in dtypes):
             return None
 
         fill_values = [x.fill_value for x in dtypes if isinstance(x, SparseDtype)]
@@ -2125,11 +2063,7 @@ class ArrowDtype(StorageExtensionDtype):
             return float
         elif pa.types.is_string(pa_type) or pa.types.is_large_string(pa_type):
             return str
-        elif (
-            pa.types.is_binary(pa_type)
-            or pa.types.is_fixed_size_binary(pa_type)
-            or pa.types.is_large_binary(pa_type)
-        ):
+        elif pa.types.is_binary(pa_type) or pa.types.is_fixed_size_binary(pa_type) or pa.types.is_large_binary(pa_type):
             return bytes
         elif pa.types.is_boolean(pa_type):
             return bool
@@ -2190,9 +2124,7 @@ class ArrowDtype(StorageExtensionDtype):
             # This can be removed if/when pyarrow addresses it:
             # https://github.com/apache/arrow/issues/34462
             return np.dtype(f"timedelta64[{self.pyarrow_dtype.unit}]")
-        if pa.types.is_string(self.pyarrow_dtype) or pa.types.is_large_string(
-            self.pyarrow_dtype
-        ):
+        if pa.types.is_string(self.pyarrow_dtype) or pa.types.is_large_string(self.pyarrow_dtype):
             # pa.string().to_pandas_dtype() = object which we don't want
             return np.dtype(str)
         try:
@@ -2237,9 +2169,7 @@ class ArrowDtype(StorageExtensionDtype):
             e.g. int64[pyarrow]
         """
         if not isinstance(string, str):
-            raise TypeError(
-                f"'construct_from_string' expects a string, got {type(string)}"
-            )
+            raise TypeError(f"'construct_from_string' expects a string, got {type(string)}")
         if not string.endswith("[pyarrow]"):
             raise TypeError(f"'{string}' must end with '[pyarrow]'")
         if string in ("string[pyarrow]", "str[pyarrow]"):
@@ -2325,11 +2255,7 @@ class ArrowDtype(StorageExtensionDtype):
         null_dtype = type(self)(pa.null())
 
         new_dtype = find_common_type(
-            [
-                dtype.numpy_dtype if isinstance(dtype, ArrowDtype) else dtype
-                for dtype in dtypes
-                if dtype != null_dtype
-            ]
+            [dtype.numpy_dtype if isinstance(dtype, ArrowDtype) else dtype for dtype in dtypes if dtype != null_dtype]
         )
         if not isinstance(new_dtype, np.dtype):
             return None

@@ -67,17 +67,13 @@ class NgramAssocMeasures(metaclass=ABCMeta):
     @abstractmethod
     def _contingency(*marginals):
         """Calculates values of a contingency table from marginal values."""
-        raise NotImplementedError(
-            "The contingency table is not available" "in the general ngram case"
-        )
+        raise NotImplementedError("The contingency table is not available" "in the general ngram case")
 
     @staticmethod
     @abstractmethod
     def _marginals(*contingency):
         """Calculates values of contingency table marginals from its values."""
-        raise NotImplementedError(
-            "The contingency table is not available" "in the general ngram case"
-        )
+        raise NotImplementedError("The contingency table is not available" "in the general ngram case")
 
     @classmethod
     def _expected_values(cls, cont):
@@ -89,10 +85,7 @@ class NgramAssocMeasures(metaclass=ABCMeta):
         for i in range(len(cont)):
             # Yield the expected value
             yield (
-                _product(
-                    sum(cont[x] for x in range(2**cls._n) if (x & j) == (i & j))
-                    for j in bits
-                )
+                _product(sum(cont[x] for x in range(2**cls._n) if (x & j) == (i & j)) for j in bits)
                 / (n_all ** (cls._n - 1))
             )
 
@@ -106,10 +99,9 @@ class NgramAssocMeasures(metaclass=ABCMeta):
         """Scores ngrams using Student's t test with independence hypothesis
         for unigrams, as in Manning and Schutze 5.3.1.
         """
-        return (
-            marginals[NGRAM]
-            - _product(marginals[UNIGRAMS]) / (marginals[TOTAL] ** (cls._n - 1))
-        ) / (marginals[NGRAM] + _SMALL) ** 0.5
+        return (marginals[NGRAM] - _product(marginals[UNIGRAMS]) / (marginals[TOTAL] ** (cls._n - 1))) / (
+            marginals[NGRAM] + _SMALL
+        ) ** 0.5
 
     @classmethod
     def chi_sq(cls, *marginals):
@@ -126,27 +118,20 @@ class NgramAssocMeasures(metaclass=ABCMeta):
         argument power sets an exponent (default 3) for the numerator. No
         logarithm of the result is calculated.
         """
-        return marginals[NGRAM] ** kwargs.get("power", 3) / _product(
-            marginals[UNIGRAMS]
-        )
+        return marginals[NGRAM] ** kwargs.get("power", 3) / _product(marginals[UNIGRAMS])
 
     @classmethod
     def pmi(cls, *marginals):
         """Scores ngrams by pointwise mutual information, as in Manning and
         Schutze 5.4.
         """
-        return _log2(marginals[NGRAM] * marginals[TOTAL] ** (cls._n - 1)) - _log2(
-            _product(marginals[UNIGRAMS])
-        )
+        return _log2(marginals[NGRAM] * marginals[TOTAL] ** (cls._n - 1)) - _log2(_product(marginals[UNIGRAMS]))
 
     @classmethod
     def likelihood_ratio(cls, *marginals):
         """Scores ngrams using likelihood ratios as in Manning and Schutze 5.3.4."""
         cont = cls._contingency(*marginals)
-        return 2 * sum(
-            obs * _ln(obs / (exp + _SMALL) + _SMALL)
-            for obs, exp in zip(cont, cls._expected_values(cont))
-        )
+        return 2 * sum(obs * _ln(obs / (exp + _SMALL) + _SMALL) for obs, exp in zip(cont, cls._expected_values(cont)))
 
     @classmethod
     def poisson_stirling(cls, *marginals):
@@ -219,9 +204,7 @@ class BigramAssocMeasures(NgramAssocMeasures):
         """
         n_ii, n_io, n_oi, n_oo = cls._contingency(*marginals)
 
-        return (n_ii * n_oo - n_io * n_oi) ** 2 / (
-            (n_ii + n_io) * (n_ii + n_oi) * (n_io + n_oo) * (n_oi + n_oo)
-        )
+        return (n_ii * n_oo - n_io * n_oi) ** 2 / ((n_ii + n_io) * (n_ii + n_oi) * (n_io + n_oo) * (n_oi + n_oo))
 
     @classmethod
     def chi_sq(cls, n_ii, n_ix_xi_tuple, n_xx):

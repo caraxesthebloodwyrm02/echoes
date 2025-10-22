@@ -321,11 +321,7 @@ class ConllCorpusReader(CorpusReader):
         if not pos_in_tree:
             for subtree in tree.subtrees():
                 for i, child in enumerate(subtree):
-                    if (
-                        isinstance(child, Tree)
-                        and len(child) == 1
-                        and isinstance(child[0], str)
-                    ):
+                    if isinstance(child, Tree) and len(child) == 1 and isinstance(child[0], str):
                         subtree[i] = (child[0], child.label())
 
         return tree
@@ -388,9 +384,7 @@ class ConllCorpusReader(CorpusReader):
                 break
             else:
                 raise ValueError("No srl column found for %r" % predicate)
-            instances.append(
-                ConllSRLInstance(tree, wordnum, predicate, rolesets[wordnum], spanlist)
-            )
+            instances.append(ConllSRLInstance(tree, wordnum, predicate, rolesets[wordnum], spanlist))
 
         return instances
 
@@ -401,9 +395,7 @@ class ConllCorpusReader(CorpusReader):
     def _require(self, *columntypes):
         for columntype in columntypes:
             if columntype not in self._colmap:
-                raise ValueError(
-                    "This corpus does not contain a %s " "column." % columntype
-                )
+                raise ValueError("This corpus does not contain a %s " "column." % columntype)
 
     @staticmethod
     def _get_column(grid, column_index):
@@ -464,9 +456,7 @@ class ConllSRLInstance:
         # Originally, its:
         ##plural = 's' if len(self.arguments) != 1 else ''
         plural = "s" if len(self.arguments) != 1 else ""
-        return "<ConllSRLInstance for %r with %d argument%s>" % (
-            (self.verb_stem, len(self.arguments), plural)
-        )
+        return "<ConllSRLInstance for %r with %d argument%s>" % ((self.verb_stem, len(self.arguments), plural))
 
     def pprint(self):
         verbstr = " ".join(self.words[i][0] for i in self.verb)
@@ -483,9 +473,7 @@ class ConllSRLInstance:
             if i in self.verb:
                 word = "<<%s>>" % word
             s += word + " "
-        return hdr + textwrap.fill(
-            s.replace(" ]", "]"), initial_indent="    ", subsequent_indent="    "
-        )
+        return hdr + textwrap.fill(s.replace(" ]", "]"), initial_indent="    ", subsequent_indent="    ")
 
 
 class ConllSRLInstanceList(list):
@@ -564,9 +552,7 @@ class ConllChunkCorpusReader(ConllCorpusReader):
     pos, and chunk.
     """
 
-    def __init__(
-        self, root, fileids, chunk_types, encoding="utf8", tagset=None, separator=None
-    ):
+    def __init__(self, root, fileids, chunk_types, encoding="utf8", tagset=None, separator=None):
         ConllCorpusReader.__init__(
             self,
             root,

@@ -534,8 +534,7 @@ class FileResponse(Response):
         boundary_len = len(boundary)
         static_header_part_len = 44 + boundary_len + len(content_type) + len(str(max_size))
         content_length = sum(
-            (len(str(start)) + len(str(end - 1)) + static_header_part_len)  # Headers
-            + (end - start)  # Content
+            (len(str(start)) + len(str(end - 1)) + static_header_part_len) + (end - start)  # Headers  # Content
             for start, end in ranges
         ) + (
             5 + boundary_len  # --boundary--\n

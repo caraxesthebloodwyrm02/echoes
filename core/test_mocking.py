@@ -57,18 +57,14 @@ def test_check_on_fit_fail(iris, kwargs):
         clf.fit(X, y)
 
 
-@pytest.mark.parametrize(
-    "pred_func", ["predict", "predict_proba", "decision_function", "score"]
-)
+@pytest.mark.parametrize("pred_func", ["predict", "predict_proba", "decision_function", "score"])
 def test_check_X_on_predict_success(iris, pred_func):
     X, y = iris
     clf = CheckingClassifier(check_X=_success).fit(X, y)
     getattr(clf, pred_func)(X)
 
 
-@pytest.mark.parametrize(
-    "pred_func", ["predict", "predict_proba", "decision_function", "score"]
-)
+@pytest.mark.parametrize("pred_func", ["predict", "predict_proba", "decision_function", "score"])
 def test_check_X_on_predict_fail(iris, pred_func):
     X, y = iris
     clf = CheckingClassifier(check_X=_success).fit(X, y)
@@ -127,9 +123,7 @@ def test_checking_classifier_with_params(iris, csr_container):
         clf.fit(X, y)
     clf.fit(X_sparse, y)
 
-    clf = CheckingClassifier(
-        check_X=check_array, check_X_params={"accept_sparse": False}
-    )
+    clf = CheckingClassifier(check_X=check_array, check_X_params={"accept_sparse": False})
     clf.fit(X, y)
     with pytest.raises(TypeError, match="Sparse data was passed"):
         clf.fit(X_sparse, y)
@@ -159,9 +153,7 @@ def test_checking_classifier_missing_fit_params(iris):
     "methods_to_check",
     [["predict"], ["predict", "predict_proba"]],
 )
-@pytest.mark.parametrize(
-    "predict_method", ["predict", "predict_proba", "decision_function", "score"]
-)
+@pytest.mark.parametrize("predict_method", ["predict", "predict_proba", "decision_function", "score"])
 def test_checking_classifier_methods_to_check(iris, methods_to_check, predict_method):
     # check that methods_to_check allows to bypass checks
     X, y = iris

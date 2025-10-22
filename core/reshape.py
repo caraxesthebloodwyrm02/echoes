@@ -107,9 +107,7 @@ class _Unstacker:
     unstacked : DataFrame
     """
 
-    def __init__(
-        self, index: MultiIndex, level: Level, constructor, sort: bool = True
-    ) -> None:
+    def __init__(self, index: MultiIndex, level: Level, constructor, sort: bool = True) -> None:
         self.constructor = constructor
         self.sort = sort
 
@@ -145,8 +143,7 @@ class _Unstacker:
         # GH 26314: Previous ValueError raised was too restrictive for many users.
         if num_cells > np.iinfo(np.int32).max:
             warnings.warn(
-                f"The following operation may generate {num_cells} cells "
-                f"in the resulting pandas object.",
+                f"The following operation may generate {num_cells} cells " f"in the resulting pandas object.",
                 PerformanceWarning,
                 stacklevel=find_stack_level(),
             )
@@ -239,9 +236,7 @@ class _Unstacker:
         columns = self.get_new_columns(value_columns)
         index = self.new_index
 
-        return self.constructor(
-            values, index=index, columns=columns, dtype=values.dtype
-        )
+        return self.constructor(values, index=index, columns=columns, dtype=values.dtype)
 
     def get_new_values(self, values, fill_value=None):
         if values.ndim == 1:
@@ -262,11 +257,7 @@ class _Unstacker:
             # TODO: Under what circumstances can we rely on sorted_values
             #  matching values?  When that holds, we can slice instead
             #  of take (in particular for EAs)
-            new_values = (
-                sorted_values.reshape(length, width, stride)
-                .swapaxes(1, 2)
-                .reshape(result_shape)
-            )
+            new_values = sorted_values.reshape(length, width, stride).swapaxes(1, 2).reshape(result_shape)
             new_mask = np.ones(result_shape, dtype=bool)
             return new_values, new_mask
 
@@ -338,9 +329,7 @@ class _Unstacker:
 
         if isinstance(value_columns, MultiIndex):
             # error: Cannot determine type of "__add__"  [has-type]
-            new_levels = value_columns.levels + (  # type: ignore[has-type]
-                self.removed_level_full,
-            )
+            new_levels = value_columns.levels + (self.removed_level_full,)  # type: ignore[has-type]
             new_names = value_columns.names + (self.removed_name,)
 
             new_codes = [lab.take(propagator) for lab in value_columns.codes]
@@ -356,9 +345,7 @@ class _Unstacker:
 
         # The entire level is then just a repetition of the single chunk:
         new_codes.append(np.tile(repeater, width))
-        return MultiIndex(
-            levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False
-        )
+        return MultiIndex(levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False)
 
     @cache_readonly
     def _repeater(self) -> np.ndarray:
@@ -395,9 +382,7 @@ class _Unstacker:
         )
 
 
-def _unstack_multiple(
-    data: Series | DataFrame, clocs, fill_value=None, sort: bool = True
-):
+def _unstack_multiple(data: Series | DataFrame, clocs, fill_value=None, sort: bool = True):
     if len(clocs) == 0:
         return data
 
@@ -460,9 +445,7 @@ def _unstack_multiple(
         dummy_df = data.copy(deep=False)
         dummy_df.index = dummy_index
 
-        unstacked = dummy_df.unstack(
-            "__placeholder__", fill_value=fill_value, sort=sort
-        )
+        unstacked = dummy_df.unstack("__placeholder__", fill_value=fill_value, sort=sort)
         if isinstance(unstacked, Series):
             unstcols = unstacked.index
         else:
@@ -474,9 +457,7 @@ def _unstack_multiple(
         new_codes = [unstcols.codes[0]]
         new_codes.extend(rec.take(unstcols.codes[-1]) for rec in recons_codes)
 
-    new_columns = MultiIndex(
-        levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False
-    )
+    new_columns = MultiIndex(levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False)
 
     if isinstance(unstacked, Series):
         unstacked.index = new_columns
@@ -508,40 +489,26 @@ def unstack(obj: Series | DataFrame, level, fill_value=None, sort: bool = True):
         # GH 36113
         # Give nicer error messages when unstack a Series whose
         # Index is not a MultiIndex.
-        raise ValueError(
-            f"index must be a MultiIndex to unstack, {type(obj.index)} was passed"
-        )
+        raise ValueError(f"index must be a MultiIndex to unstack, {type(obj.index)} was passed")
     else:
         if is_1d_only_ea_dtype(obj.dtype):
             return _unstack_extension_series(obj, level, fill_value, sort=sort)
-        unstacker = _Unstacker(
-            obj.index, level=level, constructor=obj._constructor_expanddim, sort=sort
-        )
-        return unstacker.get_result(
-            obj._values, value_columns=None, fill_value=fill_value
-        )
+        unstacker = _Unstacker(obj.index, level=level, constructor=obj._constructor_expanddim, sort=sort)
+        return unstacker.get_result(obj._values, value_columns=None, fill_value=fill_value)
 
 
-def _unstack_frame(
-    obj: DataFrame, level, fill_value=None, sort: bool = True
-) -> DataFrame:
+def _unstack_frame(obj: DataFrame, level, fill_value=None, sort: bool = True) -> DataFrame:
     assert isinstance(obj.index, MultiIndex)  # checked by caller
-    unstacker = _Unstacker(
-        obj.index, level=level, constructor=obj._constructor, sort=sort
-    )
+    unstacker = _Unstacker(obj.index, level=level, constructor=obj._constructor, sort=sort)
 
     if not obj._can_fast_transpose:
         mgr = obj._mgr.unstack(unstacker, fill_value=fill_value)
         return obj._constructor_from_mgr(mgr, axes=mgr.axes)
     else:
-        return unstacker.get_result(
-            obj._values, value_columns=obj.columns, fill_value=fill_value
-        )
+        return unstacker.get_result(obj._values, value_columns=obj.columns, fill_value=fill_value)
 
 
-def _unstack_extension_series(
-    series: Series, level, fill_value, sort: bool
-) -> DataFrame:
+def _unstack_extension_series(series: Series, level, fill_value, sort: bool) -> DataFrame:
     """
     Unstack an ExtensionArray-backed Series.
 
@@ -598,9 +565,7 @@ def stack(frame: DataFrame, level=-1, dropna: bool = True, sort: bool = True):
     level_num = frame.columns._get_level_number(level)
 
     if isinstance(frame.columns, MultiIndex):
-        return _stack_multi_columns(
-            frame, level_num=level_num, dropna=dropna, sort=sort
-        )
+        return _stack_multi_columns(frame, level_num=level_num, dropna=dropna, sort=sort)
     elif isinstance(frame.index, MultiIndex):
         new_levels = list(frame.index.levels)
         new_codes = [lab.repeat(K) for lab in frame.index.codes]
@@ -611,9 +576,7 @@ def stack(frame: DataFrame, level=-1, dropna: bool = True, sort: bool = True):
 
         new_names = list(frame.index.names)
         new_names.append(frame.columns.name)
-        new_index = MultiIndex(
-            levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False
-        )
+        new_index = MultiIndex(levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False)
     else:
         levels, (ilab, clab) = zip(*map(stack_factorize, (frame.index, frame.columns)))
         codes = ilab.repeat(K), np.tile(clab, N).ravel()
@@ -633,9 +596,7 @@ def stack(frame: DataFrame, level=-1, dropna: bool = True, sort: bool = True):
 
         if isinstance(dtype, ExtensionDtype):
             arr = dtype.construct_array_type()
-            new_values = arr._concat_same_type(
-                [col._values for _, col in frame.items()]
-            )
+            new_values = arr._concat_same_type([col._values for _, col in frame.items()])
             new_values = _reorder_for_extension_array_stack(new_values, N, K)
         else:
             # homogeneous, non-EA
@@ -678,10 +639,7 @@ def stack_multiple(frame: DataFrame, level, dropna: bool = True, sort: bool = Tr
             level = [v if v <= lev else v - 1 for v in level]
 
     else:
-        raise ValueError(
-            "level should contain all level names or all level "
-            "numbers, not a mixture of the two."
-        )
+        raise ValueError("level should contain all level names or all level " "numbers, not a mixture of the two.")
 
     return result
 
@@ -691,10 +649,7 @@ def _stack_multi_column_index(columns: MultiIndex) -> MultiIndex:
     if len(columns.levels) <= 2:
         return columns.levels[0]._rename(name=columns.names[0])
 
-    levs = [
-        [lev[c] if c >= 0 else None for c in codes]
-        for lev, codes in zip(columns.levels[:-1], columns.codes[:-1])
-    ]
+    levs = [[lev[c] if c >= 0 else None for c in codes] for lev, codes in zip(columns.levels[:-1], columns.codes[:-1])]
 
     # Remove duplicate tuples in the MultiIndex.
     tuples = zip(*levs)
@@ -713,9 +668,7 @@ def _stack_multi_column_index(columns: MultiIndex) -> MultiIndex:
     )
 
 
-def _stack_multi_columns(
-    frame: DataFrame, level_num: int = -1, dropna: bool = True, sort: bool = True
-) -> DataFrame:
+def _stack_multi_columns(frame: DataFrame, level_num: int = -1, dropna: bool = True, sort: bool = True) -> DataFrame:
     def _convert_level_number(level_num: int, columns: Index):
         """
         Logic for converting the level number to something we can safely pass
@@ -826,9 +779,7 @@ def _stack_multi_columns(
     new_codes.append(np.tile(level_codes, N))
     new_names.append(frame.columns.names[level_num])
 
-    new_index = MultiIndex(
-        levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False
-    )
+    new_index = MultiIndex(levels=new_levels, codes=new_codes, names=new_names, verify_integrity=False)
 
     result = frame._constructor(new_data, index=new_index, columns=new_columns)
 
@@ -845,9 +796,7 @@ def _stack_multi_columns(
     return result
 
 
-def _reorder_for_extension_array_stack(
-    arr: ExtensionArray, n_rows: int, n_columns: int
-) -> ExtensionArray:
+def _reorder_for_extension_array_stack(arr: ExtensionArray, n_rows: int, n_columns: int) -> ExtensionArray:
     """
     Re-orders the values when stacking multiple extension-arrays.
 
@@ -888,9 +837,7 @@ def stack_v3(frame: DataFrame, level: list[int]) -> Series | DataFrame:
 
     # If we need to drop `level` from columns, it needs to be in descending order
     drop_levnums = sorted(level, reverse=True)
-    stack_cols = frame.columns._drop_level_numbers(
-        [k for k in range(frame.columns.nlevels) if k not in level][::-1]
-    )
+    stack_cols = frame.columns._drop_level_numbers([k for k in range(frame.columns.nlevels) if k not in level][::-1])
     if len(level) > 1:
         # Arrange columns in the order we want to take them, e.g. level=[2, 0, 1]
         sorter = np.argsort(level)
@@ -911,10 +858,7 @@ def stack_v3(frame: DataFrame, level: list[int]) -> Series | DataFrame:
             if len(level) == 1:
                 idx = (idx,)
             gen = iter(idx)
-            column_indexer = tuple(
-                next(gen) if k in level else slice(None)
-                for k in range(frame.columns.nlevels)
-            )
+            column_indexer = tuple(next(gen) if k in level else slice(None) for k in range(frame.columns.nlevels))
             data = frame.loc[:, column_indexer]
 
         if len(level) < frame.columns.nlevels:

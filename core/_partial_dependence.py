@@ -99,16 +99,9 @@ def _grid_from_X(X, percentiles, is_categorical, grid_resolution, custom_values)
 
     custom_values = {k: _convert_custom_values(v) for k, v in custom_values.items()}
     if any(v.ndim != 1 for v in custom_values.values()):
-        error_string = ", ".join(
-            f"Feature {k}: {v.ndim} dimensions"
-            for k, v in custom_values.items()
-            if v.ndim != 1
-        )
+        error_string = ", ".join(f"Feature {k}: {v.ndim} dimensions" for k, v in custom_values.items() if v.ndim != 1)
 
-        raise ValueError(
-            "The custom grid for some features is not a one-dimensional array. "
-            f"{error_string}"
-        )
+        raise ValueError("The custom grid for some features is not a one-dimensional array. " f"{error_string}")
 
     values = []
     # TODO: we should handle missing values (i.e. `np.nan`) specifically and store them
@@ -137,9 +130,7 @@ def _grid_from_X(X, percentiles, is_categorical, grid_resolution, custom_values)
                 axis = uniques
             else:
                 # create axis based on percentiles and grid resolution
-                emp_percentiles = mquantiles(
-                    _safe_indexing(X, feature, axis=1), prob=percentiles, axis=0
-                )
+                emp_percentiles = mquantiles(_safe_indexing(X, feature, axis=1), prob=percentiles, axis=0)
                 if np.allclose(emp_percentiles[0], emp_percentiles[1]):
                     raise ValueError(
                         "percentiles are too close to each other, "
@@ -215,9 +206,7 @@ def _partial_dependence_recursion(est, grid, features):
     return averaged_predictions
 
 
-def _partial_dependence_brute(
-    est, grid, features, X, response_method, sample_weight=None
-):
+def _partial_dependence_brute(est, grid, features, X, response_method, sample_weight=None):
     """Calculate partial dependence via the brute force method.
 
     The brute method explicitly averages the predictions of an estimator over a
@@ -291,9 +280,7 @@ def _partial_dependence_brute(
     averaged_predictions = []
 
     if response_method == "auto":
-        response_method = (
-            "predict" if is_regressor(est) else ["predict_proba", "decision_function"]
-        )
+        response_method = "predict" if is_regressor(est) else ["predict_proba", "decision_function"]
 
     X_eval = X.copy()
     for new_values in grid:
@@ -588,22 +575,15 @@ def partial_dependence(
         X = check_array(X, ensure_all_finite="allow-nan", dtype=object)
 
     if is_regressor(estimator) and response_method != "auto":
-        raise ValueError(
-            "The response_method parameter is ignored for regressors and "
-            "must be 'auto'."
-        )
+        raise ValueError("The response_method parameter is ignored for regressors and " "must be 'auto'.")
 
     if kind != "average":
         if method == "recursion":
-            raise ValueError(
-                "The 'recursion' method only applies when 'kind' is set to 'average'"
-            )
+            raise ValueError("The 'recursion' method only applies when 'kind' is set to 'average'")
         method = "brute"
 
     if method == "recursion" and sample_weight is not None:
-        raise ValueError(
-            "The 'recursion' method can only be applied when sample_weight is None."
-        )
+        raise ValueError("The 'recursion' method can only be applied when sample_weight is None.")
 
     if method == "auto":
         if sample_weight is not None:
@@ -639,9 +619,7 @@ def partial_dependence(
             )
             raise ValueError(
                 "Only the following estimators support the 'recursion' "
-                "method: {}. Try using method='brute'.".format(
-                    ", ".join(supported_classes_recursion)
-                )
+                "method: {}. Try using method='brute'.".format(", ".join(supported_classes_recursion))
             )
         if response_method == "auto":
             response_method = "decision_function"
@@ -662,9 +640,7 @@ def partial_dependence(
         if np.any(np.less(features, 0)):
             raise ValueError("all features must be in [0, {}]".format(X.shape[1] - 1))
 
-    features_indices = np.asarray(
-        _get_column_indices(X, features), dtype=np.intp, order="C"
-    ).ravel()
+    features_indices = np.asarray(_get_column_indices(X, features), dtype=np.intp, order="C").ravel()
 
     feature_names = _check_feature_names(X, feature_names)
 
@@ -692,12 +668,9 @@ def partial_dependence(
         elif categorical_features.dtype.kind in ("i", "O", "U"):
             # categorical features provided as a list of indices or feature names
             categorical_features_idx = [
-                _get_feature_index(cat, feature_names=feature_names)
-                for cat in categorical_features
+                _get_feature_index(cat, feature_names=feature_names) for cat in categorical_features
             ]
-            is_categorical = [
-                idx in categorical_features_idx for idx in features_indices
-            ]
+            is_categorical = [idx in categorical_features_idx for idx in features_indices]
         else:
             raise ValueError(
                 "Expected `categorical_features` to be an array-like of boolean,"
@@ -729,9 +702,7 @@ def partial_dependence(
     X_subset = _safe_indexing(X, features_indices, axis=1)
 
     custom_values_for_X_subset = {
-        index: custom_values.get(feature)
-        for index, feature in enumerate(features)
-        if feature in custom_values
+        index: custom_values.get(feature) for index, feature in enumerate(features) if feature in custom_values
     }
 
     grid, values = _grid_from_X(
@@ -749,19 +720,13 @@ def partial_dependence(
 
         # reshape predictions to
         # (n_outputs, n_instances, n_values_feature_0, n_values_feature_1, ...)
-        predictions = predictions.reshape(
-            -1, X.shape[0], *[val.shape[0] for val in values]
-        )
+        predictions = predictions.reshape(-1, X.shape[0], *[val.shape[0] for val in values])
     else:
-        averaged_predictions = _partial_dependence_recursion(
-            estimator, grid, features_indices
-        )
+        averaged_predictions = _partial_dependence_recursion(estimator, grid, features_indices)
 
     # reshape averaged_predictions to
     # (n_outputs, n_values_feature_0, n_values_feature_1, ...)
-    averaged_predictions = averaged_predictions.reshape(
-        -1, *[val.shape[0] for val in values]
-    )
+    averaged_predictions = averaged_predictions.reshape(-1, *[val.shape[0] for val in values])
     pdp_results = Bunch(grid_values=values)
 
     if kind == "average":

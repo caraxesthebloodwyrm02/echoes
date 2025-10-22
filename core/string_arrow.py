@@ -145,10 +145,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         self._dtype = StringDtype(storage=self._storage, na_value=self._na_value)
 
         if not pa.types.is_large_string(self._pa_array.type):
-            raise ValueError(
-                "ArrowStringArray requires a PyArrow (chunked) array of "
-                "large_string type"
-            )
+            raise ValueError("ArrowStringArray requires a PyArrow (chunked) array of " "large_string type")
 
     @classmethod
     def _box_pa_scalar(cls, value, pa_type: pa.DataType | None = None) -> pa.Scalar:
@@ -158,9 +155,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         return pa_scalar
 
     @classmethod
-    def _box_pa_array(
-        cls, value, pa_type: pa.DataType | None = None, copy: bool = False
-    ) -> pa.Array | pa.ChunkedArray:
+    def _box_pa_array(cls, value, pa_type: pa.DataType | None = None, copy: bool = False) -> pa.Array | pa.ChunkedArray:
         pa_array = super()._box_pa_array(value, pa_type)
         if pa.types.is_string(pa_array.type) and pa_type is None:
             pa_array = pc.cast(pa_array, pa.large_string())
@@ -201,9 +196,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         return cls(pa.array(result, type=pa.large_string(), from_pandas=True))
 
     @classmethod
-    def _from_sequence_of_strings(
-        cls, strings, dtype: Dtype | None = None, copy: bool = False
-    ):
+    def _from_sequence_of_strings(cls, strings, dtype: Dtype | None = None, copy: bool = False):
         return cls._from_sequence(strings, dtype=dtype, copy=copy)
 
     @property
@@ -242,9 +235,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
                 values = values.fill_null(na)
             return values.to_numpy()
         else:
-            if na is not lib.no_default and not isna(
-                na
-            ):  # pyright: ignore [reportGeneralTypeIssues]
+            if na is not lib.no_default and not isna(na):  # pyright: ignore [reportGeneralTypeIssues]
                 values = values.fill_null(na)
         return BooleanDtype().__from_arrow__(values)
 
@@ -280,9 +271,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         if not len(value_set):
             return np.zeros(len(self), dtype=bool)
 
-        result = pc.is_in(
-            self._pa_array, value_set=pa.array(value_set, type=self._pa_array.type)
-        )
+        result = pc.is_in(self._pa_array, value_set=pa.array(value_set, type=self._pa_array.type))
         # pyarrow 2.0.0 returned nulls, so we explicily specify dtype to convert nulls
         # to False
         return np.array(result, dtype=np.bool_)
@@ -348,10 +337,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
     def _is_re_pattern_with_flags(pat: str | re.Pattern) -> bool:
         # check if `pat` is a compiled regex pattern with flags that are not
         # supported by pyarrow
-        return (
-            isinstance(pat, re.Pattern)
-            and (pat.flags & ~(re.IGNORECASE | re.UNICODE)) != 0
-        )
+        return isinstance(pat, re.Pattern) and (pat.flags & ~(re.IGNORECASE | re.UNICODE)) != 0
 
     @staticmethod
     def _preprocess_re_pattern(pat: re.Pattern, case: bool) -> tuple[str, bool, int]:
@@ -432,9 +418,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         ):
             return super()._str_replace(pat, repl, n, case, flags, regex)
 
-        return ArrowStringArrayMixin._str_replace(
-            self, pat, repl, n, case, flags, regex
-        )
+        return ArrowStringArrayMixin._str_replace(self, pat, repl, n, case, flags, regex)
 
     def _str_repeat(self, repeats: int | Sequence[int]):
         if not isinstance(repeats, int):
@@ -454,11 +438,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         return self._convert_int_result(result)
 
     def _str_find(self, sub: str, start: int = 0, end: int | None = None):
-        if (
-            pa_version_under13p0
-            and not (start != 0 and end is not None)
-            and not (start == 0 and end is None)
-        ):
+        if pa_version_under13p0 and not (start != 0 and end is not None) and not (start == 0 and end is None):
             # GH#59562
             return super()._str_find(sub, start, end)
         return ArrowStringArrayMixin._str_find(self, sub, start, end)
@@ -492,18 +472,14 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
 
         return Float64Dtype().__from_arrow__(result)
 
-    def _reduce(
-        self, name: str, *, skipna: bool = True, keepdims: bool = False, **kwargs
-    ):
+    def _reduce(self, name: str, *, skipna: bool = True, keepdims: bool = False, **kwargs):
         if self.dtype.na_value is np.nan and name in ["any", "all"]:
             if not skipna:
                 nas = pc.is_null(self._pa_array)
                 arr = pc.or_kleene(nas, pc.not_equal(self._pa_array, ""))
             else:
                 arr = pc.not_equal(self._pa_array, "")
-            result = ArrowExtensionArray(arr)._reduce(
-                name, skipna=skipna, keepdims=keepdims, **kwargs
-            )
+            result = ArrowExtensionArray(arr)._reduce(name, skipna=skipna, keepdims=keepdims, **kwargs)
             if keepdims:
                 # ArrowExtensionArray will return a length-1 bool[pyarrow] array
                 return result.astype(np.bool_)
@@ -525,9 +501,7 @@ class ArrowStringArray(ObjectStringArrayMixin, ArrowExtensionArray, BaseStringAr
         result = super().value_counts(dropna=dropna)
         if self.dtype.na_value is np.nan:
             res_values = result._values.to_numpy()
-            return result._constructor(
-                res_values, index=result.index, name=result.name, copy=False
-            )
+            return result._constructor(res_values, index=result.index, name=result.name, copy=False)
         return result
 
     def _cmp_method(self, other, op):

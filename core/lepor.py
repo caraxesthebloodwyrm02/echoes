@@ -8,7 +8,6 @@
 """LEPOR score implementation."""
 
 import math
-import re
 import sys
 from typing import Callable, List
 
@@ -73,9 +72,7 @@ def alignment(ref_tokens: List[str], hyp_tokens: List[str]):
         # Otherwise, compute the multiple possibilities.
         else:
             # Keeps an index of where the hypothesis token matches the reference.
-            ref_indexes = [
-                i for i, ref_token in enumerate(ref_tokens) if ref_token == hyp_token
-            ]
+            ref_indexes = [i for i, ref_token in enumerate(ref_tokens) if ref_token == hyp_token]
 
             # Iterate through the matched tokens, and check if
             # the one token to the left/right also matches.
@@ -141,9 +138,7 @@ def alignment(ref_tokens: List[str], hyp_tokens: List[str]):
     return alignments
 
 
-def ngram_positional_penalty(
-    ref_tokens: List[str], hyp_tokens: List[str]
-) -> (float, float):
+def ngram_positional_penalty(ref_tokens: List[str], hyp_tokens: List[str]) -> (float, float):
     """
     This function calculates the n-gram position difference penalty (NPosPenal) described in the LEPOR paper.
     The NPosPenal is an exponential of the length normalized n-gram matches between the reference and the hypothesis.
@@ -204,9 +199,7 @@ def harmonic(
     precision = match_count / hypothesis_length
     recall = match_count / reference_length
 
-    harmonic_score = (alpha + beta) / (
-        (alpha / (recall + epsilon)) + (beta / (precision + epsilon))
-    )
+    harmonic_score = (alpha + beta) / ((alpha / (recall + epsilon)) + (beta / (precision + epsilon)))
 
     return harmonic_score
 
@@ -269,9 +262,7 @@ def sentence_lepor(
         # Calculate the penalty on different positions of same word in translation.
         npd, match_count = ngram_positional_penalty(reference, hypothesis)
 
-        harmonic_score = harmonic(
-            match_count, len(reference), len(hypothesis), alpha, beta
-        )
+        harmonic_score = harmonic(match_count, len(reference), len(hypothesis), alpha, beta)
 
         lepor_scores.append(lp * npd * harmonic_score)
 
@@ -317,16 +308,12 @@ def corpus_lepor(
     if len(references) == 0 or len(hypothesis) == 0:
         raise ValueError("There is an Empty list. Exit.")
 
-    assert len(references) == len(hypothesis), (
-        "The number of hypothesis and their reference(s) should be the " "same "
-    )
+    assert len(references) == len(hypothesis), "The number of hypothesis and their reference(s) should be the " "same "
 
     lepor_scores = list()
 
     for reference_sen, hypothesis_sen in zip(references, hypothesis):
         # Calculate Lepor for each sentence separately and append in a list.
-        lepor_scores.append(
-            sentence_lepor(reference_sen, hypothesis_sen, alpha, beta, tokenizer)
-        )
+        lepor_scores.append(sentence_lepor(reference_sen, hypothesis_sen, alpha, beta, tokenizer))
 
     return lepor_scores

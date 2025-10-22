@@ -1,62 +1,62 @@
-# Echoes Platform
+# Glimpse: Integrated Cognition Framework
 
-Overview. Architecture. Setup. Maintenance.
-- Backend: backend/
-- Frontend: frontend/
-- Assets: assets/
-- Tools: tools/
-- Docs: docs/
+This repository contains the source code and documentation for the Glimpse project, a research initiative focused on building an Integrated Cognition Framework. Our goal is to bridge the gap between empirical (fact-based) and experiential (intuition-based) knowledge through a novel Retrieval-Augmented Generation (RAG) system.
+
+For a deep dive into the project's purpose and architecture, please see [FOUNDATIONAL_GROUND.md](FOUNDATIONAL_GROUND.md).
 
 ## Key Features
 
 This project includes several advanced, self-aware systems designed to improve robustness and developer interaction.
 
-### 1. Documentation-Driven Security
+### 1. RAG Orbit: The Core Engine
 
-The system includes a `GuardrailMiddleware` that actively enforces security protocols defined in the project's own documentation (`docs/glimpse/DEPLOYMENT_AND_OPERATIONS.md`). This ensures that the application's behavior is always consistent with its specification.
+The heart of the Glimpse project is **RAG Orbit**, a custom-built RAG pipeline designed for reproducibility and auditability. It consists of four main components:
 
-For a detailed summary and demonstration output, see the [Core Systems README](core/README.md).
+-   **Chunking (`src/rag_orbit/chunking.py`):** Intelligently segments documents.
+-   **Embeddings (`src/rag_orbit/embeddings.py`):** Translates text into semantic vectors.
+-   **Retrieval (`src/rag_orbit/retrieval.py`):** Provides efficient, FAISS-based similarity search.
+-   **Provenance (`src/rag_orbit/provenance.py`):** Creates a complete, verifiable audit trail of all operations.
 
-### 2. Context-Aware AI Agent
 
-We have implemented a `ContextAwareAPICall` system that can reason about the codebase and the user's recent activity (trajectory). This agent can use a multi-step tool-use workflow to:
-1.  **Search** for relevant files in the codebase.
-2.  **Read** the contents of those files.
-3.  **Synthesize** the information to answer complex, context-dependent queries.
+### 2. End-to-End Validation
 
-An end-to-end demonstration can be run via the [run_context_aware_call.py](examples/run_context_aware_call.py) script. The full implementation details are in the [Core Systems README](core/README.md).
+The entire RAG Orbit pipeline is validated through a comprehensive end-to-end test suite, which you can find at `tests/test_e2e_flow.py`. This suite confirms that the system can:
 
----
+1.  Process both `empirical` and `experiential` data.
+2.  Retrieve the correct information for a given query.
+3.  Maintain a verifiable provenance trail.
 
-## 📋 Project Status & Findings
-
-### Recent Updates (October 2025)
-- ✅ Implemented Context-Aware AI Agent with multi-step reasoning
-- ✅ Created Documentation-Driven Security middleware
-- ✅ Resolved multiple dependency vulnerabilities
-- ✅ Added comprehensive testing and documentation
-
-### Known Issues & Solutions
-For a complete list of findings, issues, and solutions, see [FINDINGS_AND_SOLUTIONS.md](docs/FINDINGS_AND_SOLUTIONS.md)
-
-**Quick Fixes:**
-```bash
-# Fix dependency vulnerabilities
-python scripts/manage_deps.py
-
-# Install pre-commit hooks
-pre-commit install
-
-# Run security audit
-pip-audit -r requirements.txt
-```
+A practical demonstration can be run via the `demo_glimpse_initialization.py` script.
 
 ---
 
-## Setup
+## 📋 Project Status (October 2025)
 
-1. Backend: cd backend && poetry install
-2. Frontend: cd frontend && npm install
-3. Dev: make dev
+-   ✅ **Foundation Established:** The project's purpose, architecture, and workflows are clearly defined in `FOUNDATIONAL_GROUND.md`.
+-   ✅ **Terminology Refactored:** The project has been consistently renamed to "Glimpse."
+-   ✅ **Core Implementation Complete:** The `RAG Orbit` system is fully implemented.
+-   ✅ **End-to-End Testing in Place:** A full test suite validates the entire pipeline.
+
+For a detailed project plan, see the [Project Charter](GLIMPSE_PROJECT_CHARTER.md).
+
+---
+
+## 🚀 Getting Started
+
+1.  **Set up the environment:**
+    ```bash
+    # Activate virtual environment
+    .\.venv\Scripts\Activate.ps1
+    ```
+
+2.  **Run the demonstration:**
+    ```bash
+    python demo_glimpse_initialization.py
+    ```
+
+3.  **Run the tests:**
+    ```bash
+    pytest
+    ```
 
 License: MIT

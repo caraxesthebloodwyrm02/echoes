@@ -1,10 +1,8 @@
 {
-  // ────── Editor & AI Assist Settings ──────
   "editor.inlineSuggest.enabled": true,
   "editor.formatOnSave": true,
   "editor.formatOnPaste": true,
   "editor.formatOnType": true,
-  // Cascade code mode / multi-file AI edits
   "chat.experimental.cascadeEdits": true,
   "chat.editor.cascadeCodeEdits": true,
   "chat.experimental.autoApplyEdits": true,
@@ -12,17 +10,14 @@
   "github.copilot.inlineSuggest.enable": true,
   "github.copilot.chat.enable": true,
   "chat.experimental.copilotInlineCompletions": true,
-  // AI tool / function-calling support
   "chat.experimental.functionCalling": true,
   "chat.experimental.externalToolIntegration": true,
   "chat.experimental.enableToolContext": true,
-  // ────── Project-specific Paths & Behaviour ──────
   "python.defaultInterpreterPath": "backend/.venv/bin/python",
   "python.formatting.provider": "black",
   "typescript.tsserver.experimental.enableProjectDiagnostics": true,
   "typescript.updateImportsOnFileMove.enabled": "always",
   "javascript.updateImportsOnFileMove.enabled": "always",
-  // ────── File Management / Exclusions ──────
   "files.exclude": {
     "**/__pycache__": true,
     "**/*.pyc": true,
@@ -32,7 +27,6 @@
   },
   "files.autoSave": "afterDelay",
   "files.autoSaveDelay": 1500,
-  // ────── Workspace Behaviour ──────
   "workbench.startupEditor": "none",
   "workbench.editor.enablePreview": false,
   "security.workspace.trust.enabled": true

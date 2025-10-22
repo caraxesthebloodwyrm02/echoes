@@ -44,7 +44,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_transform(SphinxDomains)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

@@ -263,9 +263,7 @@ def demo_real_world_workflow():
 
     # Coding phase
     logger.info("Phase 2: Implementation")
-    code_response = orchestrator.code_task(
-        "Write a FastAPI endpoint for user login with JWT token generation"
-    )
+    code_response = orchestrator.code_task("Write a FastAPI endpoint for user login with JWT token generation")
     print(f"\n💻 Code:\n{code_response[:300]}...\n")
 
     # Review phase

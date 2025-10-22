@@ -144,9 +144,7 @@ def transform_block(builder: IRBuilder, block: Block) -> None:
     # those after `if MYPY`.
     elif block.body:
         builder.add(
-            RaiseStandardError(
-                RaiseStandardError.RUNTIME_ERROR, "Reached allegedly unreachable code!", block.line
-            )
+            RaiseStandardError(RaiseStandardError.RUNTIME_ERROR, "Reached allegedly unreachable code!", block.line)
         )
         builder.add(Unreachable())
 
@@ -244,9 +242,7 @@ def transform_operator_assignment_stmt(builder: IRBuilder, stmt: OperatorAssignm
         and is_tagged(builder.node_type(stmt.rvalue))
         and stmt.op in int_borrow_friendly_op
     ):
-        can_borrow = is_borrow_friendly_expr(builder, stmt.rvalue) and is_borrow_friendly_expr(
-            builder, stmt.lvalue
-        )
+        can_borrow = is_borrow_friendly_expr(builder, stmt.rvalue) and is_borrow_friendly_expr(builder, stmt.lvalue)
     else:
         can_borrow = False
     target = builder.get_assignment_target(stmt.lvalue)
@@ -441,9 +437,7 @@ def transform_for_stmt(builder: IRBuilder, s: ForStmt) -> None:
         assert s.else_body is not None
         builder.accept(s.else_body)
 
-    for_loop_helper(
-        builder, s.index, s.expr, body, else_block if s.else_body else None, s.is_async, s.line
-    )
+    for_loop_helper(builder, s.index, s.expr, body, else_block if s.else_body else None, s.is_async, s.line)
 
 
 def transform_break_stmt(builder: IRBuilder, node: BreakStmt) -> None:
@@ -684,9 +678,7 @@ def try_finally_resolve_control(
     return out_block
 
 
-def transform_try_finally_stmt(
-    builder: IRBuilder, try_body: GenFunc, finally_body: GenFunc, line: int = -1
-) -> None:
+def transform_try_finally_stmt(builder: IRBuilder, try_body: GenFunc, finally_body: GenFunc, line: int = -1) -> None:
     """Generalized try/finally handling that takes functions to gen the bodies.
 
     The point of this is to also be able to support with."""
@@ -704,19 +696,13 @@ def transform_try_finally_stmt(
     ret_reg = try_finally_try(builder, err_handler, return_entry, main_entry, try_body)
 
     # Set up the entry blocks for the finally statement
-    old_exc = try_finally_entry_blocks(
-        builder, err_handler, return_entry, main_entry, finally_block, ret_reg
-    )
+    old_exc = try_finally_entry_blocks(builder, err_handler, return_entry, main_entry, finally_block, ret_reg)
 
     # Compile the body of the finally
-    cleanup_block, finally_control = try_finally_body(
-        builder, finally_block, finally_body, old_exc
-    )
+    cleanup_block, finally_control = try_finally_body(builder, finally_block, finally_body, old_exc)
 
     # Resolve the control flow out of the finally block
-    out_block = try_finally_resolve_control(
-        builder, cleanup_block, finally_control, old_exc, ret_reg
-    )
+    out_block = try_finally_resolve_control(builder, cleanup_block, finally_control, old_exc, ret_reg)
 
     builder.activate_block(out_block)
 
@@ -863,13 +849,9 @@ def transform_try_stmt(builder: IRBuilder, t: TryStmt) -> None:
         body = t.finally_body
 
         if use_async_version:
-            transform_try_finally_stmt_async(
-                builder, transform_try_body, lambda: builder.accept(body), t.line
-            )
+            transform_try_finally_stmt_async(builder, transform_try_body, lambda: builder.accept(body), t.line)
         else:
-            transform_try_finally_stmt(
-                builder, transform_try_body, lambda: builder.accept(body), t.line
-            )
+            transform_try_finally_stmt(builder, transform_try_body, lambda: builder.accept(body), t.line)
     else:
         transform_try_except_stmt(builder, t)
 
@@ -970,9 +952,7 @@ def transform_with_stmt(builder: IRBuilder, o: WithStmt) -> None:
         if i >= len(o.expr):
             builder.accept(o.body)
         else:
-            transform_with(
-                builder, o.expr[i], o.target[i], lambda: generate(i + 1), o.is_async, o.line
-            )
+            transform_with(builder, o.expr[i], o.target[i], lambda: generate(i + 1), o.is_async, o.line)
 
     generate(0)
 
@@ -1006,17 +986,14 @@ def transform_del_stmt(builder: IRBuilder, o: DelStmt) -> None:
 
 def transform_del_item(builder: IRBuilder, target: AssignmentTarget, line: int) -> None:
     if isinstance(target, AssignmentTargetIndex):
-        builder.gen_method_call(
-            target.base, "__delitem__", [target.index], result_type=None, line=line
-        )
+        builder.gen_method_call(target.base, "__delitem__", [target.index], result_type=None, line=line)
     elif isinstance(target, AssignmentTargetAttr):
         if isinstance(target.obj_type, RInstance):
             cl = target.obj_type.class_ir
             if not cl.is_deletable(target.attr):
                 builder.error(f'"{target.attr}" cannot be deleted', line)
                 builder.note(
-                    'Using "__deletable__ = '
-                    + '[\'<attr>\']" in the class body enables "del obj.<attr>"',
+                    'Using "__deletable__ = ' + '[\'<attr>\']" in the class body enables "del obj.<attr>"',
                     line,
                 )
         key = builder.load_str(target.attr)
@@ -1024,9 +1001,7 @@ def transform_del_item(builder: IRBuilder, target: AssignmentTarget, line: int) 
     elif isinstance(target, AssignmentTargetRegister):
         # Delete a local by assigning an error value to it, which will
         # prompt the insertion of uninit checks.
-        builder.add(
-            Assign(target.register, builder.add(LoadErrorValue(target.type, undefines=True)))
-        )
+        builder.add(Assign(target.register, builder.add(LoadErrorValue(target.type, undefines=True))))
     elif isinstance(target, AssignmentTargetTuple):
         for subtarget in target.items:
             transform_del_item(builder, subtarget, line)
@@ -1057,9 +1032,7 @@ def emit_yield(builder: IRBuilder, val: Value, line: int) -> Value:
     return cls.send_arg_reg
 
 
-def emit_yield_from_or_await(
-    builder: IRBuilder, val: Value, line: int, *, is_await: bool
-) -> Value:
+def emit_yield_from_or_await(builder: IRBuilder, val: Value, line: int, *, is_await: bool) -> Value:
     # This is basically an implementation of the code in PEP 380.
 
     # TODO: do we want to use the right types here?

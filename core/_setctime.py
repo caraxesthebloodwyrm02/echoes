@@ -45,9 +45,7 @@ else:
 from typing import Union
 
 
-def setctime(
-    filepath: Union[str, PathLike], timestamp: float, *, follow_symlinks: bool = True
-) -> None:
+def setctime(filepath: Union[str, PathLike], timestamp: float, *, follow_symlinks: bool = True) -> None:
     """Set the "ctime" (creation time) attribute of a file given an unix timestamp (Windows only)."""
     if not SUPPORTED:
         raise OSError("This function is only available for the Windows platform.")

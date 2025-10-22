@@ -40,9 +40,7 @@ class PandasDataFrameXchg(DataFrameXchg):
             if rechunked is not None:
                 self._df.isetitem(i, rechunked)
 
-    def __dataframe__(
-        self, nan_as_null: bool = False, allow_copy: bool = True
-    ) -> PandasDataFrameXchg:
+    def __dataframe__(self, nan_as_null: bool = False, allow_copy: bool = True) -> PandasDataFrameXchg:
         # `nan_as_null` can be removed here once it's removed from
         # Dataframe.__dataframe__
         return PandasDataFrameXchg(self._df, allow_copy)
@@ -72,10 +70,7 @@ class PandasDataFrameXchg(DataFrameXchg):
         return PandasColumn(self._df[name], allow_copy=self._allow_copy)
 
     def get_columns(self) -> list[PandasColumn]:
-        return [
-            PandasColumn(self._df[name], allow_copy=self._allow_copy)
-            for name in self._df.columns
-        ]
+        return [PandasColumn(self._df[name], allow_copy=self._allow_copy) for name in self._df.columns]
 
     def select_columns(self, indices: Sequence[int]) -> PandasDataFrameXchg:
         if not isinstance(indices, abc.Sequence):
@@ -83,9 +78,7 @@ class PandasDataFrameXchg(DataFrameXchg):
         if not isinstance(indices, list):
             indices = list(indices)
 
-        return PandasDataFrameXchg(
-            self._df.iloc[:, indices], allow_copy=self._allow_copy
-        )
+        return PandasDataFrameXchg(self._df.iloc[:, indices], allow_copy=self._allow_copy)
 
     def select_columns_by_name(self, names: list[str]) -> PandasDataFrameXchg:  # type: ignore[override]
         if not isinstance(names, abc.Sequence):

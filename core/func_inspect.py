@@ -16,9 +16,7 @@ from tokenize import open as open_py_source
 
 from .logger import pformat
 
-full_argspec_fields = (
-    "args varargs varkw defaults kwonlyargs kwonlydefaults annotations"
-)
+full_argspec_fields = "args varargs varkw defaults kwonlyargs kwonlydefaults annotations"
 full_argspec_type = collections.namedtuple("FullArgSpec", full_argspec_fields)
 
 
@@ -53,9 +51,7 @@ def get_func_code(func):
             source_code = "".join(inspect.getsourcelines(func)[0])
             line_no = 1
             if source_file.startswith("<doctest "):
-                source_file, line_no = re.match(
-                    r"\<doctest (.*\.rst)\[(.*)\]\>", source_file
-                ).groups()
+                source_file, line_no = re.match(r"\<doctest (.*\.rst)\[(.*)\]\>", source_file).groups()
                 line_no = int(line_no)
                 source_file = "<doctest %s>" % source_file
             return source_code, source_file, line_no
@@ -313,10 +309,7 @@ def filter_args(func, ignore_lst, args=(), kwargs=dict()):
         elif arg_varkw is not None:
             varkwargs[arg_name] = arg_value
         else:
-            raise TypeError(
-                "Ignore list for %s() contains an unexpected "
-                "keyword argument '%s'" % (name, arg_name)
-            )
+            raise TypeError("Ignore list for %s() contains an unexpected " "keyword argument '%s'" % (name, arg_name))
 
     if arg_varkw is not None:
         arg_dict["**"] = varkwargs
@@ -330,8 +323,7 @@ def filter_args(func, ignore_lst, args=(), kwargs=dict()):
             arg_dict.pop(item)
         else:
             raise ValueError(
-                "Ignore list: argument '%s' is not defined for "
-                "function %s" % (item, _signature_str(name, arg_sig))
+                "Ignore list: argument '%s' is not defined for " "function %s" % (item, _signature_str(name, arg_sig))
             )
     # XXX: Return a sorted list of pairs?
     return arg_dict

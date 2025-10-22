@@ -1,20 +1,14 @@
-from fontTools.misc.roundTools import noRound, otRound
-from fontTools.misc.intTools import bit_count
+from fontTools.misc.roundTools import noRound
 from fontTools.misc.vector import Vector
 from fontTools.ttLib.tables import otTables as ot
 from fontTools.varLib.models import supportScalar
-import fontTools.varLib.varStore  # For monkey-patching
 from fontTools.varLib.builder import (
-    buildVarRegionList,
     buildSparseVarRegionList,
     buildSparseVarRegion,
     buildMultiVarStore,
     buildMultiVarData,
 )
 from fontTools.misc.iterTools import batched
-from functools import partial
-from collections import defaultdict
-from heapq import heappush, heappop
 
 
 NO_VARIATION_INDEX = ot.NO_VARIATION_INDEX
@@ -160,9 +154,7 @@ class MultiVarStoreInstancer(object):
         self.fvar_axes = fvar_axes
         assert multivarstore is None or multivarstore.Format == 1
         self._varData = multivarstore.MultiVarData if multivarstore else []
-        self._regions = (
-            multivarstore.SparseVarRegionList.Region if multivarstore else []
-        )
+        self._regions = multivarstore.SparseVarRegionList.Region if multivarstore else []
         self.setLocation(location)
 
     def setLocation(self, location):
@@ -213,9 +205,7 @@ def MultiVarStore_subset_varidxes(self, varIdxes):
 
 
 def MultiVarStore_prune_regions(self):
-    return ot.VarStore.prune_regions(
-        self, VarData="MultiVarData", VarRegionList="SparseVarRegionList"
-    )
+    return ot.VarStore.prune_regions(self, VarData="MultiVarData", VarRegionList="SparseVarRegionList")
 
 
 ot.MultiVarStore.prune_regions = MultiVarStore_prune_regions

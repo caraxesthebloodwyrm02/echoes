@@ -22,14 +22,14 @@ if TYPE_CHECKING:
 
     from jinja2.environment import Environment
 
-_TEMPLATES_PATH = package_dir / 'templates'
-_LATEX_TEMPLATES_PATH = _TEMPLATES_PATH / 'latex'
+_TEMPLATES_PATH = package_dir / "templates"
+_LATEX_TEMPLATES_PATH = _TEMPLATES_PATH / "latex"
 
 
 class BaseRenderer:
     def __init__(self, loader: BaseLoader | None = None) -> None:
-        self.env = SandboxedEnvironment(loader=loader, extensions=['jinja2.ext.i18n'])
-        self.env.filters['repr'] = repr
+        self.env = SandboxedEnvironment(loader=loader, extensions=["jinja2.ext.i18n"])
+        self.env.filters["repr"] = repr
         # ``install_gettext_translations`` is injected by the ``jinja2.ext.i18n`` extension
         self.env.install_gettext_translations(get_translator())  # type: ignore[attr-defined]
 
@@ -62,9 +62,7 @@ class FileRenderer(BaseRenderer):
 
 
 class SphinxRenderer(FileRenderer):
-    def __init__(
-        self, template_path: Sequence[str | os.PathLike[str]] | None = None
-    ) -> None:
+    def __init__(self, template_path: Sequence[str | os.PathLike[str]] | None = None) -> None:
         if template_path is None:
             template_path = (_TEMPLATES_PATH,)
         super().__init__(template_path)
@@ -90,18 +88,18 @@ class LaTeXRenderer(SphinxRenderer):
 
         # use texescape as escape filter
         escape = partial(texescape.escape, latex_engine=latex_engine)
-        self.env.filters['e'] = escape
-        self.env.filters['escape'] = escape
-        self.env.filters['eabbr'] = texescape.escape_abbr
+        self.env.filters["e"] = escape
+        self.env.filters["escape"] = escape
+        self.env.filters["eabbr"] = texescape.escape_abbr
 
         # use JSP/eRuby like tagging instead because curly bracket; the default
         # tagging of jinja2 is not good for LaTeX sources.
-        self.env.variable_start_string = '<%='
-        self.env.variable_end_string = '%>'
-        self.env.block_start_string = '<%'
-        self.env.block_end_string = '%>'
-        self.env.comment_start_string = '<#'
-        self.env.comment_end_string = '#>'
+        self.env.variable_start_string = "<%="
+        self.env.variable_end_string = "%>"
+        self.env.block_start_string = "<%"
+        self.env.block_end_string = "%>"
+        self.env.comment_start_string = "<#"
+        self.env.comment_end_string = "#>"
 
 
 class ReSTRenderer(SphinxRenderer):
@@ -116,9 +114,9 @@ class ReSTRenderer(SphinxRenderer):
         self.env.extend(language=language)
 
         # use texescape as escape filter
-        self.env.filters['e'] = rst.escape
-        self.env.filters['escape'] = rst.escape
-        self.env.filters['heading'] = rst.heading
+        self.env.filters["e"] = rst.escape
+        self.env.filters["escape"] = rst.escape
+        self.env.filters["heading"] = rst.heading
 
 
 class SphinxTemplateLoader(BaseLoader):
@@ -148,7 +146,7 @@ class SphinxTemplateLoader(BaseLoader):
         environment: Environment,
         template: str,
     ) -> tuple[str, str, Callable[[], bool]]:
-        if template.startswith('!'):
+        if template.startswith("!"):
             # search a template from ``system_templates_paths``
             loaders = self.sysloaders
             template = template[1:]

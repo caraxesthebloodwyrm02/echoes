@@ -57,9 +57,7 @@ class StarletteOAuth1App(StarletteAppMixin, AsyncOAuth1Mixin, BaseApp):
         return await self.fetch_access_token(**params)
 
 
-class StarletteOAuth2App(
-    StarletteAppMixin, AsyncOAuth2Mixin, AsyncOpenIDMixin, BaseApp
-):
+class StarletteOAuth2App(StarletteAppMixin, AsyncOAuth2Mixin, AsyncOpenIDMixin, BaseApp):
     client_cls = AsyncOAuth2Client
 
     async def authorize_access_token(self, request, **kwargs):

@@ -112,15 +112,9 @@ from nltk.tree.transforms import chomsky_normal_form as cnf
 from nltk.tree.transforms import collapse_unary as cu
 from nltk.tree.transforms import un_chomsky_normal_form as ucnf
 
-chomsky_normal_form = deprecated(
-    "Import using `from nltk.tree import chomsky_normal_form` instead."
-)(cnf)
-un_chomsky_normal_form = deprecated(
-    "Import using `from nltk.tree import un_chomsky_normal_form` instead."
-)(ucnf)
-collapse_unary = deprecated(
-    "Import using `from nltk.tree import collapse_unary` instead."
-)(cu)
+chomsky_normal_form = deprecated("Import using `from nltk.tree import chomsky_normal_form` instead.")(cnf)
+un_chomsky_normal_form = deprecated("Import using `from nltk.tree import un_chomsky_normal_form` instead.")(ucnf)
+collapse_unary = deprecated("Import using `from nltk.tree import collapse_unary` instead.")(cu)
 
 
 __all__ = ["chomsky_normal_form", "un_chomsky_normal_form", "collapse_unary"]

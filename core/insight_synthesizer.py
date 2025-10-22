@@ -37,9 +37,7 @@ class InsightSynthesizer:
         self.synthesis_history: List[Dict[str, Any]] = []
         self.patterns_learned: Dict[str, Any] = {}
 
-    def synthesize_from_loop(
-        self, loop_result: Dict[str, Any], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    def synthesize_from_loop(self, loop_result: Dict[str, Any], context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Synthesize insights from a feedback loop result
 
@@ -69,9 +67,7 @@ class InsightSynthesizer:
         synthesis["patterns"] = patterns
 
         # Generate recommendations
-        recommendations = self._generate_recommendations(
-            loop_result, synthesis["insights"], patterns, context
-        )
+        recommendations = self._generate_recommendations(loop_result, synthesis["insights"], patterns, context)
         synthesis["recommendations"] = recommendations
 
         # Cache insights
@@ -85,9 +81,7 @@ class InsightSynthesizer:
 
         return synthesis
 
-    def _extract_iteration_insights(
-        self, iteration: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _extract_iteration_insights(self, iteration: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Extract insights from a single iteration"""
         insights = []
 
@@ -135,9 +129,7 @@ class InsightSynthesizer:
 
         return insights
 
-    def _identify_patterns(
-        self, loop_result: Dict[str, Any], context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _identify_patterns(self, loop_result: Dict[str, Any], context: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Identify patterns in the loop execution"""
         patterns = []
 
@@ -172,9 +164,7 @@ class InsightSynthesizer:
 
         # Pattern: Quality trajectory
         if len(history) > 1:
-            quality_scores = [
-                iter_data.get("quality_score", 0) for iter_data in history
-            ]
+            quality_scores = [iter_data.get("quality_score", 0) for iter_data in history]
 
             # Check if quality is improving
             if quality_scores[-1] > quality_scores[0]:
@@ -329,17 +319,13 @@ class InsightSynthesizer:
                 }
 
             self.patterns_learned[pattern_type]["occurrences"] += 1
-            self.patterns_learned[pattern_type]["confidence_scores"].append(
-                pattern["confidence"]
-            )
+            self.patterns_learned[pattern_type]["confidence_scores"].append(pattern["confidence"])
 
             # Keep limited examples
             if len(self.patterns_learned[pattern_type]["examples"]) < 10:
                 self.patterns_learned[pattern_type]["examples"].append(pattern["data"])
 
-    def get_relevant_insights(
-        self, query: str, category: str = None, limit: int = 10
-    ) -> List[Dict[str, Any]]:
+    def get_relevant_insights(self, query: str, category: str = None, limit: int = 10) -> List[Dict[str, Any]]:
         """Retrieve relevant cached insights"""
         relevant = []
         query_lower = query.lower()
@@ -357,9 +343,7 @@ class InsightSynthesizer:
                 relevant.append(cached)
 
         # Sort by confidence and recency
-        relevant.sort(
-            key=lambda x: (x["insight"]["confidence"], x["cached_at"]), reverse=True
-        )
+        relevant.sort(key=lambda x: (x["insight"]["confidence"], x["cached_at"]), reverse=True)
 
         return relevant[:limit]
 
@@ -369,9 +353,7 @@ class InsightSynthesizer:
 
         for pattern_type, data in self.patterns_learned.items():
             avg_confidence = (
-                sum(data["confidence_scores"]) / len(data["confidence_scores"])
-                if data["confidence_scores"]
-                else 0.0
+                sum(data["confidence_scores"]) / len(data["confidence_scores"]) if data["confidence_scores"] else 0.0
             )
 
             summary["patterns"][pattern_type] = {
@@ -382,9 +364,7 @@ class InsightSynthesizer:
 
         return summary
 
-    def synthesize_cross_loop_insights(
-        self, loop_results: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+    def synthesize_cross_loop_insights(self, loop_results: List[Dict[str, Any]]) -> Dict[str, Any]:
         """Synthesize insights across multiple loops"""
         cross_synthesis = {
             "synthesis_id": f"cross_synth_{datetime.now().strftime('%Y%m%d_%H%M%S')}",
@@ -395,9 +375,7 @@ class InsightSynthesizer:
         }
 
         # Aggregate quality metrics
-        quality_scores = [
-            lr.get("metadata", {}).get("final_quality", 0) for lr in loop_results
-        ]
+        quality_scores = [lr.get("metadata", {}).get("final_quality", 0) for lr in loop_results]
 
         if quality_scores:
             cross_synthesis["aggregate_insights"].append(
@@ -411,9 +389,7 @@ class InsightSynthesizer:
             )
 
         # Meta-pattern: Overall convergence rate
-        converged_count = sum(
-            1 for lr in loop_results if lr.get("metadata", {}).get("converged", False)
-        )
+        converged_count = sum(1 for lr in loop_results if lr.get("metadata", {}).get("converged", False))
         convergence_rate = converged_count / len(loop_results) if loop_results else 0
 
         cross_synthesis["meta_patterns"].append(
@@ -464,10 +440,6 @@ class InsightSynthesizer:
                 self.patterns_learned[pattern_type] = data
             else:
                 # Merge existing with imported
-                self.patterns_learned[pattern_type]["occurrences"] += data[
-                    "occurrences"
-                ]
-                self.patterns_learned[pattern_type]["confidence_scores"].extend(
-                    data["confidence_scores"]
-                )
+                self.patterns_learned[pattern_type]["occurrences"] += data["occurrences"]
+                self.patterns_learned[pattern_type]["confidence_scores"].extend(data["confidence_scores"])
                 self.patterns_learned[pattern_type]["examples"].extend(data["examples"])

@@ -2,7 +2,7 @@ from io import StringIO
 from typing import assert_type
 
 import numpy as np
-import numpy.lib.array_utils as array_utils
+from numpy.lib import array_utils
 import numpy.typing as npt
 
 AR: npt.NDArray[np.float64]

@@ -134,10 +134,7 @@ class SqliteDb:
                     with open(self.filename, "rb") as bad_file:
                         cov4_sig = b"!coverage.py: This is a private format"
                         if bad_file.read(len(cov4_sig)) == cov4_sig:
-                            msg = (
-                                "Looks like a coverage 4.x data file. "
-                                + "Are you mixing versions of coverage?"
-                            )
+                            msg = "Looks like a coverage 4.x data file. " + "Are you mixing versions of coverage?"
                 except Exception:
                     pass
             if self.debug.should("sql"):

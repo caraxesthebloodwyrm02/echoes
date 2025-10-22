@@ -433,8 +433,7 @@ def gen_blacklist():
                 "cryptography.hazmat.primitives.ciphers.algorithms.SEED",
                 "cryptography.hazmat.primitives.ciphers.algorithms.TripleDES",
             ],
-            "Use of insecure cipher {name}. Replace with a known secure"
-            " cipher such as AES.",
+            "Use of insecure cipher {name}. Replace with a known secure" " cipher such as AES.",
             "HIGH",
         )
     )
@@ -465,8 +464,7 @@ def gen_blacklist():
             "B307",
             issue.Cwe.OS_COMMAND_INJECTION,
             ["eval"],
-            "Use of possibly insecure function - consider using safer "
-            "ast.literal_eval.",
+            "Use of possibly insecure function - consider using safer " "ast.literal_eval.",
         )
     )
 
@@ -476,8 +474,7 @@ def gen_blacklist():
             "B308",
             issue.Cwe.XSS,
             ["django.utils.safestring.mark_safe"],
-            "Use of mark_safe() may expose cross-site scripting "
-            "vulnerabilities and should be reviewed.",
+            "Use of mark_safe() may expose cross-site scripting " "vulnerabilities and should be reviewed.",
         )
     )
 
@@ -498,8 +495,7 @@ def gen_blacklist():
                 "six.moves.urllib.request.URLopener",
                 "six.moves.urllib.request.FancyURLopener",
             ],
-            "Audit url open for permitted schemes. Allowing use of file:/ or "
-            "custom schemes is often unexpected.",
+            "Audit url open for permitted schemes. Allowing use of file:/ or " "custom schemes is often unexpected.",
         )
     )
 
@@ -522,8 +518,7 @@ def gen_blacklist():
                 "random.randrange",
                 "random.getrandbits",
             ],
-            "Standard pseudo-random generators are not suitable for "
-            "security/cryptographic purposes.",
+            "Standard pseudo-random generators are not suitable for " "security/cryptographic purposes.",
             "LOW",
         )
     )

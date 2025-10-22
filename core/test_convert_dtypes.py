@@ -65,9 +65,7 @@ import pandas._testing as tm
             "Int64",
             {
                 ("convert_integer", False, "convert_floating", True): "Float64",
-                ("convert_integer", False, "convert_floating", False): np.dtype(
-                    "float"
-                ),
+                ("convert_integer", False, "convert_floating", False): np.dtype("float"),
             },
         ),
         (
@@ -112,9 +110,7 @@ import pandas._testing as tm
             "Int64",
             {
                 ("convert_integer", False): "Float64",
-                ("convert_integer", False, "convert_floating", False): np.dtype(
-                    "float"
-                ),
+                ("convert_integer", False, "convert_floating", False): np.dtype("float"),
                 ("infer_objects", False): np.dtype("object"),
             },
         ),
@@ -192,11 +188,7 @@ class TestSeriesConvertDtypes:
         using_infer_string,
     ):
         data, maindtype, expected_default, expected_other = test_cases
-        if (
-            hasattr(data, "dtype")
-            and lib.is_np_dtype(data.dtype, "M")
-            and isinstance(maindtype, pd.DatetimeTZDtype)
-        ):
+        if hasattr(data, "dtype") and lib.is_np_dtype(data.dtype, "M") and isinstance(maindtype, pd.DatetimeTZDtype):
             # this astype is deprecated in favor of tz_localize
             msg = "Cannot use .astype to convert from timezone-naive dtype"
             with pytest.raises(TypeError, match=msg):
@@ -252,9 +244,7 @@ class TestSeriesConvertDtypes:
     def test_convert_string_dtype(self, nullable_string_dtype):
         # https://github.com/pandas-dev/pandas/issues/31731 -> converting columns
         # that are already string dtype
-        df = pd.DataFrame(
-            {"A": ["a", "b", pd.NA], "B": ["ä", "ö", "ü"]}, dtype=nullable_string_dtype
-        )
+        df = pd.DataFrame({"A": ["a", "b", pd.NA], "B": ["ä", "ö", "ü"]}, dtype=nullable_string_dtype)
         result = df.convert_dtypes()
         tm.assert_frame_equal(df, result)
 
@@ -272,9 +262,7 @@ class TestSeriesConvertDtypes:
         expected = df
         tm.assert_frame_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "infer_objects, dtype", [(True, "Int64"), (False, "object")]
-    )
+    @pytest.mark.parametrize("infer_objects, dtype", [(True, "Int64"), (False, "object")])
     def test_convert_dtype_object_with_na(self, infer_objects, dtype):
         # GH#48791
         ser = pd.Series([1, pd.NA])
@@ -282,9 +270,7 @@ class TestSeriesConvertDtypes:
         expected = pd.Series([1, pd.NA], dtype=dtype)
         tm.assert_series_equal(result, expected)
 
-    @pytest.mark.parametrize(
-        "infer_objects, dtype", [(True, "Float64"), (False, "object")]
-    )
+    @pytest.mark.parametrize("infer_objects, dtype", [(True, "Float64"), (False, "object")])
     def test_convert_dtype_object_with_na_float(self, infer_objects, dtype):
         # GH#48791
         ser = pd.Series([1.5, pd.NA])

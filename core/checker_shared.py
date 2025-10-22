@@ -161,9 +161,7 @@ class TypeCheckerSharedApi(CheckerPluginInterface):
         raise NotImplementedError
 
     @abstractmethod
-    def handle_partial_var_type(
-        self, typ: PartialType, is_lvalue: bool, node: Var, context: Context
-    ) -> Type:
+    def handle_partial_var_type(self, typ: PartialType, is_lvalue: bool, node: Var, context: Context) -> Type:
         raise NotImplementedError
 
     @overload
@@ -258,9 +256,7 @@ class TypeCheckerSharedApi(CheckerPluginInterface):
         raise NotImplementedError
 
     @abstractmethod
-    def iterable_item_type(
-        self, it: Instance | CallableType | TypeType | Overloaded, context: Context
-    ) -> Type:
+    def iterable_item_type(self, it: Instance | CallableType | TypeType | Overloaded, context: Context) -> Type:
         raise NotImplementedError
 
     @abstractmethod

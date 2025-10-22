@@ -16,7 +16,7 @@ from os.path import join as path_join
 from tempfile import gettempdir
 
 from nltk import jsontags
-from nltk.data import find, load
+from nltk.data import find
 from nltk.tag.api import TaggerI
 
 try:
@@ -173,17 +173,12 @@ class PerceptronTagger(TaggerI):
         # Save trained models in tmp directory by default:
         self.TRAINED_TAGGER_PATH = gettempdir()
         self.TAGGER_NAME = "averaged_perceptron_tagger"
-        self.save_dir = path_join(
-            self.TRAINED_TAGGER_PATH, f"{self.TAGGER_NAME}_{self.lang}"
-        )
+        self.save_dir = path_join(self.TRAINED_TAGGER_PATH, f"{self.TAGGER_NAME}_{self.lang}")
         if load:
             self.load_from_json(lang, loc)
 
     def param_files(self, lang="eng"):
-        return (
-            f"{self.TAGGER_NAME}_{lang}.{attr}.json"
-            for attr in ["weights", "tagdict", "classes"]
-        )
+        return (f"{self.TAGGER_NAME}_{lang}.{attr}.json" for attr in ["weights", "tagdict", "classes"])
 
     def tag(self, tokens, return_conf=False, use_tagdict=True):
         """
@@ -196,9 +191,7 @@ class PerceptronTagger(TaggerI):
 
         context = self.START + [self.normalize(w) for w in tokens] + self.END
         for i, word in enumerate(tokens):
-            tag, conf = (
-                (self.tagdict.get(word), 1.0) if use_tagdict == True else (None, None)
-            )
+            tag, conf = (self.tagdict.get(word), 1.0) if use_tagdict == True else (None, None)
             if not tag:
                 features = self._get_features(i, word, context, prev, prev2)
                 tag, conf = self.model.predict(features, return_conf)
@@ -280,9 +273,7 @@ class PerceptronTagger(TaggerI):
             with open(path_join(loc, json_file)) as fin:
                 return json.load(fin)
 
-        self.decode_json_params(
-            load_param(js_file) for js_file in self.param_files(lang)
-        )
+        self.decode_json_params(load_param(js_file) for js_file in self.param_files(lang))
 
     def decode_json_params(self, params):
         weights, tagdict, class_list = params
@@ -381,9 +372,7 @@ def _train_and_test(lang="sv"):
     tagger = PerceptronTagger(load=False, lang=lang)
     training = utb.tagged_sents(f"ch/{lang}/{lang}-universal-ch-train.conll")
     testing = utb.tagged_sents(f"ch/{lang}/{lang}-universal-ch-test.conll")
-    print(
-        f"(Lang = {lang}) training on {len(training)} and testing on {len(testing)} sentences"
-    )
+    print(f"(Lang = {lang}) training on {len(training)} and testing on {len(testing)} sentences")
     # Train and save the model
     tagger.train(training, save_loc=tagger.save_dir)
     print("Accuracy : ", tagger.accuracy(testing))

@@ -110,9 +110,7 @@ def scan_config_files() -> Dict[str, Any]:
                     "severity": "HIGH",
                     "file": config_file,
                     "issue": "Infinite retry configuration detected",
-                    "line": _find_line_number(
-                        content, r"(retry|retries)\s*=\s*(-1|None|0)"
-                    ),
+                    "line": _find_line_number(content, r"(retry|retries)\s*=\s*(-1|None|0)"),
                     "fix": "Set max_retries to finite value (e.g., 3)",
                 }
             )
@@ -125,9 +123,7 @@ def scan_config_files() -> Dict[str, Any]:
                         "severity": "MEDIUM",
                         "file": config_file,
                         "issue": "Validation disabled",
-                        "line": _find_line_number(
-                            content, r"validat\w*\s*[:=]\s*False"
-                        ),
+                        "line": _find_line_number(content, r"validat\w*\s*[:=]\s*False"),
                         "fix": "Enable validation for data integrity",
                     }
                 )
@@ -200,9 +196,7 @@ def generate_report() -> str:
         print("=" * 80)
 
         for i, issue in enumerate(scan_results["issues"], 1):
-            severity_icon = (
-                "[CRITICAL]" if issue["severity"] == "CRITICAL" else "[HIGH]"
-            )
+            severity_icon = "[CRITICAL]" if issue["severity"] == "CRITICAL" else "[HIGH]"
             print(f"\n{i}. {severity_icon} {issue['severity']}: {issue['file']}")
             print(f"   Issue: {issue['issue']}")
             if issue["line"]:
@@ -227,9 +221,7 @@ def generate_report() -> str:
                 severity_icon = (
                     "[CRITICAL]"
                     if prob["severity"] == "CRITICAL"
-                    else "[HIGH]"
-                    if prob["severity"] == "HIGH"
-                    else "[WARN]"
+                    else "[HIGH]" if prob["severity"] == "HIGH" else "[WARN]"
                 )
                 print(f"   {severity_icon} {prob['severity']}: {prob['setting']}")
                 print(f"      Issue: {prob['issue']}")
@@ -243,14 +235,10 @@ def generate_report() -> str:
     recommendations = []
 
     if scan_results["critical_count"] > 0:
-        recommendations.append(
-            "1. FIX CRITICAL ISSUES IMMEDIATELY - These can cause crashes or security breaches"
-        )
+        recommendations.append("1. FIX CRITICAL ISSUES IMMEDIATELY - These can cause crashes or security breaches")
 
     if scan_results["high_count"] > 0:
-        recommendations.append(
-            "2. Address HIGH severity issues - These affect stability"
-        )
+        recommendations.append("2. Address HIGH severity issues - These affect stability")
 
     recommendations.extend(
         [

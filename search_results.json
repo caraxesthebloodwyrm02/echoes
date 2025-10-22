@@ -1,0 +1,41 @@
+{
+  "query": "what is the main message?",
+  "timestamp": "2025-10-19T14:45:00-07:00",
+  "stats": {
+    "total_results": 2,
+    "unique_sources": 1,
+    "source": "E:\\Projects\\Echoes\\memory\\sample_data_RAG\\goals mission and vision.txt"
+  },
+  "summary": {
+    "main_objective": "Develop a framework for intuitive human interaction with multiple dimensions of reality",
+    "key_components": [
+      "Interdisciplinary research combining neuroscience, philosophy, physics, and systems design",
+      "Natural interface leveraging innate human cognitive abilities",
+      "Transformation from passive knowledge consumption to active participation",
+      "Bridging empirical science with undiscovered dimensions"
+    ],
+    "ultimate_goal": "Enhance human understanding of the universe's fundamental nature through integrated knowledge and consciousness exploration"
+  },
+  "results": [
+    {
+      "rank": 1,
+      "score": 1.6284,
+      "source": "E:\\Projects\\Echoes\\memory\\sample_data_RAG\\goals mission and vision.txt",
+      "content": "Goal\nCreate a seamless communication framework that allows humans to interface naturally between the known and unknown dimensions of reality—using inherent human faculties rather than external technologies. Vision\nTo evolve human understanding and participation in the universe by transforming humanity from passive observers of knowledge into active integrators—bridging empirical science and undiscovered realities through intuitive, cognitive, and perceptual synthesis.",
+      "key_topics": ["communication framework", "human interface", "reality dimensions", "cognitive synthesis"]
+    },
+    {
+      "rank": 2,
+      "score": 1.6204,
+      "source": "E:\\Projects\\Echoes\\memory\\sample_data_RAG\\goals mission and vision.txt",
+      "content": "Disseminate the findings through interdisciplinary research linking neuroscience, philosophy, physics, and systems design to reframe how intelligence and awareness interact across the universe's layers.",
+      "key_topics": ["interdisciplinary research", "neuroscience", "philosophy", "systems design", "intelligence", "awareness"]
+    }
+  ],
+  "metadata": {
+    "system": "Echoes RAG System",
+    "embedding_model": "sentence-transformers/all-mpnet-base-v2",
+    "vector_store": "FAISS",
+    "retrieval_timestamp": "2025-10-19T14:45:00-07:00"
+  }
+}

@@ -131,9 +131,7 @@ def is_overlapping_none(t: Type) -> bool:
 def remove_optional(typ: Type) -> Type:
     typ = get_proper_type(typ)
     if isinstance(typ, UnionType):
-        return UnionType.make_union(
-            [t for t in typ.items if not isinstance(get_proper_type(t), NoneType)]
-        )
+        return UnionType.make_union([t for t in typ.items if not isinstance(get_proper_type(t), NoneType)])
     else:
         return typ
 
@@ -160,10 +158,7 @@ def store_argument_type(
             if isinstance(unpacked_type, TupleType):
                 # Instead of using Tuple[Unpack[Tuple[...]]], just use Tuple[...]
                 arg_type = unpacked_type
-            elif (
-                isinstance(unpacked_type, Instance)
-                and unpacked_type.type.fullname == "builtins.tuple"
-            ):
+            elif isinstance(unpacked_type, Instance) and unpacked_type.type.fullname == "builtins.tuple":
                 arg_type = unpacked_type
             else:
                 # TODO: verify that we can only have a TypeVarTuple here.

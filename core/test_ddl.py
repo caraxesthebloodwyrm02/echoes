@@ -108,9 +108,7 @@ class TableDDLTest(fixtures.TestBase):
         table.comment = "a comment"
         connection.execute(schema.SetTableComment(table))
         connection.execute(schema.DropTableComment(table))
-        eq_(
-            inspect(connection).get_table_comment("test_table"), {"text": None}
-        )
+        eq_(inspect(connection).get_table_comment("test_table"), {"text": None})
 
     @requirements.table_ddl_if_exists
     @util.provide_metadata
@@ -129,23 +127,11 @@ class TableDDLTest(fixtures.TestBase):
 
         connection.execute(schema.CreateTable(table, if_not_exists=True))
         is_true(inspect(connection).has_table("test_table"))
-        is_false(
-            "test_index"
-            in [
-                ix["name"]
-                for ix in inspect(connection).get_indexes("test_table")
-            ]
-        )
+        is_false("test_index" in [ix["name"] for ix in inspect(connection).get_indexes("test_table")])
 
         connection.execute(schema.CreateIndex(idx, if_not_exists=True))
 
-        is_true(
-            "test_index"
-            in [
-                ix["name"]
-                for ix in inspect(connection).get_indexes("test_table")
-            ]
-        )
+        is_true("test_index" in [ix["name"] for ix in inspect(connection).get_indexes("test_table")])
 
         connection.execute(schema.CreateIndex(idx, if_not_exists=True))
 
@@ -171,23 +157,11 @@ class TableDDLTest(fixtures.TestBase):
 
         table.create(connection)
 
-        is_true(
-            "test_index"
-            in [
-                ix["name"]
-                for ix in inspect(connection).get_indexes("test_table")
-            ]
-        )
+        is_true("test_index" in [ix["name"] for ix in inspect(connection).get_indexes("test_table")])
 
         connection.execute(schema.DropIndex(idx, if_exists=True))
 
-        is_false(
-            "test_index"
-            in [
-                ix["name"]
-                for ix in inspect(connection).get_indexes("test_table")
-            ]
-        )
+        is_false("test_index" in [ix["name"] for ix in inspect(connection).get_indexes("test_table")])
 
         connection.execute(schema.DropIndex(idx, if_exists=True))
 
@@ -209,12 +183,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
             "fk": "foreign_key_%(table_name)s_"
             "%(column_0_N_name)s_"
             "%(referred_table_name)s_"
-            + (
-                "_".join(
-                    "".join(random.choice("abcdef") for j in range(20))
-                    for i in range(10)
-                )
-            ),
+            + ("_".join("".join(random.choice("abcdef") for j in range(20)) for i in range(10))),
         }
         metadata.naming_convention = convention
 
@@ -225,9 +194,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
             test_needs_fk=True,
         )
 
-        cons = ForeignKeyConstraint(
-            ["aid"], ["a_things_with_stuff.id_long_column_name"]
-        )
+        cons = ForeignKeyConstraint(["aid"], ["a_things_with_stuff.id_long_column_name"])
         Table(
             "b_related_things_of_value",
             metadata,
@@ -253,13 +220,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
     def pk(self, metadata, connection):
         convention = {
             "pk": "primary_key_%(table_name)s_"
-            "%(column_0_N_name)s"
-            + (
-                "_".join(
-                    "".join(random.choice("abcdef") for j in range(30))
-                    for i in range(10)
-                )
-            ),
+            "%(column_0_N_name)s" + ("_".join("".join(random.choice("abcdef") for j in range(30)) for i in range(10))),
         }
         metadata.naming_convention = convention
 
@@ -281,13 +242,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
     def ix(self, metadata, connection):
         convention = {
             "ix": "index_%(table_name)s_"
-            "%(column_0_N_name)s"
-            + (
-                "_".join(
-                    "".join(random.choice("abcdef") for j in range(30))
-                    for i in range(10)
-                )
-            ),
+            "%(column_0_N_name)s" + ("_".join("".join(random.choice("abcdef") for j in range(30)) for i in range(10))),
         }
         metadata.naming_convention = convention
 
@@ -309,13 +264,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
     def uq(self, metadata, connection):
         convention = {
             "uq": "unique_constraint_%(table_name)s_"
-            "%(column_0_N_name)s"
-            + (
-                "_".join(
-                    "".join(random.choice("abcdef") for j in range(30))
-                    for i in range(10)
-                )
-            ),
+            "%(column_0_N_name)s" + ("_".join("".join(random.choice("abcdef") for j in range(30)) for i in range(10))),
         }
         metadata.naming_convention = convention
 
@@ -338,12 +287,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
     def ck(self, metadata, connection):
         convention = {
             "ck": "check_constraint_%(table_name)s"
-            + (
-                "_".join(
-                    "".join(random.choice("abcdef") for j in range(30))
-                    for i in range(10)
-                )
-            ),
+            + ("_".join("".join(random.choice("abcdef") for j in range(30)) for i in range(10))),
         }
         metadata.naming_convention = convention
 
@@ -372,9 +316,7 @@ class LongNameBlowoutTest(fixtures.TestBase):
         argnames="type_",
     )
     def test_long_convention_name(self, type_, metadata, connection):
-        actual_name, reflected_name = getattr(self, type_)(
-            metadata, connection
-        )
+        actual_name, reflected_name = getattr(self, type_)(metadata, connection)
 
         assert len(actual_name) > 255
 

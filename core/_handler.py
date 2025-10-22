@@ -99,9 +99,7 @@ class Handler:
                 self._confirmation_lock = self._multiprocessing_context.Lock()
             self._queue_lock = create_handler_lock()
             self._owner_process_pid = os.getpid()
-            self._thread = Thread(
-                target=self._queued_writer, daemon=True, name="loguru-writer-%d" % self._id
-            )
+            self._thread = Thread(target=self._queued_writer, daemon=True, name="loguru-writer-%d" % self._id)
             self._thread.start()
 
     def __repr__(self):
@@ -165,9 +163,7 @@ class Handler:
                     formatted = precomputed_format.format_map(formatter_record)
                 else:
                     ansi_level = self._levels_ansi_codes[level_id]
-                    formatter, precomputed_format = self._memoize_dynamic_format(
-                        dynamic_format, ansi_level
-                    )
+                    formatter, precomputed_format = self._memoize_dynamic_format(dynamic_format, ansi_level)
                     coloring_message = formatter.make_coloring_message(
                         record["message"], ansi_level=ansi_level, colored_message=colored_message
                     )

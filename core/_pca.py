@@ -69,9 +69,7 @@ def _assess_dimension(spectrum, rank, n_samples):
 
     pu = -rank * log(2.0)
     for i in range(1, rank + 1):
-        pu += (
-            lgamma((n_features - i + 1) / 2.0) - log(xp.pi) * (n_features - i + 1) / 2.0
-        )
+        pu += lgamma((n_features - i + 1) / 2.0) - log(xp.pi) * (n_features - i + 1) / 2.0
 
     pl = xp.sum(xp.log(spectrum[:rank]))
     pl = -pl * n_samples / 2.0
@@ -87,9 +85,7 @@ def _assess_dimension(spectrum, rank, n_samples):
     spectrum_[rank:n_features] = v
     for i in range(rank):
         for j in range(i + 1, spectrum.shape[0]):
-            pa += log(
-                (spectrum[i] - spectrum[j]) * (1.0 / spectrum_[j] - 1.0 / spectrum_[i])
-            ) + log(n_samples)
+            pa += log((spectrum[i] - spectrum[j]) * (1.0 / spectrum_[j] - 1.0 / spectrum_[i])) + log(n_samples)
 
     ll = pu + pl + pv + pp - pa / 2.0 - rank * log(n_samples) / 2.0
 
@@ -383,9 +379,7 @@ class PCA(_BasePCA):
         ],
         "copy": ["boolean"],
         "whiten": ["boolean"],
-        "svd_solver": [
-            StrOptions({"auto", "full", "covariance_eigh", "arpack", "randomized"})
-        ],
+        "svd_solver": [StrOptions({"auto", "full", "covariance_eigh", "arpack", "randomized"})],
         "tol": [Interval(Real, 0, None, closed="left")],
         "iterated_power": [
             StrOptions({"auto"}),
@@ -490,9 +484,7 @@ class PCA(_BasePCA):
                 " TruncatedSVD for a possible alternative."
             )
         if self.svd_solver == "arpack" and is_array_api_compliant:
-            raise ValueError(
-                "PCA with svd_solver='arpack' is not supported for Array API inputs."
-            )
+            raise ValueError("PCA with svd_solver='arpack' is not supported for Array API inputs.")
 
         # Validate the data, without ever forcing a copy as any solver that
         # supports sparse input data and the `covariance_eigh` solver are
@@ -547,9 +539,7 @@ class PCA(_BasePCA):
 
         if n_components == "mle":
             if n_samples < n_features:
-                raise ValueError(
-                    "n_components='mle' is only supported if n_samples >= n_features"
-                )
+                raise ValueError("n_components='mle' is only supported if n_samples >= n_features")
         elif not 0 <= n_components <= min(n_samples, n_features):
             raise ValueError(
                 f"n_components={n_components} must be between 0 and "
@@ -602,11 +592,7 @@ class PCA(_BasePCA):
             # below.
             x_is_centered = False
             C = X.T @ X
-            C -= (
-                n_samples
-                * xp.reshape(self.mean_, (-1, 1))
-                * xp.reshape(self.mean_, (1, -1))
-            )
+            C -= n_samples * xp.reshape(self.mean_, (-1, 1)) * xp.reshape(self.mean_, (1, -1))
             C /= n_samples - 1
             eigenvals, eigenvecs = xp.linalg.eigh(C)
 
@@ -665,9 +651,7 @@ class PCA(_BasePCA):
                 # Furthermore, it's not always safe to call them for namespaces
                 # that already implement them: for instance as
                 # cupy.searchsorted does not accept a float as second argument.
-                explained_variance_ratio_np = _convert_to_numpy(
-                    explained_variance_ratio_, xp=xp
-                )
+                explained_variance_ratio_np = _convert_to_numpy(explained_variance_ratio_, xp=xp)
             else:
                 explained_variance_ratio_np = explained_variance_ratio_
             ratio_cumsum = stable_cumsum(explained_variance_ratio_np)
@@ -691,12 +675,8 @@ class PCA(_BasePCA):
         self.components_ = xp.asarray(components_[:n_components, :], copy=True)
 
         # We do the same for the other arrays for the sake of consistency.
-        self.explained_variance_ = xp.asarray(
-            explained_variance_[:n_components], copy=True
-        )
-        self.explained_variance_ratio_ = xp.asarray(
-            explained_variance_ratio_[:n_components], copy=True
-        )
+        self.explained_variance_ = xp.asarray(explained_variance_[:n_components], copy=True)
+        self.explained_variance_ratio_ = xp.asarray(explained_variance_ratio_[:n_components], copy=True)
         self.singular_values_ = xp.asarray(singular_values_[:n_components], copy=True)
 
         return U, S, Vt, X, x_is_centered, xp
@@ -709,23 +689,18 @@ class PCA(_BasePCA):
 
         svd_solver = self._fit_svd_solver
         if isinstance(n_components, str):
-            raise ValueError(
-                "n_components=%r cannot be a string with svd_solver='%s'"
-                % (n_components, svd_solver)
-            )
+            raise ValueError("n_components=%r cannot be a string with svd_solver='%s'" % (n_components, svd_solver))
         elif not 1 <= n_components <= min(n_samples, n_features):
             raise ValueError(
                 "n_components=%r must be between 1 and "
                 "min(n_samples, n_features)=%r with "
-                "svd_solver='%s'"
-                % (n_components, min(n_samples, n_features), svd_solver)
+                "svd_solver='%s'" % (n_components, min(n_samples, n_features), svd_solver)
             )
         elif svd_solver == "arpack" and n_components == min(n_samples, n_features):
             raise ValueError(
                 "n_components=%r must be strictly less than "
                 "min(n_samples, n_features)=%r with "
-                "svd_solver='%s'"
-                % (n_components, min(n_samples, n_features), svd_solver)
+                "svd_solver='%s'" % (n_components, min(n_samples, n_features), svd_solver)
             )
 
         random_state = check_random_state(self.random_state)

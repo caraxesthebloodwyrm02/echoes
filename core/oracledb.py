@@ -616,9 +616,7 @@ if TYPE_CHECKING:
     from oracledb import AsyncCursor
 
 
-class OracleExecutionContext_oracledb(
-    _cx_oracle.OracleExecutionContext_cx_oracle
-):
+class OracleExecutionContext_oracledb(_cx_oracle.OracleExecutionContext_cx_oracle):
     pass
 
 
@@ -646,9 +644,7 @@ class OracleDialect_oracledb(_cx_oracle.OracleDialect_cx_oracle):
             **kwargs,
         )
 
-        if self.dbapi is not None and (
-            thick_mode or isinstance(thick_mode, dict)
-        ):
+        if self.dbapi is not None and (thick_mode or isinstance(thick_mode, dict)):
             kw = thick_mode if isinstance(thick_mode, dict) else {}
             self.dbapi.init_oracle_client(**kw)
 
@@ -671,17 +667,10 @@ class OracleDialect_oracledb(_cx_oracle.OracleDialect_cx_oracle):
         if dbapi_module is not None:
             m = re.match(r"(\d+)\.(\d+)(?:\.(\d+))?", dbapi_module.version)
             if m:
-                version = tuple(
-                    int(x) for x in m.group(1, 2, 3) if x is not None
-                )
+                version = tuple(int(x) for x in m.group(1, 2, 3) if x is not None)
         self.oracledb_ver = version
-        if (
-            self.oracledb_ver > (0, 0, 0)
-            and self.oracledb_ver < self._min_version
-        ):
-            raise exc.InvalidRequestError(
-                f"oracledb version {self._min_version} and above are supported"
-            )
+        if self.oracledb_ver > (0, 0, 0) and self.oracledb_ver < self._min_version:
+            raise exc.InvalidRequestError(f"oracledb version {self._min_version} and above are supported")
 
     def do_begin_twophase(self, connection, xid):
         conn_xis = connection.connection.xid(*xid)
@@ -692,18 +681,14 @@ class OracleDialect_oracledb(_cx_oracle.OracleDialect_cx_oracle):
         should_commit = connection.connection.tpc_prepare()
         connection.info["oracledb_should_commit"] = should_commit
 
-    def do_rollback_twophase(
-        self, connection, xid, is_prepared=True, recover=False
-    ):
+    def do_rollback_twophase(self, connection, xid, is_prepared=True, recover=False):
         if recover:
             conn_xid = connection.connection.xid(*xid)
         else:
             conn_xid = None
         connection.connection.tpc_rollback(conn_xid)
 
-    def do_commit_twophase(
-        self, connection, xid, is_prepared=True, recover=False
-    ):
+    def do_commit_twophase(self, connection, xid, is_prepared=True, recover=False):
         conn_xid = None
         if not is_prepared:
             should_commit = connection.connection.tpc_prepare()
@@ -787,9 +772,7 @@ class AsyncAdapt_oracledb_cursor(AsyncAdapt_dbapi_cursor):
         self.close()
 
 
-class AsyncAdapt_oracledb_ss_cursor(
-    AsyncAdapt_dbapi_ss_cursor, AsyncAdapt_oracledb_cursor
-):
+class AsyncAdapt_oracledb_ss_cursor(AsyncAdapt_dbapi_ss_cursor, AsyncAdapt_oracledb_cursor):
     __slots__ = ()
 
     def close(self) -> None:
@@ -864,9 +847,7 @@ class AsyncAdapt_oracledb_connection(AsyncAdapt_dbapi_connection):
         return self.await_(self._connection.tpc_rollback(*args, **kwargs))
 
 
-class AsyncAdaptFallback_oracledb_connection(
-    AsyncAdaptFallback_dbapi_connection, AsyncAdapt_oracledb_connection
-):
+class AsyncAdaptFallback_oracledb_connection(AsyncAdaptFallback_dbapi_connection, AsyncAdapt_oracledb_connection):
     __slots__ = ()
 
 
@@ -883,14 +864,10 @@ class OracledbAdaptDBAPI:
         creator_fn = kw.pop("async_creator_fn", self.oracledb.connect_async)
 
         if asbool(async_fallback):
-            return AsyncAdaptFallback_oracledb_connection(
-                self, await_fallback(creator_fn(*arg, **kw))
-            )
+            return AsyncAdaptFallback_oracledb_connection(self, await_fallback(creator_fn(*arg, **kw)))
 
         else:
-            return AsyncAdapt_oracledb_connection(
-                self, await_only(creator_fn(*arg, **kw))
-            )
+            return AsyncAdapt_oracledb_connection(self, await_only(creator_fn(*arg, **kw)))
 
 
 class OracleExecutionContextAsync_oracledb(OracleExecutionContext_oracledb):

@@ -93,17 +93,11 @@ def validate_workspace_config():
             else:
                 for problem in report.get("problems", []):
                     if problem["severity"] == "CRITICAL":
-                        issues.append(
-                            f"[FAIL] CRITICAL: {problem['setting']} - {problem['issue']}"
-                        )
+                        issues.append(f"[FAIL] CRITICAL: {problem['setting']} - {problem['issue']}")
                     elif problem["severity"] == "HIGH":
-                        warnings.append(
-                            f"[WARN] HIGH: {problem['setting']} - {problem['issue']}"
-                        )
+                        warnings.append(f"[WARN] HIGH: {problem['setting']} - {problem['issue']}")
                     else:
-                        warnings.append(
-                            f"[WARN] {problem['severity']}: {problem['setting']} - {problem['issue']}"
-                        )
+                        warnings.append(f"[WARN] {problem['severity']}: {problem['setting']} - {problem['issue']}")
 
         except Exception as e:
             warnings.append(f"[WARN] Settings validation issue: {e}")
@@ -128,26 +122,18 @@ def validate_workspace_config():
             if "stability" in config_data:
                 stability = config_data["stability"]
                 if stability.get("max_response_time_ms", 0) > 0:
-                    successes.append(
-                        f"[PASS] Response timeout: {stability['max_response_time_ms']}ms"
-                    )
+                    successes.append(f"[PASS] Response timeout: {stability['max_response_time_ms']}ms")
                 if stability.get("request_timeout_ms", 0) > 0:
-                    successes.append(
-                        f"[PASS] Request timeout: {stability['request_timeout_ms']}ms"
-                    )
+                    successes.append(f"[PASS] Request timeout: {stability['request_timeout_ms']}ms")
                 if stability.get("max_memory_mb", 0) > 0:
-                    successes.append(
-                        f"[PASS] Memory limit: {stability['max_memory_mb']}MB"
-                    )
+                    successes.append(f"[PASS] Memory limit: {stability['max_memory_mb']}MB")
 
             # Check AI settings
             if "ai" in config_data:
                 ai = config_data["ai"]
                 if "rate_limit" in ai:
                     rate = ai["rate_limit"]
-                    successes.append(
-                        f"[PASS] Rate limit: {rate.get('requests_per_minute', 0)} req/min"
-                    )
+                    successes.append(f"[PASS] Rate limit: {rate.get('requests_per_minute', 0)} req/min")
 
         except Exception as e:
             warnings.append(f"[WARN] Windsurf config parse error: {e}")
@@ -167,9 +153,7 @@ def validate_workspace_config():
         try:
             akl = get_safe_agent_knowledge_layer(enable_kg=False)  # Test without KG
             stats = akl.get_stats()
-            successes.append(
-                f"[PASS] Safe agent knowledge layer instantiates (KG: {stats['enabled']})"
-            )
+            successes.append(f"[PASS] Safe agent knowledge layer instantiates (KG: {stats['enabled']})")
         except Exception as e:
             warnings.append(f"[WARN] Agent knowledge layer instantiation issue: {e}")
 

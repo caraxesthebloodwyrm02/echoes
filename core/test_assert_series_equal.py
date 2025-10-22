@@ -132,12 +132,8 @@ def test_less_precise(data1, data2, dtype, decimals):
         ),
         # MultiIndex
         (
-            DataFrame.from_records(
-                {"a": [1, 2], "b": [2.1, 1.5], "c": ["l1", "l2"]}, index=["a", "b"]
-            ).c,
-            DataFrame.from_records(
-                {"a": [1.0, 2.0], "b": [2.1, 1.5], "c": ["l1", "l2"]}, index=["a", "b"]
-            ).c,
+            DataFrame.from_records({"a": [1, 2], "b": [2.1, 1.5], "c": ["l1", "l2"]}, index=["a", "b"]).c,
+            DataFrame.from_records({"a": [1.0, 2.0], "b": [2.1, 1.5], "c": ["l1", "l2"]}, index=["a", "b"]).c,
             "MultiIndex level \\[0\\] are different",
         ),
     ],
@@ -179,9 +175,7 @@ def test_series_equal_index_mismatch(check_index):
 def test_series_invalid_param_combination():
     left = Series(dtype=object)
     right = Series(dtype=object)
-    with pytest.raises(
-        ValueError, match="check_like must be False if check_index is False"
-    ):
+    with pytest.raises(ValueError, match="check_like must be False if check_index is False"):
         tm.assert_series_equal(left, right, check_index=False, check_like=True)
 
 
@@ -462,9 +456,7 @@ def test_assert_series_equal_int_tol():
     tm.assert_series_equal(left, right, rtol=1.5)
 
     tm.assert_frame_equal(left.to_frame(), right.to_frame(), rtol=1.5)
-    tm.assert_extension_array_equal(
-        left.astype("Int64").values, right.astype("Int64").values, rtol=1.5
-    )
+    tm.assert_extension_array_equal(left.astype("Int64").values, right.astype("Int64").values, rtol=1.5)
 
 
 def test_assert_series_equal_index_exact_default():

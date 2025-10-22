@@ -46,10 +46,7 @@ from bandit.core import test_properties as test
 @test.checks("Call")
 @test.test_id("B612")
 def logging_config_insecure_listen(context):
-    if (
-        context.call_function_name_qual == "logging.config.listen"
-        and "verify" not in context.call_keywords
-    ):
+    if context.call_function_name_qual == "logging.config.listen" and "verify" not in context.call_keywords:
         return bandit.Issue(
             severity=bandit.MEDIUM,
             confidence=bandit.HIGH,

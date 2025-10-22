@@ -260,9 +260,7 @@ class RoadmapUser(HttpUser):
             "total_suites": total,
             "passed_suites": passed,
             "failed_suites": total - passed,
-            "results": [
-                {"name": name, "passed": success} for name, success in self.results
-            ],
+            "results": [{"name": name, "passed": success} for name, success in self.results],
         }
 
         report_file = self.q4_root / "automation" / "test_report.json"

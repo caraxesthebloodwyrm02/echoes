@@ -403,17 +403,12 @@ class NumpyDocString(Mapping):
                 section = (s.capitalize() for s in section.split(" "))
                 section = " ".join(section)
                 if self.get(section):
-                    self._error_location(
-                        "The section %s appears twice in  %s"
-                        % (section, "\n".join(self._doc._str))
-                    )
+                    self._error_location("The section %s appears twice in  %s" % (section, "\n".join(self._doc._str)))
 
             if section in ("Parameters", "Other Parameters", "Attributes", "Methods"):
                 self[section] = self._parse_param_list(content)
             elif section in ("Returns", "Yields", "Raises", "Warns", "Receives"):
-                self[section] = self._parse_param_list(
-                    content, single_element_is_type=True
-                )
+                self[section] = self._parse_param_list(content, single_element_is_type=True)
             elif section.startswith(".. index::"):
                 self["index"] = self._parse_index(section, content)
             elif section == "See Also":
@@ -701,11 +696,7 @@ class ClassDoc(NumpyDocString):
             if (
                 not name.startswith("_")
                 and not self._should_skip_member(name, self._cls)
-                and (
-                    func is None
-                    or isinstance(func, property | cached_property)
-                    or inspect.isdatadescriptor(func)
-                )
+                and (func is None or isinstance(func, property | cached_property) or inspect.isdatadescriptor(func))
                 and self._is_show_member(name)
             )
         ]

@@ -20,18 +20,14 @@ from sklearn.tree import DecisionTreeClassifier
 
 # load the iris dataset and randomly permute it
 iris = load_iris()
-X_train, X_test, y_train, y_test = train_test_split(
-    iris.data, iris.target, random_state=0
-)
+X_train, X_test, y_train, y_test = train_test_split(iris.data, iris.target, random_state=0)
 
 n_labeled_samples = 50
 
 y_train_missing_labels = y_train.copy()
 y_train_missing_labels[n_labeled_samples:] = -1
 mapping = {0: "A", 1: "B", 2: "C", -1: "-1"}
-y_train_missing_strings = np.vectorize(mapping.get)(y_train_missing_labels).astype(
-    object
-)
+y_train_missing_strings = np.vectorize(mapping.get)(y_train_missing_labels).astype(object)
 y_train_missing_strings[y_train_missing_labels == -1] = -1
 
 
@@ -54,16 +50,12 @@ def test_classification(estimator, selection_crit):
     # Also test for multioutput classification
     threshold = 0.75
     max_iter = 10
-    st = SelfTrainingClassifier(
-        estimator, max_iter=max_iter, threshold=threshold, criterion=selection_crit
-    )
+    st = SelfTrainingClassifier(estimator, max_iter=max_iter, threshold=threshold, criterion=selection_crit)
     st.fit(X_train, y_train_missing_labels)
     pred = st.predict(X_test)
     proba = st.predict_proba(X_test)
 
-    st_string = SelfTrainingClassifier(
-        estimator, max_iter=max_iter, criterion=selection_crit, threshold=threshold
-    )
+    st_string = SelfTrainingClassifier(estimator, max_iter=max_iter, criterion=selection_crit, threshold=threshold)
     st_string.fit(X_train, y_train_missing_strings)
     pred_string = st_string.predict(X_test)
     proba_string = st_string.predict_proba(X_test)
@@ -350,9 +342,7 @@ def test_self_training_estimator_attribute_error():
 def test_deprecation_warning_base_estimator():
     warn_msg = "`base_estimator` has been deprecated in 1.6 and will be removed"
     with pytest.warns(FutureWarning, match=warn_msg):
-        SelfTrainingClassifier(base_estimator=DecisionTreeClassifier()).fit(
-            X_train, y_train_missing_labels
-        )
+        SelfTrainingClassifier(base_estimator=DecisionTreeClassifier()).fit(X_train, y_train_missing_labels)
 
     error_msg = "You must pass an estimator to SelfTrainingClassifier"
     with pytest.raises(ValueError, match=error_msg):
@@ -360,9 +350,9 @@ def test_deprecation_warning_base_estimator():
 
     error_msg = "You must pass only one estimator to SelfTrainingClassifier."
     with pytest.raises(ValueError, match=error_msg):
-        SelfTrainingClassifier(
-            base_estimator=DecisionTreeClassifier(), estimator=DecisionTreeClassifier()
-        ).fit(X_train, y_train_missing_labels)
+        SelfTrainingClassifier(base_estimator=DecisionTreeClassifier(), estimator=DecisionTreeClassifier()).fit(
+            X_train, y_train_missing_labels
+        )
 
 
 # Metadata routing tests
@@ -370,22 +360,16 @@ def test_deprecation_warning_base_estimator():
 
 
 @pytest.mark.filterwarnings("ignore:y contains no unlabeled samples:UserWarning")
-@pytest.mark.parametrize(
-    "method", ["decision_function", "predict_log_proba", "predict_proba", "predict"]
-)
+@pytest.mark.parametrize("method", ["decision_function", "predict_log_proba", "predict_proba", "predict"])
 def test_routing_passed_metadata_not_supported(method):
     """Test that the right error message is raised when metadata is passed while
     not supported when `enable_metadata_routing=False`."""
     est = SelfTrainingClassifier(estimator=SimpleEstimator())
-    with pytest.raises(
-        ValueError, match="is only supported if enable_metadata_routing=True"
-    ):
+    with pytest.raises(ValueError, match="is only supported if enable_metadata_routing=True"):
         est.fit([[1], [1]], [1, 1], sample_weight=[1], prop="a")
 
     est = SelfTrainingClassifier(estimator=SimpleEstimator())
-    with pytest.raises(
-        ValueError, match="is only supported if enable_metadata_routing=True"
-    ):
+    with pytest.raises(ValueError, match="is only supported if enable_metadata_routing=True"):
         # make sure that the estimator thinks it is already fitted
         est.fitted_params_ = True
         getattr(est, method)([[1]], sample_weight=[1], prop="a")

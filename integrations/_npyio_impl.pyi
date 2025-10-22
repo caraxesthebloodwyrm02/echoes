@@ -72,7 +72,6 @@ class NpzFile(Mapping[str, NDArray[_ScalarT_co]]):
     pickle_kwargs: Mapping[str, Any] | None
     f: BagObj[NpzFile[_ScalarT_co]]
 
-    #
     def __init__(
         self,
         /,
@@ -85,7 +84,9 @@ class NpzFile(Mapping[str, NDArray[_ScalarT_co]]):
     ) -> None: ...
     def __del__(self) -> None: ...
     def __enter__(self) -> Self: ...
-    def __exit__(self, cls: type[BaseException] | None, e: BaseException | None, tb: types.TracebackType | None, /) -> None: ...
+    def __exit__(
+        self, cls: type[BaseException] | None, e: BaseException | None, tb: types.TracebackType | None, /
+    ) -> None: ...
     @override
     def __len__(self) -> int: ...
     @override
@@ -105,7 +106,6 @@ def load(
     *,
     max_header_size: int = 10_000,
 ) -> Any: ...
-
 @overload
 def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool = True) -> None: ...
 @overload
@@ -114,12 +114,10 @@ def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool, fix_imports
 @overload
 @deprecated("The 'fix_imports' flag is deprecated in NumPy 2.1.")
 def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool = True, *, fix_imports: bool) -> None: ...
-
-#
 def savez(file: _FNameWriteBytes, *args: ArrayLike, allow_pickle: bool = True, **kwds: ArrayLike) -> None: ...
-
-#
-def savez_compressed(file: _FNameWriteBytes, *args: ArrayLike, allow_pickle: bool = True, **kwds: ArrayLike) -> None: ...
+def savez_compressed(
+    file: _FNameWriteBytes, *args: ArrayLike, allow_pickle: bool = True, **kwds: ArrayLike
+) -> None: ...
 
 # File-like objects only have to implement `__iter__` and,
 # optionally, `encoding`
@@ -174,7 +172,6 @@ def loadtxt(
     quotechar: str | None = None,
     like: _SupportsArrayFunc | None = None,
 ) -> NDArray[Any]: ...
-
 def savetxt(
     fname: _FNameWrite,
     X: ArrayLike,
@@ -186,7 +183,6 @@ def savetxt(
     comments: str = "# ",
     encoding: str | None = None,
 ) -> None: ...
-
 @overload
 def fromregex(
     file: _FNameRead,
@@ -201,7 +197,6 @@ def fromregex(
     dtype: DTypeLike,
     encoding: str | None = None,
 ) -> NDArray[Any]: ...
-
 @overload
 def genfromtxt(
     fname: _FName,
@@ -289,13 +284,15 @@ def genfromtxt(
     ndmin: L[0, 1, 2] = ...,
     like: _SupportsArrayFunc | None = ...,
 ) -> NDArray[Any]: ...
-
 @overload
-def recfromtxt(fname: _FName, *, usemask: L[False] = False, **kwargs: object) -> np.recarray[Any, np.dtype[np.record]]: ...
+def recfromtxt(
+    fname: _FName, *, usemask: L[False] = False, **kwargs: object
+) -> np.recarray[Any, np.dtype[np.record]]: ...
 @overload
 def recfromtxt(fname: _FName, *, usemask: L[True], **kwargs: object) -> MaskedRecords[Any, np.dtype[np.void]]: ...
-
 @overload
-def recfromcsv(fname: _FName, *, usemask: L[False] = False, **kwargs: object) -> np.recarray[Any, np.dtype[np.record]]: ...
+def recfromcsv(
+    fname: _FName, *, usemask: L[False] = False, **kwargs: object
+) -> np.recarray[Any, np.dtype[np.record]]: ...
 @overload
 def recfromcsv(fname: _FName, *, usemask: L[True], **kwargs: object) -> MaskedRecords[Any, np.dtype[np.void]]: ...

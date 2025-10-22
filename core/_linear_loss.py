@@ -24,9 +24,7 @@ def sandwich_dot(X, W):
     # which (might) detect the symmetry and use BLAS SYRK under the hood.
     n_samples = X.shape[0]
     if sparse.issparse(X):
-        return (
-            X.T @ sparse.dia_matrix((W, 0), shape=(n_samples, n_samples)) @ X
-        ).toarray()
+        return (X.T @ sparse.dia_matrix((W, 0), shape=(n_samples, n_samples)) @ X).toarray()
     else:
         # np.einsum may use less memory but the following, using BLAS matrix
         # multiplication (gemm), is by far faster.
@@ -482,8 +480,7 @@ class LinearModelLoss:
             grad = np.empty_like(coef, dtype=weights.dtype, order="F")
         elif gradient_out.shape != coef.shape:
             raise ValueError(
-                f"gradient_out is required to have shape coef.shape = {coef.shape}; "
-                f"got {gradient_out.shape}."
+                f"gradient_out is required to have shape coef.shape = {coef.shape}; " f"got {gradient_out.shape}."
             )
         elif self.base_loss.is_multiclass and not gradient_out.flags.f_contiguous:
             raise ValueError("gradient_out must be F-contiguous.")
@@ -494,10 +491,7 @@ class LinearModelLoss:
         if hessian_out is None:
             hess = np.empty((n, n), dtype=weights.dtype)
         elif hessian_out.shape != (n, n):
-            raise ValueError(
-                f"hessian_out is required to have shape ({n, n}); got "
-                f"{hessian_out.shape=}."
-            )
+            raise ValueError(f"hessian_out is required to have shape ({n, n}); got " f"{hessian_out.shape=}.")
         elif self.base_loss.is_multiclass and (
             not hessian_out.flags.c_contiguous and not hessian_out.flags.f_contiguous
         ):
@@ -518,9 +512,7 @@ class LinearModelLoss:
             # For non-canonical link functions and far away from the optimum, the
             # pointwise hessian can be negative. We take care that 75% of the hessian
             # entries are positive.
-            hessian_warning = (
-                np.average(hess_pointwise <= 0, weights=sample_weight) > 0.25
-            )
+            hessian_warning = np.average(hess_pointwise <= 0, weights=sample_weight) > 0.25
             hess_pointwise = np.abs(hess_pointwise)
 
             grad[:n_features] = X.T @ grad_pointwise + l2_reg_strength * weights
@@ -537,9 +529,7 @@ class LinearModelLoss:
                 # The L2 penalty enters the Hessian on the diagonal only. To add those
                 # terms, we use a flattened view of the array.
                 order = "C" if hess.flags.c_contiguous else "F"
-                hess.reshape(-1, order=order)[: (n_features * n_dof) : (n_dof + 1)] += (
-                    l2_reg_strength
-                )
+                hess.reshape(-1, order=order)[: (n_features * n_dof) : (n_dof + 1)] += l2_reg_strength
 
             if self.fit_intercept:
                 # With intercept included as added column to X, the hessian becomes
@@ -632,9 +622,7 @@ class LinearModelLoss:
                         n_classes * n_features + k,
                         k : n_classes * n_features : n_classes,
                     ] = Xh
-                    hess[n_classes * n_features + k, n_classes * n_features + k] = (
-                        h.sum()
-                    )
+                    hess[n_classes * n_features + k, n_classes * n_features + k] = h.sum()
                 # Off diagonal terms (in classes) hess_kl.
                 for l in range(k + 1, n_classes):
                     # Upper triangle (in classes).
@@ -653,9 +641,7 @@ class LinearModelLoss:
                             n_classes * n_features + k,
                             l : n_classes * n_features : n_classes,
                         ] = Xh
-                        hess[n_classes * n_features + k, n_classes * n_features + l] = (
-                            h.sum()
-                        )
+                        hess[n_classes * n_features + k, n_classes * n_features + l] = h.sum()
                     # Fill lower triangle (in classes).
                     hess[l::n_classes, k::n_classes] = hess[k::n_classes, l::n_classes]
 
@@ -671,9 +657,7 @@ class LinearModelLoss:
 
         return grad, hess, hessian_warning
 
-    def gradient_hessian_product(
-        self, coef, X, y, sample_weight=None, l2_reg_strength=0.0, n_threads=1
-    ):
+    def gradient_hessian_product(self, coef, X, y, sample_weight=None, l2_reg_strength=0.0, n_threads=1):
         """Computes gradient and hessp (hessian product function) w.r.t. coef.
 
         Parameters
@@ -725,10 +709,7 @@ class LinearModelLoss:
             # Precompute as much as possible: hX, hX_sum and hessian_sum
             hessian_sum = hess_pointwise.sum()
             if sparse.issparse(X):
-                hX = (
-                    sparse.dia_matrix((hess_pointwise, 0), shape=(n_samples, n_samples))
-                    @ X
-                )
+                hX = sparse.dia_matrix((hess_pointwise, 0), shape=(n_samples, n_samples)) @ X
             else:
                 hX = hess_pointwise[:, np.newaxis] * X
 

@@ -53,9 +53,7 @@ y = [-1, -1, -1, 1, 1, 1]
 # (X, y), n_targets  <-- as expected in the output of partial_dep()
 binary_classification_data = (make_classification(n_samples=50, random_state=0), 1)
 multiclass_classification_data = (
-    make_classification(
-        n_samples=50, n_classes=3, n_clusters_per_class=1, random_state=0
-    ),
+    make_classification(n_samples=50, n_classes=3, n_clusters_per_class=1, random_state=0),
     3,
 )
 regression_data = (make_regression(n_samples=50, random_state=0), 1)
@@ -89,9 +87,7 @@ iris = load_iris()
 @pytest.mark.parametrize("features", ([1], [1, 2]))
 @pytest.mark.parametrize("kind", ("average", "individual", "both"))
 @pytest.mark.parametrize("use_custom_values", [True, False])
-def test_output_shape(
-    Estimator, method, data, grid_resolution, features, kind, use_custom_values
-):
+def test_output_shape(Estimator, method, data, grid_resolution, features, kind, use_custom_values):
     # Check that partial_dependence has consistent output shape for different
     # kinds of estimators:
     # - classifiers with binary and multiclass settings
@@ -354,9 +350,7 @@ def test_partial_dependence_helpers(est, method, target_feature):
     grid = np.array([[0.5], [123]])
 
     if method == "brute":
-        pdp, predictions = _partial_dependence_brute(
-            est, grid, features, X, response_method="auto"
-        )
+        pdp, predictions = _partial_dependence_brute(est, grid, features, X, response_method="auto")
     else:
         pdp = _partial_dependence_recursion(est, grid, features)
 
@@ -487,9 +481,7 @@ def test_recursion_decision_function(est, target_feature):
     (
         LinearRegression(),
         GradientBoostingRegressor(random_state=0),
-        HistGradientBoostingRegressor(
-            random_state=0, min_samples_leaf=1, max_leaf_nodes=None, max_iter=1
-        ),
+        HistGradientBoostingRegressor(random_state=0, min_samples_leaf=1, max_leaf_nodes=None, max_iter=1),
         DecisionTreeRegressor(random_state=0),
     ),
 )
@@ -510,9 +502,7 @@ def test_partial_dependence_easy_target(est, power):
 
     est = clone(est).fit(X, y)
 
-    pdp = partial_dependence(
-        est, features=[target_variable], X=X, grid_resolution=1000, kind="average"
-    )
+    pdp = partial_dependence(est, features=[target_variable], X=X, grid_resolution=1000, kind="average")
 
     new_X = pdp["grid_values"][0].reshape(-1, 1)
     new_y = pdp["average"][0]
@@ -546,9 +536,7 @@ def test_multiclass_multioutput(Estimator):
     est = Estimator()
     est.fit(X, y)
 
-    with pytest.raises(
-        ValueError, match="Multiclass-multioutput estimators are not supported"
-    ):
+    with pytest.raises(ValueError, match="Multiclass-multioutput estimators are not supported"):
         partial_dependence(est, X, [0])
 
 
@@ -604,10 +592,7 @@ class NoPredictProbaNoDecisionFunction(ClassifierMixin, BaseEstimator):
         (
             LinearRegression(),
             {"features": [0, 1], "custom_values": {0: [1, 2, 3], 1: np.ones((3, 3))}},
-            (
-                "The custom grid for some features is not a one-dimensional array. "
-                "Feature 1: 2 dimensions"
-            ),
+            ("The custom grid for some features is not a one-dimensional array. " "Feature 1: 2 dimensions"),
         ),
     ],
 )
@@ -619,9 +604,7 @@ def test_partial_dependence_error(estimator, params, err_msg):
         partial_dependence(estimator, X, **params)
 
 
-@pytest.mark.parametrize(
-    "estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)]
-)
+@pytest.mark.parametrize("estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)])
 @pytest.mark.parametrize("features", [-1, 10000])
 def test_partial_dependence_unknown_feature_indices(estimator, features):
     X, y = make_classification(random_state=0)
@@ -632,9 +615,7 @@ def test_partial_dependence_unknown_feature_indices(estimator, features):
         partial_dependence(estimator, X, [features])
 
 
-@pytest.mark.parametrize(
-    "estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)]
-)
+@pytest.mark.parametrize("estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)])
 def test_partial_dependence_unknown_feature_string(estimator):
     pd = pytest.importorskip("pandas")
     X, y = make_classification(random_state=0)
@@ -647,9 +628,7 @@ def test_partial_dependence_unknown_feature_string(estimator):
         partial_dependence(estimator, df, features)
 
 
-@pytest.mark.parametrize(
-    "estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)]
-)
+@pytest.mark.parametrize("estimator", [LinearRegression(), GradientBoostingClassifier(random_state=0)])
 def test_partial_dependence_X_list(estimator):
     # check that array-like objects are accepted
     X, y = make_classification(random_state=0)
@@ -664,14 +643,10 @@ def test_warning_recursion_non_constant_init():
     gbc = GradientBoostingClassifier(init=DummyClassifier(), random_state=0)
     gbc.fit(X, y)
 
-    with pytest.warns(
-        UserWarning, match="Using recursion method with a non-constant init predictor"
-    ):
+    with pytest.warns(UserWarning, match="Using recursion method with a non-constant init predictor"):
         partial_dependence(gbc, X, [0], method="recursion", kind="average")
 
-    with pytest.warns(
-        UserWarning, match="Using recursion method with a non-constant init predictor"
-    ):
+    with pytest.warns(UserWarning, match="Using recursion method with a non-constant init predictor"):
         partial_dependence(gbc, X, [0], method="recursion", kind="average")
 
 
@@ -706,9 +681,7 @@ def test_hist_gbdt_sw_not_supported():
     clf = HistGradientBoostingRegressor(random_state=1)
     clf.fit(X, y, sample_weight=np.ones(len(X)))
 
-    with pytest.raises(
-        NotImplementedError, match="does not support partial dependence"
-    ):
+    with pytest.raises(NotImplementedError, match="does not support partial dependence"):
         partial_dependence(clf, X, features=[1])
 
 
@@ -724,9 +697,7 @@ def test_partial_dependence_pipeline():
     pipe.fit(iris.data, iris.target)
 
     features = 0
-    pdp_pipe = partial_dependence(
-        pipe, iris.data, features=[features], grid_resolution=10, kind="average"
-    )
+    pdp_pipe = partial_dependence(pipe, iris.data, features=[features], grid_resolution=10, kind="average")
     pdp_clf = partial_dependence(
         clf,
         scaler.transform(iris.data),
@@ -748,9 +719,7 @@ def test_partial_dependence_pipeline():
         (["a"], 2, 2),
     ],
 )
-def test_partial_dependence_binary_model_grid_resolution(
-    features, grid_resolution, n_vals_expected
-):
+def test_partial_dependence_binary_model_grid_resolution(features, grid_resolution, n_vals_expected):
     pd = pytest.importorskip("pandas")
     model = DummyClassifier()
 
@@ -782,9 +751,7 @@ def test_partial_dependence_binary_model_grid_resolution(
         (["a"], {"a": [1.0]}, 1),
     ],
 )
-def test_partial_dependence_binary_model_custom_values(
-    features, custom_values, n_vals_expected
-):
+def test_partial_dependence_binary_model_custom_values(features, custom_values, n_vals_expected):
     pd = pytest.importorskip("pandas")
     model = DummyClassifier()
 
@@ -811,13 +778,9 @@ def test_partial_dependence_binary_model_custom_values(
         (["a", "b"], {"a": [1.0, 2.0], "b": ["a", "b"]}, 4),
     ],
 )
-def test_partial_dependence_pipeline_custom_values(
-    features, custom_values, n_vals_expected
-):
+def test_partial_dependence_pipeline_custom_values(features, custom_values, n_vals_expected):
     pd = pytest.importorskip("pandas")
-    pl = make_pipeline(
-        SimpleImputer(strategy="most_frequent"), OneHotEncoder(), DummyClassifier()
-    )
+    pl = make_pipeline(SimpleImputer(strategy="most_frequent"), OneHotEncoder(), DummyClassifier())
 
     X = pd.DataFrame({"a": [1.0, 2.0, 3.0, 4.0], "b": ["a", "b", "a", "b"]})
     y = pd.Series([0, 1, 0, 1])
@@ -871,9 +834,7 @@ def test_partial_dependence_dataframe(estimator, preprocessor, features):
 
     pipe = make_pipeline(preprocessor, clone(estimator))
     pipe.fit(df, iris.target)
-    pdp_pipe = partial_dependence(
-        pipe, df, features=features, grid_resolution=10, kind="average"
-    )
+    pdp_pipe = partial_dependence(pipe, df, features=features, grid_resolution=10, kind="average")
 
     # the column transformer will reorder the column when transforming
     # we mixed the index to be sure that we are computing the partial
@@ -952,9 +913,7 @@ def test_partial_dependence_feature_type(features, custom_values, expected_pd_sh
         (StandardScaler(), [iris.feature_names[i] for i in (0, 2)]),
         (RobustScaler(), [iris.feature_names[i] for i in (1, 3)]),
     )
-    pipe = make_pipeline(
-        preprocessor, LogisticRegression(max_iter=1000, random_state=0)
-    )
+    pipe = make_pipeline(preprocessor, LogisticRegression(max_iter=1000, random_state=0))
     pipe.fit(df, iris.target)
     pdp_pipe = partial_dependence(
         pipe,
@@ -979,9 +938,7 @@ def test_partial_dependence_feature_type(features, custom_values, expected_pd_sh
 )
 def test_partial_dependence_unfitted(estimator):
     X = iris.data
-    preprocessor = make_column_transformer(
-        (StandardScaler(), [0, 2]), (RobustScaler(), [1, 3])
-    )
+    preprocessor = make_column_transformer((StandardScaler(), [0, 2]), (RobustScaler(), [1, 3]))
     pipe = make_pipeline(preprocessor, estimator)
     with pytest.raises(NotFittedError, match="is not fitted yet"):
         partial_dependence(pipe, X, features=[0, 2], grid_resolution=10)
@@ -1022,9 +979,7 @@ def test_partial_dependence_kind_individual_ignores_sample_weight(Estimator, dat
     est.fit(X, y)
 
     pdp_nsw = partial_dependence(est, X=X, features=[1, 2], kind="individual")
-    pdp_sw = partial_dependence(
-        est, X=X, features=[1, 2], kind="individual", sample_weight=sample_weight
-    )
+    pdp_sw = partial_dependence(est, X=X, features=[1, 2], kind="individual", sample_weight=sample_weight)
     assert_allclose(pdp_nsw["individual"], pdp_sw["individual"])
     assert_allclose(pdp_nsw["grid_values"], pdp_sw["grid_values"])
 
@@ -1046,9 +1001,7 @@ def test_partial_dependence_non_null_weight_idx(estimator, non_null_weight_idx):
     corresponding index.
     """
     X, y = iris.data, iris.target
-    preprocessor = make_column_transformer(
-        (StandardScaler(), [0, 2]), (RobustScaler(), [1, 3])
-    )
+    preprocessor = make_column_transformer((StandardScaler(), [0, 2]), (RobustScaler(), [1, 3]))
     pipe = make_pipeline(preprocessor, clone(estimator)).fit(X, y)
 
     sample_weight = np.zeros_like(y)
@@ -1104,9 +1057,7 @@ def test_partial_dependence_sample_weight_size_error():
     est.fit(X, y)
 
     with pytest.raises(ValueError, match="sample_weight.shape =="):
-        partial_dependence(
-            est, X, features=[0], sample_weight=sample_weight[1:], grid_resolution=10
-        )
+        partial_dependence(est, X, features=[0], sample_weight=sample_weight[1:], grid_resolution=10)
 
 
 def test_partial_dependence_sample_weight_with_recursion():
@@ -1119,9 +1070,7 @@ def test_partial_dependence_sample_weight_with_recursion():
     est.fit(X, y, sample_weight=sample_weight)
 
     with pytest.raises(ValueError, match="'recursion' method can only be applied when"):
-        partial_dependence(
-            est, X, features=[0], method="recursion", sample_weight=sample_weight
-        )
+        partial_dependence(est, X, features=[0], method="recursion", sample_weight=sample_weight)
 
 
 def test_mixed_type_categorical():
@@ -1145,19 +1094,13 @@ def test_reject_array_with_integer_dtype():
     y = np.array([0, 1, 0, 1])
     clf = DummyClassifier()
     clf.fit(X, y)
-    with pytest.warns(
-        FutureWarning, match=re.escape("The column 0 contains integer data.")
-    ):
+    with pytest.warns(FutureWarning, match=re.escape("The column 0 contains integer data.")):
         partial_dependence(clf, X, features=0)
 
-    with pytest.warns(
-        FutureWarning, match=re.escape("The column 1 contains integer data.")
-    ):
+    with pytest.warns(FutureWarning, match=re.escape("The column 1 contains integer data.")):
         partial_dependence(clf, X, features=[1], categorical_features=[0])
 
-    with pytest.warns(
-        FutureWarning, match=re.escape("The column 0 contains integer data.")
-    ):
+    with pytest.warns(FutureWarning, match=re.escape("The column 0 contains integer data.")):
         partial_dependence(clf, X, features=[0, 1])
 
     # The following should not raise as we do not compute numerical partial
@@ -1180,14 +1123,10 @@ def test_reject_pandas_with_integer_dtype():
     clf = DummyClassifier()
     clf.fit(X, y)
 
-    with pytest.warns(
-        FutureWarning, match=re.escape("The column 'c' contains integer data.")
-    ):
+    with pytest.warns(FutureWarning, match=re.escape("The column 'c' contains integer data.")):
         partial_dependence(clf, X, features="c")
 
-    with pytest.warns(
-        FutureWarning, match=re.escape("The column 'c' contains integer data.")
-    ):
+    with pytest.warns(FutureWarning, match=re.escape("The column 'c' contains integer data.")):
         partial_dependence(clf, X, features=["a", "c"])
 
     # The following should not raise as we do not compute numerical partial
@@ -1212,6 +1151,4 @@ def test_partial_dependence_empty_categorical_features():
             "categorical features."
         ),
     ):
-        partial_dependence(
-            estimator=clf, X=iris.data, features=[0], categorical_features=[]
-        )
+        partial_dependence(estimator=clf, X=iris.data, features=[0], categorical_features=[])

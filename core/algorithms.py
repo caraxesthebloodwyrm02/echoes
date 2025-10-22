@@ -2,6 +2,7 @@
 Generic data algorithms. This module is experimental at the moment and not
 intended for public consumption
 """
+
 from __future__ import annotations
 
 import decimal
@@ -181,9 +182,7 @@ def _ensure_data(values: ArrayLike) -> np.ndarray:
     return ensure_object(values)
 
 
-def _reconstruct_data(
-    values: ArrayLike, dtype: DtypeObj, original: AnyArrayLike
-) -> ArrayLike:
+def _reconstruct_data(values: ArrayLike, dtype: DtypeObj, original: AnyArrayLike) -> ArrayLike:
     """
     reverse of _ensure_data
 
@@ -470,24 +469,18 @@ def isin(comps: ListLike, values: ListLike) -> npt.NDArray[np.bool_]:
     """
     if not is_list_like(comps):
         raise TypeError(
-            "only list-like objects are allowed to be passed "
-            f"to isin(), you passed a `{type(comps).__name__}`"
+            "only list-like objects are allowed to be passed " f"to isin(), you passed a `{type(comps).__name__}`"
         )
     if not is_list_like(values):
         raise TypeError(
-            "only list-like objects are allowed to be passed "
-            f"to isin(), you passed a `{type(values).__name__}`"
+            "only list-like objects are allowed to be passed " f"to isin(), you passed a `{type(values).__name__}`"
         )
 
     if not isinstance(values, (ABCIndex, ABCSeries, ABCExtensionArray, np.ndarray)):
         orig_values = list(values)
         values = _ensure_arraylike(orig_values, func_name="isin-targets")
 
-        if (
-            len(values) > 0
-            and values.dtype.kind in "iufcb"
-            and not is_signed_integer_dtype(comps)
-        ):
+        if len(values) > 0 and values.dtype.kind in "iufcb" and not is_signed_integer_dtype(comps):
             # GH#46485 Use object to avoid upcast to float64 later
             # TODO: Share with _find_common_type_compat
             values = construct_1d_object_array_from_listlike(orig_values)
@@ -521,11 +514,7 @@ def isin(comps: ListLike, values: ListLike) -> npt.NDArray[np.bool_]:
     # Ensure np.isin doesn't get object types or it *may* throw an exception
     # Albeit hashmap has O(1) look-up (vs. O(logn) in sorted array),
     # isin is faster for small sizes
-    if (
-        len(comps_array) > _MINIMUM_COMP_ARR_LEN
-        and len(values) <= 26
-        and comps_array.dtype != object
-    ):
+    if len(comps_array) > _MINIMUM_COMP_ARR_LEN and len(values) <= 26 and comps_array.dtype != object:
         # If the values include nan we need to check for nan explicitly
         # since np.nan it not equal to np.nan
         if isna(values).any():
@@ -765,10 +754,7 @@ def factorize(
     values = _ensure_arraylike(values, func_name="factorize")
     original = values
 
-    if (
-        isinstance(values, (ABCDatetimeArray, ABCTimedeltaArray))
-        and values.freq is not None
-    ):
+    if isinstance(values, (ABCDatetimeArray, ABCTimedeltaArray)) and values.freq is not None:
         # The presence of 'freq' means we can fast-path sorting and know there
         #  aren't NAs
         codes, uniques = values.factorize(sort=sort)
@@ -914,11 +900,7 @@ def value_counts_internal(
         elif isinstance(values, ABCMultiIndex):
             # GH49558
             levels = list(range(values.nlevels))
-            result = (
-                Series(index=values, name=name)
-                .groupby(level=levels, dropna=dropna)
-                .size()
-            )
+            result = Series(index=values, name=name).groupby(level=levels, dropna=dropna).size()
             result.index.names = values.names
             counts = result._values
 
@@ -933,10 +915,7 @@ def value_counts_internal(
             idx = Index(keys)
             if idx.dtype in [bool, "string"] and keys.dtype == object:
                 idx = idx.astype(object)
-            elif (
-                idx.dtype != keys.dtype  # noqa: PLR1714  # # pylint: disable=R1714
-                and idx.dtype != "string"
-            ):
+            elif idx.dtype != keys.dtype and idx.dtype != "string":  # noqa: PLR1714  # # pylint: disable=R1714
                 warnings.warn(
                     # GH#56161
                     "The behavior of value_counts with object-dtype is deprecated. "
@@ -1020,9 +999,7 @@ def duplicated(
     return htable.duplicated(values, keep=keep, mask=mask)
 
 
-def mode(
-    values: ArrayLike, dropna: bool = True, mask: npt.NDArray[np.bool_] | None = None
-) -> ArrayLike:
+def mode(values: ArrayLike, dropna: bool = True, mask: npt.NDArray[np.bool_] | None = None) -> ArrayLike:
     """
     Returns the mode(s) of an array.
 
@@ -1231,9 +1208,7 @@ def take(
     if allow_fill:
         # Pandas style, -1 means NA
         validate_indices(indices, arr.shape[axis])
-        result = take_nd(
-            arr, indices, axis=axis, allow_fill=True, fill_value=fill_value
-        )
+        result = take_nd(arr, indices, axis=axis, allow_fill=True, fill_value=fill_value)
     else:
         # NumPy style
         result = arr.take(indices, axis=axis)
@@ -1296,11 +1271,7 @@ def searchsorted(
     if sorter is not None:
         sorter = ensure_platform_int(sorter)
 
-    if (
-        isinstance(arr, np.ndarray)
-        and arr.dtype.kind in "iu"
-        and (is_integer(value) or is_integer_dtype(value))
-    ):
+    if isinstance(arr, np.ndarray) and arr.dtype.kind in "iu" and (is_integer(value) or is_integer_dtype(value)):
         # if `arr` and `value` have different dtypes, `arr` would be
         # recast by numpy, causing a slow search.
         # Before searching below, we therefore try to give `value` the
@@ -1379,8 +1350,7 @@ def diff(arr, n: int, axis: AxisInt = 0):
             return op(arr, arr.shift(n))
         else:
             raise TypeError(
-                f"{type(arr).__name__} has no 'diff' method. "
-                "Convert to a suitable dtype prior to calling 'diff'."
+                f"{type(arr).__name__} has no 'diff' method. " "Convert to a suitable dtype prior to calling 'diff'."
             )
 
     is_timedelta = False
@@ -1499,17 +1469,13 @@ def safe_sort(
     """
     if not isinstance(values, (np.ndarray, ABCExtensionArray, ABCIndex)):
         raise TypeError(
-            "Only np.ndarray, ExtensionArray, and Index objects are allowed to "
-            "be passed to safe_sort as values"
+            "Only np.ndarray, ExtensionArray, and Index objects are allowed to " "be passed to safe_sort as values"
         )
 
     sorter = None
     ordered: AnyArrayLike
 
-    if (
-        not isinstance(values.dtype, ExtensionDtype)
-        and lib.infer_dtype(values, skipna=False) == "mixed-integer"
-    ):
+    if not isinstance(values.dtype, ExtensionDtype) and lib.infer_dtype(values, skipna=False) == "mixed-integer":
         ordered = _sort_mixed(values)
     else:
         try:
@@ -1533,10 +1499,7 @@ def safe_sort(
         return ordered
 
     if not is_list_like(codes):
-        raise TypeError(
-            "Only list-like objects or None are allowed to "
-            "be passed to safe_sort as codes"
-        )
+        raise TypeError("Only list-like objects or None are allowed to " "be passed to safe_sort as codes")
     codes = ensure_platform_int(np.asarray(codes))
 
     if not assume_unique and not len(unique(values)) == len(values):
@@ -1609,9 +1572,7 @@ def _sort_tuples(values: np.ndarray) -> np.ndarray:
     return values[indexer]
 
 
-def union_with_duplicates(
-    lvals: ArrayLike | Index, rvals: ArrayLike | Index
-) -> ArrayLike | Index:
+def union_with_duplicates(lvals: ArrayLike | Index, rvals: ArrayLike | Index) -> ArrayLike | Index:
     """
     Extracts the union from lvals and rvals with respect to duplicates and nans in
     both arrays.
@@ -1703,9 +1664,7 @@ def map_array(
             # If a dictionary subclass defines a default value method,
             # convert mapper to a lookup function (GH #15999).
             dict_with_default = mapper
-            mapper = lambda x: dict_with_default[
-                np.nan if isinstance(x, float) and np.isnan(x) else x
-            ]
+            mapper = lambda x: dict_with_default[np.nan if isinstance(x, float) and np.isnan(x) else x]
         else:
             # Dictionary does not have a default. Thus it's safe to
             # convert to an Series for efficiency.
@@ -1742,6 +1701,4 @@ def map_array(
     if na_action is None:
         return lib.map_infer(values, mapper, convert=convert)
     else:
-        return lib.map_infer_mask(
-            values, mapper, mask=isna(values).view(np.uint8), convert=convert
-        )
+        return lib.map_infer_mask(values, mapper, mask=isna(values).view(np.uint8), convert=convert)

@@ -2,6 +2,7 @@
 masked_reductions.py is for reduction algorithms using a mask-based approach
 for missing values.
 """
+
 from __future__ import annotations
 
 from typing import (
@@ -57,9 +58,7 @@ def _reductions(
         else:
             return func(values, axis=axis, **kwargs)
     else:
-        if check_below_min_count(values.shape, mask, min_count) and (
-            axis is None or values.ndim == 1
-        ):
+        if check_below_min_count(values.shape, mask, min_count) and (axis is None or values.ndim == 1):
             return libmissing.NA
 
         if values.dtype == np.dtype(object):
@@ -77,9 +76,7 @@ def sum(
     min_count: int = 0,
     axis: AxisInt | None = None,
 ):
-    return _reductions(
-        np.sum, values=values, mask=mask, skipna=skipna, min_count=min_count, axis=axis
-    )
+    return _reductions(np.sum, values=values, mask=mask, skipna=skipna, min_count=min_count, axis=axis)
 
 
 def prod(
@@ -90,9 +87,7 @@ def prod(
     min_count: int = 0,
     axis: AxisInt | None = None,
 ):
-    return _reductions(
-        np.prod, values=values, mask=mask, skipna=skipna, min_count=min_count, axis=axis
-    )
+    return _reductions(np.prod, values=values, mask=mask, skipna=skipna, min_count=min_count, axis=axis)
 
 
 def _minmax(
@@ -178,9 +173,7 @@ def var(
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        return _reductions(
-            np.var, values=values, mask=mask, skipna=skipna, axis=axis, ddof=ddof
-        )
+        return _reductions(np.var, values=values, mask=mask, skipna=skipna, axis=axis, ddof=ddof)
 
 
 def std(
@@ -196,6 +189,4 @@ def std(
 
     with warnings.catch_warnings():
         warnings.simplefilter("ignore", RuntimeWarning)
-        return _reductions(
-            np.std, values=values, mask=mask, skipna=skipna, axis=axis, ddof=ddof
-        )
+        return _reductions(np.std, values=values, mask=mask, skipna=skipna, axis=axis, ddof=ddof)

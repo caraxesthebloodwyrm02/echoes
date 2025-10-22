@@ -80,9 +80,7 @@ class NgramModelVocabularyTests(unittest.TestCase):
         self.assertEqual(self.vocab.lookup(["a", "b"]), ("a", "b"))
         self.assertEqual(self.vocab.lookup(("a", "b")), ("a", "b"))
         self.assertEqual(self.vocab.lookup(("a", "c")), ("a", "<UNK>"))
-        self.assertEqual(
-            self.vocab.lookup(map(str, range(3))), ("<UNK>", "<UNK>", "<UNK>")
-        )
+        self.assertEqual(self.vocab.lookup(map(str, range(3))), ("<UNK>", "<UNK>", "<UNK>"))
 
     def test_lookup_empty_iterables(self):
         self.assertEqual(self.vocab.lookup(()), ())
@@ -91,9 +89,7 @@ class NgramModelVocabularyTests(unittest.TestCase):
         self.assertEqual(self.vocab.lookup(n for n in range(0, 0)), ())
 
     def test_lookup_recursive(self):
-        self.assertEqual(
-            self.vocab.lookup([["a", "b"], ["a", "c"]]), (("a", "b"), ("a", "<UNK>"))
-        )
+        self.assertEqual(self.vocab.lookup([["a", "b"], ["a", "c"]]), (("a", "b"), ("a", "<UNK>")))
         self.assertEqual(self.vocab.lookup([["a", "b"], "c"]), (("a", "b"), "<UNK>"))
         self.assertEqual(self.vocab.lookup([[[[["a", "b"]]]]]), ((((("a", "b"),),),),))
 
@@ -123,24 +119,18 @@ class NgramModelVocabularyTests(unittest.TestCase):
         self.assertNotEqual(v1, v4)
 
     def test_str(self):
-        self.assertEqual(
-            str(self.vocab), "<Vocabulary with cutoff=2 unk_label='<UNK>' and 5 items>"
-        )
+        self.assertEqual(str(self.vocab), "<Vocabulary with cutoff=2 unk_label='<UNK>' and 5 items>")
 
     def test_creation_with_counter(self):
         self.assertEqual(
             self.vocab,
             Vocabulary(
-                Counter(
-                    ["z", "a", "b", "c", "f", "d", "e", "g", "a", "d", "b", "e", "w"]
-                ),
+                Counter(["z", "a", "b", "c", "f", "d", "e", "g", "a", "d", "b", "e", "w"]),
                 unk_cutoff=2,
             ),
         )
 
-    @unittest.skip(
-        reason="Test is known to be flaky as it compares (runtime) performance."
-    )
+    @unittest.skip(reason="Test is known to be flaky as it compares (runtime) performance.")
     def test_len_is_constant(self):
         # Given an obviously small and an obviously large vocabulary.
         small_vocab = Vocabulary("abcde")

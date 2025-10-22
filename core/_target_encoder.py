@@ -264,9 +264,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
         if self.target_type_ == "continuous":
             cv = KFold(self.cv, shuffle=self.shuffle, random_state=self.random_state)
         else:
-            cv = StratifiedKFold(
-                self.cv, shuffle=self.shuffle, random_state=self.random_state
-            )
+            cv = StratifiedKFold(self.cv, shuffle=self.shuffle, random_state=self.random_state)
 
         # If 'multiclass' multiply axis=1 by num classes else keep shape the same
         if self.target_type_ == "multiclass":
@@ -324,9 +322,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
                     (n_samples, (n_features * n_classes))
             Transformed input.
         """
-        X_ordinal, X_known_mask = self._transform(
-            X, handle_unknown="ignore", ensure_all_finite="allow-nan"
-        )
+        X_ordinal, X_known_mask = self._transform(X, handle_unknown="ignore", ensure_all_finite="allow-nan")
 
         # If 'multiclass' multiply axis=1 by num of classes else keep shape the same
         if self.target_type_ == "multiclass":
@@ -385,9 +381,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
 
         self.target_mean_ = np.mean(y, axis=0)
 
-        X_ordinal, X_known_mask = self._transform(
-            X, handle_unknown="ignore", ensure_all_finite="allow-nan"
-        )
+        X_ordinal, X_known_mask = self._transform(X, handle_unknown="ignore", ensure_all_finite="allow-nan")
         n_categories = np.fromiter(
             (len(category_for_feature) for category_for_feature in self.categories_),
             dtype=np.int64,
@@ -411,9 +405,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
 
         return X_ordinal, X_known_mask, y, n_categories
 
-    def _fit_encoding_binary_or_continuous(
-        self, X_ordinal, y, n_categories, target_mean
-    ):
+    def _fit_encoding_binary_or_continuous(self, X_ordinal, y, n_categories, target_mean):
         """Learn target encodings."""
         if self.smooth == "auto":
             y_variance = np.var(y)
@@ -459,9 +451,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
             encodings.extend(encoding)
 
         reorder_index = (
-            idx
-            for start in range(n_features)
-            for idx in range(start, (n_classes * n_features), n_features)
+            idx for start in range(n_features) for idx in range(start, (n_classes * n_features), n_features)
         )
         return [encodings[idx] for idx in reorder_index]
 
@@ -520,9 +510,7 @@ class TargetEncoder(OneToOneFeatureMixin, _BaseEncoder):
         feature_names = _check_feature_names_in(self, input_features)
         if self.target_type_ == "multiclass":
             feature_names = [
-                f"{feature_name}_{class_name}"
-                for feature_name in feature_names
-                for class_name in self.classes_
+                f"{feature_name}_{class_name}" for feature_name in feature_names for class_name in self.classes_
             ]
             return np.asarray(feature_names, dtype=object)
         else:

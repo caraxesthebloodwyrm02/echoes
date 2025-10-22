@@ -48,9 +48,7 @@ def html_encoding_file(request, datapath):
 
 def assert_framelist_equal(list1, list2, *args, **kwargs):
     assert len(list1) == len(list2), (
-        "lists are not of equal size "
-        f"len(list1) == {len(list1)}, "
-        f"len(list2) == {len(list2)}"
+        "lists are not of equal size " f"len(list1) == {len(list1)}, " f"len(list2) == {len(list2)}"
     )
     msg = "not all list elements are DataFrames"
     both_frames = all(
@@ -156,9 +154,7 @@ class TestReadHtml:
             .map("{:.3f}".format).astype(float)
         )
         out = df.to_html()
-        res = flavor_read_html(
-            StringIO(out), attrs={"class": "dataframe"}, index_col=0
-        )[0]
+        res = flavor_read_html(StringIO(out), attrs={"class": "dataframe"}, index_col=0)[0]
         tm.assert_frame_equal(res, df)
 
     def test_dtype_backend(self, string_storage, dtype_backend, flavor_read_html):
@@ -205,10 +201,7 @@ class TestReadHtml:
             from pandas.arrays import ArrowExtensionArray
 
             expected = DataFrame(
-                {
-                    col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True))
-                    for col in expected.columns
-                }
+                {col: ArrowExtensionArray(pa.array(expected[col], from_pandas=True)) for col in expected.columns}
             )
 
         # the storage of the str columns' Index is also affected by the
@@ -245,12 +238,8 @@ class TestReadHtml:
 
     @pytest.mark.slow
     def test_banklist(self, banklist_data, flavor_read_html):
-        df1 = flavor_read_html(
-            banklist_data, match=".*Florida.*", attrs={"id": "table"}
-        )
-        df2 = flavor_read_html(
-            banklist_data, match="Metcalf Bank", attrs={"id": "table"}
-        )
+        df1 = flavor_read_html(banklist_data, match=".*Florida.*", attrs={"id": "table"})
+        df2 = flavor_read_html(banklist_data, match="Metcalf Bank", attrs={"id": "table"})
 
         assert_framelist_equal(df1, df2)
 
@@ -397,9 +386,7 @@ class TestReadHtml:
     @pytest.mark.slow
     def test_file_url(self, banklist_data, flavor_read_html):
         url = banklist_data
-        dfs = flavor_read_html(
-            file_path_to_url(os.path.abspath(url)), match="First", attrs={"id": "table"}
-        )
+        dfs = flavor_read_html(file_path_to_url(os.path.abspath(url)), match="First", attrs={"id": "table"})
         assert isinstance(dfs, list)
         for df in dfs:
             assert isinstance(df, DataFrame)
@@ -408,22 +395,16 @@ class TestReadHtml:
     def test_invalid_table_attrs(self, banklist_data, flavor_read_html):
         url = banklist_data
         with pytest.raises(ValueError, match="No tables found"):
-            flavor_read_html(
-                url, match="First Federal Bank of Florida", attrs={"id": "tasdfable"}
-            )
+            flavor_read_html(url, match="First Federal Bank of Florida", attrs={"id": "tasdfable"})
 
     @pytest.mark.slow
     def test_multiindex_header(self, banklist_data, flavor_read_html):
-        df = flavor_read_html(
-            banklist_data, match="Metcalf", attrs={"id": "table"}, header=[0, 1]
-        )[0]
+        df = flavor_read_html(banklist_data, match="Metcalf", attrs={"id": "table"}, header=[0, 1])[0]
         assert isinstance(df.columns, MultiIndex)
 
     @pytest.mark.slow
     def test_multiindex_index(self, banklist_data, flavor_read_html):
-        df = flavor_read_html(
-            banklist_data, match="Metcalf", attrs={"id": "table"}, index_col=[0, 1]
-        )[0]
+        df = flavor_read_html(banklist_data, match="Metcalf", attrs={"id": "table"}, index_col=[0, 1])[0]
         assert isinstance(df.index, MultiIndex)
 
     @pytest.mark.slow
@@ -696,9 +677,7 @@ class TestReadHtml:
 
         expected1 = DataFrame(data=[["bodyA", "bodyB"]], columns=["A", "B"])
 
-        expected2 = DataFrame(
-            data=[["bodyA", "bodyB"], ["footA", "footB"]], columns=["A", "B"]
-        )
+        expected2 = DataFrame(data=[["bodyA", "bodyB"], ["footA", "footB"]], columns=["A", "B"])
 
         data1 = data_template.format(footer="")
         data2 = data_template.format(footer="<tr><td>footA</td><th>footB</th></tr>")
@@ -756,8 +735,7 @@ class TestReadHtml:
             "R-G Premier Bank of Puerto Rico En Espanol",
             "Eurobank En Espanol",
             "Sanderson State Bank En Espanol",
-            "Washington Mutual Bank (Including its subsidiary Washington "
-            "Mutual Bank FSB)",
+            "Washington Mutual Bank (Including its subsidiary Washington " "Mutual Bank FSB)",
             "Silver State Bank En Espanol",
             "AmTrade International Bank En Espanol",
             "Hamilton Bank, NA En Espanol",
@@ -789,9 +767,7 @@ class TestReadHtml:
             raw_text = f.read()
 
         assert gc in raw_text
-        df = flavor_read_html(
-            banklist_data, match="Gold Canyon", attrs={"id": "table"}
-        )[0]
+        df = flavor_read_html(banklist_data, match="Gold Canyon", attrs={"id": "table"})[0]
         assert gc in df.to_string()
 
     def test_different_number_of_cols(self, flavor_read_html):
@@ -920,9 +896,7 @@ class TestReadHtml:
             header=0,
         )[0]
 
-        expected = DataFrame(
-            data=[["A", "B", "B", "Z", "C"]], columns=["X", "X.1", "Y", "Z", "W"]
-        )
+        expected = DataFrame(data=[["A", "B", "B", "Z", "C"]], columns=["X", "X.1", "Y", "Z", "W"])
 
         tm.assert_frame_equal(result, expected)
 
@@ -952,9 +926,7 @@ class TestReadHtml:
             header=0,
         )[0]
 
-        expected = DataFrame(
-            data=[["A", "B", "B", "B", "D"]], columns=["A", "B", "B.1", "B.2", "C"]
-        )
+        expected = DataFrame(data=[["A", "B", "B", "B", "D"]], columns=["A", "B", "B.1", "B.2", "C"])
 
         tm.assert_frame_equal(result, expected)
 
@@ -1052,9 +1024,7 @@ class TestReadHtml:
                 "time": raw_dates.map(lambda x: str(x.time())),
             }
         )
-        res = flavor_read_html(
-            StringIO(df.to_html()), parse_dates={"datetime": [1, 2]}, index_col=1
-        )
+        res = flavor_read_html(StringIO(df.to_html()), parse_dates={"datetime": [1, 2]}, index_col=1)
         newdf = DataFrame({"datetime": raw_dates})
         tm.assert_frame_equal(newdf, res[0])
 
@@ -1095,9 +1065,7 @@ class TestReadHtml:
         )
         expected = DataFrame(
             [["a", "b"]],
-            columns=MultiIndex.from_tuples(
-                [("Unnamed: 0_level_0", "A"), ("Unnamed: 1_level_0", "B")]
-            ),
+            columns=MultiIndex.from_tuples([("Unnamed: 0_level_0", "A"), ("Unnamed: 1_level_0", "B")]),
         )
         tm.assert_frame_equal(result[0], expected)
 
@@ -1271,9 +1239,7 @@ class TestReadHtml:
 
     def test_multiple_header_rows(self, flavor_read_html):
         # Issue #13434
-        expected_df = DataFrame(
-            data=[("Hillary", 68, "D"), ("Bernie", 74, "D"), ("Donald", 69, "R")]
-        )
+        expected_df = DataFrame(data=[("Hillary", 68, "D"), ("Bernie", 74, "D"), ("Donald", 69, "R")])
         expected_df.columns = [
             ["Unnamed: 0_level_0", "Age", "Party"],
             ["Name", "Unnamed: 1_level_1", "Unnamed: 2_level_1"],
@@ -1375,16 +1341,13 @@ class TestReadHtml:
             </tr>
         </table>
         """
-        result = flavor_read_html(StringIO(html_table), displayed_only=displayed_only)[
-            0
-        ]
+        result = flavor_read_html(StringIO(html_table), displayed_only=displayed_only)[0]
         expected = DataFrame({"A": [1, 4], "B": [2, 5]})
         tm.assert_frame_equal(result, expected)
 
     @td.skip_if_windows()
     @pytest.mark.filterwarnings(
-        "ignore:You provided Unicode markup but also provided a value for "
-        "from_encoding.*:UserWarning"
+        "ignore:You provided Unicode markup but also provided a value for " "from_encoding.*:UserWarning"
     )
     def test_encode(self, html_encoding_file, flavor_read_html):
         base_path = os.path.basename(html_encoding_file)
@@ -1393,18 +1356,12 @@ class TestReadHtml:
 
         try:
             with open(html_encoding_file, "rb") as fobj:
-                from_string = flavor_read_html(
-                    fobj.read(), encoding=encoding, index_col=0
-                ).pop()
+                from_string = flavor_read_html(fobj.read(), encoding=encoding, index_col=0).pop()
 
             with open(html_encoding_file, "rb") as fobj:
-                from_file_like = flavor_read_html(
-                    BytesIO(fobj.read()), encoding=encoding, index_col=0
-                ).pop()
+                from_file_like = flavor_read_html(BytesIO(fobj.read()), encoding=encoding, index_col=0).pop()
 
-            from_filename = flavor_read_html(
-                html_encoding_file, encoding=encoding, index_col=0
-            ).pop()
+            from_filename = flavor_read_html(html_encoding_file, encoding=encoding, index_col=0).pop()
             tm.assert_frame_equal(from_string, from_file_like)
             tm.assert_frame_equal(from_string, from_filename)
         except Exception:
@@ -1454,8 +1411,7 @@ class TestReadHtml:
                 return True
 
             # GH 49036 pylint checks for presence of __next__ for iterators
-            def __next__(self):
-                ...
+            def __next__(self): ...
 
             def __iter__(self) -> Iterator:
                 # `is_file_like` depends on the presence of
@@ -1592,10 +1548,7 @@ class TestReadHtml:
         tm.assert_frame_equal(result, expected)
 
     def test_extract_links_bad(self, spam_data):
-        msg = (
-            "`extract_links` must be one of "
-            '{None, "header", "footer", "body", "all"}, got "incorrect"'
-        )
+        msg = "`extract_links` must be one of " '{None, "header", "footer", "body", "all"}, got "incorrect"'
         with pytest.raises(ValueError, match=msg):
             read_html(spam_data, extract_links="incorrect")
 
@@ -1615,10 +1568,7 @@ class TestReadHtml:
         tm.assert_frame_equal(result, expected)
 
     def test_invalid_dtype_backend(self):
-        msg = (
-            "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-            "'pyarrow' are allowed."
-        )
+        msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
         with pytest.raises(ValueError, match=msg):
             read_html("test", dtype_backend="numpy")
 

@@ -89,14 +89,8 @@ class MySQLExecutionContext_mysqlconnector(MySQLExecutionContext):
 
 
 class MySQLCompiler_mysqlconnector(MySQLCompiler):
-    def visit_mod_binary(
-        self, binary: BinaryExpression[Any], operator: Any, **kw: Any
-    ) -> str:
-        return (
-            self.process(binary.left, **kw)
-            + " % "
-            + self.process(binary.right, **kw)
-        )
+    def visit_mod_binary(self, binary: BinaryExpression[Any], operator: Any, **kw: Any) -> str:
+        return self.process(binary.left, **kw) + " % " + self.process(binary.right, **kw)
 
 
 class IdentifierPreparerCommon_mysqlconnector:
@@ -116,15 +110,11 @@ class IdentifierPreparerCommon_mysqlconnector:
         return value
 
 
-class MySQLIdentifierPreparer_mysqlconnector(
-    IdentifierPreparerCommon_mysqlconnector, MySQLIdentifierPreparer
-):
+class MySQLIdentifierPreparer_mysqlconnector(IdentifierPreparerCommon_mysqlconnector, MySQLIdentifierPreparer):
     pass
 
 
-class MariaDBIdentifierPreparer_mysqlconnector(
-    IdentifierPreparerCommon_mysqlconnector, MariaDBIdentifierPreparer
-):
+class MariaDBIdentifierPreparer_mysqlconnector(IdentifierPreparerCommon_mysqlconnector, MariaDBIdentifierPreparer):
     pass
 
 
@@ -154,9 +144,7 @@ class MySQLDialect_mysqlconnector(MySQLDialect):
 
     execution_ctx_cls = MySQLExecutionContext_mysqlconnector
 
-    preparer: type[MySQLIdentifierPreparer] = (
-        MySQLIdentifierPreparer_mysqlconnector
-    )
+    preparer: type[MySQLIdentifierPreparer] = MySQLIdentifierPreparer_mysqlconnector
 
     colspecs = util.update_copy(MySQLDialect.colspecs, {BIT: _myconnpyBIT})
 
@@ -207,9 +195,7 @@ class MySQLDialect_mysqlconnector(MySQLDialect):
 
                 ClientFlag = constants.ClientFlag
 
-                client_flags = opts.get(
-                    "client_flags", ClientFlag.get_default()
-                )
+                client_flags = opts.get("client_flags", ClientFlag.get_default())
                 client_flags |= ClientFlag.FOUND_ROWS
                 opts["client_flags"] = client_flags
             except Exception:
@@ -266,9 +252,7 @@ class MySQLDialect_mysqlconnector(MySQLDialect):
     ) -> Optional[Row[Tuple[Any, ...]]]:
         return rp.fetchone()
 
-    def get_isolation_level_values(
-        self, dbapi_conn: DBAPIConnection
-    ) -> Sequence[IsolationLevel]:
+    def get_isolation_level_values(self, dbapi_conn: DBAPIConnection) -> Sequence[IsolationLevel]:
         return (
             "SERIALIZABLE",
             "READ UNCOMMITTED",
@@ -280,9 +264,7 @@ class MySQLDialect_mysqlconnector(MySQLDialect):
     def detect_autocommit_setting(self, dbapi_conn: DBAPIConnection) -> bool:
         return bool(dbapi_conn.autocommit)
 
-    def set_isolation_level(
-        self, dbapi_connection: DBAPIConnection, level: IsolationLevel
-    ) -> None:
+    def set_isolation_level(self, dbapi_connection: DBAPIConnection, level: IsolationLevel) -> None:
         if level == "AUTOCOMMIT":
             dbapi_connection.autocommit = True
         else:
@@ -290,9 +272,7 @@ class MySQLDialect_mysqlconnector(MySQLDialect):
             super().set_isolation_level(dbapi_connection, level)
 
 
-class MariaDBDialect_mysqlconnector(
-    MariaDBDialect, MySQLDialect_mysqlconnector
-):
+class MariaDBDialect_mysqlconnector(MariaDBDialect, MySQLDialect_mysqlconnector):
     supports_statement_cache = True
     _allows_uuid_binds = False
     preparer = MariaDBIdentifierPreparer_mysqlconnector

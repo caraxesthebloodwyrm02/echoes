@@ -58,9 +58,7 @@ def test_categorical_dtype(data, data_categorical):
     assert desc_cat["is_ordered"] == data[1]
     assert desc_cat["is_dictionary"] is True
     assert isinstance(desc_cat["categories"], PandasColumn)
-    tm.assert_series_equal(
-        desc_cat["categories"]._col, pd.Series(["a", "d", "e", "s", "t"])
-    )
+    tm.assert_series_equal(desc_cat["categories"]._col, pd.Series(["a", "d", "e", "s", "t"]))
 
     tm.assert_frame_equal(df, from_dataframe(df.__dataframe__()))
 
@@ -73,9 +71,7 @@ def test_categorical_pyarrow():
     table = pa.table({"weekday": pa.array(arr).dictionary_encode()})
     exchange_df = table.__dataframe__()
     result = from_dataframe(exchange_df)
-    weekday = pd.Categorical(
-        arr, categories=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
-    )
+    weekday = pd.Categorical(arr, categories=["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"])
     expected = pd.DataFrame({"weekday": weekday})
     tm.assert_frame_equal(result, expected)
 
@@ -149,10 +145,7 @@ def test_bitmasks_pyarrow(offset, length, expected_values):
 )
 def test_dataframe(data):
     NCOLS, NROWS = 10, 20
-    data = {
-        f"col{int((i - NCOLS / 2) % NCOLS + 1)}": [data() for _ in range(NROWS)]
-        for i in range(NCOLS)
-    }
+    data = {f"col{int((i - NCOLS / 2) % NCOLS + 1)}": [data() for _ in range(NROWS)] for i in range(NCOLS)}
     df = pd.DataFrame(data)
 
     df2 = df.__dataframe__()
@@ -185,9 +178,7 @@ def test_missing_from_masked():
     rng = np.random.default_rng(2)
     dict_null = {col: rng.integers(low=0, high=len(df)) for col in df.columns}
     for col, num_nulls in dict_null.items():
-        null_idx = df.index[
-            rng.choice(np.arange(len(df)), size=num_nulls, replace=False)
-        ]
+        null_idx = df.index[rng.choice(np.arange(len(df)), size=num_nulls, replace=False)]
         df.loc[null_idx, col] = None
 
     df2 = df.__dataframe__()
@@ -308,9 +299,7 @@ def test_multi_chunk_column() -> None:
     ser = pd.Series([1, 2, None], dtype="Int64[pyarrow]")
     df = pd.concat([ser, ser], ignore_index=True).to_frame("a")
     df_orig = df.copy()
-    with pytest.raises(
-        RuntimeError, match="Found multi-chunk pyarrow array, but `allow_copy` is False"
-    ):
+    with pytest.raises(RuntimeError, match="Found multi-chunk pyarrow array, but `allow_copy` is False"):
         pd.api.interchange.from_dataframe(df.__dataframe__(allow_copy=False))
     result = pd.api.interchange.from_dataframe(df.__dataframe__(allow_copy=True))
     # Interchange protocol defaults to creating numpy-backed columns, so currently this
@@ -352,9 +341,7 @@ def test_timestamp_ns_pyarrow():
 @pytest.mark.parametrize("unit", ["s", "ms", "us", "ns"])
 def test_datetimetzdtype(tz, unit):
     # GH 54239
-    tz_data = (
-        pd.date_range("2018-01-01", periods=5, freq="D").tz_localize(tz).as_unit(unit)
-    )
+    tz_data = pd.date_range("2018-01-01", periods=5, freq="D").tz_localize(tz).as_unit(unit)
     df = pd.DataFrame({"ts_tz": tz_data})
     tm.assert_frame_equal(df, from_dataframe(df.__dataframe__()))
 
@@ -368,8 +355,7 @@ def test_interchange_from_non_pandas_tz_aware(request):
         mark = pytest.mark.xfail(
             raises=pa.ArrowInvalid,
             reason=(
-                "TODO: Set ARROW_TIMEZONE_DATABASE environment variable "
-                "on CI to path to the tzdata for pyarrow."
+                "TODO: Set ARROW_TIMEZONE_DATABASE environment variable " "on CI to path to the tzdata for pyarrow."
             ),
         )
         request.applymarker(mark)
@@ -494,9 +480,7 @@ def test_non_str_names_w_duplicates():
         ),
     ],
 )
-def test_pandas_nullable_with_missing_values(
-    data: list, dtype: str, expected_dtype: str
-) -> None:
+def test_pandas_nullable_with_missing_values(data: list, dtype: str, expected_dtype: str) -> None:
     # https://github.com/pandas-dev/pandas/issues/57643
     # https://github.com/pandas-dev/pandas/issues/57664
     pa = pytest.importorskip("pyarrow", "11.0.0")
@@ -561,9 +545,7 @@ def test_pandas_nullable_with_missing_values(
         ),
     ],
 )
-def test_pandas_nullable_without_missing_values(
-    data: list, dtype: str, expected_dtype: str
-) -> None:
+def test_pandas_nullable_without_missing_values(data: list, dtype: str, expected_dtype: str) -> None:
     # https://github.com/pandas-dev/pandas/issues/57643
     pa = pytest.importorskip("pyarrow", "11.0.0")
     import pyarrow.interchange as pai

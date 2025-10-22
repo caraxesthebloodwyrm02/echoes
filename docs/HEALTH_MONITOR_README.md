@@ -30,7 +30,7 @@ GET /api/health
 ```
 Detailed health status for all platforms including system metrics.
 
-**Timeout:** 10 seconds  
+**Timeout:** 10 seconds
 **Response (200 OK):**
 ```json
 {
@@ -79,7 +79,7 @@ GET /api/health/simple
 ```
 Lightweight check for load balancers (verifies Turbo platform only).
 
-**Timeout:** 5 seconds  
+**Timeout:** 5 seconds
 **Response (200 OK):**
 ```json
 {
@@ -330,6 +330,6 @@ For issues or questions:
 
 ---
 
-**Status:** Production-ready ✅  
-**Last Updated:** 2025-10-18  
+**Status:** Production-ready ✅
+**Last Updated:** 2025-10-18
 **Maintainer:** Unified Platform Team

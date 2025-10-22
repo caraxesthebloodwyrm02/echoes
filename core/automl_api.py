@@ -65,9 +65,7 @@ class AutoMLRequest(BaseModel):
     max_models: int = Field(10, description="Maximum number of models to evaluate")
     max_time_seconds: int = Field(3600, description="Maximum execution time in seconds")
     cv_folds: int = Field(5, description="Number of cross-validation folds")
-    enable_hyperparameter_tuning: bool = Field(
-        True, description="Enable hyperparameter tuning"
-    )
+    enable_hyperparameter_tuning: bool = Field(True, description="Enable hyperparameter tuning")
     dataset_info: Optional[Dict[str, Any]] = Field(None, description="Dataset metadata")
 
 
@@ -136,9 +134,7 @@ async def run_automl(
             raise HTTPException(status_code=400, detail="Dataset is empty")
 
         if len(dataset.columns) < 2:
-            raise HTTPException(
-                status_code=400, detail="Dataset must have at least 2 columns"
-            )
+            raise HTTPException(status_code=400, detail="Dataset must have at least 2 columns")
 
         # Prepare data
         feature_cols = [col for col in dataset.columns if col != dataset.columns[-1]]
@@ -317,11 +313,7 @@ async def get_automl_presets():
     for name, description in preset_descriptions.items():
         try:
             config = config_manager.get_preset(name)
-            presets.append(
-                PresetConfig(
-                    name=name, description=description, config=config.to_dict()
-                )
-            )
+            presets.append(PresetConfig(name=name, description=description, config=config.to_dict()))
         except Exception as e:
             logger.warning(f"Failed to load preset {name}: {e}")
 
@@ -369,11 +361,7 @@ async def get_model_info(model_name: str):
 
         # Get latest active version
         active_versions = [v for v in history if v.get("status") == "active"]
-        latest_version = (
-            max(active_versions, key=lambda x: x["created_at"])
-            if active_versions
-            else history[-1]
-        )
+        latest_version = max(active_versions, key=lambda x: x["created_at"]) if active_versions else history[-1]
 
         return {
             "model_name": model_name,
@@ -399,9 +387,7 @@ async def deploy_model(model_name: str, version: Optional[str] = None):
 
         # Update model status to active
         version_id = f"{model_name}_latest" if version is None else version
-        model_registry.update_model_status(
-            model_name, version_id, "active", "Deployed via API"
-        )
+        model_registry.update_model_status(model_name, version_id, "active", "Deployed via API")
 
         return {
             "status": "success",
@@ -425,8 +411,6 @@ async def automl_health_check():
             "orchestrator": "available",
             "model_registry": "available",
             "config_manager": "available",
-            "privacy_middleware": "available"
-            if privacy_middleware
-            else "not_available",
+            "privacy_middleware": "available" if privacy_middleware else "not_available",
         },
     }

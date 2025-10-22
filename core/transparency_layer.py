@@ -48,9 +48,7 @@ class TransparencyReport:
             "system_name": "Ethics-Based Bias Detection Framework",
             "version": "1.0.0",
             "current_date": datetime.now().isoformat(),
-            "evolution_phase": current_phase.name
-            if current_phase
-            else "Not initialized",
+            "evolution_phase": current_phase.name if current_phase else "Not initialized",
             "active_principles": list(CORE_PRINCIPLES.keys()),
             "principle_count": len(CORE_PRINCIPLES),
             "societal_models_integrated": ["Scandinavian", "German", "French"],
@@ -64,9 +62,7 @@ class TransparencyReport:
             "severity_distribution": self._analyze_severity(detection_results),
             "affected_groups": detection_results.get("affected_groups", []),
             "mitigation_strategies": detection_results.get("mitigation_strategies", []),
-            "ethical_compliance_score": self._calculate_compliance_score(
-                detection_results
-            ),
+            "ethical_compliance_score": self._calculate_compliance_score(detection_results),
         }
 
     def _analyze_severity(self, results: Dict) -> Dict:
@@ -118,9 +114,9 @@ class TransparencyReport:
 """
 
         report += "## Audit Trail (Recent Entries)\n"
-        recent_entries = TRANSPARENCY_LEDGER.get_audit_trail(
-            start_date=datetime.now() - timedelta(days=30)
-        )[:5]  # Last 5 entries
+        recent_entries = TRANSPARENCY_LEDGER.get_audit_trail(start_date=datetime.now() - timedelta(days=30))[
+            :5
+        ]  # Last 5 entries
 
         if recent_entries:
             for entry in recent_entries:
@@ -154,15 +150,11 @@ class ExplanationEngine:
             mitigation=bias_info.get("mitigation", "review required"),
         )
 
-    def explain_principle_check(
-        self, principle_name: str, is_compliant: bool, details: str
-    ) -> str:
+    def explain_principle_check(self, principle_name: str, is_compliant: bool, details: str) -> str:
         """Explain a principle compliance check."""
         principle = get_principle(principle_name)
         if is_compliant:
-            return (
-                f"The {principle.name} principle is being followed correctly. {details}"
-            )
+            return f"The {principle.name} principle is being followed correctly. {details}"
         else:
             template = self.explanation_templates["principle_violation"]
             return template.format(
@@ -171,9 +163,7 @@ class ExplanationEngine:
                 action="Implement corrective measures as per guidelines",
             )
 
-    def explain_system_decision(
-        self, decision: str, factors: List[str], relevant_principles: List[str]
-    ) -> str:
+    def explain_system_decision(self, decision: str, factors: List[str], relevant_principles: List[str]) -> str:
         """Explain a system-level decision."""
         template = self.explanation_templates["system_decision"]
         return template.format(
@@ -194,11 +184,7 @@ class PublicInterface:
         """Get data suitable for public dashboard display."""
         return {
             "system_overview": self.report_generator.generate_system_overview(),
-            "recent_activity": len(
-                TRANSPARENCY_LEDGER.get_audit_trail(
-                    start_date=datetime.now() - timedelta(days=7)
-                )
-            ),
+            "recent_activity": len(TRANSPARENCY_LEDGER.get_audit_trail(start_date=datetime.now() - timedelta(days=7))),
             "compliance_score": 85.0,  # Placeholder - would be calculated
             "last_updated": datetime.now().isoformat(),
         }
@@ -210,28 +196,20 @@ class PublicInterface:
             "public_inquiry",
             f"Public inquiry received: {inquiry[:100]}...",
             "External stakeholder engagement",
-            ["public_interface", contact_info]
-            if contact_info
-            else ["public_interface"],
+            ["public_interface", contact_info] if contact_info else ["public_interface"],
         )
 
         # Generate response
-        response = (
-            "Thank you for your inquiry about our ethics-based bias detection system. "
-        )
+        response = "Thank you for your inquiry about our ethics-based bias detection system. "
         response += "We are committed to transparency and will review your question. "
-        response += (
-            "For detailed information, please refer to our full transparency report."
-        )
+        response += "For detailed information, please refer to our full transparency report."
 
         return response
 
     def get_explanation_for_query(self, query_type: str, **kwargs) -> str:
         """Get explanations for specific queries."""
         if query_type == "bias_detection":
-            return self.explanation_engine.explain_bias_detection(
-                kwargs.get("bias_info", {})
-            )
+            return self.explanation_engine.explain_bias_detection(kwargs.get("bias_info", {}))
         elif query_type == "principle_check":
             return self.explanation_engine.explain_principle_check(
                 kwargs.get("principle_name", ""),

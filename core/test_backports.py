@@ -26,8 +26,7 @@ def test_concurrency_safe_rename(tmpdir, dst_content, backend):
         dst_path.write(dst_content)
 
     Parallel(n_jobs=4, backend=backend)(
-        delayed(concurrency_safe_rename)(src_path.strpath, dst_path.strpath)
-        for src_path in src_paths
+        delayed(concurrency_safe_rename)(src_path.strpath, dst_path.strpath) for src_path in src_paths
     )
     assert dst_path.exists()
     assert dst_path.read() == "src content"

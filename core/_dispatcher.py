@@ -53,10 +53,7 @@ def sqeuclidean_row_norms(X, num_threads):
     if X.dtype == np.float32:
         return np.asarray(_sqeuclidean_row_norms32(X, num_threads))
 
-    raise ValueError(
-        "Only float64 or float32 datasets are supported at this time, "
-        f"got: X.dtype={X.dtype}."
-    )
+    raise ValueError("Only float64 or float32 datasets are supported at this time, " f"got: X.dtype={X.dtype}.")
 
 
 class BaseDistancesReductionDispatcher:
@@ -109,12 +106,7 @@ class BaseDistancesReductionDispatcher:
         # FIXME: the current Cython implementation is too slow for a large number of
         # features. We temporarily disable it to fallback on SciPy's implementation.
         # See: https://github.com/scikit-learn/scikit-learn/issues/28191
-        if (
-            issparse(X)
-            and issparse(Y)
-            and isinstance(metric, str)
-            and "euclidean" in metric
-        ):
+        if issparse(X) and issparse(Y) and isinstance(metric, str) and "euclidean" in metric:
             return False
 
         def is_numpy_c_ordered(X):
@@ -580,8 +572,7 @@ class ArgKminClassMode(BaseDistancesReductionDispatcher):
         """
         if weights not in {"uniform", "distance"}:
             raise ValueError(
-                "Only the 'uniform' or 'distance' weights options are supported"
-                f" at this time. Got: {weights=}."
+                "Only the 'uniform' or 'distance' weights options are supported" f" at this time. Got: {weights=}."
             )
         if X.dtype == Y.dtype == np.float64:
             return ArgKminClassMode64.compute(
@@ -728,8 +719,7 @@ class RadiusNeighborsClassMode(BaseDistancesReductionDispatcher):
         """
         if weights not in {"uniform", "distance"}:
             raise ValueError(
-                "Only the 'uniform' or 'distance' weights options are supported"
-                f" at this time. Got: {weights=}."
+                "Only the 'uniform' or 'distance' weights options are supported" f" at this time. Got: {weights=}."
             )
         if X.dtype == Y.dtype == np.float64:
             return RadiusNeighborsClassMode64.compute(

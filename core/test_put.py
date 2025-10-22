@@ -96,9 +96,7 @@ def test_api_default_format(tmp_path, setup_path):
 
 def test_put(setup_path):
     with ensure_clean_store(setup_path) as store:
-        ts = Series(
-            np.arange(10, dtype=np.float64), index=date_range("2020-01-01", periods=10)
-        )
+        ts = Series(np.arange(10, dtype=np.float64), index=date_range("2020-01-01", periods=10))
         df = DataFrame(
             np.random.default_rng(2).standard_normal((20, 4)),
             columns=Index(list("ABCD")),
@@ -145,8 +143,7 @@ def test_put_string_index(setup_path):
 
         # mixed length
         index = Index(
-            ["abcdefghijklmnopqrstuvwxyz1234567890"]
-            + [f"I am a very long string index: {i}" for i in range(20)]
+            ["abcdefghijklmnopqrstuvwxyz1234567890"] + [f"I am a very long string index: {i}" for i in range(20)]
         )
         s = Series(np.arange(21), index=index)
         df = DataFrame({"A": s, "B": s})
@@ -291,9 +288,7 @@ def test_column_multiindex(setup_path, using_infer_string):
     # GH 4710
     # recreate multi-indexes properly
 
-    index = MultiIndex.from_tuples(
-        [("A", "a"), ("A", "b"), ("B", "a"), ("B", "b")], names=["first", "second"]
-    )
+    index = MultiIndex.from_tuples([("A", "a"), ("A", "b"), ("B", "a"), ("B", "b")], names=["first", "second"])
     df = DataFrame(np.arange(12).reshape(3, 4), columns=index)
     expected = df.set_axis(df.index.to_numpy())
 
@@ -305,14 +300,10 @@ def test_column_multiindex(setup_path, using_infer_string):
                 store.put("df", df)
             return
         store.put("df", df)
-        tm.assert_frame_equal(
-            store["df"], expected, check_index_type=True, check_column_type=True
-        )
+        tm.assert_frame_equal(store["df"], expected, check_index_type=True, check_column_type=True)
 
         store.put("df1", df, format="table")
-        tm.assert_frame_equal(
-            store["df1"], expected, check_index_type=True, check_column_type=True
-        )
+        tm.assert_frame_equal(store["df1"], expected, check_index_type=True, check_column_type=True)
 
         msg = re.escape("cannot use a multi-index on axis [1] with data_columns ['A']")
         with pytest.raises(ValueError, match=msg):
@@ -334,9 +325,7 @@ def test_column_multiindex(setup_path, using_infer_string):
 
     with ensure_clean_store(setup_path) as store:
         store.put("df1", df, format="table")
-        tm.assert_frame_equal(
-            store["df1"], expected, check_index_type=True, check_column_type=True
-        )
+        tm.assert_frame_equal(store["df1"], expected, check_index_type=True, check_column_type=True)
 
 
 def test_store_multiindex(setup_path):

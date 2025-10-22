@@ -24,9 +24,7 @@ class PolarTransform(mtransforms.Transform):
     def inverted(self) -> InvertedPolarTransform: ...
 
 class PolarAffine(mtransforms.Affine2DBase):
-    def __init__(
-        self, scale_transform: mtransforms.Transform, limits: mtransforms.BboxBase
-    ) -> None: ...
+    def __init__(self, scale_transform: mtransforms.Transform, limits: mtransforms.BboxBase) -> None: ...
 
 class InvertedPolarTransform(mtransforms.Transform):
     input_dims: int
@@ -82,12 +80,12 @@ class _WedgeBbox(mtransforms.Bbox):
 
 class PolarAxes(Axes):
 
-    PolarTransform: ClassVar[type] = PolarTransform
-    PolarAffine: ClassVar[type] = PolarAffine
-    InvertedPolarTransform: ClassVar[type] = InvertedPolarTransform
-    ThetaFormatter: ClassVar[type] = ThetaFormatter
-    RadialLocator: ClassVar[type] = RadialLocator
-    ThetaLocator: ClassVar[type] = ThetaLocator
+    PolarTransform: ClassVar[type] = ...
+    PolarAffine: ClassVar[type] = ...
+    InvertedPolarTransform: ClassVar[type] = ...
+    ThetaFormatter: ClassVar[type] = ...
+    RadialLocator: ClassVar[type] = ...
+    ThetaLocator: ClassVar[type] = ...
 
     name: str
     use_sticky_edges: bool
@@ -99,36 +97,24 @@ class PolarAxes(Axes):
         rlabel_position: float = ...,
         **kwargs,
     ) -> None: ...
-    def get_xaxis_transform(
-        self, which: Literal["tick1", "tick2", "grid"] = ...
-    ) -> mtransforms.Transform: ...
-    def get_xaxis_text1_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_xaxis_transform(self, which: Literal["tick1", "tick2", "grid"] = ...) -> mtransforms.Transform: ...
+    def get_xaxis_text1_transform(self, pad: float) -> tuple[
         mtransforms.Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_xaxis_text2_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_xaxis_text2_transform(self, pad: float) -> tuple[
         mtransforms.Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_transform(
-        self, which: Literal["tick1", "tick2", "grid"] = ...
-    ) -> mtransforms.Transform: ...
-    def get_yaxis_text1_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_yaxis_transform(self, which: Literal["tick1", "tick2", "grid"] = ...) -> mtransforms.Transform: ...
+    def get_yaxis_text1_transform(self, pad: float) -> tuple[
         mtransforms.Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_text2_transform(
-        self, pad: float
-    ) -> tuple[
+    def get_yaxis_text2_transform(self, pad: float) -> tuple[
         mtransforms.Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],

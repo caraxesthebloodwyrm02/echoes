@@ -33,9 +33,7 @@ api_key = os.getenv("OPENAI_API_KEY") or os.getenv("OPENAI_API_KEY_ECHOES")
 project_name = os.getenv("PROJECT", "ECHOES")
 
 if not api_key:
-    raise EnvironmentError(
-        "❌ Missing API key. Add OPENAI_API_KEY or OPENAI_API_KEY_ECHOES to .env"
-    )
+    raise EnvironmentError("❌ Missing API key. Add OPENAI_API_KEY or OPENAI_API_KEY_ECHOES to .env")
 
 client = OpenAI(api_key=api_key)
 
@@ -51,9 +49,7 @@ def safe_api_call(func, *args, **kwargs):
         except Exception as e:
             msg = str(e).lower()
             if "rate limit" in msg or "429" in msg:
-                print(
-                    f"[RATE_LIMIT] Rate limit (attempt {attempt}/5). Waiting {delay}s..."
-                )
+                print(f"[RATE_LIMIT] Rate limit (attempt {attempt}/5). Waiting {delay}s...")
                 time.sleep(delay + random.uniform(0, 3))  # jitter
                 delay = min(delay * 2, 90)
                 continue
@@ -233,9 +229,7 @@ def run_codebase_audit():
 
     # Save to file
     os.makedirs("reports", exist_ok=True)
-    report_filename = (
-        f"reports/codebase_audit_{project_name.lower()}_{int(time.time())}.txt"
-    )
+    report_filename = f"reports/codebase_audit_{project_name.lower()}_{int(time.time())}.txt"
 
     with open(report_filename, "w", encoding="utf-8") as f:
         f.write("ECHOES CODEBASE AUDIT REPORT\n")
@@ -246,26 +240,20 @@ def run_codebase_audit():
         f.write(result)
 
     print(f"\n[SUCCESS] Report saved to {report_filename}")
-    print(
-        f"[STATS] Analysis covered {len(codebase_files)} files with ~{total_lines} lines of code"
-    )
+    print(f"[STATS] Analysis covered {len(codebase_files)} files with ~{total_lines} lines of code")
 
 
 # ==========================================================
 # Main
 # ==========================================================
 if __name__ == "__main__":
-    print(
-        f"[AUDIT] Starting Rate-Limit-Aware Codebase Audit for Project: {project_name}\n"
-    )
+    print(f"[AUDIT] Starting Rate-Limit-Aware Codebase Audit for Project: {project_name}\n")
 
     try:
         if verify_api():
             run_codebase_audit()
         else:
-            print(
-                "[WARNING] Proceeding in best-effort mode due to API verification warning."
-            )
+            print("[WARNING] Proceeding in best-effort mode due to API verification warning.")
             run_codebase_audit()
     except Exception as e:
         print(f"[ERROR] Audit failed: {e}")

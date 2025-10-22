@@ -23,8 +23,8 @@ if TYPE_CHECKING:
 
 logger = logging.getLogger(__name__)
 
-_whitespace_re = re.compile(r'\s+')
-anon_identifier_re = re.compile(r'(@[a-zA-Z0-9_])[a-zA-Z0-9_]*\b')
+_whitespace_re = re.compile(r"\s+")
+anon_identifier_re = re.compile(r"(@[a-zA-Z0-9_])[a-zA-Z0-9_]*\b")
 identifier_re = re.compile(
     r"""
     (   # This 'extends' _anon_identifier_re with the ordinary identifiers,
@@ -36,10 +36,10 @@ identifier_re = re.compile(
     """,
     flags=re.VERBOSE,
 )
-integer_literal_re = re.compile(r'[1-9][0-9]*(\'[0-9]+)*')
-octal_literal_re = re.compile(r'0[0-7]*(\'[0-7]+)*')
-hex_literal_re = re.compile(r'0[xX][0-9a-fA-F]+(\'[0-9a-fA-F]+)*')
-binary_literal_re = re.compile(r'0[bB][01]+(\'[01]+)*')
+integer_literal_re = re.compile(r"[1-9][0-9]*(\'[0-9]+)*")
+octal_literal_re = re.compile(r"0[0-7]*(\'[0-7]+)*")
+hex_literal_re = re.compile(r"0[xX][0-9a-fA-F]+(\'[0-9a-fA-F]+)*")
+binary_literal_re = re.compile(r"0[bB][01]+(\'[01]+)*")
 integers_literal_suffix_re = re.compile(
     r"""
     # unsigned and/or (long) long, in any order, but at least one of them
@@ -69,7 +69,7 @@ float_literal_re = re.compile(
     """,
     flags=re.VERBOSE,
 )
-float_literal_suffix_re = re.compile(r'[fFlL]\b')
+float_literal_suffix_re = re.compile(r"[fFlL]\b")
 # the ending word boundary is important for distinguishing between suffixes and UDLs in C++
 char_literal_re = re.compile(
     r"""
@@ -90,7 +90,7 @@ char_literal_re = re.compile(
 
 
 def verify_description_mode(mode: str) -> None:
-    if mode not in {'lastIsName', 'noneIsName', 'markType', 'markName', 'param', 'udl'}:
+    if mode not in {"lastIsName", "noneIsName", "markType", "markName", "param", "udl"}:
         raise Exception("Description mode '%s' is invalid." % mode)
 
 
@@ -125,8 +125,8 @@ class ASTBaseBase:
 
     def __repr__(self) -> str:
         if repr_string := self._stringify(repr):
-            return f'<{self.__class__.__name__}: {repr_string}>'
-        return f'<{self.__class__.__name__}>'
+            return f"<{self.__class__.__name__}: {repr_string}>"
+        return f"<{self.__class__.__name__}>"
 
 
 ################################################################################
@@ -152,12 +152,12 @@ class ASTCPPAttribute(ASTAttribute):
         return hash(self.arg)
 
     def _stringify(self, transform: StringifyTransform) -> str:
-        return f'[[{self.arg}]]'
+        return f"[[{self.arg}]]"
 
     def describe_signature(self, signode: TextElement) -> None:
-        signode.append(addnodes.desc_sig_punctuation('[[', '[['))
+        signode.append(addnodes.desc_sig_punctuation("[[", "[["))
         signode.append(nodes.Text(self.arg))
-        signode.append(addnodes.desc_sig_punctuation(']]', ']]'))
+        signode.append(addnodes.desc_sig_punctuation("]]", "]]"))
 
 
 class ASTGnuAttribute(ASTBaseBase):
@@ -192,8 +192,8 @@ class ASTGnuAttributeList(ASTAttribute):
         return hash(self.attrs)
 
     def _stringify(self, transform: StringifyTransform) -> str:
-        attrs = ', '.join(map(transform, self.attrs))
-        return f'__attribute__(({attrs}))'
+        attrs = ", ".join(map(transform, self.attrs))
+        return f"__attribute__(({attrs}))"
 
     def describe_signature(self, signode: TextElement) -> None:
         signode.append(nodes.Text(str(self)))
@@ -236,7 +236,7 @@ class ASTParenAttribute(ASTAttribute):
         return hash((self.id, self.arg))
 
     def _stringify(self, transform: StringifyTransform) -> str:
-        return f'{self.id}({self.arg})'
+        return f"{self.id}({self.arg})"
 
     def describe_signature(self, signode: TextElement) -> None:
         signode.append(nodes.Text(str(self)))
@@ -261,7 +261,7 @@ class ASTAttributeList(ASTBaseBase):
         return ASTAttributeList(self.attrs + other.attrs)
 
     def _stringify(self, transform: StringifyTransform) -> str:
-        return ' '.join(map(transform, self.attrs))
+        return " ".join(map(transform, self.attrs))
 
     def describe_signature(self, signode: TextElement) -> None:
         if len(self.attrs) == 0:
@@ -316,21 +316,21 @@ class BaseParser:
     def _make_multi_error(self, errors: list[Any], header: str) -> DefinitionError:
         if len(errors) == 1:
             if len(header) > 0:
-                return DefinitionError(header + '\n' + str(errors[0][0]))
+                return DefinitionError(header + "\n" + str(errors[0][0]))
             else:
                 return DefinitionError(str(errors[0][0]))
-        result = [header, '\n']
+        result = [header, "\n"]
         for e in errors:
             if len(e[1]) > 0:
-                indent = '  '
-                result.extend((e[1], ':\n'))
-                for line in str(e[0]).split('\n'):
+                indent = "  "
+                result.extend((e[1], ":\n"))
+                for line in str(e[0]).split("\n"):
                     if len(line) == 0:
                         continue
-                    result.extend((indent, line, '\n'))
+                    result.extend((indent, line, "\n"))
             else:
                 result.append(str(e[0]))
-        return DefinitionError(''.join(result))
+        return DefinitionError("".join(result))
 
     @property
     def language(self) -> str:
@@ -338,22 +338,22 @@ class BaseParser:
 
     def status(self, msg: str) -> None:
         # for debugging
-        indicator = '-' * self.pos + '^'
-        logger.debug(f'{msg}\n{self.definition}\n{indicator}')  # NoQA: G004
+        indicator = "-" * self.pos + "^"
+        logger.debug(f"{msg}\n{self.definition}\n{indicator}")  # NoQA: G004
 
     def fail(self, msg: str) -> NoReturn:
         errors = []
-        indicator = '-' * self.pos + '^'
+        indicator = "-" * self.pos + "^"
         msg = (
-            f'Invalid {self.language} declaration: {msg} [error at {self.pos}]\n'
-            f'  {self.definition}\n'
-            f'  {indicator}'
+            f"Invalid {self.language} declaration: {msg} [error at {self.pos}]\n"
+            f"  {self.definition}\n"
+            f"  {indicator}"
         )
         exc_main = DefinitionError(msg)
-        errors.append((exc_main, 'Main error'))
-        errors.extend((err, 'Potential other error') for err in self.otherErrors)
+        errors.append((exc_main, "Main error"))
+        errors.extend((err, "Potential other error") for err in self.otherErrors)
         self.otherErrors = []
-        raise self._make_multi_error(errors, '')
+        raise self._make_multi_error(errors, "")
 
     def warn(self, msg: str) -> None:
         logger.warning(msg, location=self.location)
@@ -375,7 +375,7 @@ class BaseParser:
         return False
 
     def skip_word(self, word: str) -> bool:
-        return self.match(re.compile(r'\b%s\b' % re.escape(word)))
+        return self.match(re.compile(r"\b%s\b" % re.escape(word)))
 
     def skip_ws(self) -> bool:
         return self.match(_whitespace_re)
@@ -401,13 +401,13 @@ class BaseParser:
         try:
             return self.definition[self.pos]
         except IndexError:
-            return 'EOF'
+            return "EOF"
 
     @property
     def matched_text(self) -> str:
         if self.last_match is not None:
             return self.last_match.group()
-        return ''
+        return ""
 
     def read_rest(self) -> str:
         rv = self.definition[self.pos :]
@@ -417,11 +417,11 @@ class BaseParser:
     def assert_end(self, *, allowSemicolon: bool = False) -> None:
         self.skip_ws()
         if allowSemicolon:
-            if not self.eof and self.definition[self.pos :] != ';':
-                self.fail('Expected end of definition or ;.')
+            if not self.eof and self.definition[self.pos :] != ";":
+                self.fail("Expected end of definition or ;.")
         else:
             if not self.eof:
-                self.fail('Expected end of definition.')
+                self.fail("Expected end of definition.")
 
     ################################################################################
 
@@ -435,7 +435,7 @@ class BaseParser:
 
     def _parse_balanced_token_seq(self, end: list[str]) -> str:
         # TODO: add handling of string literals and similar
-        brackets = {'(': ')', '[': ']', '{': '}'}
+        brackets = {"(": ")", "[": "]", "{": "}"}
         start_pos = self.pos
         symbols: list[str] = []
         while not self.eof:
@@ -445,36 +445,34 @@ class BaseParser:
                 symbols.append(brackets[self.current_char])
             elif len(symbols) > 0 and self.current_char == symbols[-1]:
                 symbols.pop()
-            elif self.current_char in ')]}':
+            elif self.current_char in ")]}":
                 self.fail("Unexpected '%s' in balanced-token-seq." % self.current_char)
             self.pos += 1
         if self.eof:
-            self.fail(
-                f'Could not find end of balanced-token-seq starting at {start_pos}.'
-            )
+            self.fail(f"Could not find end of balanced-token-seq starting at {start_pos}.")
         return self.definition[start_pos : self.pos]
 
     def _parse_attribute(self) -> ASTAttribute | None:
         self.skip_ws()
         # try C++11 style
         start_pos = self.pos
-        if self.skip_string_and_ws('['):
-            if not self.skip_string('['):
+        if self.skip_string_and_ws("["):
+            if not self.skip_string("["):
                 self.pos = start_pos
             else:
                 # TODO: actually implement the correct grammar
-                arg = self._parse_balanced_token_seq(end=[']'])
-                if not self.skip_string_and_ws(']'):
+                arg = self._parse_balanced_token_seq(end=["]"])
+                if not self.skip_string_and_ws("]"):
                     self.fail("Expected ']' in end of attribute.")
-                if not self.skip_string_and_ws(']'):
+                if not self.skip_string_and_ws("]"):
                     self.fail("Expected ']' in end of attribute after [[...]")
                 return ASTCPPAttribute(arg)
 
         # try GNU style
-        if self.skip_word_and_ws('__attribute__'):
-            if not self.skip_string_and_ws('('):
+        if self.skip_word_and_ws("__attribute__"):
+            if not self.skip_string_and_ws("("):
                 self.fail("Expected '(' after '__attribute__'.")
-            if not self.skip_string_and_ws('('):
+            if not self.skip_string_and_ws("("):
                 self.fail("Expected '(' after '__attribute__('.")
             attrs = []
             while 1:
@@ -482,12 +480,12 @@ class BaseParser:
                     name = self.matched_text
                     exprs = self._parse_paren_expression_list()
                     attrs.append(ASTGnuAttribute(name, exprs))
-                if self.skip_string_and_ws(','):
+                if self.skip_string_and_ws(","):
                     continue
-                if self.skip_string_and_ws(')'):
+                if self.skip_string_and_ws(")"):
                     break
                 self.fail("Expected identifier, ')', or ',' in __attribute__.")
-            if not self.skip_string_and_ws(')'):
+            if not self.skip_string_and_ws(")"):
                 self.fail("Expected ')' after '__attribute__((...)'")
             return ASTGnuAttributeList(attrs)
 
@@ -500,10 +498,10 @@ class BaseParser:
         for id in self.paren_attributes:
             if not self.skip_string_and_ws(id):
                 continue
-            if not self.skip_string('('):
+            if not self.skip_string("("):
                 self.fail("Expected '(' after user-defined paren-attribute.")
-            arg = self._parse_balanced_token_seq(end=[')'])
-            if not self.skip_string(')'):
+            arg = self._parse_balanced_token_seq(end=[")"])
+            if not self.skip_string(")"):
                 self.fail("Expected ')' to end user-defined paren-attribute.")
             return ASTParenAttribute(id, arg)
 

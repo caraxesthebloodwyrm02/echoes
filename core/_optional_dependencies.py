@@ -17,8 +17,7 @@ def check_matplotlib_support(caller_name):
         import matplotlib  # noqa: F401
     except ImportError as e:
         raise ImportError(
-            "{} requires matplotlib. You can install matplotlib with "
-            "`pip install matplotlib`".format(caller_name)
+            "{} requires matplotlib. You can install matplotlib with " "`pip install matplotlib`".format(caller_name)
         ) from e
 
 

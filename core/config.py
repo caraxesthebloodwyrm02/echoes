@@ -51,9 +51,7 @@ class SystemConfig(BaseSettings):
     debug: bool = Field(default=False, env="DEBUG")
 
     # Paths
-    project_root: Path = Field(
-        default_factory=lambda: Path(__file__).parent.parent.parent
-    )
+    project_root: Path = Field(default_factory=lambda: Path(__file__).parent.parent.parent)
     config_dir: Optional[Path] = None
     logs_dir: Optional[Path] = None
 

@@ -49,9 +49,7 @@ def _write_sine_wave(path: Path, duration: float = 1.0, freq: float = 440.0) -> 
     os.getenv("RUN_DIARISATION_INTEGRATION") != "1",
     reason="Set RUN_DIARISATION_INTEGRATION=1 to run diarisation integration test",
 )
-def test_diarisation_real_pipeline(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_diarisation_real_pipeline(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     token = os.getenv("HUGGINGFACE_TOKEN") or os.getenv("DIARIZATION_AUTH_TOKEN")
     if not token:
         pytest.skip("No HuggingFace token provided")
@@ -93,9 +91,7 @@ def test_diarisation_real_pipeline(
         "segments": [{"start": 0.0, "end": 0.5, "text": "hello"}],
         "language": "en",
     }
-    pipeline._whisper_model = SimpleNamespace(
-        transcribe=lambda *args, **kwargs: dummy_result
-    )
+    pipeline._whisper_model = SimpleNamespace(transcribe=lambda *args, **kwargs: dummy_result)
     monkeypatch.setattr(pipeline, "_ensure_whisper", lambda: None)
 
     result = pipeline.transcribe(audio_path)

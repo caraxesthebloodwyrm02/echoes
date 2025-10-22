@@ -37,9 +37,7 @@ class LinThesaurusCorpusReader(CorpusReader):
         super().__init__(root, r"sim[A-Z]\.lsp")
         self._thesaurus = defaultdict(LinThesaurusCorpusReader.__defaultdict_factory)
         self._badscore = badscore
-        for path, encoding, fileid in self.abspaths(
-            include_encoding=True, include_fileid=True
-        ):
+        for path, encoding, fileid in self.abspaths(include_encoding=True, include_fileid=True):
             with open(path) as lin_file:
                 first = True
                 for line in lin_file:
@@ -56,9 +54,7 @@ class LinThesaurusCorpusReader(CorpusReader):
                         split_line = line.split("\t")
                         if len(split_line) == 2:
                             ngram, score = split_line
-                            self._thesaurus[fileid][key][ngram.strip('"')] = float(
-                                score
-                            )
+                            self._thesaurus[fileid][key][ngram.strip('"')] = float(score)
 
     def similarity(self, ngram1, ngram2, fileid=None):
         """
@@ -114,10 +110,7 @@ class LinThesaurusCorpusReader(CorpusReader):
         if fileid:
             return self._thesaurus[fileid][ngram].items()
         else:
-            return [
-                (fileid, self._thesaurus[fileid][ngram].items())
-                for fileid in self._fileids
-            ]
+            return [(fileid, self._thesaurus[fileid][ngram].items()) for fileid in self._fileids]
 
     def synonyms(self, ngram, fileid=None):
         """
@@ -133,10 +126,7 @@ class LinThesaurusCorpusReader(CorpusReader):
         if fileid:
             return self._thesaurus[fileid][ngram].keys()
         else:
-            return [
-                (fileid, self._thesaurus[fileid][ngram].keys())
-                for fileid in self._fileids
-            ]
+            return [(fileid, self._thesaurus[fileid][ngram].keys()) for fileid in self._fileids]
 
     def __contains__(self, ngram):
         """

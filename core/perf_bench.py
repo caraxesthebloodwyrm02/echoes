@@ -65,9 +65,7 @@ def performance_benchmark(context):
     n = int(context.extra_data.get("iterations", 10))
     results = {}
     results["health_get"] = _bench(client, "GET", "/api/health", n=n)
-    results["science_search"] = _bench(
-        client, "POST", "/api/science/biomedical/search", {"query": "test"}, n
-    )
+    results["science_search"] = _bench(client, "POST", "/api/science/biomedical/search", {"query": "test"}, n)
     results["finance_personal"] = _bench(
         client,
         "POST",

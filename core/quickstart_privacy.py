@@ -47,6 +47,4 @@ try:
     results = scan_directory(".", extensions=[".py"])
     print(f"Privacy scan completed. Found {len(results)} potential issues.")
 except ImportError:
-    print(
-        "Privacy scanner not available. Install packages.security to enable scanning."
-    )
+    print("Privacy scanner not available. Install packages.security to enable scanning.")

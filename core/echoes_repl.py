@@ -45,9 +45,7 @@ class EchoesREPL:
                 if user_input.startswith("/"):
                     self._handle_command(user_input)
                 else:
-                    handler = self.commands.get(
-                        self.current_mode, self._handle_main_command
-                    )
+                    handler = self.commands.get(self.current_mode, self._handle_main_command)
                     handler(user_input)
             except (KeyboardInterrupt, EOFError):
                 print("\nGoodbye!")

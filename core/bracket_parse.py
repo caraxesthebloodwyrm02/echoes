@@ -68,10 +68,7 @@ class BracketParseCorpusReader(SyntaxCorpusReader):
             toks = read_regexp_block(stream, start_re=r"^\(")
             # Strip any comments out of the tokens.
             if self._comment_char:
-                toks = [
-                    re.sub("(?m)^%s.*" % re.escape(self._comment_char), "", tok)
-                    for tok in toks
-                ]
+                toks = [re.sub("(?m)^%s.*" % re.escape(self._comment_char), "", tok) for tok in toks]
             return toks
         else:
             assert 0, "bad block type"
@@ -99,9 +96,7 @@ class BracketParseCorpusReader(SyntaxCorpusReader):
                 for n in range(1, 5):
                     try:
                         v = Tree(self._normalize(t + ")" * n))
-                        sys.stderr.write(
-                            "  Recovered by adding %d close " "paren(s)\n" % n
-                        )
+                        sys.stderr.write("  Recovered by adding %d close " "paren(s)\n" % n)
                         return v
                     except ValueError:
                         pass
@@ -113,18 +108,14 @@ class BracketParseCorpusReader(SyntaxCorpusReader):
     def _tag(self, t, tagset=None):
         tagged_sent = [(w, p) for (p, w) in TAGWORD.findall(self._normalize(t))]
         if tagset and tagset != self._tagset:
-            tagged_sent = [
-                (w, map_tag(self._tagset, tagset, p)) for (w, p) in tagged_sent
-            ]
+            tagged_sent = [(w, map_tag(self._tagset, tagset, p)) for (w, p) in tagged_sent]
         return tagged_sent
 
     def _word(self, t):
         return WORD.findall(self._normalize(t))
 
 
-class CategorizedBracketParseCorpusReader(
-    CategorizedCorpusReader, BracketParseCorpusReader
-):
+class CategorizedBracketParseCorpusReader(CategorizedCorpusReader, BracketParseCorpusReader):
     """
     A reader for parsed corpora whose documents are
     divided into categories based on their file identifiers.
@@ -218,15 +209,10 @@ class AlpinoCorpusReader(BracketParseCorpusReader):
         return t
 
     def _tag(self, t, tagset=None):
-        tagged_sent = [
-            (int(o), w, p)
-            for (o, p, w) in SORTTAGWRD.findall(self._normalize(t, ordered=True))
-        ]
+        tagged_sent = [(int(o), w, p) for (o, p, w) in SORTTAGWRD.findall(self._normalize(t, ordered=True))]
         tagged_sent.sort()
         if tagset and tagset != self._tagset:
-            tagged_sent = [
-                (w, map_tag(self._tagset, tagset, p)) for (o, w, p) in tagged_sent
-            ]
+            tagged_sent = [(w, map_tag(self._tagset, tagset, p)) for (o, w, p) in tagged_sent]
         else:
             tagged_sent = [(w, p) for (o, w, p) in tagged_sent]
         return tagged_sent

@@ -153,9 +153,7 @@ class ShiftReduceApp:
         # Grammar view.
         self._prodframe = listframe = Frame(parent)
         self._prodframe.pack(fill="both", side="left", padx=2)
-        self._prodlist_label = Label(
-            self._prodframe, font=self._boldfont, text="Available Reductions"
-        )
+        self._prodlist_label = Label(self._prodframe, font=self._boldfont, text="Available Reductions")
         self._prodlist_label.pack()
         self._prodlist = Listbox(
             self._prodframe,
@@ -264,18 +262,14 @@ class ShiftReduceApp:
         menubar = Menu(parent)
 
         filemenu = Menu(menubar, tearoff=0)
-        filemenu.add_command(
-            label="Reset Parser", underline=0, command=self.reset, accelerator="Del"
-        )
+        filemenu.add_command(label="Reset Parser", underline=0, command=self.reset, accelerator="Del")
         filemenu.add_command(
             label="Print to Postscript",
             underline=0,
             command=self.postscript,
             accelerator="Ctrl-p",
         )
-        filemenu.add_command(
-            label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x"
-        )
+        filemenu.add_command(label="Exit", underline=1, command=self.destroy, accelerator="Ctrl-x")
         menubar.add_cascade(label="File", underline=0, menu=filemenu)
 
         editmenu = Menu(menubar, tearoff=0)
@@ -294,20 +288,12 @@ class ShiftReduceApp:
         menubar.add_cascade(label="Edit", underline=0, menu=editmenu)
 
         rulemenu = Menu(menubar, tearoff=0)
-        rulemenu.add_command(
-            label="Step", underline=1, command=self.step, accelerator="Space"
-        )
+        rulemenu.add_command(label="Step", underline=1, command=self.step, accelerator="Space")
         rulemenu.add_separator()
-        rulemenu.add_command(
-            label="Shift", underline=0, command=self.shift, accelerator="Ctrl-s"
-        )
-        rulemenu.add_command(
-            label="Reduce", underline=0, command=self.reduce, accelerator="Ctrl-r"
-        )
+        rulemenu.add_command(label="Shift", underline=0, command=self.shift, accelerator="Ctrl-s")
+        rulemenu.add_command(label="Reduce", underline=0, command=self.reduce, accelerator="Ctrl-r")
         rulemenu.add_separator()
-        rulemenu.add_command(
-            label="Undo", underline=0, command=self.undo, accelerator="Ctrl-u"
-        )
+        rulemenu.add_command(label="Undo", underline=0, command=self.undo, accelerator="Ctrl-u")
         menubar.add_cascade(label="Apply", underline=0, menu=rulemenu)
 
         viewmenu = Menu(menubar, tearoff=0)
@@ -356,9 +342,7 @@ class ShiftReduceApp:
         menubar.add_cascade(label="View", underline=0, menu=viewmenu)
 
         animatemenu = Menu(menubar, tearoff=0)
-        animatemenu.add_radiobutton(
-            label="No Animation", underline=0, variable=self._animate, value=0
-        )
+        animatemenu.add_radiobutton(label="No Animation", underline=0, variable=self._animate, value=0)
         animatemenu.add_radiobutton(
             label="Slow Animation",
             underline=0,
@@ -384,9 +368,7 @@ class ShiftReduceApp:
 
         helpmenu = Menu(menubar, tearoff=0)
         helpmenu.add_command(label="About", underline=0, command=self.about)
-        helpmenu.add_command(
-            label="Instructions", underline=0, command=self.help, accelerator="F1"
-        )
+        helpmenu.add_command(label="Instructions", underline=0, command=self.help, accelerator="F1")
         menubar.add_cascade(label="Help", underline=0, menu=helpmenu)
 
         parent.config(menu=menubar)
@@ -394,15 +376,11 @@ class ShiftReduceApp:
     def _init_feedback(self, parent):
         self._feedbackframe = feedbackframe = Frame(parent)
         feedbackframe.pack(fill="x", side="bottom", padx=3, pady=3)
-        self._lastoper_label = Label(
-            feedbackframe, text="Last Operation:", font=self._font
-        )
+        self._lastoper_label = Label(feedbackframe, text="Last Operation:", font=self._font)
         self._lastoper_label.pack(side="left")
         lastoperframe = Frame(feedbackframe, relief="sunken", border=1)
         lastoperframe.pack(fill="x", side="right", expand=1, padx=5)
-        self._lastoper1 = Label(
-            lastoperframe, foreground="#007070", background="#f0f0f0", font=self._font
-        )
+        self._lastoper1 = Label(lastoperframe, foreground="#007070", background="#f0f0f0", font=self._font)
         self._lastoper2 = Label(
             lastoperframe,
             anchor="w",
@@ -428,18 +406,12 @@ class ShiftReduceApp:
 
         self._stackwidgets = []
         self._rtextwidgets = []
-        self._titlebar = canvas.create_rectangle(
-            0, 0, 0, 0, fill="#c0f0f0", outline="black"
-        )
+        self._titlebar = canvas.create_rectangle(0, 0, 0, 0, fill="#c0f0f0", outline="black")
         self._exprline = canvas.create_line(0, 0, 0, 0, dash=".")
         self._stacktop = canvas.create_line(0, 0, 0, 0, fill="#408080")
         size = self._size.get() + 4
-        self._stacklabel = TextWidget(
-            canvas, "Stack", color="#004040", font=self._boldfont
-        )
-        self._rtextlabel = TextWidget(
-            canvas, "Remaining Text", color="#004040", font=self._boldfont
-        )
+        self._stacklabel = TextWidget(canvas, "Stack", color="#004040", font=self._boldfont)
+        self._rtextlabel = TextWidget(canvas, "Remaining Text", color="#004040", font=self._boldfont)
         self._cframe.add_widget(self._stacklabel)
         self._cframe.add_widget(self._rtextlabel)
 
@@ -697,9 +669,7 @@ class ShiftReduceApp:
 
     def _toggle_grammar(self, *e):
         if self._show_grammar.get():
-            self._prodframe.pack(
-                fill="both", side="left", padx=2, after=self._feedbackframe
-            )
+            self._prodframe.pack(fill="both", side="left", padx=2, after=self._feedbackframe)
             self._lastoper1["text"] = "Show Grammar"
         else:
             self._prodframe.pack_forget()
@@ -735,9 +705,7 @@ class ShiftReduceApp:
         self._reduce_menu.delete(0, "end")
         for production in productions:
             self._reduce_menu.add_command(label=str(production), command=self.reduce)
-        self._reduce_menu.post(
-            self._canvas.winfo_pointerx(), self._canvas.winfo_pointery()
-        )
+        self._reduce_menu.post(self._canvas.winfo_pointerx(), self._canvas.winfo_pointery())
 
     #########################################
     ##  Animations
@@ -805,9 +773,7 @@ class ShiftReduceApp:
             tok = self._parser.stack()[-1]
             if not isinstance(tok, Tree):
                 raise ValueError()
-            label = TextWidget(
-                self._canvas, str(tok.label()), color="#006060", font=self._boldfont
-            )
+            label = TextWidget(self._canvas, str(tok.label()), color="#006060", font=self._boldfont)
             widget = TreeSegmentWidget(self._canvas, label, widgets, width=2)
             (x1, y1, x2, y2) = self._stacklabel.bbox()
             y = y2 - y1 + 10

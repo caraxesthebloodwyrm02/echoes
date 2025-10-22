@@ -120,9 +120,7 @@ class WekaClassifier(ClassifierI):
             if stderr and not stdout:
                 if "Illegal options: -distribution" in stderr:
                     raise ValueError(
-                        "The installed version of weka does "
-                        "not support probability distribution "
-                        "output."
+                        "The installed version of weka does " "not support probability distribution " "output."
                     )
                 else:
                     raise ValueError("Weka failed to generate output:\n%s" % stderr)
@@ -156,11 +154,7 @@ class WekaClassifier(ClassifierI):
             "error",
             "distribution",
         ]:
-            return [
-                self.parse_weka_distribution(line.split()[-1])
-                for line in lines[1:]
-                if line.strip()
-            ]
+            return [self.parse_weka_distribution(line.split()[-1]) for line in lines[1:] if line.strip()]
 
         # is this safe:?
         elif re.match(r"^0 \w+ [01]\.[0-9]* \?\s*$", lines[0]):
@@ -170,9 +164,7 @@ class WekaClassifier(ClassifierI):
             for line in lines[:10]:
                 print(line)
             raise ValueError(
-                "Unhandled output format -- your version "
-                "of weka may not be supported.\n"
-                "  Header: %s" % lines[0]
+                "Unhandled output format -- your version " "of weka may not be supported.\n" "  Header: %s" % lines[0]
             )
 
     # [xx] full list of classifiers (some may be abstract?):
@@ -313,11 +305,7 @@ class ARFF_Formatter:
     def header_section(self):
         """Returns an ARFF header as a string."""
         # Header comment.
-        s = (
-            "% Weka ARFF file\n"
-            + "% Generated automatically by NLTK\n"
-            + "%% %s\n\n" % time.ctime()
-        )
+        s = "% Weka ARFF file\n" + "% Generated automatically by NLTK\n" + "%% %s\n\n" % time.ctime()
 
         # Relation name
         s += "@RELATION rel\n\n"

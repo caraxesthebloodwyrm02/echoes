@@ -33,13 +33,13 @@ Evaluate interpretability and adaptability effects using the built-in demos and 
 3. Record per-session values: `total_events`, `trajectory.current_direction`, `trajectory.trajectory_health`, velocity, intensity.
 
 ## Analysis Plan
-- Compare means between conditions (preview vs. baseline/no-preview). 
+- Compare means between conditions (preview vs. baseline/no-preview).
 - Track correlation between `trajectory_health` and error proxies (undo/delete frequency).
 - Segment by visualization mode to evaluate modality fit.
 
 ## Findings (template)
 - **Comprehension Speed**: [to fill] s/task; Δ vs. baseline: [to fill]%.
-- **Error Reduction**: corrections/100 edits reduced by [to fill]%. 
+- **Error Reduction**: corrections/100 edits reduced by [to fill]%.
 - **Decision Clarity**: Likert +Δ [to fill].
 - **Mode Fit**: timeline best for [to fill]; heatmap best for [to fill].
 

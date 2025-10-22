@@ -1,4 +1,5 @@
 """Quick verification script"""
+
 from realtime_preview import create_preview_system
 
 print("Creating system...")

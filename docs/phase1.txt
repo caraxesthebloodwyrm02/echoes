@@ -26,7 +26,7 @@ from pathlib import Path
 def test_d_drive_access():
     """Verify D:\ engines are importable"""
     sys.path.insert(0, "D:/engines")
-    
+
     try:
         from insights.bias import BiasPatternDetector
         from knowledge.alien_vault_delivery import AlienVault
@@ -114,22 +114,22 @@ sys.path.insert(0, str(D_DRIVE_ROOT / "engines"))
 
 class TurboBridge:
     """Bridge between Echoes and TurboBookshelf platforms"""
-    
+
     def __init__(self):
         # Import D:\ components
         from insights.bias import BiasPatternDetector
         from knowledge.alien_vault_delivery import AlienVault
-        
+
         self.bias_detector = BiasPatternDetector()
         self.alien_vault = AlienVault()
-        
+
         # Import E:\ components
         from knowledge_graph.system import KnowledgeGraphBridge
         from ai_agents.orchestrator import AIAgentOrchestrator
-        
+
         self.kg = KnowledgeGraphBridge()
         self.orchestrator = AIAgentOrchestrator()
-    
+
     def unified_analysis(self, data: Dict[str, Any]) -> Dict[str, Any]:
         """
         Perform cross-platform analysis
@@ -142,16 +142,16 @@ class TurboBridge:
             'bias': self._detect_bias(data),
             'knowledge': self._enrich_knowledge(data)
         }
-    
+
     def _analyze_trajectory(self, data):
         """Use Echoes trajectory analysis"""
         from src.evaluator import analyze_trajectory
         return analyze_trajectory(data)
-    
+
     def _detect_bias(self, data):
         """Use TurboBookshelf bias detection"""
         return self.bias_detector.detect(data.get('text', []))
-    
+
     def _enrich_knowledge(self, data):
         """Use Echoes knowledge graph"""
         return self.kg.semantic_search(data.get('query', ''))
@@ -177,7 +177,7 @@ def test_unified_analysis():
         'text': ['Sample analysis text'],
         'query': 'test query'
     })
-    
+
     assert 'trajectory' in result
     assert 'bias' in result
     assert 'knowledge' in result
@@ -243,31 +243,31 @@ from dotenv import load_dotenv
 
 class UnifiedConfig:
     """Load and manage cross-platform configuration"""
-    
+
     def __init__(self):
         # Load E:\ config
         echoes_env = Path("E:/Projects/Development/.env")
         if echoes_env.exists():
             load_dotenv(echoes_env)
-        
+
         # Load D:\ config
         turbo_env = Path("D:/.env.turbo")
         if turbo_env.exists():
             load_dotenv(turbo_env)
-        
+
         # Load unified config (overrides)
         unified_env = Path("E:/Projects/Development/.env.unified")
         if unified_env.exists():
             load_dotenv(unified_env, override=True)
-    
+
     @property
     def echoes_root(self) -> Path:
         return Path(os.getenv("ECHOES_ROOT", "E:/Projects/Development"))
-    
+
     @property
     def turbo_root(self) -> Path:
         return Path(os.getenv("TURBO_ROOT", "D:/"))
-    
+
     @property
     def cross_platform_enabled(self) -> bool:
         return os.getenv("ENABLE_CROSS_PLATFORM", "false").lower() == "true"
@@ -308,7 +308,7 @@ async def unified_analysis(request: AnalysisRequest):
     """
     if not config.cross_platform_enabled:
         raise HTTPException(400, "Cross-platform integration disabled")
-    
+
     if request.mode == "unified":
         return bridge.unified_analysis({
             'text': request.text,
@@ -449,31 +449,31 @@ from integrations.turbo_bridge import TurboBridge
 from integrations.config_loader import UnifiedConfig
 
 class TestCrossPlatformIntegration:
-    
+
     def test_config_loading(self):
         """Test unified configuration loads correctly"""
         config = UnifiedConfig()
         assert config.echoes_root.exists()
         assert config.turbo_root.exists()
-    
+
     def test_bridge_initialization(self):
         """Test bridge can access both platforms"""
         bridge = TurboBridge()
         assert hasattr(bridge, 'bias_detector')
         assert hasattr(bridge, 'kg')
-    
+
     def test_bias_detection_from_echoes(self):
         """Test D:\ bias detection accessible from E:\"""
         bridge = TurboBridge()
         result = bridge._detect_bias({'text': ['test']})
         assert result is not None
-    
+
     def test_knowledge_graph_from_turbo(self):
         """Test E:\ knowledge graph accessible"""
         bridge = TurboBridge()
         result = bridge._enrich_knowledge({'query': 'test'})
         assert result is not None
-    
+
     def test_unified_analysis_workflow(self):
         """Test complete cross-platform workflow"""
         bridge = TurboBridge()
@@ -481,7 +481,7 @@ class TestCrossPlatformIntegration:
             'text': ['Sample text for analysis'],
             'query': 'test query'
         })
-        
+
         assert 'trajectory' in result
         assert 'bias' in result
         assert 'knowledge' in result

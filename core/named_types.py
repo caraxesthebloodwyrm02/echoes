@@ -39,9 +39,7 @@ class NamedType(schema.SchemaVisitable, sqltypes.TypeEngine):
     DDLDropper: Type[NamedTypeDropper]
     create_type: bool
 
-    def create(
-        self, bind: _CreateDropBind, checkfirst: bool = True, **kw: Any
-    ) -> None:
+    def create(self, bind: _CreateDropBind, checkfirst: bool = True, **kw: Any) -> None:
         """Emit ``CREATE`` DDL for this type.
 
         :param bind: a connectable :class:`_engine.Engine`,
@@ -55,9 +53,7 @@ class NamedType(schema.SchemaVisitable, sqltypes.TypeEngine):
         """
         bind._run_ddl_visitor(self.DDLGenerator, self, checkfirst=checkfirst)
 
-    def drop(
-        self, bind: _CreateDropBind, checkfirst: bool = True, **kw: Any
-    ) -> None:
+    def drop(self, bind: _CreateDropBind, checkfirst: bool = True, **kw: Any) -> None:
         """Emit ``DROP`` DDL for this type.
 
         :param bind: a connectable :class:`_engine.Engine`,
@@ -70,9 +66,7 @@ class NamedType(schema.SchemaVisitable, sqltypes.TypeEngine):
         """
         bind._run_ddl_visitor(self.DDLDropper, self, checkfirst=checkfirst)
 
-    def _check_for_name_in_memos(
-        self, checkfirst: bool, kw: Dict[str, Any]
-    ) -> bool:
+    def _check_for_name_in_memos(self, checkfirst: bool, kw: Dict[str, Any]) -> bool:
         """Look in the 'ddl runner' for 'memos', then
         note our name in that collection.
 
@@ -104,11 +98,7 @@ class NamedType(schema.SchemaVisitable, sqltypes.TypeEngine):
         **kw: Any,
     ) -> None:
         if (
-            checkfirst
-            or (
-                not self.metadata
-                and not kw.get("_is_metadata_operation", False)
-            )
+            checkfirst or (not self.metadata and not kw.get("_is_metadata_operation", False))
         ) and not self._check_for_name_in_memos(checkfirst, kw):
             self.create(bind=bind, checkfirst=checkfirst)
 
@@ -157,9 +147,7 @@ class NamedTypeGenerator(InvokeCreateDDLBase):
             return True
 
         effective_schema = self.connection.schema_for_object(type_)
-        return not self.connection.dialect.has_type(
-            self.connection, type_.name, schema=effective_schema
-        )
+        return not self.connection.dialect.has_type(self.connection, type_.name, schema=effective_schema)
 
 
 class NamedTypeDropper(InvokeDropDDLBase):
@@ -172,9 +160,7 @@ class NamedTypeDropper(InvokeDropDDLBase):
             return True
 
         effective_schema = self.connection.schema_for_object(type_)
-        return self.connection.dialect.has_type(
-            self.connection, type_.name, schema=effective_schema
-        )
+        return self.connection.dialect.has_type(self.connection, type_.name, schema=effective_schema)
 
 
 class EnumGenerator(NamedTypeGenerator):
@@ -315,10 +301,7 @@ class ENUM(NamedType, type_api.NativeForEmulated, sqltypes.Enum):
 
     def coerce_compared_value(self, op, value):
         super_coerced_type = super().coerce_compared_value(op, value)
-        if (
-            super_coerced_type._type_affinity
-            is type_api.STRINGTYPE._type_affinity
-        ):
+        if super_coerced_type._type_affinity is type_api.STRINGTYPE._type_affinity:
             return self
         else:
             return super_coerced_type

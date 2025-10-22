@@ -128,9 +128,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
                 vv = 1
             else:
                 raise TypeError(
-                    f"Unsupported type {type(vv)} in iterable "
-                    "value. Only iterables of string are "
-                    "supported."
+                    f"Unsupported type {type(vv)} in iterable " "value. Only iterables of string are " "supported."
                 )
             if fitting and feature_name not in vocab:
                 vocab[feature_name] = len(feature_names)
@@ -172,9 +170,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
                     feature_name = f
                 elif isinstance(v, Mapping):
                     raise TypeError(
-                        f"Unsupported value type {type(v)} "
-                        f"for {f}: {v}.\n"
-                        "Mapping objects are not supported."
+                        f"Unsupported value type {type(v)} " f"for {f}: {v}.\n" "Mapping objects are not supported."
                     )
                 elif isinstance(v, Iterable):
                     feature_name = None
@@ -247,9 +243,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
                     )
                 else:
                     raise TypeError(
-                        f"Unsupported value Type {type(v)} "
-                        f"for {f}: {v}.\n"
-                        f"{type(v)} objects are not supported."
+                        f"Unsupported value Type {type(v)} " f"for {f}: {v}.\n" f"{type(v)} objects are not supported."
                     )
 
                 if feature_name is not None:
@@ -269,9 +263,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
         indices = np.frombuffer(indices, dtype=np.intc)
         shape = (len(indptr) - 1, len(vocab))
 
-        result_matrix = sp.csr_matrix(
-            (values, indices, indptr), shape=shape, dtype=dtype
-        )
+        result_matrix = sp.csr_matrix((values, indices, indptr), shape=shape, dtype=dtype)
 
         # Sort everything if asked
         if fitting and self.sort:
@@ -446,9 +438,7 @@ class DictVectorizer(TransformerMixin, BaseEstimator):
             new_vocab[names[i]] = len(new_vocab)
 
         self.vocabulary_ = new_vocab
-        self.feature_names_ = [
-            f for f, i in sorted(new_vocab.items(), key=itemgetter(1))
-        ]
+        self.feature_names_ = [f for f, i in sorted(new_vocab.items(), key=itemgetter(1))]
 
         return self
 

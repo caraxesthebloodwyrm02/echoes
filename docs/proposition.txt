@@ -61,11 +61,11 @@ from knowledge.alien_vault_delivery import AlienVault
 
 class TurboBridge:
     """Integrate TurboBookshelf bias detection into Echoes"""
-    
+
     def __init__(self):
         self.bias_detector = BiasPatternDetector()
         self.alien_vault = AlienVault()
-    
+
     def analyze_trajectory_bias(self, trajectory_data):
         """Apply bias detection to Echoes trajectory analysis"""
         return self.bias_detector.detect(trajectory_data)
@@ -73,7 +73,7 @@ class TurboBridge:
 
 ### **Phase 2: Knowledge Graph Unification**
 
-**D:\ has**: Bias detection, creative content, web interface  
+**D:\ has**: Bias detection, creative content, web interface
 **E:\ has**: Knowledge graphs, semantic reasoning, agent orchestration
 
 **Integration Point:**
@@ -84,18 +84,18 @@ from engines.insights.bias import BiasPatternDetector    # D:\
 
 class UnifiedKnowledgeSystem:
     """Combine Echoes KG with TurboBookshelf insights"""
-    
+
     def __init__(self):
         self.kg = KnowledgeGraphBridge()  # Echoes
         self.bias = BiasPatternDetector()  # TurboBookshelf
-    
+
     def enrich_insights(self, query):
         # Get semantic results from Echoes
         semantic_results = self.kg.semantic_search(query)
-        
+
         # Apply bias detection from TurboBookshelf
         bias_analysis = self.bias.detect(semantic_results)
-        
+
         return {
             'results': semantic_results,
             'bias_check': bias_analysis

@@ -1,4 +1,5 @@
 """ test parquet compat """
+
 import datetime
 from decimal import Decimal
 from io import BytesIO
@@ -54,9 +55,7 @@ except ImportError:
 
 pytestmark = [
     pytest.mark.filterwarnings("ignore:DataFrame._data is deprecated:FutureWarning"),
-    pytest.mark.filterwarnings(
-        "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-    ),
+    pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning"),
 ]
 
 
@@ -67,8 +66,7 @@ pytestmark = [
             "fastparquet",
             marks=[
                 pytest.mark.skipif(
-                    not _HAVE_FASTPARQUET
-                    or _get_option("mode.data_manager", silent=True) == "array",
+                    not _HAVE_FASTPARQUET or _get_option("mode.data_manager", silent=True) == "array",
                     reason="fastparquet is not installed or ArrayManager is used",
                 ),
                 pytest.mark.xfail(
@@ -80,9 +78,7 @@ pytestmark = [
         ),
         pytest.param(
             "pyarrow",
-            marks=pytest.mark.skipif(
-                not _HAVE_PYARROW, reason="pyarrow is not installed"
-            ),
+            marks=pytest.mark.skipif(not _HAVE_PYARROW, reason="pyarrow is not installed"),
         ),
     ]
 )
@@ -104,9 +100,7 @@ def fp(request):
     elif _get_option("mode.data_manager", silent=True) == "array":
         pytest.skip("ArrayManager is not supported with fastparquet")
     if using_string_dtype():
-        request.applymarker(
-            pytest.mark.xfail(reason="TODO(infer_string) fastparquet", strict=False)
-        )
+        request.applymarker(pytest.mark.xfail(reason="TODO(infer_string) fastparquet", strict=False))
     return "fastparquet"
 
 
@@ -311,16 +305,8 @@ def test_get_engine_auto_error_message():
     # Do we have engines installed, but a bad version of them?
     pa_min_ver = VERSIONS.get("pyarrow")
     fp_min_ver = VERSIONS.get("fastparquet")
-    have_pa_bad_version = (
-        False
-        if not _HAVE_PYARROW
-        else Version(pyarrow.__version__) < Version(pa_min_ver)
-    )
-    have_fp_bad_version = (
-        False
-        if not _HAVE_FASTPARQUET
-        else Version(fastparquet.__version__) < Version(fp_min_ver)
-    )
+    have_pa_bad_version = False if not _HAVE_PYARROW else Version(pyarrow.__version__) < Version(pa_min_ver)
+    have_fp_bad_version = False if not _HAVE_FASTPARQUET else Version(fastparquet.__version__) < Version(fp_min_ver)
     # Do we have usable engines installed?
     have_usable_pa = _HAVE_PYARROW and not have_pa_bad_version
     have_usable_fp = _HAVE_FASTPARQUET and not have_fp_bad_version
@@ -433,9 +419,7 @@ class TestBasic(Base):
         df = pd.DataFrame({"string": list("abc"), "int": list(range(1, 4))})
 
         expected = pd.DataFrame({"string": list("abc")})
-        check_round_trip(
-            df, engine, expected=expected, read_kwargs={"columns": ["string"]}
-        )
+        check_round_trip(df, engine, expected=expected, read_kwargs={"columns": ["string"]})
 
     def test_read_filters(self, engine, tmp_path):
         df = pd.DataFrame(
@@ -496,17 +480,13 @@ class TestBasic(Base):
             np.random.default_rng(2).standard_normal((2 * len(dates), 3)),
             columns=list("ABC"),
         )
-        index1 = pd.MultiIndex.from_product(
-            [["Level1", "Level2"], dates], names=["level", "date"]
-        )
+        index1 = pd.MultiIndex.from_product([["Level1", "Level2"], dates], names=["level", "date"])
         index2 = index1.copy(names=None)
         for index in [index1, index2]:
             df.index = index
 
             check_round_trip(df, engine)
-            check_round_trip(
-                df, engine, read_kwargs={"columns": ["A", "B"]}, expected=df[["A", "B"]]
-            )
+            check_round_trip(df, engine, read_kwargs={"columns": ["A", "B"]}, expected=df[["A", "B"]])
 
     def test_write_ignoring_index(self, engine):
         # ENH 20768
@@ -522,9 +502,7 @@ class TestBasic(Base):
         check_round_trip(df, engine, write_kwargs=write_kwargs, expected=expected)
 
         # Ignore custom index
-        df = pd.DataFrame(
-            {"a": [1, 2, 3], "b": ["q", "r", "s"]}, index=["zyx", "wvu", "tsr"]
-        )
+        df = pd.DataFrame({"a": [1, 2, 3], "b": ["q", "r", "s"]}, index=["zyx", "wvu", "tsr"])
 
         check_round_trip(df, engine, write_kwargs=write_kwargs, expected=expected)
 
@@ -533,9 +511,7 @@ class TestBasic(Base):
             ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
             ["one", "two", "one", "two", "one", "two", "one", "two"],
         ]
-        df = pd.DataFrame(
-            {"one": list(range(8)), "two": [-i for i in range(8)]}, index=arrays
-        )
+        df = pd.DataFrame({"one": list(range(8)), "two": [-i for i in range(8)]}, index=arrays)
 
         expected = df.reset_index(drop=True)
         check_round_trip(df, engine, write_kwargs=write_kwargs, expected=expected)
@@ -543,14 +519,10 @@ class TestBasic(Base):
     def test_write_column_multiindex(self, engine):
         # Not able to write column multi-indexes with non-string column names.
         mi_columns = pd.MultiIndex.from_tuples([("a", 1), ("a", 2), ("b", 1)])
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((4, 3)), columns=mi_columns
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((4, 3)), columns=mi_columns)
 
         if engine == "fastparquet":
-            self.check_error_on_write(
-                df, engine, TypeError, "Column name must be a string"
-            )
+            self.check_error_on_write(df, engine, TypeError, "Column name must be a string")
         elif engine == "pyarrow":
             check_round_trip(df, engine)
 
@@ -562,9 +534,7 @@ class TestBasic(Base):
             ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
             [1, 2, 1, 2, 1, 2, 1, 2],
         ]
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((8, 8)), columns=arrays
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((8, 8)), columns=arrays)
         df.columns.names = ["Level1", "Level2"]
         if engine == "fastparquet":
             self.check_error_on_write(df, engine, ValueError, "Column name")
@@ -581,9 +551,7 @@ class TestBasic(Base):
             ["bar", "bar", "baz", "baz", "foo", "foo", "qux", "qux"],
             ["one", "two", "one", "two", "one", "two", "one", "two"],
         ]
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((8, 8)), columns=arrays
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((8, 8)), columns=arrays)
         df.columns.names = ["ColLevel1", "ColLevel2"]
 
         check_round_trip(df, engine)
@@ -595,9 +563,7 @@ class TestBasic(Base):
 
         # Write column indexes with string column names
         arrays = ["bar", "baz", "foo", "qux"]
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((8, 4)), columns=arrays
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((8, 4)), columns=arrays)
         df.columns.name = "StringCol"
 
         check_round_trip(df, engine)
@@ -607,14 +573,10 @@ class TestBasic(Base):
 
         # Write column indexes with string column names
         arrays = [1, 2, 3, 4]
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((8, 4)), columns=arrays
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((8, 4)), columns=arrays)
         df.columns.name = "NonStringCol"
         if engine == "fastparquet":
-            self.check_error_on_write(
-                df, engine, TypeError, "Column name must be a string"
-            )
+            self.check_error_on_write(df, engine, TypeError, "Column name must be a string")
         else:
             check_round_trip(df, engine)
 
@@ -624,9 +586,7 @@ class TestBasic(Base):
         if engine == "fastparquet":
             # We are manually disabling fastparquet's
             # nullable dtype support pending discussion
-            mark = pytest.mark.xfail(
-                reason="Fastparquet nullable dtype support is disabled"
-            )
+            mark = pytest.mark.xfail(reason="Fastparquet nullable dtype support is disabled")
             request.applymarker(mark)
 
         table = pyarrow.table(
@@ -696,9 +656,7 @@ class TestBasic(Base):
                     "value": pd.array([], dtype="Float64"),
                 }
             )
-        check_round_trip(
-            df, pa, read_kwargs={"dtype_backend": "numpy_nullable"}, expected=expected
-        )
+        check_round_trip(df, pa, read_kwargs={"dtype_backend": "numpy_nullable"}, expected=expected)
 
     @pytest.mark.network
     @pytest.mark.single_cpu
@@ -851,9 +809,7 @@ class TestParquetPyArrow(Base):
             [],
         ],
     )
-    def test_s3_roundtrip_for_dir(
-        self, df_compat, s3_public_bucket, pa, partition_col, s3so
-    ):
+    def test_s3_roundtrip_for_dir(self, df_compat, s3_public_bucket, pa, partition_col, s3so):
         pytest.importorskip("s3fs")
         # GH #26388
         expected_df = df_compat.copy()
@@ -863,9 +819,7 @@ class TestParquetPyArrow(Base):
             expected_df = expected_df.astype(dict.fromkeys(partition_col, np.int32))
             partition_col_type = "category"
 
-            expected_df[partition_col] = expected_df[partition_col].astype(
-                partition_col_type
-            )
+            expected_df[partition_col] = expected_df[partition_col].astype(partition_col_type)
 
         check_round_trip(
             df_compat,
@@ -917,9 +871,7 @@ class TestParquetPyArrow(Base):
         check_partition_names(tmp_path, partition_cols_list)
         assert read_parquet(tmp_path).shape == df.shape
 
-    @pytest.mark.parametrize(
-        "path_type", [str, lambda x: x], ids=["string", "pathlib.Path"]
-    )
+    @pytest.mark.parametrize("path_type", [str, lambda x: x], ids=["string", "pathlib.Path"])
     def test_partition_cols_pathlib(self, tmp_path, pa, df_compat, path_type):
         # GH 35902
 
@@ -987,9 +939,7 @@ class TestParquetPyArrow(Base):
                 "c": pd.IntervalIndex.from_tuples([(0, 1), (1, 2), (3, 4)]),
                 "d": pd.period_range("2012-01-01", periods=3, freq="D"),
                 # GH-45881 issue with interval with datetime64[ns] subtype
-                "e": pd.IntervalIndex.from_breaks(
-                    pd.date_range("2012-01-01", periods=4, freq="D")
-                ),
+                "e": pd.IntervalIndex.from_breaks(pd.date_range("2012-01-01", periods=4, freq="D")),
             }
         )
         check_round_trip(df, pa)
@@ -1046,9 +996,7 @@ class TestParquetPyArrow(Base):
 
     def test_read_parquet_manager(self, pa, using_array_manager):
         # ensure that read_parquet honors the pandas.options.mode.data_manager option
-        df = pd.DataFrame(
-            np.random.default_rng(2).standard_normal((10, 3)), columns=["A", "B", "C"]
-        )
+        df = pd.DataFrame(np.random.default_rng(2).standard_normal((10, 3)), columns=["A", "B", "C"])
 
         with tm.ensure_clean() as path:
             df.to_parquet(path, engine=pa)
@@ -1074,9 +1022,7 @@ class TestParquetPyArrow(Base):
         if pa_version_under13p0:
             # pyarrow infers datetimes as us instead of ns
             expected["datetime"] = expected["datetime"].astype("timestamp[us][pyarrow]")
-            expected["datetime_with_nat"] = expected["datetime_with_nat"].astype(
-                "timestamp[us][pyarrow]"
-            )
+            expected["datetime_with_nat"] = expected["datetime_with_nat"].astype("timestamp[us][pyarrow]")
             expected["datetime_tz"] = expected["datetime_tz"].astype(
                 pd.ArrowDtype(pyarrow.timestamp(unit="us", tz="Europe/Brussels"))
             )
@@ -1089,9 +1035,7 @@ class TestParquetPyArrow(Base):
         )
 
     def test_read_dtype_backend_pyarrow_config_index(self, pa):
-        df = pd.DataFrame(
-            {"a": [1, 2]}, index=pd.Index([3, 4], name="test"), dtype="int64[pyarrow]"
-        )
+        df = pd.DataFrame({"a": [1, 2]}, index=pd.Index([3, 4], name="test"), dtype="int64[pyarrow]")
         expected = df.copy()
         import pyarrow
 
@@ -1155,9 +1099,7 @@ class TestParquetPyArrow(Base):
             index=pd.Index(["a", "b"], dtype=dtype),
             columns=pd.Index(
                 ["a"],
-                dtype=object
-                if pa_version_under19p0 and not using_infer_string
-                else dtype,
+                dtype=object if pa_version_under19p0 and not using_infer_string else dtype,
             ),
         )
         tm.assert_frame_equal(result, expected)
@@ -1249,9 +1191,7 @@ class TestParquetFastParquet(Base):
     def test_bool_with_none(self, fp, request):
         import fastparquet
 
-        if Version(fastparquet.__version__) < Version("2024.11.0") and Version(
-            np.__version__
-        ) >= Version("2.0.0"):
+        if Version(fastparquet.__version__) < Version("2024.11.0") and Version(np.__version__) >= Version("2.0.0"):
             request.applymarker(
                 pytest.mark.xfail(
                     reason=("fastparquet uses np.float_ in numpy2"),
@@ -1345,16 +1285,11 @@ class TestParquetFastParquet(Base):
         actual_partition_cols = fastparquet.ParquetFile(str(tmp_path), False).cats
         assert len(actual_partition_cols) == 2
 
-    def test_error_on_using_partition_cols_and_partition_on(
-        self, tmp_path, fp, df_full
-    ):
+    def test_error_on_using_partition_cols_and_partition_on(self, tmp_path, fp, df_full):
         # GH #23283
         partition_cols = ["bool", "int"]
         df = df_full
-        msg = (
-            "Cannot use both partition_on and partition_cols. Use partition_cols for "
-            "partitioning data"
-        )
+        msg = "Cannot use both partition_on and partition_cols. Use partition_cols for " "partitioning data"
         with pytest.raises(ValueError, match=msg):
             df.to_parquet(
                 tmp_path,
@@ -1374,15 +1309,12 @@ class TestParquetFastParquet(Base):
     def test_timezone_aware_index(self, fp, timezone_aware_date_list, request):
         import fastparquet
 
-        if Version(fastparquet.__version__) > Version("2022.12") and Version(
-            fastparquet.__version__
-        ) < Version("2024.11.0"):
+        if Version(fastparquet.__version__) > Version("2022.12") and Version(fastparquet.__version__) < Version(
+            "2024.11.0"
+        ):
             request.applymarker(
                 pytest.mark.xfail(
-                    reason=(
-                        "fastparquet bug, see "
-                        "https://github.com/dask/fastparquet/issues/929"
-                    ),
+                    reason=("fastparquet bug, see " "https://github.com/dask/fastparquet/issues/929"),
                 )
             )
 
@@ -1427,32 +1359,24 @@ class TestParquetFastParquet(Base):
         pytest.importorskip("fastparquet")
         df = pd.DataFrame(data={"A": [0, 1], "B": [1, 0]})
         with tm.ensure_clean() as path:
-            with pytest.raises(
-                NotImplementedError, match="filesystem is not implemented"
-            ):
+            with pytest.raises(NotImplementedError, match="filesystem is not implemented"):
                 df.to_parquet(path, engine="fastparquet", filesystem="foo")
 
         with tm.ensure_clean() as path:
             pathlib.Path(path).write_bytes(b"foo")
-            with pytest.raises(
-                NotImplementedError, match="filesystem is not implemented"
-            ):
+            with pytest.raises(NotImplementedError, match="filesystem is not implemented"):
                 read_parquet(path, engine="fastparquet", filesystem="foo")
 
     def test_invalid_filesystem(self):
         pytest.importorskip("pyarrow")
         df = pd.DataFrame(data={"A": [0, 1], "B": [1, 0]})
         with tm.ensure_clean() as path:
-            with pytest.raises(
-                ValueError, match="filesystem must be a pyarrow or fsspec FileSystem"
-            ):
+            with pytest.raises(ValueError, match="filesystem must be a pyarrow or fsspec FileSystem"):
                 df.to_parquet(path, engine="pyarrow", filesystem="foo")
 
         with tm.ensure_clean() as path:
             pathlib.Path(path).write_bytes(b"foo")
-            with pytest.raises(
-                ValueError, match="filesystem must be a pyarrow or fsspec FileSystem"
-            ):
+            with pytest.raises(ValueError, match="filesystem must be a pyarrow or fsspec FileSystem"):
                 read_parquet(path, engine="pyarrow", filesystem="foo")
 
     def test_unsupported_pa_filesystem_storage_options(self):
@@ -1484,10 +1408,7 @@ class TestParquetFastParquet(Base):
                 )
 
     def test_invalid_dtype_backend(self, engine):
-        msg = (
-            "dtype_backend numpy is invalid, only 'numpy_nullable' and "
-            "'pyarrow' are allowed."
-        )
+        msg = "dtype_backend numpy is invalid, only 'numpy_nullable' and " "'pyarrow' are allowed."
         df = pd.DataFrame({"int": list(range(1, 4))})
         with tm.ensure_clean("tmp.parquet") as path:
             df.to_parquet(path)

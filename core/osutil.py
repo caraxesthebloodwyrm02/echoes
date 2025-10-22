@@ -25,7 +25,7 @@ if TYPE_CHECKING:
 # Define SEP as a manifest constant, not so much because we expect it to change
 # in the future as to avoid the suspicion that a stray "/" in the code is a
 # hangover from more *nix-oriented origins.
-SEP = '/'
+SEP = "/"
 
 
 def os_path(canonical_path: str, /) -> str:
@@ -40,15 +40,15 @@ def canon_path(native_path: str | os.PathLike[str], /) -> str:
 def path_stabilize(filepath: str | os.PathLike[str], /) -> str:
     """Normalize path separator and unicode string"""
     new_path = canon_path(filepath)
-    return unicodedata.normalize('NFC', new_path)
+    return unicodedata.normalize("NFC", new_path)
 
 
 def relative_uri(base: str, to: str) -> str:
     """Return a relative URL from ``base`` to ``to``."""
     if to.startswith(SEP):
         return to
-    b2 = base.split('#')[0].split(SEP)
-    t2 = to.split('#')[0].split(SEP)
+    b2 = base.split("#")[0].split(SEP)
+    t2 = to.split("#")[0].split(SEP)
     # remove common segments (except the last segment)
     for x, y in zip(b2[:-1], t2[:-1], strict=False):
         if x != y:
@@ -58,12 +58,12 @@ def relative_uri(base: str, to: str) -> str:
     if b2 == t2:
         # Special case: relative_uri('f/index.html','f/index.html')
         # returns '', not 'index.html'
-        return ''
-    if len(b2) == 1 and t2 == ['']:
+        return ""
+    if len(b2) == 1 and t2 == [""]:
         # Special case: relative_uri('f/index.html','f/') should
         # return './', not ''
-        return '.' + SEP
-    return ('..' + SEP) * (len(b2) - 1) + SEP.join(t2)
+        return "." + SEP
+    return (".." + SEP) * (len(b2) - 1) + SEP.join(t2)
 
 
 def ensuredir(file: str | os.PathLike[str]) -> None:
@@ -111,7 +111,7 @@ def copyfile(
     source = Path(source)
     dest = Path(dest)
     if not source.exists():
-        msg = f'{source} does not exist'
+        msg = f"{source} does not exist"
         raise FileNotFoundError(msg)
 
     if (
@@ -127,14 +127,11 @@ def copyfile(
 
             logger = logging.getLogger(__name__)
 
-            msg = __(
-                'Aborted attempted copy from %s to %s '
-                '(the destination path has existing data).'
-            )
-            logger.warning(msg, source, dest, type='misc', subtype='copy_overwrite')
+            msg = __("Aborted attempted copy from %s to %s " "(the destination path has existing data).")
+            logger.warning(msg, source, dest, type="misc", subtype="copy_overwrite")
             return
 
-        if sys.platform == 'win32':
+        if sys.platform == "win32":
             # copy2() uses Windows API calls
             shutil.copy2(source, dest)
         else:
@@ -144,20 +141,18 @@ def copyfile(
                 _copy_times(source, dest)
 
 
-_no_fn_re = re.compile(r'[^a-zA-Z0-9_-]')
+_no_fn_re = re.compile(r"[^a-zA-Z0-9_-]")
 
 
 def make_filename(string: str) -> str:
-    return _no_fn_re.sub('', string) or 'sphinx'
+    return _no_fn_re.sub("", string) or "sphinx"
 
 
 def make_filename_from_project(project: str) -> str:
-    return make_filename(project.removesuffix(' Documentation')).lower()
+    return make_filename(project.removesuffix(" Documentation")).lower()
 
 
-def relpath(
-    path: str | os.PathLike[str], start: str | os.PathLike[str] | None = os.curdir
-) -> str:
+def relpath(path: str | os.PathLike[str], start: str | os.PathLike[str] | None = os.curdir) -> str:
     """Return a relative filepath to *path* either from the current directory or
     from an optional *start* directory.
 
@@ -178,12 +173,12 @@ def _relative_path(path: Path, root: Path, /) -> Path:
     which may happen on Windows.
     """
     # Path.relative_to() requires fully-resolved paths (no '..').
-    if '..' in path.parts:
+    if ".." in path.parts:
         path = path.resolve()
-    if '..' in root.parts:
+    if ".." in root.parts:
         root = root.resolve()
 
-    if path.anchor != root.anchor or '..' in root.parts:
+    if path.anchor != root.anchor or ".." in root.parts:
         # If the drives are different, no relative path exists.
         return path
     if sys.version_info[:2] < (3, 12):
@@ -223,21 +218,21 @@ class FileAvoidWrite:
     def close(self) -> None:
         """Stop accepting writes and write file, if needed."""
         if not self._io:
-            msg = 'FileAvoidWrite does not support empty files.'
+            msg = "FileAvoidWrite does not support empty files."
             raise Exception(msg)
 
         buf = self.getvalue()
         self._io.close()
 
         try:
-            with open(self._path, encoding='utf-8') as old_f:
+            with open(self._path, encoding="utf-8") as old_f:
                 old_content = old_f.read()
             if old_content == buf:
                 return
         except OSError:
             pass
 
-        with open(self._path, 'w', encoding='utf-8') as f:
+        with open(self._path, "w", encoding="utf-8") as f:
             f.write(buf)
 
     def __enter__(self) -> Self:
@@ -255,7 +250,7 @@ class FileAvoidWrite:
     def __getattr__(self, name: str) -> Any:
         # Proxy to _io instance.
         if not self._io:
-            msg = 'Must write to FileAvoidWrite before other methods can be used'
+            msg = "Must write to FileAvoidWrite before other methods can be used"
             raise Exception(msg)
 
         return getattr(self._io, name)

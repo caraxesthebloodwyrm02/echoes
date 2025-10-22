@@ -59,10 +59,7 @@ def test_read_params():
     # check that we escape html tags
     tag_injection = "<script>alert('xss')</script>"
     out = _read_params("a", tag_injection, tuple())
-    assert (
-        out["param_value"]
-        == "&quot;&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;&quot;"
-    )
+    assert out["param_value"] == "&quot;&lt;script&gt;alert(&#x27;xss&#x27;)&lt;/script&gt;&quot;"
     assert out["param_name"] == "a"
     assert out["param_type"] == "default"
 

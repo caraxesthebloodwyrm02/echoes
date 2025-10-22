@@ -50,9 +50,7 @@ class TestTrajectoryScenarios:
         # This test validates the Poetry setup from trajectory logs
         import subprocess
 
-        result = subprocess.run(
-            ["poetry", "check"], capture_output=True, text=True, cwd="."
-        )
+        result = subprocess.run(["poetry", "check"], capture_output=True, text=True, cwd=".")
         assert result.returncode == 0, "Poetry environment should be valid"
 
     def test_ecosystem_monitoring_metaphors(self):

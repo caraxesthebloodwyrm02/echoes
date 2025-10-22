@@ -118,9 +118,7 @@ class NLTKWordTokenizer(TokenizerI):
     CONTRACTIONS2 = list(map(re.compile, _contractions.CONTRACTIONS2))
     CONTRACTIONS3 = list(map(re.compile, _contractions.CONTRACTIONS3))
 
-    def tokenize(
-        self, text: str, convert_parentheses: bool = False, return_str: bool = False
-    ) -> List[str]:
+    def tokenize(self, text: str, convert_parentheses: bool = False, return_str: bool = False) -> List[str]:
         r"""Return a tokenized copy of `text`.
 
         >>> from nltk.tokenize import NLTKWordTokenizer
@@ -148,8 +146,7 @@ class NLTKWordTokenizer(TokenizerI):
         """
         if return_str:
             warnings.warn(
-                "Parameter 'return_str' has been deprecated and should no "
-                "longer be used.",
+                "Parameter 'return_str' has been deprecated and should no " "longer be used.",
                 category=DeprecationWarning,
                 stacklevel=2,
             )
@@ -224,10 +221,7 @@ class NLTKWordTokenizer(TokenizerI):
             matched = [m.group() for m in re.finditer(r"``|'{2}|\"", text)]
 
             # Replace converted quotes back to double quotes
-            tokens = [
-                matched.pop(0) if tok in ['"', "``", "''"] else tok
-                for tok in raw_tokens
-            ]
+            tokens = [matched.pop(0) if tok in ['"', "``", "''"] else tok for tok in raw_tokens]
         else:
             tokens = raw_tokens
 

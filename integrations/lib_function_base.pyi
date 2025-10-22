@@ -73,8 +73,8 @@ assert_type(np.asarray_chkfinite(AR_f8, dtype=float), npt.NDArray[Any])
 
 assert_type(np.piecewise(AR_f8, AR_b, [func]), npt.NDArray[np.float64])
 assert_type(np.piecewise(AR_f8, AR_b_list, [func]), npt.NDArray[np.float64])
-assert_type(np.piecewise(AR_f8, AR_b_list, [func], True, -1, kwarg=''), npt.NDArray[np.float64])
-assert_type(np.piecewise(AR_f8, AR_b_list, [func], True, arg=-1, kwarg=''), npt.NDArray[np.float64])
+assert_type(np.piecewise(AR_f8, AR_b_list, [func], True, -1, kwarg=""), npt.NDArray[np.float64])
+assert_type(np.piecewise(AR_f8, AR_b_list, [func], True, arg=-1, kwarg=""), npt.NDArray[np.float64])
 assert_type(np.piecewise(AR_LIKE_f8, AR_b_list, [func]), npt.NDArray[Any])
 
 assert_type(np.select([AR_f8], [AR_f8]), npt.NDArray[Any])
@@ -99,7 +99,9 @@ assert_type(np.interp(1, [1], [1j]), np.complex128)  # pyright correctly infers 
 assert_type(np.interp([1], [1], AR_f8), npt.NDArray[np.float64])
 assert_type(np.interp([1], [1], [1]), npt.NDArray[np.float64])
 assert_type(np.interp([1], [1], AR_c16), npt.NDArray[np.complex128])
-assert_type(np.interp([1], [1], [1j]), npt.NDArray[np.complex128])  # pyright correctly infers `NDArray[complex128 | float64]`
+assert_type(
+    np.interp([1], [1], [1j]), npt.NDArray[np.complex128]
+)  # pyright correctly infers `NDArray[complex128 | float64]`
 
 assert_type(np.angle(f8), np.floating)
 assert_type(np.angle(AR_f8), npt.NDArray[np.floating])
@@ -197,7 +199,10 @@ assert_type(np.meshgrid(AR_c16, indexing="ij"), tuple[npt.NDArray[np.complex128]
 assert_type(np.meshgrid(AR_i8, AR_f8, copy=False), tuple[npt.NDArray[np.int64], npt.NDArray[np.float64]])
 assert_type(np.meshgrid(AR_LIKE_f8, AR_f8), tuple[npt.NDArray[Any], npt.NDArray[np.float64]])
 assert_type(np.meshgrid(AR_LIKE_f8, AR_i8, AR_c16), tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]])
-assert_type(np.meshgrid(AR_f8, AR_f8, AR_f8, AR_f8), tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]])
+assert_type(
+    np.meshgrid(AR_f8, AR_f8, AR_f8, AR_f8),
+    tuple[npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any], npt.NDArray[Any]],
+)
 assert_type(np.meshgrid(*AR_LIKE_f8), tuple[npt.NDArray[Any], ...])
 
 assert_type(np.delete(AR_f8, np.s_[:5]), npt.NDArray[np.float64])

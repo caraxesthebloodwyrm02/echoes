@@ -157,13 +157,9 @@ class TimitCorpusReader(CorpusReader):
         if isinstance(encoding, str):
             encoding = [(r".*\.wav", None), (".*", encoding)]
 
-        CorpusReader.__init__(
-            self, root, find_corpus_fileids(root, self._FILE_RE), encoding=encoding
-        )
+        CorpusReader.__init__(self, root, find_corpus_fileids(root, self._FILE_RE), encoding=encoding)
 
-        self._utterances = [
-            name[:-4] for name in find_corpus_fileids(root, self._UTTERANCE_RE)
-        ]
+        self._utterances = [name[:-4] for name in find_corpus_fileids(root, self._UTTERANCE_RE)]
         """A list of the utterance identifiers for all utterances in
         this corpus."""
 
@@ -190,9 +186,7 @@ class TimitCorpusReader(CorpusReader):
         else:
             raise ValueError("Bad value for filetype: %r" % filetype)
 
-    def utteranceids(
-        self, dialect=None, sex=None, spkrid=None, sent_type=None, sentid=None
-    ):
+    def utteranceids(self, dialect=None, sex=None, spkrid=None, sent_type=None, sentid=None):
         """
         :return: A list of the utterance identifiers for all
             utterances in this corpus, or for the given speaker, dialect
@@ -253,11 +247,7 @@ class TimitCorpusReader(CorpusReader):
         :return: A list of all utterances associated with a given
             speaker.
         """
-        return [
-            utterance
-            for utterance in self._utterances
-            if utterance.startswith(speaker + "/")
-        ]
+        return [utterance for utterance in self._utterances if utterance.startswith(speaker + "/")]
 
     def spkrinfo(self, speaker):
         """
@@ -364,9 +354,7 @@ class TimitCorpusReader(CorpusReader):
             while sent_times:
                 (sent, sent_start, sent_end) = sent_times.pop(0)
                 trees.append(Tree("S", []))
-                while (
-                    word_times and phone_times and phone_times[0][2] <= word_times[0][1]
-                ):
+                while word_times and phone_times and phone_times[0][2] <= word_times[0][1]:
                     trees[-1].append(phone_times.pop(0)[0])
                 while word_times and word_times[0][2] <= sent_end:
                     (word, word_start, word_end) = word_times.pop(0)
@@ -444,10 +432,7 @@ class TimitCorpusReader(CorpusReader):
                 dsp.close()
             except OSError as e:
                 print(
-                    (
-                        "can't acquire the audio device; please "
-                        "activate your audio device."
-                    ),
+                    ("can't acquire the audio device; please " "activate your audio device."),
                     file=sys.stderr,
                 )
                 print("system error message:", str(e), file=sys.stderr)
@@ -478,9 +463,7 @@ class TimitCorpusReader(CorpusReader):
 
 
 class SpeakerInfo:
-    def __init__(
-        self, id, sex, dr, use, recdate, birthdate, ht, race, edu, comments=None
-    ):
+    def __init__(self, id, sex, dr, use, recdate, birthdate, ht, race, edu, comments=None):
         self.id = id
         self.sex = sex
         self.dr = dr

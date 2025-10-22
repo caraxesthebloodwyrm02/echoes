@@ -15,7 +15,7 @@ Michael R. Genesereth and Nils J. Nilsson.
 from collections import defaultdict
 from functools import reduce
 
-from nltk.inference.api import Prover, ProverCommandDecorator
+from nltk.inference.api import ProverCommandDecorator
 from nltk.inference.prover9 import Prover9, Prover9Command
 from nltk.sem.logic import (
     AbstractVariableExpression,
@@ -78,9 +78,7 @@ class ClosedDomainProver(ProverCommandDecorator):
         :return: ``Expression``
         """
         if isinstance(ex, AllExpression):
-            conjuncts = [
-                ex.term.replace(ex.variable, VariableExpression(d)) for d in domain
-            ]
+            conjuncts = [ex.term.replace(ex.variable, VariableExpression(d)) for d in domain]
             conjuncts = [self.replace_quants(c, domain) for c in conjuncts]
             return reduce(lambda x, y: x & y, conjuncts)
         elif isinstance(ex, BooleanExpression):
@@ -91,9 +89,7 @@ class ClosedDomainProver(ProverCommandDecorator):
         elif isinstance(ex, NegatedExpression):
             return -self.replace_quants(ex.term, domain)
         elif isinstance(ex, ExistsExpression):
-            disjuncts = [
-                ex.term.replace(ex.variable, VariableExpression(d)) for d in domain
-            ]
+            disjuncts = [ex.term.replace(ex.variable, VariableExpression(d)) for d in domain]
             disjuncts = [self.replace_quants(d, domain) for d in disjuncts]
             return reduce(lambda x, y: x | y, disjuncts)
         else:
@@ -129,9 +125,7 @@ class UniqueNamesProver(ProverCommandDecorator):
             for b in domain[i + 1 :]:
                 # if a and b are not already in the same equality set
                 if b not in eq_sets[a]:
-                    newEqEx = EqualityExpression(
-                        VariableExpression(a), VariableExpression(b)
-                    )
+                    newEqEx = EqualityExpression(VariableExpression(a), VariableExpression(b))
                     if Prover9().prove(newEqEx, assumptions):
                         # we can prove that the names are the same entity.
                         # remember that they are equal so we don't re-check.
@@ -285,9 +279,7 @@ class ClosedWorldProver(ProverCommandDecorator):
                 sig.append(term.variable)
                 term = term.term
             if isinstance(term, ImpExpression):
-                if isinstance(term.first, ApplicationExpression) and isinstance(
-                    term.second, ApplicationExpression
-                ):
+                if isinstance(term.first, ApplicationExpression) and isinstance(term.second, ApplicationExpression):
                     func1, args1 = term.first.uncurry()
                     func2, args2 = term.second.uncurry()
                     if (
@@ -511,15 +503,9 @@ def default_reasoning_demo():
     premises.append(lexpr(r"all x.(flying_ostrich(x)  -> ostrich(x))"))
 
     # default properties
-    premises.append(
-        lexpr(r"all x.((animal(x)  & -Ab1(x)) -> -fly(x))")
-    )  # normal animals don't fly
-    premises.append(
-        lexpr(r"all x.((bird(x)    & -Ab2(x)) -> fly(x))")
-    )  # normal birds fly
-    premises.append(
-        lexpr(r"all x.((ostrich(x) & -Ab3(x)) -> -fly(x))")
-    )  # normal ostriches don't fly
+    premises.append(lexpr(r"all x.((animal(x)  & -Ab1(x)) -> -fly(x))"))  # normal animals don't fly
+    premises.append(lexpr(r"all x.((bird(x)    & -Ab2(x)) -> fly(x))"))  # normal birds fly
+    premises.append(lexpr(r"all x.((ostrich(x) & -Ab3(x)) -> -fly(x))"))  # normal ostriches don't fly
 
     # specify abnormal entities
     premises.append(lexpr(r"all x.(bird(x)           -> Ab1(x))"))  # flight

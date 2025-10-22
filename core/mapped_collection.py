@@ -74,10 +74,7 @@ class _PlainColumnGetter(Generic[_KT]):
         state = base.instance_state(value)
         m = base._state_mapper(state)
 
-        key: List[_KT] = [
-            m._get_state_attr_by_column(state, state.dict, col)
-            for col in self._cols(m)
-        ]
+        key: List[_KT] = [m._get_state_attr_by_column(state, state.dict, col) for col in self._cols(m)]
         if self.composite:
             return tuple(key)
         else:
@@ -102,9 +99,7 @@ class _SerializableColumnGetterV2(_PlainColumnGetter[_KT]):
 
     __slots__ = ("colkeys",)
 
-    def __init__(
-        self, colkeys: Sequence[Tuple[Optional[str], Optional[str]]]
-    ) -> None:
+    def __init__(self, colkeys: Sequence[Tuple[Optional[str], Optional[str]]]) -> None:
         self.colkeys = colkeys
         self.composite = len(colkeys) > 1
 
@@ -187,10 +182,7 @@ def column_keyed_dict(
 
 
     """
-    cols = [
-        coercions.expect(roles.ColumnArgumentRole, q, argname="mapping_spec")
-        for q in util.to_list(mapping_spec)
-    ]
+    cols = [coercions.expect(roles.ColumnArgumentRole, q, argname="mapping_spec") for q in util.to_list(mapping_spec)]
     keyfunc = _PlainColumnGetter(cols)
     return _mapped_collection_cls(
         keyfunc,
@@ -224,9 +216,7 @@ class _AttrGetter:
         return _AttrGetter, (self.attr_name,)
 
 
-def attribute_keyed_dict(
-    attr_name: str, *, ignore_unpopulated_attribute: bool = False
-) -> Type[KeyFuncDict[Any, Any]]:
+def attribute_keyed_dict(attr_name: str, *, ignore_unpopulated_attribute: bool = False) -> Type[KeyFuncDict[Any, Any]]:
     """A dictionary-based collection type with attribute-based keying.
 
     .. versionchanged:: 2.0 Renamed :data:`.attribute_mapped_collection` to
@@ -317,9 +307,7 @@ def keyfunc_mapping(
 
 
     """
-    return _mapped_collection_cls(
-        keyfunc, ignore_unpopulated_attribute=ignore_unpopulated_attribute
-    )
+    return _mapped_collection_cls(keyfunc, ignore_unpopulated_attribute=ignore_unpopulated_attribute)
 
 
 class KeyFuncDict(Dict[_KT, _VT]):
@@ -456,16 +444,12 @@ class KeyFuncDict(Dict[_KT, _VT]):
 
         if key is base.NO_VALUE:
             if not self.ignore_unpopulated_attribute:
-                self._raise_for_unpopulated(
-                    value, _sa_initiator, warn_only=False
-                )
+                self._raise_for_unpopulated(value, _sa_initiator, warn_only=False)
             else:
                 return
         elif key is Missing:
             if not self.ignore_unpopulated_attribute:
-                self._raise_for_unpopulated(
-                    value, _sa_initiator, warn_only=True
-                )
+                self._raise_for_unpopulated(value, _sa_initiator, warn_only=True)
                 key = None
             else:
                 return
@@ -485,15 +469,11 @@ class KeyFuncDict(Dict[_KT, _VT]):
 
         if key is base.NO_VALUE:
             if not self.ignore_unpopulated_attribute:
-                self._raise_for_unpopulated(
-                    value, _sa_initiator, warn_only=False
-                )
+                self._raise_for_unpopulated(value, _sa_initiator, warn_only=False)
             return
         elif key is Missing:
             if not self.ignore_unpopulated_attribute:
-                self._raise_for_unpopulated(
-                    value, _sa_initiator, warn_only=True
-                )
+                self._raise_for_unpopulated(value, _sa_initiator, warn_only=True)
                 key = None
             else:
                 return

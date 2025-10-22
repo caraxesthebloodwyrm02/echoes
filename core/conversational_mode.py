@@ -132,10 +132,7 @@ Does this make sense? Feel free to ask if you'd like me to explain any part in m
     def postprocess_response(self, response: str, context: Dict[str, Any]) -> str:
         """Add conversational polish"""
         # Add encouraging closing if not already present
-        if not any(
-            phrase in response.lower()
-            for phrase in ["feel free", "let me know", "questions"]
-        ):
+        if not any(phrase in response.lower() for phrase in ["feel free", "let me know", "questions"]):
             response += "\n\nLet me know if you have any questions about this!"
 
         return response

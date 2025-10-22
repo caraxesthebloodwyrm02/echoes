@@ -262,9 +262,7 @@ class XMLCorpusView(StreamBackedCorpusView):
 
             # Do we have a fragment that will never be well-formed?
             if re.search("[<>]", fragment).group(0) == ">":
-                pos = stream.tell() - (
-                    len(fragment) - re.search("[<>]", fragment).end()
-                )
+                pos = stream.tell() - (len(fragment) - re.search("[<>]", fragment).end())
                 raise ValueError('Unexpected ">" near char %s' % pos)
 
             # End of file?

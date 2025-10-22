@@ -70,12 +70,7 @@ def _compute_mi_cc(x, y, n_neighbors):
     ny = kd.query_radius(y, radius, count_only=True, return_distance=False)
     ny = np.array(ny) - 1.0
 
-    mi = (
-        digamma(n_samples)
-        + digamma(n_neighbors)
-        - np.mean(digamma(nx + 1))
-        - np.mean(digamma(ny + 1))
-    )
+    mi = digamma(n_samples) + digamma(n_neighbors) - np.mean(digamma(nx + 1)) - np.mean(digamma(ny + 1))
 
     return max(0, mi)
 
@@ -143,12 +138,7 @@ def _compute_mi_cd(c, d, n_neighbors):
     m_all = kd.query_radius(c, radius, count_only=True, return_distance=False)
     m_all = np.array(m_all)
 
-    mi = (
-        digamma(n_samples)
-        + np.mean(digamma(k_all))
-        - np.mean(digamma(label_counts))
-        - np.mean(digamma(m_all))
-    )
+    mi = digamma(n_samples) + np.mean(digamma(k_all)) - np.mean(digamma(label_counts)) - np.mean(digamma(m_all))
 
     return max(0, mi)
 
@@ -294,25 +284,15 @@ def _estimate_mi(
     rng = check_random_state(random_state)
     if np.any(continuous_mask):
         X = X.astype(np.float64, copy=copy)
-        X[:, continuous_mask] = scale(
-            X[:, continuous_mask], with_mean=False, copy=False
-        )
+        X[:, continuous_mask] = scale(X[:, continuous_mask], with_mean=False, copy=False)
 
         # Add small noise to continuous features as advised in Kraskov et. al.
         means = np.maximum(1, np.mean(np.abs(X[:, continuous_mask]), axis=0))
-        X[:, continuous_mask] += (
-            1e-10
-            * means
-            * rng.standard_normal(size=(n_samples, np.sum(continuous_mask)))
-        )
+        X[:, continuous_mask] += 1e-10 * means * rng.standard_normal(size=(n_samples, np.sum(continuous_mask)))
 
     if not discrete_target:
         y = scale(y, with_mean=False)
-        y += (
-            1e-10
-            * np.maximum(1, np.mean(np.abs(y)))
-            * rng.standard_normal(size=n_samples)
-        )
+        y += 1e-10 * np.maximum(1, np.mean(np.abs(y))) * rng.standard_normal(size=n_samples)
 
     mi = Parallel(n_jobs=n_jobs)(
         delayed(_compute_mi)(x, y, discrete_feature, discrete_target, n_neighbors)

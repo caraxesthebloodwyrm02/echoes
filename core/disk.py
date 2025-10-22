@@ -44,8 +44,7 @@ def memstr_to_bytes(text):
         size = int(units[text[-1]] * float(text[:-1]))
     except (KeyError, ValueError) as e:
         raise ValueError(
-            "Invalid literal for size give: %s (type %s) should be "
-            "alike '10G', '500M', '50K'." % (text, type(text))
+            "Invalid literal for size give: %s (type %s) should be " "alike '10G', '500M', '50K'." % (text, type(text))
         ) from e
     return size
 
@@ -116,11 +115,7 @@ def delete_folder(folder_path, onerror=None, allow_non_empty=True):
                         util.debug("Successfully deleted {}".format(folder_path))
                         break
                     else:
-                        raise OSError(
-                            "Expected empty folder {} but got {} files.".format(
-                                folder_path, len(files)
-                            )
-                        )
+                        raise OSError("Expected empty folder {} but got {} files.".format(folder_path, len(files)))
                 except (OSError, WindowsError):
                     err_count += 1
                     if err_count > RM_SUBDIRS_N_RETRY:

@@ -100,9 +100,7 @@ def grow_diag_final_and(srclen, trglen, e2f, f2e):
                             e_new, f_new = neighbor
                             # if ( ( e-new not aligned and f-new not aligned)
                             # and (e-new, f-new in union(e2f, f2e) )
-                            if (
-                                e_new not in aligned and f_new not in aligned
-                            ) and neighbor in union:
+                            if (e_new not in aligned and f_new not in aligned) and neighbor in union:
                                 alignment.add(neighbor)
                                 aligned["e"].add(e_new)
                                 aligned["f"].add(f_new)
@@ -123,11 +121,7 @@ def grow_diag_final_and(srclen, trglen, e2f, f2e):
             for f_new in range(trglen):
                 # if ( ( e-new not aligned and f-new not aligned)
                 # and (e-new, f-new in union(e2f, f2e) )
-                if (
-                    e_new not in aligned
-                    and f_new not in aligned
-                    and (e_new, f_new) in union
-                ):
+                if e_new not in aligned and f_new not in aligned and (e_new, f_new) in union:
                     alignment.add((e_new, f_new))
                     aligned["e"].add(e_new)
                     aligned["f"].add(f_new)

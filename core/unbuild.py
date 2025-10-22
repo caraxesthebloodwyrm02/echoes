@@ -64,9 +64,7 @@ def _pruneLocations(locations, poles, axisTags):
                             continue
                         if axisTag not in candidateAxes:
                             continue
-                        candidate = {
-                            k: defaultV for k, (_, defaultV, _) in candidate.items()
-                        }
+                        candidate = {k: defaultV for k, (_, defaultV, _) in candidate.items()}
                         if candidate[axisTag] == v:
                             pins[tuple(candidate.items())] = None
                             break
@@ -83,11 +81,7 @@ def mappings_from_avar(font, denormalize=True):
     if "avar" not in font:
         return {}, {}
     avar = font["avar"]
-    axisMaps = {
-        tag: seg
-        for tag, seg in avar.segments.items()
-        if seg and seg != {-1: -1, 0: 0, 1: 1}
-    }
+    axisMaps = {tag: seg for tag, seg in avar.segments.items() if seg and seg != {-1: -1, 0: 0, 1: 1}}
     mappings = []
 
     if getattr(avar, "majorVersion", 1) == 2:
@@ -167,12 +161,8 @@ def mappings_from_avar(font, denormalize=True):
             axisMaps[tag] = {denorm(k): denorm(v) for k, v in seg.items()}
 
         for i, (inputLoc, outputLoc) in enumerate(mappings):
-            inputLoc = {
-                tag: _denormalize(val, axisMap[tag]) for tag, val in inputLoc.items()
-            }
-            outputLoc = {
-                tag: _denormalize(val, axisMap[tag]) for tag, val in outputLoc.items()
-            }
+            inputLoc = {tag: _denormalize(val, axisMap[tag]) for tag, val in inputLoc.items()}
+            outputLoc = {tag: _denormalize(val, axisMap[tag]) for tag, val in outputLoc.items()}
             mappings[i] = (inputLoc, outputLoc)
 
     return axisMaps, mappings

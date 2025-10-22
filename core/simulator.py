@@ -89,9 +89,7 @@ class PhaseSimulator:
         factors[AlignmentFactor.VISION_ALIGNMENT] = vision_score
 
         # Overall score
-        alignment_score = sum(
-            factors[factor] * self.vision_weights[factor] for factor in AlignmentFactor
-        )
+        alignment_score = sum(factors[factor] * self.vision_weights[factor] for factor in AlignmentFactor)
 
         # Generate recommendations and risks
         recommendations, risks = self._generate_feedback(phase_json, factors)
@@ -173,9 +171,7 @@ class PhaseSimulator:
             risks.append("Timeline may slip due to single-operator constraints")
 
         if factors[AlignmentFactor.VISION_ALIGNMENT] < 0.8:
-            recommendations.append(
-                "Ensure deliverables align with Python/automation focus"
-            )
+            recommendations.append("Ensure deliverables align with Python/automation focus")
             risks.append("Deviation from vision may lead to rework")
 
         return recommendations, risks

@@ -132,10 +132,7 @@ class ViterbiParser(ParserI):
         # that might cover that span to the constituents dictionary.
         for length in range(1, len(tokens) + 1):
             if self._trace:
-                print(
-                    "Finding the most likely constituents"
-                    + " spanning %d text elements..." % length
-                )
+                print("Finding the most likely constituents" + " spanning %d text elements..." % length)
             for start in range(len(tokens) - length + 1):
                 span = (start, start + length)
                 self._add_constituents_spanning(span, constituents, tokens)
@@ -336,7 +333,6 @@ def demo():
     import sys
     import time
 
-    from nltk import tokenize
     from nltk.grammar import PCFG
     from nltk.parse import ViterbiParser
 
@@ -412,9 +408,7 @@ def demo():
     t = time.time()
     parses = parser.parse_all(tokens)
     time = time.time() - t
-    average = (
-        reduce(lambda a, b: a + b.prob(), parses, 0) / len(parses) if parses else 0
-    )
+    average = reduce(lambda a, b: a + b.prob(), parses, 0) / len(parses) if parses else 0
     num_parses = len(parses)
     for p in parses:
         all_parses[p.freeze()] = 1

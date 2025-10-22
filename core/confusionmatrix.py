@@ -122,9 +122,7 @@ class ConfusionMatrix:
 
         values = self._values
         if sort_by_count:
-            values = sorted(
-                values, key=lambda v: -sum(self._confusion[self._indices[v]])
-            )
+            values = sorted(values, key=lambda v: -sum(self._confusion[self._indices[v]]))
 
         if truncate:
             values = values[:truncate]

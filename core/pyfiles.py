@@ -34,16 +34,9 @@ def template_to_file(
         output = template.render_unicode(**kw).encode(output_encoding)
     except:
         with tempfile.NamedTemporaryFile(suffix=".txt", delete=False) as ntf:
-            ntf.write(
-                exceptions.text_error_template()
-                .render_unicode()
-                .encode(output_encoding)
-            )
+            ntf.write(exceptions.text_error_template().render_unicode().encode(output_encoding))
             fname = ntf.name
-        raise CommandError(
-            "Template rendering failed; see %s for a "
-            "template-oriented traceback." % fname
-        )
+        raise CommandError("Template rendering failed; see %s for a " "template-oriented traceback." % fname)
     else:
         with open(dest, "ab" if append_with_newlines else "wb") as f:
             if append_with_newlines:
@@ -71,9 +64,7 @@ def coerce_resource_to_filename(fname_or_resource: str) -> pathlib.Path:
         ref = resources.files(tokens[0])
         for tok in tokens[1:]:
             ref = ref / tok
-        fname_or_resource = file_manager.enter_context(  # type: ignore[assignment]  # noqa: E501
-            resources.as_file(ref)
-        )
+        fname_or_resource = file_manager.enter_context(resources.as_file(ref))  # type: ignore[assignment]  # noqa: E501
     return pathlib.Path(fname_or_resource)
 
 
@@ -83,9 +74,7 @@ def pyc_file_from_path(
     """Given a python source path, locate the .pyc."""
 
     pathpath = pathlib.Path(path)
-    candidate = pathlib.Path(
-        importlib.util.cache_from_source(pathpath.as_posix())
-    )
+    candidate = pathlib.Path(importlib.util.cache_from_source(pathpath.as_posix()))
     if candidate.exists():
         return candidate
 
@@ -99,9 +88,7 @@ def pyc_file_from_path(
         return None
 
 
-def load_python_file(
-    dir_: Union[str, os.PathLike[str]], filename: Union[str, os.PathLike[str]]
-) -> ModuleType:
+def load_python_file(dir_: Union[str, os.PathLike[str]], filename: Union[str, os.PathLike[str]]) -> ModuleType:
     """Load a file from the given path as a Python module."""
 
     dir_ = pathlib.Path(dir_)
@@ -127,9 +114,7 @@ def load_python_file(
     return module
 
 
-def load_module_py(
-    module_id: str, path: Union[str, os.PathLike[str]]
-) -> ModuleType:
+def load_module_py(module_id: str, path: Union[str, os.PathLike[str]]) -> ModuleType:
     spec = importlib.util.spec_from_file_location(module_id, path)
     assert spec
     module = importlib.util.module_from_spec(spec)

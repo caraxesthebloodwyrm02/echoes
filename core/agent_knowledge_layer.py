@@ -58,9 +58,7 @@ try:
     KG_AVAILABLE = True
 except ImportError:
     KG_AVAILABLE = False
-    logging.warning(
-        "Knowledge graph dependencies not available for AgentKnowledgeLayer"
-    )
+    logging.warning("Knowledge graph dependencies not available for AgentKnowledgeLayer")
 
 
 class AgentDiscovery:
@@ -80,9 +78,7 @@ class AgentDiscovery:
         self.confidence = confidence
         self.metadata = metadata or {}
         self.timestamp = datetime.now().isoformat()
-        self.discovery_id = (
-            f"{agent_name}_{discovery_type}_{datetime.now().timestamp()}"
-        )
+        self.discovery_id = f"{agent_name}_{discovery_type}_{datetime.now().timestamp()}"
 
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary for storage"""
@@ -114,9 +110,7 @@ class AgentContext:
         self.context_data = context_data
         self.priority = priority
         self.timestamp = datetime.now().isoformat()
-        self.context_id = (
-            f"ctx_{source_agent}_{target_agent}_{datetime.now().timestamp()}"
-        )
+        self.context_id = f"ctx_{source_agent}_{target_agent}_{datetime.now().timestamp()}"
         self.status = "pending"  # pending, active, completed, failed
 
     def to_dict(self) -> Dict[str, Any]:
@@ -180,9 +174,7 @@ class AgentKnowledgeLayer:
                 self.kg_bridge = KnowledgeGraphBridge(enable_kg=True)
                 self.logger.info("Agent Knowledge Layer initialized with KG support")
             except Exception as e:
-                self.logger.error(
-                    f"Failed to initialize KG for Agent Knowledge Layer: {e}"
-                )
+                self.logger.error(f"Failed to initialize KG for Agent Knowledge Layer: {e}")
                 self.enabled = False
         else:
             self.logger.warning("Agent Knowledge Layer running without KG support")
@@ -268,9 +260,7 @@ class AgentKnowledgeLayer:
                 )
 
                 # Link discovery to agent
-                agent_uri = self.kg.ns["code"][
-                    f"Agent_{discovery.agent_name.replace('.', '_')}"
-                ]
+                agent_uri = self.kg.ns["code"][f"Agent_{discovery.agent_name.replace('.', '_')}"]
                 self.kg.add_relationship(
                     agent_uri,
                     "made_discovery",
@@ -279,9 +269,7 @@ class AgentKnowledgeLayer:
                 )
 
             self.stats["discoveries_shared"] += 1
-            self.logger.info(
-                f"Discovery shared by {discovery.agent_name}: {discovery.discovery_type}"
-            )
+            self.logger.info(f"Discovery shared by {discovery.agent_name}: {discovery.discovery_type}")
             return True
 
         except Exception as e:
@@ -321,9 +309,7 @@ class AgentKnowledgeLayer:
                 # Use semantic search via KG bridge
                 results = self.kg_bridge.semantic_search(
                     query=query,
-                    category="agent_discovery"
-                    if not discovery_type
-                    else discovery_type,
+                    category="agent_discovery" if not discovery_type else discovery_type,
                     limit=limit,
                     min_confidence=min_confidence,
                 )
@@ -332,9 +318,7 @@ class AgentKnowledgeLayer:
                     return results
 
             except Exception as e:
-                self.logger.warning(
-                    f"Semantic query failed, falling back to in-memory: {e}"
-                )
+                self.logger.warning(f"Semantic query failed, falling back to in-memory: {e}")
 
         # Fallback: In-memory filtering
         filtered = []
@@ -376,9 +360,7 @@ class AgentKnowledgeLayer:
         """
         # Enhance context with related discoveries if requested
         if include_related_discoveries:
-            related_discoveries = self.query_discoveries(
-                agent_name=source_agent, min_confidence=0.7, limit=5
-            )
+            related_discoveries = self.query_discoveries(agent_name=source_agent, min_confidence=0.7, limit=5)
             context_data["related_discoveries"] = related_discoveries
 
             # Add relevant knowledge from KG
@@ -420,12 +402,8 @@ class AgentKnowledgeLayer:
                 )
 
                 # Link agents via handoff
-                source_uri = self.kg.ns["code"][
-                    f"Agent_{source_agent.replace('.', '_')}"
-                ]
-                target_uri = self.kg.ns["code"][
-                    f"Agent_{target_agent.replace('.', '_')}"
-                ]
+                source_uri = self.kg.ns["code"][f"Agent_{source_agent.replace('.', '_')}"]
+                target_uri = self.kg.ns["code"][f"Agent_{target_agent.replace('.', '_')}"]
                 self.kg.add_relationship(
                     source_uri,
                     "hands_off_to",
@@ -493,35 +471,23 @@ class AgentKnowledgeLayer:
                     pair = (ctx.source_agent, ctx.target_agent)
                     agent_pairs[pair] = agent_pairs.get(pair, 0) + 1
 
-                for (source, target), count in sorted(
-                    agent_pairs.items(), key=lambda x: x[1], reverse=True
-                )[:5]:
-                    patterns["successful_handoffs"].append(
-                        f"{source} → {target} ({count} successful handoffs)"
-                    )
+                for (source, target), count in sorted(agent_pairs.items(), key=lambda x: x[1], reverse=True)[:5]:
+                    patterns["successful_handoffs"].append(f"{source} → {target} ({count} successful handoffs)")
 
             # Analyze common discovery types
             discovery_types = {}
             for disc in self.discoveries:
                 if disc.confidence >= 0.7:
-                    discovery_types[disc.discovery_type] = (
-                        discovery_types.get(disc.discovery_type, 0) + 1
-                    )
+                    discovery_types[disc.discovery_type] = discovery_types.get(disc.discovery_type, 0) + 1
 
-            for disc_type, count in sorted(
-                discovery_types.items(), key=lambda x: x[1], reverse=True
-            )[:5]:
-                patterns["common_discoveries"].append(
-                    f"{disc_type} ({count} discoveries)"
-                )
+            for disc_type, count in sorted(discovery_types.items(), key=lambda x: x[1], reverse=True)[:5]:
+                patterns["common_discoveries"].append(f"{disc_type} ({count} discoveries)")
 
             # Merge KG patterns
             patterns.update(kg_patterns)
 
             self.stats["patterns_learned"] = sum(len(v) for v in patterns.values())
-            self.logger.info(
-                f"Learned {self.stats['patterns_learned']} patterns from agent interactions"
-            )
+            self.logger.info(f"Learned {self.stats['patterns_learned']} patterns from agent interactions")
 
         except Exception as e:
             self.logger.error(f"Pattern learning failed: {e}")
@@ -554,9 +520,7 @@ class AgentKnowledgeLayer:
             elif ctx.target_agent == agent_name:
                 collaborated_with.add(ctx.source_agent)
 
-        uncollaborated = (
-            set(self.agent_registry.keys()) - collaborated_with - {agent_name}
-        )
+        uncollaborated = set(self.agent_registry.keys()) - collaborated_with - {agent_name}
         if uncollaborated:
             recommendations.append(
                 {
@@ -596,9 +560,7 @@ class AgentKnowledgeLayer:
             "discoveries_stored": len(self.discoveries),
             "contexts_stored": len(self.contexts),
             "active_agents": len(self.agent_registry),
-            "completed_handoffs": len(
-                [c for c in self.contexts if c.status == "completed"]
-            ),
+            "completed_handoffs": len([c for c in self.contexts if c.status == "completed"]),
         }
 
 

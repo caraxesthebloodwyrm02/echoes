@@ -31,9 +31,7 @@ def _raise_typeerror(X):
 
 def _raise_error_wrong_axis(axis):
     if axis not in (0, 1):
-        raise ValueError(
-            "Unknown axis value: %d. Use 0 for rows, or 1 for columns" % axis
-        )
+        raise ValueError("Unknown axis value: %d. Use 0 for rows, or 1 for columns" % axis)
 
 
 def inplace_csr_column_scale(X, scale):
@@ -153,22 +151,14 @@ def mean_variance_axis(X, axis, weights=None, return_sum_weights=False):
 
     if sp.issparse(X) and X.format == "csr":
         if axis == 0:
-            return _csr_mean_var_axis0(
-                X, weights=weights, return_sum_weights=return_sum_weights
-            )
+            return _csr_mean_var_axis0(X, weights=weights, return_sum_weights=return_sum_weights)
         else:
-            return _csc_mean_var_axis0(
-                X.T, weights=weights, return_sum_weights=return_sum_weights
-            )
+            return _csc_mean_var_axis0(X.T, weights=weights, return_sum_weights=return_sum_weights)
     elif sp.issparse(X) and X.format == "csc":
         if axis == 0:
-            return _csc_mean_var_axis0(
-                X, weights=weights, return_sum_weights=return_sum_weights
-            )
+            return _csc_mean_var_axis0(X, weights=weights, return_sum_weights=return_sum_weights)
         else:
-            return _csr_mean_var_axis0(
-                X.T, weights=weights, return_sum_weights=return_sum_weights
-            )
+            return _csr_mean_var_axis0(X.T, weights=weights, return_sum_weights=return_sum_weights)
     else:
         _raise_typeerror(X)
 
@@ -283,9 +273,7 @@ def incr_mean_variance_axis(X, *, axis, last_mean, last_var, last_n, weights=Non
     if weights is not None:
         weights = _check_sample_weight(weights, X, dtype=X.dtype)
 
-    return _incr_mean_var_axis0(
-        X, last_mean=last_mean, last_var=last_var, last_n=last_n, weights=weights
-    )
+    return _incr_mean_var_axis0(X, last_mean=last_mean, last_var=last_var, last_n=last_n, weights=weights)
 
 
 def inplace_column_scale(X, scale):
@@ -670,8 +658,7 @@ def _get_median(data, n_zeros):
         return _get_elem_at_rank(middle, data, n_negative, n_zeros)
 
     return (
-        _get_elem_at_rank(middle - 1, data, n_negative, n_zeros)
-        + _get_elem_at_rank(middle, data, n_negative, n_zeros)
+        _get_elem_at_rank(middle - 1, data, n_negative, n_zeros) + _get_elem_at_rank(middle, data, n_negative, n_zeros)
     ) / 2.0
 
 

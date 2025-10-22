@@ -131,11 +131,7 @@ class MyServerHandler(BaseHTTPRequestHandler):
             # This doesn't seem to work with MWEs.
             type = "text/html"
             parts = (sp.split("?")[1]).split("&")
-            word = [
-                p.split("=")[1].replace("+", " ")
-                for p in parts
-                if p.startswith("nextWord")
-            ][0]
+            word = [p.split("=")[1].replace("+", " ") for p in parts if p.startswith("nextWord")][0]
             page, word = page_from_word(word)
         elif sp.startswith("lookup_"):
             # TODO add a variation of this that takes a non ecoded word or MWE.
@@ -164,10 +160,7 @@ class MyServerHandler(BaseHTTPRequestHandler):
         global logfile
 
         if logfile:
-            logfile.write(
-                "%s - - [%s] %s\n"
-                % (self.address_string(), self.log_date_time_string(), format % args)
-            )
+            logfile.write("%s - - [%s] %s\n" % (self.address_string(), self.log_date_time_string(), format % args))
 
 
 def get_unique_counter_from_url(sp):
@@ -387,9 +380,7 @@ def get_relations_data(word, synset):
             (
                 DERIVATIONALLY_RELATED_FORM,
                 "Derivationally related form",
-                lemma_property(
-                    word, synset, lambda l: l.derivationally_related_forms()
-                ),
+                lemma_property(word, synset, lambda l: l.derivationally_related_forms()),
             ),
         )
     elif synset.pos() == wn.VERB:
@@ -409,9 +400,7 @@ def get_relations_data(word, synset):
             (
                 DERIVATIONALLY_RELATED_FORM,
                 "Derivationally related form",
-                lemma_property(
-                    word, synset, lambda l: l.derivationally_related_forms()
-                ),
+                lemma_property(word, synset, lambda l: l.derivationally_related_forms()),
             ),
         )
     elif synset.pos() == wn.ADJ or synset.pos() == wn.ADJ_SAT:
@@ -430,9 +419,7 @@ def get_relations_data(word, synset):
     elif synset.pos() == wn.ADV:
         # This is weird. adverbs such as 'quick' and 'fast' don't seem
         # to have antonyms returned by the corpus.a
-        return (
-            (ANTONYM, "Antonym", lemma_property(word, synset, lambda l: l.antonyms())),
-        )
+        return ((ANTONYM, "Antonym", lemma_property(word, synset, lambda l: l.antonyms())),)
         # Derived from adjective - not supported by corpus
     else:
         raise TypeError("Unhandled synset POS type: " + str(synset.pos()))
@@ -587,8 +574,7 @@ def _collect_all_synsets(word, pos, synset_relations=dict()):
     part of speech.
     """
     return "<ul>%s\n</ul>\n" % "".join(
-        _collect_one_synset(word, synset, synset_relations)
-        for synset in wn.synsets(word, pos)
+        _collect_one_synset(word, synset, synset_relations) for synset in wn.synsets(word, pos)
     )
 
 
@@ -606,7 +592,7 @@ def _synset_relations(word, synset, synset_relations):
     :rtype: str
     """
 
-    if not synset.name() in synset_relations:
+    if synset.name() not in synset_relations:
         return ""
     ref = Reference(word, synset_relations)
 
@@ -623,10 +609,7 @@ def _synset_relations(word, synset, synset_relations):
                 "".join("<li>%s</li>\n" % relation_html(sr) for sr in r[1]),
             )
         else:
-            raise TypeError(
-                "r must be a synset, lemma or list, it was: type(r) = %s, r = %s"
-                % (type(r), r)
-            )
+            raise TypeError("r must be a synset, lemma or list, it was: type(r) = %s, r = %s" % (type(r), r))
 
     def make_synset_html(db_name, disp_name, rels):
         synset_html = "<i>%s</i>\n" % make_lookup_link(
@@ -635,9 +618,7 @@ def _synset_relations(word, synset, synset_relations):
         )
 
         if db_name in ref.synset_relations[synset.name()]:
-            synset_html += "<ul>%s</ul>\n" % "".join(
-                "<li>%s</li>\n" % relation_html(r) for r in rels
-            )
+            synset_html += "<ul>%s</ul>\n" % "".join("<li>%s</li>\n" % relation_html(r) for r in rels)
 
         return synset_html
 
@@ -977,9 +958,7 @@ def usage():
 
 def app():
     # Parse and interpret options.
-    (opts, _) = getopt.getopt(
-        argv[1:], "l:p:sh", ["logfile=", "port=", "server-mode", "help"]
-    )
+    (opts, _) = getopt.getopt(argv[1:], "l:p:sh", ["logfile=", "port=", "server-mode", "help"])
     port = 8000
     server_mode = False
     help_mode = False

@@ -106,9 +106,7 @@ async def demo_data_loop():
     print("Running with data loop enabled...")
 
     try:
-        result = await system.process_prompt(
-            prompt=prompt, mode="ide", enable_data_loop=True
-        )
+        result = await system.process_prompt(prompt=prompt, mode="ide", enable_data_loop=True)
 
         print("\nResponse:")
         print("-" * 60)
@@ -192,9 +190,7 @@ async def demo_workflow_integration():
     integration_config = system.integrate_with_workflow_macro(phases)
 
     print(f"Integration phases: {len(integration_config['phases'])}")
-    print(
-        f"Priority map: {integration_config['deterministic_merge_config']['priority_map']}"
-    )
+    print(f"Priority map: {integration_config['deterministic_merge_config']['priority_map']}")
 
     # This would integrate with the existing workflows/macro.py system
     print("Integration configuration created successfully!")

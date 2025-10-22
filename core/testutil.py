@@ -40,9 +40,7 @@ class MypycDataSuite(DataSuite):
     data_prefix = test_data_prefix
 
 
-def builtins_wrapper(
-    func: Callable[[DataDrivenTestCase], None], path: str
-) -> Callable[[DataDrivenTestCase], None]:
+def builtins_wrapper(func: Callable[[DataDrivenTestCase], None], path: str) -> Callable[[DataDrivenTestCase], None]:
     """Decorate a function that implements a data-driven test case to copy an
     alternative builtins module implementation in place before performing the
     test case. Clean up after executing the test case.
@@ -71,9 +69,7 @@ def use_custom_builtins(builtins_path: str, testcase: DataDrivenTestCase) -> Ite
             os.remove(builtins)
 
 
-def perform_test(
-    func: Callable[[DataDrivenTestCase], None], builtins_path: str, testcase: DataDrivenTestCase
-) -> None:
+def perform_test(func: Callable[[DataDrivenTestCase], None], builtins_path: str, testcase: DataDrivenTestCase) -> None:
     for path, _ in testcase.files:
         if os.path.basename(path) == "builtins.py":
             default_builtins = False
@@ -92,9 +88,7 @@ def perform_test(
         os.remove(builtins)
 
 
-def build_ir_for_single_file(
-    input_lines: list[str], compiler_options: CompilerOptions | None = None
-) -> list[FuncIR]:
+def build_ir_for_single_file(input_lines: list[str], compiler_options: CompilerOptions | None = None) -> list[FuncIR]:
     return build_ir_for_single_file2(input_lines, compiler_options)[0].functions
 
 
@@ -126,9 +120,7 @@ def build_ir_for_single_file2(
 
     errors = Errors(options)
     mapper = Mapper({"__main__": None})
-    modules = build_ir(
-        [result.files["__main__"]], result.graph, result.types, mapper, compiler_options, errors
-    )
+    modules = build_ir([result.files["__main__"]], result.graph, result.types, mapper, compiler_options, errors)
     if errors.num_errors:
         raise CompileError(errors.new_messages())
 
@@ -181,9 +173,7 @@ def assert_test_output(
     if expected_output != actual and testcase.config.getoption("--update-data", False):
         update_testcase_output(testcase, actual)
 
-    assert_string_arrays_equal(
-        expected_output, actual, f"{message} ({testcase.file}, line {testcase.line})"
-    )
+    assert_string_arrays_equal(expected_output, actual, f"{message} ({testcase.file}, line {testcase.line})")
 
 
 def get_func_names(expected: list[str]) -> list[str]:

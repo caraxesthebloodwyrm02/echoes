@@ -59,9 +59,7 @@ class ODFReader(BaseExcelReader["OpenDocument"]):
 
         return OpenDocument
 
-    def load_workbook(
-        self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs
-    ) -> OpenDocument:
+    def load_workbook(self, filepath_or_buffer: FilePath | ReadBuffer[bytes], engine_kwargs) -> OpenDocument:
         from odf.opendocument import load
 
         return load(filepath_or_buffer, **engine_kwargs)
@@ -99,9 +97,7 @@ class ODFReader(BaseExcelReader["OpenDocument"]):
         self.close()
         raise ValueError(f"sheet {name} not found")
 
-    def get_sheet_data(
-        self, sheet, file_rows_needed: int | None = None
-    ) -> list[list[Scalar | NaTType]]:
+    def get_sheet_data(self, sheet, file_rows_needed: int | None = None) -> list[list[Scalar | NaTType]]:
         """
         Parse an ODF Table into a list of lists
         """
@@ -122,11 +118,7 @@ class ODFReader(BaseExcelReader["OpenDocument"]):
         table: list[list[Scalar | NaTType]] = []
 
         for sheet_row in sheet_rows:
-            sheet_cells = [
-                x
-                for x in sheet_row.childNodes
-                if hasattr(x, "qname") and x.qname in cell_names
-            ]
+            sheet_cells = [x for x in sheet_row.childNodes if hasattr(x, "qname") and x.qname in cell_names]
             empty_cells = 0
             table_row: list[Scalar | NaTType] = []
 

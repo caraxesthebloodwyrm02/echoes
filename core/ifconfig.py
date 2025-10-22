@@ -47,7 +47,7 @@ class IfConfig(SphinxDirective):
         node = ifconfig()
         node.document = self.state.document
         self.set_source_info(node)
-        node['expr'] = self.arguments[0]
+        node["expr"] = self.arguments[0]
         node += self.parse_content_to_nodes(allow_section_headings=True)
         return [node]
 
@@ -55,18 +55,16 @@ class IfConfig(SphinxDirective):
 def process_ifconfig_nodes(app: Sphinx, doctree: nodes.document, docname: str) -> None:
     ns = {confval.name: confval.value for confval in app.config}
     ns.update(app.config.__dict__.copy())
-    ns['builder'] = app.builder.name
+    ns["builder"] = app.builder.name
     for node in list(doctree.findall(ifconfig)):
         try:
-            res = eval(node['expr'], ns)  # NoQA: S307
+            res = eval(node["expr"], ns)  # NoQA: S307
         except Exception as err:
             # handle exceptions in a clean fashion
             from traceback import format_exception_only
 
-            msg = ''.join(format_exception_only(err.__class__, err))
-            newnode = doctree.reporter.error(
-                f'Exception occurred in ifconfig expression: \n{msg}', base_node=node
-            )
+            msg = "".join(format_exception_only(err.__class__, err))
+            newnode = doctree.reporter.error(f"Exception occurred in ifconfig expression: \n{msg}", base_node=node)
             node.replace_self(newnode)
         else:
             if not res:
@@ -77,9 +75,9 @@ def process_ifconfig_nodes(app: Sphinx, doctree: nodes.document, docname: str) -
 
 def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_node(ifconfig)
-    app.add_directive('ifconfig', IfConfig)
-    app.connect('doctree-resolved', process_ifconfig_nodes)
+    app.add_directive("ifconfig", IfConfig)
+    app.connect("doctree-resolved", process_ifconfig_nodes)
     return {
-        'version': sphinx.__display_version__,
-        'parallel_read_safe': True,
+        "version": sphinx.__display_version__,
+        "parallel_read_safe": True,
     }

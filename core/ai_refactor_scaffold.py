@@ -75,11 +75,7 @@ class AIRefactorScaffold:
 
                     # Truncate very large files for analysis
                     if len(content) > 10000:
-                        content = (
-                            content[:5000]
-                            + "\n\n[... FILE TRUNCATED FOR ANALYSIS ...]\n\n"
-                            + content[-2000:]
-                        )
+                        content = content[:5000] + "\n\n[... FILE TRUNCATED FOR ANALYSIS ...]\n\n" + content[-2000:]
 
                     codebase_analysis.append(
                         f"""

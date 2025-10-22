@@ -20,9 +20,7 @@ class AbstractPathEffect:
     ) -> None: ...
 
 class PathEffectRenderer(RendererBase):
-    def __init__(
-        self, path_effects: Iterable[AbstractPathEffect], renderer: RendererBase
-    ) -> None: ...
+    def __init__(self, path_effects: Iterable[AbstractPathEffect], renderer: RendererBase) -> None: ...
     def copy_with_path_effect(self, path_effects: Iterable[AbstractPathEffect]) -> PathEffectRenderer: ...
     def draw_path(
         self,
@@ -32,21 +30,10 @@ class PathEffectRenderer(RendererBase):
         rgbFace: ColorType | None = ...,
     ) -> None: ...
     def draw_markers(
-        self,
-        gc: GraphicsContextBase,
-        marker_path: Path,
-        marker_trans: Transform,
-        path: Path,
-        *args,
-        **kwargs
+        self, gc: GraphicsContextBase, marker_path: Path, marker_trans: Transform, path: Path, *args, **kwargs
     ) -> None: ...
     def draw_path_collection(
-        self,
-        gc: GraphicsContextBase,
-        master_transform: Transform,
-        paths: Sequence[Path],
-        *args,
-        **kwargs
+        self, gc: GraphicsContextBase, master_transform: Transform, paths: Sequence[Path], *args, **kwargs
     ) -> None: ...
     def __getattribute__(self, name: str) -> Any: ...
 
@@ -93,12 +80,7 @@ class PathPatchEffect(AbstractPathEffect):
 
 class TickedStroke(AbstractPathEffect):
     def __init__(
-        self,
-        offset: tuple[float, float] = ...,
-        spacing: float = ...,
-        angle: float = ...,
-        length: float = ...,
-        **kwargs
+        self, offset: tuple[float, float] = ..., spacing: float = ..., angle: float = ..., length: float = ..., **kwargs
     ) -> None: ...
     # rgbFace becomes non-optional
     def draw_path(self, renderer: RendererBase, gc: GraphicsContextBase, tpath: Path, affine: Transform, rgbFace: ColorType) -> None: ...  # type: ignore[override]

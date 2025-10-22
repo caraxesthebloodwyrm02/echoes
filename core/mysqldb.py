@@ -197,13 +197,9 @@ class MySQLDialect_mysqldb(MySQLDialect):
         if context is not None:
             cast(MySQLExecutionContext, context)._rowcount = rowcount
 
-    def create_connect_args(
-        self, url: URL, _translate_args: Optional[Dict[str, Any]] = None
-    ) -> ConnectArgsType:
+    def create_connect_args(self, url: URL, _translate_args: Optional[Dict[str, Any]] = None) -> ConnectArgsType:
         if _translate_args is None:
-            _translate_args = dict(
-                database="db", username="user", password="passwd"
-            )
+            _translate_args = dict(database="db", username="user", password="passwd")
 
         opts = url.translate_connect_args(**_translate_args)
         opts.update(url.query)
@@ -253,9 +249,7 @@ class MySQLDialect_mysqldb(MySQLDialect):
     def _found_rows_client_flag(self) -> Optional[int]:
         if self.dbapi is not None:
             try:
-                CLIENT_FLAGS = __import__(
-                    self.dbapi.__name__ + ".constants.CLIENT"
-                ).constants.CLIENT
+                CLIENT_FLAGS = __import__(self.dbapi.__name__ + ".constants.CLIENT").constants.CLIENT
             except (AttributeError, ImportError):
                 return None
             else:
@@ -273,9 +267,7 @@ class MySQLDialect_mysqldb(MySQLDialect):
             # note: the SQL here would be
             # "SHOW VARIABLES LIKE 'character_set%%'"
 
-            cset_name: Callable[[], str] = (
-                connection.connection.character_set_name
-            )
+            cset_name: Callable[[], str] = connection.connection.character_set_name
         except AttributeError:
             util.warn(
                 "No 'character_set_name' can be detected with "
@@ -287,9 +279,7 @@ class MySQLDialect_mysqldb(MySQLDialect):
         else:
             return cset_name()
 
-    def get_isolation_level_values(
-        self, dbapi_conn: DBAPIConnection
-    ) -> Tuple[IsolationLevel, ...]:
+    def get_isolation_level_values(self, dbapi_conn: DBAPIConnection) -> Tuple[IsolationLevel, ...]:
         return (
             "SERIALIZABLE",
             "READ UNCOMMITTED",
@@ -301,9 +291,7 @@ class MySQLDialect_mysqldb(MySQLDialect):
     def detect_autocommit_setting(self, dbapi_conn: DBAPIConnection) -> bool:
         return dbapi_conn.get_autocommit()  # type: ignore[no-any-return]
 
-    def set_isolation_level(
-        self, dbapi_connection: DBAPIConnection, level: IsolationLevel
-    ) -> None:
+    def set_isolation_level(self, dbapi_connection: DBAPIConnection, level: IsolationLevel) -> None:
         if level == "AUTOCOMMIT":
             dbapi_connection.autocommit(True)
         else:

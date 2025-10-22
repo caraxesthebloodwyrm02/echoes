@@ -35,6 +35,7 @@ TOOLS = [
     },
 ]
 
+
 # Function implementations
 def fetch_user_data(user_id: int) -> dict:
     # In a real app, call your DB or API

@@ -61,15 +61,11 @@ def test_fit_transform(global_random_seed):
     alpha = 1
     rng = np.random.RandomState(global_random_seed)
     Y, _, _ = generate_toy_data(3, 10, (8, 8), random_state=rng)  # wide array
-    spca_lars = SparsePCA(
-        n_components=3, method="lars", alpha=alpha, random_state=global_random_seed
-    )
+    spca_lars = SparsePCA(n_components=3, method="lars", alpha=alpha, random_state=global_random_seed)
     spca_lars.fit(Y)
 
     # Test that CD gives similar results
-    spca_lasso = SparsePCA(
-        n_components=3, method="cd", random_state=global_random_seed, alpha=alpha
-    )
+    spca_lasso = SparsePCA(n_components=3, method="cd", random_state=global_random_seed, alpha=alpha)
     spca_lasso.fit(Y)
     assert_array_almost_equal(spca_lasso.components_, spca_lars.components_)
 
@@ -79,9 +75,7 @@ def test_fit_transform_parallel(global_random_seed):
     alpha = 1
     rng = np.random.RandomState(global_random_seed)
     Y, _, _ = generate_toy_data(3, 10, (8, 8), random_state=rng)  # wide array
-    spca_lars = SparsePCA(
-        n_components=3, method="lars", alpha=alpha, random_state=global_random_seed
-    )
+    spca_lars = SparsePCA(n_components=3, method="lars", alpha=alpha, random_state=global_random_seed)
     spca_lars.fit(Y)
     U1 = spca_lars.transform(Y)
     # Test multiple CPUs
@@ -121,9 +115,7 @@ def test_initialization(global_random_seed):
     rng = np.random.RandomState(global_random_seed)
     U_init = rng.randn(5, 3)
     V_init = rng.randn(3, 4)
-    model = SparsePCA(
-        n_components=3, U_init=U_init, V_init=V_init, max_iter=0, random_state=rng
-    )
+    model = SparsePCA(n_components=3, U_init=U_init, V_init=V_init, max_iter=0, random_state=rng)
     model.fit(rng.randn(5, 4))
 
     expected_components = V_init / np.linalg.norm(V_init, axis=1, keepdims=True)
@@ -165,9 +157,7 @@ def test_pca_vs_spca(global_random_seed):
     spca.fit(Y)
     results_test_pca = pca.transform(Z)
     results_test_spca = spca.transform(Z)
-    assert_allclose(
-        np.abs(spca.components_.dot(pca.components_.T)), np.eye(2), atol=1e-4
-    )
+    assert_allclose(np.abs(spca.components_.dot(pca.components_.T)), np.eye(2), atol=1e-4)
     results_test_pca *= np.sign(results_test_pca[0, :])
     results_test_spca *= np.sign(results_test_spca[0, :])
     assert_allclose(results_test_pca, results_test_spca, atol=1e-4)
@@ -261,12 +251,8 @@ def test_spca_early_stopping(global_random_seed):
     X = rng.randn(n_samples, n_features)
 
     # vary the tolerance to force the early stopping of one of the model
-    model_early_stopped = MiniBatchSparsePCA(
-        max_iter=100, tol=0.5, random_state=global_random_seed
-    ).fit(X)
-    model_not_early_stopped = MiniBatchSparsePCA(
-        max_iter=100, tol=1e-3, random_state=global_random_seed
-    ).fit(X)
+    model_early_stopped = MiniBatchSparsePCA(max_iter=100, tol=0.5, random_state=global_random_seed).fit(X)
+    model_not_early_stopped = MiniBatchSparsePCA(max_iter=100, tol=1e-3, random_state=global_random_seed).fit(X)
     assert model_early_stopped.n_iter_ < model_not_early_stopped.n_iter_
 
     # force the max number of no improvement to a large value to check that
@@ -322,9 +308,7 @@ def test_sparse_pca_inverse_transform(global_random_seed):
     pca = PCA(n_components=n_components, random_state=global_random_seed)
     X_trans_spca = spca.fit_transform(X)
     X_trans_pca = pca.fit_transform(X)
-    assert_allclose(
-        spca.inverse_transform(X_trans_spca), pca.inverse_transform(X_trans_pca)
-    )
+    assert_allclose(spca.inverse_transform(X_trans_spca), pca.inverse_transform(X_trans_pca))
 
 
 @pytest.mark.parametrize("SPCA", [SparsePCA, MiniBatchSparsePCA])

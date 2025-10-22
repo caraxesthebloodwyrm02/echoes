@@ -65,30 +65,16 @@ def test_random_state():
 
     # check array-like
     # GH32503
-    state_arr_like = np.random.default_rng(None).integers(
-        0, 2**31, size=624, dtype="uint32"
-    )
-    assert (
-        com.random_state(state_arr_like).uniform()
-        == np.random.RandomState(state_arr_like).uniform()
-    )
+    state_arr_like = np.random.default_rng(None).integers(0, 2**31, size=624, dtype="uint32")
+    assert com.random_state(state_arr_like).uniform() == np.random.RandomState(state_arr_like).uniform()
 
     # Check BitGenerators
     # GH32503
-    assert (
-        com.random_state(np.random.MT19937(3)).uniform()
-        == np.random.RandomState(np.random.MT19937(3)).uniform()
-    )
-    assert (
-        com.random_state(np.random.PCG64(11)).uniform()
-        == np.random.RandomState(np.random.PCG64(11)).uniform()
-    )
+    assert com.random_state(np.random.MT19937(3)).uniform() == np.random.RandomState(np.random.MT19937(3)).uniform()
+    assert com.random_state(np.random.PCG64(11)).uniform() == np.random.RandomState(np.random.PCG64(11)).uniform()
 
     # Error for floats or strings
-    msg = (
-        "random_state must be an integer, array-like, a BitGenerator, Generator, "
-        "a numpy RandomState, or None"
-    )
+    msg = "random_state must be an integer, array-like, a BitGenerator, Generator, " "a numpy RandomState, or None"
     with pytest.raises(ValueError, match=msg):
         com.random_state("test")
 
@@ -124,9 +110,7 @@ def test_random_state():
             Series([1], name=(np.float64("nan"), np.int64(2))),
             pd.Index([], name=(np.float64("nan"), np.int64(2))),
             (np.float64("nan"), np.int64(2)),
-            marks=pytest.mark.xfail(
-                reason="Not checking for matching NAs inside tuples."
-            ),
+            marks=pytest.mark.xfail(reason="Not checking for matching NAs inside tuples."),
         ),
     ],
 )
@@ -172,14 +156,10 @@ def test_version_tag():
     try:
         version > Version("0.0.1")
     except TypeError:
-        raise ValueError(
-            "No git tags exist, please sync tags between upstream and your repo"
-        )
+        raise ValueError("No git tags exist, please sync tags between upstream and your repo")
 
 
-@pytest.mark.parametrize(
-    "obj", [(obj,) for obj in pd.__dict__.values() if callable(obj)]
-)
+@pytest.mark.parametrize("obj", [(obj,) for obj in pd.__dict__.values() if callable(obj)])
 def test_serializable(obj):
     # GH 35611
     unpickled = tm.round_trip_pickle(obj)

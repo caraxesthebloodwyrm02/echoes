@@ -68,11 +68,7 @@ class ComplianceAuditor:
                 for pattern, pii_type in pii_patterns:
                     if re.search(pattern, content, re.IGNORECASE):
                         # Check if there's encryption/anonymization nearby
-                        has_protection = bool(
-                            re.search(
-                                r"encrypt|hash|anonymize|redact", content, re.IGNORECASE
-                            )
-                        )
+                        has_protection = bool(re.search(r"encrypt|hash|anonymize|redact", content, re.IGNORECASE))
                         if not has_protection:
                             issues.append(
                                 {
@@ -277,9 +273,7 @@ class ComplianceAuditor:
 
         # Calculate compliance score
         total_checks = len(checks)
-        compliant_checks = sum(
-            1 for check in checks.values() if check.get("compliant", False)
-        )
+        compliant_checks = sum(1 for check in checks.values() if check.get("compliant", False))
         compliance_score = (compliant_checks / total_checks) * 100
 
         # Determine compliance level
@@ -306,27 +300,19 @@ class ComplianceAuditor:
         recommendations = []
 
         if checks["data_privacy"]["issues"] > 0:
-            recommendations.append(
-                "Implement PII encryption/anonymization for all sensitive data"
-            )
+            recommendations.append("Implement PII encryption/anonymization for all sensitive data")
 
         if not checks["consent_management"]["compliant"]:
-            recommendations.append(
-                "Implement user consent management system (GDPR requirement)"
-            )
+            recommendations.append("Implement user consent management system (GDPR requirement)")
 
         if not checks["data_retention"]["compliant"]:
             recommendations.append("Define and implement data retention policies")
 
         if not checks["audit_logging"]["compliant"]:
-            recommendations.append(
-                "Implement comprehensive audit logging (HIPAA requirement)"
-            )
+            recommendations.append("Implement comprehensive audit logging (HIPAA requirement)")
 
         if not checks["encryption"]["compliant"]:
-            recommendations.append(
-                "Implement encryption for data at rest and in transit"
-            )
+            recommendations.append("Implement encryption for data at rest and in transit")
 
         if not checks["access_controls"]["compliant"]:
             recommendations.append("Implement role-based access controls (RBAC)")

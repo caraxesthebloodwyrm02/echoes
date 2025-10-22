@@ -79,18 +79,10 @@ class TestFreqConversion:
         ival_A_to_D_end = Period(freq="D", year=2007, month=12, day=31)
         ival_A_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_A_to_H_end = Period(freq="h", year=2007, month=12, day=31, hour=23)
-        ival_A_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_A_to_T_end = Period(
-            freq="Min", year=2007, month=12, day=31, hour=23, minute=59
-        )
-        ival_A_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_A_to_S_end = Period(
-            freq="s", year=2007, month=12, day=31, hour=23, minute=59, second=59
-        )
+        ival_A_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_A_to_T_end = Period(freq="Min", year=2007, month=12, day=31, hour=23, minute=59)
+        ival_A_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_A_to_S_end = Period(freq="s", year=2007, month=12, day=31, hour=23, minute=59, second=59)
 
         ival_AJAN_to_D_end = Period(freq="D", year=2007, month=1, day=31)
         ival_AJAN_to_D_start = Period(freq="D", year=2006, month=2, day=1)
@@ -157,18 +149,10 @@ class TestFreqConversion:
         ival_Q_to_D_end = Period(freq="D", year=2007, month=3, day=31)
         ival_Q_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_Q_to_H_end = Period(freq="h", year=2007, month=3, day=31, hour=23)
-        ival_Q_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_Q_to_T_end = Period(
-            freq="Min", year=2007, month=3, day=31, hour=23, minute=59
-        )
-        ival_Q_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_Q_to_S_end = Period(
-            freq="s", year=2007, month=3, day=31, hour=23, minute=59, second=59
-        )
+        ival_Q_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_Q_to_T_end = Period(freq="Min", year=2007, month=3, day=31, hour=23, minute=59)
+        ival_Q_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_Q_to_S_end = Period(freq="s", year=2007, month=3, day=31, hour=23, minute=59, second=59)
 
         ival_QEJAN_to_D_start = Period(freq="D", year=2006, month=2, day=1)
         ival_QEJAN_to_D_end = Period(freq="D", year=2006, month=4, day=30)
@@ -219,18 +203,10 @@ class TestFreqConversion:
         ival_M_to_D_end = Period(freq="D", year=2007, month=1, day=31)
         ival_M_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_M_to_H_end = Period(freq="h", year=2007, month=1, day=31, hour=23)
-        ival_M_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_M_to_T_end = Period(
-            freq="Min", year=2007, month=1, day=31, hour=23, minute=59
-        )
-        ival_M_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_M_to_S_end = Period(
-            freq="s", year=2007, month=1, day=31, hour=23, minute=59, second=59
-        )
+        ival_M_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_M_to_T_end = Period(freq="Min", year=2007, month=1, day=31, hour=23, minute=59)
+        ival_M_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_M_to_S_end = Period(freq="s", year=2007, month=1, day=31, hour=23, minute=59, second=59)
 
         assert ival_M.asfreq("Y") == ival_M_to_A
         assert ival_M_end_of_year.asfreq("Y") == ival_M_to_A
@@ -309,18 +285,10 @@ class TestFreqConversion:
         ival_W_to_D_end = Period(freq="D", year=2007, month=1, day=7)
         ival_W_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_W_to_H_end = Period(freq="h", year=2007, month=1, day=7, hour=23)
-        ival_W_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_W_to_T_end = Period(
-            freq="Min", year=2007, month=1, day=7, hour=23, minute=59
-        )
-        ival_W_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_W_to_S_end = Period(
-            freq="s", year=2007, month=1, day=7, hour=23, minute=59, second=59
-        )
+        ival_W_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_W_to_T_end = Period(freq="Min", year=2007, month=1, day=7, hour=23, minute=59)
+        ival_W_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_W_to_S_end = Period(freq="s", year=2007, month=1, day=7, hour=23, minute=59, second=59)
 
         assert ival_W.asfreq("Y") == ival_W_to_A
         assert ival_W_end_of_year.asfreq("Y") == ival_W_to_A_end_of_year
@@ -402,18 +370,10 @@ class TestFreqConversion:
         ival_B_to_D = Period(freq="D", year=2007, month=1, day=1)
         ival_B_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_B_to_H_end = Period(freq="h", year=2007, month=1, day=1, hour=23)
-        ival_B_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_B_to_T_end = Period(
-            freq="Min", year=2007, month=1, day=1, hour=23, minute=59
-        )
-        ival_B_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_B_to_S_end = Period(
-            freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59
-        )
+        ival_B_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_B_to_T_end = Period(freq="Min", year=2007, month=1, day=1, hour=23, minute=59)
+        ival_B_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_B_to_S_end = Period(freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59)
 
         assert ival_B.asfreq("Y") == ival_B_to_A
         assert ival_B_end_of_year.asfreq("Y") == ival_B_to_A
@@ -468,18 +428,10 @@ class TestFreqConversion:
 
         ival_D_to_H_start = Period(freq="h", year=2007, month=1, day=1, hour=0)
         ival_D_to_H_end = Period(freq="h", year=2007, month=1, day=1, hour=23)
-        ival_D_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_D_to_T_end = Period(
-            freq="Min", year=2007, month=1, day=1, hour=23, minute=59
-        )
-        ival_D_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_D_to_S_end = Period(
-            freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59
-        )
+        ival_D_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_D_to_T_end = Period(freq="Min", year=2007, month=1, day=1, hour=23, minute=59)
+        ival_D_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_D_to_S_end = Period(freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59)
 
         assert ival_D.asfreq("Y") == ival_D_to_A
 
@@ -532,18 +484,10 @@ class TestFreqConversion:
         with tm.assert_produces_warning(FutureWarning, match=bday_msg):
             ival_H_to_B = Period(freq="B", year=2007, month=1, day=1)
 
-        ival_H_to_T_start = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=0
-        )
-        ival_H_to_T_end = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=59
-        )
-        ival_H_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_H_to_S_end = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=59, second=59
-        )
+        ival_H_to_T_start = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
+        ival_H_to_T_end = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=59)
+        ival_H_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_H_to_S_end = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=59, second=59)
 
         assert ival_H.asfreq("Y") == ival_H_to_A
         assert ival_H_end_of_year.asfreq("Y") == ival_H_to_A
@@ -570,27 +514,13 @@ class TestFreqConversion:
         # frequency conversion tests: from Minutely Frequency"
 
         ival_T = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=0)
-        ival_T_end_of_year = Period(
-            freq="Min", year=2007, month=12, day=31, hour=23, minute=59
-        )
-        ival_T_end_of_quarter = Period(
-            freq="Min", year=2007, month=3, day=31, hour=23, minute=59
-        )
-        ival_T_end_of_month = Period(
-            freq="Min", year=2007, month=1, day=31, hour=23, minute=59
-        )
-        ival_T_end_of_week = Period(
-            freq="Min", year=2007, month=1, day=7, hour=23, minute=59
-        )
-        ival_T_end_of_day = Period(
-            freq="Min", year=2007, month=1, day=1, hour=23, minute=59
-        )
-        ival_T_end_of_bus = Period(
-            freq="Min", year=2007, month=1, day=1, hour=23, minute=59
-        )
-        ival_T_end_of_hour = Period(
-            freq="Min", year=2007, month=1, day=1, hour=0, minute=59
-        )
+        ival_T_end_of_year = Period(freq="Min", year=2007, month=12, day=31, hour=23, minute=59)
+        ival_T_end_of_quarter = Period(freq="Min", year=2007, month=3, day=31, hour=23, minute=59)
+        ival_T_end_of_month = Period(freq="Min", year=2007, month=1, day=31, hour=23, minute=59)
+        ival_T_end_of_week = Period(freq="Min", year=2007, month=1, day=7, hour=23, minute=59)
+        ival_T_end_of_day = Period(freq="Min", year=2007, month=1, day=1, hour=23, minute=59)
+        ival_T_end_of_bus = Period(freq="Min", year=2007, month=1, day=1, hour=23, minute=59)
+        ival_T_end_of_hour = Period(freq="Min", year=2007, month=1, day=1, hour=0, minute=59)
 
         ival_T_to_A = Period(freq="Y", year=2007)
         ival_T_to_Q = Period(freq="Q", year=2007, quarter=1)
@@ -601,12 +531,8 @@ class TestFreqConversion:
             ival_T_to_B = Period(freq="B", year=2007, month=1, day=1)
         ival_T_to_H = Period(freq="h", year=2007, month=1, day=1, hour=0)
 
-        ival_T_to_S_start = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0
-        )
-        ival_T_to_S_end = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=59
-        )
+        ival_T_to_S_start = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
+        ival_T_to_S_end = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=59)
 
         assert ival_T.asfreq("Y") == ival_T_to_A
         assert ival_T_end_of_year.asfreq("Y") == ival_T_to_A
@@ -633,30 +559,14 @@ class TestFreqConversion:
         # frequency conversion tests: from Secondly Frequency"
 
         ival_S = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=0)
-        ival_S_end_of_year = Period(
-            freq="s", year=2007, month=12, day=31, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_quarter = Period(
-            freq="s", year=2007, month=3, day=31, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_month = Period(
-            freq="s", year=2007, month=1, day=31, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_week = Period(
-            freq="s", year=2007, month=1, day=7, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_day = Period(
-            freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_bus = Period(
-            freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59
-        )
-        ival_S_end_of_hour = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=59, second=59
-        )
-        ival_S_end_of_minute = Period(
-            freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=59
-        )
+        ival_S_end_of_year = Period(freq="s", year=2007, month=12, day=31, hour=23, minute=59, second=59)
+        ival_S_end_of_quarter = Period(freq="s", year=2007, month=3, day=31, hour=23, minute=59, second=59)
+        ival_S_end_of_month = Period(freq="s", year=2007, month=1, day=31, hour=23, minute=59, second=59)
+        ival_S_end_of_week = Period(freq="s", year=2007, month=1, day=7, hour=23, minute=59, second=59)
+        ival_S_end_of_day = Period(freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59)
+        ival_S_end_of_bus = Period(freq="s", year=2007, month=1, day=1, hour=23, minute=59, second=59)
+        ival_S_end_of_hour = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=59, second=59)
+        ival_S_end_of_minute = Period(freq="s", year=2007, month=1, day=1, hour=0, minute=0, second=59)
 
         ival_S_to_A = Period(freq="Y", year=2007)
         ival_S_to_Q = Period(freq="Q", year=2007, quarter=1)

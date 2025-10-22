@@ -156,13 +156,7 @@ class Element(abc.MutableSequence):
         element = self
         if not inplace:
             element = self.deepcopy()
-        element.reset_children(
-            [
-                e
-                for e in element.children
-                if not (isinstance(e, Data) and e.data.strip() == "")
-            ]
-        )
+        element.reset_children([e for e in element.children if not (isinstance(e, Data) and e.data.strip() == "")])
         if recurse:
             for child in element:
                 child.strip(inplace=True, recurse=True)
@@ -181,9 +175,7 @@ class Element(abc.MutableSequence):
         if include_self:
             iterator = itertools.chain([self], iterator)
         test_func = (
-            (lambda c: isinstance(c, identifier))
-            if inspect.isclass(identifier)
-            else lambda c: c.name == identifier
+            (lambda c: isinstance(c, identifier)) if inspect.isclass(identifier) else lambda c: c.name == identifier
         )
         classes = set(classes) if classes is not None else classes
         for child in iterator:
@@ -217,9 +209,7 @@ class Tag(Element):
             return tag_overrides[self.name](self, tag_overrides)
         return (
             f"<{self.name}{' ' if self.attrs else ''}{self.attrs}>"
-            + "".join(
-                child.render(tag_overrides=tag_overrides, **kwargs) for child in self
-            )
+            + "".join(child.render(tag_overrides=tag_overrides, **kwargs) for child in self)
             + f"</{self.name}>"
         )
 

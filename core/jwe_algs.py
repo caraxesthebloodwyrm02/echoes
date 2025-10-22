@@ -200,9 +200,7 @@ class ECDHESAlgorithm(JWEAlgorithm):
             self.description = "ECDH-ES in the Direct Key Agreement mode"
         else:
             self.name = f"ECDH-ES+A{key_size}KW"
-            self.description = (
-                f"ECDH-ES using Concat KDF and CEK wrapped with A{key_size}KW"
-            )
+            self.description = f"ECDH-ES using Concat KDF and CEK wrapped with A{key_size}KW"
         self.key_size = key_size
         self.aeskw = AESAlgorithm(key_size)
 

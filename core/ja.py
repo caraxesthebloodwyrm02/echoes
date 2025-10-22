@@ -59,34 +59,32 @@ class MecabSplitter(BaseSplitter):
             self.init_ctypes(options)
         else:
             self.init_native(options)
-        self.dict_encode = options.get('dic_enc', 'utf-8')
+        self.dict_encode = options.get("dic_enc", "utf-8")
 
     def split(self, input: str) -> list[str]:
         if native_module:
             result = self.native.parse(input)
         else:
-            result = self.ctypes_libmecab.mecab_sparse_tostr(
-                self.ctypes_mecab, input.encode(self.dict_encode)
-            )
-        return result.split(' ')
+            result = self.ctypes_libmecab.mecab_sparse_tostr(self.ctypes_mecab, input.encode(self.dict_encode))
+        return result.split(" ")
 
     def init_native(self, options: dict[str, str]) -> None:
-        param = '-Owakati'
-        dict = options.get('dict')
+        param = "-Owakati"
+        dict = options.get("dict")
         if dict:
-            param += ' -d %s' % dict
+            param += " -d %s" % dict
         self.native = MeCab.Tagger(param)
 
     def init_ctypes(self, options: dict[str, str]) -> None:
         import ctypes.util
 
-        lib = options.get('lib')
+        lib = options.get("lib")
 
         if lib is None:
-            if sys.platform.startswith('win'):
-                libname = 'libmecab.dll'
+            if sys.platform.startswith("win"):
+                libname = "libmecab.dll"
             else:
-                libname = 'mecab'
+                libname = "mecab"
             libpath = ctypes.util.find_library(libname)
         elif os.path.basename(lib) == lib:
             libpath = ctypes.util.find_library(lib)
@@ -95,13 +93,13 @@ class MecabSplitter(BaseSplitter):
             if Path(lib).exists():
                 libpath = lib
         if libpath is None:
-            msg = 'MeCab dynamic library is not available'
+            msg = "MeCab dynamic library is not available"
             raise RuntimeError(msg)
 
-        param = 'mecab -Owakati'
-        dict = options.get('dict')
+        param = "mecab -Owakati"
+        dict = options.get("dict")
         if dict:
-            param += ' -d %s' % dict
+            param += " -d %s" % dict
 
         fs_enc = sys.getfilesystemencoding() or sys.getdefaultencoding()
 
@@ -115,7 +113,7 @@ class MecabSplitter(BaseSplitter):
         self.ctypes_libmecab.mecab_sparse_tostr.restype = ctypes.c_char_p
         self.ctypes_mecab = self.ctypes_libmecab.mecab_new2(param.encode(fs_enc))
         if self.ctypes_mecab is None:
-            msg = 'mecab initialization failed'
+            msg = "mecab initialization failed"
             raise SphinxError(msg)
 
     def __del__(self) -> None:
@@ -126,33 +124,31 @@ class MecabSplitter(BaseSplitter):
 class JanomeSplitter(BaseSplitter):
     def __init__(self, options: dict[str, str]) -> None:
         super().__init__(options)
-        self.user_dict = options.get('user_dic')
-        self.user_dict_enc = options.get('user_dic_enc', 'utf8')
+        self.user_dict = options.get("user_dic")
+        self.user_dict_enc = options.get("user_dic_enc", "utf8")
         self.init_tokenizer()
 
     def init_tokenizer(self) -> None:
         if not janome_module:
-            msg = 'Janome is not available'
+            msg = "Janome is not available"
             raise RuntimeError(msg)
-        self.tokenizer = janome.tokenizer.Tokenizer(
-            udic=self.user_dict, udic_enc=self.user_dict_enc
-        )
+        self.tokenizer = janome.tokenizer.Tokenizer(udic=self.user_dict, udic_enc=self.user_dict_enc)
 
     def split(self, input: str) -> list[str]:
-        result = ' '.join(token.surface for token in self.tokenizer.tokenize(input))
-        return result.split(' ')
+        result = " ".join(token.surface for token in self.tokenizer.tokenize(input))
+        return result.split(" ")
 
 
 class DefaultSplitter(BaseSplitter):
     patterns_ = {
         re.compile(pattern): value
         for pattern, value in {
-            '[一二三四五六七八九十百千万億兆]': 'M',
-            '[一-龠々〆ヵヶ]': 'H',
-            '[ぁ-ん]': 'I',
-            '[ァ-ヴーｱ-ﾝﾞｰ]': 'K',
-            '[a-zA-Zａ-ｚＡ-Ｚ]': 'A',
-            '[0-9０-９]': 'N',
+            "[一二三四五六七八九十百千万億兆]": "M",
+            "[一-龠々〆ヵヶ]": "H",
+            "[ぁ-ん]": "I",
+            "[ァ-ヴーｱ-ﾝﾞｰ]": "K",
+            "[a-zA-Zａ-ｚＡ-Ｚ]": "A",
+            "[0-9０-９]": "N",
         }.items()
     }
     # fmt: off
@@ -423,7 +419,7 @@ class DefaultSplitter(BaseSplitter):
         for pattern, value in self.patterns_.items():
             if pattern.match(char):
                 return value
-        return 'O'
+        return "O"
 
     # ts_
     def ts_(self, dict: dict[str, int], key: str) -> int:
@@ -437,12 +433,12 @@ class DefaultSplitter(BaseSplitter):
             return []
 
         result = []
-        seg = ['B3', 'B2', 'B1', *input, 'E1', 'E2', 'E3']
-        ctype = ['O', 'O', 'O', *map(self.ctype_, input), 'O', 'O', 'O']
+        seg = ["B3", "B2", "B1", *input, "E1", "E2", "E3"]
+        ctype = ["O", "O", "O", *map(self.ctype_, input), "O", "O", "O"]
         word = seg[3]
-        p1 = 'U'
-        p2 = 'U'
-        p3 = 'U'
+        p1 = "U"
+        p2 = "U"
+        p3 = "U"
 
         for i in range(4, len(seg) - 3):
             score = self.BIAS__
@@ -501,11 +497,11 @@ class DefaultSplitter(BaseSplitter):
             score += self.ts_(self.TQ2__, p2 + c2 + c3 + c4)
             score += self.ts_(self.TQ3__, p3 + c1 + c2 + c3)
             score += self.ts_(self.TQ4__, p3 + c2 + c3 + c4)
-            p = 'O'
+            p = "O"
             if score > 0:
                 result.append(word.strip())
-                word = ''
-                p = 'B'
+                word = ""
+                p = "B"
             p1 = p2
             p2 = p3
             p3 = p
@@ -520,18 +516,16 @@ class SearchJapanese(SearchLanguage):
     complicated.
     """
 
-    lang = 'ja'
-    language_name = 'Japanese'
+    lang = "ja"
+    language_name = "Japanese"
 
     def init(self, options: dict[str, str]) -> None:
-        dotted_path = options.get('type')
+        dotted_path = options.get("type")
         if dotted_path is None:
             self.splitter = DefaultSplitter(options)
         else:
             try:
-                splitter_cls = import_object(
-                    dotted_path, "html_search_options['type'] setting"
-                )
+                splitter_cls = import_object(dotted_path, "html_search_options['type'] setting")
                 self.splitter = splitter_cls(options)
             except ExtensionError as exc:
                 msg = f"Splitter module {dotted_path!r} can't be imported"

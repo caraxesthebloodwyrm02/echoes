@@ -71,9 +71,7 @@ st.markdown(
 def run_simulation(parameters: Dict) -> Optional[Dict]:
     """Call API to run UBI simulation"""
     try:
-        response = requests.post(
-            f"{API_BASE_URL}/simulate", json=parameters, timeout=30
-        )
+        response = requests.post(f"{API_BASE_URL}/simulate", json=parameters, timeout=30)
         response.raise_for_status()
         return response.json()
     except Exception as e:
@@ -129,8 +127,7 @@ with st.sidebar:
         scenario_params = scenarios[selected_scenario]["parameters"]
         if selected_scenario != "Custom":
             st.info(
-                f"📋 **{scenarios[selected_scenario]['name']}**\n\n"
-                f"{scenarios[selected_scenario]['description']}"
+                f"📋 **{scenarios[selected_scenario]['name']}**\n\n" f"{scenarios[selected_scenario]['description']}"
             )
     else:
         scenario_params = {
@@ -175,9 +172,7 @@ with st.sidebar:
     funding_mechanism = st.selectbox(
         "Funding Mechanism",
         ["tax", "deficit", "reallocation"],
-        index=["tax", "deficit", "reallocation"].index(
-            scenario_params["funding_mechanism"]
-        ),
+        index=["tax", "deficit", "reallocation"].index(scenario_params["funding_mechanism"]),
         help="How the program is funded",
     )
 
@@ -194,9 +189,7 @@ with st.sidebar:
         tax_rate = 0.0
 
     # Run simulation button
-    run_button = st.button(
-        "🚀 Run Simulation", type="primary", use_container_width=True
-    )
+    run_button = st.button("🚀 Run Simulation", type="primary", use_container_width=True)
 
 # Main content area
 if run_button:
@@ -229,11 +222,7 @@ if run_button:
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
-            cost_color = (
-                "positive-metric"
-                if results_data["total_cost"] < 500000000
-                else "negative-metric"
-            )
+            cost_color = "positive-metric" if results_data["total_cost"] < 500000000 else "negative-metric"
             st.markdown(
                 f"""
             <div class="metric-card {cost_color}">
@@ -258,11 +247,7 @@ if run_button:
             )
 
         with col3:
-            employment_color = (
-                "positive-metric"
-                if results_data["employment_change"] >= 0
-                else "negative-metric"
-            )
+            employment_color = "positive-metric" if results_data["employment_change"] >= 0 else "negative-metric"
             st.markdown(
                 f"""
             <div class="metric-card {employment_color}">
@@ -275,11 +260,7 @@ if run_button:
             )
 
         with col4:
-            gdp_color = (
-                "positive-metric"
-                if results_data["gdp_impact"] >= 0
-                else "negative-metric"
-            )
+            gdp_color = "positive-metric" if results_data["gdp_impact"] >= 0 else "negative-metric"
             st.markdown(
                 f"""
             <div class="metric-card {gdp_color}">
@@ -297,11 +278,7 @@ if run_button:
         dist_col1, dist_col2 = st.columns(2)
 
         with dist_col1:
-            poverty_color = (
-                "positive-metric"
-                if results_data["poverty_reduction"] > 0
-                else "neutral-metric"
-            )
+            poverty_color = "positive-metric" if results_data["poverty_reduction"] > 0 else "neutral-metric"
             st.markdown(
                 f"""
             <div class="metric-card {poverty_color}">
@@ -411,9 +388,7 @@ comp_col1, comp_col2 = st.columns(2)
 
 with comp_col1:
     st.subheader("Scenario A")
-    scenario_a = st.selectbox(
-        "Select Scenario A", list(scenarios.keys()) + ["Current"], key="scenario_a"
-    )
+    scenario_a = st.selectbox("Select Scenario A", list(scenarios.keys()) + ["Current"], key="scenario_a")
 
     if scenario_a in scenarios:
         scenario_a_params = scenarios[scenario_a]["parameters"]
@@ -428,9 +403,7 @@ with comp_col1:
 
 with comp_col2:
     st.subheader("Scenario B")
-    scenario_b = st.selectbox(
-        "Select Scenario B", list(scenarios.keys()) + ["Current"], key="scenario_b"
-    )
+    scenario_b = st.selectbox("Select Scenario B", list(scenarios.keys()) + ["Current"], key="scenario_b")
 
     if scenario_b in scenarios:
         scenario_b_params = scenarios[scenario_b]["parameters"]

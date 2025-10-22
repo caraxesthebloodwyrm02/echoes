@@ -5,7 +5,6 @@ Simple test for monitoring and logging system
 
 import sys
 from pathlib import Path
-import os
 import importlib.util
 
 # Debug: Print current working directory and sys.path
@@ -18,7 +17,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 print(f"Debug: Updated sys.path: {sys.path}")
 
 # Check if the module file exists
-module_path = Path(__file__).parent / 'packages' / 'core' / 'logging' / 'logger.py'
+module_path = Path(__file__).parent / "packages" / "core" / "logging" / "logger.py"
 if not module_path.exists():
     print(f"FAILED: Module file not found - {module_path}. Ensure it exists and has __init__.py in parent directories.")
     sys.exit(1)
@@ -41,7 +40,7 @@ print("=" * 70)
 try:
     # Set up logger
     logger = setup_logger()
-    
+
     # Log a test message
     logger.info("Test log message: Logging system is operational")
     print("PASSED: Logger initialized and wrote a message")

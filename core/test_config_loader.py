@@ -65,9 +65,7 @@ class TestConfigLoader:
 
     def test_config_loading_with_validation(self):
         """Test loading config with validation."""
-        with patch.dict(
-            os.environ, {"OPENAI_API_KEY": "test-key", "LOG_LEVEL": "DEBUG"}
-        ):
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "test-key", "LOG_LEVEL": "DEBUG"}):
             loader = ConfigLoader()
             config = loader.load_config(validate=True)
 
@@ -206,9 +204,7 @@ class TestEnvFileLoading:
             temp_env2 = f2.name
 
         try:
-            with patch.object(
-                ConfigLoader, "_config_files", [Path(temp_env1), Path(temp_env2)]
-            ):
+            with patch.object(ConfigLoader, "_config_files", [Path(temp_env1), Path(temp_env2)]):
                 with patch.dict(os.environ, {}, clear=True):
                     loader = ConfigLoader()
                     config = loader.load_config(validate=False)
@@ -282,9 +278,7 @@ class TestErrorHandling:
 
     def test_invalid_log_level(self):
         """Test invalid log level handling."""
-        with patch.dict(
-            os.environ, {"OPENAI_API_KEY": "test-key", "LOG_LEVEL": "INVALID_LEVEL"}
-        ):
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "test-key", "LOG_LEVEL": "INVALID_LEVEL"}):
             loader = ConfigLoader()
 
             with pytest.raises(ConfigurationError):
@@ -292,9 +286,7 @@ class TestErrorHandling:
 
     def test_invalid_temperature(self):
         """Test invalid temperature handling."""
-        with patch.dict(
-            os.environ, {"OPENAI_API_KEY": "test-key", "TEMPERATURE": "2.5"}
-        ):  # Out of range
+        with patch.dict(os.environ, {"OPENAI_API_KEY": "test-key", "TEMPERATURE": "2.5"}):  # Out of range
             loader = ConfigLoader()
 
             with pytest.raises(ConfigurationError):

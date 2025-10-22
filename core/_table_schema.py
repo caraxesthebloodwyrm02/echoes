@@ -3,6 +3,7 @@ Table Schema builders
 
 https://specs.frictionlessdata.io/table-schema/
 """
+
 from __future__ import annotations
 
 from typing import (
@@ -218,9 +219,7 @@ def convert_json_field_to_pandas_type(field) -> str | CategoricalDtype:
             return "datetime64[ns]"
     elif typ == "any":
         if "constraints" in field and "ordered" in field:
-            return CategoricalDtype(
-                categories=field["constraints"]["enum"], ordered=field["ordered"]
-            )
+            return CategoricalDtype(categories=field["constraints"]["enum"], ordered=field["ordered"])
         elif "extDtype" in field:
             return registry.find(field["extDtype"])
         else:
@@ -361,16 +360,11 @@ def parse_table_schema(json, precise_float: bool) -> DataFrame:
     col_order = [field["name"] for field in table["schema"]["fields"]]
     df = DataFrame(table["data"], columns=col_order)[col_order]
 
-    dtypes = {
-        field["name"]: convert_json_field_to_pandas_type(field)
-        for field in table["schema"]["fields"]
-    }
+    dtypes = {field["name"]: convert_json_field_to_pandas_type(field) for field in table["schema"]["fields"]}
 
     # No ISO constructor for Timedelta as of yet, so need to raise
     if "timedelta64" in dtypes.values():
-        raise NotImplementedError(
-            'table="orient" can not yet read ISO-formatted Timedelta data'
-        )
+        raise NotImplementedError('table="orient" can not yet read ISO-formatted Timedelta data')
 
     df = df.astype(dtypes)
 
@@ -380,8 +374,6 @@ def parse_table_schema(json, precise_float: bool) -> DataFrame:
             if df.index.name == "index":
                 df.index.name = None
         else:
-            df.index.names = [
-                None if x.startswith("level_") else x for x in df.index.names
-            ]
+            df.index.names = [None if x.startswith("level_") else x for x in df.index.names]
 
     return df

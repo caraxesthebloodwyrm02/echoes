@@ -74,9 +74,7 @@ def apply_ema(new_value: float, old_value: float, alpha: float) -> float:
     return alpha * new_value + (1.0 - alpha) * old_value
 
 
-def generate_noisy_input(
-    base: float, variance: float, timestep: int, rng: random.Random
-) -> float:
+def generate_noisy_input(base: float, variance: float, timestep: int, rng: random.Random) -> float:
     noise = (rng.random() - 0.5) * variance * 2.0
     sine = math.sin(timestep * 0.1) * 15.0
     raw = base + noise + sine
@@ -100,13 +98,8 @@ class ResonanceGovernor:
 
     def step(self):
         self.t += 1
-        raw = generate_noisy_input(
-            self.macro.cadence, self.macro.variance, self.t, self.rng
-        )
-        alpha = (
-            variance_to_filter_strength(self.macro.variance)
-            * self.macro.smoothing_strength
-        )
+        raw = generate_noisy_input(self.macro.cadence, self.macro.variance, self.t, self.rng)
+        alpha = variance_to_filter_strength(self.macro.variance) * self.macro.smoothing_strength
         alpha = max(1e-6, min(0.999999, alpha))
         smoothed = apply_ema(raw, self.state.smoothed_output, alpha)
         error = raw - self.macro.cadence
@@ -115,9 +108,7 @@ class ResonanceGovernor:
         if abs(error) > self.macro.variance * 0.7:
             adj = calculate_feedback(error, self.macro)
             new_strength = self.macro.smoothing_strength + adj
-            self.macro.smoothing_strength = max(
-                self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength)
-            )
+            self.macro.smoothing_strength = max(self.macro.min_smoothing, min(self.macro.max_smoothing, new_strength))
         self.state.raw_input = raw
         self.state.smoothed_output = smoothed
         self.state.governor_angle = angle
@@ -159,9 +150,7 @@ class ResonanceGovernor:
 
 
 if __name__ == "__main__":
-    macro = MacroConfig(
-        cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6
-    )
+    macro = MacroConfig(cadence=50, variance=25, smoothing_strength=0.35, feedback_sensitivity=0.6)
     gov = ResonanceGovernor(macro, seed=42)
     gov.run(250)
     m = gov.metrics()

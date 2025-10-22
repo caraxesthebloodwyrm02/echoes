@@ -98,24 +98,16 @@ class LoopController:
 
             # Refine data based on validation feedback
             if iteration < self.max_iterations - 1:
-                refinement_result = await refinement_fn(
-                    loop_state["current_data"], validation_result, context
-                )
+                refinement_result = await refinement_fn(loop_state["current_data"], validation_result, context)
 
-                loop_state["current_data"] = refinement_result.get(
-                    "refined_data", loop_state["current_data"]
-                )
-                iteration_data["refinements_applied"] = refinement_result.get(
-                    "refinements", []
-                )
+                loop_state["current_data"] = refinement_result.get("refined_data", loop_state["current_data"])
+                iteration_data["refinements_applied"] = refinement_result.get("refinements", [])
 
             loop_state["iterations"].append(iteration_data)
 
         # Finalize loop
         loop_state["end_time"] = datetime.now()
-        loop_state["duration"] = (
-            loop_state["end_time"] - loop_state["start_time"]
-        ).total_seconds()
+        loop_state["duration"] = (loop_state["end_time"] - loop_state["start_time"]).total_seconds()
         loop_state["final_quality"] = loop_state["iterations"][-1]["quality_score"]
         loop_state["total_iterations"] = len(loop_state["iterations"])
 
@@ -137,9 +129,7 @@ class LoopController:
             "history": loop_state["iterations"],
         }
 
-    async def run_multi_phase_loop(
-        self, phases: List[Dict[str, Any]], context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+    async def run_multi_phase_loop(self, phases: List[Dict[str, Any]], context: Dict[str, Any]) -> Dict[str, Any]:
         """
         Run multi-phase feedback loop
 
@@ -200,19 +190,13 @@ class LoopController:
 
         # Update average iterations with safe division
         if self.loop_history:
-            total_iterations = sum(
-                len(loop["iterations"]) for loop in self.loop_history
-            )
-            self.metrics["average_iterations"] = total_iterations / len(
-                self.loop_history
-            )
+            total_iterations = sum(len(loop["iterations"]) for loop in self.loop_history)
+            self.metrics["average_iterations"] = total_iterations / len(self.loop_history)
         else:
             self.metrics["average_iterations"] = 0.0
 
         # Update convergence rate
-        self.metrics["convergence_rate"] = (
-            self.metrics["successful_loops"] / self.metrics["total_loops"]
-        )
+        self.metrics["convergence_rate"] = self.metrics["successful_loops"] / self.metrics["total_loops"]
 
     def get_loop_metrics(self) -> Dict[str, Any]:
         """Get loop performance metrics"""
@@ -236,9 +220,7 @@ class LoopController:
 
         analysis = {
             "total_loops": len(self.loop_history),
-            "converged_loops": sum(
-                1 for loop in self.loop_history if loop["converged"]
-            ),
+            "converged_loops": sum(1 for loop in self.loop_history if loop["converged"]),
             "average_quality_improvement": 0.0,
             "common_issues": {},
             "iteration_distribution": {},
@@ -255,22 +237,16 @@ class LoopController:
 
             # Track iteration counts
             iter_count = len(loop["iterations"])
-            analysis["iteration_distribution"][iter_count] = (
-                analysis["iteration_distribution"].get(iter_count, 0) + 1
-            )
+            analysis["iteration_distribution"][iter_count] = analysis["iteration_distribution"].get(iter_count, 0) + 1
 
             # Collect common issues
             for iteration in loop["iterations"]:
                 for issue in iteration.get("issues", []):
                     issue_type = issue.get("type", "unknown")
-                    analysis["common_issues"][issue_type] = (
-                        analysis["common_issues"].get(issue_type, 0) + 1
-                    )
+                    analysis["common_issues"][issue_type] = analysis["common_issues"].get(issue_type, 0) + 1
 
         if quality_improvements:
-            analysis["average_quality_improvement"] = sum(quality_improvements) / len(
-                quality_improvements
-            )
+            analysis["average_quality_improvement"] = sum(quality_improvements) / len(quality_improvements)
 
         return analysis
 

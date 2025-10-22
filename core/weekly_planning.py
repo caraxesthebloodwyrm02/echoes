@@ -65,11 +65,7 @@ class WeeklyPlanningTask:
 
     def _send_reminders(self) -> str:
         """Send reminders for pending items."""
-        pending = [
-            i
-            for i in self.plan.plan["focus_areas"]
-            if i["status"] == PlanStatus.PENDING.value
-        ]
+        pending = [i for i in self.plan.plan["focus_areas"] if i["status"] == PlanStatus.PENDING.value]
 
         if not pending:
             return "No pending items to remind about."
@@ -89,27 +85,15 @@ class WeeklyPlanningTask:
         """Show the current status of the weekly plan."""
         plan = self.plan.plan
         completed = len(plan["completed_items"])
-        pending = len(
-            [
-                i
-                for i in plan["focus_areas"]
-                if i["status"] != PlanStatus.COMPLETED.value
-            ]
-        )
+        pending = len([i for i in plan["focus_areas"] if i["status"] != PlanStatus.COMPLETED.value])
 
-        status = (
-            f"Weekly Plan - {plan['week_start']}\n"
-            f"✓ Completed: {completed} | ⏳ Pending: {pending}\n"
-        )
+        status = f"Weekly Plan - {plan['week_start']}\n" f"✓ Completed: {completed} | ⏳ Pending: {pending}\n"
 
         if pending > 0:
             status += "\nCurrent Focus Areas:\n"
             for item in plan["focus_areas"]:
                 if item["status"] != PlanStatus.COMPLETED.value:
-                    status += (
-                        f"- [{item['id']}] {item['area']}\n"
-                        f"  → {', '.join(item['key_outcomes'][:2])}\n"
-                    )
+                    status += f"- [{item['id']}] {item['area']}\n" f"  → {', '.join(item['key_outcomes'][:2])}\n"
 
         if plan["constraints"]:
             status += "\nConstraints:\n"

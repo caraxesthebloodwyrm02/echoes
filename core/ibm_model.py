@@ -74,18 +74,14 @@ class IBMModel:
         self.reset_probabilities()
 
     def reset_probabilities(self):
-        self.translation_table = defaultdict(
-            lambda: defaultdict(lambda: IBMModel.MIN_PROB)
-        )
+        self.translation_table = defaultdict(lambda: defaultdict(lambda: IBMModel.MIN_PROB))
         """
         dict[str][str]: float. Probability(target word | source word).
         Values accessed as ``translation_table[target_word][source_word]``.
         """
 
         self.alignment_table = defaultdict(
-            lambda: defaultdict(
-                lambda: defaultdict(lambda: defaultdict(lambda: IBMModel.MIN_PROB))
-            )
+            lambda: defaultdict(lambda: defaultdict(lambda: defaultdict(lambda: IBMModel.MIN_PROB)))
         )
         """
         dict[int][int][int][int]: float. Probability(i | j,l,m).
@@ -219,9 +215,7 @@ class IBMModel:
 
                 for i in range(0, l + 1):
                     s = src_sentence[i]
-                    alignment_prob = (
-                        self.translation_table[t][s] * self.alignment_table[i][j][l][m]
-                    )
+                    alignment_prob = self.translation_table[t][s] * self.alignment_table[i][j][l][m]
 
                     if alignment_prob >= max_alignment_prob:
                         max_alignment_prob = alignment_prob
@@ -230,9 +224,7 @@ class IBMModel:
             alignment[j] = best_i
             cepts[best_i].append(j)
 
-        return AlignmentInfo(
-            tuple(alignment), tuple(src_sentence), tuple(trg_sentence), cepts
-        )
+        return AlignmentInfo(tuple(alignment), tuple(src_sentence), tuple(trg_sentence), cepts)
 
     def hillclimb(self, alignment_info, j_pegged=None):
         """
@@ -396,8 +388,7 @@ class AlignmentInfo:
     def __init__(self, alignment, src_sentence, trg_sentence, cepts):
         if not isinstance(alignment, tuple):
             raise TypeError(
-                "The alignment must be a tuple because it is used "
-                "to uniquely identify AlignmentInfo objects."
+                "The alignment must be a tuple because it is used " "to uniquely identify AlignmentInfo objects."
             )
 
         self.alignment = alignment
@@ -467,10 +458,7 @@ class AlignmentInfo:
         """
         i = self.alignment[j]
         if i == 0:
-            raise ValueError(
-                "Words aligned to NULL cannot have a previous "
-                "cept because NULL has no position"
-            )
+            raise ValueError("Words aligned to NULL cannot have a previous " "cept because NULL has no position")
         previous_cept = i - 1
         while previous_cept > 0 and self.fertility_of_i(previous_cept) == 0:
             previous_cept -= 1

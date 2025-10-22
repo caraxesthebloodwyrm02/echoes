@@ -62,9 +62,7 @@ class LegalitySyllableTokenizer(TokenizerI):
         [['This'], ['is'], ['a'], ['won', 'der', 'ful'], ['sen', 'ten', 'ce'], ['.']]
     """
 
-    def __init__(
-        self, tokenized_source_text, vowels="aeiouy", legal_frequency_threshold=0.001
-    ):
+    def __init__(self, tokenized_source_text, vowels="aeiouy", legal_frequency_threshold=0.001):
         """
         :param tokenized_source_text: List of valid tokens in the language
         :type tokenized_source_text: list(str)
@@ -87,11 +85,7 @@ class LegalitySyllableTokenizer(TokenizerI):
         :rtype: set(str)
         """
         onsets = [self.onset(word) for word in words]
-        legal_onsets = [
-            k
-            for k, v in Counter(onsets).items()
-            if (v / len(onsets)) > self.legal_frequency_threshold
-        ]
+        legal_onsets = [k for k, v in Counter(onsets).items() if (v / len(onsets)) > self.legal_frequency_threshold]
         return set(legal_onsets)
 
     def onset(self, word):

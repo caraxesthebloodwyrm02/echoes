@@ -60,9 +60,7 @@ Examples:
         help="Run mode (default: dev)",
     )
 
-    parser.add_argument(
-        "--verbose", "-v", action="store_true", help="Enable verbose output"
-    )
+    parser.add_argument("--verbose", "-v", action="store_true", help="Enable verbose output")
 
     parser.add_argument("--config", type=str, help="Path to configuration file")
 

@@ -129,9 +129,7 @@ def sentence_bleu(
     :return: The sentence-level BLEU score. Returns a list if multiple weights were supplied.
     :rtype: float / list(float)
     """
-    return corpus_bleu(
-        [references], [hypothesis], weights, smoothing_function, auto_reweigh
-    )
+    return corpus_bleu([references], [hypothesis], weights, smoothing_function, auto_reweigh)
 
 
 def corpus_bleu(
@@ -246,10 +244,7 @@ def corpus_bleu(
     bp = brevity_penalty(ref_lengths, hyp_lengths)
 
     # Collects the various precision values for the different ngram orders.
-    p_n = [
-        Fraction(p_numerators[i], p_denominators[i], _normalize=False)
-        for i in range(1, max_weight_length + 1)
-    ]
+    p_n = [Fraction(p_numerators[i], p_denominators[i], _normalize=False) for i in range(1, max_weight_length + 1)]
 
     # Returns 0 if there's no matching n-grams
     # We only need to check for p_numerators[1] == 0, since if there's
@@ -264,9 +259,7 @@ def corpus_bleu(
     # Note: smoothing_function() may convert values into floats;
     #       it tries to retain the Fraction object as much as the
     #       smoothing method allows.
-    p_n = smoothing_function(
-        p_n, references=references, hypothesis=hypothesis, hyp_len=hyp_lengths
-    )
+    p_n = smoothing_function(p_n, references=references, hypothesis=hypothesis, hyp_len=hyp_lengths)
 
     bleu_scores = []
     for weight in weights:
@@ -374,16 +367,12 @@ def modified_precision(references, hypothesis, n):
     # max_counts = reduce(or_, [Counter(ngrams(ref, n)) for ref in references])
     max_counts = {}
     for reference in references:
-        reference_counts = (
-            Counter(ngrams(reference, n)) if len(reference) >= n else Counter()
-        )
+        reference_counts = Counter(ngrams(reference, n)) if len(reference) >= n else Counter()
         for ngram in counts:
             max_counts[ngram] = max(max_counts.get(ngram, 0), reference_counts[ngram])
 
     # Assigns the intersection between hypothesis and references' counts.
-    clipped_counts = {
-        ngram: min(count, max_counts[ngram]) for ngram, count in counts.items()
-    }
+    clipped_counts = {ngram: min(count, max_counts[ngram]) for ngram, count in counts.items()}
 
     numerator = sum(clipped_counts.values())
     # Ensures that denominator is minimum 1 to avoid ZeroDivisionError.
@@ -407,9 +396,7 @@ def closest_ref_length(references, hyp_len):
     :rtype: int
     """
     ref_lens = (len(reference) for reference in references)
-    closest_ref_len = min(
-        ref_lens, key=lambda ref_len: (abs(ref_len - hyp_len), ref_len)
-    )
+    closest_ref_len = min(ref_lens, key=lambda ref_len: (abs(ref_len - hyp_len), ref_len))
     return closest_ref_len
 
 
@@ -587,14 +574,7 @@ class SmoothingFunction:
         """
         Smoothing method 1: Add *epsilon* counts to precision with 0 counts.
         """
-        return [
-            (
-                (p_i.numerator + self.epsilon) / p_i.denominator
-                if p_i.numerator == 0
-                else p_i
-            )
-            for p_i in p_n
-        ]
+        return [((p_i.numerator + self.epsilon) / p_i.denominator if p_i.numerator == 0 else p_i) for p_i in p_n]
 
     def method2(self, p_n, *args, **kwargs):
         """
@@ -604,11 +584,7 @@ class SmoothingFunction:
         In COLING 2004.
         """
         return [
-            (
-                Fraction(p_n[i].numerator + 1, p_n[i].denominator + 1, _normalize=False)
-                if i != 0
-                else p_n[0]
-            )
+            (Fraction(p_n[i].numerator + 1, p_n[i].denominator + 1, _normalize=False) if i != 0 else p_n[0])
             for i in range(len(p_n))
         ]
 

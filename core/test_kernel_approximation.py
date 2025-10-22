@@ -74,15 +74,11 @@ def test_polynomial_count_sketch_dense_sparse(gamma, degree, coef0, csr_containe
     """Check that PolynomialCountSketch results are the same for dense and sparse
     input.
     """
-    ps_dense = PolynomialCountSketch(
-        n_components=500, gamma=gamma, degree=degree, coef0=coef0, random_state=42
-    )
+    ps_dense = PolynomialCountSketch(n_components=500, gamma=gamma, degree=degree, coef0=coef0, random_state=42)
     Xt_dense = ps_dense.fit_transform(X)
     Yt_dense = ps_dense.transform(Y)
 
-    ps_sparse = PolynomialCountSketch(
-        n_components=500, gamma=gamma, degree=degree, coef0=coef0, random_state=42
-    )
+    ps_sparse = PolynomialCountSketch(n_components=500, gamma=gamma, degree=degree, coef0=coef0, random_state=42)
     Xt_sparse = ps_sparse.fit_transform(csr_container(X))
     Yt_sparse = ps_sparse.transform(csr_container(Y))
 
@@ -153,9 +149,7 @@ def test_additive_chi2_sampler_sample_steps(method, sample_steps):
 def test_additive_chi2_sampler_wrong_sample_steps(method):
     """Check that we raise a ValueError on invalid sample_steps"""
     transformer = AdditiveChi2Sampler(sample_steps=4)
-    msg = re.escape(
-        "If sample_steps is not in [1, 2, 3], you need to provide sample_interval"
-    )
+    msg = re.escape("If sample_steps is not in [1, 2, 3], you need to provide sample_interval")
     with pytest.raises(ValueError, match=msg):
         getattr(transformer, method)(X)
 
@@ -177,9 +171,7 @@ def test_skewed_chi2_sampler():
 
     # we do it in log-space in the hope that it's more stable
     # this array is n_samples_x x n_samples_y big x n_features
-    log_kernel = (
-        (np.log(X_c) / 2.0) + (np.log(Y_c) / 2.0) + np.log(2.0) - np.log(X_c + Y_c)
-    )
+    log_kernel = (np.log(X_c) / 2.0) + (np.log(Y_c) / 2.0) + np.log(2.0) - np.log(X_c + Y_c)
     # reduce to n_samples_x x n_samples_y by summing over features in log-space
     kernel = np.exp(log_kernel.sum(axis=2))
 
@@ -290,12 +282,8 @@ def test_skewed_chi2_sampler_dtype_equivalence():
     X_64 = np.array([[1, 2], [3, 4], [5, 6]], dtype=np.float64)
     skewed_chi2_sampler_64.fit(X_64)
 
-    assert_allclose(
-        skewed_chi2_sampler_32.random_offset_, skewed_chi2_sampler_64.random_offset_
-    )
-    assert_allclose(
-        skewed_chi2_sampler_32.random_weights_, skewed_chi2_sampler_64.random_weights_
-    )
+    assert_allclose(skewed_chi2_sampler_32.random_offset_, skewed_chi2_sampler_64.random_offset_)
+    assert_allclose(skewed_chi2_sampler_32.random_weights_, skewed_chi2_sampler_64.random_weights_)
 
 
 @pytest.mark.parametrize("csr_container", CSR_CONTAINERS)
@@ -380,9 +368,7 @@ def test_nystroem_poly_kernel_params():
     X = rnd.uniform(size=(10, 4))
 
     K = polynomial_kernel(X, degree=3.1, coef0=0.1)
-    nystroem = Nystroem(
-        kernel="polynomial", n_components=X.shape[0], degree=3.1, coef0=0.1
-    )
+    nystroem = Nystroem(kernel="polynomial", n_components=X.shape[0], degree=3.1, coef0=0.1)
     X_transformed = nystroem.fit_transform(X)
     assert_array_almost_equal(np.dot(X_transformed, X_transformed.T), K)
 
@@ -451,9 +437,7 @@ def test_nystroem_component_indices():
     assert feature_map_nystroem.component_indices_.shape == (10,)
 
 
-@pytest.mark.parametrize(
-    "Estimator", [PolynomialCountSketch, RBFSampler, SkewedChi2Sampler, Nystroem]
-)
+@pytest.mark.parametrize("Estimator", [PolynomialCountSketch, RBFSampler, SkewedChi2Sampler, Nystroem])
 def test_get_feature_names_out(Estimator):
     """Check get_feature_names_out"""
     est = Estimator().fit(X)

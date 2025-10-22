@@ -59,10 +59,7 @@ class TestPromptRegenerator:
         # Check structure
         assert isinstance(prompt, RegeneratedPrompt)
         assert prompt.expected_classification == "Aligned"
-        assert (
-            "optimal" in prompt.objective.lower()
-            or "synergy" in prompt.objective.lower()
-        )
+        assert "optimal" in prompt.objective.lower() or "synergy" in prompt.objective.lower()
         assert len(prompt.constraints) > 0
         assert len(prompt.alternative_prompts) > 0
 
@@ -96,10 +93,7 @@ class TestPromptRegenerator:
         assert prompt.expected_classification == "Imbalanced"
 
         # Check that productivity-creativity opposition is mentioned
-        assert any(
-            "productivity" in c.lower() and "creativity" in c.lower()
-            for c in prompt.constraints
-        )
+        assert any("productivity" in c.lower() and "creativity" in c.lower() for c in prompt.constraints)
 
         # Check reasoning mentions key relationships
         assert "productivity" in prompt.reasoning.lower()
@@ -131,10 +125,7 @@ class TestPromptRegenerator:
         assert prompt.expected_classification == "Fragmented"
 
         # Should mention intervention or critical state
-        assert any(
-            "intervention" in alt.lower() or "critical" in alt.lower()
-            for alt in prompt.alternative_prompts
-        )
+        assert any("intervention" in alt.lower() or "critical" in alt.lower() for alt in prompt.alternative_prompts)
 
     def test_relationship_analysis(self):
         """Test dimensional relationship analysis."""
@@ -312,9 +303,7 @@ class TestBidirectionalPath:
         regenerated_prompt = regenerator.regenerate_from_result(original_result)
 
         # Validate (forward path: Prompt → Result)
-        validation = regenerator.validate_regeneration(
-            original_result, regenerated_prompt
-        )
+        validation = regenerator.validate_regeneration(original_result, regenerated_prompt)
 
         # Bidirectional consistency check
         assert validation["is_valid"], "Bidirectional path should be consistent"

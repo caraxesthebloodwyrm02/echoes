@@ -119,9 +119,7 @@ class DecisionTreeClassifier(ClassifierI):
                 s += f"return {result._label!r}\n"
         if self._default is not None:
             if len(self._decisions) == 1:
-                s += "{}if {} != {!r}: ".format(
-                    prefix, self._fname, list(self._decisions.keys())[0]
-                )
+                s += "{}if {} != {!r}: ".format(prefix, self._fname, list(self._decisions.keys())[0])
             else:
                 s += f"{prefix}else: "
             if self._default._fname is not None and depth > 1:
@@ -163,13 +161,9 @@ class DecisionTreeClassifier(ClassifierI):
 
         # Start with a stump.
         if not binary:
-            tree = DecisionTreeClassifier.best_stump(
-                feature_names, labeled_featuresets, verbose
-            )
+            tree = DecisionTreeClassifier.best_stump(feature_names, labeled_featuresets, verbose)
         else:
-            tree = DecisionTreeClassifier.best_binary_stump(
-                feature_names, labeled_featuresets, feature_values, verbose
-            )
+            tree = DecisionTreeClassifier.best_binary_stump(feature_names, labeled_featuresets, feature_values, verbose)
 
         # Refine the stump.
         tree.refine(
@@ -297,31 +291,23 @@ class DecisionTreeClassifier(ClassifierI):
         return DecisionTreeClassifier(label, feature_name, decisions, default)
 
     @staticmethod
-    def best_binary_stump(
-        feature_names, labeled_featuresets, feature_values, verbose=False
-    ):
+    def best_binary_stump(feature_names, labeled_featuresets, feature_values, verbose=False):
         best_stump = DecisionTreeClassifier.leaf(labeled_featuresets)
         best_error = best_stump.error(labeled_featuresets)
         for fname in feature_names:
             for fval in feature_values[fname]:
-                stump = DecisionTreeClassifier.binary_stump(
-                    fname, fval, labeled_featuresets
-                )
+                stump = DecisionTreeClassifier.binary_stump(fname, fval, labeled_featuresets)
                 stump_error = stump.error(labeled_featuresets)
                 if stump_error < best_error:
                     best_error = stump_error
                     best_stump = stump
         if verbose:
             if best_stump._decisions:
-                descr = "{}={}".format(
-                    best_stump._fname, list(best_stump._decisions.keys())[0]
-                )
+                descr = "{}={}".format(best_stump._fname, list(best_stump._decisions.keys())[0])
             else:
                 descr = "(default)"
             print(
-                "best stump for {:6d} toks uses {:20} err={:6.4f}".format(
-                    len(labeled_featuresets), descr, best_error
-                )
+                "best stump for {:6d} toks uses {:20} err={:6.4f}".format(len(labeled_featuresets), descr, best_error)
             )
         return best_stump
 
@@ -338,9 +324,7 @@ def f(x):
 def demo():
     from nltk.classify.util import binary_names_demo_features, names_demo
 
-    classifier = names_demo(
-        f, binary_names_demo_features  # DecisionTreeClassifier.train,
-    )
+    classifier = names_demo(f, binary_names_demo_features)  # DecisionTreeClassifier.train,
     print(classifier.pretty_format(depth=7))
     print(classifier.pseudocode(depth=7))
 

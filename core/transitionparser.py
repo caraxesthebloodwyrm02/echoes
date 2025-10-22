@@ -20,7 +20,7 @@ try:
 except ImportError:
     pass
 
-from nltk.parse import DependencyEvaluator, DependencyGraph, ParserI
+from nltk.parse import ParserI
 
 
 class Configuration:
@@ -50,14 +50,7 @@ class Configuration:
         self._max_address = len(self.buffer)
 
     def __str__(self):
-        return (
-            "Stack : "
-            + str(self.stack)
-            + "  Buffer : "
-            + str(self.buffer)
-            + "   Arcs : "
-            + str(self.arcs)
-        )
+        return "Stack : " + str(self.stack) + "  Buffer : " + str(self.buffer) + "   Arcs : " + str(self.arcs)
 
     def _check_informative(self, feat, flag=False):
         """
@@ -199,8 +192,7 @@ class Transition:
             TransitionParser.ARC_EAGER,
         ]:
             raise ValueError(
-                " Currently we only support %s and %s "
-                % (TransitionParser.ARC_STANDARD, TransitionParser.ARC_EAGER)
+                " Currently we only support %s and %s " % (TransitionParser.ARC_STANDARD, TransitionParser.ARC_EAGER)
             )
 
     def left_arc(self, conf, relation):
@@ -300,11 +292,8 @@ class TransitionParser(ParserI):
         :param algorithm: the algorithm option of this parser. Currently support `arc-standard` and `arc-eager` algorithm
         :type algorithm: str
         """
-        if not (algorithm in [self.ARC_STANDARD, self.ARC_EAGER]):
-            raise ValueError(
-                " Currently we only support %s and %s "
-                % (self.ARC_STANDARD, self.ARC_EAGER)
-            )
+        if algorithm not in [self.ARC_STANDARD, self.ARC_EAGER]:
+            raise ValueError(" Currently we only support %s and %s " % (self.ARC_STANDARD, self.ARC_EAGER))
         self._algorithm = algorithm
 
         self._dictionary = {}
@@ -335,9 +324,7 @@ class TransitionParser(ParserI):
             unsorted_result.append(self._dictionary[feature])
 
         # Default value of each feature is 1.0
-        return " ".join(
-            str(featureID) + ":1.0" for featureID in sorted(unsorted_result)
-        )
+        return " ".join(str(featureID) + ":1.0" for featureID in sorted(unsorted_result))
 
     def _is_projective(self, depgraph):
         arc_list = []
@@ -571,9 +558,7 @@ class TransitionParser(ParserI):
                 np_row = array(row)
                 np_data = array(data)
 
-                x_test = sparse.csr_matrix(
-                    (np_data, (np_row, np_col)), shape=(1, len(self._dictionary))
-                )
+                x_test = sparse.csr_matrix((np_data, (np_row, np_col)), shape=(1, len(self._dictionary)))
 
                 # It's best to use decision function as follow BUT it's not supported yet for sparse SVM
                 # Using decision function to build the votes array
@@ -610,16 +595,10 @@ class TransitionParser(ParserI):
                         baseTransition = strTransition.split(":")[0]
 
                         if baseTransition == Transition.LEFT_ARC:
-                            if (
-                                operation.left_arc(conf, strTransition.split(":")[1])
-                                != -1
-                            ):
+                            if operation.left_arc(conf, strTransition.split(":")[1]) != -1:
                                 break
                         elif baseTransition == Transition.RIGHT_ARC:
-                            if (
-                                operation.right_arc(conf, strTransition.split(":")[1])
-                                != -1
-                            ):
+                            if operation.right_arc(conf, strTransition.split(":")[1]) != -1:
                                 break
                         elif baseTransition == Transition.REDUCE:
                             if operation.reduce(conf) != -1:
@@ -628,9 +607,7 @@ class TransitionParser(ParserI):
                             if operation.shift(conf) != -1:
                                 break
                     else:
-                        raise ValueError(
-                            "The predicted transition is not recognized, expected errors"
-                        )
+                        raise ValueError("The predicted transition is not recognized, expected errors")
 
             # Finish with operations build the dependency graph from Conf.arcs
 

@@ -13,9 +13,7 @@ from collections import Counter, defaultdict
 from nltk.util import ngrams
 
 
-def sentence_chrf(
-    reference, hypothesis, min_len=1, max_len=6, beta=3.0, ignore_whitespace=True
-):
+def sentence_chrf(reference, hypothesis, min_len=1, max_len=6, beta=3.0, ignore_whitespace=True):
     """
     Calculates the sentence level CHRF (Character n-gram F-score) described in
      - Maja Popovic. 2015. CHRF: Character n-gram F-score for Automatic MT Evaluation.
@@ -108,9 +106,7 @@ def _preprocess(sent, ignore_whitespace):
     return sent
 
 
-def chrf_precision_recall_fscore_support(
-    reference, hypothesis, n, beta=3.0, epsilon=1e-16
-):
+def chrf_precision_recall_fscore_support(reference, hypothesis, n, beta=3.0, epsilon=1e-16):
     """
     This function computes the precision, recall and fscore from the ngram
     overlaps. It returns the `support` which is the true positive score.
@@ -151,9 +147,7 @@ def chrf_precision_recall_fscore_support(
     return prec, rec, fscore, tp
 
 
-def corpus_chrf(
-    references, hypotheses, min_len=1, max_len=6, beta=3.0, ignore_whitespace=True
-):
+def corpus_chrf(references, hypotheses, min_len=1, max_len=6, beta=3.0, ignore_whitespace=True):
     """
     Calculates the corpus level CHRF (Character n-gram F-score), it is the
     macro-averaged value of the sentence/segment level CHRF score.
@@ -188,9 +182,7 @@ def corpus_chrf(
     :rtype: float
     """
 
-    assert len(references) == len(
-        hypotheses
-    ), "The number of hypotheses and their references should be the same"
+    assert len(references) == len(hypotheses), "The number of hypotheses and their references should be the same"
     num_sents = len(hypotheses)
 
     # Keep f-scores for each n-gram order separate
@@ -206,9 +198,7 @@ def corpus_chrf(
         # separately.
         for n in range(min_len, max_len + 1):
             # Compute the precision, recall, fscore and support.
-            prec, rec, fscore, tp = chrf_precision_recall_fscore_support(
-                reference, hypothesis, n, beta=beta
-            )
+            prec, rec, fscore, tp = chrf_precision_recall_fscore_support(reference, hypothesis, n, beta=beta)
             ngram_fscores[n].append(fscore)
 
     # how many n-gram sizes

@@ -239,14 +239,10 @@ class FreqDist(Counter):
         :rtype: any or None
         """
         if len(self) == 0:
-            raise ValueError(
-                "A FreqDist must have at least one sample before max is defined."
-            )
+            raise ValueError("A FreqDist must have at least one sample before max is defined.")
         return self.most_common(1)[0][0]
 
-    def plot(
-        self, *args, title="", cumulative=False, percents=False, show=False, **kwargs
-    ):
+    def plot(self, *args, title="", cumulative=False, percents=False, show=False, **kwargs):
         """
         Plot samples from the frequency distribution
         displaying the most frequent sample first.  If an integer
@@ -268,8 +264,7 @@ class FreqDist(Counter):
             import matplotlib.pyplot as plt
         except ImportError as e:
             raise ValueError(
-                "The plot function requires matplotlib to be installed."
-                "See https://matplotlib.org/"
+                "The plot function requires matplotlib to be installed." "See https://matplotlib.org/"
             ) from e
 
         if len(args) == 0:
@@ -322,9 +317,7 @@ class FreqDist(Counter):
         """
         if len(args) == 0:
             args = [len(self)]
-        samples = _get_kwarg(
-            kwargs, "samples", [item for item, _ in self.most_common(*args)]
-        )
+        samples = _get_kwarg(kwargs, "samples", [item for item, _ in self.most_common(*args)])
 
         cumulative = _get_kwarg(kwargs, "cumulative", False)
         if cumulative:
@@ -422,16 +415,12 @@ class FreqDist(Counter):
         """
         if not isinstance(other, FreqDist):
             raise_unorderable_types("<=", self, other)
-        return set(self).issubset(other) and all(
-            self[key] <= other[key] for key in self
-        )
+        return set(self).issubset(other) and all(self[key] <= other[key] for key in self)
 
     def __ge__(self, other):
         if not isinstance(other, FreqDist):
             raise_unorderable_types(">=", self, other)
-        return set(self).issuperset(other) and all(
-            self[key] >= other[key] for key in other
-        )
+        return set(self).issuperset(other) and all(self[key] >= other[key] for key in other)
 
     __lt__ = lambda self, other: self <= other and not self == other
     __gt__ = lambda self, other: self >= other and not self == other
@@ -611,9 +600,7 @@ class UniformProbDist(ProbDistI):
         :raise ValueError: If ``samples`` is empty.
         """
         if len(samples) == 0:
-            raise ValueError(
-                "A Uniform probability distribution must " + "have at least one sample."
-            )
+            raise ValueError("A Uniform probability distribution must " + "have at least one sample.")
         self._sampleset = set(samples)
         self._prob = 1.0 / len(self._sampleset)
         self._samples = list(self._sampleset)
@@ -640,9 +627,7 @@ class RandomProbDist(ProbDistI):
 
     def __init__(self, samples):
         if len(samples) == 0:
-            raise ValueError(
-                "A probability distribution must " + "have at least one sample."
-            )
+            raise ValueError("A probability distribution must " + "have at least one sample.")
         self._probs = self.unirand(samples)
         self._samples = list(self._probs.keys())
 
@@ -708,10 +693,7 @@ class DictionaryProbDist(ProbDistI):
         # Normalize the distribution, if requested.
         if normalize:
             if len(prob_dict) == 0:
-                raise ValueError(
-                    "A DictionaryProbDist must have at least one sample "
-                    + "before it can be normalized."
-                )
+                raise ValueError("A DictionaryProbDist must have at least one sample " + "before it can be normalized.")
             if log:
                 value_sum = sum_logs(list(self._prob_dict.values()))
                 if value_sum <= _NINF:
@@ -845,9 +827,7 @@ class LidstoneProbDist(ProbDistI):
         """
         if (bins == 0) or (bins is None and freqdist.N() == 0):
             name = self.__class__.__name__[:-8]
-            raise ValueError(
-                "A %s probability distribution " % name + "must have at least one bin."
-            )
+            raise ValueError("A %s probability distribution " % name + "must have at least one bin.")
         if (bins is not None) and (bins < freqdist.B()):
             name = self.__class__.__name__[:-8]
             raise ValueError(
@@ -1389,9 +1369,9 @@ class SimpleGoodTuringProbDist(ProbDistI):
             then it's assumed to be equal to ``freqdist``.B() + 1
         :type bins: int
         """
-        assert (
-            bins is None or bins > freqdist.B()
-        ), "bins parameter must not be less than %d=freqdist.B()+1" % (freqdist.B() + 1)
+        assert bins is None or bins > freqdist.B(), "bins parameter must not be less than %d=freqdist.B()+1" % (
+            freqdist.B() + 1
+        )
         if bins is None:
             bins = freqdist.B() + 1
         self._freqdist = freqdist
@@ -1749,9 +1729,7 @@ class KneserNeyProbDist(ProbDistI):
         else:
             # if the sample trigram was seen during training
             if trigram in self._trigrams:
-                prob = (self._trigrams[trigram] - self.discount()) / self._bigrams[
-                    (w0, w1)
-                ]
+                prob = (self._trigrams[trigram] - self.discount()) / self._bigrams[(w0, w1)]
 
             # else if the 'rougher' environment was seen during training
             elif (w0, w1) in self._bigrams and (w1, w2) in self._wordtypes_before:
@@ -1815,9 +1793,7 @@ def log_likelihood(test_pdist, actual_pdist):
     if not isinstance(test_pdist, ProbDistI) or not isinstance(actual_pdist, ProbDistI):
         raise ValueError("expected a ProbDist.")
     # Is this right?
-    return sum(
-        actual_pdist.prob(s) * math.log(test_pdist.prob(s), 2) for s in actual_pdist
-    )
+    return sum(actual_pdist.prob(s) * math.log(test_pdist.prob(s), 2) for s in actual_pdist)
 
 
 def entropy(pdist):
@@ -1953,8 +1929,7 @@ class ConditionalFreqDist(defaultdict):
             import matplotlib.pyplot as plt  # import statement fix
         except ImportError as e:
             raise ValueError(
-                "The plot function requires matplotlib to be installed."
-                "See https://matplotlib.org/"
+                "The plot function requires matplotlib to be installed." "See https://matplotlib.org/"
             ) from e
 
         if not conditions:
@@ -2242,14 +2217,10 @@ class ConditionalProbDist(ConditionalProbDistI):
         self._factory_kw_args = factory_kw_args
 
         for condition in cfdist:
-            self[condition] = probdist_factory(
-                cfdist[condition], *factory_args, **factory_kw_args
-            )
+            self[condition] = probdist_factory(cfdist[condition], *factory_args, **factory_kw_args)
 
     def __missing__(self, key):
-        self[key] = self._probdist_factory(
-            FreqDist(), *self._factory_args, **self._factory_kw_args
-        )
+        self[key] = self._probdist_factory(FreqDist(), *self._factory_args, **self._factory_kw_args)
         return self[key]
 
 
@@ -2434,9 +2405,7 @@ def _create_rand_fdist(numsamples, numoutcomes):
 
     fdist = FreqDist()
     for x in range(numoutcomes):
-        y = random.randint(1, (1 + numsamples) // 2) + random.randint(
-            0, numsamples // 2
-        )
+        y = random.randint(1, (1 + numsamples) // 2) + random.randint(0, numsamples // 2)
         fdist[y] += 1
     return fdist
 
@@ -2497,10 +2466,7 @@ def demo(numsamples=6, numoutcomes=500):
         vals.append(tuple([n, fdist1.freq(n)] + [pdist.prob(n) for pdist in pdists]))
 
     # Print the results in a formatted table.
-    print(
-        "%d samples (1-%d); %d outcomes were sampled for each FreqDist"
-        % (numsamples, numsamples, numoutcomes)
-    )
+    print("%d samples (1-%d); %d outcomes were sampled for each FreqDist" % (numsamples, numsamples, numoutcomes))
     print("=" * 9 * (len(pdists) + 2))
     FORMATSTR = "      FreqDist " + "%8s " * (len(pdists) - 1) + "|  Actual"
     print(FORMATSTR % tuple(repr(pdist)[1:9] for pdist in pdists[:-1]))
@@ -2538,9 +2504,7 @@ def gt_demo():
     fd = FreqDist(emma_words)
     sgt = SimpleGoodTuringProbDist(fd)
     print("{:>18} {:>8}  {:>14}".format("word", "frequency", "SimpleGoodTuring"))
-    fd_keys_sorted = (
-        key for key, value in sorted(fd.items(), key=lambda item: item[1], reverse=True)
-    )
+    fd_keys_sorted = (key for key, value in sorted(fd.items(), key=lambda item: item[1], reverse=True))
     for key in fd_keys_sorted:
         print("%18s %8d  %14e" % (key, fd[key], sgt.prob(key)))
 

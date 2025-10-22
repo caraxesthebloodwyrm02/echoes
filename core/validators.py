@@ -144,9 +144,7 @@ def validate_schema(data: Dict[str, Any], strict: bool = True) -> bool:
     return True
 
 
-def validate_numeric_reproducibility(
-    data1: Dict[str, Any], data2: Dict[str, Any], rtol: float = 1e-7
-) -> bool:
+def validate_numeric_reproducibility(data1: Dict[str, Any], data2: Dict[str, Any], rtol: float = 1e-7) -> bool:
     """Validate that two analysis outputs are numerically identical.
 
     Parameters
@@ -179,14 +177,10 @@ def validate_numeric_reproducibility(
     metrics1 = data1["metrics"]
     metrics2 = data2["metrics"]
 
-    if not np.isclose(
-        metrics1["efficiency_score"], metrics2["efficiency_score"], rtol=rtol
-    ):
+    if not np.isclose(metrics1["efficiency_score"], metrics2["efficiency_score"], rtol=rtol):
         return False
 
-    if not np.isclose(
-        metrics1["balance_angle_deg"], metrics2["balance_angle_deg"], rtol=rtol
-    ):
+    if not np.isclose(metrics1["balance_angle_deg"], metrics2["balance_angle_deg"], rtol=rtol):
         return False
 
     # Compare pairwise angles

@@ -264,9 +264,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         if chance_level_kw is None:
             chance_level_kw = {}
 
-        chance_level_kw = _validate_style_kwargs(
-            default_chance_level_line_kw, chance_level_kw
-        )
+        chance_level_kw = _validate_style_kwargs(default_chance_level_line_kw, chance_level_kw)
 
         self.line_ = []
         for fpr, tpr, line_kw in zip(fpr, tpr, curve_kwargs):
@@ -275,9 +273,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         if len(self.line_) == 1:
             self.line_ = self.line_[0]
 
-        info_pos_label = (
-            f" (Positive label: {self.pos_label})" if self.pos_label is not None else ""
-        )
+        info_pos_label = f" (Positive label: {self.pos_label})" if self.pos_label is not None else ""
 
         xlabel = "False Positive Rate" + info_pos_label
         ylabel = "True Positive Rate" + info_pos_label
@@ -297,9 +293,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         if despine:
             _despine(self.ax_)
 
-        if curve_kwargs[0].get("label") is not None or (
-            plot_chance_level and chance_level_kw.get("label") is not None
-        ):
+        if curve_kwargs[0].get("label") is not None or (plot_chance_level and chance_level_kw.get("label") is not None):
             self.ax_.legend(loc="lower right")
 
         return self
@@ -578,19 +572,14 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         >>> plt.show()
         """
         # TODO(1.9): remove after the end of the deprecation period of `y_pred`
-        if y_score is not None and not (
-            isinstance(y_pred, str) and y_pred == "deprecated"
-        ):
+        if y_score is not None and not (isinstance(y_pred, str) and y_pred == "deprecated"):
             raise ValueError(
                 "`y_pred` and `y_score` cannot be both specified. Please use `y_score`"
                 " only as `y_pred` is deprecated in 1.7 and will be removed in 1.9."
             )
         if not (isinstance(y_pred, str) and y_pred == "deprecated"):
             warnings.warn(
-                (
-                    "y_pred is deprecated in 1.7 and will be removed in 1.9. "
-                    "Please use `y_score` instead."
-                ),
+                ("y_pred is deprecated in 1.7 and will be removed in 1.9. " "Please use `y_score` instead."),
                 FutureWarning,
             )
             y_score = y_pred
@@ -751,9 +740,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
         )
 
         fpr_folds, tpr_folds, auc_folds = [], [], []
-        for estimator, test_indices in zip(
-            cv_results["estimator"], cv_results["indices"]["test"]
-        ):
+        for estimator, test_indices in zip(cv_results["estimator"], cv_results["indices"]["test"]):
             y_true = _safe_indexing(y, test_indices)
             y_pred, _ = _get_response_values_binary(
                 estimator,
@@ -761,11 +748,7 @@ class RocCurveDisplay(_BinaryClassifierCurveDisplayMixin):
                 response_method=response_method,
                 pos_label=pos_label_,
             )
-            sample_weight_fold = (
-                None
-                if sample_weight is None
-                else _safe_indexing(sample_weight, test_indices)
-            )
+            sample_weight_fold = None if sample_weight is None else _safe_indexing(sample_weight, test_indices)
             fpr, tpr, _ = roc_curve(
                 y_true,
                 y_pred,

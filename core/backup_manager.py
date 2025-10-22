@@ -45,9 +45,7 @@ class BackupManager:
         self.backup_dir = backup_dir or Path(".backups")
         self.backup_dir.mkdir(exist_ok=True)
 
-    def create_backup(
-        self, file_path: Union[str, Path], suffix: str = ".bak"
-    ) -> Optional[Path]:
+    def create_backup(self, file_path: Union[str, Path], suffix: str = ".bak") -> Optional[Path]:
         """Create a backup of a file before modification.
 
         Args:
@@ -72,9 +70,7 @@ class BackupManager:
         except Exception:
             return None
 
-    def restore_backup(
-        self, original_path: Union[str, Path], backup_path: Union[str, Path]
-    ) -> bool:
+    def restore_backup(self, original_path: Union[str, Path], backup_path: Union[str, Path]) -> bool:
         """Restore a file from backup.
 
         Args:
@@ -90,9 +86,7 @@ class BackupManager:
         except Exception:
             return False
 
-    def list_backups(
-        self, original_file: Optional[Union[str, Path]] = None
-    ) -> List[Path]:
+    def list_backups(self, original_file: Optional[Union[str, Path]] = None) -> List[Path]:
         """List available backup files.
 
         Args:
@@ -230,9 +224,7 @@ def atomic_write_text(
         return False
 
 
-def safe_api_call(
-    func, *args, max_retries: int = 3, backup_on_failure: bool = True, **kwargs
-):
+def safe_api_call(func, *args, max_retries: int = 3, backup_on_failure: bool = True, **kwargs):
     """Execute an API call with retry logic and optional backup.
 
     Args:

@@ -12,11 +12,7 @@ class TriContourSet(ContourSet):
 
 @overload
 def tricontour(
-    ax: Axes,
-    triangulation: Triangulation,
-    z: ArrayLike,
-    levels: int | ArrayLike = ...,
-    **kwargs
+    ax: Axes, triangulation: Triangulation, z: ArrayLike, levels: int | ArrayLike = ..., **kwargs
 ) -> TriContourSet: ...
 @overload
 def tricontour(
@@ -32,11 +28,7 @@ def tricontour(
 ) -> TriContourSet: ...
 @overload
 def tricontourf(
-    ax: Axes,
-    triangulation: Triangulation,
-    z: ArrayLike,
-    levels: int | ArrayLike = ...,
-    **kwargs
+    ax: Axes, triangulation: Triangulation, z: ArrayLike, levels: int | ArrayLike = ..., **kwargs
 ) -> TriContourSet: ...
 @overload
 def tricontourf(

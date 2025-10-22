@@ -175,8 +175,7 @@ class LcovReporter:
 
         # ensure file records are sorted by the _relative_ filename, not the full path
         to_report = [
-            (fr.relative_filename(), fr, analysis)
-            for fr, analysis in get_analysis_to_report(self.coverage, morfs)
+            (fr.relative_filename(), fr, analysis) for fr, analysis in get_analysis_to_report(self.coverage, morfs)
         ]
         to_report.sort()
 

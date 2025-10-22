@@ -119,8 +119,7 @@ def ssl_with_bad_version(context, config):
                 severity=bandit.HIGH,
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.BROKEN_CRYPTO,
-                text="ssl.wrap_socket call with insecure SSL/TLS protocol "
-                "version identified, security issue.",
+                text="ssl.wrap_socket call with insecure SSL/TLS protocol " "version identified, security issue.",
                 lineno=context.get_lineno_for_call_arg("ssl_version"),
             )
     elif context.call_function_name_qual == "pyOpenSSL.SSL.Context":
@@ -129,8 +128,7 @@ def ssl_with_bad_version(context, config):
                 severity=bandit.HIGH,
                 confidence=bandit.HIGH,
                 cwe=issue.Cwe.BROKEN_CRYPTO,
-                text="SSL.Context call with insecure SSL/TLS protocol "
-                "version identified, security issue.",
+                text="SSL.Context call with insecure SSL/TLS protocol " "version identified, security issue.",
                 lineno=context.get_lineno_for_call_arg("method"),
             )
 
@@ -138,18 +136,15 @@ def ssl_with_bad_version(context, config):
         context.call_function_name_qual != "ssl.wrap_socket"
         and context.call_function_name_qual != "pyOpenSSL.SSL.Context"
     ):
-        if context.check_call_arg_value(
-            "method", bad_ssl_versions
-        ) or context.check_call_arg_value("ssl_version", bad_ssl_versions):
-            lineno = context.get_lineno_for_call_arg(
-                "method"
-            ) or context.get_lineno_for_call_arg("ssl_version")
+        if context.check_call_arg_value("method", bad_ssl_versions) or context.check_call_arg_value(
+            "ssl_version", bad_ssl_versions
+        ):
+            lineno = context.get_lineno_for_call_arg("method") or context.get_lineno_for_call_arg("ssl_version")
             return bandit.Issue(
                 severity=bandit.MEDIUM,
                 confidence=bandit.MEDIUM,
                 cwe=issue.Cwe.BROKEN_CRYPTO,
-                text="Function call with insecure SSL/TLS protocol "
-                "identified, possible security issue.",
+                text="Function call with insecure SSL/TLS protocol " "identified, possible security issue.",
                 lineno=lineno,
             )
 

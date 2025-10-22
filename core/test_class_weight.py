@@ -60,11 +60,7 @@ def test_compute_class_weight():
 )
 def test_compute_class_weight_not_present(y_type, class_weight, classes, err_msg):
     # Raise error when y does not contain all class labels
-    y = (
-        np.asarray([0, 0, 0, 1, 1, 2])
-        if y_type == "numeric"
-        else np.asarray(["dog", "cat", "dog"])
-    )
+    y = np.asarray([0, 0, 0, 1, 1, 2]) if y_type == "numeric" else np.asarray(["dog", "cat", "dog"])
 
     print(y)
     with pytest.raises(ValueError, match=err_msg):
@@ -140,9 +136,7 @@ def test_compute_class_weight_balanced_sample_weight_equivalence():
 
     y_rep = np.repeat(y, sw, axis=0)
 
-    class_weights_weighted = compute_class_weight(
-        "balanced", classes=classes, y=y, sample_weight=sw
-    )
+    class_weights_weighted = compute_class_weight("balanced", classes=classes, y=y, sample_weight=sw)
     class_weights_repeated = compute_class_weight("balanced", classes=classes, y=y_rep)
     assert len(class_weights_weighted) == len(classes)
     assert len(class_weights_repeated) == len(classes)
@@ -209,9 +203,7 @@ def test_compute_sample_weight():
     # Test with unbalanced classes
     y = np.asarray([1, 1, 1, 2, 2, 2, 3])
     sample_weight = compute_sample_weight("balanced", y)
-    expected_balanced = np.array(
-        [0.7777, 0.7777, 0.7777, 0.7777, 0.7777, 0.7777, 2.3333]
-    )
+    expected_balanced = np.array([0.7777, 0.7777, 0.7777, 0.7777, 0.7777, 0.7777, 2.3333])
     assert_array_almost_equal(sample_weight, expected_balanced, decimal=4)
 
     # Test with `None` weights

@@ -8,7 +8,6 @@
 
 """NIST score implementation."""
 
-import fractions
 import math
 from collections import Counter
 
@@ -90,9 +89,7 @@ def corpus_nist(list_of_references, hypotheses, n=5):
     # Collect the ngram coounts from the reference sentences.
     ngram_freq = Counter()
     total_reference_words = 0
-    for (
-        references
-    ) in list_of_references:  # For each source sent, there's a list of reference sents.
+    for references in list_of_references:  # For each source sent, there's a list of reference sents.
         for reference in references:
             # For each order of ngram, count the ngram occurrences.
             for i in range(1, n + 1):
@@ -132,25 +129,14 @@ def corpus_nist(list_of_references, hypotheses, n=5):
             for reference in references:
                 _ref_len = len(reference)
                 # Counter of ngrams in hypothesis.
-                hyp_ngrams = (
-                    Counter(ngrams(hypothesis, i))
-                    if len(hypothesis) >= i
-                    else Counter()
-                )
-                ref_ngrams = (
-                    Counter(ngrams(reference, i)) if len(reference) >= i else Counter()
-                )
+                hyp_ngrams = Counter(ngrams(hypothesis, i)) if len(hypothesis) >= i else Counter()
+                ref_ngrams = Counter(ngrams(reference, i)) if len(reference) >= i else Counter()
                 ngram_overlaps = hyp_ngrams & ref_ngrams
                 # Precision part of the score in Eqn 3
-                _numerator = sum(
-                    information_weights[_ngram] * count
-                    for _ngram, count in ngram_overlaps.items()
-                )
+                _numerator = sum(information_weights[_ngram] * count for _ngram, count in ngram_overlaps.items())
                 _denominator = sum(hyp_ngrams.values())
                 _precision = 0 if _denominator == 0 else _numerator / _denominator
-                nist_score_per_ref.append(
-                    (_precision, _numerator, _denominator, _ref_len)
-                )
+                nist_score_per_ref.append((_precision, _numerator, _denominator, _ref_len))
             # Best reference.
             precision, numerator, denominator, ref_len = max(nist_score_per_ref)
             nist_precision_numerator_per_ngram[i] += numerator
@@ -161,10 +147,7 @@ def corpus_nist(list_of_references, hypotheses, n=5):
     # Final NIST micro-average mean aggregation.
     nist_precision = 0
     for i in nist_precision_numerator_per_ngram:
-        precision = (
-            nist_precision_numerator_per_ngram[i]
-            / nist_precision_denominator_per_ngram[i]
-        )
+        precision = nist_precision_numerator_per_ngram[i] / nist_precision_denominator_per_ngram[i]
         nist_precision += precision
     # Eqn 3 in Doddington(2002)
     return nist_precision * nist_length_penalty(l_ref, l_sys)

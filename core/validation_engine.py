@@ -54,9 +54,7 @@ class ValidationResult:
     ):
         self.test_case = test_case
         self.match_score = match_score
-        self.intuitive_alignment = (
-            intuitive_alignment  # How well score matches human intuition
-        )
+        self.intuitive_alignment = intuitive_alignment  # How well score matches human intuition
         self.passes_threshold = passes_threshold
 
 
@@ -70,28 +68,20 @@ class SemanticMatchValidator:
         self.test_cases = self._load_validation_cases()
         self.feedback_loop = FeedbackCollector()
 
-    def run_intuitive_validation(
-        self, matcher: RelationshipAwareMatcher
-    ) -> "ValidationReport":
+    def run_intuitive_validation(self, matcher: RelationshipAwareMatcher) -> "ValidationReport":
         """Test against cases where human intuition matters"""
 
         results = []
         for test_case in self.test_cases:
             # Embed skills
-            candidate_embedding = self._embed_skills(
-                test_case.candidate_skills, "candidate"
-            )
+            candidate_embedding = self._embed_skills(test_case.candidate_skills, "candidate")
             job_embedding = self._embed_skills(test_case.job_skills, "job")
 
             # Run matching
-            match_score = matcher.calculate_semantic_similarity(
-                candidate_embedding, job_embedding
-            )
+            match_score = matcher.calculate_semantic_similarity(candidate_embedding, job_embedding)
 
             # Compare with human judgment
-            intuitive_alignment = self._compare_with_human_judgment(
-                match_score.score, test_case.expected_score
-            )
+            intuitive_alignment = self._compare_with_human_judgment(match_score.score, test_case.expected_score)
 
             passes_threshold = intuitive_alignment >= 0.8
 
@@ -138,9 +128,7 @@ class SemanticMatchValidator:
         context_filter = ContextFilter()
         return context_filter.apply_context(mock_semantic, "general")
 
-    def _compare_with_human_judgment(
-        self, actual_score: float, expected_score: float
-    ) -> float:
+    def _compare_with_human_judgment(self, actual_score: float, expected_score: float) -> float:
         """
         Compare actual match score with human-expected score.
         Returns alignment score between 0 and 1.
@@ -160,9 +148,7 @@ class SemanticMatchValidator:
         else:
             return 0.3
 
-    def _generate_validation_report(
-        self, results: List[ValidationResult]
-    ) -> "ValidationReport":
+    def _generate_validation_report(self, results: List[ValidationResult]) -> "ValidationReport":
         """Generate comprehensive validation report"""
 
         total_cases = len(results)
@@ -297,9 +283,7 @@ class FeedbackCollector:
         if not self.feedback_data:
             return {"message": "No feedback data available"}
 
-        score_differences = [
-            abs(f["human_score"] - f["system_score"]) for f in self.feedback_data
-        ]
+        score_differences = [abs(f["human_score"] - f["system_score"]) for f in self.feedback_data]
 
         avg_difference = np.mean(score_differences)
         max_difference = np.max(score_differences)

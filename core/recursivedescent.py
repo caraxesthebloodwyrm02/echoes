@@ -217,14 +217,10 @@ class RecursiveDescentParser(ParserI):
                 else:
                     newtree = tree.copy(deep=True)
                     newtree[frontier[0]] = subtree
-                new_frontier = [
-                    frontier[0] + (i,) for i in range(len(production.rhs()))
-                ]
+                new_frontier = [frontier[0] + (i,) for i in range(len(production.rhs()))]
                 if self._trace:
                     self._trace_expand(newtree, new_frontier, production)
-                yield from self._parse(
-                    remaining_text, newtree, new_frontier + frontier[1:]
-                )
+                yield from self._parse(remaining_text, newtree, new_frontier + frontier[1:])
 
     def _production_to_tree(self, production):
         """
@@ -564,11 +560,7 @@ class SteppingRecursiveDescentParser(RecursiveDescentParser):
         if len(self._frontier) == 0 or not isinstance(frontier_child, Tree):
             return []
 
-        return [
-            p
-            for p in self._grammar.productions()
-            if p.lhs().symbol() == frontier_child.label()
-        ]
+        return [p for p in self._grammar.productions() if p.lhs().symbol() == frontier_child.label()]
 
     def untried_expandable_productions(self):
         """

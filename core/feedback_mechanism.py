@@ -93,9 +93,7 @@ class FeedbackMechanism:
         self.logger.setLevel(logging.INFO)
 
         handler = logging.FileHandler("logs/feedback.log")
-        handler.setFormatter(
-            logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-        )
+        handler.setFormatter(logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s"))
         self.logger.addHandler(handler)
 
     def collect_monitoring_feedback(self, report: MonitoringReport):
@@ -175,9 +173,7 @@ class FeedbackMechanism:
         self._add_feedback_entry(entry)
         self.logger.info(f"User feedback collected: {title}")
 
-    def collect_test_failure_feedback(
-        self, test_name: str, error_message: str, stack_trace: Optional[str] = None
-    ):
+    def collect_test_failure_feedback(self, test_name: str, error_message: str, stack_trace: Optional[str] = None):
         """Collect feedback from test failures."""
 
         entry = FeedbackEntry(
@@ -209,11 +205,7 @@ class FeedbackMechanism:
         period_start = period_end - timedelta(days=days)
 
         # Filter entries in period
-        period_entries = [
-            entry
-            for entry in self.feedback_entries
-            if period_start <= entry.timestamp <= period_end
-        ]
+        period_entries = [entry for entry in self.feedback_entries if period_start <= entry.timestamp <= period_end]
 
         # Calculate statistics
         total_entries = len(period_entries)
@@ -225,9 +217,7 @@ class FeedbackMechanism:
             entries_by_category[entry.category] += 1
             entries_by_severity[entry.severity] += 1
 
-        resolution_rate = (
-            len(resolved_entries) / total_entries if total_entries > 0 else 0
-        )
+        resolution_rate = len(resolved_entries) / total_entries if total_entries > 0 else 0
 
         # Identify top issues
         top_issues = self._identify_top_issues(period_entries)
@@ -329,9 +319,7 @@ class FeedbackMechanism:
         self._save_feedback()
         self.logger.debug(f"Feedback entry added: {entry.title}")
 
-    def _generate_benchmark_recommendations(
-        self, benchmark: BenchmarkResult
-    ) -> List[str]:
+    def _generate_benchmark_recommendations(self, benchmark: BenchmarkResult) -> List[str]:
         """Generate recommendations for benchmark issues."""
 
         recommendations = []
@@ -379,9 +367,7 @@ class FeedbackMechanism:
 
         return recommendations
 
-    def _analyze_ecosystem_health(
-        self, ecosystem_health: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _analyze_ecosystem_health(self, ecosystem_health: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Analyze ecosystem health for feedback issues."""
 
         issues = []
@@ -419,11 +405,7 @@ class FeedbackMechanism:
                     "severity": "high",
                     "title": "Communication issues detected",
                     "description": f"Found {len(ecosystem_health['communications']['issues'])} communication problems",
-                    "metrics": {
-                        "issues_count": len(
-                            ecosystem_health["communications"]["issues"]
-                        )
-                    },
+                    "metrics": {"issues_count": len(ecosystem_health["communications"]["issues"])},
                     "recommendations": ecosystem_health["communications"]["issues"],
                 }
             )
@@ -436,17 +418,13 @@ class FeedbackMechanism:
                     "title": "GATE validation failed",
                     "description": "Quality gate is closed due to validation failures",
                     "metrics": ecosystem_health["gate_status"]["details"],
-                    "recommendations": [
-                        "Review and fix validation failures before proceeding"
-                    ],
+                    "recommendations": ["Review and fix validation failures before proceeding"],
                 }
             )
 
         return issues
 
-    def _analyze_detector_metrics(
-        self, detector_metrics: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+    def _analyze_detector_metrics(self, detector_metrics: Dict[str, Any]) -> List[Dict[str, Any]]:
         """Analyze detector metrics for feedback issues."""
 
         issues = []
@@ -484,9 +462,7 @@ class FeedbackMechanism:
 
         return issues
 
-    def _identify_top_issues(
-        self, entries: List[FeedbackEntry]
-    ) -> List[Dict[str, Any]]:
+    def _identify_top_issues(self, entries: List[FeedbackEntry]) -> List[Dict[str, Any]]:
         """Identify the most common issues."""
 
         issue_counts = defaultdict(int)
@@ -506,9 +482,7 @@ class FeedbackMechanism:
             issue_details[key]["severities"].add(entry.severity)
 
         # Sort by frequency
-        top_issues = sorted(
-            issue_details.values(), key=lambda x: x["count"], reverse=True
-        )
+        top_issues = sorted(issue_details.values(), key=lambda x: x["count"], reverse=True)
         return top_issues[:10]  # Top 10 issues
 
     def _analyze_improvement_trends(self, entries: List[FeedbackEntry]) -> List[str]:
@@ -523,16 +497,8 @@ class FeedbackMechanism:
         sorted_entries = sorted(entries, key=lambda x: x.timestamp)
 
         # Check resolution trends
-        recent_entries = [
-            e
-            for e in sorted_entries
-            if e.timestamp > datetime.now() - timedelta(days=7)
-        ]
-        older_entries = [
-            e
-            for e in sorted_entries
-            if e.timestamp <= datetime.now() - timedelta(days=7)
-        ]
+        recent_entries = [e for e in sorted_entries if e.timestamp > datetime.now() - timedelta(days=7)]
+        older_entries = [e for e in sorted_entries if e.timestamp <= datetime.now() - timedelta(days=7)]
 
         recent_resolved = sum(1 for e in recent_entries if e.resolved)
         older_resolved = sum(1 for e in older_entries if e.resolved)
@@ -572,9 +538,7 @@ class FeedbackMechanism:
             recommendations.append("Focus on performance optimization initiatives")
 
         if categories.get("security", 0) > 3:
-            recommendations.append(
-                "Prioritize security improvements and detector tuning"
-            )
+            recommendations.append("Prioritize security improvements and detector tuning")
 
         # Severity-based recommendations
         if severities.get("critical", 0) > 0:
@@ -588,9 +552,7 @@ class FeedbackMechanism:
                 recommendations.append("Review and adjust current processes")
 
         if not recommendations:
-            recommendations.append(
-                "Maintain current monitoring and improvement practices"
-            )
+            recommendations.append("Maintain current monitoring and improvement practices")
 
         return recommendations
 
@@ -620,9 +582,7 @@ class FeedbackMechanism:
                 "metrics": entry.metrics,
                 "recommendations": entry.recommendations,
                 "resolved": entry.resolved,
-                "resolved_at": entry.resolved_at.isoformat()
-                if entry.resolved_at
-                else None,
+                "resolved_at": entry.resolved_at.isoformat() if entry.resolved_at else None,
                 "resolution_notes": entry.resolution_notes,
             }
             for entry in self.feedback_entries
@@ -639,9 +599,7 @@ def collect_user_feedback(title: str, description: str, **kwargs):
     mechanism.collect_user_feedback(title, description, **kwargs)
 
 
-def export_feedback_report(
-    output_path: str = "reports/feedback_analysis.json", days: int = 30
-):
+def export_feedback_report(output_path: str = "reports/feedback_analysis.json", days: int = 30):
     """Convenience function for feedback report export."""
     mechanism = FeedbackMechanism()
     mechanism.export_feedback_report(output_path, days)

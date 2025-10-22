@@ -106,9 +106,7 @@ class CfgReadingCommand(ReadingCommand):
         :param gramfile: name of file where grammar can be loaded
         :type gramfile: str
         """
-        self._gramfile = (
-            gramfile if gramfile else "grammars/book_grammars/discourse.fcfg"
-        )
+        self._gramfile = gramfile if gramfile else "grammars/book_grammars/discourse.fcfg"
         self._parser = load_parser(self._gramfile)
 
     def parse_to_readings(self, sentence):
@@ -136,9 +134,7 @@ class DrtGlueReadingCommand(ReadingCommand):
         :param depparser: the dependency parser
         """
         if semtype_file is None:
-            semtype_file = os.path.join(
-                "grammars", "sample_grammars", "drt_glue.semtype"
-            )
+            semtype_file = os.path.join("grammars", "sample_grammars", "drt_glue.semtype")
         self._glue = DrtGlue(
             semtype_file=semtype_file,
             remove_duplicates=remove_duplicates,
@@ -184,9 +180,7 @@ class DiscourseTester:
         self._sentences = {"s%s" % i: sent for i, sent in enumerate(input)}
         self._models = None
         self._readings = {}
-        self._reading_command = (
-            reading_command if reading_command else CfgReadingCommand()
-        )
+        self._reading_command = reading_command if reading_command else CfgReadingCommand()
         self._threads = {}
         self._filtered_threads = {}
         if background is not None:
@@ -229,10 +223,7 @@ class DiscourseTester:
                 for sent_reading in self._get_readings(sentence):
                     tp = Prover9Command(goal=sent_reading, assumptions=assumptions)
                     if tp.prove():
-                        print(
-                            "Sentence '%s' under reading '%s':"
-                            % (sentence, str(sent_reading))
-                        )
+                        print("Sentence '%s' under reading '%s':" % (sentence, str(sent_reading)))
                         print("Not informative relative to thread '%s'" % tid)
 
         self._input.append(sentence)
@@ -255,10 +246,7 @@ class DiscourseTester:
         try:
             self._input.remove(sentence)
         except ValueError:
-            print(
-                "Retraction failed. The sentence '%s' is not part of the current discourse:"
-                % sentence
-            )
+            print("Retraction failed. The sentence '%s' is not part of the current discourse:" % sentence)
             self.sentences()
             return None
         self._sentences = {"s%s" % i: sent for i, sent in enumerate(self._input)}
@@ -295,8 +283,7 @@ class DiscourseTester:
             sentence = self._sentences[sid]
             readings = self._get_readings(sentence)
             self._readings[sid] = {
-                f"{sid}-r{rid}": reading.simplify()
-                for rid, reading in enumerate(sorted(readings, key=str))
+                f"{sid}-r{rid}": reading.simplify() for rid, reading in enumerate(sorted(readings, key=str))
             }
 
     def _construct_threads(self):
@@ -340,14 +327,9 @@ class DiscourseTester:
         threads = self._filtered_threads if filter else self._threads
         for tid in sorted(threads):
             if show_thread_readings:
-                readings = [
-                    self._readings[rid.split("-")[0]][rid] for rid in self._threads[tid]
-                ]
+                readings = [self._readings[rid.split("-")[0]][rid] for rid in self._threads[tid]]
                 try:
-                    thread_reading = (
-                        ": %s"
-                        % self._reading_command.combine_readings(readings).normalize()
-                    )
+                    thread_reading = ": %s" % self._reading_command.combine_readings(readings).normalize()
                 except Exception as e:
                     thread_reading = ": INVALID: %s" % e.__class__.__name__
             else:
@@ -382,9 +364,7 @@ class DiscourseTester:
             if not threaded:
                 self._show_readings(sentence=sentence)
             else:
-                self._show_threads(
-                    filter=filter, show_thread_readings=show_thread_readings
-                )
+                self._show_threads(filter=filter, show_thread_readings=show_thread_readings)
 
     def expand_threads(self, thread_id, threads=None):
         """
@@ -399,11 +379,7 @@ class DiscourseTester:
         """
         if threads is None:
             threads = self._threads
-        return [
-            (rid, self._readings[sid][rid])
-            for rid in threads[thread_id]
-            for sid in rid.split("-")[:1]
-        ]
+        return [(rid, self._readings[sid][rid]) for rid in threads[thread_id] for sid in rid.split("-")[:1]]
 
     ###############################
     # Models and Background
@@ -412,9 +388,7 @@ class DiscourseTester:
     def _check_consistency(self, threads, show=False, verbose=False):
         results = []
         for tid in sorted(threads):
-            assumptions = [
-                reading for (rid, reading) in self.expand_threads(tid, threads=threads)
-            ]
+            assumptions = [reading for (rid, reading) in self.expand_threads(tid, threads=threads)]
             assumptions = list(
                 map(
                     self._reading_command.to_fol,
@@ -455,9 +429,7 @@ class DiscourseTester:
         self._construct_threads()
         threads = {thread_id: self._threads[thread_id]} if thread_id else self._threads
 
-        for tid, modelfound in self._check_consistency(
-            threads, show=show, verbose=verbose
-        ):
+        for tid, modelfound in self._check_consistency(threads, show=show, verbose=verbose):
             idlist = [rid for rid in threads[tid]]
 
             if not modelfound:
@@ -555,9 +527,7 @@ def discourse_demo(reading_command=None):
     """
     Illustrate the various methods of ``DiscourseTester``
     """
-    dt = DiscourseTester(
-        ["A boxer walks", "Every boxer chases a girl"], reading_command
-    )
+    dt = DiscourseTester(["A boxer walks", "Every boxer chases a girl"], reading_command)
     dt.models()
     print()
     # dt.grammar()
@@ -575,9 +545,7 @@ def discourse_demo(reading_command=None):
     print()
     dt.readings(threaded=True)
     print()
-    dt = DiscourseTester(
-        ["A student dances", "Every student is a person"], reading_command
-    )
+    dt = DiscourseTester(["A student dances", "Every student is a person"], reading_command)
     print()
     dt.add_sentence("No person dances", consistchk=True)
     print()
@@ -642,9 +610,7 @@ def demo():
         ]
     )
     depparser = MaltParser(tagger=tagger)
-    drt_discourse_demo(
-        DrtGlueReadingCommand(remove_duplicates=False, depparser=depparser)
-    )
+    drt_discourse_demo(DrtGlueReadingCommand(remove_duplicates=False, depparser=depparser))
 
 
 if __name__ == "__main__":

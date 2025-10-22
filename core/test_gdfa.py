@@ -148,7 +148,5 @@ class TestGDFA(unittest.TestCase):
         ]
 
         # Iterate through all 10 examples and check for expected outputs.
-        for fw, bw, src_len, trg_len, expect in zip(
-            forwards, backwards, source_lens, target_lens, expected
-        ):
+        for fw, bw, src_len, trg_len, expect in zip(forwards, backwards, source_lens, target_lens, expected):
             self.assertListEqual(expect, grow_diag_final_and(src_len, trg_len, fw, bw))

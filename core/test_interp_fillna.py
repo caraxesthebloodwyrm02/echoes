@@ -63,9 +63,7 @@ def test_interp_fill_functions(using_copy_on_write, func):
 
 
 @pytest.mark.parametrize("func", ["ffill", "bfill"])
-@pytest.mark.parametrize(
-    "vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]]
-)
+@pytest.mark.parametrize("vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]])
 def test_interpolate_triggers_copy(using_copy_on_write, vals, func):
     df = DataFrame({"a": vals})
     result = getattr(df, func)()
@@ -76,9 +74,7 @@ def test_interpolate_triggers_copy(using_copy_on_write, vals, func):
         assert result._mgr._has_no_reference(0)
 
 
-@pytest.mark.parametrize(
-    "vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]]
-)
+@pytest.mark.parametrize("vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]])
 def test_interpolate_inplace_no_reference_no_copy(using_copy_on_write, vals):
     df = DataFrame({"a": vals})
     arr = get_array(df, "a")
@@ -90,9 +86,7 @@ def test_interpolate_inplace_no_reference_no_copy(using_copy_on_write, vals):
         assert df._mgr._has_no_reference(0)
 
 
-@pytest.mark.parametrize(
-    "vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]]
-)
+@pytest.mark.parametrize("vals", [[1, np.nan, 2], [Timestamp("2019-12-31"), NaT, Timestamp("2020-12-31")]])
 def test_interpolate_inplace_with_refs(using_copy_on_write, vals, warn_copy_on_write):
     df = DataFrame({"a": [1, np.nan, 2]})
     df_orig = df.copy()
@@ -114,9 +108,7 @@ def test_interpolate_inplace_with_refs(using_copy_on_write, vals, warn_copy_on_w
 
 @pytest.mark.parametrize("func", ["ffill", "bfill"])
 @pytest.mark.parametrize("dtype", ["float64", "Float64"])
-def test_interp_fill_functions_inplace(
-    using_copy_on_write, func, warn_copy_on_write, dtype
-):
+def test_interp_fill_functions_inplace(using_copy_on_write, func, warn_copy_on_write, dtype):
     # Check that these takes the same code paths as interpolate
     df = DataFrame({"a": [1, np.nan, 2]}, dtype=dtype)
     df_orig = df.copy()
@@ -282,9 +274,7 @@ def test_fillna_inplace_reference(using_copy_on_write, warn_copy_on_write):
 
 def test_fillna_interval_inplace_reference(using_copy_on_write, warn_copy_on_write):
     # Set dtype explicitly to avoid implicit cast when setting nan
-    ser = Series(
-        interval_range(start=0, end=5), name="a", dtype="interval[float64, right]"
-    )
+    ser = Series(interval_range(start=0, end=5), name="a", dtype="interval[float64, right]")
     ser.iloc[1] = np.nan
 
     ser_orig = ser.copy()
@@ -293,14 +283,10 @@ def test_fillna_interval_inplace_reference(using_copy_on_write, warn_copy_on_wri
         ser.fillna(value=Interval(left=0, right=5), inplace=True)
 
     if using_copy_on_write:
-        assert not np.shares_memory(
-            get_array(ser, "a").left.values, get_array(view, "a").left.values
-        )
+        assert not np.shares_memory(get_array(ser, "a").left.values, get_array(view, "a").left.values)
         tm.assert_series_equal(view, ser_orig)
     else:
-        assert np.shares_memory(
-            get_array(ser, "a").left.values, get_array(view, "a").left.values
-        )
+        assert np.shares_memory(get_array(ser, "a").left.values, get_array(view, "a").left.values)
 
 
 def test_fillna_series_empty_arg(using_copy_on_write):
@@ -327,9 +313,7 @@ def test_fillna_series_empty_arg_inplace(using_copy_on_write):
         assert ser._mgr._has_no_reference(0)
 
 
-def test_fillna_ea_noop_shares_memory(
-    using_copy_on_write, any_numeric_ea_and_arrow_dtype
-):
+def test_fillna_ea_noop_shares_memory(using_copy_on_write, any_numeric_ea_and_arrow_dtype):
     df = DataFrame({"a": [1, NA, 3], "b": 1}, dtype=any_numeric_ea_and_arrow_dtype)
     df_orig = df.copy()
     df2 = df.fillna(100)
@@ -355,9 +339,7 @@ def test_fillna_ea_noop_shares_memory(
     tm.assert_frame_equal(df_orig, df)
 
 
-def test_fillna_inplace_ea_noop_shares_memory(
-    using_copy_on_write, warn_copy_on_write, any_numeric_ea_and_arrow_dtype
-):
+def test_fillna_inplace_ea_noop_shares_memory(using_copy_on_write, warn_copy_on_write, any_numeric_ea_and_arrow_dtype):
     df = DataFrame({"a": [1, NA, 3], "b": 1}, dtype=any_numeric_ea_and_arrow_dtype)
     df_orig = df.copy()
     view = df[:]
@@ -375,9 +357,7 @@ def test_fillna_inplace_ea_noop_shares_memory(
         assert not df._mgr._has_no_reference(1)
         assert not view._mgr._has_no_reference(1)
 
-    with tm.assert_cow_warning(
-        warn_copy_on_write and "pyarrow" not in any_numeric_ea_and_arrow_dtype
-    ):
+    with tm.assert_cow_warning(warn_copy_on_write and "pyarrow" not in any_numeric_ea_and_arrow_dtype):
         df.iloc[0, 1] = 100
     if isinstance(df["a"].dtype, ArrowDtype) or using_copy_on_write:
         tm.assert_frame_equal(df_orig, view)

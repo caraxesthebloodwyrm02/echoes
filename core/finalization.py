@@ -98,9 +98,7 @@ def secure_write(file_path: Path, content: str | bytes, read_only: bool = True) 
     mode = "wb" if isinstance(content, bytes) else "w"
     encoding = None if isinstance(content, bytes) else "utf-8"
 
-    with tempfile.NamedTemporaryFile(
-        mode=mode, encoding=encoding, dir=file_path.parent, delete=False
-    ) as tmp:
+    with tempfile.NamedTemporaryFile(mode=mode, encoding=encoding, dir=file_path.parent, delete=False) as tmp:
         tmp.write(content)
         tmp_path = Path(tmp.name)
 
@@ -166,9 +164,7 @@ def finalize_analysis(
 
     # Secure write
     json_content = json.dumps(finalized_data, indent=2)
-    secure_write(
-        final_path, json_content, read_only=False
-    )  # Keep writable for checksums
+    secure_write(final_path, json_content, read_only=False)  # Keep writable for checksums
 
     # Compute checksum
     json_checksum = compute_sha256(final_path)
@@ -198,40 +194,26 @@ def generate_summary(analysis_data: Dict[str, Any]) -> str:
 
     # Principal findings
     findings = []
-    findings.append(
-        f"System classified as {label} (score={score:.3f}, balance={balance:.1f}°)"
-    )
+    findings.append(f"System classified as {label} (score={score:.3f}, balance={balance:.1f}°)")
 
     if ip_angle < 45:
         findings.append(f"Strong influence-productivity alignment ({ip_angle:.1f}°)")
 
     if pc_angle > 135:
-        findings.append(
-            f"Productivity-creativity opposition detected ({pc_angle:.1f}°)"
-        )
+        findings.append(f"Productivity-creativity opposition detected ({pc_angle:.1f}°)")
     elif ic_angle > 120:
-        findings.append(
-            f"Creativity undervalued relative to influence ({ic_angle:.1f}°)"
-        )
+        findings.append(f"Creativity undervalued relative to influence ({ic_angle:.1f}°)")
 
     # Interventions
     interventions = []
     if label == "Fragmented":
         interventions.append("URGENT: Conduct leadership realignment workshop")
-        interventions.append(
-            "Separate productivity/creativity tracks with clear handoffs"
-        )
+        interventions.append("Separate productivity/creativity tracks with clear handoffs")
     elif label == "Imbalanced":
-        interventions.append(
-            "Introduce structured ideation sessions (weekly 2-hour blocks)"
-        )
-        interventions.append(
-            "Balance KPIs: add innovation metrics alongside output metrics"
-        )
+        interventions.append("Introduce structured ideation sessions (weekly 2-hour blocks)")
+        interventions.append("Balance KPIs: add innovation metrics alongside output metrics")
     else:  # Aligned
-        interventions.append(
-            "Maintain current balance through quarterly efficiency audits"
-        )
+        interventions.append("Maintain current balance through quarterly efficiency audits")
         interventions.append("Document successful practices for knowledge transfer")
 
     # Format summary

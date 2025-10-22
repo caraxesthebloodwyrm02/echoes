@@ -58,9 +58,7 @@ logger = logging.getLogger(__name__)
 _import_status: Dict[str, Dict[str, Any]] = {}
 
 
-def safe_import(
-    module_name: str, fallback: Any = None, required: bool = False
-) -> Tuple[bool, Any]:
+def safe_import(module_name: str, fallback: Any = None, required: bool = False) -> Tuple[bool, Any]:
     """
     Safely import a module with fallback handling.
 
@@ -85,9 +83,7 @@ def safe_import(
             logger.error(f"Required module '{module_name}' not available: {e}")
             raise
 
-        logger.warning(
-            f"Optional module '{module_name}' not available, using fallback: {e}"
-        )
+        logger.warning(f"Optional module '{module_name}' not available, using fallback: {e}")
         _import_status[module_name] = {
             "status": "fallback",
             "module": fallback,
@@ -130,18 +126,14 @@ class SafeKnowledgeGraphBridge:
                 try:
                     from prompting.core.kg_bridge import KnowledgeGraphBridge
 
-                    self.kg_bridge = KnowledgeGraphBridge(
-                        enable_kg=True, cache_size=cache_size
-                    )
+                    self.kg_bridge = KnowledgeGraphBridge(enable_kg=True, cache_size=cache_size)
                     self.enabled = True
                     logger.info("Knowledge Graph Bridge initialized successfully")
                 except Exception as e:
                     logger.warning(f"Failed to initialize KG Bridge: {e}")
                     self.enabled = False
             else:
-                logger.info(
-                    "Knowledge Graph dependencies not available - operating in fallback mode"
-                )
+                logger.info("Knowledge Graph dependencies not available - operating in fallback mode")
 
     def sync_insights_to_kg(self, insights):
         """Safe sync with fallback"""
@@ -181,9 +173,7 @@ class SafeAgentKnowledgeLayer:
         self.contexts = []
 
         # Try to import agent knowledge layer safely
-        akl_success, akl_module = safe_import(
-            "ai_agents.agent_knowledge_layer", required=False
-        )
+        akl_success, akl_module = safe_import("ai_agents.agent_knowledge_layer", required=False)
 
         if akl_success and enable_kg:
             try:
@@ -196,9 +186,7 @@ class SafeAgentKnowledgeLayer:
                 logger.warning(f"Failed to initialize Agent Knowledge Layer: {e}")
                 self.enabled = False
         else:
-            logger.info(
-                "Agent Knowledge Layer dependencies not available - operating in fallback mode"
-            )
+            logger.info("Agent Knowledge Layer dependencies not available - operating in fallback mode")
 
     def register_agent(self, agent_name, **kwargs):
         """Safe agent registration"""
@@ -270,9 +258,7 @@ def _initialize_safe_imports():
     safe_import("openai")
     safe_import("agents")
 
-    logger.info(
-        f"Import safety system initialized. Status: {len(_import_status)} modules checked"
-    )
+    logger.info(f"Import safety system initialized. Status: {len(_import_status)} modules checked")
 
 
 # Auto-initialize on import

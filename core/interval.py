@@ -1,4 +1,5 @@
 """ define the IntervalIndex """
+
 from __future__ import annotations
 
 from operator import (
@@ -272,9 +273,7 @@ class IntervalIndex(ExtensionIndex):
         dtype: Dtype | None = None,
     ) -> IntervalIndex:
         with rewrite_exception("IntervalArray", cls.__name__):
-            array = IntervalArray.from_breaks(
-                breaks, closed=closed, copy=copy, dtype=dtype
-            )
+            array = IntervalArray.from_breaks(breaks, closed=closed, copy=copy, dtype=dtype)
         return cls._simple_new(array, name=name)
 
     @classmethod
@@ -308,9 +307,7 @@ class IntervalIndex(ExtensionIndex):
         dtype: Dtype | None = None,
     ) -> IntervalIndex:
         with rewrite_exception("IntervalArray", cls.__name__):
-            array = IntervalArray.from_arrays(
-                left, right, closed, copy=copy, dtype=dtype
-            )
+            array = IntervalArray.from_arrays(left, right, closed, copy=copy, dtype=dtype)
         return cls._simple_new(array, name=name)
 
     @classmethod
@@ -556,9 +553,7 @@ class IntervalIndex(ExtensionIndex):
             right = self._maybe_convert_i8(key.right)
             constructor = Interval if scalar else IntervalIndex.from_arrays
             # error: "object" not callable
-            return constructor(
-                left, right, closed=self.closed
-            )  # type: ignore[operator]
+            return constructor(left, right, closed=self.closed)  # type: ignore[operator]
 
         if scalar:
             # Timestamp/Timedelta
@@ -583,10 +578,7 @@ class IntervalIndex(ExtensionIndex):
         subtype = self.dtype.subtype  # type: ignore[union-attr]
 
         if subtype != key_dtype:
-            raise ValueError(
-                f"Cannot index an IntervalIndex of subtype {subtype} with "
-                f"values of dtype {key_dtype}"
-            )
+            raise ValueError(f"Cannot index an IntervalIndex of subtype {subtype} with " f"values of dtype {key_dtype}")
 
         return key_i8
 
@@ -713,9 +705,7 @@ class IntervalIndex(ExtensionIndex):
         return ensure_platform_int(indexer)
 
     @Appender(_index_shared_docs["get_indexer_non_unique"] % _index_doc_kwargs)
-    def get_indexer_non_unique(
-        self, target: Index
-    ) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]:
+    def get_indexer_non_unique(self, target: Index) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]:
         target = ensure_index(target)
 
         if not self._should_compare(target) and not self._should_partial_index(target):
@@ -755,9 +745,7 @@ class IntervalIndex(ExtensionIndex):
         indexer = np.where(left_indexer == right_indexer, left_indexer, -1)
         return indexer
 
-    def _get_indexer_pointwise(
-        self, target: Index
-    ) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]:
+    def _get_indexer_pointwise(self, target: Index) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]:
         """
         pointwise implementation for get_indexer and get_indexer_non_unique.
         """
@@ -791,9 +779,7 @@ class IntervalIndex(ExtensionIndex):
     def _index_as_unique(self) -> bool:
         return not self.is_overlapping and self._engine._na_count < 2
 
-    _requires_unique_msg = (
-        "cannot handle overlapping indices; use IntervalIndex.get_indexer_non_unique"
-    )
+    _requires_unique_msg = "cannot handle overlapping indices; use IntervalIndex.get_indexer_non_unique"
 
     def _convert_slice_indexer(self, key: slice, kind: Literal["loc", "getitem"]):
         if not (key.step is None or key.step == 1):
@@ -925,8 +911,7 @@ class IntervalIndex(ExtensionIndex):
         #  dtype or constructing tuples (faster than constructing Intervals)
         #  but the libjoin fastpaths are no longer fast in these cases.
         raise NotImplementedError(
-            "IntervalIndex does not use libjoin fastpaths or pass values to "
-            "IndexEngine objects"
+            "IntervalIndex does not use libjoin fastpaths or pass values to " "IndexEngine objects"
         )
 
     def _from_join_target(self, result):
@@ -1067,10 +1052,7 @@ def interval_range(
         freq = 1 if is_number(endpoint) else "D"
 
     if com.count_not_none(start, end, periods, freq) != 3:
-        raise ValueError(
-            "Of the four parameters: start, end, periods, and "
-            "freq, exactly three must be specified"
-        )
+        raise ValueError("Of the four parameters: start, end, periods, and " "freq, exactly three must be specified")
 
     if not _is_valid_endpoint(start):
         raise ValueError(f"start must be numeric or datetime-like, got {start}")
@@ -1083,9 +1065,7 @@ def interval_range(
         try:
             freq = to_offset(freq)
         except ValueError as err:
-            raise ValueError(
-                f"freq must be numeric or convertible to DateOffset, got {freq}"
-            ) from err
+            raise ValueError(f"freq must be numeric or convertible to DateOffset, got {freq}") from err
 
     # verify type compatibility
     if not all(

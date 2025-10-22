@@ -124,8 +124,7 @@ class BoxPlot(LinePlot):
 
         if colormap is not None:
             warnings.warn(
-                "'color' and 'colormap' cannot be used "
-                "simultaneously. Using 'color'",
+                "'color' and 'colormap' cannot be used " "simultaneously. Using 'color'",
                 stacklevel=find_stack_level(),
             )
 
@@ -134,8 +133,7 @@ class BoxPlot(LinePlot):
             for key in color:
                 if key not in valid_keys:
                     raise ValueError(
-                        f"color dict contains invalid key '{key}'. "
-                        f"The key must be either {valid_keys}"
+                        f"color dict contains invalid key '{key}'. " f"The key must be either {valid_keys}"
                     )
         return color
 
@@ -166,10 +164,7 @@ class BoxPlot(LinePlot):
     def _get_colors(
         self,
         num_colors=None,
-        color_kwds: dict[str, MatplotlibColor]
-        | MatplotlibColor
-        | Collection[MatplotlibColor]
-        | None = "color",
+        color_kwds: dict[str, MatplotlibColor] | MatplotlibColor | Collection[MatplotlibColor] | None = "color",
     ) -> None:
         pass
 
@@ -195,11 +190,7 @@ class BoxPlot(LinePlot):
             self._return_obj = pd.Series(dtype=object)
 
             # Re-create iterated data if `by` is assigned by users
-            data = (
-                create_iter_data_given_by(self.data, self._kind)
-                if self.by is not None
-                else self.data
-            )
+            data = create_iter_data_given_by(self.data, self._kind) if self.by is not None else self.data
 
             # error: Argument "data" to "_iter_data" of "MPLPlot" has
             # incompatible type "object"; expected "DataFrame |
@@ -222,31 +213,23 @@ class BoxPlot(LinePlot):
                 else:
                     ticklabels = [pprint_thing(label)]
 
-                ret, bp = self._plot(
-                    ax, y, column_num=i, return_type=self.return_type, **kwds
-                )
+                ret, bp = self._plot(ax, y, column_num=i, return_type=self.return_type, **kwds)
                 self.maybe_color_bp(bp)
                 self._return_obj[label] = ret
-                _set_ticklabels(
-                    ax=ax, labels=ticklabels, is_vertical=self.orientation == "vertical"
-                )
+                _set_ticklabels(ax=ax, labels=ticklabels, is_vertical=self.orientation == "vertical")
         else:
             y = self.data.values.T
             ax = self._get_ax(0)
             kwds = self.kwds.copy()
 
-            ret, bp = self._plot(
-                ax, y, column_num=0, return_type=self.return_type, **kwds
-            )
+            ret, bp = self._plot(ax, y, column_num=0, return_type=self.return_type, **kwds)
             self.maybe_color_bp(bp)
             self._return_obj = ret
 
             labels = [pprint_thing(left) for left in self.data.columns]
             if not self.use_index:
                 labels = [pprint_thing(key) for key in range(len(labels))]
-            _set_ticklabels(
-                ax=ax, labels=labels, is_vertical=self.orientation == "vertical"
-            )
+            _set_ticklabels(ax=ax, labels=labels, is_vertical=self.orientation == "vertical")
 
     def _make_legend(self) -> None:
         pass
@@ -391,8 +374,7 @@ def boxplot(
                         result[key_to_index[key]] = value
                     else:
                         raise ValueError(
-                            f"color dict contains invalid key '{key}'. "
-                            f"The key must be either {valid_keys}"
+                            f"color dict contains invalid key '{key}'. " f"The key must be either {valid_keys}"
                         )
             else:
                 result.fill(colors)
@@ -414,9 +396,7 @@ def boxplot(
             ax.tick_params(axis="both", labelsize=fontsize)
 
         # GH 45465: x/y are flipped when "vert" changes
-        _set_ticklabels(
-            ax=ax, labels=keys, is_vertical=kwds.get("vert", True), rotation=rot
-        )
+        _set_ticklabels(ax=ax, labels=keys, is_vertical=kwds.get("vert", True), rotation=rot)
         maybe_color_bp(bp, color_tup=colors, **kwds)
 
         # Return axes in multiplot case, maybe revisit later # 985
@@ -463,9 +443,7 @@ def boxplot(
         data = data._get_numeric_data()
         naxes = len(data.columns)
         if naxes == 0:
-            raise ValueError(
-                "boxplot method requires numerical columns, nothing to plot."
-            )
+            raise ValueError("boxplot method requires numerical columns, nothing to plot.")
         if columns is None:
             columns = data.columns
         else:
@@ -539,9 +517,7 @@ def boxplot_frame_groupby(
         ret = pd.Series(dtype=object)
 
         for (key, group), ax in zip(grouped, axes):
-            d = group.boxplot(
-                ax=ax, column=column, fontsize=fontsize, rot=rot, grid=grid, **kwds
-            )
+            d = group.boxplot(ax=ax, column=column, fontsize=fontsize, rot=rot, grid=grid, **kwds)
             ax.set_title(pprint_thing(key))
             ret.loc[key] = d
         maybe_adjust_figure(fig, bottom=0.15, top=0.9, left=0.1, right=0.9, wspace=0.2)

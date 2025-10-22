@@ -341,9 +341,7 @@ class TestCalculateEfficiencyMetrics:
         summary1 = calculate_efficiency_metrics(points)
         summary2 = calculate_efficiency_metrics(points)
 
-        np.testing.assert_array_almost_equal(
-            summary1.efficiency_vector, summary2.efficiency_vector
-        )
+        np.testing.assert_array_almost_equal(summary1.efficiency_vector, summary2.efficiency_vector)
         assert summary1.efficiency_score == summary2.efficiency_score
 
 
@@ -389,9 +387,7 @@ class TestIntegration:
         # Efficiency: [0.459, 0.877, 0.146]
 
         expected_efficiency = np.array([0.459, 0.877, 0.146])
-        np.testing.assert_array_almost_equal(
-            summary.efficiency_vector, expected_efficiency, decimal=2
-        )
+        np.testing.assert_array_almost_equal(summary.efficiency_vector, expected_efficiency, decimal=2)
 
         # Efficiency score ≈ 0.42
         assert 0.40 <= summary.efficiency_score <= 0.45

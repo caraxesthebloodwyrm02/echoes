@@ -62,9 +62,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
 
         for i in range(n_features):
             Xi = _safe_indexing(X, indices=i, axis=1)
-            Xi = check_array(
-                Xi, ensure_2d=False, dtype=None, ensure_all_finite=needs_validation
-            )
+            Xi = check_array(Xi, ensure_2d=False, dtype=None, ensure_all_finite=needs_validation)
             X_columns.append(Xi)
 
         return X_columns, n_samples, n_features
@@ -80,17 +78,12 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         self._check_infrequent_enabled()
         _check_n_features(self, X, reset=True)
         _check_feature_names(self, X, reset=True)
-        X_list, n_samples, n_features = self._check_X(
-            X, ensure_all_finite=ensure_all_finite
-        )
+        X_list, n_samples, n_features = self._check_X(X, ensure_all_finite=ensure_all_finite)
         self.n_features_in_ = n_features
 
         if self.categories != "auto":
             if len(self.categories) != n_features:
-                raise ValueError(
-                    "Shape mismatch: if categories is an array,"
-                    " it has to be of shape (n_features,)."
-                )
+                raise ValueError("Shape mismatch: if categories is an array," " it has to be of shape (n_features,).")
 
         self.categories_ = []
         category_counts = []
@@ -116,11 +109,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                     Xi_dtype = Xi.dtype
 
                 cats = np.array(self.categories[i], dtype=Xi_dtype)
-                if (
-                    cats.dtype == object
-                    and isinstance(cats[0], bytes)
-                    and Xi.dtype.kind != "S"
-                ):
+                if cats.dtype == object and isinstance(cats[0], bytes) and Xi.dtype.kind != "S":
                     msg = (
                         f"In column {i}, the predefined categories have type 'bytes'"
                         " which is incompatible with values of type"
@@ -138,17 +127,12 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                         )
 
                 if cats.size != len(_unique(cats)):
-                    msg = (
-                        f"In column {i}, the predefined categories"
-                        " contain duplicate elements."
-                    )
+                    msg = f"In column {i}, the predefined categories" " contain duplicate elements."
                     raise ValueError(msg)
 
                 if Xi.dtype.kind not in "OUS":
                     sorted_cats = np.sort(cats)
-                    error_msg = (
-                        "Unsorted categories are not supported for numerical categories"
-                    )
+                    error_msg = "Unsorted categories are not supported for numerical categories"
                     # if there are nans, nan should be the last element
                     stop_idx = -1 if np.isnan(sorted_cats[-1]) else None
                     if np.any(sorted_cats[:stop_idx] != cats[:stop_idx]):
@@ -157,10 +141,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                 if handle_unknown == "error":
                     diff = _check_unknown(Xi, cats)
                     if diff:
-                        msg = (
-                            "Found unknown categories {0} in column {1}"
-                            " during fit".format(diff, i)
-                        )
+                        msg = "Found unknown categories {0} in column {1}" " during fit".format(diff, i)
                         raise ValueError(msg)
                 if compute_counts:
                     category_counts.append(_get_counts(Xi, cats))
@@ -195,9 +176,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         warn_on_unknown=False,
         ignore_category_indices=None,
     ):
-        X_list, n_samples, n_features = self._check_X(
-            X, ensure_all_finite=ensure_all_finite
-        )
+        X_list, n_samples, n_features = self._check_X(X, ensure_all_finite=ensure_all_finite)
         _check_feature_names(self, X, reset=False)
         _check_n_features(self, X, reset=False)
 
@@ -211,10 +190,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
 
             if not np.all(valid_mask):
                 if handle_unknown == "error":
-                    msg = (
-                        "Found unknown categories {0} in column {1}"
-                        " during transform".format(diff, i)
-                    )
+                    msg = "Found unknown categories {0} in column {1}" " during transform".format(diff, i)
                     raise ValueError(msg)
                 else:
                     if warn_on_unknown:
@@ -225,10 +201,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                     X_mask[:, i] = valid_mask
                     # cast Xi into the largest string type necessary
                     # to handle different lengths of numpy strings
-                    if (
-                        self.categories_[i].dtype.kind in ("U", "S")
-                        and self.categories_[i].itemsize > Xi.itemsize
-                    ):
+                    if self.categories_[i].dtype.kind in ("U", "S") and self.categories_[i].itemsize > Xi.itemsize:
                         Xi = Xi.astype(self.categories_[i].dtype)
                     elif self.categories_[i].dtype.kind == "O" and Xi.dtype.kind == "U":
                         # categories are objects and Xi are numpy strings.
@@ -272,9 +245,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
         """
         max_categories = getattr(self, "max_categories", None)
         min_frequency = getattr(self, "min_frequency", None)
-        self._infrequent_enabled = (
-            max_categories is not None and max_categories >= 1
-        ) or min_frequency is not None
+        self._infrequent_enabled = (max_categories is not None and max_categories >= 1) or min_frequency is not None
 
     def _identify_infrequent(self, category_count, n_samples, col_idx):
         """Compute the infrequent indices.
@@ -313,17 +284,13 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
                 infrequent_mask[:] = True
             else:
                 # stable sort to preserve original count order
-                smallest_levels = np.argsort(category_count, kind="mergesort")[
-                    :-frequent_category_count
-                ]
+                smallest_levels = np.argsort(category_count, kind="mergesort")[:-frequent_category_count]
                 infrequent_mask[smallest_levels] = True
 
         output = np.flatnonzero(infrequent_mask)
         return output if output.size > 0 else None
 
-    def _fit_infrequent_category_mapping(
-        self, n_samples, category_counts, missing_indices
-    ):
+    def _fit_infrequent_category_mapping(self, n_samples, category_counts, missing_indices):
         """Fit infrequent categories.
 
         Defines the private attribute: `_default_to_infrequent_mappings`. For
@@ -360,9 +327,7 @@ class _BaseEncoder(TransformerMixin, BaseEstimator):
             category_counts_ = []
             for feature_idx, count in enumerate(category_counts):
                 if feature_idx in missing_indices:
-                    category_counts_.append(
-                        np.delete(count, missing_indices[feature_idx])
-                    )
+                    category_counts_.append(np.delete(count, missing_indices[feature_idx]))
                 else:
                     category_counts_.append(count)
         else:
@@ -742,9 +707,7 @@ class OneHotEncoder(_BaseEncoder):
         "categories": [StrOptions({"auto"}), list],
         "drop": [StrOptions({"first", "if_binary"}), "array-like", None],
         "dtype": "no_validation",  # validation delegated to numpy
-        "handle_unknown": [
-            StrOptions({"error", "ignore", "infrequent_if_exist", "warn"})
-        ],
+        "handle_unknown": [StrOptions({"error", "ignore", "infrequent_if_exist", "warn"})],
         "max_categories": [Interval(Integral, 1, None, closed="left"), None],
         "min_frequency": [
             Interval(Integral, 1, None, closed="left"),
@@ -838,10 +801,7 @@ class OneHotEncoder(_BaseEncoder):
                         n_features_out_no_drop[i] -= infreq_idx.size - 1
 
                 drop_idx_after_grouping = np.array(
-                    [
-                        0 if n_features_out == 2 else None
-                        for n_features_out in n_features_out_no_drop
-                    ],
+                    [0 if n_features_out == 2 else None for n_features_out in n_features_out_no_drop],
                     dtype=object,
                 )
 
@@ -850,31 +810,22 @@ class OneHotEncoder(_BaseEncoder):
             droplen = len(drop_array)
 
             if droplen != len(self.categories_):
-                msg = (
-                    "`drop` should have length equal to the number "
-                    "of features ({}), got {}"
-                )
+                msg = "`drop` should have length equal to the number " "of features ({}), got {}"
                 raise ValueError(msg.format(len(self.categories_), droplen))
             missing_drops = []
             drop_indices = []
-            for feature_idx, (drop_val, cat_list) in enumerate(
-                zip(drop_array, self.categories_)
-            ):
+            for feature_idx, (drop_val, cat_list) in enumerate(zip(drop_array, self.categories_)):
                 if not is_scalar_nan(drop_val):
                     drop_idx = np.where(cat_list == drop_val)[0]
                     if drop_idx.size:  # found drop idx
-                        drop_indices.append(
-                            self._map_drop_idx_to_infrequent(feature_idx, drop_idx[0])
-                        )
+                        drop_indices.append(self._map_drop_idx_to_infrequent(feature_idx, drop_idx[0]))
                     else:
                         missing_drops.append((feature_idx, drop_val))
                     continue
 
                 # drop_val is nan, find nan in categories manually
                 if is_scalar_nan(cat_list[-1]):
-                    drop_indices.append(
-                        self._map_drop_idx_to_infrequent(feature_idx, cat_list.size - 1)
-                    )
+                    drop_indices.append(self._map_drop_idx_to_infrequent(feature_idx, cat_list.size - 1))
                 else:  # nan is missing
                     missing_drops.append((feature_idx, drop_val))
 
@@ -882,14 +833,7 @@ class OneHotEncoder(_BaseEncoder):
                 msg = (
                     "The following categories were supposed to be "
                     "dropped, but were not found in the training "
-                    "data.\n{}".format(
-                        "\n".join(
-                            [
-                                "Category: {}, Feature: {}".format(c, v)
-                                for c, v in missing_drops
-                            ]
-                        )
-                    )
+                    "data.\n{}".format("\n".join(["Category: {}, Feature: {}".format(c, v) for c, v in missing_drops]))
                 )
                 raise ValueError(msg)
             drop_idx_after_grouping = np.array(drop_indices, dtype=object)
@@ -904,9 +848,7 @@ class OneHotEncoder(_BaseEncoder):
         else:
             drop_idx_ = []
             for feature_idx, drop_idx in enumerate(drop_idx_after_grouping):
-                default_to_infrequent = self._default_to_infrequent_mappings[
-                    feature_idx
-                ]
+                default_to_infrequent = self._default_to_infrequent_mappings[feature_idx]
                 if drop_idx is None or default_to_infrequent is None:
                     orig_drop_idx = drop_idx
                 else:
@@ -931,9 +873,7 @@ class OneHotEncoder(_BaseEncoder):
                 frequent_mask = infreq_map < infreq_map.max()
                 infrequent_cat = "infrequent_sklearn"
                 # infrequent category is always at the end
-                cats = np.concatenate(
-                    (cats[frequent_mask], np.array([infrequent_cat], dtype=object))
-                )
+                cats = np.concatenate((cats[frequent_mask], np.array([infrequent_cat], dtype=object)))
 
         if remove_dropped:
             cats = self._remove_dropped_categories(cats, i)
@@ -941,10 +881,7 @@ class OneHotEncoder(_BaseEncoder):
 
     def _remove_dropped_categories(self, categories, i):
         """Remove dropped categories."""
-        if (
-            self._drop_idx_after_grouping is not None
-            and self._drop_idx_after_grouping[i] is not None
-        ):
+        if self._drop_idx_after_grouping is not None and self._drop_idx_after_grouping[i] is not None:
             return np.delete(categories, self._drop_idx_after_grouping[i])
         return categories
 
@@ -1116,15 +1053,12 @@ class OneHotEncoder(_BaseEncoder):
         n_features_out = np.sum(self._n_features_outs)
 
         # validate shape of passed X
-        msg = (
-            "Shape of the passed X data is not correct. Expected {0} columns, got {1}."
-        )
+        msg = "Shape of the passed X data is not correct. Expected {0} columns, got {1}."
         if X.shape[1] != n_features_out:
             raise ValueError(msg.format(n_features_out, X.shape[1]))
 
         transformed_features = [
-            self._compute_transformed_categories(i, remove_dropped=False)
-            for i, _ in enumerate(self.categories_)
+            self._compute_transformed_categories(i, remove_dropped=False) for i, _ in enumerate(self.categories_)
         ]
 
         # create resulting array of appropriate dtype
@@ -1140,9 +1074,7 @@ class OneHotEncoder(_BaseEncoder):
             infrequent_indices = [None] * n_features
 
         for i in range(n_features):
-            cats_wo_dropped = self._remove_dropped_categories(
-                transformed_features[i], i
-            )
+            cats_wo_dropped = self._remove_dropped_categories(transformed_features[i], i)
             n_categories = cats_wo_dropped.shape[0]
 
             # Only happens if there was a column with a unique
@@ -1158,23 +1090,17 @@ class OneHotEncoder(_BaseEncoder):
             X_tr[:, i] = cats_wo_dropped[labels]
 
             if self.handle_unknown == "ignore" or (
-                self.handle_unknown in ("infrequent_if_exist", "warn")
-                and infrequent_indices[i] is None
+                self.handle_unknown in ("infrequent_if_exist", "warn") and infrequent_indices[i] is None
             ):
                 unknown = np.asarray(sub.sum(axis=1) == 0).flatten()
                 # ignored unknown categories: we have a row of all zero
                 if unknown.any():
                     # if categories were dropped then unknown categories will
                     # be mapped to the dropped category
-                    if (
-                        self._drop_idx_after_grouping is None
-                        or self._drop_idx_after_grouping[i] is None
-                    ):
+                    if self._drop_idx_after_grouping is None or self._drop_idx_after_grouping[i] is None:
                         found_unknown[i] = unknown
                     else:
-                        X_tr[unknown, i] = self.categories_[i][
-                            self._drop_idx_after_grouping[i]
-                        ]
+                        X_tr[unknown, i] = self.categories_[i][self._drop_idx_after_grouping[i]]
             else:
                 dropped = np.asarray(sub.sum(axis=1) == 0).flatten()
                 if dropped.any():
@@ -1225,10 +1151,7 @@ class OneHotEncoder(_BaseEncoder):
         """
         check_is_fitted(self)
         input_features = _check_feature_names_in(self, input_features)
-        cats = [
-            self._compute_transformed_categories(i)
-            for i, _ in enumerate(self.categories_)
-        ]
+        cats = [self._compute_transformed_categories(i) for i, _ in enumerate(self.categories_)]
 
         name_combiner = self._check_get_feature_name_combiner()
         feature_names = []
@@ -1545,9 +1468,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
                     )
 
         if self._missing_indices:
-            if np.dtype(self.dtype).kind != "f" and is_scalar_nan(
-                self.encoded_missing_value
-            ):
+            if np.dtype(self.dtype).kind != "f" and is_scalar_nan(self.encoded_missing_value):
                 raise ValueError(
                     "There are missing values in features "
                     f"{list(self._missing_indices)}. For OrdinalEncoder to "
@@ -1563,8 +1484,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
                 invalid_features = [
                     cat_idx
                     for cat_idx, cardinality in enumerate(cardinalities)
-                    if cat_idx in self._missing_indices
-                    and 0 <= self.encoded_missing_value < cardinality
+                    if cat_idx in self._missing_indices and 0 <= self.encoded_missing_value < cardinality
                 ]
 
                 if invalid_features:
@@ -1632,9 +1552,7 @@ class OrdinalEncoder(OneToOneFeatureMixin, _BaseEncoder):
         n_features = len(self.categories_)
 
         # validate shape of passed X
-        msg = (
-            "Shape of the passed X data is not correct. Expected {0} columns, got {1}."
-        )
+        msg = "Shape of the passed X data is not correct. Expected {0} columns, got {1}."
         if X.shape[1] != n_features:
             raise ValueError(msg.format(n_features, X.shape[1]))
 

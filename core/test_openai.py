@@ -64,9 +64,7 @@ def test_openai_integration():
         config.switch_api_key("PRIMARY")
         client = config.openai_client
         models = client.models.list()
-        print(
-            "[SUCCESS] Connected with PRIMARY key. Available models:", len(models.data)
-        )
+        print("[SUCCESS] Connected with PRIMARY key. Available models:", len(models.data))
     except Exception as e:
         print("[ERROR] With PRIMARY key:", str(e))
 

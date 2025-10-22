@@ -30,9 +30,7 @@ RESULTS = [(0.16, 0.84), (0.46, 0.54), (0.41, 0.59), (0.76, 0.24)]
 
 def assert_classifier_correct(algorithm):
     try:
-        classifier = classify.MaxentClassifier.train(
-            TRAIN, algorithm, trace=0, max_iter=1000
-        )
+        classifier = classify.MaxentClassifier.train(TRAIN, algorithm, trace=0, max_iter=1000)
     except (LookupError, AttributeError) as e:
         pytest.skip(str(e))
 

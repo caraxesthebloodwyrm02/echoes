@@ -62,16 +62,11 @@ class TestAgentKnowledgeLayer:
 
         assert success is True
         assert "test_architect" in knowledge_layer.agent_registry
-        assert (
-            knowledge_layer.agent_registry["test_architect"]["agent_type"]
-            == "architect"
-        )
+        assert knowledge_layer.agent_registry["test_architect"]["agent_type"] == "architect"
 
     def test_duplicate_registration(self, knowledge_layer):
         """Test that duplicate registration succeeds (updates registration)"""
-        knowledge_layer.register_agent(
-            agent_name="duplicate_agent", agent_type="tester", capabilities=["testing"]
-        )
+        knowledge_layer.register_agent(agent_name="duplicate_agent", agent_type="tester", capabilities=["testing"])
 
         # Try to register again - should succeed (overwrites)
         success = knowledge_layer.register_agent(
@@ -85,9 +80,7 @@ class TestAgentKnowledgeLayer:
         from ai_agents.agent_knowledge_layer import AgentDiscovery
 
         # Register agent first
-        knowledge_layer.register_agent(
-            agent_name="discoverer", agent_type="reviewer", capabilities=["code_review"]
-        )
+        knowledge_layer.register_agent(agent_name="discoverer", agent_type="reviewer", capabilities=["code_review"])
 
         # Create and share discovery
         discovery = AgentDiscovery(
@@ -122,9 +115,7 @@ class TestAgentKnowledgeLayer:
         from ai_agents.agent_knowledge_layer import AgentDiscovery
 
         # Register agents
-        knowledge_layer.register_agent(
-            agent_name="agent1", agent_type="architect", capabilities=["design"]
-        )
+        knowledge_layer.register_agent(agent_name="agent1", agent_type="architect", capabilities=["design"])
 
         # Share some discoveries
         knowledge_layer.share_discovery(
@@ -146,9 +137,7 @@ class TestAgentKnowledgeLayer:
         )
 
         # Query discoveries
-        results = knowledge_layer.query_discoveries(
-            agent_name="agent1", min_confidence=0.5, limit=5
-        )
+        results = knowledge_layer.query_discoveries(agent_name="agent1", min_confidence=0.5, limit=5)
 
         # Results depend on KG availability
         assert isinstance(results, list)
@@ -177,12 +166,8 @@ class TestAgentKnowledgeLayer:
     def test_handoff_context(self, knowledge_layer):
         """Test creating handoff context"""
         # Register agents
-        knowledge_layer.register_agent(
-            agent_name="agent_a", agent_type="architect", capabilities=["design"]
-        )
-        knowledge_layer.register_agent(
-            agent_name="agent_b", agent_type="implementer", capabilities=["coding"]
-        )
+        knowledge_layer.register_agent(agent_name="agent_a", agent_type="architect", capabilities=["design"])
+        knowledge_layer.register_agent(agent_name="agent_b", agent_type="implementer", capabilities=["coding"])
 
         # Create handoff
         context = knowledge_layer.create_handoff_context(
@@ -204,9 +189,7 @@ class TestAgentKnowledgeLayer:
         from ai_agents.agent_knowledge_layer import AgentDiscovery
 
         # Register and use agent
-        knowledge_layer.register_agent(
-            agent_name="stats_agent", agent_type="tester", capabilities=["testing"]
-        )
+        knowledge_layer.register_agent(agent_name="stats_agent", agent_type="tester", capabilities=["testing"])
 
         knowledge_layer.share_discovery(
             AgentDiscovery(
@@ -229,12 +212,8 @@ class TestAgentKnowledgeLayer:
         from ai_agents.agent_knowledge_layer import AgentDiscovery
 
         # Register multiple agents
-        knowledge_layer.register_agent(
-            agent_name="agent_x", agent_type="architect", capabilities=["design"]
-        )
-        knowledge_layer.register_agent(
-            agent_name="agent_y", agent_type="reviewer", capabilities=["review"]
-        )
+        knowledge_layer.register_agent(agent_name="agent_x", agent_type="architect", capabilities=["design"])
+        knowledge_layer.register_agent(agent_name="agent_y", agent_type="reviewer", capabilities=["review"])
 
         # Both discover same pattern type
         knowledge_layer.share_discovery(

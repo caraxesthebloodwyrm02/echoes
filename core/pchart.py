@@ -64,9 +64,7 @@ class ProbabilisticTreeEdge(TreeEdge):
 
     @staticmethod
     def from_production(production, index, p):
-        return ProbabilisticTreeEdge(
-            p, (index, index), production.lhs(), production.rhs(), 0
-        )
+        return ProbabilisticTreeEdge(p, (index, index), production.lhs(), production.rhs(), 0)
 
 
 # Rules using probabilistic edges
@@ -88,9 +86,7 @@ class ProbabilisticBottomUpPredictRule(AbstractChartRule):
             return
         for prod in grammar.productions():
             if edge.lhs() == prod.rhs()[0]:
-                new_edge = ProbabilisticTreeEdge.from_production(
-                    prod, edge.start(), prod.prob()
-                )
+                new_edge = ProbabilisticTreeEdge.from_production(prod, edge.start(), prod.prob())
                 if chart.insert(new_edge, ()):
                     yield new_edge
 
@@ -138,15 +134,11 @@ class SingleEdgeProbabilisticFundamentalRule(AbstractChartRule):
         fr = self._fundamental_rule
         if edge1.is_incomplete():
             # edge1 = left_edge; edge2 = right_edge
-            for edge2 in chart.select(
-                start=edge1.end(), is_complete=True, lhs=edge1.nextsym()
-            ):
+            for edge2 in chart.select(start=edge1.end(), is_complete=True, lhs=edge1.nextsym()):
                 yield from fr.apply(chart, grammar, edge1, edge2)
         else:
             # edge2 = left_edge; edge1 = right_edge
-            for edge2 in chart.select(
-                end=edge1.start(), is_complete=False, nextsym=edge1.lhs()
-            ):
+            for edge2 in chart.select(end=edge1.start(), is_complete=False, nextsym=edge1.lhs()):
                 yield from fr.apply(chart, grammar, edge2, edge1)
 
     def __str__(self):
@@ -234,10 +226,7 @@ class BottomUpProbabilisticChartParser(ParserI):
         # Initialize the chart.
         for edge in bu_init.apply(chart, grammar):
             if self._trace > 1:
-                print(
-                    "  %-50s [%s]"
-                    % (chart.pretty_format_edge(edge, width=2), edge.prob())
-                )
+                print("  %-50s [%s]" % (chart.pretty_format_edge(edge, width=2), edge.prob()))
             queue.append(edge)
 
         while len(queue) > 0:
@@ -251,10 +240,7 @@ class BottomUpProbabilisticChartParser(ParserI):
             # Get the best edge.
             edge = queue.pop()
             if self._trace > 0:
-                print(
-                    "  %-50s [%s]"
-                    % (chart.pretty_format_edge(edge, width=2), edge.prob())
-                )
+                print("  %-50s [%s]" % (chart.pretty_format_edge(edge, width=2), edge.prob()))
 
             # Apply BU & FR to it.
             queue.extend(bu.apply(chart, grammar, edge))
@@ -437,7 +423,6 @@ def demo(choice=None, draw_parses=None, print_parses=None):
     import sys
     import time
 
-    from nltk import tokenize
     from nltk.parse import pchart
 
     # Define two demos.  Each demo has a sentence and a grammar.

@@ -1,7 +1,7 @@
-import matplotlib.cm as cm
+from matplotlib import cm
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
-from matplotlib.collections import Collection, PathCollection
+from matplotlib.collections import Collection
 from matplotlib.colorizer import Colorizer, ColorizingArtist
 from matplotlib.colors import Colormap, Normalize
 from matplotlib.path import Path
@@ -15,8 +15,6 @@ import numpy as np
 from collections.abc import Callable, Iterable, Sequence
 from typing import Literal
 from .typing import ColorType
-
-
 
 class ContourLabeler:
     labelFmt: str | Formatter | Callable[[float], str] | dict[float, str]
@@ -48,12 +46,8 @@ class ContourLabeler:
         lev: float,
         fmt: str | Formatter | Callable[[float], str] | dict[float, str],
     ) -> str: ...
-    def locate_label(
-        self, linecontour: ArrayLike, labelwidth: float
-    ) -> tuple[float, float, float]: ...
-    def add_label(
-        self, x: float, y: float, rotation: float, lev: float, cvalue: ColorType
-    ) -> None: ...
+    def locate_label(self, linecontour: ArrayLike, labelwidth: float) -> tuple[float, float, float]: ...
+    def add_label(self, x: float, y: float, rotation: float, lev: float, cvalue: ColorType) -> None: ...
     def add_label_near(
         self,
         x: float,
@@ -79,9 +73,11 @@ class ContourSet(ContourLabeler, Collection):
     nchunk: int
     locator: Locator | None
     logscale: bool
-    negative_linestyles: None | Literal[
-        "solid", "dashed", "dashdot", "dotted"
-    ] | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
+    negative_linestyles: (
+        None
+        | Literal["solid", "dashed", "dashdot", "dotted"]
+        | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
+    )
     clip_path: Patch | Path | TransformedPath | TransformedPatchPath | None
     labelTexts: list[Text]
     labelCValues: list[ColorType]
@@ -93,12 +89,13 @@ class ContourSet(ContourLabeler, Collection):
     @property
     def alpha(self) -> float | None: ...
     @property
-    def linestyles(self) -> (
-        None |
-        Literal["solid", "dashed", "dashdot", "dotted"] |
-        Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
+    def linestyles(
+        self,
+    ) -> (
+        None
+        | Literal["solid", "dashed", "dashdot", "dotted"]
+        | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
     ): ...
-
     def __init__(
         self,
         ax: Axes,
@@ -106,9 +103,11 @@ class ContourSet(ContourLabeler, Collection):
         levels: Iterable[float] | None = ...,
         filled: bool = ...,
         linewidths: float | ArrayLike | None = ...,
-        linestyles: Literal["solid", "dashed", "dashdot", "dotted"]
-        | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
-        | None = ...,
+        linestyles: (
+            Literal["solid", "dashed", "dashdot", "dotted"]
+            | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
+            | None
+        ) = ...,
         hatches: Iterable[str | None] = ...,
         alpha: float | None = ...,
         origin: Literal["upper", "lower", "image"] | None = ...,
@@ -124,9 +123,11 @@ class ContourSet(ContourLabeler, Collection):
         nchunk: int = ...,
         locator: Locator | None = ...,
         transform: Transform | None = ...,
-        negative_linestyles: Literal["solid", "dashed", "dashdot", "dotted"]
-        | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
-        | None = ...,
+        negative_linestyles: (
+            Literal["solid", "dashed", "dashdot", "dotted"]
+            | Iterable[Literal["solid", "dashed", "dashdot", "dotted"]]
+            | None
+        ) = ...,
         clip_path: Patch | Path | TransformedPath | TransformedPatchPath | None = ...,
         **kwargs
     ) -> None: ...

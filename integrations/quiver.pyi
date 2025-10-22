@@ -5,7 +5,6 @@ from matplotlib.figure import Figure, SubFigure
 from matplotlib.text import Text
 from matplotlib.transforms import Transform, Bbox
 
-
 import numpy as np
 from numpy.typing import ArrayLike
 from collections.abc import Sequence
@@ -89,8 +88,7 @@ class Quiver(mcollections.PolyCollection):
         minshaft: float = ...,
         minlength: float = ...,
         units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] = ...,
-        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"]
-        | None = ...,
+        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None = ...,
         angles: Literal["uv", "xy"] | ArrayLike = ...,
         width: float | None = ...,
         color: ColorType | Sequence[ColorType] = ...,
@@ -114,8 +112,7 @@ class Quiver(mcollections.PolyCollection):
         minshaft: float = ...,
         minlength: float = ...,
         units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] = ...,
-        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"]
-        | None = ...,
+        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None = ...,
         angles: Literal["uv", "xy"] | ArrayLike = ...,
         width: float | None = ...,
         color: ColorType | Sequence[ColorType] = ...,
@@ -123,9 +120,7 @@ class Quiver(mcollections.PolyCollection):
         **kwargs
     ) -> None: ...
     def get_datalim(self, transData: Transform) -> Bbox: ...
-    def set_UVC(
-        self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...
-    ) -> None: ...
+    def set_UVC(self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...) -> None: ...
 
 class Barbs(mcollections.PolyCollection):
     sizes: dict[str, float]
@@ -178,7 +173,5 @@ class Barbs(mcollections.PolyCollection):
         flip_barb: bool | ArrayLike = ...,
         **kwargs
     ) -> None: ...
-    def set_UVC(
-        self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...
-    ) -> None: ...
+    def set_UVC(self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...) -> None: ...
     def set_offsets(self, xy: ArrayLike) -> None: ...

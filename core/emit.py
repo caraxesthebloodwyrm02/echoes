@@ -145,9 +145,7 @@ class GotoHandler(ErrorHandler):
 class TracebackAndGotoHandler(ErrorHandler):
     """Add traceback item and goto label on error."""
 
-    def __init__(
-        self, label: str, source_path: str, module_name: str, traceback_entry: tuple[str, int]
-    ) -> None:
+    def __init__(self, label: str, source_path: str, module_name: str, traceback_entry: tuple[str, int]) -> None:
         self.label = label
         self.source_path = source_path
         self.module_name = module_name
@@ -365,9 +363,7 @@ class Emitter:
         attr = self.bitmap_field(index)
         return f"({cast}{obj})->{attr}"
 
-    def emit_attr_bitmap_set(
-        self, value: str, obj: str, rtype: RType, cl: ClassIR, attr: str
-    ) -> None:
+    def emit_attr_bitmap_set(self, value: str, obj: str, rtype: RType, cl: ClassIR, attr: str) -> None:
         """Mark an attribute as defined in the attribute bitmap.
 
         Assumes that the attribute is tracked in the bitmap (only some attributes
@@ -382,9 +378,7 @@ class Emitter:
         """
         self._emit_attr_bitmap_update("", obj, rtype, cl, attr, clear=True)
 
-    def _emit_attr_bitmap_update(
-        self, value: str, obj: str, rtype: RType, cl: ClassIR, attr: str, clear: bool
-    ) -> None:
+    def _emit_attr_bitmap_update(self, value: str, obj: str, rtype: RType, cl: ClassIR, attr: str, clear: bool) -> None:
         if value:
             check = self.error_value_check(rtype, value, "==")
             self.emit_line(f"if (unlikely({check})) {{")
@@ -422,9 +416,7 @@ class Emitter:
 
     def error_value_check(self, rtype: RType, value: str, compare: str) -> str:
         if isinstance(rtype, RTuple):
-            return self.tuple_undefined_check_cond(
-                rtype, value, self.c_error_value, compare, check_exception=False
-            )
+            return self.tuple_undefined_check_cond(rtype, value, self.c_error_value, compare, check_exception=False)
         else:
             return f"{value} {compare} {self.c_error_value(rtype)}"
 
@@ -453,9 +445,7 @@ class Emitter:
             else:
                 assert False, "not expecting tuple with error overlap"
         if isinstance(item_type, RTuple):
-            return self.tuple_undefined_check_cond(
-                item_type, tuple_expr_in_c + f".f{i}", c_type_compare_val, compare
-            )
+            return self.tuple_undefined_check_cond(item_type, tuple_expr_in_c + f".f{i}", c_type_compare_val, compare)
         else:
             check = f"{tuple_expr_in_c}.f{i} {compare} {c_type_compare_val(item_type)}"
             if rtuple.error_overlap and check_exception:
@@ -516,9 +506,7 @@ class Emitter:
                 self.emit_line("CPy_INCREF_NO_IMM(%s);" % dest)
         # Otherwise assume it's an unboxed, pointerless value and do nothing.
 
-    def emit_dec_ref(
-        self, dest: str, rtype: RType, *, is_xdec: bool = False, rare: bool = False
-    ) -> None:
+    def emit_dec_ref(self, dest: str, rtype: RType, *, is_xdec: bool = False, rare: bool = False) -> None:
         """Decrement reference count of C expression `dest`.
 
         For composite unboxed structures (e.g. tuples) recursively
@@ -677,18 +665,14 @@ class Emitter:
             # fall back to a normal typecheck.
             # Otherwise check all the subclasses.
             if not concrete or len(concrete) > FAST_ISINSTANCE_MAX_SUBCLASSES + 1:
-                check = "(PyObject_TypeCheck({}, {}))".format(
-                    src, self.type_struct_name(typ.class_ir)
-                )
+                check = "(PyObject_TypeCheck({}, {}))".format(src, self.type_struct_name(typ.class_ir))
             else:
                 full_str = "(Py_TYPE({src}) == {targets[0]})"
                 for i in range(1, len(concrete)):
                     full_str += " || (Py_TYPE({src}) == {targets[%d]})" % i
                 if len(concrete) > 1:
                     full_str = "(%s)" % full_str
-                check = full_str.format(
-                    src=src, targets=[self.type_struct_name(ir) for ir in concrete]
-                )
+                check = full_str.format(src=src, targets=[self.type_struct_name(ir) for ir in concrete])
             if likely:
                 check = f"(likely{check})"
             self.emit_arg_check(src, dest, typ, check, optional)
@@ -713,9 +697,7 @@ class Emitter:
             if optional:
                 self.emit_line("}")
         elif isinstance(typ, RUnion):
-            self.emit_union_cast(
-                src, dest, typ, declare_dest, error, optional, src_type, raise_exception
-            )
+            self.emit_union_cast(src, dest, typ, declare_dest, error, optional, src_type, raise_exception)
         elif isinstance(typ, RTuple):
             assert not optional
             self.emit_tuple_cast(src, dest, typ, declare_dest, error, src_type)
@@ -957,9 +939,7 @@ class Emitter:
                 self.emit_line("} else {")
 
             cast_temp = self.temp_name()
-            self.emit_tuple_cast(
-                src, cast_temp, typ, declare_dest=True, error=error, src_type=None
-            )
+            self.emit_tuple_cast(src, cast_temp, typ, declare_dest=True, error=error, src_type=None)
             self.emit_line(f"if (unlikely({cast_temp} == NULL)) {{")
 
             # self.emit_arg_check(src, dest, typ,
@@ -997,9 +977,7 @@ class Emitter:
         else:
             assert False, "Unboxing not implemented: %s" % typ
 
-    def emit_box(
-        self, src: str, dest: str, typ: RType, declare_dest: bool = False, can_borrow: bool = False
-    ) -> None:
+    def emit_box(self, src: str, dest: str, typ: RType, declare_dest: bool = False, can_borrow: bool = False) -> None:
         """Emit code for boxing a value of given type.
 
         Generate a simple assignment if no boxing is needed.
@@ -1143,9 +1121,7 @@ class Emitter:
         else:
             self.emit_gc_clear(target, rtype)
 
-    def emit_traceback(
-        self, source_path: str, module_name: str, traceback_entry: tuple[str, int]
-    ) -> None:
+    def emit_traceback(self, source_path: str, module_name: str, traceback_entry: tuple[str, int]) -> None:
         return self._emit_traceback("CPy_AddTraceback", source_path, module_name, traceback_entry)
 
     def emit_type_error_traceback(
@@ -1159,9 +1135,7 @@ class Emitter:
     ) -> None:
         func = "CPy_TypeErrorTraceback"
         type_str = f'"{self.pretty_name(typ)}"'
-        return self._emit_traceback(
-            func, source_path, module_name, traceback_entry, type_str=type_str, src=src
-        )
+        return self._emit_traceback(func, source_path, module_name, traceback_entry, type_str=type_str, src=src)
 
     def _emit_traceback(
         self,
@@ -1188,9 +1162,7 @@ class Emitter:
         if DEBUG_ERRORS:
             self.emit_line('assert(PyErr_Occurred() != NULL && "failure w/o err!");')
 
-    def emit_unbox_failure_with_overlapping_error_value(
-        self, dest: str, typ: RType, failure: str
-    ) -> None:
+    def emit_unbox_failure_with_overlapping_error_value(self, dest: str, typ: RType, failure: str) -> None:
         self.emit_line(f"if ({dest} == {self.c_error_value(typ)} && PyErr_Occurred()) {{")
         self.emit_line(failure)
         self.emit_line("}")

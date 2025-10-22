@@ -39,7 +39,7 @@ from numpy._typing import (
     _ArrayLikeTD64_co,
 )
 
-__all__ = [  # noqa: RUF022
+__all__ = [
     "IS_EDITABLE",
     "IS_MUSL",
     "IS_PYPY",
@@ -145,7 +145,9 @@ class clear_and_catch_warnings(warnings.catch_warnings[_W_co], Generic[_W_co]): 
     @overload  # record: True
     def __init__(self: clear_and_catch_warnings[_WarnLog], /, record: L[True], modules: _ToModules = ()) -> None: ...
     @overload  # record: False (default)
-    def __init__(self: clear_and_catch_warnings[None], /, record: L[False] = False, modules: _ToModules = ()) -> None: ...
+    def __init__(
+        self: clear_and_catch_warnings[None], /, record: L[False] = False, modules: _ToModules = ()
+    ) -> None: ...
     @overload  # record; bool
     def __init__(self, /, record: bool, modules: _ToModules = ()) -> None: ...
 
@@ -153,28 +155,34 @@ class suppress_warnings:
     log: Final[_WarnLog]
     def __init__(self, /, forwarding_rule: L["always", "module", "once", "location"] = "always") -> None: ...
     def __enter__(self) -> Self: ...
-    def __exit__(self, cls: type[BaseException] | None, exc: BaseException | None, tb: types.TracebackType | None, /) -> None: ...
+    def __exit__(
+        self, cls: type[BaseException] | None, exc: BaseException | None, tb: types.TracebackType | None, /
+    ) -> None: ...
     def __call__(self, /, func: _FT) -> _FT: ...
-
-    #
-    def filter(self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None) -> None: ...
-    def record(self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None) -> _WarnLog: ...
+    def filter(
+        self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None
+    ) -> None: ...
+    def record(
+        self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None
+    ) -> _WarnLog: ...
 
 # Contrary to runtime we can't do `os.name` checks while type checking,
 # only `sys.platform` checks
 if sys.platform == "win32" or sys.platform == "cygwin":
     def memusage(processName: str = ..., instance: int = ...) -> int: ...
+
 elif sys.platform == "linux":
     def memusage(_proc_pid_stat: StrOrBytesPath = ...) -> int | None: ...
+
 else:
     def memusage() -> NoReturn: ...
 
 if sys.platform == "linux":
     def jiffies(_proc_pid_stat: StrOrBytesPath | None = None, _load_time: list[float] | None = None) -> int: ...
+
 else:
     def jiffies(_load_time: list[float] = []) -> int: ...
 
-#
 def build_err_msg(
     arrays: Iterable[object],
     err_msg: object,
@@ -183,14 +191,8 @@ def build_err_msg(
     names: Sequence[str] = ...,
     precision: SupportsIndex | None = ...,
 ) -> str: ...
-
-#
 def print_assert_equal(test_string: str, actual: object, desired: object) -> None: ...
-
-#
 def assert_(val: object, msg: str | Callable[[], str] = "") -> None: ...
-
-#
 def assert_equal(
     actual: object,
     desired: object,
@@ -199,7 +201,6 @@ def assert_equal(
     *,
     strict: bool = False,
 ) -> None: ...
-
 def assert_almost_equal(
     actual: _NumericArrayLike,
     desired: _NumericArrayLike,
@@ -207,8 +208,6 @@ def assert_almost_equal(
     err_msg: object = "",
     verbose: bool = True,
 ) -> None: ...
-
-#
 def assert_approx_equal(
     actual: ConvertibleToFloat,
     desired: ConvertibleToFloat,
@@ -216,8 +215,6 @@ def assert_approx_equal(
     err_msg: object = "",
     verbose: bool = True,
 ) -> None: ...
-
-#
 def assert_array_compare(
     comparison: _ComparisonFunc,
     x: ArrayLike,
@@ -232,8 +229,6 @@ def assert_array_compare(
     strict: bool = False,
     names: tuple[str, str] = ("ACTUAL", "DESIRED"),
 ) -> None: ...
-
-#
 def assert_array_equal(
     actual: object,
     desired: object,
@@ -242,8 +237,6 @@ def assert_array_equal(
     *,
     strict: bool = False,
 ) -> None: ...
-
-#
 def assert_array_almost_equal(
     actual: _NumericArrayLike,
     desired: _NumericArrayLike,
@@ -251,7 +244,6 @@ def assert_array_almost_equal(
     err_msg: object = "",
     verbose: bool = True,
 ) -> None: ...
-
 @overload
 def assert_array_less(
     x: _ArrayLikeDT64_co,
@@ -279,11 +271,7 @@ def assert_array_less(
     *,
     strict: bool = False,
 ) -> None: ...
-
-#
 def assert_string_equal(actual: str, desired: str) -> None: ...
-
-#
 @overload
 def assert_raises(
     exception_class: _ExceptionSpec[_ET],
@@ -299,8 +287,6 @@ def assert_raises(
     *args: _Tss.args,
     **kwargs: _Tss.kwargs,
 ) -> None: ...
-
-#
 @overload
 def assert_raises_regex(
     exception_class: _ExceptionSpec[_ET],
@@ -316,8 +302,6 @@ def assert_raises_regex(
     *args: _Tss.args,
     **kwargs: _Tss.kwargs,
 ) -> None: ...
-
-#
 @overload
 def assert_allclose(
     actual: _ArrayLikeTD64_co,
@@ -342,35 +326,27 @@ def assert_allclose(
     *,
     strict: bool = False,
 ) -> None: ...
-
-#
 def assert_array_almost_equal_nulp(
     x: _ArrayLikeNumber_co,
     y: _ArrayLikeNumber_co,
     nulp: float = 1,
 ) -> None: ...
-
-#
 def assert_array_max_ulp(
     a: _ArrayLikeNumber_co,
     b: _ArrayLikeNumber_co,
     maxulp: float = 1,
     dtype: DTypeLike | None = None,
 ) -> NDArray[Any]: ...
-
-#
 @overload
 def assert_warns(warning_class: _WarningSpec) -> _GeneratorContextManager[None]: ...
 @overload
-def assert_warns(warning_class: _WarningSpec, func: Callable[_Tss, _T], *args: _Tss.args, **kwargs: _Tss.kwargs) -> _T: ...
-
-#
+def assert_warns(
+    warning_class: _WarningSpec, func: Callable[_Tss, _T], *args: _Tss.args, **kwargs: _Tss.kwargs
+) -> _T: ...
 @overload
 def assert_no_warnings() -> _GeneratorContextManager[None]: ...
 @overload
 def assert_no_warnings(func: Callable[_Tss, _T], /, *args: _Tss.args, **kwargs: _Tss.kwargs) -> _T: ...
-
-#
 @overload
 def assert_no_gc_cycles() -> _GeneratorContextManager[None]: ...
 @overload
@@ -378,7 +354,6 @@ def assert_no_gc_cycles(func: Callable[_Tss, Any], /, *args: _Tss.args, **kwargs
 
 ###
 
-#
 @overload
 def tempdir(
     suffix: None = None,
@@ -405,8 +380,6 @@ def tempdir(
     prefix: AnyStr | None = None,
     dir: GenericPath[AnyStr] | None = None,
 ) -> _GeneratorContextManager[AnyStr]: ...
-
-#
 @overload
 def temppath(
     suffix: None = None,
@@ -451,18 +424,12 @@ def temppath(
     dir: GenericPath[AnyStr] | None = None,
     text: bool = False,
 ) -> _GeneratorContextManager[AnyStr]: ...
-
-#
-def check_support_sve(__cache: list[_T_or_bool] = []) -> _T_or_bool: ...  # noqa: PYI063
-
-#
+def check_support_sve(__cache: list[_T_or_bool] = []) -> _T_or_bool: ...
 def decorate_methods(
     cls: type,
     decorator: Callable[[Callable[..., Any]], Any],
     testmatch: _RegexLike | None = None,
 ) -> None: ...
-
-#
 @overload
 def run_threaded(
     func: Callable[[], None],
@@ -491,9 +458,7 @@ def run_threaded(
     *,
     prepare_args: tuple[*_Ts],
 ) -> None: ...
-
-#
-def runstring(astr: _StrLike | types.CodeType, dict: dict[str, Any] | None) -> Any: ...  # noqa: ANN401
+def runstring(astr: _StrLike | types.CodeType, dict: dict[str, Any] | None) -> Any: ...
 def rundocs(filename: StrPath | None = None, raise_on_error: bool = True) -> None: ...
 def measure(code_str: _StrLike | ast.AST, times: int = 1, label: str | None = None) -> float: ...
 def break_cycles() -> None: ...

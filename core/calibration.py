@@ -349,9 +349,7 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
             if sample_weight is not None:
                 # Check that the sample_weight dtype is consistent with the predictions
                 # to avoid unintentional upcasts.
-                sample_weight = _check_sample_weight(
-                    sample_weight, predictions, dtype=predictions.dtype
-                )
+                sample_weight = _check_sample_weight(sample_weight, predictions, dtype=predictions.dtype)
 
             calibrated_classifier = _fit_calibrator(
                 estimator,
@@ -465,9 +463,7 @@ class CalibratedClassifierCV(ClassifierMixin, MetaEstimatorMixin, BaseEstimator)
                 if sample_weight is not None:
                     # Check that the sample_weight dtype is consistent with the
                     # predictions to avoid unintentional upcasts.
-                    sample_weight = _check_sample_weight(
-                        sample_weight, predictions, dtype=predictions.dtype
-                    )
+                    sample_weight = _check_sample_weight(sample_weight, predictions, dtype=predictions.dtype)
 
                 this_estimator.fit(X, y, **routed_params.estimator.fit)
                 # Note: Here we don't pass on fit_params because the supported
@@ -641,9 +637,7 @@ def _fit_classifier_calibrator_pair(
         sw_test = _safe_indexing(sample_weight, test)
     else:
         sw_test = None
-    calibrated_classifier = _fit_calibrator(
-        estimator, predictions, y_test, classes, method, sample_weight=sw_test
-    )
+    calibrated_classifier = _fit_calibrator(estimator, predictions, y_test, classes, method, sample_weight=sw_test)
     return calibrated_classifier
 
 
@@ -755,9 +749,7 @@ class _CalibratedClassifier:
         pos_class_indices = label_encoder.transform(self.estimator.classes_)
 
         proba = np.zeros((_num_samples(X), n_classes))
-        for class_idx, this_pred, calibrator in zip(
-            pos_class_indices, predictions.T, self.calibrators
-        ):
+        for class_idx, this_pred, calibrator in zip(pos_class_indices, predictions.T, self.calibrators):
             if n_classes == 2:
                 # When binary, `predictions` consists only of predictions for
                 # clf.classes_[1] but `pos_class_indices` = 0
@@ -773,9 +765,7 @@ class _CalibratedClassifier:
             # probability for a given sample, use the uniform distribution
             # instead.
             uniform_proba = np.full_like(proba, 1 / n_classes)
-            proba = np.divide(
-                proba, denominator, out=uniform_proba, where=denominator != 0
-            )
+            proba = np.divide(proba, denominator, out=uniform_proba, where=denominator != 0)
 
         # Deal with cases where the predicted probability minimally exceeds 1.0
         proba[(1.0 < proba) & (proba <= 1.0 + 1e-5)] = 1.0
@@ -785,9 +775,7 @@ class _CalibratedClassifier:
 
 # The max_abs_prediction_threshold was approximated using
 # logit(np.finfo(np.float64).eps) which is about -36
-def _sigmoid_calibration(
-    predictions, y, sample_weight=None, max_abs_prediction_threshold=30
-):
+def _sigmoid_calibration(predictions, y, sample_weight=None, max_abs_prediction_threshold=30):
     """Probability Calibration with sigmoid method (Platt 2000)
 
     Parameters
@@ -1041,9 +1029,7 @@ def calibration_curve(
 
     labels = np.unique(y_true)
     if len(labels) > 2:
-        raise ValueError(
-            f"Only binary classification is supported. Provided labels {labels}."
-        )
+        raise ValueError(f"Only binary classification is supported. Provided labels {labels}.")
     y_true = y_true == pos_label
 
     if strategy == "quantile":  # Determine bin edges by distribution of data
@@ -1052,10 +1038,7 @@ def calibration_curve(
     elif strategy == "uniform":
         bins = np.linspace(0.0, 1.0, n_bins + 1)
     else:
-        raise ValueError(
-            "Invalid entry to 'strategy' input. Strategy "
-            "must be either 'quantile' or 'uniform'."
-        )
+        raise ValueError("Invalid entry to 'strategy' input. Strategy " "must be either 'quantile' or 'uniform'.")
 
     binids = np.searchsorted(bins[1:-1], y_prob)
 
@@ -1147,9 +1130,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
     <...>
     """
 
-    def __init__(
-        self, prob_true, prob_pred, y_prob, *, estimator_name=None, pos_label=None
-    ):
+    def __init__(self, prob_true, prob_pred, y_prob, *, estimator_name=None, pos_label=None):
         self.prob_true = prob_true
         self.prob_pred = prob_pred
         self.y_prob = y_prob
@@ -1186,9 +1167,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
         """
         self.ax_, self.figure_, name = self._validate_plot_params(ax=ax, name=name)
 
-        info_pos_label = (
-            f"(Positive class: {self.pos_label})" if self.pos_label is not None else ""
-        )
+        info_pos_label = f"(Positive class: {self.pos_label})" if self.pos_label is not None else ""
 
         default_line_kwargs = {"marker": "s", "linestyle": "-"}
         if name is not None:
@@ -1434,9 +1413,7 @@ class CalibrationDisplay(_BinaryClassifierCurveDisplayMixin):
             y_true, y_prob, sample_weight=None, pos_label=pos_label, name=name
         )
 
-        prob_true, prob_pred = calibration_curve(
-            y_true, y_prob, n_bins=n_bins, strategy=strategy, pos_label=pos_label
-        )
+        prob_true, prob_pred = calibration_curve(y_true, y_prob, n_bins=n_bins, strategy=strategy, pos_label=pos_label)
 
         disp = cls(
             prob_true=prob_true,

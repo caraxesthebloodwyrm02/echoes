@@ -1387,9 +1387,7 @@ def _retrieve(i, j, s, S, T, str1, str2, out):
                 str2,
                 out,
             )
-        elif (
-            i > 1 and S[i - 2, j - 1] + sigma_exp(str2[j - 1], str1[i - 2 : i]) + s >= T
-        ):
+        elif i > 1 and S[i - 2, j - 1] + sigma_exp(str2[j - 1], str1[i - 2 : i]) + s >= T:
             out.insert(0, (str1[i - 2 : i], str2[j - 1]))
             _retrieve(
                 i - 2,
@@ -1460,9 +1458,7 @@ def delta(p, q):
     features = R(p, q)
     total = 0
     if np is not None:
-        return np.dot(
-            [diff(p, q, f) for f in features], [salience[f] for f in features]
-        )
+        return np.dot([diff(p, q, f) for f in features], [salience[f] for f in features])
     for f in features:
         total += diff(p, q, f) * salience[f]
     return total

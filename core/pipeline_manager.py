@@ -206,13 +206,9 @@ class PipelineManager:
         try:
             # Check dependencies
             for dep in stage.dependencies:
-                dep_stage = next(
-                    (s for s in self.pipeline_stages if s.name == dep), None
-                )
+                dep_stage = next((s for s in self.pipeline_stages if s.name == dep), None)
                 if dep_stage:
-                    dep_result = next(
-                        (r for r in self.deployment_history if r.stage == dep), None
-                    )
+                    dep_result = next((r for r in self.deployment_history if r.stage == dep), None)
                     if not dep_result or not dep_result.success:
                         raise Exception(f"Dependency {dep} failed or not executed")
 
@@ -247,9 +243,7 @@ class PipelineManager:
                 artifacts={"commands_executed": len(stage.commands)},
             )
 
-            self.logger.info(
-                f"Stage {stage.name} completed successfully in {duration:.0f}ms"
-            )
+            self.logger.info(f"Stage {stage.name} completed successfully in {duration:.0f}ms")
             return deployment_result
 
         except subprocess.TimeoutExpired:
@@ -294,9 +288,7 @@ class PipelineManager:
         # Execute stages in dependency order
         executed_stages = set()
 
-        while len(executed_stages) < len(
-            [s for s in self.pipeline_stages if s.enabled]
-        ):
+        while len(executed_stages) < len([s for s in self.pipeline_stages if s.enabled]):
             made_progress = False
 
             for stage in self.pipeline_stages:
@@ -307,9 +299,7 @@ class PipelineManager:
                     continue
 
                 # Check if all dependencies are satisfied
-                deps_satisfied = all(
-                    dep in executed_stages for dep in stage.dependencies
-                )
+                deps_satisfied = all(dep in executed_stages for dep in stage.dependencies)
 
                 if deps_satisfied:
                     result = self.execute_stage(stage)
@@ -324,25 +314,16 @@ class PipelineManager:
 
             if not made_progress:
                 # Check for circular dependencies or missing stages
-                pending_stages = [
-                    s.name
-                    for s in self.pipeline_stages
-                    if s.enabled and s.name not in executed_stages
-                ]
+                pending_stages = [s.name for s in self.pipeline_stages if s.enabled and s.name not in executed_stages]
                 if pending_stages:
-                    self.logger.error(
-                        f"Cannot execute stages due to unmet dependencies: "
-                        f"{pending_stages}"
-                    )
+                    self.logger.error(f"Cannot execute stages due to unmet dependencies: " f"{pending_stages}")
                     return False
                 break
 
         # Check overall success
         failed_stages = [r for r in self.deployment_history if not r.success]
         if failed_stages:
-            self.logger.warning(
-                f"Pipeline completed with {len(failed_stages)} failed stages"
-            )
+            self.logger.warning(f"Pipeline completed with {len(failed_stages)} failed stages")
             all_successful = False
 
         return all_successful

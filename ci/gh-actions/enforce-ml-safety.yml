@@ -1,0 +1,75 @@
+name: ML Security Enforcement
+
+on:
+  push:
+    paths:
+      - 'requirements*.txt'
+      - 'setup.py'
+      - 'pyproject.toml'
+  pull_request:
+    paths:
+      - 'requirements*.txt'
+      - 'setup.py'
+      - 'pyproject.toml'
+  workflow_dispatch:
+
+jobs:
+  security-scan:
+    runs-on: ubuntu-latest
+    permissions:
+      security-events: write
+      
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.13'
+          
+      - name: Verify pip version
+        run: |
+          python -m pip install --upgrade pip>=25.3
+          pip --version
+          if ! pip --version | grep -q "pip 25"; then
+            echo "ERROR: pip version must be >=25.3"
+            exit 1
+          fi
+          
+      - name: Install security tools
+        run: |
+          pip install --only-binary=:all: -r requirements-security.txt
+          
+      - name: Run pip-audit
+        run: |
+          pip-audit --requirement requirements*.txt --format json > pip-audit-results.json
+          cat pip-audit-results.json
+          
+      - name: Generate SBOM
+        run: |
+          cyclonedx-py requirements -r requirements*.txt -o sbom/cyclonedx-sbom.xml
+          
+      - name: Build Docker test image
+        run: |
+          docker build -t glimpse-test -f docker/glimpse-test/Dockerfile .
+          docker save glimpse-test -o docker_image.tar
+          
+      - name: Run tests in container
+        run: |
+          docker run --rm glimpse-test pytest tests/ --json=test_results_post_hardening.json
+          
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: security-artifacts
+          path: |
+            pip-audit-results.json
+            sbom/cyclonedx-sbom.xml
+            test_results_post_hardening.json
+            docker_image.tar
+            
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v2
+        if: success() || failure()
+        with:
+          sarif_file: pip-audit-results.json

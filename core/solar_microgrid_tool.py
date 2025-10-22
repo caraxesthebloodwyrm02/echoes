@@ -54,6 +54,4 @@ class SolarMicrogridTool:
 if __name__ == "__main__":
     tool = SolarMicrogridTool()
     tool.iterate_optimize()
-    print(
-        "Tool Ready: Models solar trajectories, boosts clean energy via optimization."
-    )
+    print("Tool Ready: Models solar trajectories, boosts clean energy via optimization.")

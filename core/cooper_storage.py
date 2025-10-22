@@ -7,7 +7,7 @@
 
 from nltk.parse import load_parser
 from nltk.parse.featurechart import InstantiateVarsChart
-from nltk.sem.logic import ApplicationExpression, LambdaExpression, Variable
+from nltk.sem.logic import ApplicationExpression, LambdaExpression
 
 
 class CooperStore:
@@ -68,9 +68,7 @@ class CooperStore:
                 quant, varex = tuple(bindop.args)
                 # use var to make an abstraction over the current term and then
                 # apply the quantifier to it
-                term = ApplicationExpression(
-                    quant, LambdaExpression(varex.variable, term)
-                )
+                term = ApplicationExpression(quant, LambdaExpression(varex.variable, term))
                 if trace:
                     print("  ", term)
                 term = term.simplify()

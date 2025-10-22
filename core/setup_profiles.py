@@ -66,9 +66,7 @@ sys.path.insert(0, str(PROJECT_ROOT))
 
 import logging
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -82,12 +80,8 @@ class ProfileManager:
 
         # User profile paths
         self.user_appdata = Path(os.environ.get("APPDATA", ""))
-        self.vscode_user_settings = (
-            self.user_appdata / "Code" / "User" / "settings.json"
-        )
-        self.windsurf_user_settings = (
-            self.user_appdata / "Windsurf" / "User" / "settings.json"
-        )
+        self.vscode_user_settings = self.user_appdata / "Code" / "User" / "settings.json"
+        self.windsurf_user_settings = self.user_appdata / "Windsurf" / "User" / "settings.json"
 
     def backup_existing_settings(self) -> bool:
         """Backup existing user settings before modification"""
@@ -136,14 +130,10 @@ class ProfileManager:
         user_level_settings = self._extract_user_settings(project_settings)
 
         # Update VS Code user settings
-        success_vscode = self._update_user_settings(
-            self.vscode_user_settings, user_level_settings, "VS Code"
-        )
+        success_vscode = self._update_user_settings(self.vscode_user_settings, user_level_settings, "VS Code")
 
         # Update Windsurf user settings
-        success_windsurf = self._update_user_settings(
-            self.windsurf_user_settings, user_level_settings, "Windsurf"
-        )
+        success_windsurf = self._update_user_settings(self.windsurf_user_settings, user_level_settings, "Windsurf")
 
         return success_vscode and success_windsurf
 
@@ -208,9 +198,7 @@ class ProfileManager:
 
         return user_settings
 
-    def _update_user_settings(
-        self, settings_path: Path, new_settings: Dict, name: str
-    ) -> bool:
+    def _update_user_settings(self, settings_path: Path, new_settings: Dict, name: str) -> bool:
         """Update user settings file"""
         try:
             # Load existing settings
@@ -329,9 +317,7 @@ DEBUG=true
 
         # Check Python version
         if sys.version_info < (3, 12):
-            issues.append(
-                f"Python {sys.version_info.major}.{sys.version_info.minor} detected, 3.12+ required"
-            )
+            issues.append(f"Python {sys.version_info.major}.{sys.version_info.minor} detected, 3.12+ required")
 
         # Check virtual environment
         venv_python = self.project_root / ".venv" / "Scripts" / "python.exe"
@@ -367,30 +353,20 @@ DEBUG=true
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Echoes Profile and Environment Manager"
-    )
-    parser.add_argument(
-        "--backup", action="store_true", help="Create backups before making changes"
-    )
+    parser = argparse.ArgumentParser(description="Echoes Profile and Environment Manager")
+    parser.add_argument("--backup", action="store_true", help="Create backups before making changes")
     parser.add_argument(
         "--align-profiles",
         action="store_true",
         help="Align user profiles with project settings",
     )
-    parser.add_argument(
-        "--setup-startup", action="store_true", help="Setup automatic startup scripts"
-    )
-    parser.add_argument(
-        "--validate", action="store_true", help="Validate environment setup"
-    )
+    parser.add_argument("--setup-startup", action="store_true", help="Setup automatic startup scripts")
+    parser.add_argument("--validate", action="store_true", help="Validate environment setup")
     parser.add_argument("--all", action="store_true", help="Run all setup steps")
 
     args = parser.parse_args()
 
-    if not any(
-        [args.backup, args.align_profiles, args.setup_startup, args.validate, args.all]
-    ):
+    if not any([args.backup, args.align_profiles, args.setup_startup, args.validate, args.all]):
         args.all = True
 
     manager = ProfileManager()

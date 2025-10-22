@@ -77,9 +77,7 @@ SUPPORTED_OPTIONS_EDITABLE_REQ: List[Callable[..., optparse.Option]] = [
 
 # the 'dest' string values
 SUPPORTED_OPTIONS_REQ_DEST = [str(o().dest) for o in SUPPORTED_OPTIONS_REQ]
-SUPPORTED_OPTIONS_EDITABLE_REQ_DEST = [
-    str(o().dest) for o in SUPPORTED_OPTIONS_EDITABLE_REQ
-]
+SUPPORTED_OPTIONS_EDITABLE_REQ_DEST = [str(o().dest) for o in SUPPORTED_OPTIONS_EDITABLE_REQ]
 
 logger = logging.getLogger(__name__)
 
@@ -149,9 +147,7 @@ def parse_requirements(
     parser = RequirementsFileParser(session, line_parser)
 
     for parsed_line in parser.parse(filename, constraint):
-        parsed_req = handle_line(
-            parsed_line, options=options, finder=finder, session=session
-        )
+        parsed_req = handle_line(parsed_line, options=options, finder=finder, session=session)
         if parsed_req is not None:
             yield parsed_req
 
@@ -222,9 +218,7 @@ def handle_option_line(
         if opts.require_hashes:
             options.require_hashes = opts.require_hashes
         if opts.features_enabled:
-            options.features_enabled.extend(
-                f for f in opts.features_enabled if f not in options.features_enabled
-            )
+            options.features_enabled.extend(f for f in opts.features_enabled if f not in options.features_enabled)
 
     # set finder options
     if finder:
@@ -325,13 +319,9 @@ class RequirementsFileParser:
         self._session = session
         self._line_parser = line_parser
 
-    def parse(
-        self, filename: str, constraint: bool
-    ) -> Generator[ParsedLine, None, None]:
+    def parse(self, filename: str, constraint: bool) -> Generator[ParsedLine, None, None]:
         """Parse a given file, yielding parsed lines."""
-        yield from self._parse_and_recurse(
-            filename, constraint, [{os.path.abspath(filename): None}]
-        )
+        yield from self._parse_and_recurse(filename, constraint, [{os.path.abspath(filename): None}])
 
     def _parse_and_recurse(
         self,
@@ -340,9 +330,7 @@ class RequirementsFileParser:
         parsed_files_stack: List[Dict[str, Optional[str]]],
     ) -> Generator[ParsedLine, None, None]:
         for line in self._parse_file(filename, constraint):
-            if not line.is_requirement and (
-                line.opts.requirements or line.opts.constraints
-            ):
+            if not line.is_requirement and (line.opts.requirements or line.opts.constraints):
                 # parse a nested requirements file
                 if line.opts.requirements:
                     req_path = line.opts.requirements[0]
@@ -368,26 +356,16 @@ class RequirementsFileParser:
                 parsed_files = parsed_files_stack[0]
                 if req_path in parsed_files:
                     initial_file = parsed_files[req_path]
-                    tail = (
-                        f" and again in {initial_file}"
-                        if initial_file is not None
-                        else ""
-                    )
-                    raise RequirementsFileParseError(
-                        f"{req_path} recursively references itself in {filename}{tail}"
-                    )
+                    tail = f" and again in {initial_file}" if initial_file is not None else ""
+                    raise RequirementsFileParseError(f"{req_path} recursively references itself in {filename}{tail}")
                 # Keeping a track where was each file first included in
                 new_parsed_files = parsed_files.copy()
                 new_parsed_files[req_path] = filename
-                yield from self._parse_and_recurse(
-                    req_path, nested_constraint, [new_parsed_files, *parsed_files_stack]
-                )
+                yield from self._parse_and_recurse(req_path, nested_constraint, [new_parsed_files, *parsed_files_stack])
             else:
                 yield line
 
-    def _parse_file(
-        self, filename: str, constraint: bool
-    ) -> Generator[ParsedLine, None, None]:
+    def _parse_file(self, filename: str, constraint: bool) -> Generator[ParsedLine, None, None]:
         _, content = get_file_content(filename, self._session)
 
         lines_enum = preprocess(content)

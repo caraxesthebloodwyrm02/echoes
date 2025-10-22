@@ -6,7 +6,6 @@
 # For license information, see LICENSE.TXT
 """Language Model Vocabulary"""
 
-import sys
 from collections import Counter
 from collections.abc import Iterable
 from functools import singledispatch
@@ -206,11 +205,7 @@ class Vocabulary:
         return self._len
 
     def __eq__(self, other):
-        return (
-            self.unk_label == other.unk_label
-            and self.cutoff == other.cutoff
-            and self.counts == other.counts
-        )
+        return self.unk_label == other.unk_label and self.cutoff == other.cutoff and self.counts == other.counts
 
     def __str__(self):
         return "<{} with cutoff={} unk_label='{}' and {} items>".format(

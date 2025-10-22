@@ -143,15 +143,11 @@ def test_weighted_percentile_2d(global_random_seed):
     w_2d = np.vstack((w1, w2)).T
 
     w_median = _weighted_percentile(x_2d, w_2d)
-    p_axis_0 = [
-        _weighted_percentile(x_2d[:, i], w_2d[:, i]) for i in range(x_2d.shape[1])
-    ]
+    p_axis_0 = [_weighted_percentile(x_2d[:, i], w_2d[:, i]) for i in range(x_2d.shape[1])]
     assert_allclose(w_median, p_axis_0)
 
 
-@pytest.mark.parametrize(
-    "array_namespace, device, dtype_name", yield_namespace_device_dtype_combinations()
-)
+@pytest.mark.parametrize("array_namespace, device, dtype_name", yield_namespace_device_dtype_combinations())
 @pytest.mark.parametrize(
     "data, weights, percentile",
     [
@@ -192,8 +188,7 @@ def test_weighted_percentile_array_api_consistency(
             if device == array_api_strict.Device("device1"):
                 # See https://github.com/data-apis/array-api-strict/issues/134
                 pytest.xfail(
-                    "array_api_strict has bug when indexing with tuple of arrays "
-                    "on non-'CPU_DEVICE' devices."
+                    "array_api_strict has bug when indexing with tuple of arrays " "on non-'CPU_DEVICE' devices."
                 )
 
     xp = _array_api_for_tests(array_namespace, device)
@@ -255,17 +250,12 @@ def test_weighted_percentile_nan_filtered(sample_weight_ndim, global_random_seed
     results = _weighted_percentile(array_with_nans, sample_weight, 30)
 
     # Find the weighted percentile on the filtered array:
-    filtered_array = [
-        array_with_nans[~nan_mask[:, col], col]
-        for col in range(array_with_nans.shape[1])
-    ]
+    filtered_array = [array_with_nans[~nan_mask[:, col], col] for col in range(array_with_nans.shape[1])]
     if sample_weight.ndim == 1:
         sample_weight = np.repeat(sample_weight, array_with_nans.shape[1]).reshape(
             array_with_nans.shape[0], array_with_nans.shape[1]
         )
-    filtered_weights = [
-        sample_weight[~nan_mask[:, col], col] for col in range(array_with_nans.shape[1])
-    ]
+    filtered_weights = [sample_weight[~nan_mask[:, col], col] for col in range(array_with_nans.shape[1])]
 
     expected_results = np.array(
         [
@@ -314,9 +304,7 @@ def test_weighted_percentile_like_numpy_quantile(percentile, global_random_seed)
     array = rng.rand(10, 100)
     sample_weight = rng.randint(1, 6, size=(10, 100))
 
-    percentile_weighted_percentile = _weighted_percentile(
-        array, sample_weight, percentile
-    )
+    percentile_weighted_percentile = _weighted_percentile(array, sample_weight, percentile)
     percentile_numpy_quantile = np.quantile(
         array, percentile / 100, weights=sample_weight, axis=0, method="inverted_cdf"
     )
@@ -338,9 +326,7 @@ def test_weighted_percentile_like_numpy_nanquantile(percentile, global_random_se
     array_with_nans[rng.rand(*array_with_nans.shape) < 0.5] = np.nan
     sample_weight = rng.randint(1, 6, size=(10, 100))
 
-    percentile_weighted_percentile = _weighted_percentile(
-        array_with_nans, sample_weight, percentile
-    )
+    percentile_weighted_percentile = _weighted_percentile(array_with_nans, sample_weight, percentile)
     percentile_numpy_nanquantile = np.nanquantile(
         array_with_nans,
         percentile / 100,

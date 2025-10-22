@@ -42,39 +42,39 @@ class _DomainsContainer:
     """
 
     __slots__ = (
-        '_domain_instances',
-        'c_domain',
-        'changeset_domain',
-        'citation_domain',
-        'cpp_domain',
-        'index_domain',
-        'javascript_domain',
-        'math_domain',
-        'python_domain',
-        'restructuredtext_domain',
-        'standard_domain',
+        "_domain_instances",
+        "c_domain",
+        "changeset_domain",
+        "citation_domain",
+        "cpp_domain",
+        "index_domain",
+        "javascript_domain",
+        "math_domain",
+        "python_domain",
+        "restructuredtext_domain",
+        "standard_domain",
     )
 
     #: First-party domains in :mod:`sphinx.domains`
-    _core_domains: Final = frozenset({
-        'std',
-        # Language-specific domains
-        'c',
-        'cpp',
-        'js',
-        'py',
-        'rst',
-        # Other core domains
-        'changeset',
-        'citation',
-        'index',
-        'math',
-    })
+    _core_domains: Final = frozenset(
+        {
+            "std",
+            # Language-specific domains
+            "c",
+            "cpp",
+            "js",
+            "py",
+            "rst",
+            # Other core domains
+            "changeset",
+            "citation",
+            "index",
+            "math",
+        }
+    )
 
     @classmethod
-    def _from_environment(
-        cls, env: BuildEnvironment, /, *, registry: SphinxComponentRegistry
-    ) -> Self:
+    def _from_environment(cls, env: BuildEnvironment, /, *, registry: SphinxComponentRegistry) -> Self:
         create_domains = registry.create_domains
         # Initialise domains
         if domains := {domain.name: domain for domain in create_domains(env)}:
@@ -127,16 +127,16 @@ class _DomainsContainer:
         # All domains, including core.
         # Implemented as a dict for backwards compatibility.
         self._domain_instances: Mapping[str, Domain] = {
-            'c': c,
-            'changeset': changeset,
-            'citation': citation,
-            'cpp': cpp,
-            'index': index,
-            'js': js,
-            'math': math,
-            'py': py,
-            'rst': rst,
-            'std': std,
+            "c": c,
+            "changeset": changeset,
+            "citation": citation,
+            "cpp": cpp,
+            "index": index,
+            "js": js,
+            "math": math,
+            "py": py,
+            "rst": rst,
+            "std": std,
             **domains,
         }
 
@@ -155,16 +155,14 @@ class _DomainsContainer:
         for domain_name, domain in self._domain_instances.items():
             # invariant from ``_DomainsContainer._from_environment``
             if domain_name != domain.name:
-                msg = f'Domain name mismatch in {domain!r}: {domain_name!r} != {domain.name!r}'
+                msg = f"Domain name mismatch in {domain!r}: {domain_name!r} != {domain.name!r}"
                 raise ValueError(msg)
 
     def _setup(self) -> None:
         for domain in self._domain_instances.values():
             domain.setup()
 
-    def _process_doc(
-        self, env: BuildEnvironment, docname: str, document: nodes.document
-    ) -> None:
+    def _process_doc(self, env: BuildEnvironment, docname: str, document: nodes.document) -> None:
         for domain in self._domain_instances.values():
             domain.process_doc(env, docname, document)
 
@@ -172,9 +170,7 @@ class _DomainsContainer:
         for domain in self._domain_instances.values():
             domain.clear_doc(docname)
 
-    def _merge_domain_data(
-        self, docnames: Set[str], domain_data: dict[str, Any]
-    ) -> None:
+    def _merge_domain_data(self, docnames: Set[str], domain_data: dict[str, Any]) -> None:
         for domain_name, domain in self._domain_instances.items():
             domain.merge_domaindata(docnames, domain_data[domain_name])
 
@@ -195,55 +191,55 @@ class _DomainsContainer:
 
     def __setattr__(self, key: str, value: object) -> None:
         if key in self._core_domains:
-            msg = f'{self.__class__.__name__!r} object does not support assignment to {key!r}'
+            msg = f"{self.__class__.__name__!r} object does not support assignment to {key!r}"
             raise TypeError(msg)
         super().__setattr__(key, value)
 
     def __delattr__(self, key: str) -> None:
         if key in self._core_domains:
-            msg = f'{self.__class__.__name__!r} object does not support deletion of {key!r}'
+            msg = f"{self.__class__.__name__!r} object does not support deletion of {key!r}"
             raise TypeError(msg)
         super().__delattr__(key)
 
     # Mapping interface: builtin domains
 
     @overload
-    def __getitem__(self, key: Literal['c']) -> CDomain: ...
+    def __getitem__(self, key: Literal["c"]) -> CDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['cpp']) -> CPPDomain: ...
+    def __getitem__(self, key: Literal["cpp"]) -> CPPDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['changeset']) -> ChangeSetDomain: ...
+    def __getitem__(self, key: Literal["changeset"]) -> ChangeSetDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['citation']) -> CitationDomain: ...
+    def __getitem__(self, key: Literal["citation"]) -> CitationDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['index']) -> IndexDomain: ...
+    def __getitem__(self, key: Literal["index"]) -> IndexDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['js']) -> JavaScriptDomain: ...
+    def __getitem__(self, key: Literal["js"]) -> JavaScriptDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['math']) -> MathDomain: ...
+    def __getitem__(self, key: Literal["math"]) -> MathDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['py']) -> PythonDomain: ...
+    def __getitem__(self, key: Literal["py"]) -> PythonDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['rst']) -> ReSTDomain: ...
+    def __getitem__(self, key: Literal["rst"]) -> ReSTDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['std']) -> StandardDomain: ...
+    def __getitem__(self, key: Literal["std"]) -> StandardDomain: ...
 
     # Mapping interface: first-party domains
 
     @overload
-    def __getitem__(self, key: Literal['duration']) -> DurationDomain: ...
+    def __getitem__(self, key: Literal["duration"]) -> DurationDomain: ...
 
     @overload
-    def __getitem__(self, key: Literal['todo']) -> TodoDomain: ...
+    def __getitem__(self, key: Literal["todo"]) -> TodoDomain: ...
 
     # Mapping interface: third-party domains
 
@@ -256,11 +252,11 @@ class _DomainsContainer:
         return self._domain_instances[key]
 
     def __setitem__(self, key: str, value: Domain) -> NoReturn:
-        msg = f'{self.__class__.__name__!r} object does not support item assignment'
+        msg = f"{self.__class__.__name__!r} object does not support item assignment"
         raise TypeError(msg)
 
     def __delitem__(self, key: str) -> NoReturn:
-        msg = f'{self.__class__.__name__!r} object does not support item deletion'
+        msg = f"{self.__class__.__name__!r} object does not support item deletion"
         raise TypeError(msg)
 
     def __iter__(self) -> Iterator[str]:

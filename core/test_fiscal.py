@@ -1,6 +1,7 @@
 """
 Tests for Fiscal Year and Fiscal Quarter offset classes
 """
+
 from datetime import datetime
 
 from dateutil.relativedelta import relativedelta
@@ -37,17 +38,9 @@ def makeFY5253LastOfMonth(*args, **kwds):
 
 
 def test_get_offset_name():
+    assert makeFY5253LastOfMonthQuarter(weekday=1, startingMonth=3, qtr_with_extra_week=4).freqstr == "REQ-L-MAR-TUE-4"
     assert (
-        makeFY5253LastOfMonthQuarter(
-            weekday=1, startingMonth=3, qtr_with_extra_week=4
-        ).freqstr
-        == "REQ-L-MAR-TUE-4"
-    )
-    assert (
-        makeFY5253NearestEndMonthQuarter(
-            weekday=1, startingMonth=3, qtr_with_extra_week=3
-        ).freqstr
-        == "REQ-N-MAR-TUE-3"
+        makeFY5253NearestEndMonthQuarter(weekday=1, startingMonth=3, qtr_with_extra_week=3).freqstr == "REQ-N-MAR-TUE-3"
     )
 
 
@@ -100,9 +93,7 @@ class TestFY5253LastOfMonth:
 
     def test_apply(self):
         offset_lom_aug_sat = makeFY5253LastOfMonth(startingMonth=8, weekday=WeekDay.SAT)
-        offset_lom_aug_sat_1 = makeFY5253LastOfMonth(
-            n=1, startingMonth=8, weekday=WeekDay.SAT
-        )
+        offset_lom_aug_sat_1 = makeFY5253LastOfMonth(n=1, startingMonth=8, weekday=WeekDay.SAT)
 
         date_seq_lom_aug_sat = [
             datetime(2006, 8, 26),
@@ -138,15 +129,15 @@ class TestFY5253LastOfMonth:
 
 class TestFY5253NearestEndMonth:
     def test_get_year_end(self):
-        assert makeFY5253NearestEndMonth(
-            startingMonth=8, weekday=WeekDay.SAT
-        ).get_year_end(datetime(2013, 1, 1)) == datetime(2013, 8, 31)
-        assert makeFY5253NearestEndMonth(
-            startingMonth=8, weekday=WeekDay.SUN
-        ).get_year_end(datetime(2013, 1, 1)) == datetime(2013, 9, 1)
-        assert makeFY5253NearestEndMonth(
-            startingMonth=8, weekday=WeekDay.FRI
-        ).get_year_end(datetime(2013, 1, 1)) == datetime(2013, 8, 30)
+        assert makeFY5253NearestEndMonth(startingMonth=8, weekday=WeekDay.SAT).get_year_end(
+            datetime(2013, 1, 1)
+        ) == datetime(2013, 8, 31)
+        assert makeFY5253NearestEndMonth(startingMonth=8, weekday=WeekDay.SUN).get_year_end(
+            datetime(2013, 1, 1)
+        ) == datetime(2013, 9, 1)
+        assert makeFY5253NearestEndMonth(startingMonth=8, weekday=WeekDay.FRI).get_year_end(
+            datetime(2013, 1, 1)
+        ) == datetime(2013, 8, 30)
 
         offset_n = FY5253(weekday=WeekDay.TUE, startingMonth=12, variation="nearest")
         assert offset_n.get_year_end(datetime(2012, 1, 1)) == datetime(2013, 1, 1)
@@ -160,12 +151,8 @@ class TestFY5253NearestEndMonth:
         JNJ = FY5253(n=1, startingMonth=12, weekday=6, variation="nearest")
         assert JNJ.get_year_end(datetime(2006, 1, 1)) == datetime(2006, 12, 31)
 
-    offset_lom_aug_sat = makeFY5253NearestEndMonth(
-        1, startingMonth=8, weekday=WeekDay.SAT
-    )
-    offset_lom_aug_thu = makeFY5253NearestEndMonth(
-        1, startingMonth=8, weekday=WeekDay.THU
-    )
+    offset_lom_aug_sat = makeFY5253NearestEndMonth(1, startingMonth=8, weekday=WeekDay.SAT)
+    offset_lom_aug_thu = makeFY5253NearestEndMonth(1, startingMonth=8, weekday=WeekDay.THU)
     offset_n = FY5253(weekday=WeekDay.TUE, startingMonth=12, variation="nearest")
 
     on_offset_cases = [
@@ -312,37 +299,21 @@ class TestFY5253LastOfMonthQuarter:
     def test_equality(self):
         assert makeFY5253LastOfMonthQuarter(
             startingMonth=1, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        ) == makeFY5253LastOfMonthQuarter(
-            startingMonth=1, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
+        ) == makeFY5253LastOfMonthQuarter(startingMonth=1, weekday=WeekDay.SAT, qtr_with_extra_week=4)
         assert makeFY5253LastOfMonthQuarter(
             startingMonth=1, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        ) != makeFY5253LastOfMonthQuarter(
-            startingMonth=1, weekday=WeekDay.SUN, qtr_with_extra_week=4
-        )
+        ) != makeFY5253LastOfMonthQuarter(startingMonth=1, weekday=WeekDay.SUN, qtr_with_extra_week=4)
         assert makeFY5253LastOfMonthQuarter(
             startingMonth=1, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        ) != makeFY5253LastOfMonthQuarter(
-            startingMonth=2, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
+        ) != makeFY5253LastOfMonthQuarter(startingMonth=2, weekday=WeekDay.SAT, qtr_with_extra_week=4)
 
     def test_offset(self):
-        offset = makeFY5253LastOfMonthQuarter(
-            1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
-        offset2 = makeFY5253LastOfMonthQuarter(
-            2, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
-        offset4 = makeFY5253LastOfMonthQuarter(
-            4, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
+        offset = makeFY5253LastOfMonthQuarter(1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
+        offset2 = makeFY5253LastOfMonthQuarter(2, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
+        offset4 = makeFY5253LastOfMonthQuarter(4, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
 
-        offset_neg1 = makeFY5253LastOfMonthQuarter(
-            -1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
-        offset_neg2 = makeFY5253LastOfMonthQuarter(
-            -2, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
+        offset_neg1 = makeFY5253LastOfMonthQuarter(-1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
+        offset_neg2 = makeFY5253LastOfMonthQuarter(-2, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
 
         GMCR = [
             datetime(2010, 3, 27),
@@ -362,18 +333,14 @@ class TestFY5253LastOfMonthQuarter:
         ]
 
         assert_offset_equal(offset, base=GMCR[0], expected=GMCR[1])
-        assert_offset_equal(
-            offset, base=GMCR[0] + relativedelta(days=-1), expected=GMCR[0]
-        )
+        assert_offset_equal(offset, base=GMCR[0] + relativedelta(days=-1), expected=GMCR[0])
         assert_offset_equal(offset, base=GMCR[1], expected=GMCR[2])
 
         assert_offset_equal(offset2, base=GMCR[0], expected=GMCR[2])
         assert_offset_equal(offset4, base=GMCR[0], expected=GMCR[4])
 
         assert_offset_equal(offset_neg1, base=GMCR[-1], expected=GMCR[-2])
-        assert_offset_equal(
-            offset_neg1, base=GMCR[-1] + relativedelta(days=+1), expected=GMCR[-1]
-        )
+        assert_offset_equal(offset_neg1, base=GMCR[-1] + relativedelta(days=+1), expected=GMCR[-1])
         assert_offset_equal(offset_neg2, base=GMCR[-1], expected=GMCR[-3])
 
         date = GMCR[0] + relativedelta(days=-1)
@@ -386,12 +353,8 @@ class TestFY5253LastOfMonthQuarter:
             assert_offset_equal(offset_neg1, date, expected)
             date = date + offset_neg1
 
-    lomq_aug_sat_4 = makeFY5253LastOfMonthQuarter(
-        1, startingMonth=8, weekday=WeekDay.SAT, qtr_with_extra_week=4
-    )
-    lomq_sep_sat_4 = makeFY5253LastOfMonthQuarter(
-        1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4
-    )
+    lomq_aug_sat_4 = makeFY5253LastOfMonthQuarter(1, startingMonth=8, weekday=WeekDay.SAT, qtr_with_extra_week=4)
+    lomq_sep_sat_4 = makeFY5253LastOfMonthQuarter(1, startingMonth=9, weekday=WeekDay.SAT, qtr_with_extra_week=4)
 
     on_offset_cases = [
         # From Wikipedia
@@ -429,31 +392,23 @@ class TestFY5253LastOfMonthQuarter:
         # INTC (extra week in Q1)
         # See: http://www.intc.com/releasedetail.cfm?ReleaseID=542844
         (
-            makeFY5253LastOfMonthQuarter(
-                1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
-            ),
+            makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1),
             datetime(2011, 4, 2),
             True,
         ),
         # see: http://google.brand.edgar-online.com/?sym=INTC&formtypeID=7
         (
-            makeFY5253LastOfMonthQuarter(
-                1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
-            ),
+            makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1),
             datetime(2012, 12, 29),
             True,
         ),
         (
-            makeFY5253LastOfMonthQuarter(
-                1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
-            ),
+            makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1),
             datetime(2011, 12, 31),
             True,
         ),
         (
-            makeFY5253LastOfMonthQuarter(
-                1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
-            ),
+            makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1),
             datetime(2010, 12, 25),
             True,
         ),
@@ -480,9 +435,7 @@ class TestFY5253LastOfMonthQuarter:
             1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
         ).year_has_extra_week(datetime(2010, 12, 25))
 
-        for year in [
-            x for x in range(1994, 2011 + 1) if x not in [2011, 2005, 2000, 1994]
-        ]:
+        for year in [x for x in range(1994, 2011 + 1) if x not in [2011, 2005, 2000, 1994]]:
             assert not makeFY5253LastOfMonthQuarter(
                 1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
             ).year_has_extra_week(datetime(year, 4, 2))
@@ -501,12 +454,8 @@ class TestFY5253LastOfMonthQuarter:
         ).year_has_extra_week(datetime(1994, 4, 2))
 
     def test_get_weeks(self):
-        sat_dec_1 = makeFY5253LastOfMonthQuarter(
-            1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1
-        )
-        sat_dec_4 = makeFY5253LastOfMonthQuarter(
-            1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=4
-        )
+        sat_dec_1 = makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=1)
+        sat_dec_4 = makeFY5253LastOfMonthQuarter(1, startingMonth=12, weekday=WeekDay.SAT, qtr_with_extra_week=4)
 
         assert sat_dec_1.get_weeks(datetime(2011, 4, 2)) == [14, 13, 13, 13]
         assert sat_dec_4.get_weeks(datetime(2011, 4, 2)) == [13, 13, 13, 14]
@@ -569,9 +518,7 @@ class TestFY5253NearestEndMonthQuarter:
         assert_is_on_offset(offset, dt, expected)
 
     def test_offset(self):
-        offset = makeFY5253NearestEndMonthQuarter(
-            1, startingMonth=8, weekday=WeekDay.THU, qtr_with_extra_week=4
-        )
+        offset = makeFY5253NearestEndMonthQuarter(1, startingMonth=8, weekday=WeekDay.THU, qtr_with_extra_week=4)
 
         MU = [
             datetime(2012, 5, 31),
@@ -589,9 +536,7 @@ class TestFY5253NearestEndMonthQuarter:
         assert_offset_equal(offset, datetime(2012, 5, 31), datetime(2012, 8, 30))
         assert_offset_equal(offset, datetime(2012, 5, 30), datetime(2012, 5, 31))
 
-        offset2 = FY5253Quarter(
-            weekday=5, startingMonth=12, variation="last", qtr_with_extra_week=4
-        )
+        offset2 = FY5253Quarter(weekday=5, startingMonth=12, variation="last", qtr_with_extra_week=4)
 
         assert_offset_equal(offset2, datetime(2013, 1, 15), datetime(2013, 3, 30))
 
@@ -637,9 +582,7 @@ def test_fy5253_nearest_onoffset():
 def test_fy5253qtr_onoffset_nearest():
     # GH#19036
     ts = Timestamp("1985-09-02 23:57:46.232550356-0300", tz="Atlantic/Bermuda")
-    offset = FY5253Quarter(
-        n=3, qtr_with_extra_week=1, startingMonth=2, variation="nearest", weekday=0
-    )
+    offset = FY5253Quarter(n=3, qtr_with_extra_week=1, startingMonth=2, variation="nearest", weekday=0)
     fast = offset.is_on_offset(ts)
     slow = (ts + offset) - offset == ts
     assert fast == slow
@@ -647,9 +590,7 @@ def test_fy5253qtr_onoffset_nearest():
 
 def test_fy5253qtr_onoffset_last():
     # GH#19036
-    offset = FY5253Quarter(
-        n=-2, qtr_with_extra_week=1, startingMonth=7, variation="last", weekday=2
-    )
+    offset = FY5253Quarter(n=-2, qtr_with_extra_week=1, startingMonth=7, variation="last", weekday=2)
     ts = Timestamp("2011-01-26 19:03:40.331096129+0200", tz="Africa/Windhoek")
     slow = (ts + offset) - offset == ts
     fast = offset.is_on_offset(ts)

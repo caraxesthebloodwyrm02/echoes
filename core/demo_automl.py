@@ -37,15 +37,11 @@ from packages.automl.core.orchestrator import AutoMLConfig, AutoMLOrchestrator
 from packages.automl.models.model_registry import ModelRegistry
 
 # Setup logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
-def create_sample_classification_dataset(
-    n_samples=1000, n_features=20, n_classes=2, random_state=42
-):
+def create_sample_classification_dataset(n_samples=1000, n_features=20, n_classes=2, random_state=42):
     """Create a sample classification dataset."""
     logger.info(
         f"Creating sample classification dataset: {n_samples} samples, {n_features} features, {n_classes} classes"
@@ -70,13 +66,9 @@ def create_sample_classification_dataset(
 
 def create_sample_regression_dataset(n_samples=1000, n_features=15, random_state=42):
     """Create a sample regression dataset."""
-    logger.info(
-        f"Creating sample regression dataset: {n_samples} samples, {n_features} features"
-    )
+    logger.info(f"Creating sample regression dataset: {n_samples} samples, {n_features} features")
 
-    X, y = make_regression(
-        n_samples=n_samples, n_features=n_features, noise=0.1, random_state=random_state
-    )
+    X, y = make_regression(n_samples=n_samples, n_features=n_features, noise=0.1, random_state=random_state)
 
     # Convert to DataFrame
     feature_names = [f"feature_{i}" for i in range(n_features)]
@@ -138,9 +130,7 @@ def demo_advanced_automl():
     logger.info("=" * 60)
 
     # Create larger dataset
-    df = create_sample_classification_dataset(
-        n_samples=1000, n_features=15, n_classes=3
-    )
+    df = create_sample_classification_dataset(n_samples=1000, n_features=15, n_classes=3)
     X = df.drop("target", axis=1).values
     y = df["target"].values
     feature_names = list(df.columns[:-1])
@@ -173,9 +163,7 @@ def demo_advanced_automl():
     # Show feature importance if available
     if result.feature_importance:
         logger.info("\n🔍 Top 5 Important Features:")
-        sorted_features = sorted(
-            result.feature_importance.items(), key=lambda x: x[1], reverse=True
-        )
+        sorted_features = sorted(result.feature_importance.items(), key=lambda x: x[1], reverse=True)
         for feature, importance in sorted_features[:5]:
             logger.info(f"  • {feature}: {importance:.4f}")
     return result
@@ -258,9 +246,7 @@ def demo_config_presets():
         },
     )
 
-    logger.info(
-        f"Custom config: max_models={custom_config.max_models}, metric={custom_config.metric}"
-    )
+    logger.info(f"Custom config: max_models={custom_config.max_models}, metric={custom_config.metric}")
 
 
 def demo_model_registry():

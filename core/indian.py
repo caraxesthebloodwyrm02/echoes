@@ -29,12 +29,7 @@ class IndianCorpusReader(CorpusReader):
     """
 
     def words(self, fileids=None):
-        return concat(
-            [
-                IndianCorpusView(fileid, enc, False, False)
-                for (fileid, enc) in self.abspaths(fileids, True)
-            ]
-        )
+        return concat([IndianCorpusView(fileid, enc, False, False) for (fileid, enc) in self.abspaths(fileids, True)])
 
     def tagged_words(self, fileids=None, tagset=None):
         if tagset and tagset != self._tagset:
@@ -49,12 +44,7 @@ class IndianCorpusReader(CorpusReader):
         )
 
     def sents(self, fileids=None):
-        return concat(
-            [
-                IndianCorpusView(fileid, enc, False, True)
-                for (fileid, enc) in self.abspaths(fileids, True)
-            ]
-        )
+        return concat([IndianCorpusView(fileid, enc, False, True) for (fileid, enc) in self.abspaths(fileids, True)])
 
     def tagged_sents(self, fileids=None, tagset=None):
         if tagset and tagset != self._tagset:
@@ -70,9 +60,7 @@ class IndianCorpusReader(CorpusReader):
 
 
 class IndianCorpusView(StreamBackedCorpusView):
-    def __init__(
-        self, corpus_file, encoding, tagged, group_by_sent, tag_mapping_function=None
-    ):
+    def __init__(self, corpus_file, encoding, tagged, group_by_sent, tag_mapping_function=None):
         self._tagged = tagged
         self._group_by_sent = group_by_sent
         self._tag_mapping_function = tag_mapping_function

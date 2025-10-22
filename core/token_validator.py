@@ -117,21 +117,15 @@ class JWTBearerTokenValidator(BearerTokenValidator):
                 claims_options=claims_options,
             )
         except DecodeError as exc:
-            raise InvalidTokenError(
-                realm=self.realm, extra_attributes=self.extra_attributes
-            ) from exc
+            raise InvalidTokenError(realm=self.realm, extra_attributes=self.extra_attributes) from exc
 
-    def validate_token(
-        self, token, scopes, request, groups=None, roles=None, entitlements=None
-    ):
+    def validate_token(self, token, scopes, request, groups=None, roles=None, entitlements=None):
         """"""
         # empty docstring avoids to display the irrelevant parent docstring
         try:
             token.validate()
         except JoseError as exc:
-            raise InvalidTokenError(
-                realm=self.realm, extra_attributes=self.extra_attributes
-            ) from exc
+            raise InvalidTokenError(realm=self.realm, extra_attributes=self.extra_attributes) from exc
 
         # If an authorization request includes a scope parameter, the corresponding
         # issued JWT access token SHOULD include a 'scope' claim as defined in Section

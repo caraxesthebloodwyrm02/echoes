@@ -5,8 +5,6 @@
 # URL: <https://www.nltk.org/>
 # For license information, see LICENSE.TXT
 
-import re
-import textwrap
 
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.util import *
@@ -24,25 +22,15 @@ class NPSChatCorpusReader(XMLCorpusReader):
     def xml_posts(self, fileids=None):
         if self._wrap_etree:
             return concat(
-                [
-                    XMLCorpusView(fileid, "Session/Posts/Post", self._wrap_elt)
-                    for fileid in self.abspaths(fileids)
-                ]
+                [XMLCorpusView(fileid, "Session/Posts/Post", self._wrap_elt) for fileid in self.abspaths(fileids)]
             )
         else:
-            return concat(
-                [
-                    XMLCorpusView(fileid, "Session/Posts/Post")
-                    for fileid in self.abspaths(fileids)
-                ]
-            )
+            return concat([XMLCorpusView(fileid, "Session/Posts/Post") for fileid in self.abspaths(fileids)])
 
     def posts(self, fileids=None):
         return concat(
             [
-                XMLCorpusView(
-                    fileid, "Session/Posts/Post/terminals", self._elt_to_words
-                )
+                XMLCorpusView(fileid, "Session/Posts/Post/terminals", self._elt_to_words)
                 for fileid in self.abspaths(fileids)
             ]
         )
@@ -52,10 +40,7 @@ class NPSChatCorpusReader(XMLCorpusReader):
             return self._elt_to_tagged_words(elt, handler, tagset)
 
         return concat(
-            [
-                XMLCorpusView(fileid, "Session/Posts/Post/terminals", reader)
-                for fileid in self.abspaths(fileids)
-            ]
+            [XMLCorpusView(fileid, "Session/Posts/Post/terminals", reader) for fileid in self.abspaths(fileids)]
         )
 
     def words(self, fileids=None):
@@ -71,14 +56,9 @@ class NPSChatCorpusReader(XMLCorpusReader):
         return [self._simplify_username(t.attrib["word"]) for t in elt.findall("t")]
 
     def _elt_to_tagged_words(self, elt, handler, tagset=None):
-        tagged_post = [
-            (self._simplify_username(t.attrib["word"]), t.attrib["pos"])
-            for t in elt.findall("t")
-        ]
+        tagged_post = [(self._simplify_username(t.attrib["word"]), t.attrib["pos"]) for t in elt.findall("t")]
         if tagset and tagset != self._tagset:
-            tagged_post = [
-                (w, map_tag(self._tagset, tagset, t)) for (w, t) in tagged_post
-            ]
+            tagged_post = [(w, map_tag(self._tagset, tagset, t)) for (w, t) in tagged_post]
         return tagged_post
 
     @staticmethod

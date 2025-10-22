@@ -61,9 +61,7 @@ def _find_binning_thresholds(col_data, max_bins):
         # work on a fixed-size subsample of the full data.
         percentiles = np.linspace(0, 100, num=max_bins + 1)
         percentiles = percentiles[1:-1]
-        midpoints = np.percentile(col_data, percentiles, method="midpoint").astype(
-            X_DTYPE
-        )
+        midpoints = np.percentile(col_data, percentiles, method="midpoint").astype(X_DTYPE)
         assert midpoints.shape[0] == max_bins - 1
 
     # We avoid having +inf thresholds: +inf thresholds are only allowed in
@@ -189,11 +187,7 @@ class _BinMapper(TransformerMixin, BaseEstimator):
         """
         if not (3 <= self.n_bins <= 256):
             # min is 3: at least 2 distinct bins and a missing values bin
-            raise ValueError(
-                "n_bins={} should be no smaller than 3 and no larger than 256.".format(
-                    self.n_bins
-                )
-            )
+            raise ValueError("n_bins={} should be no smaller than 3 and no larger than 256.".format(self.n_bins))
 
         X = check_array(X, dtype=[X_DTYPE], ensure_all_finite=False)
         max_bins = self.n_bins - 1
@@ -218,13 +212,10 @@ class _BinMapper(TransformerMixin, BaseEstimator):
             is_categorical = self.is_categorical_[f_idx]
             known_cats = known_categories[f_idx]
             if is_categorical and known_cats is None:
-                raise ValueError(
-                    f"Known categories for feature {f_idx} must be provided."
-                )
+                raise ValueError(f"Known categories for feature {f_idx} must be provided.")
             if not is_categorical and known_cats is not None:
                 raise ValueError(
-                    f"Feature {f_idx} isn't marked as a categorical feature, "
-                    "but categories were passed."
+                    f"Feature {f_idx} isn't marked as a categorical feature, " "but categories were passed."
                 )
 
         self.missing_values_bin_idx_ = self.n_bins - 1
@@ -314,15 +305,11 @@ class _BinMapper(TransformerMixin, BaseEstimator):
         n_categorical_features = categorical_features_indices.size
 
         f_idx_map = np.zeros(n_features, dtype=np.uint32)
-        f_idx_map[categorical_features_indices] = np.arange(
-            n_categorical_features, dtype=np.uint32
-        )
+        f_idx_map[categorical_features_indices] = np.arange(n_categorical_features, dtype=np.uint32)
 
         known_categories = self.bin_thresholds_
 
-        known_cat_bitsets = np.zeros(
-            (n_categorical_features, 8), dtype=X_BITSET_INNER_DTYPE
-        )
+        known_cat_bitsets = np.zeros((n_categorical_features, 8), dtype=X_BITSET_INNER_DTYPE)
 
         # TODO: complexity is O(n_categorical_features * 255). Maybe this is
         # worth cythonizing

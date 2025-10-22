@@ -28,9 +28,7 @@ from .utils.validation import (
 )
 
 
-class PolynomialCountSketch(
-    ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator
-):
+class PolynomialCountSketch(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
     """Polynomial kernel approximation via Tensor Sketch.
 
     Implements Tensor Sketch, which approximates the feature map
@@ -126,9 +124,7 @@ class PolynomialCountSketch(
         "random_state": ["random_state"],
     }
 
-    def __init__(
-        self, *, gamma=1.0, degree=2, coef0=0, n_components=100, random_state=None
-    ):
+    def __init__(self, *, gamma=1.0, degree=2, coef0=0, n_components=100, random_state=None):
         self.gamma = gamma
         self.degree = degree
         self.coef0 = coef0
@@ -164,9 +160,7 @@ class PolynomialCountSketch(
         if self.coef0 != 0:
             n_features += 1
 
-        self.indexHash_ = random_state.randint(
-            0, high=self.n_components, size=(self.degree, n_features)
-        )
+        self.indexHash_ = random_state.randint(0, high=self.n_components, size=(self.degree, n_features))
 
         self.bitHash_ = random_state.choice(a=[-1, 1], size=(self.degree, n_features))
         self._n_features_out = self.n_components
@@ -199,15 +193,10 @@ class PolynomialCountSketch(
             )
 
         elif not sp.issparse(X_gamma) and self.coef0 != 0:
-            X_gamma = np.hstack(
-                [X_gamma, np.sqrt(self.coef0) * np.ones((X_gamma.shape[0], 1))]
-            )
+            X_gamma = np.hstack([X_gamma, np.sqrt(self.coef0) * np.ones((X_gamma.shape[0], 1))])
 
         if X_gamma.shape[1] != self.indexHash_.shape[1]:
-            raise ValueError(
-                "Number of features of test samples does not"
-                " match that of training samples."
-            )
+            raise ValueError("Number of features of test samples does not" " match that of training samples.")
 
         count_sketches = np.zeros((X_gamma.shape[0], self.degree, self.n_components))
 
@@ -216,9 +205,7 @@ class PolynomialCountSketch(
                 for d in range(self.degree):
                     iHashIndex = self.indexHash_[d, j]
                     iHashBit = self.bitHash_[d, j]
-                    count_sketches[:, d, iHashIndex] += (
-                        (iHashBit * X_gamma[:, [j]]).toarray().ravel()
-                    )
+                    count_sketches[:, d, iHashIndex] += (iHashBit * X_gamma[:, [j]]).toarray().ravel()
 
         else:
             for j in range(X_gamma.shape[1]):
@@ -369,9 +356,7 @@ class RBFSampler(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimato
             self._gamma = 1.0 / (n_features * X_var) if X_var != 0 else 1.0
         else:
             self._gamma = self.gamma
-        self.random_weights_ = (2.0 * self._gamma) ** 0.5 * random_state.normal(
-            size=(n_features, self.n_components)
-        )
+        self.random_weights_ = (2.0 * self._gamma) ** 0.5 * random_state.normal(size=(n_features, self.n_components))
 
         self.random_offset_ = random_state.uniform(0, 2 * np.pi, size=self.n_components)
 
@@ -414,9 +399,7 @@ class RBFSampler(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimato
         return tags
 
 
-class SkewedChi2Sampler(
-    ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator
-):
+class SkewedChi2Sampler(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator):
     """Approximate feature map for "skewed chi-squared" kernel.
 
     Read more in the :ref:`User Guide <skewed_chi_kernel_approx>`.
@@ -554,9 +537,7 @@ class SkewedChi2Sampler(
             Returns the instance itself.
         """
         check_is_fitted(self)
-        X = validate_data(
-            self, X, copy=True, dtype=[np.float64, np.float32], reset=False
-        )
+        X = validate_data(self, X, copy=True, dtype=[np.float64, np.float32], reset=False)
         if (X <= -self.skewedness).any():
             raise ValueError("X may not contain entries smaller than -skewedness.")
 
@@ -687,10 +668,7 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
         X = validate_data(self, X, accept_sparse="csr", ensure_non_negative=True)
 
         if self.sample_interval is None and self.sample_steps not in (1, 2, 3):
-            raise ValueError(
-                "If sample_steps is not in [1, 2, 3],"
-                " you need to provide sample_interval"
-            )
+            raise ValueError("If sample_steps is not in [1, 2, 3]," " you need to provide sample_interval")
 
         return self
 
@@ -710,9 +688,7 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
             Whether the return value is an array or sparse matrix depends on
             the type of the input X.
         """
-        X = validate_data(
-            self, X, accept_sparse="csr", reset=False, ensure_non_negative=True
-        )
+        X = validate_data(self, X, accept_sparse="csr", reset=False, ensure_non_negative=True)
         sparse = sp.issparse(X)
 
         if self.sample_interval is None:
@@ -727,10 +703,7 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
             elif self.sample_steps == 3:
                 sample_interval = 0.4
             else:
-                raise ValueError(
-                    "If sample_steps is not in [1, 2, 3],"
-                    " you need to provide sample_interval"
-                )
+                raise ValueError("If sample_steps is not in [1, 2, 3]," " you need to provide sample_interval")
         else:
             sample_interval = self.sample_interval
 
@@ -757,9 +730,7 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
         # to check if the attribute is present. Otherwise it will pass on this
         # stateless estimator (requires_fit=False)
         check_is_fitted(self, attributes="n_features_in_")
-        input_features = _check_feature_names_in(
-            self, input_features, generate_names=True
-        )
+        input_features = _check_feature_names_in(self, input_features, generate_names=True)
         est_name = self.__class__.__name__.lower()
 
         names_list = [f"{est_name}_{name}_sqrt" for name in input_features]
@@ -803,9 +774,7 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
         indptr = X.indptr.copy()
 
         data_step = np.sqrt(X.data * sample_interval)
-        X_step = sp.csr_matrix(
-            (data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False
-        )
+        X_step = sp.csr_matrix((data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False)
         X_new = [X_step]
 
         log_step_nz = sample_interval * np.log(X.data)
@@ -815,15 +784,11 @@ class AdditiveChi2Sampler(TransformerMixin, BaseEstimator):
             factor_nz = np.sqrt(step_nz / np.cosh(np.pi * j * sample_interval))
 
             data_step = factor_nz * np.cos(j * log_step_nz)
-            X_step = sp.csr_matrix(
-                (data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False
-            )
+            X_step = sp.csr_matrix((data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False)
             X_new.append(X_step)
 
             data_step = factor_nz * np.sin(j * log_step_nz)
-            X_step = sp.csr_matrix(
-                (data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False
-            )
+            X_step = sp.csr_matrix((data_step, indices, indptr), shape=X.shape, dtype=X.dtype, copy=False)
             X_new.append(X_step)
 
         return sp.hstack(X_new)
@@ -1086,15 +1051,9 @@ class Nystroem(ClassNamePrefixFeaturesOutMixin, TransformerMixin, BaseEstimator)
                 if getattr(self, param) is not None:
                     params[param] = getattr(self, param)
         else:
-            if (
-                self.gamma is not None
-                or self.coef0 is not None
-                or self.degree is not None
-            ):
+            if self.gamma is not None or self.coef0 is not None or self.degree is not None:
                 raise ValueError(
-                    "Don't pass gamma, coef0 or degree to "
-                    "Nystroem if using a callable "
-                    "or precomputed kernel"
+                    "Don't pass gamma, coef0 or degree to " "Nystroem if using a callable " "or precomputed kernel"
                 )
 
         return params

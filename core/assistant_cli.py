@@ -58,15 +58,11 @@ console = Console()
 @app.command()
 def query(
     prompt: str = typer.Argument(..., help="Question or prompt for assistance"),
-    model: Optional[str] = typer.Option(
-        None, help="Override model (gpt-4o-mini, gpt-4o)"
-    ),
+    model: Optional[str] = typer.Option(None, help="Override model (gpt-4o-mini, gpt-4o)"),
     temperature: float = typer.Option(0.2, help="Creativity level (0.0-1.0)"),
     max_tokens: Optional[int] = typer.Option(512, help="Maximum response length"),
     no_cache: bool = typer.Option(False, help="Skip cache and force fresh response"),
-    batch_file: Optional[Path] = typer.Option(
-        None, help="File with multiple queries to batch"
-    ),
+    batch_file: Optional[Path] = typer.Option(None, help="File with multiple queries to batch"),
 ):
     """Query the Symphony assistant with intelligent caching"""
 
@@ -88,9 +84,7 @@ def query(
             # Batch similar queries for efficiency
             if len(queries) > 1:
                 combined_prompt = CreditEfficientPatterns.batch_similar_queries(queries)
-                console.print(
-                    f"[blue]Batched {len(queries)} queries into single request[/blue]"
-                )
+                console.print(f"[blue]Batched {len(queries)} queries into single request[/blue]")
             else:
                 combined_prompt = queries[0]
 
@@ -112,11 +106,7 @@ def query(
                 return
 
             # Show cache status
-            cache_status = (
-                "[green]Fresh[/green]"
-                if not response.get("cached", False)
-                else "[blue]Cached[/blue]"
-            )
+            cache_status = "[green]Fresh[/green]" if not response.get("cached", False) else "[blue]Cached[/blue]"
             console.print(f"Response ({cache_status}):")
 
             # Display content in a nice panel
@@ -126,9 +116,7 @@ def query(
             # Show usage if available
             if "usage" in response and response["usage"]:
                 usage = response["usage"]
-                console.print(
-                    f"\n[yellow]Usage: {usage.get('total_tokens', 'N/A')} tokens[/yellow]"
-                )
+                console.print(f"\n[yellow]Usage: {usage.get('total_tokens', 'N/A')} tokens[/yellow]")
 
     asyncio.run(run_query())
 
@@ -167,20 +155,13 @@ def models():
 
                 # Group models by category
                 categories = {
-                    "GPT-4": [
-                        m for m in model_list if "gpt-4" in m and "mini" not in m
-                    ],
-                    "GPT-4 Mini": [
-                        m for m in model_list if "gpt-4" in m and "mini" in m
-                    ],
+                    "GPT-4": [m for m in model_list if "gpt-4" in m and "mini" not in m],
+                    "GPT-4 Mini": [m for m in model_list if "gpt-4" in m and "mini" in m],
                     "GPT-3.5": [m for m in model_list if "gpt-3.5" in m],
                     "Other": [
                         m
                         for m in model_list
-                        if not any(
-                            x in m
-                            for x in ["gpt-4", "gpt-3.5", "dall-e", "whisper", "tts"]
-                        )
+                        if not any(x in m for x in ["gpt-4", "gpt-3.5", "dall-e", "whisper", "tts"])
                     ],
                 }
 
@@ -212,9 +193,7 @@ def switch_key(key_type: str = typer.Argument(..., help="PRIMARY or SECONDARY"))
                 result = response.json()
 
                 if result["status"] == "ok":
-                    console.print(
-                        f"[green]Switched to {result['active_key']} API key[/green]"
-                    )
+                    console.print(f"[green]Switched to {result['active_key']} API key[/green]")
                 else:
                     console.print("[red]Switch failed[/red]")
 
@@ -244,9 +223,7 @@ def integrate_master_channel():
         compressed = await integrator.assisted_compress_and_glue(test_data)
 
         console.print("[blue]Finalizing with AI-enhanced summary...[/blue]")
-        final_result = await integrator.assisted_finalize(
-            {"compressed_data": compressed}
-        )
+        final_result = await integrator.assisted_finalize({"compressed_data": compressed})
 
         console.print("[green]Integration complete![/green]")
         console.print(Panel(final_result, title="AI-Enhanced Master Channel Result"))
@@ -260,9 +237,7 @@ def stats():
     cache_dir = Path("automation/cache/assistant")
 
     if not cache_dir.exists():
-        console.print(
-            "[yellow]No cache directory found - no statistics available[/yellow]"
-        )
+        console.print("[yellow]No cache directory found - no statistics available[/yellow]")
         return
 
     # Count cached responses
@@ -275,34 +250,24 @@ def stats():
 
     # Estimate token savings (rough calculation)
     avg_tokens_per_response = 256  # Conservative estimate
-    estimated_savings = (
-        total_cached * avg_tokens_per_response * 0.00015
-    )  # GPT-4o-mini cost
+    estimated_savings = total_cached * avg_tokens_per_response * 0.00015  # GPT-4o-mini cost
 
     console.print("[green]Assistant Usage Statistics:[/green]")
     console.print(f"  Cached Responses: {total_cached}")
     console.print(f"  Cache Directory: {cache_dir}")
     console.print(f"  Estimated Cost Savings: ${estimated_savings:.2f}")
-    console.print(
-        f"  Efficiency: {(total_cached / max(total_cached + 1, 1)) * 100:.1f}% of queries served from cache"
-    )
+    console.print(f"  Efficiency: {(total_cached / max(total_cached + 1, 1)) * 100:.1f}% of queries served from cache")
 
     # Show recent cache files
     if cache_files:
         console.print("\n[yellow]Recent cached queries:[/yellow]")
-        recent_files = sorted(
-            cache_files, key=lambda x: x.stat().st_mtime, reverse=True
-        )[:5]
+        recent_files = sorted(cache_files, key=lambda x: x.stat().st_mtime, reverse=True)[:5]
         for cache_file in recent_files:
             try:
                 with open(cache_file, "r") as f:
                     data = json.load(f)
                     if "content" in data:
-                        preview = (
-                            data["content"][:80] + "..."
-                            if len(data["content"]) > 80
-                            else data["content"]
-                        )
+                        preview = data["content"][:80] + "..." if len(data["content"]) > 80 else data["content"]
                         console.print(f"  • {preview}")
             except:
                 console.print(f"  • [Error reading {cache_file.name}]")
@@ -310,9 +275,7 @@ def stats():
 
 @app.command()
 def trajectory(
-    run_tests: bool = typer.Option(
-        False, help="Run focused pytest checks as part of trajectory"
-    ),
+    run_tests: bool = typer.Option(False, help="Run focused pytest checks as part of trajectory"),
 ):
     """Run a short trajectory check (API, cache, optional tests) and report completion percentage."""
     from pathlib import Path
@@ -349,9 +312,9 @@ def trajectory(
             r = client.get("http://127.0.0.1:8000/assistant/health")
             if r.status_code == 200:
                 health_data = r.json()
-                health_ok = health_data.get(
-                    "openai_client_initialized", False
-                ) and health_data.get("cache_writable", False)
+                health_ok = health_data.get("openai_client_initialized", False) and health_data.get(
+                    "cache_writable", False
+                )
     except Exception:
         health_ok = False
 

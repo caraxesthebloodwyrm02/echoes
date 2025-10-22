@@ -120,9 +120,7 @@ class AgentKnowledgeLayer:
         if kg_bridge:
             self.kg_bridge = kg_bridge
         else:
-            self.kg_bridge = (
-                KnowledgeGraphBridge(enable_kg=True) if KG_AVAILABLE else None
-            )
+            self.kg_bridge = KnowledgeGraphBridge(enable_kg=True) if KG_AVAILABLE else None
 
         # Track agent activity
         self.agent_registry: Dict[str, Dict[str, Any]] = {}
@@ -246,13 +244,10 @@ class AgentKnowledgeLayer:
                 # Link to related entities
                 for entity in related_entities or []:
                     entity_uri = self.kg_bridge.kg.ns["code"][entity]
-                    self.kg_bridge.kg.add_relationship(
-                        discovery_uri, "related_to", entity_uri
-                    )
+                    self.kg_bridge.kg.add_relationship(discovery_uri, "related_to", entity_uri)
 
                 self.logger.info(
-                    f"Agent {agent_name} published discovery: {discovery_type} "
-                    f"(confidence: {confidence:.2f})"
+                    f"Agent {agent_name} published discovery: {discovery_type} " f"(confidence: {confidence:.2f})"
                 )
 
             except Exception as e:
@@ -302,14 +297,8 @@ class AgentKnowledgeLayer:
 
         try:
             # Build SPARQL query
-            type_filter = (
-                f'?discovery code:discovery_type "{discovery_type}" .'
-                if discovery_type
-                else ""
-            )
-            exclude_filter = (
-                f'FILTER (?agent_name != "{agent_name}")' if exclude_own else ""
-            )
+            type_filter = f'?discovery code:discovery_type "{discovery_type}" .' if discovery_type else ""
+            exclude_filter = f'FILTER (?agent_name != "{agent_name}")' if exclude_own else ""
 
             sparql_query = f"""
             SELECT ?discovery ?agent_name ?discovery_type ?content ?confidence ?timestamp
@@ -364,9 +353,7 @@ class AgentKnowledgeLayer:
             scored_results.sort(key=lambda x: x["combined_score"], reverse=True)
             final_results = scored_results[:limit]
 
-            self.logger.info(
-                f"Agent {agent_name} query returned {len(final_results)} discoveries"
-            )
+            self.logger.info(f"Agent {agent_name} query returned {len(final_results)} discoveries")
 
             return final_results
 
@@ -474,9 +461,7 @@ class AgentKnowledgeLayer:
                     if results:
                         context["relevant_discoveries"].append(results[0])
                 except Exception as e:
-                    self.logger.error(
-                        f"Failed to retrieve discovery {discovery_id}: {e}"
-                    )
+                    self.logger.error(f"Failed to retrieve discovery {discovery_id}: {e}")
 
         # Query for additional context
         if self.kg_bridge and self.kg_bridge.enabled:

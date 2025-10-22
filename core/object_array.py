@@ -83,10 +83,7 @@ class ObjectStringArrayMixin(BaseStringArrayMethods):
         except (TypeError, AttributeError) as err:
             # Reraise the exception if callable `f` got wrong number of args.
             # The user may want to be warned by this, instead of getting NaN
-            p_err = (
-                r"((takes)|(missing)) (?(2)from \d+ to )?\d+ "
-                r"(?(3)required )positional arguments?"
-            )
+            p_err = r"((takes)|(missing)) (?(2)from \d+ to )?\d+ " r"(?(3)required )positional arguments?"
 
             if len(err.args) >= 1 and re.search(p_err, err.args[0]):
                 # FIXME: this should be totally avoidable
@@ -154,8 +151,7 @@ class ObjectStringArrayMixin(BaseStringArrayMethods):
         if na is not lib.no_default and not isna(na) and not isinstance(na, bool):
             # GH#59561
             warnings.warn(
-                "Allowing a non-bool 'na' in obj.str.contains is deprecated "
-                "and will raise in a future version.",
+                "Allowing a non-bool 'na' in obj.str.contains is deprecated " "and will raise in a future version.",
                 FutureWarning,
                 stacklevel=find_stack_level(),
             )
@@ -166,8 +162,7 @@ class ObjectStringArrayMixin(BaseStringArrayMethods):
         if na is not lib.no_default and not isna(na) and not isinstance(na, bool):
             # GH#59561
             warnings.warn(
-                "Allowing a non-bool 'na' in obj.str.startswith is deprecated "
-                "and will raise in a future version.",
+                "Allowing a non-bool 'na' in obj.str.startswith is deprecated " "and will raise in a future version.",
                 FutureWarning,
                 stacklevel=find_stack_level(),
             )
@@ -178,8 +173,7 @@ class ObjectStringArrayMixin(BaseStringArrayMethods):
         if na is not lib.no_default and not isna(na) and not isinstance(na, bool):
             # GH#59561
             warnings.warn(
-                "Allowing a non-bool 'na' in obj.str.endswith is deprecated "
-                "and will raise in a future version.",
+                "Allowing a non-bool 'na' in obj.str.endswith is deprecated " "and will raise in a future version.",
                 FutureWarning,
                 stacklevel=find_stack_level(),
             )
@@ -430,9 +424,7 @@ class ObjectStringArrayMixin(BaseStringArrayMethods):
 
         for i, t in enumerate(tags2):
             pat = sep + t + sep
-            dummies[:, i] = lib.map_infer(
-                arr.to_numpy(), functools.partial(_isin, element=pat)
-            )
+            dummies[:, i] = lib.map_infer(arr.to_numpy(), functools.partial(_isin, element=pat))
         return dummies, tags2
 
     def _str_upper(self):

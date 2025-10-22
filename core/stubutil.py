@@ -60,9 +60,7 @@ class CantImport(Exception):
         self.message = message
 
 
-def walk_packages(
-    inspect: ModuleInspect, packages: list[str], verbose: bool = False
-) -> Iterator[str]:
+def walk_packages(inspect: ModuleInspect, packages: list[str], verbose: bool = False) -> Iterator[str]:
     """Iterates through all packages and sub-packages in the given list.
 
     This uses runtime imports (in another process) to find both Python and C modules.
@@ -135,9 +133,7 @@ def find_module_path_and_all_py3(
 
 
 @contextmanager
-def generate_guarded(
-    mod: str, target: str, ignore_errors: bool = True, verbose: bool = False
-) -> Iterator[None]:
+def generate_guarded(mod: str, target: str, ignore_errors: bool = True, verbose: bool = False) -> Iterator[None]:
     """Ignore or report errors during stub generation.
 
     Optionally report success.
@@ -408,10 +404,7 @@ def infer_method_arg_types(
                     "BaseException | None",
                     "types.TracebackType | None",
                 ]
-                args = [
-                    ArgSig(name=arg_name, type=arg_type)
-                    for arg_name, arg_type in zip(arg_names, arg_types)
-                ]
+                args = [ArgSig(name=arg_name, type=arg_type) for arg_name, arg_type in zip(arg_names, arg_types)]
     if args is not None:
         return [ArgSig(name=self_var)] + args
     return None
@@ -421,9 +414,7 @@ def infer_method_arg_types(
 class SignatureGenerator:
     """Abstract base class for extracting a list of FunctionSigs for each function."""
 
-    def remove_self_type(
-        self, inferred: list[FunctionSig] | None, self_var: str
-    ) -> list[FunctionSig] | None:
+    def remove_self_type(self, inferred: list[FunctionSig] | None, self_var: str) -> list[FunctionSig] | None:
         """Remove type annotation from self/cls argument"""
         if inferred:
             for signature in inferred:
@@ -433,9 +424,7 @@ class SignatureGenerator:
         return inferred
 
     @abstractmethod
-    def get_function_sig(
-        self, default_sig: FunctionSig, ctx: FunctionContext
-    ) -> list[FunctionSig] | None:
+    def get_function_sig(self, default_sig: FunctionSig, ctx: FunctionContext) -> list[FunctionSig] | None:
         """Return a list of signatures for the given function.
 
         If no signature can be found, return None. If all of the registered SignatureGenerators
@@ -478,9 +467,7 @@ class ImportTracker:
         # Names that should be reexported if they come from another module
         self.reexports: set[str] = set()
 
-    def add_import_from(
-        self, module: str, names: list[tuple[str, str | None]], require: bool = False
-    ) -> None:
+    def add_import_from(self, module: str, names: list[tuple[str, str | None]], require: bool = False) -> None:
         for name, alias in names:
             if alias:
                 # 'from {module} import {name} as {alias}'
@@ -868,11 +855,7 @@ class BaseStubGenerator:
         return True
 
     def should_reexport(self, name: str, full_module: str, name_is_alias: bool) -> bool:
-        if (
-            not name_is_alias
-            and self.module_name
-            and (self.module_name + "." + name) in self.EXTRA_EXPORTED
-        ):
+        if not name_is_alias and self.module_name and (self.module_name + "." + name) in self.EXTRA_EXPORTED:
             # Special case certain names that should be exported, against our general rules.
             return True
         if name_is_alias:

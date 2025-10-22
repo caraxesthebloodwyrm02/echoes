@@ -97,10 +97,7 @@ class TestFloatNumericIndex:
         index_cls = Index
         cls_name = index_cls.__name__
         # invalid
-        msg = (
-            rf"{cls_name}\(\.\.\.\) must be called with a collection of "
-            r"some kind, 0\.0 was passed"
-        )
+        msg = rf"{cls_name}\(\.\.\.\) must be called with a collection of " r"some kind, 0\.0 was passed"
         with pytest.raises(TypeError, match=msg):
             index_cls(0.0)
 
@@ -114,12 +111,8 @@ class TestFloatNumericIndex:
 
     def test_constructor_explicit(self, mixed_index, float_index):
         # these don't auto convert
-        self.check_coerce(
-            float_index, Index((np.arange(5) * 2.5), dtype=object), is_float_index=False
-        )
-        self.check_coerce(
-            mixed_index, Index([1.5, 2, 3, 4, 5], dtype=object), is_float_index=False
-        )
+        self.check_coerce(float_index, Index((np.arange(5) * 2.5), dtype=object), is_float_index=False)
+        self.check_coerce(mixed_index, Index([1.5, 2, 3, 4, 5], dtype=object), is_float_index=False)
 
     def test_type_coercion_fail(self, any_int_numpy_dtype):
         # see gh-15832
@@ -341,10 +334,7 @@ class TestIntNumericIndex:
         index_cls = Index
 
         # scalar raise Exception
-        msg = (
-            rf"{index_cls.__name__}\(\.\.\.\) must be called with a collection of some "
-            "kind, 5 was passed"
-        )
+        msg = rf"{index_cls.__name__}\(\.\.\.\) must be called with a collection of some " "kind, 5 was passed"
         with pytest.raises(TypeError, match=msg):
             index_cls(5)
 

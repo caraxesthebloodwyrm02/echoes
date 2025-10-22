@@ -59,9 +59,7 @@ PROJECT_ROOT = Path(__file__).parent
 sys.path.insert(0, str(PROJECT_ROOT))
 
 # Setup logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -78,14 +76,10 @@ class EnvironmentBootstrapper:
         """Check Python version compatibility"""
         version = sys.version_info
         if version.major == 3 and version.minor >= 12:
-            logger.info(
-                f"✓ Python {version.major}.{version.minor}.{version.micro} detected"
-            )
+            logger.info(f"✓ Python {version.major}.{version.minor}.{version.micro} detected")
             return True
         else:
-            logger.error(
-                f"✗ Python 3.12+ required, found {version.major}.{version.minor}.{version.micro}"
-            )
+            logger.error(f"✗ Python 3.12+ required, found {version.major}.{version.minor}.{version.micro}")
             return False
 
     def ensure_virtual_environment(self) -> bool:
@@ -307,9 +301,7 @@ except ImportError as e:
         ]
 
         if not skip_validation:
-            steps.append(
-                ("Running configuration validation", self.run_configuration_validation)
-            )
+            steps.append(("Running configuration validation", self.run_configuration_validation))
 
         success = True
         for step_name, step_func in steps:
@@ -335,12 +327,8 @@ except ImportError as e:
 
 
 def main():
-    parser = argparse.ArgumentParser(
-        description="Echoes Development Environment Bootstrapper"
-    )
-    parser.add_argument(
-        "--skip-validation", action="store_true", help="Skip configuration validation"
-    )
+    parser = argparse.ArgumentParser(description="Echoes Development Environment Bootstrapper")
+    parser.add_argument("--skip-validation", action="store_true", help="Skip configuration validation")
     parser.add_argument("--quiet", action="store_true", help="Reduce output verbosity")
 
     args = parser.parse_args()

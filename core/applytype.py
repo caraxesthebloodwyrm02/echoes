@@ -129,9 +129,7 @@ def apply_generic_arguments(
             # as a whole, not expanding arguments individually.
             callable = expand_type(callable, id_to_type)
             assert isinstance(callable, CallableType)
-            return callable.copy_modified(
-                variables=[tv for tv in tvars if tv.id not in id_to_type]
-            )
+            return callable.copy_modified(variables=[tv for tv in tvars if tv.id not in id_to_type])
 
     # Apply arguments to argument types.
     var_arg = callable.var_arg()
@@ -141,9 +139,7 @@ def apply_generic_arguments(
         assert isinstance(callable, CallableType)
         return callable.copy_modified(variables=[tv for tv in tvars if tv.id not in id_to_type])
     else:
-        callable = callable.copy_modified(
-            arg_types=[expand_type(at, id_to_type) for at in callable.arg_types]
-        )
+        callable = callable.copy_modified(arg_types=[expand_type(at, id_to_type) for at in callable.arg_types])
 
     # Apply arguments to TypeGuard and TypeIs if any.
     if callable.type_guard is not None:
@@ -277,9 +273,7 @@ class PolyTranslator(TypeTranslator):
             #     forall T . Foo[[x: T], T]
             # are not really expressible in current type system, but this looks like
             # a useful feature, so let's keep it.
-            param_spec_index = next(
-                i for (i, tv) in enumerate(t.type.defn.type_vars) if isinstance(tv, ParamSpecType)
-            )
+            param_spec_index = next(i for (i, tv) in enumerate(t.type.defn.type_vars) if isinstance(tv, ParamSpecType))
             p = get_proper_type(t.args[param_spec_index])
             if isinstance(p, Parameters):
                 found_vars = self.collect_vars(p)
@@ -298,7 +292,5 @@ class PolyTranslator(TypeTranslator):
                 raise PolyTranslationError()
             call = mypy.subtypes.find_member("__call__", t, t, is_operator=True)
             assert call is not None
-            return call.accept(
-                PolyTranslator(self.poly_tvars, self.bound_tvars, self.seen_aliases | {t.type})
-            )
+            return call.accept(PolyTranslator(self.poly_tvars, self.bound_tvars, self.seen_aliases | {t.type}))
         return super().visit_instance(t)

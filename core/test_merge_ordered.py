@@ -50,9 +50,7 @@ class TestMergeOrdered:
 
         left["group"] = ["a"] * 3 + ["b"] * 3
 
-        result = merge_ordered(
-            left, right, on="key", left_by="group", fill_method="ffill"
-        )
+        result = merge_ordered(left, right, on="key", left_by="group", fill_method="ffill")
         expected = DataFrame(
             {
                 "key": ["a", "b", "c", "d", "e", "f"] * 2,
@@ -64,17 +62,13 @@ class TestMergeOrdered:
 
         tm.assert_frame_equal(result, expected.loc[:, result.columns])
 
-        result2 = merge_ordered(
-            right, left, on="key", right_by="group", fill_method="ffill"
-        )
+        result2 = merge_ordered(right, left, on="key", right_by="group", fill_method="ffill")
         tm.assert_frame_equal(result, result2.loc[:, result.columns])
 
         result = merge_ordered(left, right, on="key", left_by="group")
         assert result["group"].notna().all()
 
-    @pytest.mark.filterwarnings(
-        "ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning"
-    )
+    @pytest.mark.filterwarnings("ignore:Passing a BlockManager|Passing a SingleBlockManager:DeprecationWarning")
     def test_merge_type(self, left, right):
         class NotADataFrame(DataFrame):
             @property
@@ -101,9 +95,7 @@ class TestMergeOrdered:
         with pytest.raises(ValueError, match=pattern):
             pd.concat(df_seq)
 
-    @pytest.mark.parametrize(
-        "arg", [[DataFrame()], [None, DataFrame()], [DataFrame(), None]]
-    )
+    @pytest.mark.parametrize("arg", [[DataFrame()], [None, DataFrame()], [DataFrame(), None]])
     def test_empty_sequence_concat_ok(self, arg):
         pd.concat(arg)
 
@@ -198,9 +190,7 @@ class TestMergeOrdered:
         left = DataFrame([["g", "h", 1], ["g", "h", 3]], columns=list("GHE"))
         right = DataFrame([[2, 1]], columns=list("ET"))
         result = merge_ordered(left, right, on="E", left_by=["G", "H"])
-        expected = DataFrame(
-            {"G": ["g"] * 3, "H": ["h"] * 3, "E": [1, 2, 3], "T": [np.nan, 1.0, np.nan]}
-        )
+        expected = DataFrame({"G": ["g"] * 3, "H": ["h"] * 3, "E": [1, 2, 3], "T": [np.nan, 1.0, np.nan]})
 
         tm.assert_frame_equal(result, expected)
 
@@ -215,9 +205,7 @@ class TestMergeOrdered:
     @pytest.mark.parametrize("invalid_method", ["linear", "carrot"])
     def test_ffill_validate_fill_method(self, left, right, invalid_method):
         # GH 55884
-        with pytest.raises(
-            ValueError, match=re.escape("fill_method must be 'ffill' or None")
-        ):
+        with pytest.raises(ValueError, match=re.escape("fill_method must be 'ffill' or None")):
             merge_ordered(left, right, on="key", fill_method=invalid_method)
 
     def test_ffill_left_merge(self):
@@ -230,9 +218,7 @@ class TestMergeOrdered:
             }
         )
         df2 = DataFrame({"key": ["b", "c", "d"], "rvalue": [1, 2, 3]})
-        result = merge_ordered(
-            df1, df2, fill_method="ffill", left_by="group", how="left"
-        )
+        result = merge_ordered(df1, df2, fill_method="ffill", left_by="group", how="left")
         expected = DataFrame(
             {
                 "key": ["a", "c", "e", "a", "c", "e"],

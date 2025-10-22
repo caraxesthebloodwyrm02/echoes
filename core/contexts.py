@@ -34,9 +34,7 @@ if TYPE_CHECKING:
 
 
 @contextmanager
-def decompress_file(
-    path: FilePath | BaseBuffer, compression: CompressionOptions
-) -> Generator[IO[bytes], None, None]:
+def decompress_file(path: FilePath | BaseBuffer, compression: CompressionOptions) -> Generator[IO[bytes], None, None]:
     """
     Open a compressed file and return a file object.
 
@@ -100,9 +98,7 @@ def set_timezone(tz: str) -> Generator[None, None, None]:
 
 
 @contextmanager
-def ensure_clean(
-    filename=None, return_filelike: bool = False, **kwargs: Any
-) -> Generator[Any, None, None]:
+def ensure_clean(filename=None, return_filelike: bool = False, **kwargs: Any) -> Generator[Any, None, None]:
     """
     Gets a temporary path and agrees to remove on close.
 
@@ -219,10 +215,7 @@ def raises_chained_assignment_error(warn=True, extra_warnings=(), extra_match=()
     else:
         if using_copy_on_write():
             warning = ChainedAssignmentError
-            match = (
-                "A value is trying to be set on a copy of a DataFrame or Series "
-                "through chained assignment"
-            )
+            match = "A value is trying to be set on a copy of a DataFrame or Series " "through chained assignment"
         else:
             warning = FutureWarning  # type: ignore[assignment]
             # TODO update match

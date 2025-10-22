@@ -1,6 +1,7 @@
 """
 Tests for statistical reductions of 2nd moment or higher: var, skew, kurt, ...
 """
+
 import inspect
 
 import numpy as np
@@ -89,9 +90,7 @@ class TestSeriesStatReductions:
     #  were moved from a series-specific test file, _not_ that these tests are
     #  intended long-term to be series-specific
 
-    def _check_stat_op(
-        self, name, alternate, string_series_, check_objects=False, check_allna=False
-    ):
+    def _check_stat_op(self, name, alternate, string_series_, check_objects=False, check_allna=False):
         with pd.option_context("use_bottleneck", False):
             f = getattr(Series, name)
 
@@ -220,9 +219,7 @@ class TestSeriesStatReductions:
         self._check_stat_op("sem", alt, string_series)
 
         result = datetime_series.sem(ddof=4)
-        expected = np.std(datetime_series.values, ddof=4) / np.sqrt(
-            len(datetime_series.values)
-        )
+        expected = np.std(datetime_series.values, ddof=4) / np.sqrt(len(datetime_series.values))
         tm.assert_almost_equal(result, expected)
 
         # 1 - element series with ddof=1

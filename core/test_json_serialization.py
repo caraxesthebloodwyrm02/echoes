@@ -5,7 +5,6 @@ from nltk.jsontags import JSONTaggedDecoder, JSONTaggedEncoder
 from nltk.tag import (
     AffixTagger,
     BigramTagger,
-    BrillTagger,
     BrillTaggerTrainer,
     DefaultTagger,
     NgramTagger,
@@ -66,9 +65,7 @@ class TestJSONSerialization(unittest.TestCase):
         self.assertEqual(repr(tritagger), repr(decoded.backoff))
         self.assertEqual(repr(bitagger), repr(decoded.backoff.backoff))
         self.assertEqual(repr(unitagger), repr(decoded.backoff.backoff.backoff))
-        self.assertEqual(
-            repr(self.default_tagger), repr(decoded.backoff.backoff.backoff.backoff)
-        )
+        self.assertEqual(repr(self.default_tagger), repr(decoded.backoff.backoff.backoff.backoff))
 
     def test_perceptron_tagger(self):
         tagger = PerceptronTagger(load=False)
@@ -82,9 +79,7 @@ class TestJSONSerialization(unittest.TestCase):
         self.assertEqual(tagger.classes, decoded.classes)
 
     def test_brill_tagger(self):
-        trainer = BrillTaggerTrainer(
-            self.default_tagger, nltkdemo18(), deterministic=True
-        )
+        trainer = BrillTaggerTrainer(self.default_tagger, nltkdemo18(), deterministic=True)
         tagger = trainer.train(self.corpus, max_rules=30)
 
         encoded = self.encoder.encode(tagger)

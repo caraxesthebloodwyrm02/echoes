@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  echoes-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - PYTHON_VERSION=3.11
+    image: echoes:latest
+    container_name: echoes-production
+    restart: unless-stopped
+    
+    environment:
+      # Application settings
+      - ENVIRONMENT=production
+      - LOG_LEVEL=info
+      - PYTHONUNBUFFERED=1
+      
+      # JWT settings
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY:-change-me-in-production}
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - REFRESH_TOKEN_EXPIRE_DAYS=7
+      
+      # Rate limiting
+      - RATE_LIMIT_REQUESTS=100
+      - RATE_LIMIT_WINDOW=60
+      
+      # Database (if needed)
+      - DATABASE_URL=${DATABASE_URL:-sqlite:///./echoes.db}
+      
+    ports:
+      - "8000:8000"
+    
+    volumes:
+      # Persist data
+      - echoes-data:/app/data
+      - echoes-logs:/app/logs
+      
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    
+    networks:
+      - echoes-network
+    
+    labels:
+      - "com.echoes.version=1.0.0"
+      - "com.echoes.commit=eedf7793"
+      - "com.echoes.tests=40/41-passing"
+
+volumes:
+  echoes-data:
+    driver: local
+  echoes-logs:
+    driver: local
+
+networks:
+  echoes-network:
+    driver: bridge

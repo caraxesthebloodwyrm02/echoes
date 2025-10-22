@@ -12,9 +12,7 @@ import pandas._testing as tm
 
 
 class TestPeriodIndex:
-    def test_getitem_periodindex_duplicates_string_slice(
-        self, using_copy_on_write, warn_copy_on_write
-    ):
+    def test_getitem_periodindex_duplicates_string_slice(self, using_copy_on_write, warn_copy_on_write):
         # monotonic
         idx = PeriodIndex([2000, 2007, 2007, 2009, 2009], freq="Y-JUN")
         ts = Series(np.random.default_rng(2).standard_normal(len(idx)), index=idx)
@@ -135,10 +133,7 @@ class TestPeriodIndex:
         obj = DataFrame({"units": [100 + i for i in range(10)]}, index=idx)
         obj = tm.get_obj(obj, frame_or_series)
 
-        msg = (
-            f"cannot do slice indexing on {type(idx).__name__} with "
-            r"these indexers \[foo\] of type str"
-        )
+        msg = f"cannot do slice indexing on {type(idx).__name__} with " r"these indexers \[foo\] of type str"
 
         # Check the lower-level calls are raising where expected.
         with pytest.raises(TypeError, match=msg):
@@ -167,9 +162,7 @@ class TestPeriodIndex:
         nidx = ser.index
 
         # Manually identified locations of year==2014
-        indexer_2014 = np.array(
-            [0, 1, 2, 3, 4, 5, 6, 15, 16, 17, 18, 19, 20], dtype=np.intp
-        )
+        indexer_2014 = np.array([0, 1, 2, 3, 4, 5, 6, 15, 16, 17, 18, 19, 20], dtype=np.intp)
         assert (nidx[indexer_2014].year == 2014).all()
         assert not (nidx[~indexer_2014].year == 2014).any()
 

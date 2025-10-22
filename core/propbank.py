@@ -11,7 +11,6 @@ from xml.etree import ElementTree
 
 from nltk.corpus.reader.api import *
 from nltk.corpus.reader.util import *
-from nltk.internals import raise_unorderable_types
 from nltk.tree import Tree
 
 
@@ -149,9 +148,7 @@ class PropbankCorpusReader(CorpusReader):
         for i in range(100):
             line = stream.readline().strip()
             if line:
-                inst = PropbankInstance.parse(
-                    line, self._parse_fileid_xform, self._parse_corpus
-                )
+                inst = PropbankInstance.parse(line, self._parse_fileid_xform, self._parse_corpus)
                 if instance_filter(inst):
                     block.append(inst)
 
@@ -388,16 +385,12 @@ class PropbankTreePointer(PropbankPointer):
         # Deal with chains (xx*yy*zz)
         pieces = s.split("*")
         if len(pieces) > 1:
-            return PropbankChainTreePointer(
-                [PropbankTreePointer.parse(elt) for elt in pieces]
-            )
+            return PropbankChainTreePointer([PropbankTreePointer.parse(elt) for elt in pieces])
 
         # Deal with split args (xx,yy,zz)
         pieces = s.split(",")
         if len(pieces) > 1:
-            return PropbankSplitTreePointer(
-                [PropbankTreePointer.parse(elt) for elt in pieces]
-            )
+            return PropbankSplitTreePointer([PropbankTreePointer.parse(elt) for elt in pieces])
 
         # Deal with normal pointers.
         pieces = s.split(":")

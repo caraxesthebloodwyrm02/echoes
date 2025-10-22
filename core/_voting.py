@@ -92,9 +92,7 @@ class _BaseVoting(TransformerMixin, _BaseHeterogeneousEnsemble):
             for name in names:
                 routed_params[name] = Bunch(fit={})
                 if "sample_weight" in fit_params:
-                    routed_params[name].fit["sample_weight"] = fit_params[
-                        "sample_weight"
-                    ]
+                    routed_params[name].fit["sample_weight"] = fit_params["sample_weight"]
 
         self.estimators_ = Parallel(n_jobs=self.n_jobs)(
             delayed(_fit_single_estimator)(
@@ -154,11 +152,7 @@ class _BaseVoting(TransformerMixin, _BaseHeterogeneousEnsemble):
         try:
             check_is_fitted(self)
         except NotFittedError as nfe:
-            raise AttributeError(
-                "{} object has no n_features_in_ attribute.".format(
-                    self.__class__.__name__
-                )
-            ) from nfe
+            raise AttributeError("{} object has no n_features_in_ attribute.".format(self.__class__.__name__)) from nfe
 
         return self.estimators_[0].n_features_in_
 
@@ -439,9 +433,7 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
 
     def _check_voting(self):
         if self.voting == "hard":
-            raise AttributeError(
-                f"predict_proba is not available when voting={self.voting!r}"
-            )
+            raise AttributeError(f"predict_proba is not available when voting={self.voting!r}")
         return True
 
     @available_if(_check_voting)
@@ -459,9 +451,7 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
             Weighted average probability for each class per sample.
         """
         check_is_fitted(self)
-        avg = np.average(
-            self._collect_probas(X), axis=0, weights=self._weights_not_none
-        )
+        avg = np.average(self._collect_probas(X), axis=0, weights=self._weights_not_none)
         return avg
 
     def transform(self, X):
@@ -512,8 +502,7 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
         check_is_fitted(self, "n_features_in_")
         if self.voting == "soft" and not self.flatten_transform:
             raise ValueError(
-                "get_feature_names_out is not supported when `voting='soft'` and "
-                "`flatten_transform=False`"
+                "get_feature_names_out is not supported when `voting='soft'` and " "`flatten_transform=False`"
             )
 
         _check_feature_names_in(self, input_features, generate_names=False)
@@ -522,15 +511,11 @@ class VotingClassifier(ClassifierMixin, _BaseVoting):
         active_names = [name for name, est in self.estimators if est != "drop"]
 
         if self.voting == "hard":
-            return np.asarray(
-                [f"{class_name}_{name}" for name in active_names], dtype=object
-            )
+            return np.asarray([f"{class_name}_{name}" for name in active_names], dtype=object)
 
         # voting == "soft"
         n_classes = len(self.classes_)
-        names_out = [
-            f"{class_name}_{name}{i}" for name in active_names for i in range(n_classes)
-        ]
+        names_out = [f"{class_name}_{name}{i}" for name in active_names for i in range(n_classes)]
         return np.asarray(names_out, dtype=object)
 
     def __sklearn_tags__(self):

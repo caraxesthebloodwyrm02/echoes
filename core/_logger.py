@@ -180,9 +180,7 @@ class Core:
         # Cache used internally to quickly access level attributes based on their name or severity.
         # It can also contain integers as keys, it serves to avoid calling "isinstance()" repeatedly
         # when "logger.log()" is used.
-        self.levels_lookup = {
-            name: (name, name, level.no, level.icon) for name, level in self.levels.items()
-        }
+        self.levels_lookup = {name: (name, name, level.no, level.icon) for name, level in self.levels.items()}
 
         self.handlers_count = 0
         self.handlers = {}
@@ -829,9 +827,7 @@ class Logger:
             encoding = getattr(sink, "encoding", None)
             terminator = ""
             exception_prefix = "\n"
-        elif iscoroutinefunction(sink) or iscoroutinefunction(
-            getattr(sink, "__call__", None)  # noqa: B004
-        ):
+        elif iscoroutinefunction(sink) or iscoroutinefunction(getattr(sink, "__call__", None)):  # noqa: B004
             name = getattr(sink, "__name__", None) or repr(sink)
 
             if colorize is None:
@@ -907,8 +903,7 @@ class Logger:
                 else:
                     raise TypeError(
                         "The filter dict contains a module '%s' associated to an invalid level, "
-                        "it should be an integer, a string or a boolean, not: '%s'"
-                        % (module, type(level_).__name__)
+                        "it should be an integer, a string or a boolean, not: '%s'" % (module, type(level_).__name__)
                     )
                 if levelno_ < 0:
                     raise ValueError(
@@ -916,9 +911,7 @@ class Logger:
                         "it should be a positive integer, not: '%d'" % (module, levelno_)
                     )
                 level_per_module[module] = levelno_
-            filter_func = functools.partial(
-                _filters.filter_by_level, level_per_module=level_per_module
-            )
+            filter_func = functools.partial(_filters.filter_by_level, level_per_module=level_per_module)
         elif callable(filter):
             if filter == builtins.filter:
                 raise ValueError(
@@ -929,8 +922,7 @@ class Logger:
             filter_func = filter
         else:
             raise TypeError(
-                "Invalid filter, it should be a function, a string or a dict, not: '%s'"
-                % type(filter).__name__
+                "Invalid filter, it should be a function, a string or a dict, not: '%s'" % type(filter).__name__
             )
 
         if isinstance(level, str):
@@ -938,23 +930,16 @@ class Logger:
         elif isinstance(level, int):
             levelno = level
         else:
-            raise TypeError(
-                "Invalid level, it should be an integer or a string, not: '%s'"
-                % type(level).__name__
-            )
+            raise TypeError("Invalid level, it should be an integer or a string, not: '%s'" % type(level).__name__)
 
         if levelno < 0:
-            raise ValueError(
-                "Invalid level value, it should be a positive integer, not: %d" % levelno
-            )
+            raise ValueError("Invalid level value, it should be a positive integer, not: %d" % levelno)
 
         if isinstance(format, str):
             try:
                 formatter = Colorizer.prepare_format(format + terminator + "{exception}")
             except ValueError as e:
-                raise ValueError(
-                    "Invalid format, color markups could not be parsed correctly"
-                ) from e
+                raise ValueError("Invalid format, color markups could not be parsed correctly") from e
             is_formatter_dynamic = False
         elif callable(format):
             if format == builtins.format:
@@ -966,10 +951,7 @@ class Logger:
             formatter = format
             is_formatter_dynamic = True
         else:
-            raise TypeError(
-                "Invalid format, it should be a string or a function, not: '%s'"
-                % type(format).__name__
-            )
+            raise TypeError("Invalid format, it should be a string or a function, not: '%s'" % type(format).__name__)
 
         if not isinstance(encoding, str):
             encoding = "ascii"
@@ -1215,9 +1197,7 @@ class Logger:
         ... def main():
         ...     1 / 0
         """
-        if callable(exception) and (
-            not isclass(exception) or not issubclass(exception, BaseException)
-        ):
+        if callable(exception) and (not isclass(exception) or not issubclass(exception, BaseException)):
             return self.catch()(exception)
 
         logger = self
@@ -1303,16 +1283,7 @@ class Logger:
         return Catcher(False)
 
     def opt(
-        self,
-        *,
-        exception=None,
-        record=False,
-        lazy=False,
-        colors=False,
-        raw=False,
-        capture=True,
-        depth=0,
-        ansi=False
+        self, *, exception=None, record=False, lazy=False, colors=False, raw=False, capture=True, depth=0, ansi=False
     ):
         r"""Parametrize a logging call to slightly change generated log message.
 
@@ -1587,9 +1558,7 @@ class Logger:
         30 /!\\ Updated!
         """
         if not isinstance(name, str):
-            raise TypeError(
-                "Invalid level name, it should be a string, not: '%s'" % type(name).__name__
-            )
+            raise TypeError("Invalid level name, it should be a string, not: '%s'" % type(name).__name__)
 
         if no is color is icon is None:
             try:
@@ -1599,10 +1568,7 @@ class Logger:
 
         if name not in self._core.levels:
             if no is None:
-                raise ValueError(
-                    "Level '%s' does not exist, you have to create it by specifying a level no"
-                    % name
-                )
+                raise ValueError("Level '%s' does not exist, you have to create it by specifying a level no" % name)
             old_color, old_icon = "", " "
         elif no is not None:
             raise ValueError("Level '%s' already exists, you can't update its severity no" % name)
@@ -1616,9 +1582,7 @@ class Logger:
             icon = old_icon
 
         if not isinstance(no, int):
-            raise TypeError(
-                "Invalid level no, it should be an integer, not: '%s'" % type(no).__name__
-            )
+            raise TypeError("Invalid level no, it should be an integer, not: '%s'" % type(no).__name__)
 
         if no < 0:
             raise ValueError("Invalid level no, it should be a positive integer, not: %d" % no)
@@ -1775,9 +1739,7 @@ class Logger:
 
     def _change_activation(self, name, status):
         if not (name is None or isinstance(name, str)):
-            raise TypeError(
-                "Invalid name, it should be a string (or None), not: '%s'" % type(name).__name__
-            )
+            raise TypeError("Invalid name, it should be a string (or None), not: '%s'" % type(name).__name__)
 
         with self._core.lock:
             enabled = self._core.enabled.copy()
@@ -1793,9 +1755,7 @@ class Logger:
             if name != "":
                 name += "."
 
-            activation_list = [
-                (n, s) for n, s in self._core.activation_list if n[: len(name)] != name
-            ]
+            activation_list = [(n, s) for n, s in self._core.activation_list if n[: len(name)] != name]
 
             parent_status = next((s for n, s in activation_list if name[: len(n)] == n), None)
             if parent_status != status and not (name == "" and status is True):
@@ -1876,8 +1836,7 @@ class Logger:
 
         else:
             raise TypeError(
-                "Invalid file, it should be a string path or a file object, not: '%s'"
-                % type(file).__name__
+                "Invalid file, it should be a string path or a file object, not: '%s'" % type(file).__name__
             )
 
         if isinstance(cast, dict):
@@ -1890,16 +1849,13 @@ class Logger:
         elif callable(cast):
             cast_function = cast
         else:
-            raise TypeError(
-                "Invalid cast, it should be a function or a dict, not: '%s'" % type(cast).__name__
-            )
+            raise TypeError("Invalid cast, it should be a function or a dict, not: '%s'" % type(cast).__name__)
 
         try:
             regex = re.compile(pattern)
         except TypeError:
             raise TypeError(
-                "Invalid pattern, it should be a string or a compiled regex, not: '%s'"
-                % type(pattern).__name__
+                "Invalid pattern, it should be a string or a compiled regex, not: '%s'" % type(pattern).__name__
             ) from None
 
         with opener() as fileobj:
@@ -1941,13 +1897,10 @@ class Logger:
                 raise ValueError("Level '%s' does not exist" % level) from None
             if not isinstance(level, int):
                 raise TypeError(
-                    "Invalid level, it should be an integer or a string, not: '%s'"
-                    % type(level).__name__
+                    "Invalid level, it should be an integer or a string, not: '%s'" % type(level).__name__
                 ) from None
             if level < 0:
-                raise ValueError(
-                    "Invalid level value, it should be a positive integer, not: %d" % level
-                ) from None
+                raise ValueError("Invalid level value, it should be a positive integer, not: %d" % level) from None
             cache = (None, "Level %d" % level, level, " ")
             level_id, level_name, level_no, level_icon = cache
             core.levels_lookup[level] = cache

@@ -80,9 +80,7 @@ def test_monotonic_constraints_classifications(
     est.fit(X_train, y_train)
     proba_test = est.predict_proba(X_test)
 
-    assert np.logical_and(proba_test >= 0.0, proba_test <= 1.0).all(), (
-        "Probability should always be in [0, 1] range."
-    )
+    assert np.logical_and(proba_test >= 0.0, proba_test <= 1.0).all(), "Probability should always be in [0, 1] range."
     assert_allclose(proba_test.sum(axis=1), 1.0)
 
     # Monotonic increase constraint, it applies to the positive class
@@ -163,9 +161,7 @@ def test_monotonic_constraints_regressions(
 
 @pytest.mark.parametrize("TreeClassifier", TREE_BASED_CLASSIFIER_CLASSES)
 def test_multiclass_raises(TreeClassifier):
-    X, y = make_classification(
-        n_samples=100, n_features=5, n_classes=3, n_informative=3, random_state=0
-    )
+    X, y = make_classification(n_samples=100, n_features=5, n_classes=3, n_informative=3, random_state=0)
     y[0] = 0
     monotonic_cst = np.zeros(X.shape[1])
     monotonic_cst[0] = -1
@@ -182,9 +178,7 @@ def test_multiple_output_raises(TreeClassifier):
     X = [[1, 2, 3, 4, 5], [6, 7, 8, 9, 10]]
     y = [[1, 0, 1, 0, 1], [1, 0, 1, 0, 1]]
 
-    est = TreeClassifier(
-        max_depth=None, monotonic_cst=np.array([-1, 1]), random_state=0
-    )
+    est = TreeClassifier(max_depth=None, monotonic_cst=np.array([-1, 1]), random_state=0)
     msg = "Monotonicity constraints are not supported with multiple output"
     with pytest.raises(ValueError, match=msg):
         est.fit(X, y)
@@ -200,9 +194,7 @@ def test_multiple_output_raises(TreeClassifier):
     ],
 )
 def test_missing_values_raises(Tree):
-    X, y = make_classification(
-        n_samples=100, n_features=5, n_classes=2, n_informative=3, random_state=0
-    )
+    X, y = make_classification(n_samples=100, n_features=5, n_classes=2, n_informative=3, random_state=0)
     X[0, 0] = np.nan
     monotonic_cst = np.zeros(X.shape[1])
     monotonic_cst[0] = 1
@@ -219,22 +211,16 @@ def test_bad_monotonic_cst_raises(TreeClassifier):
     y = [1, 0, 1, 0, 1]
 
     msg = "monotonic_cst has shape 3 but the input data X has 2 features."
-    est = TreeClassifier(
-        max_depth=None, monotonic_cst=np.array([-1, 1, 0]), random_state=0
-    )
+    est = TreeClassifier(max_depth=None, monotonic_cst=np.array([-1, 1, 0]), random_state=0)
     with pytest.raises(ValueError, match=msg):
         est.fit(X, y)
 
     msg = "monotonic_cst must be None or an array-like of -1, 0 or 1."
-    est = TreeClassifier(
-        max_depth=None, monotonic_cst=np.array([-2, 2]), random_state=0
-    )
+    est = TreeClassifier(max_depth=None, monotonic_cst=np.array([-2, 2]), random_state=0)
     with pytest.raises(ValueError, match=msg):
         est.fit(X, y)
 
-    est = TreeClassifier(
-        max_depth=None, monotonic_cst=np.array([-1, 0.8]), random_state=0
-    )
+    est = TreeClassifier(max_depth=None, monotonic_cst=np.array([-1, 0.8]), random_state=0)
     with pytest.raises(ValueError, match=msg + "(.*)0.8]"):
         est.fit(X, y)
 
@@ -310,9 +296,7 @@ def test_1d_opposite_monotonicity_cst_data(TreeRegressor):
 @pytest.mark.parametrize("monotonic_sign", (-1, 1))
 @pytest.mark.parametrize("depth_first_builder", (True, False))
 @pytest.mark.parametrize("criterion", ("absolute_error", "squared_error"))
-def test_1d_tree_nodes_values(
-    TreeRegressor, monotonic_sign, depth_first_builder, criterion, global_random_seed
-):
+def test_1d_tree_nodes_values(TreeRegressor, monotonic_sign, depth_first_builder, criterion, global_random_seed):
     # Adaptation from test_nodes_values in test_monotonic_constraints.py
     # in sklearn.ensemble._hist_gradient_boosting
     # Build a single tree with only one feature, and make sure the node
@@ -463,9 +447,7 @@ def test_assert_nd_reg_tree_children_monotonic_bounded():
 @pytest.mark.parametrize("monotonic_sign", (-1, 1))
 @pytest.mark.parametrize("depth_first_builder", (True, False))
 @pytest.mark.parametrize("criterion", ("absolute_error", "squared_error"))
-def test_nd_tree_nodes_values(
-    TreeRegressor, monotonic_sign, depth_first_builder, criterion, global_random_seed
-):
+def test_nd_tree_nodes_values(TreeRegressor, monotonic_sign, depth_first_builder, criterion, global_random_seed):
     # Build tree with several features, and make sure the nodes
     # values respect the monotonicity constraints.
 

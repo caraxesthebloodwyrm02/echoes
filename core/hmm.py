@@ -136,9 +136,7 @@ class HiddenMarkovModelTagger(TaggerI):
     :type transform: callable
     """
 
-    def __init__(
-        self, symbols, states, transitions, outputs, priors, transform=_identity
-    ):
+    def __init__(self, symbols, states, transitions, outputs, priors, transform=_identity):
         self._symbols = unique_list(symbols)
         self._states = unique_list(states)
         self._transitions = transitions
@@ -182,18 +180,14 @@ class HiddenMarkovModelTagger(TaggerI):
 
         if unlabeled_sequence:
             max_iterations = kwargs.get("max_iterations", 5)
-            hmm = trainer.train_unsupervised(
-                unlabeled_sequence, model=hmm, max_iterations=max_iterations
-            )
+            hmm = trainer.train_unsupervised(unlabeled_sequence, model=hmm, max_iterations=max_iterations)
             if test_sequence:
                 hmm.test(test_sequence, verbose=kwargs.get("verbose", False))
 
         return hmm
 
     @classmethod
-    def train(
-        cls, labeled_sequence, test_sequence=None, unlabeled_sequence=None, **kwargs
-    ):
+    def train(cls, labeled_sequence, test_sequence=None, unlabeled_sequence=None, **kwargs):
         """
         Train a new HiddenMarkovModelTagger using the given labeled and
         unlabeled training instances. Testing will be performed if test
@@ -258,14 +252,10 @@ class HiddenMarkovModelTagger(TaggerI):
 
         if T > 0 and sequence[0][_TAG]:
             last_state = sequence[0][_TAG]
-            p = self._priors.logprob(last_state) + self._output_logprob(
-                last_state, sequence[0][_TEXT]
-            )
+            p = self._priors.logprob(last_state) + self._output_logprob(last_state, sequence[0][_TEXT])
             for t in range(1, T):
                 state = sequence[t][_TAG]
-                p += self._transitions[last_state].logprob(
-                    state
-                ) + self._output_logprob(state, sequence[t][_TEXT])
+                p += self._transitions[last_state].logprob(state) + self._output_logprob(state, sequence[t][_TEXT])
                 last_state = state
             return p
         else:
@@ -493,19 +483,13 @@ class HiddenMarkovModelTagger(TaggerI):
         # sample the starting state and symbol prob dists
         tokens = []
         state = self._sample_probdist(self._priors, rng.random(), self._states)
-        symbol = self._sample_probdist(
-            self._outputs[state], rng.random(), self._symbols
-        )
+        symbol = self._sample_probdist(self._outputs[state], rng.random(), self._symbols)
         tokens.append((symbol, state))
 
         for i in range(1, length):
             # sample the state transition and symbol prob dists
-            state = self._sample_probdist(
-                self._transitions[state], rng.random(), self._states
-            )
-            symbol = self._sample_probdist(
-                self._outputs[state], rng.random(), self._symbols
-            )
+            state = self._sample_probdist(self._transitions[state], rng.random(), self._states)
+            symbol = self._sample_probdist(self._outputs[state], rng.random(), self._symbols)
             tokens.append((symbol, state))
 
         return tokens
@@ -583,9 +567,7 @@ class HiddenMarkovModelTagger(TaggerI):
         for t in range(T):
             for i, state in enumerate(self._states):
                 p = 2 ** (alpha[t, i] + beta[t, i] - normalisation)
-                entropy -= p * self._outputs[state].logprob(
-                    unlabeled_sequence[t][_TEXT]
-                )
+                entropy -= p * self._outputs[state].logprob(unlabeled_sequence[t][_TEXT])
                 # print('p(s_%d = %s) =' % (t, state), p)
 
         return entropy
@@ -686,11 +668,7 @@ class HiddenMarkovModelTagger(TaggerI):
 
     def _transitions_matrix(self):
         """Return a matrix of transition log probabilities."""
-        trans_iter = (
-            self._transitions[sj].logprob(si)
-            for sj in self._states
-            for si in self._states
-        )
+        trans_iter = (self._transitions[sj].logprob(si) for sj in self._states for si in self._states)
 
         transitions_logprob = np.fromiter(trans_iter, dtype=np.float64)
         N = len(self._states)
@@ -726,9 +704,7 @@ class HiddenMarkovModelTagger(TaggerI):
         # Initialization
         symbol = unlabeled_sequence[0][_TEXT]
         for i, state in enumerate(self._states):
-            alpha[0, i] = self._priors.logprob(state) + self._output_logprob(
-                state, symbol
-            )
+            alpha[0, i] = self._priors.logprob(state) + self._output_logprob(state, symbol)
 
         # Induction
         for t in range(1, T):
@@ -910,12 +886,7 @@ class HiddenMarkovModelTrainer:
             alpha_plus_beta = alpha[t] + beta[t]
 
             if t < T - 1:
-                numer_add = (
-                    transitions_logprob
-                    + next_outputs_logprob
-                    + beta[t + 1]
-                    + alpha[t].reshape(N, 1)
-                )
+                numer_add = transitions_logprob + next_outputs_logprob + beta[t + 1] + alpha[t].reshape(N, 1)
                 A_numer = np.logaddexp2(A_numer, numer_add)
                 A_denom = np.logaddexp2(A_denom, alpha_plus_beta)
             else:
@@ -954,15 +925,9 @@ class HiddenMarkovModelTrainer:
         model = kwargs.get("model")
         if not model:
             priors = RandomProbDist(self._states)
-            transitions = DictionaryConditionalProbDist(
-                {state: RandomProbDist(self._states) for state in self._states}
-            )
-            outputs = DictionaryConditionalProbDist(
-                {state: RandomProbDist(self._symbols) for state in self._states}
-            )
-            model = HiddenMarkovModelTagger(
-                self._symbols, self._states, transitions, outputs, priors
-            )
+            transitions = DictionaryConditionalProbDist({state: RandomProbDist(self._states) for state in self._states})
+            outputs = DictionaryConditionalProbDist({state: RandomProbDist(self._symbols) for state in self._states})
+            model = HiddenMarkovModelTagger(self._symbols, self._states, transitions, outputs, priors)
 
         self._states = model._states
         self._symbols = model._symbols
@@ -975,18 +940,12 @@ class HiddenMarkovModelTrainer:
         # model._priors = MutableProbDist(model._priors, self._states)
 
         model._transitions = DictionaryConditionalProbDist(
-            {
-                s: MutableProbDist(model._transitions[s], self._states)
-                for s in self._states
-            }
+            {s: MutableProbDist(model._transitions[s], self._states) for s in self._states}
         )
 
         if update_outputs:
             model._outputs = DictionaryConditionalProbDist(
-                {
-                    s: MutableProbDist(model._outputs[s], self._symbols)
-                    for s in self._states
-                }
+                {s: MutableProbDist(model._outputs[s], self._symbols) for s in self._states}
             )
 
         model.reset_cache()
@@ -1167,9 +1126,7 @@ def _create_hmm_tagger(states, symbols, A, B, pi):
     A = cpd(A, states, states)
     B = cpd(B, states, symbols)
     pi = pd(pi, states)
-    return HiddenMarkovModelTagger(
-        symbols=symbols, states=states, transitions=A, outputs=B, priors=pi
-    )
+    return HiddenMarkovModelTagger(symbols=symbols, states=states, transitions=A, outputs=B, priors=pi)
 
 
 def _market_hmm_example():
@@ -1266,9 +1223,7 @@ def _untag(sentences):
     return unlabeled
 
 
-def demo_pos_bw(
-    test=10, supervised=20, unsupervised=10, verbose=True, max_iterations=5
-):
+def demo_pos_bw(test=10, supervised=20, unsupervised=10, verbose=True, max_iterations=5):
     # demonstrates the Baum-Welch algorithm in POS tagging
 
     print()
@@ -1295,9 +1250,7 @@ def demo_pos_bw(
     print("Training (unsupervised, %d sentences)..." % unsupervised)
     # it's rather slow - so only use 10 samples by default
     unlabeled = _untag(sentences[test + supervised :])
-    hmm = trainer.train_unsupervised(
-        unlabeled, model=hmm, max_iterations=max_iterations
-    )
+    hmm = trainer.train_unsupervised(unlabeled, model=hmm, max_iterations=max_iterations)
     hmm.test(sentences[:test], verbose=verbose)
 
 

@@ -51,9 +51,7 @@ class RSAKey(AsymmetricKey):
             # https://tools.ietf.org/html/rfc7518#section-6.3.2.7
             raise ValueError('"oth" is not supported yet')
 
-        public_numbers = RSAPublicNumbers(
-            base64_to_int(obj["e"]), base64_to_int(obj["n"])
-        )
+        public_numbers = RSAPublicNumbers(base64_to_int(obj["e"]), base64_to_int(obj["n"]))
 
         if has_all_prime_factors(obj):
             numbers = RSAPrivateNumbers(
@@ -81,9 +79,7 @@ class RSAKey(AsymmetricKey):
         return numbers.private_key(default_backend())
 
     def load_public_key(self):
-        numbers = RSAPublicNumbers(
-            base64_to_int(self._dict_data["e"]), base64_to_int(self._dict_data["n"])
-        )
+        numbers = RSAPublicNumbers(base64_to_int(self._dict_data["e"]), base64_to_int(self._dict_data["n"]))
         return numbers.public_key(default_backend())
 
     @classmethod
@@ -120,8 +116,6 @@ def has_all_prime_factors(obj):
         return True
 
     if any(props_found):
-        raise ValueError(
-            "RSA key must include all parameters if any are present besides d"
-        )
+        raise ValueError("RSA key must include all parameters if any are present besides d")
 
     return False

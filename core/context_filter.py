@@ -61,9 +61,7 @@ class ContextFilter:
         },
     }
 
-    def apply_context(
-        self, embedding: SemanticVector, job_context: str
-    ) -> ContextualEmbedding:
+    def apply_context(self, embedding: SemanticVector, job_context: str) -> ContextualEmbedding:
         """
         Weight embedding based on job context.
         This is where the semantic understanding gets contextualized.
@@ -71,22 +69,16 @@ class ContextFilter:
         context_config = self.CONTEXT_MAPPINGS.get(job_context, {})
 
         # Adjust weights based on context relevance
-        adjusted_vector = self._adjust_weights(
-            embedding.vector, embedding.semantic_tags, context_config
-        )
+        adjusted_vector = self._adjust_weights(embedding.vector, embedding.semantic_tags, context_config)
 
         return ContextualEmbedding(
             vector=adjusted_vector,
             original_embedding=embedding,
             context=job_context,
-            relevance_score=self._calculate_context_relevance(
-                embedding.semantic_tags, job_context
-            ),
+            relevance_score=self._calculate_context_relevance(embedding.semantic_tags, job_context),
         )
 
-    def _adjust_weights(
-        self, vector: np.ndarray, semantic_tags: set, context_config: Dict
-    ) -> np.ndarray:
+    def _adjust_weights(self, vector: np.ndarray, semantic_tags: set, context_config: Dict) -> np.ndarray:
         """Apply context-specific weight adjustments to the embedding vector"""
 
         adjusted_vector = vector.copy()
@@ -156,9 +148,7 @@ class ContextValidator:
     Validate that context filtering makes intuitive sense
     """
 
-    def validate_context_separation(
-        self, context_filter: ContextFilter
-    ) -> Dict[str, bool]:
+    def validate_context_separation(self, context_filter: ContextFilter) -> Dict[str, bool]:
         """
         Test that different contexts produce different embeddings for the same skill
         """

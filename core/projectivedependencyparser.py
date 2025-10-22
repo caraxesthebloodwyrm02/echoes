@@ -79,9 +79,7 @@ class DependencySpan:
         return str
 
     def __eq__(self, other):
-        return (
-            type(self) == type(other) and self._comparison_key == other._comparison_key
-        )
+        return type(self) == type(other) and self._comparison_key == other._comparison_key
 
     def __ne__(self, other):
         return not self == other
@@ -246,9 +244,7 @@ class ProjectiveDependencyParser:
         # adjacent rightward covered concatenation
         new_arcs = span1._arcs + span2._arcs
         new_tags = span1._tags + span2._tags
-        if self._grammar.contains(
-            self._tokens[span1._head_index], self._tokens[span2._head_index]
-        ):
+        if self._grammar.contains(self._tokens[span1._head_index], self._tokens[span2._head_index]):
             #           print('Performing rightward cover %d to %d' % (span1._head_index, span2._head_index))
             new_arcs[span2._head_index - span1._start_index] = span1._head_index
             spans.append(
@@ -262,9 +258,7 @@ class ProjectiveDependencyParser:
             )
         # adjacent leftward covered concatenation
         new_arcs = span1._arcs + span2._arcs
-        if self._grammar.contains(
-            self._tokens[span2._head_index], self._tokens[span1._head_index]
-        ):
+        if self._grammar.contains(self._tokens[span2._head_index], self._tokens[span1._head_index]):
             #           print('performing leftward cover %d to %d' % (span2._head_index, span1._head_index))
             new_arcs[span1._head_index - span1._start_index] = span2._head_index
             spans.append(
@@ -334,14 +328,9 @@ class ProbabilisticProjectiveDependencyParser:
                 if i == j + 1:
                     if tokens[i - 1] in self._grammar._tags:
                         for tag in self._grammar._tags[tokens[i - 1]]:
-                            chart[i][j].add(
-                                DependencySpan(i - 1, i, i - 1, [-1], [tag])
-                            )
+                            chart[i][j].add(DependencySpan(i - 1, i, i - 1, [-1], [tag]))
                     else:
-                        print(
-                            "No tag found for input token '%s', parse is impossible."
-                            % tokens[i - 1]
-                        )
+                        print("No tag found for input token '%s', parse is impossible." % tokens[i - 1])
                         return []
         for i in range(1, len(self._tokens) + 1):
             for j in range(i - 2, -1, -1):
@@ -405,9 +394,7 @@ class ProbabilisticProjectiveDependencyParser:
         # adjacent rightward covered concatenation
         new_arcs = span1._arcs + span2._arcs
         new_tags = span1._tags + span2._tags
-        if self._grammar.contains(
-            self._tokens[span1._head_index], self._tokens[span2._head_index]
-        ):
+        if self._grammar.contains(self._tokens[span1._head_index], self._tokens[span2._head_index]):
             new_arcs[span2._head_index - span1._start_index] = span1._head_index
             spans.append(
                 DependencySpan(
@@ -421,9 +408,7 @@ class ProbabilisticProjectiveDependencyParser:
         # adjacent leftward covered concatenation
         new_arcs = span1._arcs + span2._arcs
         new_tags = span1._tags + span2._tags
-        if self._grammar.contains(
-            self._tokens[span2._head_index], self._tokens[span1._head_index]
-        ):
+        if self._grammar.contains(self._tokens[span2._head_index], self._tokens[span1._head_index]):
             new_arcs[span1._head_index - span1._start_index] = span2._head_index
             spans.append(
                 DependencySpan(
@@ -452,16 +437,12 @@ class ProbabilisticProjectiveDependencyParser:
         for dg in graphs:
             for node_index in range(1, len(dg.nodes)):
                 # children = dg.nodes[node_index]['deps']
-                children = list(
-                    chain.from_iterable(dg.nodes[node_index]["deps"].values())
-                )
+                children = list(chain.from_iterable(dg.nodes[node_index]["deps"].values()))
 
                 nr_left_children = dg.left_children(node_index)
                 nr_right_children = dg.right_children(node_index)
                 nr_children = nr_left_children + nr_right_children
-                for child_index in range(
-                    0 - (nr_left_children + 1), nr_right_children + 2
-                ):
+                for child_index in range(0 - (nr_left_children + 1), nr_right_children + 2):
                     head_word = dg.nodes[node_index]["word"]
                     head_tag = dg.nodes[node_index]["tag"]
                     if head_word in tags:
@@ -684,9 +665,7 @@ def arity_parse_demo():
     print(grammar)
 
     print()
-    print(
-        "This constrains the number of possible parses to just one:"
-    )  # unimplemented, soon to replace
+    print("This constrains the number of possible parses to just one:")  # unimplemented, soon to replace
     pdp = ProjectiveDependencyParser(grammar)
     trees = pdp.parse(["the", "price", "of", "the", "stock", "fell"])
     for tree in trees:

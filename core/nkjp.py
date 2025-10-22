@@ -56,16 +56,11 @@ class NKJPCorpusReader(XMLCorpusReader):
         if isinstance(fileids, str):
             XMLCorpusReader.__init__(self, root, fileids + ".*/header.xml")
         else:
-            XMLCorpusReader.__init__(
-                self, root, [fileid + "/header.xml" for fileid in fileids]
-            )
+            XMLCorpusReader.__init__(self, root, [fileid + "/header.xml" for fileid in fileids])
         self._paths = self.get_paths()
 
     def get_paths(self):
-        return [
-            os.path.join(str(self._root), f.split("header.xml")[0])
-            for f in self._fileids
-        ]
+        return [os.path.join(str(self._root), f.split("header.xml")[0]) for f in self._fileids]
 
     def fileids(self):
         """
@@ -86,9 +81,7 @@ class NKJPCorpusReader(XMLCorpusReader):
         elif mode is NKJPCorpusReader.HEADER_MODE:
             return NKJPCorpus_Header_View(filename, tags=tags)
         elif mode is NKJPCorpusReader.RAW_MODE:
-            return NKJPCorpus_Text_View(
-                filename, tags=tags, mode=NKJPCorpus_Text_View.RAW_MODE
-            )
+            return NKJPCorpus_Text_View(filename, tags=tags, mode=NKJPCorpus_Text_View.RAW_MODE)
 
         else:
             raise NameError("No such mode!")
@@ -108,9 +101,7 @@ class NKJPCorpusReader(XMLCorpusReader):
         """
         return concat(
             [
-                self._view(
-                    self.add_root(fileid), mode=NKJPCorpusReader.HEADER_MODE, **kwargs
-                ).handle_query()
+                self._view(self.add_root(fileid), mode=NKJPCorpusReader.HEADER_MODE, **kwargs).handle_query()
                 for fileid in fileids
             ]
         )
@@ -122,9 +113,7 @@ class NKJPCorpusReader(XMLCorpusReader):
         """
         return concat(
             [
-                self._view(
-                    self.add_root(fileid), mode=NKJPCorpusReader.SENTS_MODE, **kwargs
-                ).handle_query()
+                self._view(self.add_root(fileid), mode=NKJPCorpusReader.SENTS_MODE, **kwargs).handle_query()
                 for fileid in fileids
             ]
         )
@@ -137,9 +126,7 @@ class NKJPCorpusReader(XMLCorpusReader):
 
         return concat(
             [
-                self._view(
-                    self.add_root(fileid), mode=NKJPCorpusReader.WORDS_MODE, **kwargs
-                ).handle_query()
+                self._view(self.add_root(fileid), mode=NKJPCorpusReader.WORDS_MODE, **kwargs).handle_query()
                 for fileid in fileids
             ]
         )
@@ -153,12 +140,7 @@ class NKJPCorpusReader(XMLCorpusReader):
         tags = kwargs.pop("tags", [])
         return concat(
             [
-                self._view(
-                    self.add_root(fileid),
-                    mode=NKJPCorpusReader.WORDS_MODE,
-                    tags=tags,
-                    **kwargs
-                ).handle_query()
+                self._view(self.add_root(fileid), mode=NKJPCorpusReader.WORDS_MODE, tags=tags, **kwargs).handle_query()
                 for fileid in fileids
             ]
         )
@@ -170,9 +152,7 @@ class NKJPCorpusReader(XMLCorpusReader):
         """
         return concat(
             [
-                self._view(
-                    self.add_root(fileid), mode=NKJPCorpusReader.RAW_MODE, **kwargs
-                ).handle_query()
+                self._view(self.add_root(fileid), mode=NKJPCorpusReader.RAW_MODE, **kwargs).handle_query()
                 for fileid in fileids
             ]
         )
@@ -289,16 +269,12 @@ class NKJPCorpus_Segmentation_View(XMLCorpusView):
     def __init__(self, filename, **kwargs):
         self.tagspec = ".*p/.*s"
         # intersperse NKJPCorpus_Text_View
-        self.text_view = NKJPCorpus_Text_View(
-            filename, mode=NKJPCorpus_Text_View.SENTS_MODE
-        )
+        self.text_view = NKJPCorpus_Text_View(filename, mode=NKJPCorpus_Text_View.SENTS_MODE)
         self.text_view.handle_query()
         # xml preprocessing
         self.xml_tool = XML_Tool(filename, "ann_segmentation.xml")
         # base class init
-        XMLCorpusView.__init__(
-            self, self.xml_tool.build_preprocessed_file(), self.tagspec
-        )
+        XMLCorpusView.__init__(self, self.xml_tool.build_preprocessed_file(), self.tagspec)
 
     def get_segm_id(self, example_word):
         return example_word.split("(")[1].split(",")[0]
@@ -375,9 +351,7 @@ class NKJPCorpus_Text_View(XMLCorpusView):
         # xml preprocessing
         self.xml_tool = XML_Tool(filename, "text.xml")
         # base class init
-        XMLCorpusView.__init__(
-            self, self.xml_tool.build_preprocessed_file(), self.tagspec
-        )
+        XMLCorpusView.__init__(self, self.xml_tool.build_preprocessed_file(), self.tagspec)
 
     def handle_query(self):
         try:
@@ -426,9 +400,7 @@ class NKJPCorpus_Morph_View(XMLCorpusView):
         self.tags = kwargs.pop("tags", None)
         self.tagspec = ".*/seg/fs"
         self.xml_tool = XML_Tool(filename, "ann_morphosyntax.xml")
-        XMLCorpusView.__init__(
-            self, self.xml_tool.build_preprocessed_file(), self.tagspec
-        )
+        XMLCorpusView.__init__(self, self.xml_tool.build_preprocessed_file(), self.tagspec)
 
     def handle_query(self):
         try:
@@ -466,10 +438,7 @@ class NKJPCorpus_Morph_View(XMLCorpusView):
                 for symbol in child:
                     if "type" in symbol.keys() and symbol.attrib["type"] == "lex":
                         for symbol2 in symbol:
-                            if (
-                                "name" in symbol2.keys()
-                                and symbol2.attrib["name"] == "ctag"
-                            ):
+                            if "name" in symbol2.keys() and symbol2.attrib["name"] == "ctag":
                                 for symbol3 in symbol2:
                                     if (
                                         "value" in symbol3.keys()
@@ -477,10 +446,7 @@ class NKJPCorpus_Morph_View(XMLCorpusView):
                                         and symbol3.attrib["value"] in self.tags
                                     ):
                                         flag = True
-                                    elif (
-                                        "value" in symbol3.keys()
-                                        and symbol3.attrib["value"] == "interp"
-                                    ):
+                                    elif "value" in symbol3.keys() and symbol3.attrib["value"] == "interp":
                                         is_not_interp = False
         if flag and is_not_interp:
             return word

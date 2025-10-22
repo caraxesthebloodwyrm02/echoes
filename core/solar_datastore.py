@@ -60,8 +60,6 @@ if __name__ == "__main__":
     import argparse
 
     parser = argparse.ArgumentParser(description="Solar Datastore Integration")
-    parser.add_argument(
-        "--json_file", type=str, required=True, help="JSON file to insert"
-    )
+    parser.add_argument("--json_file", type=str, required=True, help="JSON file to insert")
     args = parser.parse_args()
     insert_into_datastore(args.json_file)

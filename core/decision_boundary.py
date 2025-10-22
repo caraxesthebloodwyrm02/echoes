@@ -163,9 +163,7 @@ class DecisionBoundaryDisplay:
     >>> plt.show()
     """
 
-    def __init__(
-        self, *, xx0, xx1, response, multiclass_colors=None, xlabel=None, ylabel=None
-    ):
+    def __init__(self, *, xx0, xx1, response, multiclass_colors=None, xlabel=None, ylabel=None):
         self.xx0 = xx0
         self.xx1 = xx1
         self.response = response
@@ -209,8 +207,7 @@ class DecisionBoundaryDisplay:
 
         if plot_method not in ("contourf", "contour", "pcolormesh"):
             raise ValueError(
-                "plot_method must be 'contourf', 'contour', or 'pcolormesh'. "
-                f"Got {plot_method} instead."
+                "plot_method must be 'contourf', 'contour', or 'pcolormesh'. " f"Got {plot_method} instead."
             )
 
         if ax is None:
@@ -230,9 +227,7 @@ class DecisionBoundaryDisplay:
                     )
                     del kwargs[kwarg]
 
-            if self.multiclass_colors is None or isinstance(
-                self.multiclass_colors, str
-            ):
+            if self.multiclass_colors is None or isinstance(self.multiclass_colors, str):
                 if self.multiclass_colors is None:
                     cmap = "tab10" if n_responses <= 10 else "gist_rainbow"
                 else:
@@ -261,9 +256,7 @@ class DecisionBoundaryDisplay:
             if plot_method == "contour":
                 # Plot only argmax map for contour
                 class_map = self.response.argmax(axis=2)
-                self.surface_ = plot_func(
-                    self.xx0, self.xx1, class_map, colors=colors, **kwargs
-                )
+                self.surface_ = plot_func(self.xx0, self.xx1, class_map, colors=colors, **kwargs)
             else:
                 multiclass_cmaps = [
                     mpl.colors.LinearSegmentedColormap.from_list(
@@ -278,9 +271,7 @@ class DecisionBoundaryDisplay:
                         self.response[:, :, class_idx],
                         mask=~(self.response.argmax(axis=2) == class_idx),
                     )
-                    self.surface_.append(
-                        plot_func(self.xx0, self.xx1, response, cmap=cmap, **kwargs)
-                    )
+                    self.surface_.append(plot_func(self.xx0, self.xx1, response, cmap=cmap, **kwargs))
 
         if xlabel is not None or not ax.get_xlabel():
             xlabel = self.xlabel if xlabel is None else xlabel
@@ -434,29 +425,19 @@ class DecisionBoundaryDisplay:
         import matplotlib as mpl
 
         if not grid_resolution > 1:
-            raise ValueError(
-                "grid_resolution must be greater than 1. Got"
-                f" {grid_resolution} instead."
-            )
+            raise ValueError("grid_resolution must be greater than 1. Got" f" {grid_resolution} instead.")
 
         if not eps >= 0:
-            raise ValueError(
-                f"eps must be greater than or equal to 0. Got {eps} instead."
-            )
+            raise ValueError(f"eps must be greater than or equal to 0. Got {eps} instead.")
 
         possible_plot_methods = ("contourf", "contour", "pcolormesh")
         if plot_method not in possible_plot_methods:
             available_methods = ", ".join(possible_plot_methods)
-            raise ValueError(
-                f"plot_method must be one of {available_methods}. "
-                f"Got {plot_method} instead."
-            )
+            raise ValueError(f"plot_method must be one of {available_methods}. " f"Got {plot_method} instead.")
 
         num_features = _num_features(X)
         if num_features != 2:
-            raise ValueError(
-                f"n_features must be equal to 2. Got {num_features} instead."
-            )
+            raise ValueError(f"n_features must be equal to 2. Got {num_features} instead.")
 
         if (
             response_method in ("predict_proba", "decision_function", "auto")
@@ -471,9 +452,7 @@ class DecisionBoundaryDisplay:
                         f"length as 'estimator.classes_' ({n_classes}), got: "
                         f"{len(multiclass_colors)}."
                     )
-                elif any(
-                    not mpl.colors.is_color_like(col) for col in multiclass_colors
-                ):
+                elif any(not mpl.colors.is_color_like(col) for col in multiclass_colors):
                     raise ValueError(
                         "When 'multiclass_colors' is a list, it can only contain valid"
                         f" Matplotlib color names. Got: {multiclass_colors}"
@@ -504,9 +483,7 @@ class DecisionBoundaryDisplay:
                 columns=X.columns,
             )
 
-        prediction_method = _check_boundary_response_method(
-            estimator, response_method, class_of_interest
-        )
+        prediction_method = _check_boundary_response_method(estimator, response_method, class_of_interest)
         try:
             response, _, response_method_used = _get_response_values(
                 estimator,

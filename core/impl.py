@@ -62,9 +62,7 @@ class QueuePool(Pool):
 
     _is_asyncio = False
 
-    _queue_class: Type[sqla_queue.QueueCommon[ConnectionPoolEntry]] = (
-        sqla_queue.Queue
-    )
+    _queue_class: Type[sqla_queue.QueueCommon[ConnectionPoolEntry]] = sqla_queue.Queue
 
     _pool: sqla_queue.QueueCommon[ConnectionPoolEntry]
 
@@ -165,8 +163,7 @@ class QueuePool(Pool):
             else:
                 raise exc.TimeoutError(
                     "QueuePool limit of size %d overflow %d reached, "
-                    "connection timed out, timeout %0.2f"
-                    % (self.size(), self.overflow(), self._timeout),
+                    "connection timed out, timeout %0.2f" % (self.size(), self.overflow(), self._timeout),
                     code="3o7r",
                 )
 
@@ -270,9 +267,7 @@ class AsyncAdaptedQueuePool(QueuePool):
     """
 
     _is_asyncio = True
-    _queue_class: Type[sqla_queue.QueueCommon[ConnectionPoolEntry]] = (
-        sqla_queue.AsyncAdaptedQueue
-    )
+    _queue_class: Type[sqla_queue.QueueCommon[ConnectionPoolEntry]] = sqla_queue.AsyncAdaptedQueue
 
     _dialect = _AsyncConnDialect()
 
@@ -465,10 +460,7 @@ class StaticPool(Pool):
         return "StaticPool"
 
     def dispose(self) -> None:
-        if (
-            "connection" in self.__dict__
-            and self.connection.dbapi_connection is not None
-        ):
+        if "connection" in self.__dict__ and self.connection.dbapi_connection is not None:
             self.connection.close()
             del self.__dict__["connection"]
 
@@ -563,9 +555,7 @@ class AssertionPool(Pool):
     def _do_get(self) -> ConnectionPoolEntry:
         if self._checked_out:
             if self._checkout_traceback:
-                suffix = " at:\n%s" % "".join(
-                    chop_traceback(self._checkout_traceback)
-                )
+                suffix = " at:\n%s" % "".join(chop_traceback(self._checkout_traceback))
             else:
                 suffix = ""
             raise AssertionError("connection is already checked out" + suffix)

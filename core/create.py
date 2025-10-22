@@ -596,9 +596,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
         if "import_dbapi" in dialect_cls.__dict__:
             dbapi_meth = dialect_cls.import_dbapi
 
-        elif hasattr(dialect_cls, "dbapi") and inspect.ismethod(
-            dialect_cls.dbapi
-        ):
+        elif hasattr(dialect_cls, "dbapi") and inspect.ismethod(dialect_cls.dbapi):
             util.warn_deprecated(
                 "The dbapi() classmethod on dialect classes has been "
                 "renamed to import_dbapi().  Implement an import_dbapi() "
@@ -635,8 +633,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
 
     if "async_fallback" in cparams and util.asbool(cparams["async_fallback"]):
         util.warn_deprecated(
-            "The async_fallback dialect argument is deprecated and will be "
-            "removed in SQLAlchemy 2.1.",
+            "The async_fallback dialect argument is deprecated and will be " "removed in SQLAlchemy 2.1.",
             "2.0",
         )
 
@@ -681,10 +678,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
     else:
         pool._dialect = dialect
 
-    if (
-        hasattr(pool, "_is_asyncio")
-        and pool._is_asyncio is not dialect.is_async
-    ):
+    if hasattr(pool, "_is_asyncio") and pool._is_asyncio is not dialect.is_async:
         raise exc.ArgumentError(
             f"Pool class {pool.__class__.__name__} cannot be "
             f"used with {'non-' if not dialect.is_async else ''}"
@@ -694,10 +688,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
 
     # create engine.
     if not pop_kwarg("future", True):
-        raise exc.ArgumentError(
-            "The 'future' parameter passed to "
-            "create_engine() may only be set to True."
-        )
+        raise exc.ArgumentError("The 'future' parameter passed to " "create_engine() may only be set to True.")
 
     engineclass = base.Engine
 
@@ -750,9 +741,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
         ) -> None:
             c = base.Connection(
                 engine,
-                connection=_AdhocProxiedConnection(
-                    dbapi_connection, connection_record
-                ),
+                connection=_AdhocProxiedConnection(dbapi_connection, connection_record),
                 _has_events=False,
                 # reconnecting will be a reentrant condition, so if the
                 # connection goes away, Connection is then closed
@@ -779,9 +768,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
         # since "on_connect" is virtually always present, just use
         # "connect" event with once_unless_exception in all cases so that
         # the connection event flow is consistent in all cases.
-        event.listen(
-            pool, "connect", first_connect, _once_unless_exception=True
-        )
+        event.listen(pool, "connect", first_connect, _once_unless_exception=True)
 
     dialect_cls.engine_created(engine)
     if entrypoint is not dialect_cls:
@@ -793,9 +780,7 @@ def create_engine(url: Union[str, _url.URL], **kwargs: Any) -> Engine:
     return engine
 
 
-def engine_from_config(
-    configuration: Dict[str, Any], prefix: str = "sqlalchemy.", **kwargs: Any
-) -> Engine:
+def engine_from_config(configuration: Dict[str, Any], prefix: str = "sqlalchemy.", **kwargs: Any) -> Engine:
     """Create a new Engine instance using a configuration dictionary.
 
     The dictionary is typically produced from a config file.
@@ -827,11 +812,7 @@ def engine_from_config(
 
     """
 
-    options = {
-        key[len(prefix) :]: configuration[key]
-        for key in configuration
-        if key.startswith(prefix)
-    }
+    options = {key[len(prefix) :]: configuration[key] for key in configuration if key.startswith(prefix)}
     options["_coerce_config"] = True
     options.update(kwargs)
     url = options.pop("url")

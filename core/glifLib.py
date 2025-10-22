@@ -87,17 +87,13 @@ class GLIFFormatVersion(BaseFormatVersion):
     FORMAT_2_0 = (2, 0)
 
     @classmethod
-    def default(
-        cls, ufoFormatVersion: Optional[UFOFormatVersion] = None
-    ) -> GLIFFormatVersion:
+    def default(cls, ufoFormatVersion: Optional[UFOFormatVersion] = None) -> GLIFFormatVersion:
         if ufoFormatVersion is not None:
             return max(cls.supported_versions(ufoFormatVersion))
         return super().default()
 
     @classmethod
-    def supported_versions(
-        cls, ufoFormatVersion: Optional[UFOFormatVersion] = None
-    ) -> frozenset[GLIFFormatVersion]:
+    def supported_versions(cls, ufoFormatVersion: Optional[UFOFormatVersion] = None) -> frozenset[GLIFFormatVersion]:
         if ufoFormatVersion is None:
             # if ufo format unspecified, return all the supported GLIF formats
             return super().supported_versions()
@@ -127,9 +123,7 @@ class Glyph:
         """
         Draw this glyph onto a *FontTools* Pen.
         """
-        pointPen = PointToSegmentPen(
-            pen, outputImpliedClosingLine=outputImpliedClosingLine
-        )
+        pointPen = PointToSegmentPen(pen, outputImpliedClosingLine=outputImpliedClosingLine)
         self.drawPoints(pointPen)
 
     def drawPoints(self, pointPen: AbstractPointPen) -> None:
@@ -186,15 +180,11 @@ class GlyphSet(_UFOBaseIO):
         are reading an existing UFO and ``False`` if you create a fresh	glyph set.
         """
         try:
-            ufoFormatVersion = normalizeFormatVersion(
-                ufoFormatVersion, UFOFormatVersion
-            )
+            ufoFormatVersion = normalizeFormatVersion(ufoFormatVersion, UFOFormatVersion)
         except ValueError as e:
             from fontTools.ufoLib.errors import UnsupportedUFOFormat
 
-            raise UnsupportedUFOFormat(
-                f"Unsupported UFO format: {ufoFormatVersion!r}"
-            ) from e
+            raise UnsupportedUFOFormat(f"Unsupported UFO format: {ufoFormatVersion!r}") from e
 
         if hasattr(path, "__fspath__"):  # support os.PathLike objects
             path = path.__fspath__()
@@ -213,9 +203,7 @@ class GlyphSet(_UFOBaseIO):
                 raise GlifLibError("the filesystem '%s' is closed" % filesystem)
             self._shouldClose = False
         else:
-            raise TypeError(
-                "Expected a path string or fs object, found %s" % type(path).__name__
-            )
+            raise TypeError("Expected a path string or fs object, found %s" % type(path).__name__)
         try:
             path = filesystem.getsyspath("/")
         except fs.errors.NoSysPath:
@@ -235,9 +223,7 @@ class GlyphSet(_UFOBaseIO):
         self.ufoFormatVersionTuple: UFOFormatVersion = ufoFormatVersion
         if glyphNameToFileNameFunc is None:
             glyphNameToFileNameFunc = glyphNameToFileName
-        self.glyphNameToFileName: Callable[[str, set[str]], str] = (
-            glyphNameToFileNameFunc
-        )
+        self.glyphNameToFileName: Callable[[str, set[str]], str] = glyphNameToFileNameFunc
         self._validateRead: bool = validateRead
         self._validateWrite: bool = validateWrite
         self._existingFileNames: set[str] | None = None
@@ -268,8 +254,7 @@ class GlyphSet(_UFOBaseIO):
                         invalidFormat = True
                     elif not self.fs.exists(fileName):
                         raise GlifLibError(
-                            "%s references a file that does not exist: %s"
-                            % (CONTENTS_FILENAME, fileName)
+                            "%s references a file that does not exist: %s" % (CONTENTS_FILENAME, fileName)
                         )
             if invalidFormat:
                 raise GlifLibError("%s is not properly formatted" % CONTENTS_FILENAME)
@@ -320,8 +305,7 @@ class GlyphSet(_UFOBaseIO):
                 setattr(info, attr, value)
             except AttributeError:
                 raise GlifLibError(
-                    "The supplied layer info object does not support setting a necessary attribute (%s)."
-                    % attr
+                    "The supplied layer info object does not support setting a necessary attribute (%s)." % attr
                 )
 
     def writeLayerInfo(self, info: Any, validateWrite: Optional[bool] = None) -> None:
@@ -332,10 +316,7 @@ class GlyphSet(_UFOBaseIO):
         if validateWrite is None:
             validateWrite = self._validateWrite
         if self.ufoFormatVersionTuple.major < 3:
-            raise GlifLibError(
-                "layerinfo.plist is not allowed in UFO %d."
-                % self.ufoFormatVersionTuple.major
-            )
+            raise GlifLibError("layerinfo.plist is not allowed in UFO %d." % self.ufoFormatVersionTuple.major)
         # gather data
         infoData = {}
         for attr in layerInfoVersion3ValueData.keys():
@@ -344,8 +325,7 @@ class GlyphSet(_UFOBaseIO):
                     value = getattr(info, attr)
                 except AttributeError:
                     raise GlifLibError(
-                        "The supplied info object does not support getting a necessary attribute (%s)."
-                        % attr
+                        "The supplied info object does not support getting a necessary attribute (%s)." % attr
                     )
                 if value is None or (attr == "lib" and not value):
                     continue
@@ -449,9 +429,7 @@ class GlyphSet(_UFOBaseIO):
         text = self.getGLIF(glyphName)
         try:
             tree = _glifTreeFromString(text)
-            formatVersions = GLIFFormatVersion.supported_versions(
-                self.ufoFormatVersionTuple
-            )
+            formatVersions = GLIFFormatVersion.supported_versions(self.ufoFormatVersionTuple)
             _readGlyphFromTree(
                 tree,
                 glyphObject,
@@ -470,9 +448,7 @@ class GlyphSet(_UFOBaseIO):
                 # the best string representation we have.
                 glifLocation = f"'{fileName}' from '{str(self.fs)}'"
 
-            glifLibError._add_note(
-                f"The issue is in glyph '{glyphName}', located in {glifLocation}."
-            )
+            glifLibError._add_note(f"The issue is in glyph '{glyphName}', located in {glifLocation}.")
             raise
 
     def writeGlyph(
@@ -536,12 +512,8 @@ class GlyphSet(_UFOBaseIO):
             except ValueError as e:
                 from fontTools.ufoLib.errors import UnsupportedGLIFFormat
 
-                raise UnsupportedGLIFFormat(
-                    f"Unsupported GLIF format version: {formatVersion!r}"
-                ) from e
-        if formatVersion not in GLIFFormatVersion.supported_versions(
-            self.ufoFormatVersionTuple
-        ):
+                raise UnsupportedGLIFFormat(f"Unsupported GLIF format version: {formatVersion!r}") from e
+        if formatVersion not in GLIFFormatVersion.supported_versions(self.ufoFormatVersionTuple):
             from fontTools.ufoLib.errors import UnsupportedGLIFFormat
 
             raise UnsupportedGLIFFormat(
@@ -553,9 +525,7 @@ class GlyphSet(_UFOBaseIO):
         fileName = self.contents.get(glyphName)
         if fileName is None:
             if self._existingFileNames is None:
-                self._existingFileNames = {
-                    fileName.lower() for fileName in self.contents.values()
-                }
+                self._existingFileNames = {fileName.lower() for fileName in self.contents.values()}
             fileName = self.glyphNameToFileName(glyphName, self._existingFileNames)
             self.contents[glyphName] = fileName
             self._existingFileNames.add(fileName.lower())
@@ -568,11 +538,7 @@ class GlyphSet(_UFOBaseIO):
             formatVersion=formatVersion,
             validate=validate,
         )
-        if (
-            self._havePreviousFile
-            and self.fs.exists(fileName)
-            and data == self.fs.readbytes(fileName)
-        ):
+        if self._havePreviousFile and self.fs.exists(fileName) and data == self.fs.readbytes(fileName):
             return
         self.fs.writebytes(fileName, data)
 
@@ -608,9 +574,7 @@ class GlyphSet(_UFOBaseIO):
 
     # quickly fetch unicode values
 
-    def getUnicodes(
-        self, glyphNames: Optional[Iterable[str]] = None
-    ) -> dict[str, list[int]]:
+    def getUnicodes(self, glyphNames: Optional[Iterable[str]] = None) -> dict[str, list[int]]:
         """
         Return a dictionary that maps glyph names to lists containing
         the unicode value[s] for that glyph, if any. This parses the .glif
@@ -625,9 +589,7 @@ class GlyphSet(_UFOBaseIO):
             unicodes[glyphName] = _fetchUnicodes(text)
         return unicodes
 
-    def getComponentReferences(
-        self, glyphNames: Optional[Iterable[str]] = None
-    ) -> dict[str, list[str]]:
+    def getComponentReferences(self, glyphNames: Optional[Iterable[str]] = None) -> dict[str, list[str]]:
         """
         Return a dictionary that maps glyph names to lists containing the
         base glyph name of components in the glyph. This parses the .glif
@@ -642,9 +604,7 @@ class GlyphSet(_UFOBaseIO):
             components[glyphName] = _fetchComponentBases(text)
         return components
 
-    def getImageReferences(
-        self, glyphNames: Optional[Iterable[str]] = None
-    ) -> dict[str, Optional[str]]:
+    def getImageReferences(self, glyphNames: Optional[Iterable[str]] = None) -> dict[str, Optional[str]]:
         """
         Return a dictionary that maps glyph names to the file name of the image
         referenced by the glyph. This parses the .glif files partially, so it is a
@@ -751,9 +711,7 @@ def readGlyphFromString(
     tree = _glifTreeFromString(aString)
 
     if formatVersions is None:
-        validFormatVersions: Set[GLIFFormatVersion] = (
-            GLIFFormatVersion.supported_versions()
-        )
+        validFormatVersions: Set[GLIFFormatVersion] = GLIFFormatVersion.supported_versions()
     else:
         validFormatVersions, invalidFormatVersions = set(), set()
         for v in formatVersions:
@@ -764,10 +722,7 @@ def readGlyphFromString(
             else:
                 validFormatVersions.add(formatVersion)
         if not validFormatVersions:
-            raise ValueError(
-                "None of the requested GLIF formatVersions are supported: "
-                f"{formatVersions!r}"
-            )
+            raise ValueError("None of the requested GLIF formatVersions are supported: " f"{formatVersions!r}")
 
     _readGlyphFromTree(
         tree,
@@ -792,17 +747,13 @@ def _writeGlyphToBytes(
     except ValueError:
         from fontTools.ufoLib.errors import UnsupportedGLIFFormat
 
-        raise UnsupportedGLIFFormat(
-            "Unsupported GLIF format version: {formatVersion!r}"
-        )
+        raise UnsupportedGLIFFormat("Unsupported GLIF format version: {formatVersion!r}")
     # start
     if validate and not isinstance(glyphName, str):
         raise GlifLibError("The glyph name is not properly formatted.")
     if validate and len(glyphName) == 0:
         raise GlifLibError("The glyph name is empty.")
-    glyphAttrs = OrderedDict(
-        [("name", glyphName), ("format", repr(formatVersion.major))]
-    )
+    glyphAttrs = OrderedDict([("name", glyphName), ("format", repr(formatVersion.major))])
     if formatVersion.minor != 0:
         glyphAttrs["formatMinor"] = repr(formatVersion.minor)
     root = etree.Element("glyph", glyphAttrs)
@@ -839,9 +790,7 @@ def _writeGlyphToBytes(
     if getattr(glyphObject, "lib", None):
         _writeLib(glyphObject, root, validate)
     # return the text
-    data = etree.tostring(
-        root, encoding="UTF-8", xml_declaration=True, pretty_print=True
-    )
+    data = etree.tostring(root, encoding="UTF-8", xml_declaration=True, pretty_print=True)
     return data
 
 
@@ -962,9 +911,7 @@ def _writeImage(glyphObject: Any, element: ElementType, validate: bool) -> None:
         return
 
     if validate and not imageValidator(image):
-        raise GlifLibError(
-            "image attribute must be a dict or dict-like object with the proper structure."
-        )
+        raise GlifLibError("image attribute must be a dict or dict-like object with the proper structure.")
     attrs = OrderedDict([("fileName", image["fileName"])])
     for attr, default in _transformationInfo:
         value = image.get(attr, default)
@@ -976,9 +923,7 @@ def _writeImage(glyphObject: Any, element: ElementType, validate: bool) -> None:
     etree.SubElement(element, "image", attrs)
 
 
-def _writeGuidelines(
-    glyphObject: Any, element: ElementType, identifiers: set[str], validate: bool
-) -> None:
+def _writeGuidelines(glyphObject: Any, element: ElementType, identifiers: set[str], validate: bool) -> None:
     guidelines = getattr(glyphObject, "guidelines", [])
     if validate and not guidelinesValidator(guidelines):
         raise GlifLibError("guidelines attribute does not have the proper structure.")
@@ -1179,9 +1124,7 @@ def _readGlyphFromTree(
         formatVersionMajor = 0
     formatVersionMinor = tree.get("formatMinor", 0)
     try:
-        formatVersion = GLIFFormatVersion(
-            (int(formatVersionMajor), int(formatVersionMinor))
-        )
+        formatVersion = GLIFFormatVersion((int(formatVersionMajor), int(formatVersionMinor)))
     except ValueError as e:
         msg = "Unsupported GLIF format: %s.%s" % (
             formatVersionMajor,
@@ -1194,8 +1137,7 @@ def _readGlyphFromTree(
         # warn but continue using the latest supported format
         formatVersion = GLIFFormatVersion.default()
         logger.warning(
-            "%s. Assuming the latest supported version (%s). "
-            "Some data may be skipped or parsed incorrectly.",
+            "%s. Assuming the latest supported version (%s). " "Some data may be skipped or parsed incorrectly.",
             msg,
             formatVersion,
         )
@@ -1238,9 +1180,7 @@ def _readGlyphFromTreeFormat1(
                 if haveSeenOutline:
                     raise GlifLibError("The outline element occurs more than once.")
                 if element.attrib:
-                    raise GlifLibError(
-                        "The outline element contains unknown attributes."
-                    )
+                    raise GlifLibError("The outline element contains unknown attributes.")
                 if element.text and element.text.strip() != "":
                     raise GlifLibError("Invalid outline structure.")
             haveSeenOutline = True
@@ -1253,17 +1193,13 @@ def _readGlyphFromTreeFormat1(
         elif element.tag == "unicode":
             v = element.get("hex")
             if v is None:
-                raise GlifLibError(
-                    "A unicode element is missing its required hex attribute."
-                )
+                raise GlifLibError("A unicode element is missing its required hex attribute.")
             try:
                 v = int(v, 16)
                 if v not in unicodes:
                     unicodes.append(v)
             except ValueError:
-                raise GlifLibError(
-                    "Illegal value for hex attribute of unicode element."
-                )
+                raise GlifLibError("Illegal value for hex attribute of unicode element.")
         elif element.tag == "note":
             if validate and haveSeenNote:
                 raise GlifLibError("The note element occurs more than once.")
@@ -1294,9 +1230,7 @@ def _readGlyphFromTreeFormat2(
     unicodes = []
     guidelines = []
     anchors = []
-    haveSeenAdvance = haveSeenImage = haveSeenOutline = haveSeenLib = haveSeenNote = (
-        False
-    )
+    haveSeenAdvance = haveSeenImage = haveSeenOutline = haveSeenLib = haveSeenNote = False
     identifiers: set[str] = set()
     for element in tree:
         if glyphObject is None:
@@ -1306,16 +1240,12 @@ def _readGlyphFromTreeFormat2(
                 if haveSeenOutline:
                     raise GlifLibError("The outline element occurs more than once.")
                 if element.attrib:
-                    raise GlifLibError(
-                        "The outline element contains unknown attributes."
-                    )
+                    raise GlifLibError("The outline element contains unknown attributes.")
                 if element.text and element.text.strip() != "":
                     raise GlifLibError("Invalid outline structure.")
             haveSeenOutline = True
             if pointPen is not None:
-                buildOutlineFormat2(
-                    glyphObject, pointPen, element, identifiers, validate
-                )
+                buildOutlineFormat2(glyphObject, pointPen, element, identifiers, validate)
         elif element.tag == "advance":
             if validate and haveSeenAdvance:
                 raise GlifLibError("The advance element occurs more than once.")
@@ -1324,17 +1254,13 @@ def _readGlyphFromTreeFormat2(
         elif element.tag == "unicode":
             v = element.get("hex")
             if v is None:
-                raise GlifLibError(
-                    "A unicode element is missing its required hex attribute."
-                )
+                raise GlifLibError("A unicode element is missing its required hex attribute.")
             try:
                 v = int(v, 16)
                 if v not in unicodes:
                     unicodes.append(v)
             except ValueError:
-                raise GlifLibError(
-                    "Illegal value for hex attribute of unicode element."
-                )
+                raise GlifLibError("Illegal value for hex attribute of unicode element.")
         elif element.tag == "guideline":
             if validate and len(element):
                 raise GlifLibError("Unknown children in guideline element.")
@@ -1508,9 +1434,7 @@ def _buildAnchorFormat1(point: ElementType, validate: bool) -> Optional[dict[str
     return anchor
 
 
-def _buildOutlineContourFormat1(
-    pen: AbstractPointPen, contour: ElementType, validate: bool
-) -> None:
+def _buildOutlineContourFormat1(pen: AbstractPointPen, contour: ElementType, validate: bool) -> None:
     if validate and contour.attrib:
         raise GlifLibError("Unknown attributes in contour element.")
     pen.beginPath()
@@ -1525,9 +1449,7 @@ def _buildOutlineContourFormat1(
     pen.endPath()
 
 
-def _buildOutlinePointsFormat1(
-    pen: AbstractPointPen, contour: list[dict[str, Any]]
-) -> None:
+def _buildOutlinePointsFormat1(pen: AbstractPointPen, contour: list[dict[str, Any]]) -> None:
     for point in contour:
         x = point["x"]
         y = point["y"]
@@ -1537,9 +1459,7 @@ def _buildOutlinePointsFormat1(
         pen.addPoint((x, y), segmentType=segmentType, smooth=smooth, name=name)
 
 
-def _buildOutlineComponentFormat1(
-    pen: AbstractPointPen, component: ElementType, validate: bool
-) -> None:
+def _buildOutlineComponentFormat1(pen: AbstractPointPen, component: ElementType, validate: bool) -> None:
     if validate:
         if len(component):
             raise GlifLibError("Unknown child elements of component element.")
@@ -1550,12 +1470,8 @@ def _buildOutlineComponentFormat1(
     if validate and baseGlyphName is None:
         raise GlifLibError("The base attribute is not defined in the component.")
     assert baseGlyphName is not None
-    transformation = tuple(
-        _number(component.get(attr) or default) for attr, default in _transformationInfo
-    )
-    transformation = cast(
-        tuple[float, float, float, float, float, float], transformation
-    )
+    transformation = tuple(_number(component.get(attr) or default) for attr, default in _transformationInfo)
+    transformation = cast(tuple[float, float, float, float, float, float], transformation)
     pen.addComponent(baseGlyphName, transformation)
 
 
@@ -1589,13 +1505,9 @@ def _buildOutlineContourFormat2(
     if identifier is not None:
         if validate:
             if identifier in identifiers:
-                raise GlifLibError(
-                    "The identifier %s is used more than once." % identifier
-                )
+                raise GlifLibError("The identifier %s is used more than once." % identifier)
             if not identifierValidator(identifier):
-                raise GlifLibError(
-                    "The contour identifier %s is not valid." % identifier
-                )
+                raise GlifLibError("The contour identifier %s is not valid." % identifier)
         identifiers.add(identifier)
     try:
         pen.beginPath(identifier=identifier)
@@ -1606,9 +1518,7 @@ def _buildOutlineContourFormat2(
             DeprecationWarning,
         )
     if len(contour):
-        massaged = _validateAndMassagePointStructures(
-            contour, pointAttributesFormat2, validate=validate
-        )
+        massaged = _validateAndMassagePointStructures(contour, pointAttributesFormat2, validate=validate)
         _buildOutlinePointsFormat2(pen, massaged, identifiers, validate)
     pen.endPath()
 
@@ -1629,9 +1539,7 @@ def _buildOutlinePointsFormat2(
         if identifier is not None:
             if validate:
                 if identifier in identifiers:
-                    raise GlifLibError(
-                        "The identifier %s is used more than once." % identifier
-                    )
+                    raise GlifLibError("The identifier %s is used more than once." % identifier)
                 if not identifierValidator(identifier):
                     raise GlifLibError("The identifier %s is not valid." % identifier)
             identifiers.add(identifier)
@@ -1664,19 +1572,13 @@ def _buildOutlineComponentFormat2(
     if validate and baseGlyphName is None:
         raise GlifLibError("The base attribute is not defined in the component.")
     assert baseGlyphName is not None
-    transformation = tuple(
-        _number(component.get(attr) or default) for attr, default in _transformationInfo
-    )
-    transformation = cast(
-        tuple[float, float, float, float, float, float], transformation
-    )
+    transformation = tuple(_number(component.get(attr) or default) for attr, default in _transformationInfo)
+    transformation = cast(tuple[float, float, float, float, float, float], transformation)
     identifier = component.get("identifier")
     if identifier is not None:
         if validate:
             if identifier in identifiers:
-                raise GlifLibError(
-                    "The identifier %s is used more than once." % identifier
-                )
+                raise GlifLibError("The identifier %s is used more than once." % identifier)
             if validate and not identifierValidator(identifier):
                 raise GlifLibError("The identifier %s is not valid." % identifier)
         identifiers.add(identifier)
@@ -1693,9 +1595,7 @@ def _buildOutlineComponentFormat2(
 # all formats
 
 
-def _validateAndMassagePointStructures(
-    contour, pointAttributes, openContourOffCurveLeniency=False, validate=True
-):
+def _validateAndMassagePointStructures(contour, pointAttributes, openContourOffCurveLeniency=False, validate=True):
     if not len(contour):
         return
     # store some data for later validation
@@ -1706,9 +1606,7 @@ def _validateAndMassagePointStructures(
     for index, element in enumerate(contour):
         # not <point>
         if element.tag != "point":
-            raise GlifLibError(
-                "Unknown child element (%s) of contour element." % element.tag
-            )
+            raise GlifLibError("Unknown child element (%s) of contour element." % element.tag)
         point = dict(element.attrib)
         massaged.append(point)
         if validate:
@@ -1724,9 +1622,7 @@ def _validateAndMassagePointStructures(
             try:
                 point[attr] = _number(point[attr])
             except KeyError as e:
-                raise GlifLibError(
-                    f"Required {attr} attribute is missing in point element."
-                ) from e
+                raise GlifLibError(f"Required {attr} attribute is missing in point element.") from e
         # segment type
         pointType = point.pop("type", "offcurve")
         if validate and pointType not in pointTypeOptions:
@@ -1740,9 +1636,7 @@ def _validateAndMassagePointStructures(
             lastOnCurvePoint = index
         # move can only occur as the first point
         if validate and pointType == "move" and index != 0:
-            raise GlifLibError(
-                "A move point occurs after the first point in the contour."
-            )
+            raise GlifLibError("A move point occurs after the first point in the contour.")
         # smooth is optional
         smooth = point.get("smooth", "no")
         if validate and smooth is not None:
@@ -1885,11 +1779,7 @@ class _FetchUnicodesParser(_BaseParser):
         super().__init__()
 
     def startElementHandler(self, name: str, attrs: dict[str, str]) -> None:
-        if (
-            name == "unicode"
-            and self._elementStack
-            and self._elementStack[-1] == "glyph"
-        ):
+        if name == "unicode" and self._elementStack and self._elementStack[-1] == "glyph":
             value = attrs.get("hex")
             if value is not None:
                 try:
@@ -1949,11 +1839,7 @@ class _FetchComponentBasesParser(_BaseParser):
         super().__init__()
 
     def startElementHandler(self, name: str, attrs: dict[str, str]) -> None:
-        if (
-            name == "component"
-            and self._elementStack
-            and self._elementStack[-1] == "outline"
-        ):
+        if name == "component" and self._elementStack and self._elementStack[-1] == "outline":
             base = attrs.get("base")
             if base is not None:
                 self.bases.append(base)
@@ -2008,13 +1894,9 @@ class GLIFPointPen(AbstractPointPen):
         if identifier is not None and self.formatVersion.major >= 2:
             if self.validate:
                 if identifier in self.identifiers:
-                    raise GlifLibError(
-                        "identifier used more than once: %s" % identifier
-                    )
+                    raise GlifLibError("identifier used more than once: %s" % identifier)
                 if not identifierValidator(identifier):
-                    raise GlifLibError(
-                        "identifier not formatted properly: %s" % identifier
-                    )
+                    raise GlifLibError("identifier not formatted properly: %s" % identifier)
             attrs["identifier"] = identifier
             self.identifiers.add(identifier)
         self.contour = etree.SubElement(self.outline, "contour", attrs)
@@ -2032,9 +1914,7 @@ class GLIFPointPen(AbstractPointPen):
         self.prevOffCurveCount = 0
         self.prevPointTypes = []
 
-    def addPoint(
-        self, pt, segmentType=None, smooth=None, name=None, identifier=None, **kwargs
-    ):
+    def addPoint(self, pt, segmentType=None, smooth=None, name=None, identifier=None, **kwargs):
         attrs = OrderedDict()
         # coordinates
         if pt is not None:
@@ -2049,14 +1929,8 @@ class GLIFPointPen(AbstractPointPen):
             segmentType = None
         if self.validate:
             if segmentType == "move" and self.prevPointTypes:
-                raise GlifLibError(
-                    "move occurs after a point has already been added to the contour."
-                )
-            if (
-                segmentType in ("move", "line")
-                and self.prevPointTypes
-                and self.prevPointTypes[-1] == "offcurve"
-            ):
+                raise GlifLibError("move occurs after a point has already been added to the contour.")
+            if segmentType in ("move", "line") and self.prevPointTypes and self.prevPointTypes[-1] == "offcurve":
                 raise GlifLibError("offcurve occurs before %s point." % segmentType)
             if segmentType == "curve" and self.prevOffCurveCount > 2:
                 raise GlifLibError("too many offcurve points before curve point.")
@@ -2081,13 +1955,9 @@ class GLIFPointPen(AbstractPointPen):
         if identifier is not None and self.formatVersion.major >= 2:
             if self.validate:
                 if identifier in self.identifiers:
-                    raise GlifLibError(
-                        "identifier used more than once: %s" % identifier
-                    )
+                    raise GlifLibError("identifier used more than once: %s" % identifier)
                 if not identifierValidator(identifier):
-                    raise GlifLibError(
-                        "identifier not formatted properly: %s" % identifier
-                    )
+                    raise GlifLibError("identifier not formatted properly: %s" % identifier)
             attrs["identifier"] = identifier
             self.identifiers.add(identifier)
         etree.SubElement(self.contour, "point", attrs)
@@ -2102,13 +1972,9 @@ class GLIFPointPen(AbstractPointPen):
         if identifier is not None and self.formatVersion.major >= 2:
             if self.validate:
                 if identifier in self.identifiers:
-                    raise GlifLibError(
-                        "identifier used more than once: %s" % identifier
-                    )
+                    raise GlifLibError("identifier used more than once: %s" % identifier)
                 if self.validate and not identifierValidator(identifier):
-                    raise GlifLibError(
-                        "identifier not formatted properly: %s" % identifier
-                    )
+                    raise GlifLibError("identifier not formatted properly: %s" % identifier)
             attrs["identifier"] = identifier
             self.identifiers.add(identifier)
         etree.SubElement(self.outline, "component", attrs)

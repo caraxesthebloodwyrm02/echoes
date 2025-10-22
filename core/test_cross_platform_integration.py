@@ -121,9 +121,7 @@ class TestTurboBridge:
         bridge.connect_all()
 
         # Route to echoes (should always work)
-        response = bridge.streamline_communication(
-            source="glimpse", target="echoes", message={"test": "data"}
-        )
+        response = bridge.streamline_communication(source="glimpse", target="echoes", message={"test": "data"})
 
         assert response is not None
         assert isinstance(response, dict)
@@ -188,9 +186,7 @@ class TestIntegrationScenarios:
         dev_query = {"query": "trajectory analysis", "context": "development"}
 
         # Route to research platform
-        response = bridge.streamline_communication(
-            source="echoes", target="glimpse", message=dev_query
-        )
+        response = bridge.streamline_communication(source="echoes", target="glimpse", message=dev_query)
 
         assert response is not None
         print(f"Development→Research flow result: {response}")
@@ -200,14 +196,10 @@ class TestIntegrationScenarios:
         bridge = create_bridge()
 
         # Send message to research
-        to_research = bridge.streamline_communication(
-            source="echoes", target="glimpse", message={"action": "analyze"}
-        )
+        to_research = bridge.streamline_communication(source="echoes", target="glimpse", message={"action": "analyze"})
 
         # Send response back to development
-        to_dev = bridge.streamline_communication(
-            source="glimpse", target="echoes", message={"result": to_research}
-        )
+        to_dev = bridge.streamline_communication(source="glimpse", target="echoes", message={"result": to_research})
 
         assert to_dev is not None
         print("[OK] Bidirectional communication successful")
@@ -230,9 +222,7 @@ def test_integration_summary():
     print("\nConnections:")
     for platform, connected in status["connections"].items():
         status_icon = "[OK]" if connected else "[!]"
-        print(
-            f"  {status_icon} {platform.upper()}: {'Connected' if connected else 'Not available'}"
-        )
+        print(f"  {status_icon} {platform.upper()}: {'Connected' if connected else 'Not available'}")
 
     print("\n" + "=" * 60)
     print("Integration bridge ready for research <-> development communication")

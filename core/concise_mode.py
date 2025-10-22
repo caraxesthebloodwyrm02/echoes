@@ -35,9 +35,7 @@ class ConciseMode(ModeHandler):
     def __init__(self):
         super().__init__()
         self.mode_name = "concise"
-        self.description = (
-            "High compression ratio of meaning - dense, metaphorically efficient"
-        )
+        self.description = "High compression ratio of meaning - dense, metaphorically efficient"
         self.config = {
             "max_words": 150,
             "compression_ratio": "high",
@@ -76,7 +74,9 @@ class ConciseMode(ModeHandler):
         # Ensure we always return something
         result = "\n\n".join(formatted)
         if not result or result.strip() == "":
-            result = "Compressed synthesis: Data loop intelligence framework established for recursive codebase enhancement."
+            result = (
+                "Compressed synthesis: Data loop intelligence framework established for recursive codebase enhancement."
+            )
 
         return result
 

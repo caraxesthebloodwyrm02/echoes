@@ -79,9 +79,7 @@ class DocumentProcessor:
         try:
             pattern = str(self.input_dir / self.file_pattern)
             files = [Path(f) for f in glob.glob(pattern)]
-            self.logger.info(
-                f"Discovered {len(files)} files matching '{self.file_pattern}'"
-            )
+            self.logger.info(f"Discovered {len(files)} files matching '{self.file_pattern}'")
             return files
         except Exception as e:
             self.logger.error(f"Error discovering files: {e}")
@@ -134,9 +132,7 @@ class DocumentProcessor:
         except Exception as e:
             error_msg = f"Failed to process {file_path}: {str(e)}"
             self.logger.error(error_msg)
-            return ProcessingResult(
-                file_path=file_path, success=False, error_message=error_msg
-            )
+            return ProcessingResult(file_path=file_path, success=False, error_message=error_msg)
 
     def _process_content(self, content: str, file_path: Path) -> str:
         """Process the content of a document (override in subclasses)."""
@@ -159,10 +155,7 @@ class DocumentProcessor:
         self.logger.info(f"Starting batch processing of {len(files)} files")
 
         with ThreadPoolExecutor(max_workers=self.max_workers) as executor:
-            future_to_file = {
-                executor.submit(self.process_file, file_path): file_path
-                for file_path in files
-            }
+            future_to_file = {executor.submit(self.process_file, file_path): file_path for file_path in files}
 
             for future in as_completed(future_to_file):
                 result = future.result()
@@ -174,9 +167,7 @@ class DocumentProcessor:
                     self.logger.error(f"Failed to process: {result.file_path}")
 
         successful = sum(1 for r in results if r.success)
-        self.logger.info(
-            f"Batch processing complete: {successful}/{len(results)} successful"
-        )
+        self.logger.info(f"Batch processing complete: {successful}/{len(results)} successful")
 
         return results
 
@@ -191,9 +182,7 @@ class DocumentProcessor:
 
             # Validate processed files
             processed_files = list(self.output_dir.rglob("*"))
-            valid_files = [
-                f for f in processed_files if f.is_file() and f.stat().st_size > 0
-            ]
+            valid_files = [f for f in processed_files if f.is_file() and f.stat().st_size > 0]
 
             return {
                 "temp_files_cleaned": len(temp_files),
@@ -208,8 +197,6 @@ class DocumentProcessor:
             return {"error": error_msg, "success": False}
 
 
-def create_document_processor(
-    input_dir: str, output_dir: str, **kwargs
-) -> DocumentProcessor:
+def create_document_processor(input_dir: str, output_dir: str, **kwargs) -> DocumentProcessor:
     """Factory function to create a document processor."""
     return DocumentProcessor(input_dir=input_dir, output_dir=output_dir, **kwargs)

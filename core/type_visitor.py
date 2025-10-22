@@ -314,9 +314,7 @@ class TypeTranslator(TypeVisitor[Type]):
     def translate_type_tuple(self, types: tuple[Type, ...]) -> tuple[Type, ...]:
         return tuple(t.accept(self) for t in types)
 
-    def translate_variables(
-        self, variables: Sequence[TypeVarLikeType]
-    ) -> Sequence[TypeVarLikeType]:
+    def translate_variables(self, variables: Sequence[TypeVarLikeType]) -> Sequence[TypeVarLikeType]:
         return variables
 
     def visit_overloaded(self, t: Overloaded, /) -> Type:

@@ -8,7 +8,6 @@ from docutils import readers, utils, transforms
 
 
 class Reader(readers.ReReader):
-
     """
     Adapt the Reader API for an existing document tree.
 
@@ -24,10 +23,10 @@ class Reader(readers.ReReader):
     the Publisher call above.
     """
 
-    supported = ('doctree',)
+    supported = ("doctree",)
 
-    config_section = 'doctree reader'
-    config_section_dependencies = ('readers',)
+    config_section = "doctree reader"
+    config_section_dependencies = ("readers",)
 
     def parse(self):
         """
@@ -42,5 +41,4 @@ class Reader(readers.ReReader):
         self.document.settings = self.settings
         # Create fresh Reporter object because it is dependent on
         # (new) settings.
-        self.document.reporter = utils.new_reporter(
-            self.document.get('source', ''), self.document.settings)
+        self.document.reporter = utils.new_reporter(self.document.get("source", ""), self.document.settings)

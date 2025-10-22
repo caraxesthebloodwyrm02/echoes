@@ -50,9 +50,7 @@ class TestReport(MypycDataSuite):
             else:
                 annotations = generate_annotations("native.py", tree, ir, type_map, mapper)
                 actual = []
-                for line_num, line_anns in sorted(
-                    annotations.annotations.items(), key=lambda it: it[0]
-                ):
+                for line_num, line_anns in sorted(annotations.annotations.items(), key=lambda it: it[0]):
                     anns = get_max_prio(line_anns)
                     str_anns = [a.message for a in anns]
                     s = " ".join(str_anns)

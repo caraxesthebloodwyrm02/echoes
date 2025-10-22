@@ -57,9 +57,7 @@ def _generate_indices(random_state, bootstrap, n_population, n_samples):
     if bootstrap:
         indices = random_state.randint(0, n_population, n_samples)
     else:
-        indices = sample_without_replacement(
-            n_population, n_samples, random_state=random_state
-        )
+        indices = sample_without_replacement(n_population, n_samples, random_state=random_state)
 
     return indices
 
@@ -78,12 +76,8 @@ def _generate_bagging_indices(
     random_state = check_random_state(random_state)
 
     # Draw indices
-    feature_indices = _generate_indices(
-        random_state, bootstrap_features, n_features, max_features
-    )
-    sample_indices = _generate_indices(
-        random_state, bootstrap_samples, n_samples, max_samples
-    )
+    feature_indices = _generate_indices(random_state, bootstrap_features, n_features, max_features)
+    sample_indices = _generate_indices(random_state, bootstrap_samples, n_samples, max_samples)
 
     return feature_indices, sample_indices
 
@@ -116,12 +110,9 @@ def _parallel_build_estimators(
     # TODO: (slep6) remove if condition for unrouted sample_weight when metadata
     # routing can't be disabled.
     support_sample_weight = has_fit_parameter(ensemble.estimator_, "sample_weight")
-    if not _routing_enabled() and (
-        not support_sample_weight and fit_params.get("sample_weight") is not None
-    ):
+    if not _routing_enabled() and (not support_sample_weight and fit_params.get("sample_weight") is not None):
         raise ValueError(
-            "The base estimator doesn't support sample weight, but sample_weight is "
-            "passed to the fit method."
+            "The base estimator doesn't support sample weight, but sample_weight is " "passed to the fit method."
         )
 
     for i in range(n_estimators):
@@ -164,16 +155,12 @@ def _parallel_build_estimators(
         # if possible, otherwise use indexing.
         if _routing_enabled():
             request_or_router = get_routing_for_object(ensemble.estimator_)
-            consumes_sample_weight = request_or_router.consumes(
-                "fit", ("sample_weight",)
-            )
+            consumes_sample_weight = request_or_router.consumes("fit", ("sample_weight",))
         else:
             consumes_sample_weight = support_sample_weight
         if consumes_sample_weight:
             # Draw sub samples, using sample weights, and then fit
-            curr_sample_weight = _check_sample_weight(
-                fit_params_.pop("sample_weight", None), X
-            ).copy()
+            curr_sample_weight = _check_sample_weight(fit_params_.pop("sample_weight", None), X).copy()
 
             if bootstrap:
                 sample_counts = np.bincount(indices, minlength=n_samples)
@@ -214,23 +201,17 @@ def _parallel_predict_proba(
 
     for estimator, features in zip(estimators, estimators_features):
         if hasattr(estimator, "predict_proba"):
-            proba_estimator = estimator.predict_proba(
-                X[:, features], **(predict_params or {})
-            )
+            proba_estimator = estimator.predict_proba(X[:, features], **(predict_params or {}))
 
             if n_classes == len(estimator.classes_):
                 proba += proba_estimator
 
             else:
-                proba[:, estimator.classes_] += proba_estimator[
-                    :, range(len(estimator.classes_))
-                ]
+                proba[:, estimator.classes_] += proba_estimator[:, range(len(estimator.classes_))]
 
         else:
             # Resort to voting
-            predictions = estimator.predict(
-                X[:, features], **(predict_proba_params or {})
-            )
+            predictions = estimator.predict(X[:, features], **(predict_proba_params or {}))
 
             for i in range(n_samples):
                 proba[i, predictions[i]] += 1
@@ -274,8 +255,7 @@ def _parallel_decision_function(estimators, estimators_features, X, params):
 def _parallel_predict_regression(estimators, estimators_features, X, params):
     """Private function used to compute predictions within a job."""
     return sum(
-        estimator.predict(X[:, features], **params)
-        for estimator, features in zip(estimators, estimators_features)
+        estimator.predict(X[:, features], **params) for estimator, features in zip(estimators, estimators_features)
     )
 
 
@@ -466,9 +446,7 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
             routed_params = Bunch()
             routed_params.estimator = Bunch(fit=fit_params)
             if "sample_weight" in fit_params:
-                routed_params.estimator.fit["sample_weight"] = fit_params[
-                    "sample_weight"
-                ]
+                routed_params.estimator.fit["sample_weight"] = fit_params["sample_weight"]
 
         if max_depth is not None:
             self.estimator_.max_depth = max_depth
@@ -519,21 +497,15 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
         if n_more_estimators < 0:
             raise ValueError(
                 "n_estimators=%d must be larger or equal to "
-                "len(estimators_)=%d when warm_start==True"
-                % (self.n_estimators, len(self.estimators_))
+                "len(estimators_)=%d when warm_start==True" % (self.n_estimators, len(self.estimators_))
             )
 
         elif n_more_estimators == 0:
-            warn(
-                "Warm-start fitting without increasing n_estimators does not "
-                "fit new trees."
-            )
+            warn("Warm-start fitting without increasing n_estimators does not " "fit new trees.")
             return self
 
         # Parallel loop
-        n_jobs, n_estimators, starts = _partition_estimators(
-            n_more_estimators, self.n_jobs
-        )
+        n_jobs, n_estimators, starts = _partition_estimators(n_more_estimators, self.n_jobs)
         total_n_estimators = sum(n_estimators)
 
         # Advance random state to state after training
@@ -544,9 +516,7 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
         seeds = random_state.randint(MAX_INT, size=n_more_estimators)
         self._seeds = seeds
 
-        all_results = Parallel(
-            n_jobs=n_jobs, verbose=self.verbose, **self._parallel_args()
-        )(
+        all_results = Parallel(n_jobs=n_jobs, verbose=self.verbose, **self._parallel_args())(
             delayed(_parallel_build_estimators)(
                 n_estimators[i],
                 self,
@@ -562,12 +532,8 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
         )
 
         # Reduce
-        self.estimators_ += list(
-            itertools.chain.from_iterable(t[0] for t in all_results)
-        )
-        self.estimators_features_ += list(
-            itertools.chain.from_iterable(t[1] for t in all_results)
-        )
+        self.estimators_ += list(itertools.chain.from_iterable(t[0] for t in all_results))
+        self.estimators_features_ += list(itertools.chain.from_iterable(t[1] for t in all_results))
 
         if self.oob_score:
             self._set_oob_score(X, y)
@@ -632,9 +598,7 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
         router = MetadataRouter(owner=self.__class__.__name__)
 
         method_mapping = MethodMapping()
-        method_mapping.add(caller="fit", callee="fit").add(
-            caller="decision_function", callee="decision_function"
-        )
+        method_mapping.add(caller="fit", callee="fit").add(caller="decision_function", callee="decision_function")
 
         # the router needs to be built depending on whether the sub-estimator has a
         # `predict_proba` method (as BaggingClassifier decides dynamically at runtime):
@@ -646,11 +610,7 @@ class BaseBagging(BaseEnsemble, metaclass=ABCMeta):
             )
 
         else:
-            (
-                method_mapping.add(caller="predict", callee="predict").add(
-                    caller="predict_proba", callee="predict"
-                )
-            )
+            (method_mapping.add(caller="predict", callee="predict").add(caller="predict_proba", callee="predict"))
 
         # the router needs to be built depending on whether the sub-estimator has a
         # `predict_log_proba` method (as BaggingClassifier decides dynamically at
@@ -893,16 +853,12 @@ class BaggingClassifier(ClassifierMixin, BaseBagging):
 
         predictions = np.zeros((n_samples, n_classes_))
 
-        for estimator, samples, features in zip(
-            self.estimators_, self.estimators_samples_, self.estimators_features_
-        ):
+        for estimator, samples, features in zip(self.estimators_, self.estimators_samples_, self.estimators_features_):
             # Create mask for OOB samples
             mask = ~indices_to_mask(samples, n_samples)
 
             if hasattr(estimator, "predict_proba"):
-                predictions[mask, :] += estimator.predict_proba(
-                    (X[mask, :])[:, features]
-                )
+                predictions[mask, :] += estimator.predict_proba((X[mask, :])[:, features])
 
             else:
                 p = estimator.predict((X[mask, :])[:, features])
@@ -1023,9 +979,7 @@ class BaggingClassifier(ClassifierMixin, BaseBagging):
         # Parallel loop
         n_jobs, _, starts = _partition_estimators(self.n_estimators, self.n_jobs)
 
-        all_proba = Parallel(
-            n_jobs=n_jobs, verbose=self.verbose, **self._parallel_args()
-        )(
+        all_proba = Parallel(n_jobs=n_jobs, verbose=self.verbose, **self._parallel_args())(
             delayed(_parallel_predict_proba)(
                 self.estimators_[starts[i] : starts[i + 1]],
                 self.estimators_features_[starts[i] : starts[i + 1]],
@@ -1122,9 +1076,7 @@ class BaggingClassifier(ClassifierMixin, BaseBagging):
 
         return log_proba
 
-    @available_if(
-        _estimator_has("decision_function", delegates=("estimators_", "estimator"))
-    )
+    @available_if(_estimator_has("decision_function", delegates=("estimators_", "estimator")))
     def decision_function(self, X, **params):
         """Average of the decision functions of the base classifiers.
 
@@ -1451,9 +1403,7 @@ class BaggingRegressor(RegressorMixin, BaseBagging):
         predictions = np.zeros((n_samples,))
         n_predictions = np.zeros((n_samples,))
 
-        for estimator, samples, features in zip(
-            self.estimators_, self.estimators_samples_, self.estimators_features_
-        ):
+        for estimator, samples, features in zip(self.estimators_, self.estimators_samples_, self.estimators_features_):
             # Create mask for OOB samples
             mask = ~indices_to_mask(samples, n_samples)
 

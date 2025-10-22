@@ -40,9 +40,7 @@ def test_privacy_filter():
 
         privacy_filter = PrivacyFilter()
 
-        test_text = (
-            "Contact john.doe@example.com or call (555) 123-4567. SSN: 123-45-6789"
-        )
+        test_text = "Contact john.doe@example.com or call (555) 123-4567. SSN: 123-45-6789"
 
         # Test all modes
         redacted = privacy_filter.redact(test_text)

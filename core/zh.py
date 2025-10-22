@@ -18,7 +18,7 @@ try:
     from jieba import cut_for_search
     from jieba import load_userdict as jieba_load_userdict
 except ImportError:
-    JIEBA_DEFAULT_DICT = ''
+    JIEBA_DEFAULT_DICT = ""
 
     def jieba_load_userdict(f: str) -> None:
         pass
@@ -27,9 +27,7 @@ except ImportError:
         yield from ()
 
 else:
-    JIEBA_DEFAULT_DICT = (
-        Path(jieba.__file__, '..', jieba.DEFAULT_DICT_NAME).resolve().as_posix()
-    )
+    JIEBA_DEFAULT_DICT = Path(jieba.__file__, "..", jieba.DEFAULT_DICT_NAME).resolve().as_posix()
     del jieba
 
 english_stopwords = {
@@ -234,22 +232,22 @@ iti|ous|ive|ize)$/;
 class SearchChinese(SearchLanguage):
     """Chinese search implementation"""
 
-    lang = 'zh'
-    language_name = 'Chinese'
+    lang = "zh"
+    language_name = "Chinese"
     js_stemmer_code = js_porter_stemmer
     stopwords = english_stopwords
-    latin1_letters = re.compile(r'[a-zA-Z0-9_]+')
+    latin1_letters = re.compile(r"[a-zA-Z0-9_]+")
 
     def __init__(self, options: dict[str, str]) -> None:
         super().__init__(options)
         self.latin_terms: set[str] = set()
 
     def init(self, options: dict[str, str]) -> None:
-        dict_path = options.get('dict', JIEBA_DEFAULT_DICT)
+        dict_path = options.get("dict", JIEBA_DEFAULT_DICT)
         if dict_path and Path(dict_path).is_file():
             jieba_load_userdict(str(dict_path))
 
-        self.stemmer = snowballstemmer.stemmer('english')
+        self.stemmer = snowballstemmer.stemmer("english")
 
     def split(self, input: str) -> list[str]:
         chinese: list[str] = list(cut_for_search(input))
@@ -266,9 +264,7 @@ class SearchChinese(SearchLanguage):
         # if not stemmed, but would be too short after being stemmed
         # avoids some issues with acronyms
         stemmed = self.stemmer.stemWord(word.lower())
-        should_not_be_stemmed = (
-            len(word) >= 3 > len(stemmed) and word in self.latin_terms
-        )
+        should_not_be_stemmed = len(word) >= 3 > len(stemmed) and word in self.latin_terms
         if should_not_be_stemmed:
             return word.lower()
         return stemmed

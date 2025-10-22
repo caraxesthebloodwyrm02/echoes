@@ -35,9 +35,7 @@ class PyJWS:
         options: dict[str, Any] | None = None,
     ) -> None:
         self._algorithms = get_default_algorithms()
-        self._valid_algs = (
-            set(algorithms) if algorithms is not None else set(self._algorithms)
-        )
+        self._valid_algs = set(algorithms) if algorithms is not None else set(self._algorithms)
 
         # Remove algorithms that aren't on the whitelist
         for key in list(self._algorithms.keys()):
@@ -71,10 +69,7 @@ class PyJWS:
         Throws KeyError if algorithm is not registered.
         """
         if alg_id not in self._algorithms:
-            raise KeyError(
-                "The specified algorithm could not be removed"
-                " because it is not registered."
-            )
+            raise KeyError("The specified algorithm could not be removed" " because it is not registered.")
 
         del self._algorithms[alg_id]
         self._valid_algs.remove(alg_id)
@@ -149,9 +144,7 @@ class PyJWS:
             # True is the standard value for b64, so no need for it
             del header["b64"]
 
-        json_header = json.dumps(
-            header, separators=(",", ":"), cls=json_encoder, sort_keys=sort_headers
-        ).encode()
+        json_header = json.dumps(header, separators=(",", ":"), cls=json_encoder, sort_keys=sort_headers).encode()
 
         segments.append(base64url_encode(json_header))
 
@@ -242,9 +235,7 @@ class PyJWS:
                 RemovedInPyjwt3Warning,
                 stacklevel=2,
             )
-        decoded = self.decode_complete(
-            jwt, key, algorithms, options, detached_payload=detached_payload
-        )
+        decoded = self.decode_complete(jwt, key, algorithms, options, detached_payload=detached_payload)
         return decoded["payload"]
 
     def get_unverified_header(self, jwt: str | bytes) -> dict[str, Any]:

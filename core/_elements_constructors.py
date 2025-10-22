@@ -340,9 +340,7 @@ def asc(
     return UnaryExpression._create_asc(column)
 
 
-def collate(
-    expression: _ColumnExpressionArgument[str], collation: str
-) -> BinaryExpression[str]:
+def collate(expression: _ColumnExpressionArgument[str], collation: str) -> BinaryExpression[str]:
     """Return the clause ``expression COLLATE collation``.
 
     e.g.::
@@ -427,9 +425,7 @@ def between(
     return col_expr.between(lower_bound, upper_bound, symmetric=symmetric)
 
 
-def outparam(
-    key: str, type_: Optional[TypeEngine[_T]] = None
-) -> BindParameter[_T]:
+def outparam(key: str, type_: Optional[TypeEngine[_T]] = None) -> BindParameter[_T]:
     """Create an 'OUT' parameter for usage in functions (stored procedures),
     for databases which support them.
 
@@ -735,9 +731,7 @@ def bindparam(
 
 
 def case(
-    *whens: Union[
-        typing_Tuple[_ColumnExpressionArgument[bool], Any], Mapping[Any, Any]
-    ],
+    *whens: Union[typing_Tuple[_ColumnExpressionArgument[bool], Any], Mapping[Any, Any]],
     value: Optional[Any] = None,
     else_: Optional[Any] = None,
 ) -> Case[Any]:
@@ -1248,9 +1242,7 @@ def false() -> False_:
     return False_._instance()
 
 
-def funcfilter(
-    func: FunctionElement[_T], *criterion: _ColumnExpressionArgument[bool]
-) -> FunctionFilter[_T]:
+def funcfilter(func: FunctionElement[_T], *criterion: _ColumnExpressionArgument[bool]) -> FunctionFilter[_T]:
     """Produce a :class:`.FunctionFilter` object against a function.
 
     Used against aggregate and window functions,
@@ -1831,9 +1823,7 @@ def type_coerce(
     return TypeCoerce(expression, type_)
 
 
-def within_group(
-    element: FunctionElement[_T], *order_by: _ColumnExpressionArgument[Any]
-) -> WithinGroup[_T]:
+def within_group(element: FunctionElement[_T], *order_by: _ColumnExpressionArgument[Any]) -> WithinGroup[_T]:
     r"""Produce a :class:`.WithinGroup` object against a function.
 
     Used against so-called "ordered set aggregate" and "hypothetical

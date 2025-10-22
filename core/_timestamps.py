@@ -10,4 +10,4 @@ def _format_rfc3339_microseconds(timestamp: int, /) -> str:
     """
     seconds, fraction = divmod(timestamp, 10**6)
     time_tuple = time.gmtime(seconds)
-    return time.strftime('%Y-%m-%d %H:%M:%S', time_tuple) + f'.{fraction // 1_000}'
+    return time.strftime("%Y-%m-%d %H:%M:%S", time_tuple) + f".{fraction // 1_000}"

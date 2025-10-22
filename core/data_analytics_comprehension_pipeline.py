@@ -36,9 +36,7 @@ import pandas as pd
 import plotly.express as px
 from drucker_management import DEFAULT_ROADMAP_ITEMS, DruckerFoundationModel
 
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger(__name__)
 
 
@@ -88,20 +86,14 @@ class RoadmapAnalyticsPipeline:
     # ------------------------------------------------------------------
     def build_status_summary(self) -> pd.DataFrame:
         counts = self.model.status_counts()
-        return pd.DataFrame(
-            [{"status": status, "count": value} for status, value in counts.items()]
-        )
+        return pd.DataFrame([{"status": status, "count": value} for status, value in counts.items()])
 
     def build_phase_summary(self) -> pd.DataFrame:
         counts = self.model.phase_counts()
-        return pd.DataFrame(
-            [{"phase": phase, "count": value} for phase, value in counts.items()]
-        )
+        return pd.DataFrame([{"phase": phase, "count": value} for phase, value in counts.items()])
 
     def build_progress_snapshot(self) -> pd.DataFrame:
-        return pd.DataFrame(self.model.to_records())[
-            ["title", "phase", "status", "progress", "due_date"]
-        ]
+        return pd.DataFrame(self.model.to_records())[["title", "phase", "status", "progress", "due_date"]]
 
     def metrics(self) -> Dict[str, int]:
         return self.model.metrics()
@@ -111,15 +103,11 @@ class RoadmapAnalyticsPipeline:
     # ------------------------------------------------------------------
     def status_chart(self) -> px.pie:
         df = self.build_status_summary()
-        return px.pie(
-            df, names="status", values="count", title="Roadmap Status Distribution"
-        )
+        return px.pie(df, names="status", values="count", title="Roadmap Status Distribution")
 
     def phase_chart(self) -> px.bar:
         df = self.build_phase_summary()
-        return px.bar(
-            df, x="phase", y="count", color="phase", title="Roadmap Phase Mix"
-        )
+        return px.bar(df, x="phase", y="count", color="phase", title="Roadmap Phase Mix")
 
     def progress_chart(self) -> px.bar:
         df = self.build_progress_snapshot()
@@ -145,9 +133,7 @@ class RoadmapAnalyticsPipeline:
         logger.info("Exported roadmap metrics to %s", target)
 
 
-def run_pipeline(
-    data_source: Optional[str] = None, export_dir: Optional[str] = None
-) -> RoadmapAnalyticsPipeline:
+def run_pipeline(data_source: Optional[str] = None, export_dir: Optional[str] = None) -> RoadmapAnalyticsPipeline:
     pipeline = RoadmapAnalyticsPipeline(Path(data_source) if data_source else None)
 
     records = pipeline.load_records()

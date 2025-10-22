@@ -6,14 +6,12 @@
 # URL: <https://www.nltk.org/>
 # For license information, see LICENSE.TXT
 
-import json
 import os
 import tempfile
 import warnings
 from subprocess import PIPE
 
 from nltk.internals import _java_options, config_java, find_jar, java
-from nltk.parse.corenlp import CoreNLPParser
 from nltk.tokenize.api import TokenizerI
 
 _stanford_url = "https://nlp.stanford.edu/software/tokenizer.shtml"
@@ -102,9 +100,7 @@ class StanfordTokenizer(TokenizerI):
             cmd.append(input_file.name)
 
             # Run the tagger and get the output.
-            stdout, stderr = java(
-                cmd, classpath=self._stanford_jar, stdout=PIPE, stderr=PIPE
-            )
+            stdout, stderr = java(cmd, classpath=self._stanford_jar, stdout=PIPE, stderr=PIPE)
             stdout = stdout.decode(encoding)
 
         os.unlink(input_file.name)

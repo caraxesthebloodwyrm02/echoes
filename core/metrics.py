@@ -114,15 +114,12 @@ class EfficiencySummary:
 
     # For concise logging / debugging
     def __repr__(self) -> str:  # noqa: D401
-        return (
-            "EfficiencySummary(score={s:.3f}, balance={b:.2f}°, "
-            "angles=({ip:.2f}, {ic:.2f}, {pc:.2f}))".format(
-                s=self.efficiency_score,
-                b=self.balance_angle_deg,
-                ip=self.influence_productivity_deg,
-                ic=self.influence_creativity_deg,
-                pc=self.productivity_creativity_deg,
-            )
+        return "EfficiencySummary(score={s:.3f}, balance={b:.2f}°, " "angles=({ip:.2f}, {ic:.2f}, {pc:.2f}))".format(
+            s=self.efficiency_score,
+            b=self.balance_angle_deg,
+            ip=self.influence_productivity_deg,
+            ic=self.influence_creativity_deg,
+            pc=self.productivity_creativity_deg,
         )
 
 

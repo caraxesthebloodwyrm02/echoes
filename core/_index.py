@@ -79,14 +79,12 @@ class Index(ABC):
 
     def __init__(self, domain: Domain) -> None:
         if not self.name or self.localname is None:
-            msg = f'Index subclass {self.__class__.__name__} has no valid name or localname'
+            msg = f"Index subclass {self.__class__.__name__} has no valid name or localname"
             raise SphinxError(msg)
         self.domain = domain
 
     @abstractmethod
-    def generate(
-        self, docnames: Iterable[str] | None = None
-    ) -> tuple[list[tuple[str, list[IndexEntry]]], bool]:
+    def generate(self, docnames: Iterable[str] | None = None) -> tuple[list[tuple[str, list[IndexEntry]]], bool]:
         """Get entries for the index.
 
         If ``docnames`` is given, restrict to entries referring to these

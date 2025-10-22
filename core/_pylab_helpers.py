@@ -68,8 +68,7 @@ class Gcf:
     @classmethod
     def destroy_fig(cls, fig):
         """Destroy figure *fig*."""
-        num = next((manager.num for manager in cls.figs.values()
-                    if manager.canvas.figure == fig), None)
+        num = next((manager.num for manager in cls.figs.values() if manager.canvas.figure == fig), None)
         if num is not None:
             cls.destroy(num)
 
@@ -105,8 +104,7 @@ class Gcf:
     def _set_new_active_manager(cls, manager):
         """Adopt *manager* into pyplot and make it the active manager."""
         if not hasattr(manager, "_cidgcf"):
-            manager._cidgcf = manager.canvas.mpl_connect(
-                "button_press_event", lambda event: cls.set_active(manager))
+            manager._cidgcf = manager.canvas.mpl_connect("button_press_event", lambda event: cls.set_active(manager))
         fig = manager.canvas.figure
         fig._number = manager.num
         label = fig.get_label()

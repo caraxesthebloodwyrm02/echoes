@@ -92,12 +92,8 @@ def test_o1_validation_logic():
     for i, vuln in enumerate(test_vulns):
         requires_complex = analyzer._requires_complex_analysis(vuln)
         complex_flags.append(requires_complex)
-        print(
-            f"  Vulnerability {i + 1} ({vuln.tool}): {'REQUIRES' if requires_complex else 'SKIPS'} complex analysis"
-        )
-        print(
-            f"    - Severity: {vuln.severity}, Confidence: {vuln.confidence}, CWE: {vuln.cwe}"
-        )
+        print(f"  Vulnerability {i + 1} ({vuln.tool}): {'REQUIRES' if requires_complex else 'SKIPS'} complex analysis")
+        print(f"    - Severity: {vuln.severity}, Confidence: {vuln.confidence}, CWE: {vuln.cwe}")
 
     # Verify expected results
     expected_complex = [
@@ -109,9 +105,7 @@ def test_o1_validation_logic():
     if complex_flags == expected_complex:
         print("Complex analysis detection working correctly")
     else:
-        print(
-            f"Complex analysis detection failed. Expected {expected_complex}, got {complex_flags}"
-        )
+        print(f"Complex analysis detection failed. Expected {expected_complex}, got {complex_flags}")
         return False
 
     # Test batch validation filtering
@@ -126,9 +120,7 @@ def test_o1_validation_logic():
         print("Batch validation filtering working correctly")
         print(f"   Processed {len(batch_results)} complex vulnerabilities")
     else:
-        print(
-            f"Batch validation filtering failed. Expected {expected_keys}, got {actual_keys}"
-        )
+        print(f"Batch validation filtering failed. Expected {expected_keys}, got {actual_keys}")
         return False
 
     # Test validation result structure

@@ -128,9 +128,7 @@ class BaseThresholdClassifier(ClassifierMixin, MetaEstimatorMixin, BaseEstimator
 
         y_type = type_of_target(y, input_name="y")
         if y_type != "binary":
-            raise ValueError(
-                f"Only binary classification is supported. Unknown label type: {y_type}"
-            )
+            raise ValueError(f"Only binary classification is supported. Unknown label type: {y_type}")
 
         self._fit(X, y, **params)
 
@@ -324,9 +322,7 @@ class FixedThresholdClassifier(BaseThresholdClassifier):
             check_is_fitted(self.estimator)
             return self.estimator.classes_
         except NotFittedError:
-            raise AttributeError(
-                "The underlying estimator is not fitted yet."
-            ) from NotFittedError
+            raise AttributeError("The underlying estimator is not fitted yet.") from NotFittedError
 
     def _fit(self, X, y, **params):
         """Fit the classifier.
@@ -382,9 +378,7 @@ class FixedThresholdClassifier(BaseThresholdClassifier):
         else:
             decision_threshold = self.threshold
 
-        return _threshold_scores_to_class_labels(
-            y_score, decision_threshold, self.classes_, self.pos_label
-        )
+        return _threshold_scores_to_class_labels(y_score, decision_threshold, self.classes_, self.pos_label)
 
     def get_metadata_routing(self):
         """Get metadata routing of this object.
@@ -727,18 +721,14 @@ class TunedThresholdClassifierCV(BaseThresholdClassifier):
             Returns an instance of self.
         """
         if isinstance(self.cv, Real) and 0 < self.cv < 1:
-            cv = StratifiedShuffleSplit(
-                n_splits=1, test_size=self.cv, random_state=self.random_state
-            )
+            cv = StratifiedShuffleSplit(n_splits=1, test_size=self.cv, random_state=self.random_state)
         elif self.cv == "prefit":
             if self.refit is True:
                 raise ValueError("When cv='prefit', refit cannot be True.")
             try:
                 check_is_fitted(self.estimator, "classes_")
             except NotFittedError as exc:
-                raise NotFittedError(
-                    """When cv='prefit', `estimator` must be fitted."""
-                ) from exc
+                raise NotFittedError("""When cv='prefit', `estimator` must be fitted.""") from exc
             cv = self.cv
         else:
             cv = check_cv(self.cv, y=y, classifier=True)
@@ -769,9 +759,7 @@ class TunedThresholdClassifierCV(BaseThresholdClassifier):
                 train_idx, _ = next(cv.split(X, y, **routed_params.splitter.split))
                 X_train = _safe_indexing(X, train_idx)
                 y_train = _safe_indexing(y, train_idx)
-                fit_params_train = _check_method_params(
-                    X, routed_params.estimator.fit, indices=train_idx
-                )
+                fit_params_train = _check_method_params(X, routed_params.estimator.fit, indices=train_idx)
 
             self.estimator_.fit(X_train, y_train, **fit_params_train)
 
@@ -798,22 +786,14 @@ class TunedThresholdClassifierCV(BaseThresholdClassifier):
             )
 
         # find the global min and max thresholds across all folds
-        min_threshold = min(
-            split_thresholds.min() for split_thresholds in cv_thresholds
-        )
-        max_threshold = max(
-            split_thresholds.max() for split_thresholds in cv_thresholds
-        )
+        min_threshold = min(split_thresholds.min() for split_thresholds in cv_thresholds)
+        max_threshold = max(split_thresholds.max() for split_thresholds in cv_thresholds)
         if isinstance(self.thresholds, Integral):
-            decision_thresholds = np.linspace(
-                min_threshold, max_threshold, num=self.thresholds
-            )
+            decision_thresholds = np.linspace(min_threshold, max_threshold, num=self.thresholds)
         else:
             decision_thresholds = np.asarray(self.thresholds)
 
-        objective_scores = _mean_interpolated_score(
-            decision_thresholds, cv_thresholds, cv_scores
-        )
+        objective_scores = _mean_interpolated_score(decision_thresholds, cv_thresholds, cv_scores)
         best_idx = objective_scores.argmax()
         self.best_score_ = objective_scores[best_idx]
         self.best_threshold_ = decision_thresholds[best_idx]
@@ -847,9 +827,7 @@ class TunedThresholdClassifierCV(BaseThresholdClassifier):
             pos_label=pos_label,
         )
 
-        return _threshold_scores_to_class_labels(
-            y_score, self.best_threshold_, self.classes_, pos_label
-        )
+        return _threshold_scores_to_class_labels(y_score, self.best_threshold_, self.classes_, pos_label)
 
     def get_metadata_routing(self):
         """Get metadata routing of this object.
@@ -883,7 +861,5 @@ class TunedThresholdClassifierCV(BaseThresholdClassifier):
     def _get_curve_scorer(self):
         """Get the curve scorer based on the objective metric used."""
         scoring = check_scoring(self.estimator, scoring=self.scoring)
-        curve_scorer = _CurveScorer.from_scorer(
-            scoring, self._get_response_method(), self.thresholds
-        )
+        curve_scorer = _CurveScorer.from_scorer(scoring, self._get_response_method(), self.thresholds)
         return curve_scorer

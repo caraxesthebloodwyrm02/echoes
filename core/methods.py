@@ -23,9 +23,7 @@ class BaseMethodsTests:
         # as the data
         from pandas.core.util.hashing import _default_hash_key
 
-        res = data._hash_pandas_object(
-            encoding="utf-8", hash_key=_default_hash_key, categorize=False
-        )
+        res = data._hash_pandas_object(encoding="utf-8", hash_key=_default_hash_key, categorize=False)
         assert res.dtype == np.uint64
         assert res.shape == data.shape
 
@@ -59,9 +57,7 @@ class BaseMethodsTests:
         result = ser.value_counts(normalize=True).sort_index()
 
         if not isinstance(data, pd.Categorical):
-            expected = pd.Series(
-                [1 / len(values)] * len(values), index=result.index, name="proportion"
-            )
+            expected = pd.Series([1 / len(values)] * len(values), index=result.index, name="proportion")
         else:
             expected = pd.Series(0.0, index=result.index, name="proportion")
             expected[result > 0] = 1 / len(values)
@@ -69,9 +65,7 @@ class BaseMethodsTests:
         if isinstance(data.dtype, pd.StringDtype) and data.dtype.na_value is np.nan:
             # TODO: avoid special-casing
             expected = expected.astype("float64")
-        elif getattr(data.dtype, "storage", "") == "pyarrow" or isinstance(
-            data.dtype, pd.ArrowDtype
-        ):
+        elif getattr(data.dtype, "storage", "") == "pyarrow" or isinstance(data.dtype, pd.ArrowDtype):
             # TODO: avoid special-casing
             expected = expected.astype("double[pyarrow]")
         elif na_value_for_dtype(data.dtype) is pd.NA:
@@ -175,9 +169,7 @@ class BaseMethodsTests:
             ("argmin", False, -1),
         ],
     )
-    def test_argreduce_series(
-        self, data_missing_for_sorting, op_name, skipna, expected
-    ):
+    def test_argreduce_series(self, data_missing_for_sorting, op_name, skipna, expected):
         # data_missing_for_sorting -> [B, NA, A] with A < B and NA missing.
         warn = None
         msg = "The behavior of Series.argmax/argmin"
@@ -228,9 +220,7 @@ class BaseMethodsTests:
         tm.assert_series_equal(result, expected)
 
     @pytest.mark.parametrize("ascending", [True, False])
-    def test_sort_values_missing(
-        self, data_missing_for_sorting, ascending, sort_by_key
-    ):
+    def test_sort_values_missing(self, data_missing_for_sorting, ascending, sort_by_key):
         ser = pd.Series(data_missing_for_sorting)
         result = ser.sort_values(ascending=ascending, key=sort_by_key)
         if ascending:
@@ -243,9 +233,7 @@ class BaseMethodsTests:
     def test_sort_values_frame(self, data_for_sorting, ascending):
         df = pd.DataFrame({"A": [1, 2, 1], "B": data_for_sorting})
         result = df.sort_values(["A", "B"])
-        expected = pd.DataFrame(
-            {"A": [1, 1, 2], "B": data_for_sorting.take([2, 0, 1])}, index=[2, 0, 1]
-        )
+        expected = pd.DataFrame({"A": [1, 1, 2], "B": data_for_sorting.take([2, 0, 1])}, index=[2, 0, 1])
         tm.assert_frame_equal(result, expected)
 
     @pytest.mark.parametrize("keep", ["first", "last", False])
@@ -370,9 +358,7 @@ class BaseMethodsTests:
         try:
             with np.errstate(over="ignore"):
                 expected = pd.Series(
-                    orig_data1._from_sequence(
-                        [a + b for (a, b) in zip(list(orig_data1), list(orig_data2))]
-                    )
+                    orig_data1._from_sequence([a + b for (a, b) in zip(list(orig_data1), list(orig_data2))])
                 )
         except TypeError:
             # If the operation is not supported pointwise for our scalars,
@@ -386,9 +372,7 @@ class BaseMethodsTests:
 
         val = s1.iloc[0]
         result = s1.combine(val, lambda x1, x2: x1 + x2)
-        expected = pd.Series(
-            orig_data1._from_sequence([a + val for a in list(orig_data1)])
-        )
+        expected = pd.Series(orig_data1._from_sequence([a + val for a in list(orig_data1)]))
         tm.assert_series_equal(result, expected)
 
     def test_combine_first(self, data):
@@ -412,9 +396,7 @@ class BaseMethodsTests:
 
         if frame:
             result = data.to_frame(name="A").assign(B=1).shift(periods)
-            expected = pd.concat(
-                [expected, pd.Series([1] * 5, name="B").shift(periods)], axis=1
-            )
+            expected = pd.concat([expected, pd.Series([1] * 5, name="B").shift(periods)], axis=1)
             compare = tm.assert_frame_equal
         else:
             result = data.shift(periods)
@@ -574,9 +556,7 @@ class BaseMethodsTests:
             cond = cond.reshape(-1, 1)
 
         result = ser.where(cond)
-        expected = pd.Series(
-            cls._from_sequence([a, a, na_value, na_value], dtype=data.dtype)
-        )
+        expected = pd.Series(cls._from_sequence([a, a, na_value, na_value], dtype=data.dtype))
 
         if as_frame:
             expected = expected.to_frame(name="a")

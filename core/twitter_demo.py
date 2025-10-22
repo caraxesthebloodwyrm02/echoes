@@ -96,10 +96,7 @@ def twitterclass_demo():
     tw = Twitter()
     tw.tweets(keywords="love, hate", stream=False, limit=10)  # search past tweets
     print(SPACER)
-    print(
-        "Follow two accounts in the public stream"
-        + " -- be prepared to wait a few minutes\n"
-    )
+    print("Follow two accounts in the public stream" + " -- be prepared to wait a few minutes\n")
     tw = Twitter()
     tw.tweets(follow=["759251", "6017542"], stream=True, limit=5)  # public stream
 

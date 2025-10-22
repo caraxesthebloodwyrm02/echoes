@@ -7,7 +7,6 @@
 # URL: <https://www.nltk.org/>
 # For license information, see LICENSE.TXT
 
-import inspect
 import os
 import subprocess
 import sys
@@ -73,9 +72,7 @@ def find_maltparser(parser_dirname):
     malt_dependencies = {"log4j.jar", "libsvm.jar", "liblinear-1.8.jar"}
 
     assert malt_dependencies.issubset(_jars)
-    assert any(
-        filter(lambda i: i.startswith("maltparser-") and i.endswith(".jar"), _jars)
-    )
+    assert any(filter(lambda i: i.startswith("maltparser-") and i.endswith(".jar"), _jars))
     return list(_malt_jars)
 
 
@@ -142,9 +139,7 @@ class MaltParser(ParserI):
         # Find all the necessary jar files for MaltParser.
         self.malt_jars = find_maltparser(parser_dirname)
         # Initialize additional java arguments.
-        self.additional_java_args = (
-            additional_java_args if additional_java_args is not None else []
-        )
+        self.additional_java_args = additional_java_args if additional_java_args is not None else []
         # Initialize model.
         self.model = find_malt_model(model_filename)
         self._trained = self.model != "malt_temp.mco"
@@ -182,9 +177,7 @@ class MaltParser(ParserI):
                 input_file.close()
 
                 # Generate command to run maltparser.
-                cmd = self.generate_malt_command(
-                    input_file.name, output_file.name, mode="parse"
-                )
+                cmd = self.generate_malt_command(input_file.name, output_file.name, mode="parse")
 
                 # This is a maltparser quirk, it needs to be run
                 # where the model file is. otherwise it goes into an awkward
@@ -198,23 +191,12 @@ class MaltParser(ParserI):
                 os.chdir(_current_path)  # Change back to current path.
 
                 if ret != 0:
-                    raise Exception(
-                        "MaltParser parsing (%s) failed with exit "
-                        "code %d" % (" ".join(cmd), ret)
-                    )
+                    raise Exception("MaltParser parsing (%s) failed with exit " "code %d" % (" ".join(cmd), ret))
 
                 # Must return iter(iter(Tree))
                 with open(output_file.name) as infile:
                     for tree_str in infile.read().split("\n\n"):
-                        yield (
-                            iter(
-                                [
-                                    DependencyGraph(
-                                        tree_str, top_relation_label=top_relation_label
-                                    )
-                                ]
-                            )
-                        )
+                        yield (iter([DependencyGraph(tree_str, top_relation_label=top_relation_label)]))
 
         os.remove(input_file.name)
         os.remove(output_file.name)
@@ -231,9 +213,7 @@ class MaltParser(ParserI):
         :return: iter(DependencyGraph)
         """
         tagged_sentences = (self.tagger(sentence) for sentence in sentences)
-        return self.parse_tagged_sents(
-            tagged_sentences, verbose, top_relation_label=top_relation_label
-        )
+        return self.parse_tagged_sents(tagged_sentences, verbose, top_relation_label=top_relation_label)
 
     def generate_malt_command(self, inputfilename, outputfilename=None, mode=None):
         """
@@ -314,10 +294,7 @@ class MaltParser(ParserI):
         cmd = self.generate_malt_command(conll_file, mode="learn")
         ret = self._execute(cmd, verbose)
         if ret != 0:
-            raise Exception(
-                "MaltParser training (%s) failed with exit "
-                "code %d" % (" ".join(cmd), ret)
-            )
+            raise Exception("MaltParser training (%s) failed with exit " "code %d" % (" ".join(cmd), ret))
         self._trained = True
 
 

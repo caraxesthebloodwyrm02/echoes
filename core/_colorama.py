@@ -23,8 +23,7 @@ def should_colorize(stream):
 
     if stream is sys.__stdout__ or stream is sys.__stderr__:
         if "CI" in os.environ and any(
-            ci in os.environ
-            for ci in ["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS"]
+            ci in os.environ for ci in ["TRAVIS", "CIRCLECI", "APPVEYOR", "GITLAB_CI", "GITHUB_ACTIONS"]
         ):
             return True
         if "PYCHARM_HOSTED" in os.environ:

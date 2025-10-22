@@ -11,9 +11,7 @@ from pandas.core.arrays import (
     period_array,
 )
 
-pytestmark = pytest.mark.filterwarnings(
-    "ignore:Passing a BlockManager to DataFrame:DeprecationWarning"
-)
+pytestmark = pytest.mark.filterwarnings("ignore:Passing a BlockManager to DataFrame:DeprecationWarning")
 
 
 pa = pytest.importorskip("pyarrow")
@@ -106,9 +104,7 @@ def test_arrow_load_from_zero_chunks():
 
     table = pa.table(df)
     assert isinstance(table.field("a").type, ArrowPeriodType)
-    table = pa.table(
-        [pa.chunked_array([], type=table.column(0).type)], schema=table.schema
-    )
+    table = pa.table([pa.chunked_array([], type=table.column(0).type)], schema=table.schema)
 
     result = table.to_pandas()
     assert isinstance(result["a"].dtype, PeriodDtype)

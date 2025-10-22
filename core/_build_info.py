@@ -24,24 +24,24 @@ class BuildInfo:
 
     @classmethod
     def load(cls: type[BuildInfo], filename: Path, /) -> BuildInfo:
-        content = filename.read_text(encoding='utf-8')
+        content = filename.read_text(encoding="utf-8")
         lines = content.splitlines()
 
         version = lines[0].rstrip()
-        if version != '# Sphinx build info version 1':
-            msg = __('failed to read broken build info file (unknown version)')
+        if version != "# Sphinx build info version 1":
+            msg = __("failed to read broken build info file (unknown version)")
             raise ValueError(msg)
 
-        if not lines[2].startswith('config: '):
-            msg = __('failed to read broken build info file (missing config entry)')
+        if not lines[2].startswith("config: "):
+            msg = __("failed to read broken build info file (missing config entry)")
             raise ValueError(msg)
-        if not lines[3].startswith('tags: '):
-            msg = __('failed to read broken build info file (missing tags entry)')
+        if not lines[3].startswith("tags: "):
+            msg = __("failed to read broken build info file (missing tags entry)")
             raise ValueError(msg)
 
         build_info = BuildInfo()
-        build_info.config_hash = lines[2].removeprefix('config: ').strip()
-        build_info.tags_hash = lines[3].removeprefix('tags: ').strip()
+        build_info.config_hash = lines[2].removeprefix("config: ").strip()
+        build_info.tags_hash = lines[3].removeprefix("tags: ").strip()
         return build_info
 
     def __init__(
@@ -50,8 +50,8 @@ class BuildInfo:
         tags: Tags | None = None,
         config_categories: Set[_ConfigRebuild] = frozenset(),
     ) -> None:
-        self.config_hash = ''
-        self.tags_hash = ''
+        self.config_hash = ""
+        self.tags_hash = ""
 
         if config:
             values = {c.name: c.value for c in config.filter(config_categories)}
@@ -61,19 +61,17 @@ class BuildInfo:
             self.tags_hash = stable_hash(sorted(tags))
 
     def __eq__(self, other: BuildInfo) -> bool:  # type: ignore[override]
-        return (
-            self.config_hash == other.config_hash and self.tags_hash == other.tags_hash
-        )
+        return self.config_hash == other.config_hash and self.tags_hash == other.tags_hash
 
     def __hash__(self) -> int:
         return hash((self.config_hash, self.tags_hash))
 
     def dump(self, filename: Path, /) -> None:
         build_info = (
-            '# Sphinx build info version 1\n'
-            '# This file records the configuration used when building these files. '
-            'When it is not found, a full rebuild will be done.\n'
-            f'config: {self.config_hash}\n'
-            f'tags: {self.tags_hash}\n'
+            "# Sphinx build info version 1\n"
+            "# This file records the configuration used when building these files. "
+            "When it is not found, a full rebuild will be done.\n"
+            f"config: {self.config_hash}\n"
+            f"tags: {self.tags_hash}\n"
         )
-        filename.write_text(build_info, encoding='utf-8')
+        filename.write_text(build_info, encoding="utf-8")

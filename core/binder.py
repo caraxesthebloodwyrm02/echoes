@@ -273,9 +273,7 @@ class ConditionalTypeBinder:
 
             resulting_values = [x for x in resulting_values if x is not None]
 
-            if all_reachable and all(
-                x is not None and not x.from_assignment for x in resulting_values
-            ):
+            if all_reachable and all(x is not None and not x.from_assignment for x in resulting_values):
                 # Do not synthesize a new type if we encountered a conditional block
                 # (if, while or match-case) without assignments.
                 # See check-isinstance.test::testNoneCheckDoesNotMakeTypeVarOptional
@@ -289,9 +287,7 @@ class ConditionalTypeBinder:
             declaration_type = get_proper_type(self.declarations.get(key))
             if isinstance(declaration_type, AnyType):
                 # At this point resulting values can't contain None, see continue above
-                if not all(
-                    t is not None and is_same_type(type, t.type) for t in resulting_values[1:]
-                ):
+                if not all(t is not None and is_same_type(type, t.type) for t in resulting_values[1:]):
                     type = AnyType(TypeOfAny.from_another_any, source_any=declaration_type)
             else:
                 possible_types = []
@@ -305,9 +301,7 @@ class ConditionalTypeBinder:
                 else:
                     type = make_simplified_union(possible_types)
                     # Legacy guard for corner case when the original type is TypeVarType.
-                    if isinstance(declaration_type, TypeVarType) and not is_subtype(
-                        type, declaration_type
-                    ):
+                    if isinstance(declaration_type, TypeVarType) and not is_subtype(type, declaration_type):
                         type = declaration_type
                     # Try simplifying resulting type for unions involving variadic tuples.
                     # Technically, everything is still valid without this step, but if we do
@@ -319,11 +313,7 @@ class ConditionalTypeBinder:
                     # still equivalent to such type).
                     if isinstance(type, UnionType):
                         type = collapse_variadic_union(type)
-                    if (
-                        old_semantics
-                        and isinstance(type, ProperType)
-                        and isinstance(type, UnionType)
-                    ):
+                    if old_semantics and isinstance(type, ProperType) and isinstance(type, UnionType):
                         # Simplify away any extra Any's that were added to the declared
                         # type when popping a frame.
                         simplified = UnionType.make_union(
@@ -423,10 +413,7 @@ class ConditionalTypeBinder:
             ):
                 # Second case: explicit optional type, in this case we optimize for a common
                 # pattern when an untyped value used as a fallback replacing None.
-                new_items = [
-                    type if isinstance(get_proper_type(item), NoneType) else item
-                    for item in p_declared.items
-                ]
+                new_items = [type if isinstance(get_proper_type(item), NoneType) else item for item in p_declared.items]
                 self.put(expr, UnionType(new_items))
             elif isinstance(p_declared, UnionType) and any(
                 isinstance(get_proper_type(item), AnyType) for item in p_declared.items

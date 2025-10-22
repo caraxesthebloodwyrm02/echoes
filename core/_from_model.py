@@ -41,12 +41,7 @@ def _calculate_threshold(estimator, importances, threshold):
         is_elasticnetcv_l1_penalized = est_name == "ElasticNetCV" and (
             hasattr(estimator, "l1_ratio_") and np.isclose(estimator.l1_ratio_, 1.0)
         )
-        if (
-            is_l1_penalized
-            or is_lasso
-            or is_elasticnet_l1_penalized
-            or is_elasticnetcv_l1_penalized
-        ):
+        if is_l1_penalized or is_lasso or is_elasticnet_l1_penalized or is_elasticnetcv_l1_penalized:
             # the natural default threshold is 0 when l1 penalty was used
             threshold = 1e-5
         else:
@@ -74,9 +69,7 @@ def _calculate_threshold(estimator, importances, threshold):
             threshold = np.mean(importances)
 
         else:
-            raise ValueError(
-                "Expected threshold='mean' or threshold='median' got %s" % threshold
-            )
+            raise ValueError("Expected threshold='mean' or threshold='median' got %s" % threshold)
 
     else:
         threshold = float(threshold)
@@ -273,22 +266,17 @@ class SelectFromModel(MetaEstimatorMixin, SelectorMixin, BaseEstimator):
                 check_is_fitted(self.estimator)
             except NotFittedError as exc:
                 raise NotFittedError(
-                    "When `prefit=True`, `estimator` is expected to be a fitted "
-                    "estimator."
+                    "When `prefit=True`, `estimator` is expected to be a fitted " "estimator."
                 ) from exc
         if callable(max_features):
             # This branch is executed when `transform` is called directly and thus
             # `max_features_` is not set and we fallback using `self.max_features`
             # that is not validated
             raise NotFittedError(
-                "When `prefit=True` and `max_features` is a callable, call `fit` "
-                "before calling `transform`."
+                "When `prefit=True` and `max_features` is a callable, call `fit` " "before calling `transform`."
             )
         elif max_features is not None and not isinstance(max_features, Integral):
-            raise ValueError(
-                f"`max_features` must be an integer. Got `max_features={max_features}` "
-                "instead."
-            )
+            raise ValueError(f"`max_features` must be an integer. Got `max_features={max_features}` " "instead.")
 
         scores = _get_feature_importances(
             estimator=estimator,
@@ -364,8 +352,7 @@ class SelectFromModel(MetaEstimatorMixin, SelectorMixin, BaseEstimator):
                 check_is_fitted(self.estimator)
             except NotFittedError as exc:
                 raise NotFittedError(
-                    "When `prefit=True`, `estimator` is expected to be a fitted "
-                    "estimator."
+                    "When `prefit=True`, `estimator` is expected to be a fitted " "estimator."
                 ) from exc
             self.estimator_ = deepcopy(self.estimator)
         else:
@@ -445,8 +432,7 @@ class SelectFromModel(MetaEstimatorMixin, SelectorMixin, BaseEstimator):
                     check_is_fitted(self.estimator)
                 except NotFittedError as exc:
                     raise NotFittedError(
-                        "When `prefit=True`, `estimator` is expected to be a fitted "
-                        "estimator."
+                        "When `prefit=True`, `estimator` is expected to be a fitted " "estimator."
                     ) from exc
                 self.estimator_ = deepcopy(self.estimator)
             return self
@@ -476,11 +462,7 @@ class SelectFromModel(MetaEstimatorMixin, SelectorMixin, BaseEstimator):
         try:
             check_is_fitted(self)
         except NotFittedError as nfe:
-            raise AttributeError(
-                "{} object has no n_features_in_ attribute.".format(
-                    self.__class__.__name__
-                )
-            ) from nfe
+            raise AttributeError("{} object has no n_features_in_ attribute.".format(self.__class__.__name__)) from nfe
 
         return self.estimator_.n_features_in_
 

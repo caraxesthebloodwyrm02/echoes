@@ -132,9 +132,7 @@ if __name__ == "__main__":
         help="Output format",
     )
     parser.add_argument("--output", help="Output file path")
-    parser.add_argument(
-        "--log-only", action="store_true", help="Only run audit without format options"
-    )
+    parser.add_argument("--log-only", action="store_true", help="Only run audit without format options")
 
     args = parser.parse_args()
 

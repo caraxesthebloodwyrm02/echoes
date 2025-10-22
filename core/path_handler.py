@@ -87,15 +87,9 @@ class PathConfig(BaseSettings):
     archives_dir: Optional[Path] = None
 
     # Security settings
-    allow_absolute_paths: bool = Field(
-        default=False, description="Allow absolute paths (security risk)"
-    )
-    enforce_sandbox: bool = Field(
-        default=True, description="Enforce all paths stay within project root"
-    )
-    auto_create_dirs: bool = Field(
-        default=True, description="Automatically create directories if they don't exist"
-    )
+    allow_absolute_paths: bool = Field(default=False, description="Allow absolute paths (security risk)")
+    enforce_sandbox: bool = Field(default=True, description="Enforce all paths stay within project root")
+    auto_create_dirs: bool = Field(default=True, description="Automatically create directories if they don't exist")
 
     def model_post_init(self, __context):
         """Initialize directory paths after model creation"""
@@ -160,9 +154,7 @@ class SmartPathHandler:
                 path.mkdir(parents=True, exist_ok=True)
                 self.logger.debug(f"Ensured directory exists: {path}")
             except OSError as e:
-                self.logger.error(
-                    f"Failed to create {category} directory at {path}: {e}"
-                )
+                self.logger.error(f"Failed to create {category} directory at {path}: {e}")
 
     def _validate_path_security(self, path: Path) -> Path:
         """
@@ -182,9 +174,7 @@ class SmartPathHandler:
                 try:
                     resolved.relative_to(self.config.project_root)
                 except ValueError:
-                    raise SecurityError(
-                        f"Path '{path}' is outside project root: {self.config.project_root}"
-                    )
+                    raise SecurityError(f"Path '{path}' is outside project root: {self.config.project_root}")
 
             # Check for symlink attacks
             if resolved.is_symlink() and not self.config.allow_absolute_paths:
@@ -300,9 +290,7 @@ class SmartPathHandler:
         joined = base_path.joinpath(*parts)
         return self._validate_path_security(joined)
 
-    def list_files(
-        self, category: PathCategory, pattern: str = "*", recursive: bool = False
-    ) -> List[Path]:
+    def list_files(self, category: PathCategory, pattern: str = "*", recursive: bool = False) -> List[Path]:
         """
         List files in a category directory
 

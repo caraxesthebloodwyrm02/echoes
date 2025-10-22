@@ -71,9 +71,7 @@ class StabilitySettings(BaseSettings):
         le=120000,
         description="Maximum time to wait for AI response",
     )
-    request_timeout_ms: int = Field(
-        default=60000, ge=10000, le=300000, description="Overall request timeout"
-    )
+    request_timeout_ms: int = Field(default=60000, ge=10000, le=300000, description="Overall request timeout")
     idle_timeout_ms: int = Field(
         default=300000,
         ge=60000,
@@ -82,20 +80,12 @@ class StabilitySettings(BaseSettings):
     )
 
     # Memory management
-    max_memory_mb: int = Field(
-        default=2048, ge=512, le=8192, description="Maximum memory usage in MB"
-    )
-    gc_interval_ms: int = Field(
-        default=60000, ge=10000, le=300000, description="Garbage collection interval"
-    )
+    max_memory_mb: int = Field(default=2048, ge=512, le=8192, description="Maximum memory usage in MB")
+    gc_interval_ms: int = Field(default=60000, ge=10000, le=300000, description="Garbage collection interval")
 
     # Health checks
-    health_check_interval_ms: int = Field(
-        default=10000, ge=5000, le=60000, description="Health check interval"
-    )
-    auto_save_interval_ms: int = Field(
-        default=30000, ge=10000, le=120000, description="Auto-save interval"
-    )
+    health_check_interval_ms: int = Field(default=10000, ge=5000, le=60000, description="Health check interval")
+    auto_save_interval_ms: int = Field(default=30000, ge=10000, le=120000, description="Auto-save interval")
 
 
 class AIProviderSettings(BaseSettings):
@@ -108,17 +98,13 @@ class AIProviderSettings(BaseSettings):
     )
 
     # Provider settings
-    provider: str = Field(
-        default="openai", description="AI provider (openai, azure, ollama)"
-    )
+    provider: str = Field(default="openai", description="AI provider (openai, azure, ollama)")
     model_primary: str = Field(default="gpt-4o-mini", description="Primary model")
     model_fallback: str = Field(default="gpt-4o", description="Fallback model")
 
     # API Keys (validated separately)
     api_key_primary: Optional[str] = Field(default=None, description="Primary API key")
-    api_key_secondary: Optional[str] = Field(
-        default=None, description="Secondary API key for failover"
-    )
+    api_key_secondary: Optional[str] = Field(default=None, description="Secondary API key for failover")
 
     # Timeout and retry settings
     timeout_ms: int = Field(
@@ -127,28 +113,16 @@ class AIProviderSettings(BaseSettings):
         le=120000,
         description="API call timeout in milliseconds",
     )
-    max_retries: int = Field(
-        default=3, ge=0, le=5, description="Maximum retry attempts"
-    )
-    retry_delay_ms: int = Field(
-        default=1000, ge=100, le=5000, description="Delay between retries"
-    )
+    max_retries: int = Field(default=3, ge=0, le=5, description="Maximum retry attempts")
+    retry_delay_ms: int = Field(default=1000, ge=100, le=5000, description="Delay between retries")
 
     # Rate limiting (CRITICAL for stability)
-    requests_per_minute: int = Field(
-        default=50, ge=1, le=500, description="Max requests per minute"
-    )
-    tokens_per_minute: int = Field(
-        default=40000, ge=1000, le=200000, description="Max tokens per minute"
-    )
+    requests_per_minute: int = Field(default=50, ge=1, le=500, description="Max requests per minute")
+    tokens_per_minute: int = Field(default=40000, ge=1000, le=200000, description="Max tokens per minute")
 
     # Model parameters
-    max_tokens: int = Field(
-        default=4096, ge=256, le=128000, description="Maximum tokens per response"
-    )
-    temperature: float = Field(
-        default=0.7, ge=0.0, le=2.0, description="Temperature for generation"
-    )
+    max_tokens: int = Field(default=4096, ge=256, le=128000, description="Maximum tokens per response")
+    temperature: float = Field(default=0.7, ge=0.0, le=2.0, description="Temperature for generation")
 
     @field_validator("provider")
     @classmethod
@@ -169,13 +143,9 @@ class SecuritySettings(BaseSettings):
     )
 
     # Schema validation
-    validate_schemas: bool = Field(
-        default=True, description="Validate all data against schemas"
-    )
+    validate_schemas: bool = Field(default=True, description="Validate all data against schemas")
     strict_mode: bool = Field(default=True, description="Enable strict validation mode")
-    allow_extra_fields: bool = Field(
-        default=False, description="Allow extra fields in data (DANGEROUS if True)"
-    )
+    allow_extra_fields: bool = Field(default=False, description="Allow extra fields in data (DANGEROUS if True)")
 
     # Input sanitization
     sanitize_inputs: bool = Field(default=True, description="Sanitize all user inputs")
@@ -187,12 +157,8 @@ class SecuritySettings(BaseSettings):
     )
 
     # API security
-    require_api_keys: bool = Field(
-        default=True, description="Require API keys for operations"
-    )
-    rotate_keys_days: int = Field(
-        default=90, ge=30, le=365, description="Days before key rotation reminder"
-    )
+    require_api_keys: bool = Field(default=True, description="Require API keys for operations")
+    rotate_keys_days: int = Field(default=90, ge=30, le=365, description="Days before key rotation reminder")
 
 
 class PerformanceSettings(BaseSettings):
@@ -205,26 +171,16 @@ class PerformanceSettings(BaseSettings):
     )
 
     # Concurrency
-    parallel_requests: int = Field(
-        default=4, ge=1, le=20, description="Maximum parallel requests"
-    )
-    batch_size: int = Field(
-        default=10, ge=1, le=100, description="Batch processing size"
-    )
+    parallel_requests: int = Field(default=4, ge=1, le=20, description="Maximum parallel requests")
+    batch_size: int = Field(default=10, ge=1, le=100, description="Batch processing size")
 
     # Debouncing
-    debounce_ms: int = Field(
-        default=300, ge=0, le=5000, description="Debounce delay in milliseconds"
-    )
+    debounce_ms: int = Field(default=300, ge=0, le=5000, description="Debounce delay in milliseconds")
 
     # Caching
     cache_enabled: bool = Field(default=True, description="Enable response caching")
-    max_cache_size_mb: int = Field(
-        default=512, ge=64, le=4096, description="Maximum cache size in MB"
-    )
-    cache_ttl_seconds: int = Field(
-        default=3600, ge=60, le=86400, description="Cache TTL in seconds"
-    )
+    max_cache_size_mb: int = Field(default=512, ge=64, le=4096, description="Maximum cache size in MB")
+    cache_ttl_seconds: int = Field(default=3600, ge=60, le=86400, description="Cache TTL in seconds")
 
     # Loading strategies
     lazy_loading: bool = Field(default=True, description="Enable lazy loading")
@@ -249,35 +205,21 @@ class WorkspaceSettings(BaseSettings):
     debug: bool = Field(default=False, description="Enable debug mode")
 
     # Workspace paths
-    workspace_root: Path = Field(
-        default_factory=lambda: Path.cwd(), description="Workspace root directory"
-    )
+    workspace_root: Path = Field(default_factory=lambda: Path.cwd(), description="Workspace root directory")
 
     # Logging
     log_level: str = Field(default="INFO", description="Logging level")
     log_to_file: bool = Field(default=True, description="Enable file logging")
-    log_max_size_mb: int = Field(
-        default=10, ge=1, le=100, description="Max log file size"
-    )
+    log_max_size_mb: int = Field(default=10, ge=1, le=100, description="Max log file size")
 
     # Features
-    enable_knowledge_graph: bool = Field(
-        default=True, description="Enable knowledge graph integration"
-    )
-    enable_semantic_search: bool = Field(
-        default=True, description="Enable semantic search"
-    )
-    enable_agent_orchestration: bool = Field(
-        default=True, description="Enable agent orchestration"
-    )
+    enable_knowledge_graph: bool = Field(default=True, description="Enable knowledge graph integration")
+    enable_semantic_search: bool = Field(default=True, description="Enable semantic search")
+    enable_agent_orchestration: bool = Field(default=True, description="Enable agent orchestration")
 
     # Telemetry (DISABLED by default for stability)
-    enable_telemetry: bool = Field(
-        default=False, description="Enable telemetry collection"
-    )
-    enable_crash_reporting: bool = Field(
-        default=False, description="Enable crash reporting"
-    )
+    enable_telemetry: bool = Field(default=False, description="Enable telemetry collection")
+    enable_crash_reporting: bool = Field(default=False, description="Enable crash reporting")
 
     @field_validator("log_level")
     @classmethod
@@ -320,9 +262,7 @@ class UnifiedSettings:
             handlers=[
                 logging.StreamHandler(),
                 (
-                    logging.FileHandler(
-                        self.workspace.workspace_root / "logs" / "workspace.log"
-                    )
+                    logging.FileHandler(self.workspace.workspace_root / "logs" / "workspace.log")
                     if self.workspace.log_to_file
                     else logging.NullHandler()
                 ),
@@ -337,9 +277,7 @@ class UnifiedSettings:
         # Check for missing API keys
         if self.security.require_api_keys:
             if not self.ai.api_key_primary:
-                issues.append(
-                    "WARNING: Primary API key not set (OPENAI_API_KEY or AI_API_KEY_PRIMARY)"
-                )
+                issues.append("WARNING: Primary API key not set (OPENAI_API_KEY or AI_API_KEY_PRIMARY)")
 
         # Check timeout settings
         if self.ai.timeout_ms > self.stability.request_timeout_ms:
@@ -351,16 +289,12 @@ class UnifiedSettings:
         # Check rate limits
         if self.ai.requests_per_minute > 100:
             issues.append(
-                f"WARNING: High request rate ({self.ai.requests_per_minute}/min) "
-                "may cause stability issues"
+                f"WARNING: High request rate ({self.ai.requests_per_minute}/min) " "may cause stability issues"
             )
 
         # Check memory limits
         if self.stability.max_memory_mb < 512:
-            issues.append(
-                f"WARNING: Low memory limit ({self.stability.max_memory_mb}MB) "
-                "may cause crashes"
-            )
+            issues.append(f"WARNING: Low memory limit ({self.stability.max_memory_mb}MB) " "may cause crashes")
 
         # Check dangerous settings
         if self.security.allow_extra_fields:
@@ -496,9 +430,7 @@ def validate_workspace_settings() -> Dict[str, Any]:
     validation_issues = settings._validate_configuration()
 
     return {
-        "status": "CRITICAL"
-        if any(p["severity"] == "CRITICAL" for p in problems)
-        else "OK",
+        "status": "CRITICAL" if any(p["severity"] == "CRITICAL" for p in problems) else "OK",
         "problems": problems,
         "validation_issues": validation_issues,
         "summary": settings.get_settings_summary(),

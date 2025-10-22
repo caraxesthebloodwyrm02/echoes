@@ -7,6 +7,7 @@ Exposes endpoints:
 
 The server embeds a Glimpse orchestrator and broadcasts frames on every input.
 """
+
 from __future__ import annotations
 
 import json
@@ -23,6 +24,7 @@ from automation.guardrails.middleware import GuardrailMiddleware
 
 class SSEHub:
     """Thread-safe hub to manage SSE client queues and broadcast messages."""
+
     def __init__(self) -> None:
         self._clients: List[Queue] = []
         self._lock = threading.Lock()
@@ -51,7 +53,9 @@ class SSEHub:
 
 class ServerState:
     def __init__(self, base_path: Path, enable_guardrails: bool = True) -> None:
-        self.system = create_glimpse(mode="timeline", enable_security=False, enable_guardrails=enable_guardrails, base_path=base_path)
+        self.system = create_glimpse(
+            mode="timeline", enable_security=False, enable_guardrails=enable_guardrails, base_path=base_path
+        )
         self.system.start()
         self.hub = SSEHub()
         self.current_stage: str = "draft"  # "draft"|"final"
@@ -115,7 +119,7 @@ class PreviewRequestHandler(BaseHTTPRequestHandler):
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.end_headers()
-        self.wfile.write(b"{\"status\":\"ok\"}")
+        self.wfile.write(b'{"status":"ok"}')
 
     def _handle_events(self):
         self.send_response(200)
@@ -200,7 +204,9 @@ class PreviewRequestHandler(BaseHTTPRequestHandler):
         self.wfile.write(json.dumps(resp).encode("utf-8"))
 
 
-def start_server(host: str = "127.0.0.1", port: int = 8765, base_path: Path | None = None, enable_guardrails: bool = True) -> ThreadingHTTPServer:
+def start_server(
+    host: str = "127.0.0.1", port: int = 8765, base_path: Path | None = None, enable_guardrails: bool = True
+) -> ThreadingHTTPServer:
     server = ThreadingHTTPServer((host, port), PreviewRequestHandler)
     # attach state
     server.state = ServerState(base_path or Path(__file__).parent, enable_guardrails=enable_guardrails)  # type: ignore[attr-defined]

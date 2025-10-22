@@ -150,9 +150,7 @@ class CSVFormatter:
     def has_mi_columns(self) -> bool:
         return bool(isinstance(self.obj.columns, ABCMultiIndex))
 
-    def _initialize_columns(
-        self, cols: Iterable[Hashable] | None
-    ) -> npt.NDArray[np.object_]:
+    def _initialize_columns(self, cols: Iterable[Hashable] | None) -> npt.NDArray[np.object_]:
         # validate mi options
         if self.has_mi_columns:
             if cols is not None:
@@ -190,13 +188,8 @@ class CSVFormatter:
     @cache_readonly
     def data_index(self) -> Index:
         data_index = self.obj.index
-        if (
-            isinstance(data_index, (ABCDatetimeIndex, ABCPeriodIndex))
-            and self.date_format is not None
-        ):
-            data_index = Index(
-                [x.strftime(self.date_format) if notna(x) else "" for x in data_index]
-            )
+        if isinstance(data_index, (ABCDatetimeIndex, ABCPeriodIndex)) and self.date_format is not None:
+            data_index = Index([x.strftime(self.date_format) if notna(x) else "" for x in data_index])
         elif isinstance(data_index, ABCMultiIndex):
             data_index = data_index.remove_unused_levels()
         return data_index
@@ -221,9 +214,7 @@ class CSVFormatter:
         if self._has_aliases:
             assert not isinstance(self.header, bool)
             if len(self.header) != len(self.cols):
-                raise ValueError(
-                    f"Writing {len(self.cols)} cols but got {len(self.header)} aliases"
-                )
+                raise ValueError(f"Writing {len(self.cols)} cols but got {len(self.header)} aliases")
             return self.header
         else:
             # self.cols is an ndarray derived from Index._get_values_for_csv,

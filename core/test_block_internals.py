@@ -52,16 +52,12 @@ class TestDataFrameBlockInternals:
 
     def test_cast_internals(self, float_frame):
         msg = "Passing a BlockManager to DataFrame"
-        with tm.assert_produces_warning(
-            DeprecationWarning, match=msg, check_stacklevel=False
-        ):
+        with tm.assert_produces_warning(DeprecationWarning, match=msg, check_stacklevel=False):
             casted = DataFrame(float_frame._mgr, dtype=int)
         expected = DataFrame(float_frame._series, dtype=int)
         tm.assert_frame_equal(casted, expected)
 
-        with tm.assert_produces_warning(
-            DeprecationWarning, match=msg, check_stacklevel=False
-        ):
+        with tm.assert_produces_warning(DeprecationWarning, match=msg, check_stacklevel=False):
             casted = DataFrame(float_frame._mgr, dtype=np.int32)
         expected = DataFrame(float_frame._series, dtype=np.int32)
         tm.assert_frame_equal(casted, expected)
@@ -132,9 +128,7 @@ class TestDataFrameBlockInternals:
 
         df = DataFrame({"A": [datetime(2005, 1, 1), True]})
         result = df["A"]
-        expected = Series(
-            np.asarray([datetime(2005, 1, 1), True], np.object_), name="A"
-        )
+        expected = Series(np.asarray([datetime(2005, 1, 1), True], np.object_), name="A")
         tm.assert_series_equal(result, expected)
 
         df = DataFrame({"A": [None, 1]})
@@ -179,9 +173,7 @@ class TestDataFrameBlockInternals:
 
         df = DataFrame({"A": [2.0, 1, datetime(2006, 1, 1), None]})
         result = df["A"]
-        expected = Series(
-            np.asarray([2.0, 1, datetime(2006, 1, 1), None], np.object_), name="A"
-        )
+        expected = Series(np.asarray([2.0, 1, datetime(2006, 1, 1), None], np.object_), name="A")
         tm.assert_series_equal(result, expected)
 
     def test_construction_with_mixed(self, float_string_frame, using_infer_string):
@@ -194,9 +186,7 @@ class TestDataFrameBlockInternals:
         expected = Series(
             [np.dtype("float64")] * 4
             + [
-                np.dtype("object")
-                if not using_infer_string
-                else pd.StringDtype(na_value=np.nan),
+                np.dtype("object") if not using_infer_string else pd.StringDtype(na_value=np.nan),
                 np.dtype("datetime64[us]"),
                 np.dtype("timedelta64[us]"),
             ],
@@ -209,9 +199,7 @@ class TestDataFrameBlockInternals:
         #  *not* convert
         arr = np.array([1, 2, 3], dtype="timedelta64[s]")
         df = DataFrame({"A": arr})
-        expected = DataFrame(
-            {"A": pd.timedelta_range("00:00:01", periods=3, freq="s")}, index=range(3)
-        )
+        expected = DataFrame({"A": pd.timedelta_range("00:00:01", periods=3, freq="s")}, index=range(3))
         tm.assert_numpy_array_equal(df["A"].to_numpy(), arr)
 
         expected = DataFrame(
@@ -227,9 +215,7 @@ class TestDataFrameBlockInternals:
         assert expected.dtypes["dt2"] == "M8[s]"
 
         dt1 = np.datetime64("2013-01-01")
-        dt2 = np.array(
-            ["2013-01-01", "2013-01-02", "2013-01-03"], dtype="datetime64[D]"
-        )
+        dt2 = np.array(["2013-01-01", "2013-01-02", "2013-01-03"], dtype="datetime64[D]")
         df = DataFrame({"dt1": dt1, "dt2": dt2})
 
         # df['dt3'] = np.array(['2013-01-01 00:00:01','2013-01-01
@@ -354,9 +340,7 @@ class TestDataFrameBlockInternals:
         df[0] = np.nan
         wasCol = {}
 
-        with tm.assert_produces_warning(
-            PerformanceWarning, raise_on_extra_warnings=False
-        ):
+        with tm.assert_produces_warning(PerformanceWarning, raise_on_extra_warnings=False):
             for i, dt in enumerate(df.index):
                 for col in range(100, 200):
                     if col not in wasCol:
@@ -391,9 +375,7 @@ class TestDataFrameBlockInternals:
             {
                 "a": [1, 2, 3, 4],
                 "b": ["a", "b", "c", "d"],
-                "c": pd.arrays.NumpyExtensionArray(
-                    np.array([1, 2, None, 3], dtype=object)
-                ),
+                "c": pd.arrays.NumpyExtensionArray(np.array([1, 2, None, 3], dtype=object)),
             }
         )
         assert type(df["c"]._mgr.blocks[0]) == NumpyBlock

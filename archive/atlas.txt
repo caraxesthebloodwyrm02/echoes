@@ -1,1 +1,0 @@
-Atlas - AI-Powered Project Scaffolding Tool. Generates comprehensive project structures and development frameworks using OpenAI GPT models. Optimized for rapid project initialization with intelligent architecture recommendations.

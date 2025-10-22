@@ -81,9 +81,7 @@ def maybe_resample(series: Series, ax: Axes, kwargs: dict[str, Any]):
         if is_superperiod(freq, ax_freq):  # upsample input
             series = series.copy()
             # error: "Index" has no attribute "asfreq"
-            series.index = series.index.asfreq(  # type: ignore[attr-defined]
-                ax_freq, how="s"
-            )
+            series.index = series.index.asfreq(ax_freq, how="s")  # type: ignore[attr-defined]
             freq = ax_freq
         elif _is_sup(freq, ax_freq):  # one is weekly
             how = "last"
@@ -98,15 +96,11 @@ def maybe_resample(series: Series, ax: Axes, kwargs: dict[str, Any]):
 
 
 def _is_sub(f1: str, f2: str) -> bool:
-    return (f1.startswith("W") and is_subperiod("D", f2)) or (
-        f2.startswith("W") and is_subperiod(f1, "D")
-    )
+    return (f1.startswith("W") and is_subperiod("D", f2)) or (f2.startswith("W") and is_subperiod(f1, "D"))
 
 
 def _is_sup(f1: str, f2: str) -> bool:
-    return (f1.startswith("W") and is_superperiod("D", f2)) or (
-        f2.startswith("W") and is_superperiod(f1, "D")
-    )
+    return (f1.startswith("W") and is_superperiod("D", f2)) or (f2.startswith("W") and is_superperiod(f1, "D"))
 
 
 def _upsample_others(ax: Axes, freq: BaseOffset, kwargs: dict[str, Any]) -> None:
@@ -250,9 +244,7 @@ def use_dynamic_x(ax: Axes, data: DataFrame | Series) -> bool:
     if isinstance(data.index, ABCDatetimeIndex):
         # error: "BaseOffset" has no attribute "_period_dtype_code"
         freq_str = OFFSET_TO_PERIOD_FREQSTR.get(freq_str, freq_str)
-        base = to_offset(
-            freq_str, is_period=True
-        )._period_dtype_code  # type: ignore[attr-defined]
+        base = to_offset(freq_str, is_period=True)._period_dtype_code  # type: ignore[attr-defined]
         x = data.index
         if base <= FreqGroup.FR_DAY.value:
             return x[:1].is_normalized
@@ -321,9 +313,7 @@ def _format_coord(freq, t, y) -> str:
     return f"t = {time_period}  y = {y:8f}"
 
 
-def format_dateaxis(
-    subplot, freq: BaseOffset, index: DatetimeIndex | PeriodIndex
-) -> None:
+def format_dateaxis(subplot, freq: BaseOffset, index: DatetimeIndex | PeriodIndex) -> None:
     """
     Pretty-formats the date axis (x-axis).
 
@@ -338,21 +328,13 @@ def format_dateaxis(
     # Note: DatetimeIndex does not use this
     # interface. DatetimeIndex uses matplotlib.date directly
     if isinstance(index, ABCPeriodIndex):
-        majlocator = TimeSeries_DateLocator(
-            freq, dynamic_mode=True, minor_locator=False, plot_obj=subplot
-        )
-        minlocator = TimeSeries_DateLocator(
-            freq, dynamic_mode=True, minor_locator=True, plot_obj=subplot
-        )
+        majlocator = TimeSeries_DateLocator(freq, dynamic_mode=True, minor_locator=False, plot_obj=subplot)
+        minlocator = TimeSeries_DateLocator(freq, dynamic_mode=True, minor_locator=True, plot_obj=subplot)
         subplot.xaxis.set_major_locator(majlocator)
         subplot.xaxis.set_minor_locator(minlocator)
 
-        majformatter = TimeSeries_DateFormatter(
-            freq, dynamic_mode=True, minor_locator=False, plot_obj=subplot
-        )
-        minformatter = TimeSeries_DateFormatter(
-            freq, dynamic_mode=True, minor_locator=True, plot_obj=subplot
-        )
+        majformatter = TimeSeries_DateFormatter(freq, dynamic_mode=True, minor_locator=False, plot_obj=subplot)
+        minformatter = TimeSeries_DateFormatter(freq, dynamic_mode=True, minor_locator=True, plot_obj=subplot)
         subplot.xaxis.set_major_formatter(majformatter)
         subplot.xaxis.set_minor_formatter(minformatter)
 

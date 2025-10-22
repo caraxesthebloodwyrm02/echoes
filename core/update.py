@@ -1,4 +1,4 @@
-'''
+"""
 This module contains subroutines concerning the update of the interpolation set.
 
 Translated from Zaikun Zhang's modern-Fortran reference implementation in PRIMA.
@@ -6,7 +6,7 @@ Translated from Zaikun Zhang's modern-Fortran reference implementation in PRIMA.
 Dedicated to late Professor M. J. D. Powell FRS (1936--2015).
 
 Python translation by Nickolai Belakovski.
-'''
+"""
 
 from ..common.consts import DEBUGGING
 from ..common.infos import DAMAGING_ROUNDING, INFO_DEFAULT
@@ -15,9 +15,9 @@ import numpy as np
 
 
 def updatexfc(jdrop, constr, cpen, cstrv, d, f, conmat, cval, fval, sim, simi):
-    '''
+    """
     This function revises the simplex by updating the elements of SIM, SIMI, FVAL, CONMAT, and CVAL
-    '''
+    """
 
     # Local variables
     itol = 1
@@ -46,10 +46,9 @@ def updatexfc(jdrop, constr, cpen, cstrv, d, f, conmat, cval, fval, sim, simi):
         assert np.isfinite(simi).all()
         assert isinv(sim[:, :num_vars], simi, itol)
 
-    #====================#
+    # ====================#
     # Calculation starts #
-    #====================#
-
+    # ====================#
 
     # Do nothing when JDROP is None. This can only happen after a trust-region step.
     if jdrop is None:  # JDROP is None is impossible if the input is correct.
@@ -93,9 +92,9 @@ def updatexfc(jdrop, constr, cpen, cstrv, d, f, conmat, cval, fval, sim, simi):
         sim = sim_old
         simi = simi_old
 
-    #==================#
+    # ==================#
     # Calculation ends #
-    #==================#
+    # ==================#
 
     # Postconditions
     if DEBUGGING:
@@ -112,11 +111,12 @@ def updatexfc(jdrop, constr, cpen, cstrv, d, f, conmat, cval, fval, sim, simi):
 
     return sim, simi, fval, conmat, cval, info
 
+
 def findpole(cpen, cval, fval):
-    '''
+    """
     This subroutine identifies the best vertex of the current simplex with respect to the merit
     function PHI = F + CPEN * CSTRV.
-    '''
+    """
 
     # Size
     num_vars = np.size(fval) - 1
@@ -127,9 +127,9 @@ def findpole(cpen, cval, fval):
         assert np.size(cval) == num_vars + 1 and not any(cval < 0 | np.isnan(cval) | np.isposinf(cval))
         assert np.size(fval) == num_vars + 1 and not any(np.isnan(fval) | np.isposinf(fval))
 
-    #====================#
+    # ====================#
     # Calculation starts #
-    #====================#
+    # ====================#
 
     # Identify the optimal vertex of the current simplex
     jopt = np.size(fval) - 1
@@ -143,19 +143,23 @@ def findpole(cpen, cval, fval):
         # phimin, and in that case we should choose the one with the smallest cval.
         jopt = np.ma.array(cval, mask=(phi > phimin)).argmin()
 
-    #==================#
+    # ==================#
     # Calculation ends #
-    #==================#
+    # ==================#
 
     # Postconditions
     if DEBUGGING:
         assert jopt >= 0 and jopt < num_vars + 1
-        assert jopt == num_vars or phi[jopt] < phi[num_vars] or (phi[jopt] <= phi[num_vars] and cval[jopt] < cval[num_vars])
+        assert (
+            jopt == num_vars
+            or phi[jopt] < phi[num_vars]
+            or (phi[jopt] <= phi[num_vars] and cval[jopt] < cval[num_vars])
+        )
     return jopt
 
 
 def updatepole(cpen, conmat, cval, fval, sim, simi):
-    #--------------------------------------------------------------------------------------------------!
+    # --------------------------------------------------------------------------------------------------!
     # This subroutine identifies the best vertex of the current simplex with respect to the merit
     # function PHI = F + CPEN * CSTRV, and then switch this vertex to SIM[:, NUM_VARS], which Powell called
     # the "pole position" in his comments. CONMAT, CVAL, FVAL, and SIMI are updated accordingly.
@@ -203,9 +207,9 @@ def updatepole(cpen, conmat, cval, fval, sim, simi):
         assert np.isfinite(simi).all()
         assert isinv(sim[:, :num_vars], simi, itol)
 
-    #====================#
+    # ====================#
     # Calculation starts #
-    #====================#
+    # ====================#
 
     # INFO must be set, as it is an output.
     info = INFO_DEFAULT
@@ -254,7 +258,6 @@ def updatepole(cpen, conmat, cval, fval, sim, simi):
             simi = simi_test
             erri = erri_test
 
-
     # If SIMI is satisfactory, then update FVAL, CONMAT, and CVAL. Otherwise restore SIM and SIMI, and
     # return with INFO = DAMAGING_ROUNDING.
     if erri <= itol:
@@ -267,9 +270,9 @@ def updatepole(cpen, conmat, cval, fval, sim, simi):
         sim = sim_old
         simi = simi_old
 
-    #==================#
+    # ==================#
     # Calculation ends #
-    #==================#
+    # ==================#
 
     # Postconditions
     if DEBUGGING:

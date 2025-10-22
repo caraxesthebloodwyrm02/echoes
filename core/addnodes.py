@@ -35,9 +35,7 @@ class translatable(nodes.Node):
         """Preserve original translatable messages."""
         raise NotImplementedError
 
-    def apply_translated_message(
-        self, original_message: str, translated_message: str
-    ) -> None:
+    def apply_translated_message(self, original_message: str, translated_message: str) -> None:
         """Apply translated message."""
         raise NotImplementedError
 
@@ -60,36 +58,34 @@ class toctree(nodes.General, nodes.Element, translatable):
 
     def preserve_original_messages(self) -> None:
         # toctree entries
-        rawentries: list[str] = self.setdefault('rawentries', [])
-        for title, _docname in self['entries']:
+        rawentries: list[str] = self.setdefault("rawentries", [])
+        for title, _docname in self["entries"]:
             if title:
                 rawentries.append(title)
 
         # :caption: option
-        if self.get('caption'):
-            self['rawcaption'] = self['caption']
+        if self.get("caption"):
+            self["rawcaption"] = self["caption"]
 
-    def apply_translated_message(
-        self, original_message: str, translated_message: str
-    ) -> None:
+    def apply_translated_message(self, original_message: str, translated_message: str) -> None:
         # toctree entries
-        for i, (title, docname) in enumerate(self['entries']):
+        for i, (title, docname) in enumerate(self["entries"]):
             if title == original_message:
-                self['entries'][i] = (translated_message, docname)
+                self["entries"][i] = (translated_message, docname)
 
         # :caption: option
-        if self.get('rawcaption') == original_message:
-            self['caption'] = translated_message
+        if self.get("rawcaption") == original_message:
+            self["caption"] = translated_message
 
     def extract_original_messages(self) -> list[str]:
         messages: list[str] = []
 
         # toctree entries
-        messages.extend(self.get('rawentries', []))
+        messages.extend(self.get("rawentries", []))
 
         # :caption: option
-        if 'rawcaption' in self:
-            messages.append(self['rawcaption'])
+        if "rawcaption" in self:
+            messages.append(self["rawcaption"])
         return messages
 
 
@@ -108,7 +104,7 @@ class _desc_classes_injector(nodes.Element, not_smartquotable):
 
     def __init__(self, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs)
-        self['classes'].extend(self.classes)
+        self["classes"].extend(self.classes)
 
 
 # Top-level nodes
@@ -131,9 +127,7 @@ class desc(nodes.Admonition, nodes.Element):
     #  that forces the specification of the domain and objtyp?
 
 
-class desc_signature(
-    _desc_classes_injector, nodes.Part, nodes.Inline, nodes.TextElement
-):
+class desc_signature(_desc_classes_injector, nodes.Part, nodes.Inline, nodes.TextElement):
     """Node for a single object signature.
 
     As default the signature is a single-line signature.
@@ -144,12 +138,12 @@ class desc_signature(
     """
 
     # Note: the domain name is being added through a post-transform DescSigAddDomainAsClass
-    classes = ['sig', 'sig-object']
+    classes = ["sig", "sig-object"]
 
     @property
     def child_text_separator(self) -> str:  # type: ignore[override]
-        if self.get('is_multiline'):
-            return ' '
+        if self.get("is_multiline"):
+            return " "
         else:
             return super().child_text_separator
 
@@ -162,7 +156,7 @@ class desc_signature_line(nodes.Part, nodes.Inline, nodes.FixedTextElement):
     Set ``add_permalink = True`` for the line that should get the permalink.
     """
 
-    sphinx_line_type = ''
+    sphinx_line_type = ""
 
 
 class desc_content(nodes.General, nodes.Element):
@@ -181,11 +175,11 @@ class desc_inline(_desc_classes_injector, nodes.Inline, nodes.TextElement):
     and the name of the domain it belongs to.
     """
 
-    classes = ['sig', 'sig-inline']
+    classes = ["sig", "sig-inline"]
 
     def __init__(self, domain: str, *args: Any, **kwargs: Any) -> None:
         super().__init__(*args, **kwargs, domain=domain)
-        self['classes'].append(domain)
+        self["classes"].append(domain)
 
 
 # Nodes for high-level structure in signatures
@@ -194,9 +188,7 @@ class desc_inline(_desc_classes_injector, nodes.Inline, nodes.TextElement):
 # nodes to use within a desc_signature or desc_signature_line
 
 
-class desc_name(
-    _desc_classes_injector, nodes.Part, nodes.Inline, nodes.FixedTextElement
-):
+class desc_name(_desc_classes_injector, nodes.Part, nodes.Inline, nodes.FixedTextElement):
     """Node for the main object name.
 
     For example, in the declaration of a Python class ``MyModule.MyClass``,
@@ -205,12 +197,10 @@ class desc_name(
     This node always has the class ``sig-name``.
     """
 
-    classes = ['sig-name', 'descname']  # 'descname' is for backwards compatibility
+    classes = ["sig-name", "descname"]  # 'descname' is for backwards compatibility
 
 
-class desc_addname(
-    _desc_classes_injector, nodes.Part, nodes.Inline, nodes.FixedTextElement
-):
+class desc_addname(_desc_classes_injector, nodes.Part, nodes.Inline, nodes.FixedTextElement):
     """Node for additional name parts for an object.
 
     For example, in the declaration of a Python class ``MyModule.MyClass``,
@@ -220,7 +210,7 @@ class desc_addname(
     """
 
     # 'descclassname' is for backwards compatibility
-    classes = ['sig-prename', 'descclassname']
+    classes = ["sig-prename", "descclassname"]
 
 
 # compatibility alias
@@ -235,7 +225,7 @@ class desc_returns(desc_type):
     """Node for a "returns" annotation (a la -> in Python)."""
 
     def astext(self) -> str:
-        return ' -> ' + super().astext()
+        return " -> " + super().astext()
 
 
 class desc_parameterlist(nodes.Part, nodes.Inline, nodes.FixedTextElement):
@@ -248,10 +238,10 @@ class desc_parameterlist(nodes.Part, nodes.Inline, nodes.FixedTextElement):
     if ``multi_line_trailing_comma`` is True.
     """
 
-    child_text_separator = ', '
+    child_text_separator = ", "
 
     def astext(self) -> str:
-        return f'({super().astext()})'
+        return f"({super().astext()})"
 
 
 class desc_type_parameter_list(nodes.Part, nodes.Inline, nodes.FixedTextElement):
@@ -264,10 +254,10 @@ class desc_type_parameter_list(nodes.Part, nodes.Inline, nodes.FixedTextElement)
     if ``multi_line_trailing_comma`` is True.
     """
 
-    child_text_separator = ', '
+    child_text_separator = ", "
 
     def astext(self) -> str:
-        return f'[{super().astext()}]'
+        return f"[{super().astext()}]"
 
 
 class desc_parameter(nodes.Part, nodes.Inline, nodes.FixedTextElement):
@@ -281,10 +271,10 @@ class desc_type_parameter(nodes.Part, nodes.Inline, nodes.FixedTextElement):
 class desc_optional(nodes.Part, nodes.Inline, nodes.FixedTextElement):
     """Node for marking optional parts of the parameter list."""
 
-    child_text_separator = ', '
+    child_text_separator = ", "
 
     def astext(self) -> str:
-        return '[' + super().astext() + ']'
+        return "[" + super().astext() + "]"
 
 
 class desc_annotation(nodes.Part, nodes.Inline, nodes.FixedTextElement):
@@ -315,11 +305,9 @@ class desc_sig_element(nodes.inline, _desc_classes_injector):
 
     classes: list[str] = []
 
-    def __init__(
-        self, rawsource: str = '', text: str = '', *children: Element, **attributes: Any
-    ) -> None:
+    def __init__(self, rawsource: str = "", text: str = "", *children: Element, **attributes: Any) -> None:
         super().__init__(rawsource, text, *children, **attributes)
-        self['classes'].extend(self.classes)
+        self["classes"].extend(self.classes)
 
     def __init_subclass__(cls, *, _sig_element: bool = False, **kwargs: Any) -> None:
         super().__init_subclass__(**kwargs)
@@ -335,12 +323,12 @@ class desc_sig_element(nodes.inline, _desc_classes_injector):
 class desc_sig_space(desc_sig_element, _sig_element=True):
     """Node for a space in a signature."""
 
-    classes = ['w']
+    classes = ["w"]
 
     def __init__(
         self,
-        rawsource: str = '',
-        text: str = ' ',
+        rawsource: str = "",
+        text: str = " ",
         *children: Element,
         **attributes: Any,
     ) -> None:
@@ -350,49 +338,49 @@ class desc_sig_space(desc_sig_element, _sig_element=True):
 class desc_sig_name(desc_sig_element, _sig_element=True):
     """Node for an identifier in a signature."""
 
-    classes = ['n']
+    classes = ["n"]
 
 
 class desc_sig_operator(desc_sig_element, _sig_element=True):
     """Node for an operator in a signature."""
 
-    classes = ['o']
+    classes = ["o"]
 
 
 class desc_sig_punctuation(desc_sig_element, _sig_element=True):
     """Node for punctuation in a signature."""
 
-    classes = ['p']
+    classes = ["p"]
 
 
 class desc_sig_keyword(desc_sig_element, _sig_element=True):
     """Node for a general keyword in a signature."""
 
-    classes = ['k']
+    classes = ["k"]
 
 
 class desc_sig_keyword_type(desc_sig_element, _sig_element=True):
     """Node for a keyword which is a built-in type in a signature."""
 
-    classes = ['kt']
+    classes = ["kt"]
 
 
 class desc_sig_literal_number(desc_sig_element, _sig_element=True):
     """Node for a numeric literal in a signature."""
 
-    classes = ['m']
+    classes = ["m"]
 
 
 class desc_sig_literal_string(desc_sig_element, _sig_element=True):
     """Node for a string literal in a signature."""
 
-    classes = ['s']
+    classes = ["s"]
 
 
 class desc_sig_literal_char(desc_sig_element, _sig_element=True):
     """Node for a character literal in a signature."""
 
-    classes = ['sc']
+    classes = ["sc"]
 
 
 ###############################################################
@@ -498,7 +486,7 @@ class pending_xref(nodes.Inline, nodes.Element):
     BuildEnvironment.resolve_references.
     """
 
-    child_text_separator = ''
+    child_text_separator = ""
 
 
 class pending_xref_condition(nodes.Inline, nodes.TextElement):
@@ -618,7 +606,7 @@ def setup(app: Sphinx) -> ExtensionMetadata:
     app.add_node(manpage)
 
     return {
-        'version': 'builtin',
-        'parallel_read_safe': True,
-        'parallel_write_safe': True,
+        "version": "builtin",
+        "parallel_read_safe": True,
+        "parallel_write_safe": True,
     }

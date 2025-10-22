@@ -34,9 +34,7 @@ class GAAClusterer(VectorSpaceClusterer):
 
     def cluster(self, vectors, assign_clusters=False, trace=False):
         # stores the merge order
-        self._dendrogram = Dendrogram(
-            [numpy.array(vector, numpy.float64) for vector in vectors]
-        )
+        self._dendrogram = Dendrogram([numpy.array(vector, numpy.float64) for vector in vectors])
         return VectorSpaceClusterer.cluster(self, vectors, assign_clusters, trace)
 
     def cluster_vectorspace(self, vectors, trace=False):
@@ -89,9 +87,7 @@ class GAAClusterer(VectorSpaceClusterer):
         dist[:i, i] = dist[:i, i] * i_weight + dist[:i, j] * j_weight
         dist[:i, i] /= weight_sum
         # update for i<x<j
-        dist[i, i + 1 : j] = (
-            dist[i, i + 1 : j] * i_weight + dist[i + 1 : j, j] * j_weight
-        )
+        dist[i, i + 1 : j] = dist[i, i + 1 : j] * i_weight + dist[i + 1 : j, j] * j_weight
         # update for i<j<x
         dist[i, j + 1 :] = dist[i, j + 1 :] * i_weight + dist[j, j + 1 :] * j_weight
         dist[i, i + 1 :] /= weight_sum

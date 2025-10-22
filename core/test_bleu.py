@@ -43,18 +43,12 @@ class TestBLEU(unittest.TestCase):
 
         # Example 2: the "of the" example.
         # Reference sentences
-        ref1 = str(
-            "It is a guide to action that ensures that the military "
-            "will forever heed Party commands"
-        ).split()
+        ref1 = str("It is a guide to action that ensures that the military " "will forever heed Party commands").split()
         ref2 = str(
             "It is the guiding principle which guarantees the military "
             "forces always being under the command of the Party"
         ).split()
-        ref3 = str(
-            "It is the practical guide for the army always to heed "
-            "the directions of the party"
-        ).split()
+        ref3 = str("It is the practical guide for the army always to heed " "the directions of the party").split()
         # Hypothesis sentence(s).
         hyp1 = "of the".split()
 
@@ -67,13 +61,9 @@ class TestBLEU(unittest.TestCase):
 
         # Example 3: Proper MT outputs.
         hyp1 = str(
-            "It is a guide to action which ensures that the military "
-            "always obeys the commands of the party"
+            "It is a guide to action which ensures that the military " "always obeys the commands of the party"
         ).split()
-        hyp2 = str(
-            "It is to insure the troops forever hearing the activity "
-            "guidebook that party direct"
-        ).split()
+        hyp2 = str("It is to insure the troops forever hearing the activity " "guidebook that party direct").split()
 
         references = [ref1, ref2, ref3]
 
@@ -104,9 +94,7 @@ class TestBLEU(unittest.TestCase):
         hypothesis = ["a"] * 7
         hyp_len = len(hypothesis)
         closest_ref_len = closest_ref_length(references, hyp_len)
-        self.assertAlmostEqual(
-            brevity_penalty(closest_ref_len, hyp_len), 0.8669, places=4
-        )
+        self.assertAlmostEqual(brevity_penalty(closest_ref_len, hyp_len), 0.8669, places=4)
 
         references = [["a"] * 11, ["a"] * 8, ["a"] * 6, ["a"] * 7]
         hypothesis = ["a"] * 7
@@ -157,9 +145,7 @@ class TestBLEUFringeCases(unittest.TestCase):
         weights = (1.0 / n,) * n  # Uniform weights.
         # Since no n-grams matches were found the result should be zero
         # exp(w_1 * 1 * w_2 * 1 * w_3 * 1 * w_4 * -inf) = 0
-        self.assertAlmostEqual(
-            sentence_bleu(references, hypothesis, weights), 0.0, places=4
-        )
+        self.assertAlmostEqual(sentence_bleu(references, hypothesis, weights), 0.0, places=4)
         # Checks that the warning has been raised because len(hypothesis) < 4.
         try:
             self.assertWarns(UserWarning, sentence_bleu, references, hypothesis)
@@ -172,9 +158,7 @@ class TestBLEUFringeCases(unittest.TestCase):
         hypothesis = "John loves Mary".split()
         # Since no 4-grams matches were found the result should be zero
         # exp(w_1 * 1 * w_2 * 1 * w_3 * 1 * w_4 * -inf) = 0
-        self.assertAlmostEqual(
-            sentence_bleu(references, hypothesis, weights), 0.0, places=4
-        )
+        self.assertAlmostEqual(sentence_bleu(references, hypothesis, weights), 0.0, places=4)
 
     def test_empty_hypothesis(self):
         # Test case where there's hypothesis is empty.
@@ -249,9 +233,7 @@ class TestBLEUvsMteval13a(unittest.TestCase):
                 references = list(map(lambda x: [x.split()], ref_fin))
                 # Without smoothing.
                 for i, mteval_bleu in zip(range(1, 10), mteval_bleu_scores):
-                    nltk_bleu = corpus_bleu(
-                        references, hypothesis, weights=(1.0 / i,) * i
-                    )
+                    nltk_bleu = corpus_bleu(references, hypothesis, weights=(1.0 / i,) * i)
                     # Check that the BLEU scores difference is less than 0.005 .
                     # Note: This is an approximate comparison; as much as
                     #       +/- 0.01 BLEU might be "statistically significant",
@@ -283,12 +265,8 @@ class TestBLEUWithBadSentence(unittest.TestCase):
         try:  # Check that the warning is raised since no. of 2-grams < 0.
             with self.assertWarns(UserWarning):
                 # Verify that the BLEU output is undesired since no. of 2-grams < 0.
-                self.assertAlmostEqual(
-                    corpus_bleu(references, hypotheses), 0.0, places=4
-                )
-        except (
-            AttributeError
-        ):  # unittest.TestCase.assertWarns is only supported in Python >= 3.2.
+                self.assertAlmostEqual(corpus_bleu(references, hypotheses), 0.0, places=4)
+        except AttributeError:  # unittest.TestCase.assertWarns is only supported in Python >= 3.2.
             self.assertAlmostEqual(corpus_bleu(references, hypotheses), 0.0, places=4)
 
 
@@ -405,12 +383,6 @@ class TestBLEUWithMultipleWeights(unittest.TestCase):
             hypotheses=[hyp1, hyp2],
             weights=[weight_1, weight_2, weight_3],
         )
-        assert bleu_scores[0] == corpus_bleu(
-            [[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_1
-        )
-        assert bleu_scores[1] == corpus_bleu(
-            [[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_2
-        )
-        assert bleu_scores[2] == corpus_bleu(
-            [[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_3
-        )
+        assert bleu_scores[0] == corpus_bleu([[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_1)
+        assert bleu_scores[1] == corpus_bleu([[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_2)
+        assert bleu_scores[2] == corpus_bleu([[ref1a, ref1b, ref1c], [ref2a]], [hyp1, hyp2], weight_3)

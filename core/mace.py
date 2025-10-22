@@ -10,8 +10,6 @@
 A model builder that makes use of the external 'Mace4' package.
 """
 
-import os
-import tempfile
 
 from nltk.inference.api import BaseModelBuilderCommand, ModelBuilder
 from nltk.inference.prover9 import Prover9CommandParent, Prover9Parent
@@ -80,13 +78,8 @@ class MaceCommand(Prover9CommandParent, BaseModelBuilderCommand):
                 if "(" in l:
                     # relation is not nullary
                     name = l[: l.index("(")].strip()
-                    values = [
-                        int(v.strip())
-                        for v in l[l.index("[") + 1 : l.index("]")].split(",")
-                    ]
-                    val.append(
-                        (name, MaceCommand._make_relation_set(num_entities, values))
-                    )
+                    values = [int(v.strip()) for v in l[l.index("[") + 1 : l.index("]")].split(",")]
+                    val.append((name, MaceCommand._make_relation_set(num_entities, values)))
                 else:
                     # relation is nullary
                     name = l[: l.index(",")].strip()
@@ -107,9 +100,7 @@ class MaceCommand(Prover9CommandParent, BaseModelBuilderCommand):
         """
         r = set()
         for position in [pos for (pos, v) in enumerate(values) if v == 1]:
-            r.add(
-                tuple(MaceCommand._make_relation_tuple(position, values, num_entities))
-            )
+            r.add(tuple(MaceCommand._make_relation_tuple(position, values, num_entities)))
         return r
 
     @staticmethod
@@ -121,12 +112,8 @@ class MaceCommand(Prover9CommandParent, BaseModelBuilderCommand):
             sublist_start = position // sublist_size
             sublist_position = int(position % sublist_size)
 
-            sublist = values[
-                sublist_start * sublist_size : (sublist_start + 1) * sublist_size
-            ]
-            return [
-                MaceCommand._make_model_var(sublist_start)
-            ] + MaceCommand._make_relation_tuple(
+            sublist = values[sublist_start * sublist_size : (sublist_start + 1) * sublist_size]
+            return [MaceCommand._make_model_var(sublist_start)] + MaceCommand._make_relation_tuple(
                 sublist_position, sublist, num_entities
             )
 
@@ -217,13 +204,9 @@ class MaceCommand(Prover9CommandParent, BaseModelBuilderCommand):
         :see: ``config_prover9``
         """
         if self._interpformat_bin is None:
-            self._interpformat_bin = self._modelbuilder._find_binary(
-                "interpformat", verbose
-            )
+            self._interpformat_bin = self._modelbuilder._find_binary("interpformat", verbose)
 
-        return self._modelbuilder._call(
-            input_str, self._interpformat_bin, args, verbose
-        )
+        return self._modelbuilder._call(input_str, self._interpformat_bin, args, verbose)
 
 
 class Mace(Prover9Parent, ModelBuilder):
@@ -244,9 +227,7 @@ class Mace(Prover9Parent, ModelBuilder):
         if not assumptions:
             assumptions = []
 
-        stdout, returncode = self._call_mace4(
-            self.prover9_input(goal, assumptions), verbose=verbose
-        )
+        stdout, returncode = self._call_mace4(self.prover9_input(goal, assumptions), verbose=verbose)
         return (returncode == 0, stdout)
 
     def _call_mace4(self, input_str, args=[], verbose=False):
@@ -280,9 +261,7 @@ def decode_result(found):
     :param found: The output of model_found()
     :type found: bool
     """
-    return {True: "Countermodel found", False: "No countermodel found", None: "None"}[
-        found
-    ]
+    return {True: "Countermodel found", False: "No countermodel found", None: "None"}[found]
 
 
 def test_model_found(arguments):
@@ -351,16 +330,8 @@ def test_transform_output(argument_pair):
 
 
 def test_make_relation_set():
-    print(
-        MaceCommand._make_relation_set(num_entities=3, values=[1, 0, 1])
-        == {("c",), ("a",)}
-    )
-    print(
-        MaceCommand._make_relation_set(
-            num_entities=3, values=[0, 0, 0, 0, 0, 0, 1, 0, 0]
-        )
-        == {("c", "a")}
-    )
+    print(MaceCommand._make_relation_set(num_entities=3, values=[1, 0, 1]) == {("c",), ("a",)})
+    print(MaceCommand._make_relation_set(num_entities=3, values=[0, 0, 0, 0, 0, 0, 1, 0, 0]) == {("c", "a")})
     print(
         MaceCommand._make_relation_set(num_entities=2, values=[0, 0, 1, 0, 0, 0, 1, 0])
         == {("a", "b", "a"), ("b", "b", "a")}

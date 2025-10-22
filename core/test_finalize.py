@@ -1,6 +1,7 @@
 """
 An exhaustive list of pandas methods exercising NDFrame.__finalize__.
 """
+
 import operator
 import re
 
@@ -487,8 +488,7 @@ def test_binops(request, args, annotate, all_binary_operators):
             if annotate == "right" and isinstance(left, type(right)):
                 request.applymarker(
                     pytest.mark.xfail(
-                        reason=f"{all_binary_operators} doesn't work when right has "
-                        f"attrs and both are {type(left)}"
+                        reason=f"{all_binary_operators} doesn't work when right has " f"attrs and both are {type(left)}"
                     )
                 )
             if not isinstance(left, type(right)):
@@ -510,8 +510,7 @@ def test_binops(request, args, annotate, all_binary_operators):
             if annotate == "left" and isinstance(left, type(right)):
                 request.applymarker(
                     pytest.mark.xfail(
-                        reason=f"{all_binary_operators} doesn't work when left has "
-                        f"attrs and both are {type(left)}"
+                        reason=f"{all_binary_operators} doesn't work when left has " f"attrs and both are {type(left)}"
                     )
                 )
             if not isinstance(left, type(right)):
@@ -675,9 +674,7 @@ def test_datetime_property(attr):
     assert result.attrs == {"a": 1}
 
 
-@pytest.mark.parametrize(
-    "attr", ["days", "seconds", "microseconds", "nanoseconds", "components"]
-)
+@pytest.mark.parametrize("attr", ["days", "seconds", "microseconds", "nanoseconds", "components"])
 def test_timedelta_property(attr):
     s = pd.Series(pd.timedelta_range("2000", periods=4))
     s.attrs = {"a": 1}
@@ -719,9 +716,7 @@ def test_categorical_accessor(method):
 # Groupby
 
 
-@pytest.mark.parametrize(
-    "obj", [pd.Series([0, 0]), pd.DataFrame({"A": [0, 1], "B": [1, 2]})]
-)
+@pytest.mark.parametrize("obj", [pd.Series([0, 0]), pd.DataFrame({"A": [0, 1], "B": [1, 2]})])
 @pytest.mark.parametrize(
     "method",
     [
@@ -738,9 +733,7 @@ def test_groupby_finalize(obj, method):
     assert result.attrs == {"a": 1}
 
 
-@pytest.mark.parametrize(
-    "obj", [pd.Series([0, 0]), pd.DataFrame({"A": [0, 1], "B": [1, 2]})]
-)
+@pytest.mark.parametrize("obj", [pd.Series([0, 0]), pd.DataFrame({"A": [0, 1], "B": [1, 2]})])
 @pytest.mark.parametrize(
     "method",
     [

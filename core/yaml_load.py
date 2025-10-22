@@ -70,7 +70,6 @@ def yaml_load(context):
             severity=bandit.MEDIUM,
             confidence=bandit.HIGH,
             cwe=issue.Cwe.IMPROPER_INPUT_VALIDATION,
-            text="Use of unsafe yaml load. Allows instantiation of"
-            " arbitrary objects. Consider yaml.safe_load().",
+            text="Use of unsafe yaml load. Allows instantiation of" " arbitrary objects. Consider yaml.safe_load().",
             lineno=context.node.lineno,
         )

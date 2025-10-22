@@ -35,9 +35,7 @@ from mypy.types import LiteralType, get_proper_type
 
 # Note: 'enum.EnumMeta' is deliberately excluded from this list. Classes that directly use
 # enum.EnumMeta do not necessarily automatically have the 'name' and 'value' attributes.
-ENUM_BASES: Final = frozenset(
-    ("enum.Enum", "enum.IntEnum", "enum.Flag", "enum.IntFlag", "enum.StrEnum")
-)
+ENUM_BASES: Final = frozenset(("enum.Enum", "enum.IntEnum", "enum.Flag", "enum.IntFlag", "enum.StrEnum"))
 ENUM_SPECIAL_PROPS: Final = frozenset(
     (
         "name",
@@ -80,9 +78,7 @@ class EnumCallAnalyzer:
         self.api.add_symbol(name, enum_call, s)
         return True
 
-    def check_enum_call(
-        self, node: Expression, var_name: str, is_func_scope: bool
-    ) -> TypeInfo | None:
+    def check_enum_call(self, node: Expression, var_name: str, is_func_scope: bool) -> TypeInfo | None:
         """Check if a call defines an Enum.
 
         Example:
@@ -105,9 +101,7 @@ class EnumCallAnalyzer:
         if fullname not in ENUM_BASES:
             return None
 
-        new_class_name, items, values, ok = self.parse_enum_call_args(
-            call, fullname.split(".")[-1]
-        )
+        new_class_name, items, values, ok = self.parse_enum_call_args(call, fullname.split(".")[-1])
         if not ok:
             # Error. Construct dummy return value.
             name = var_name
@@ -116,7 +110,9 @@ class EnumCallAnalyzer:
             info = self.build_enum_call_typeinfo(name, [], fullname, node.line)
         else:
             if new_class_name != var_name:
-                msg = f'String argument 1 "{new_class_name}" to {fullname}(...) does not match variable name "{var_name}"'
+                msg = (
+                    f'String argument 1 "{new_class_name}" to {fullname}(...) does not match variable name "{var_name}"'
+                )
                 self.fail(msg, call)
 
             name = cast(StrExpr, call.args[0]).value
@@ -132,9 +128,7 @@ class EnumCallAnalyzer:
         info.line = node.line
         return info
 
-    def build_enum_call_typeinfo(
-        self, name: str, items: list[str], fullname: str, line: int
-    ) -> TypeInfo:
+    def build_enum_call_typeinfo(self, name: str, items: list[str], fullname: str, line: int) -> TypeInfo:
         base = self.api.named_type_or_none(fullname)
         assert base is not None
         info = self.api.basic_new_typeinfo(name, base, line)
@@ -183,9 +177,7 @@ class EnumCallAnalyzer:
         if names is None:
             names = args[1]
         if not isinstance(value, StrExpr):
-            return self.fail_enum_call_arg(
-                f"{class_name}() expects a string literal as the first argument", call
-            )
+            return self.fail_enum_call_arg(f"{class_name}() expects a string literal as the first argument", call)
         new_class_name = value.value
 
         items = []
@@ -218,18 +210,12 @@ class EnumCallAnalyzer:
         elif isinstance(names, DictExpr):
             for key, value in names.items:
                 if not isinstance(key, StrExpr):
-                    return self.fail_enum_call_arg(
-                        f"{class_name}() with dict literal requires string literals", call
-                    )
+                    return self.fail_enum_call_arg(f"{class_name}() with dict literal requires string literals", call)
                 items.append(key.value)
                 values.append(value)
         elif isinstance(args[1], RefExpr) and isinstance(args[1].node, Var):
             proper_type = get_proper_type(args[1].node.type)
-            if (
-                proper_type is not None
-                and isinstance(proper_type, LiteralType)
-                and isinstance(proper_type.value, str)
-            ):
+            if proper_type is not None and isinstance(proper_type, LiteralType) and isinstance(proper_type.value, str):
                 fields = proper_type.value
                 for field in fields.replace(",", " ").split():
                     items.append(field)

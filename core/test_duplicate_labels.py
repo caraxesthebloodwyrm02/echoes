@@ -1,4 +1,5 @@
 """Tests dealing with the NDFrame.allows_duplicates."""
+
 import operator
 
 import numpy as np
@@ -45,9 +46,7 @@ class TestPreserves:
         s = pd.Series([0, 1], index=["a", "b"]).set_flags(allows_duplicate_labels=False)
         assert func(s).flags.allows_duplicate_labels is False
 
-    @pytest.mark.parametrize(
-        "other", [pd.Series(0, index=["a", "b", "c"]), pd.Series(0, index=["a", "b"])]
-    )
+    @pytest.mark.parametrize("other", [pd.Series(0, index=["a", "b", "c"]), pd.Series(0, index=["a", "b"])])
     # TODO: frame
     @not_implemented
     def test_align(self, other):
@@ -57,9 +56,7 @@ class TestPreserves:
         assert b.flags.allows_duplicate_labels is False
 
     def test_preserved_frame(self):
-        df = pd.DataFrame({"A": [1, 2], "B": [3, 4]}, index=["a", "b"]).set_flags(
-            allows_duplicate_labels=False
-        )
+        df = pd.DataFrame({"A": [1, 2], "B": [3, 4]}, index=["a", "b"]).set_flags(allows_duplicate_labels=False)
         assert df.loc[["a"]].flags.allows_duplicate_labels is False
         assert df.loc[:, ["A", "B"]].flags.allows_duplicate_labels is False
 
@@ -71,9 +68,7 @@ class TestPreserves:
     @pytest.mark.parametrize("frame", [False, True])
     @pytest.mark.parametrize("other", [1, pd.Series([1, 2], name="A")])
     def test_binops(self, func, other, frame):
-        df = pd.Series([1, 2], name="A", index=["a", "b"]).set_flags(
-            allows_duplicate_labels=False
-        )
+        df = pd.Series([1, 2], name="A", index=["a", "b"]).set_flags(allows_duplicate_labels=False)
         if frame:
             df = df.to_frame()
         if isinstance(other, pd.Series) and frame:
@@ -90,9 +85,7 @@ class TestPreserves:
         assert df.loc[[0]].flags.allows_duplicate_labels is False
         assert df.loc[0, ["A"]].flags.allows_duplicate_labels is False
 
-    def test_ndframe_getitem_caching_issue(
-        self, request, using_copy_on_write, warn_copy_on_write
-    ):
+    def test_ndframe_getitem_caching_issue(self, request, using_copy_on_write, warn_copy_on_write):
         if not (using_copy_on_write or warn_copy_on_write):
             request.applymarker(pytest.mark.xfail(reason="Unclear behavior."))
         # NDFrame.__getitem__ will cache the first df['A']. May need to
@@ -169,20 +162,14 @@ class TestPreserves:
         [
             # false false false
             pytest.param(
-                pd.DataFrame({"A": [0, 1]}, index=["a", "b"]).set_flags(
-                    allows_duplicate_labels=False
-                ),
-                pd.DataFrame({"B": [0, 1]}, index=["a", "d"]).set_flags(
-                    allows_duplicate_labels=False
-                ),
+                pd.DataFrame({"A": [0, 1]}, index=["a", "b"]).set_flags(allows_duplicate_labels=False),
+                pd.DataFrame({"B": [0, 1]}, index=["a", "d"]).set_flags(allows_duplicate_labels=False),
                 False,
                 marks=not_implemented,
             ),
             # false true false
             pytest.param(
-                pd.DataFrame({"A": [0, 1]}, index=["a", "b"]).set_flags(
-                    allows_duplicate_labels=False
-                ),
+                pd.DataFrame({"A": [0, 1]}, index=["a", "b"]).set_flags(allows_duplicate_labels=False),
                 pd.DataFrame({"B": [0, 1]}, index=["a", "d"]),
                 False,
                 marks=not_implemented,
@@ -285,9 +272,7 @@ class TestRaises:
         ],
     )
     def test_getitem_raises(self, getter, target):
-        df = pd.DataFrame({"A": [1, 2], "B": [3, 4]}, index=["a", "b"]).set_flags(
-            allows_duplicate_labels=False
-        )
+        df = pd.DataFrame({"A": [1, 2], "B": [3, 4]}, index=["a", "b"]).set_flags(allows_duplicate_labels=False)
         if target:
             # df, df.loc, or df.iloc
             target = getattr(df, target)
@@ -318,9 +303,7 @@ class TestRaises:
 
     @not_implemented
     def test_merge_raises(self):
-        a = pd.DataFrame({"A": [0, 1, 2]}, index=["a", "b", "c"]).set_flags(
-            allows_duplicate_labels=False
-        )
+        a = pd.DataFrame({"A": [0, 1, 2]}, index=["a", "b", "c"]).set_flags(allows_duplicate_labels=False)
         b = pd.DataFrame({"B": [0, 1, 2]}, index=["a", "b", "b"])
         msg = "Index has duplicates."
         with pytest.raises(pd.errors.DuplicateLabelError, match=msg):
@@ -357,9 +340,7 @@ def test_raises_basic(idx):
 def test_format_duplicate_labels_message():
     idx = pd.Index(["a", "b", "a", "b", "c"])
     result = idx._format_duplicate_message()
-    expected = pd.DataFrame(
-        {"positions": [[0, 2], [1, 3]]}, index=pd.Index(["a", "b"], name="label")
-    )
+    expected = pd.DataFrame({"positions": [[0, 2], [1, 3]]}, index=pd.Index(["a", "b"], name="label"))
     tm.assert_frame_equal(result, expected)
 
 
@@ -389,9 +370,7 @@ def test_dataframe_insert_raises():
     ],
 )
 def test_inplace_raises(method, frame_only):
-    df = pd.DataFrame({"A": [0, 0], "B": [1, 2]}).set_flags(
-        allows_duplicate_labels=False
-    )
+    df = pd.DataFrame({"A": [0, 0], "B": [1, 2]}).set_flags(allows_duplicate_labels=False)
     s = df["A"]
     s.flags.allows_duplicate_labels = False
     msg = "Cannot specify"

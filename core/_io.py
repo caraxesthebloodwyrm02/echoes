@@ -36,9 +36,7 @@ if TYPE_CHECKING:
 # File-IO
 
 
-def round_trip_pickle(
-    obj: Any, path: FilePath | ReadPickleBuffer | None = None
-) -> DataFrame | Series:
+def round_trip_pickle(obj: Any, path: FilePath | ReadPickleBuffer | None = None) -> DataFrame | Series:
     """
     Pickle an object and then read it again.
 
