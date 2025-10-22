@@ -22,7 +22,7 @@ try:
     print("PASSED: JWT Handler")
 except Exception as e:
     print(f"FAILED: JWT Handler - {e}")
-    sys.exit(1)
+    raise AssertionError(f"JWT Handler test failed: {e}")
 
 # Test 2: API Key Manager
 print("\n[2/5] Testing API Key Manager...")
@@ -43,7 +43,7 @@ try:
     print("PASSED: API Key Manager")
 except Exception as e:
     print(f"FAILED: API Key Manager - {e}")
-    sys.exit(1)
+    raise AssertionError(f"API Key Manager test failed: {e}")
 
 # Test 3: Permissions
 print("\n[3/5] Testing Permissions...")
@@ -55,7 +55,7 @@ try:
     print("PASSED: Permissions")
 except Exception as e:
     print(f"FAILED: Permissions - {e}")
-    sys.exit(1)
+    raise AssertionError(f"Permissions test failed: {e}")
 
 # Test 4: Rate Limiter
 print("\n[4/5] Testing Rate Limiter...")
@@ -67,7 +67,7 @@ try:
     print("PASSED: Rate Limiter")
 except Exception as e:
     print(f"FAILED: Rate Limiter - {e}")
-    sys.exit(1)
+    raise AssertionError(f"Rate Limiter test failed: {e}")
 
 # Test 5: Integration
 print("\n[5/5] Testing Complete Workflow...")
@@ -88,7 +88,7 @@ try:
     print("PASSED: Integration Workflow")
 except Exception as e:
     print(f"FAILED: Integration - {e}")
-    sys.exit(1)
+    raise AssertionError(f"Integration test failed: {e}")
 
 print("\n" + "=" * 70)
 print("ALL TESTS PASSED - Authentication System Operational!")
