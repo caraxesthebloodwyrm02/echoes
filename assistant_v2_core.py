@@ -961,12 +961,16 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
     print("  'clear'              - Clear conversation history")
     print("  'tools'              - List available tools")
     print("  'stats'              - Show statistics")
+    print("  'actions'            - Show action history")
     print("  'add knowledge'      - Add documents to knowledge base")
     print("  'stream on/off'      - Toggle streaming")
     print("  'prompt <name>'      - Load prompt from prompts/<name>.yaml")
     print("  'prompt list'        - List available prompts")
     print("  'prompt show <name>' - Show content of a prompt")
     print("  'status on/off'      - Toggle status indicators")
+    print("  'action add <sku> <name> <cat> <qty> <loc>' - Add inventory item")
+    print("  'action list [category]' - List inventory items")
+    print("  'action report [type]' - Generate inventory report")
     print("=" * 60 + "\n")
 
     try:
@@ -1018,6 +1022,75 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
                     print(json.dumps(stats, indent=2))
                     continue
 
+                if command == "actions":
+                    history = assistant.get_action_history(limit=10)
+                    print(f"\n📋 Action History ({len(history)} actions):")
+                    for action in history:
+                        status_icon = "✓" if action["success"] else "✗"
+                        print(f"  {status_icon} {action['action_id']}: {action['action_type']} ({action['duration_ms']:.1f}ms)")
+                    summary = assistant.get_action_summary()
+                    print(f"\n📊 Action Summary:")
+                    print(f"  Total: {summary['total_actions']} | Success: {summary['successful']} | Failed: {summary['failed']}")
+                    print(f"  Success Rate: {summary['success_rate']:.1f}% | Avg Duration: {summary['avg_duration_ms']:.1f}ms")
+                    continue
+
+                if command.startswith("action "):
+                    parts = command.split(maxsplit=1)[1].split()
+                    if not parts:
+                        print("Usage: action <add|list|report> [args]")
+                        continue
+
+                    action_cmd = parts[0]
+
+                    if action_cmd == "add" and len(parts) >= 6:
+                        result = assistant.execute_action(
+                            "inventory", "add_item",
+                            sku=parts[1],
+                            name=parts[2],
+                            category=parts[3],
+                            quantity=int(parts[4]),
+                            location=parts[5],
+                            min_stock=int(parts[6]) if len(parts) > 6 else 0,
+                            max_stock=int(parts[7]) if len(parts) > 7 else 0,
+                        )
+                        print(f"\n{STATUS_COMPLETE} Item added: {result['action_id']}")
+                        if result["success"]:
+                            print(f"  SKU: {result['result'].get('sku')}")
+                            print(f"  Quantity: {result['result'].get('quantity')}")
+                        else:
+                            print(f"  Error: {result['error']}")
+                        continue
+
+                    if action_cmd == "list":
+                        category = parts[1] if len(parts) > 1 else None
+                        result = assistant.execute_action(
+                            "inventory", "list_items",
+                            category=category
+                        )
+                        if result["success"]:
+                            items = result["result"]
+                            print(f"\n📦 Inventory Items ({len(items)} total):")
+                            for item in items[:10]:
+                                print(f"  • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})")
+                            if len(items) > 10:
+                                print(f"  ... and {len(items) - 10} more")
+                        else:
+                            print(f"  Error: {result['error']}")
+                        continue
+
+                    if action_cmd == "report":
+                        report_type = parts[1] if len(parts) > 1 else "summary"
+                        result = assistant.execute_action(
+                            "inventory", "report",
+                            report_type=report_type
+                        )
+                        if result["success"]:
+                            print(f"\n📊 Inventory Report ({report_type}):")
+                            print(json.dumps(result["result"], indent=2))
+                        else:
+                            print(f"  Error: {result['error']}")
+                        continue
+
                 if command == "stream on":
                     streaming_enabled = True
                     print("✓ Streaming enabled")
@@ -1054,6 +1127,8 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
                         else:
                             print(f"⚠ Prompt '{prompt_name}' not found")
                     continue
+
+                system_prompt_var = system_prompt if "system_prompt" in locals() else None
 
                 response = assistant.chat(
                     user_input,
