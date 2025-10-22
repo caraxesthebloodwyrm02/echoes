@@ -43,6 +43,9 @@ from openai import OpenAI, APIError, AuthenticationError
 from tools.registry import get_registry
 from tools.examples import *  # Load all built-in tools
 
+# Action Execution
+from app.actions import ActionExecutor, ActionResult
+
 # RAG System V2
 try:
     from echoes.core.rag_v2 import create_rag_system
@@ -317,6 +320,10 @@ class EchoesAssistantV2:
         if enable_tools:
             self.tool_registry = get_registry()
             print(f"✓ Loaded {len(self.tool_registry.list_tools())} tools")
+
+        # Action execution
+        self.action_executor = ActionExecutor()
+        print(f"✓ Action executor initialized")
 
         # RAG system
         self.enable_rag = enable_rag and RAG_AVAILABLE
@@ -634,6 +641,50 @@ class EchoesAssistantV2:
             return []
         return self.tool_registry.list_tools(category)
 
+    def execute_action(
+        self,
+        action_type: str,
+        action_name: str,
+        **kwargs
+    ) -> Dict[str, Any]:
+        """
+        Execute an action on behalf of the user.
+
+        Args:
+            action_type: Type of action ('inventory', 'tool')
+            action_name: Name of the specific action
+            **kwargs: Action parameters
+
+        Returns:
+            Action result with status and data
+        """
+        if action_type == "inventory":
+            result = self.action_executor.execute_inventory_action(action_name, **kwargs)
+        elif action_type == "tool":
+            result = self.action_executor.execute_tool_action(action_name, **kwargs)
+        else:
+            return {
+                "success": False,
+                "error": f"Unknown action type: {action_type}",
+            }
+
+        return {
+            "success": result.status == "success",
+            "action_id": result.action_id,
+            "action_type": result.action_type,
+            "result": result.result,
+            "error": result.error,
+            "duration_ms": result.duration_ms,
+        }
+
+    def get_action_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+        """Get recent action history."""
+        return self.action_executor.get_action_history(limit)
+
+    def get_action_summary(self) -> Dict[str, Any]:
+        """Get summary of actions executed."""
+        return self.action_executor.get_action_summary()
+
     def get_stats(self) -> Dict[str, Any]:
         """Get assistant statistics."""
         stats = {
@@ -641,6 +692,7 @@ class EchoesAssistantV2:
             "messages": len(self.context_manager.get_messages(self.session_id)),
             "rag_enabled": self.enable_rag,
             "tools_enabled": self.enable_tools,
+            "actions": self.get_action_summary(),
         }
 
         if self.tool_registry:
