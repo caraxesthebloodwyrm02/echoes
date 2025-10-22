@@ -257,6 +257,9 @@ autosave/
 # SBOM output directory
 sbom/
 
+# .NET solution files
+*.sln
+
 # Node/JS build artifacts
 .next/
 .nuxt/
