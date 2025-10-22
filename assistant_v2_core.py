@@ -46,6 +46,12 @@ from tools.examples import *  # Load all built-in tools
 # Action Execution
 from app.actions import ActionExecutor, ActionResult
 
+# Knowledge Management
+from app.knowledge import KnowledgeManager
+
+# Filesystem Tools
+from app.filesystem import FilesystemTools
+
 # RAG System V2
 try:
     from echoes.core.rag_v2 import create_rag_system
@@ -324,6 +330,14 @@ class EchoesAssistantV2:
         # Action execution
         self.action_executor = ActionExecutor()
         print(f"✓ Action executor initialized")
+
+        # Knowledge management
+        self.knowledge_manager = KnowledgeManager()
+        print(f"✓ Knowledge manager initialized")
+
+        # Filesystem tools
+        self.fs_tools = FilesystemTools(root_dir=os.getcwd())
+        print(f"✓ Filesystem tools initialized")
 
         # RAG system
         self.enable_rag = enable_rag and RAG_AVAILABLE
@@ -685,6 +699,43 @@ class EchoesAssistantV2:
         """Get summary of actions executed."""
         return self.action_executor.get_action_summary()
 
+    def gather_knowledge(self, content: str, source: str, category: str = "general", tags: Optional[List[str]] = None) -> str:
+        """Gather and store knowledge."""
+        return self.knowledge_manager.add_knowledge(content, source, category, tags)
+
+    def search_knowledge(self, query: Optional[str] = None, category: Optional[str] = None, limit: int = 10) -> List[Dict[str, Any]]:
+        """Search knowledge base."""
+        entries = self.knowledge_manager.search_knowledge(query, category, limit=limit)
+        return [e.to_dict() for e in entries]
+
+    def update_context(self, key: str, value: Any):
+        """Update assistant context."""
+        self.knowledge_manager.update_context(key, value)
+
+    def get_context_summary(self) -> str:
+        """Get context summary."""
+        return self.knowledge_manager.build_context_summary()
+
+    def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> Dict[str, Any]:
+        """List directory contents."""
+        return self.fs_tools.list_directory(dirpath, pattern, recursive)
+
+    def read_file(self, filepath: str) -> Dict[str, Any]:
+        """Read file contents."""
+        return self.fs_tools.read_file(filepath)
+
+    def write_file(self, filepath: str, content: str) -> Dict[str, Any]:
+        """Write file contents."""
+        return self.fs_tools.write_file(filepath, content)
+
+    def search_files(self, query: str, search_path: Optional[str] = None) -> Dict[str, Any]:
+        """Search files."""
+        return self.fs_tools.search_files(query, search_path)
+
+    def get_directory_tree(self, dirpath: str, max_depth: int = 3) -> Dict[str, Any]:
+        """Get directory tree."""
+        return self.fs_tools.get_directory_tree(dirpath, max_depth)
+
     def get_stats(self) -> Dict[str, Any]:
         """Get assistant statistics."""
         stats = {
@@ -693,6 +744,7 @@ class EchoesAssistantV2:
             "rag_enabled": self.enable_rag,
             "tools_enabled": self.enable_tools,
             "actions": self.get_action_summary(),
+            "knowledge": self.knowledge_manager.get_stats(),
         }
 
         if self.tool_registry:
