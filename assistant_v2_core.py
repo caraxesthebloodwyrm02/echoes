@@ -52,6 +52,9 @@ from app.knowledge import KnowledgeManager
 # Filesystem Tools
 from app.filesystem import FilesystemTools
 
+# Agent Workflow System
+from app.agents import AgentWorkflow
+
 # RAG System V2
 try:
     from echoes.core.rag_v2 import create_rag_system
@@ -338,6 +341,10 @@ class EchoesAssistantV2:
         # Filesystem tools
         self.fs_tools = FilesystemTools(root_dir=os.getcwd())
         print(f"✓ Filesystem tools initialized")
+
+        # Agent workflow system
+        self.agent_workflow = AgentWorkflow(self)
+        print(f"✓ Agent workflow system initialized")
 
         # RAG system
         self.enable_rag = enable_rag and RAG_AVAILABLE
@@ -735,6 +742,28 @@ class EchoesAssistantV2:
     def get_directory_tree(self, dirpath: str, max_depth: int = 3) -> Dict[str, Any]:
         """Get directory tree."""
         return self.fs_tools.get_directory_tree(dirpath, max_depth)
+
+    def run_workflow(self, workflow_type: str, **kwargs) -> Dict[str, Any]:
+        """Run an agent workflow."""
+        if workflow_type == "triage":
+            result = self.agent_workflow.run_triage_workflow(
+                user_input=kwargs.get("user_input", ""),
+                context=kwargs.get("context")
+            )
+        elif workflow_type == "comparison":
+            result = self.agent_workflow.run_comparison_workflow(
+                file1=kwargs.get("file1"),
+                file2=kwargs.get("file2")
+            )
+        elif workflow_type == "data_enrichment":
+            result = self.agent_workflow.run_data_enrichment_workflow(
+                topic=kwargs.get("topic"),
+                context=kwargs.get("context")
+            )
+        else:
+            return {"success": False, "error": f"Unknown workflow type: {workflow_type}"}
+        
+        return result.to_dict()
 
     def get_stats(self) -> Dict[str, Any]:
         """Get assistant statistics."""
