@@ -6,7 +6,6 @@ Tests knowledge management, filesystem interaction, and context building.
 """
 
 import os
-from pathlib import Path
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -18,12 +17,7 @@ def test_agentic_capabilities():
 
     # Initialize assistant
     print("\n[Test 1] Initializing agentic assistant...")
-    assistant = EchoesAssistantV2(
-        enable_tools=True,
-        enable_rag=False,
-        enable_streaming=False,
-        enable_status=False
-    )
+    assistant = EchoesAssistantV2(enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False)
     print("✓ Assistant initialized with knowledge, filesystem, and action capabilities")
 
     # Test knowledge gathering
@@ -32,7 +26,7 @@ def test_agentic_capabilities():
         content="ATLAS is an inventory management system",
         source="ATLAS/README.md",
         category="inventory",
-        tags=["atlas", "inventory"]
+        tags=["atlas", "inventory"],
     )
     print(f"✓ Knowledge gathered: {k_id1}")
 
@@ -40,7 +34,7 @@ def test_agentic_capabilities():
         content="EchoesAssistantV2 supports tool calling and RAG",
         source="assistant_v2_core.py",
         category="assistant",
-        tags=["echoes", "assistant"]
+        tags=["echoes", "assistant"],
     )
     print(f"✓ Knowledge gathered: {k_id2}")
 
@@ -66,7 +60,7 @@ def test_agentic_capabilities():
     result = assistant.list_directory("ATLAS", pattern="*.py")
     if result["success"]:
         print(f"✓ Listed {result['total_files']} Python files in ATLAS")
-        for f in result['files'][:5]:
+        for f in result["files"][:5]:
             print(f"  - {f['name']} ({f['size']} bytes)")
     else:
         print(f"✗ Error: {result['error']}")
@@ -85,7 +79,7 @@ def test_agentic_capabilities():
     result = assistant.search_files("test", search_path=".")
     if result["success"]:
         print(f"✓ Found {result['total']} files matching 'test'")
-        for f in result['results'][:5]:
+        for f in result["results"][:5]:
             print(f"  - {f['name']}")
     else:
         print(f"✗ Error: {result['error']}")
@@ -94,19 +88,17 @@ def test_agentic_capabilities():
     print("\n[Test 8] Testing filesystem - directory tree...")
     result = assistant.get_directory_tree("ATLAS", max_depth=2)
     if result["success"]:
-        print(f"✓ Built directory tree for ATLAS")
-        tree = result['tree']
+        print("✓ Built directory tree for ATLAS")
+        tree = result["tree"]
         print(f"  Root: {tree['name']}")
-        if 'children' in tree:
+        if "children" in tree:
             print(f"  Children: {len(tree['children'])}")
     else:
         print(f"✗ Error: {result['error']}")
 
     # Test action execution
     print("\n[Test 9] Testing action execution...")
-    result = assistant.execute_action(
-        "inventory", "list_items"
-    )
+    result = assistant.execute_action("inventory", "list_items")
     print(f"✓ Action executed: {result['action_id']}")
     print(f"  Success: {result['success']}, Duration: {result['duration_ms']:.1f}ms")
 

@@ -78,7 +78,7 @@ def test_direct_atlas_interaction():
     print("\n[Test 7] Generating reports...")
     result = api.report_summary()
     assert result["success"], f"Failed to generate report: {result['error']}"
-    print(f"  ✓ Summary Report:")
+    print("  ✓ Summary Report:")
     print(f"    - Total Items: {result['report']['total_items']}")
     print(f"    - Total Quantity: {result['report']['total_quantity']}")
 
@@ -86,7 +86,7 @@ def test_direct_atlas_interaction():
     print("\n[Test 8] Getting statistics...")
     result = api.get_statistics()
     assert result["success"], f"Failed to get stats: {result['error']}"
-    print(f"  ✓ Statistics:")
+    print("  ✓ Statistics:")
     print(f"    - Total Items: {result['total_items']}")
     print(f"    - Total Quantity: {result['total_quantity']}")
     print(f"    - Categories: {result['categories']}")
@@ -118,7 +118,7 @@ def test_direct_atlas_interaction():
     print("\n[Test 10] Category breakdown...")
     result = api.report_by_category()
     assert result["success"], f"Failed to get category report: {result['error']}"
-    print(f"  ✓ Categories:")
+    print("  ✓ Categories:")
     for category, items in result["by_category"].items():
         print(f"    - {category}: {len(items)} items")
 

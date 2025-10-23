@@ -5,7 +5,7 @@ Multi-agent orchestration with chaining, triage, and conditional execution.
 """
 
 import json
-from typing import Dict, Any, List, Optional, Callable
+from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, asdict
 from datetime import datetime, timezone
 from enum import Enum
@@ -13,6 +13,7 @@ from enum import Enum
 
 class AgentRole(Enum):
     """Agent roles for different tasks."""
+
     TRIAGE = "triage"
     QUERY_REWRITE = "query_rewrite"
     RESEARCH = "research"
@@ -25,6 +26,7 @@ class AgentRole(Enum):
 @dataclass
 class AgentStep:
     """Single step in an agent workflow."""
+
     agent_name: str
     role: AgentRole
     instructions: str
@@ -35,15 +37,13 @@ class AgentStep:
     success: bool = False
 
     def to_dict(self) -> Dict[str, Any]:
-        return {
-            **asdict(self),
-            "role": self.role.value
-        }
+        return {**asdict(self), "role": self.role.value}
 
 
 @dataclass
 class WorkflowResult:
     """Result of a workflow execution."""
+
     workflow_id: str
     steps: List[AgentStep]
     final_output: Any
@@ -58,7 +58,7 @@ class WorkflowResult:
             "final_output": self.final_output,
             "total_duration_ms": self.total_duration_ms,
             "success": self.success,
-            "error": self.error
+            "error": self.error,
         }
 
 
@@ -72,11 +72,7 @@ class AgentWorkflow:
         self.workflow_counter = 0
 
     def _create_step(
-        self,
-        agent_name: str,
-        role: AgentRole,
-        instructions: str,
-        input_data: Dict[str, Any]
+        self, agent_name: str, role: AgentRole, instructions: str, input_data: Dict[str, Any]
     ) -> AgentStep:
         """Create a workflow step."""
         return AgentStep(
@@ -84,34 +80,29 @@ class AgentWorkflow:
             role=role,
             instructions=instructions,
             input_data=input_data,
-            timestamp=datetime.now(timezone.utc).isoformat()
+            timestamp=datetime.now(timezone.utc).isoformat(),
         )
 
     def _execute_step(self, step: AgentStep) -> AgentStep:
         """Execute a single workflow step."""
         import time
+
         start_time = time.time()
 
         try:
             # Add instructions to conversation
-            self.conversation_history.append({
-                "role": "system",
-                "content": step.instructions
-            })
+            self.conversation_history.append({"role": "system", "content": step.instructions})
 
             # Add input data
             if "query" in step.input_data:
-                self.conversation_history.append({
-                    "role": "user",
-                    "content": step.input_data["query"]
-                })
+                self.conversation_history.append({"role": "user", "content": step.input_data["query"]})
 
             # Execute via assistant
             response = self.assistant.chat(
                 message=step.input_data.get("query", ""),
                 system_prompt=step.instructions,
                 stream=False,
-                show_status=False
+                show_status=False,
             )
 
             # Store output
@@ -125,17 +116,14 @@ class AgentWorkflow:
         step.duration_ms = (time.time() - start_time) * 1000
         return step
 
-    def run_triage_workflow(
-        self,
-        user_input: str,
-        context: Optional[Dict[str, Any]] = None
-    ) -> WorkflowResult:
+    def run_triage_workflow(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
         """
         Run a triage workflow to classify and route requests.
 
         Pattern: Triage -> Classify -> Route -> Execute
         """
         import time
+
         self.workflow_counter += 1
         workflow_id = f"workflow_{self.workflow_counter}"
         start_time = time.time()
@@ -152,9 +140,9 @@ class AgentWorkflow:
                 - 'analysis': Requires code analysis or document comparison
                 - 'planning': Requires creating work plans or strategies
                 - 'structured_query': Requires database or structured data queries
-                
+
                 Respond with just the category name.""",
-                input_data={"query": user_input, "context": context or {}}
+                input_data={"query": user_input, "context": context or {}},
             )
             triage_step = self._execute_step(triage_step)
             steps.append(triage_step)
@@ -187,7 +175,7 @@ class AgentWorkflow:
                 steps=steps,
                 final_output=final_output,
                 total_duration_ms=total_duration,
-                success=True
+                success=True,
             )
 
         except Exception as e:
@@ -198,7 +186,7 @@ class AgentWorkflow:
                 final_output=None,
                 total_duration_ms=total_duration,
                 success=False,
-                error=str(e)
+                error=str(e),
             )
 
     def _execute_qa_workflow(self, query: str) -> AgentStep:
@@ -207,7 +195,7 @@ class AgentWorkflow:
             agent_name="qa_agent",
             role=AgentRole.ANALYSIS,
             instructions="Answer the question concisely using available knowledge. Use bullet points.",
-            input_data={"query": query}
+            input_data={"query": query},
         )
         return self._execute_step(step)
 
@@ -215,16 +203,16 @@ class AgentWorkflow:
         """Execute research workflow with knowledge gathering."""
         # Gather knowledge first
         knowledge_results = self.assistant.search_knowledge(query=query, limit=5)
-        
+
         step = self._create_step(
             agent_name="research_agent",
             role=AgentRole.RESEARCH,
             instructions=f"""Research the topic using available knowledge and filesystem.
-            
+
             Existing knowledge: {json.dumps(knowledge_results[:3])}
-            
+
             Provide a comprehensive answer with sources.""",
-            input_data={"query": query, "knowledge": knowledge_results}
+            input_data={"query": query, "knowledge": knowledge_results},
         )
         return self._execute_step(step)
 
@@ -239,7 +227,7 @@ class AgentWorkflow:
             1. Summary
             2. Key findings
             3. Recommendations""",
-            input_data={"query": query}
+            input_data={"query": query},
         )
         return self._execute_step(step)
 
@@ -254,9 +242,9 @@ class AgentWorkflow:
             3. Resource requirements
             4. Timeline
             5. Success criteria
-            
+
             Be specific and actionable.""",
-            input_data={"query": query}
+            input_data={"query": query},
         )
         return self._execute_step(step)
 
@@ -270,7 +258,7 @@ class AgentWorkflow:
             2. Determine what operations are needed
             3. Execute using available tools (ATLAS, filesystem, etc.)
             4. Format results clearly""",
-            input_data={"query": query}
+            input_data={"query": query},
         )
         return self._execute_step(step)
 
@@ -280,21 +268,18 @@ class AgentWorkflow:
             agent_name="default_agent",
             role=AgentRole.ANALYSIS,
             instructions="Provide helpful assistance based on the request.",
-            input_data={"query": query}
+            input_data={"query": query},
         )
         return self._execute_step(step)
 
-    def run_comparison_workflow(
-        self,
-        file1: str,
-        file2: str
-    ) -> WorkflowResult:
+    def run_comparison_workflow(self, file1: str, file2: str) -> WorkflowResult:
         """
         Run document comparison workflow.
 
         Pattern: Read -> Compare -> Propose -> Approve/Reject
         """
         import time
+
         self.workflow_counter += 1
         workflow_id = f"comparison_{self.workflow_counter}"
         start_time = time.time()
@@ -317,15 +302,15 @@ class AgentWorkflow:
                 2. Additions/Deletions
                 3. Structural changes
                 4. Recommendations for reconciliation
-                
+
                 Document 1: {file1}
                 Document 2: {file2}""",
                 input_data={
                     "file1": file1,
                     "file2": file2,
                     "content1": content1["content"][:1000],
-                    "content2": content2["content"][:1000]
-                }
+                    "content2": content2["content"][:1000],
+                },
             )
             compare_step = self._execute_step(compare_step)
             steps.append(compare_step)
@@ -335,7 +320,7 @@ class AgentWorkflow:
                 agent_name="proposal_agent",
                 role=AgentRole.SUMMARY,
                 instructions="Based on the comparison, propose a reconciliation strategy.",
-                input_data={"comparison": compare_step.output}
+                input_data={"comparison": compare_step.output},
             )
             propose_step = self._execute_step(propose_step)
             steps.append(propose_step)
@@ -346,7 +331,7 @@ class AgentWorkflow:
                 steps=steps,
                 final_output=propose_step.output,
                 total_duration_ms=total_duration,
-                success=True
+                success=True,
             )
 
         except Exception as e:
@@ -357,20 +342,17 @@ class AgentWorkflow:
                 final_output=None,
                 total_duration_ms=total_duration,
                 success=False,
-                error=str(e)
+                error=str(e),
             )
 
-    def run_data_enrichment_workflow(
-        self,
-        topic: str,
-        context: Optional[Dict[str, Any]] = None
-    ) -> WorkflowResult:
+    def run_data_enrichment_workflow(self, topic: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
         """
         Run data enrichment workflow.
 
         Pattern: Query -> Search -> Gather -> Synthesize
         """
         import time
+
         self.workflow_counter += 1
         workflow_id = f"enrichment_{self.workflow_counter}"
         start_time = time.time()
@@ -382,7 +364,7 @@ class AgentWorkflow:
                 agent_name="query_rewriter",
                 role=AgentRole.QUERY_REWRITE,
                 instructions="Rewrite the query to be more specific and searchable.",
-                input_data={"query": topic, "context": context or {}}
+                input_data={"query": topic, "context": context or {}},
             )
             rewrite_step = self._execute_step(rewrite_step)
             steps.append(rewrite_step)
@@ -396,7 +378,7 @@ class AgentWorkflow:
                 2. Search filesystem for relevant files
                 3. Use available tools
                 4. Compile findings""",
-                input_data={"query": rewrite_step.output["response"]}
+                input_data={"query": rewrite_step.output["response"]},
             )
             gather_step = self._execute_step(gather_step)
             steps.append(gather_step)
@@ -406,7 +388,7 @@ class AgentWorkflow:
                 agent_name="synthesizer",
                 role=AgentRole.SUMMARY,
                 instructions="Synthesize all gathered data into a comprehensive answer.",
-                input_data={"data": gather_step.output}
+                input_data={"data": gather_step.output},
             )
             synth_step = self._execute_step(synth_step)
             steps.append(synth_step)
@@ -417,7 +399,7 @@ class AgentWorkflow:
                 steps=steps,
                 final_output=synth_step.output,
                 total_duration_ms=total_duration,
-                success=True
+                success=True,
             )
 
         except Exception as e:
@@ -428,7 +410,7 @@ class AgentWorkflow:
                 final_output=None,
                 total_duration_ms=total_duration,
                 success=False,
-                error=str(e)
+                error=str(e),
             )
 
     def get_workflow_history(self) -> List[Dict[str, Any]]:

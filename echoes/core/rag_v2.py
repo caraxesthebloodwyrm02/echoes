@@ -4,7 +4,7 @@ RAG V2 interface wrapper for the Echoes AI Assistant.
 Provides backward compatibility with the expected RAG API.
 """
 
-from typing import List, Dict, Any, Optional
+from typing import List, Dict, Any
 from core.rag_integration import EchoesRAG
 
 
@@ -35,11 +35,13 @@ class RAGSystem:
         # Transform results to expected format
         formatted_results = []
         for result in results:
-            formatted_results.append({
-                "content": result.get("content", ""),
-                "score": result.get("score", 0.0),
-                "metadata": result.get("metadata", {})
-            })
+            formatted_results.append(
+                {
+                    "content": result.get("content", ""),
+                    "score": result.get("score", 0.0),
+                    "metadata": result.get("metadata", {}),
+                }
+            )
         # Return object with results attribute
         return {"results": formatted_results}
 
@@ -62,23 +64,29 @@ def create_rag_system(preset: str = "balanced") -> RAGSystem:
     config = {}
 
     if preset == "balanced":
-        config.update({
-            "chunk_size": 1000,
-            "chunk_overlap": 200,
-            "top_k": 3,
-        })
+        config.update(
+            {
+                "chunk_size": 1000,
+                "chunk_overlap": 200,
+                "top_k": 3,
+            }
+        )
     elif preset == "fast":
-        config.update({
-            "chunk_size": 500,
-            "chunk_overlap": 100,
-            "top_k": 2,
-        })
+        config.update(
+            {
+                "chunk_size": 500,
+                "chunk_overlap": 100,
+                "top_k": 2,
+            }
+        )
     elif preset == "accurate":
-        config.update({
-            "chunk_size": 1500,
-            "chunk_overlap": 300,
-            "top_k": 5,
-        })
+        config.update(
+            {
+                "chunk_size": 1500,
+                "chunk_overlap": 300,
+                "top_k": 5,
+            }
+        )
 
     # Create the underlying RAG instance
     rag_instance = EchoesRAG(config=config)

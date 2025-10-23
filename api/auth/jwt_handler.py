@@ -4,7 +4,7 @@ Manages JWT token generation, validation, and refresh
 """
 
 import os
-from datetime import datetime, timedelta
+from datetime import timedelta
 from typing import Dict, Any, Optional
 import jwt
 from jwt.exceptions import InvalidTokenError

@@ -2,11 +2,11 @@
 
 ## Institutional-Grade AI for Portfolio Management & Alpha Generation
 
-**Demonstration**: Real-World Institutional Investment Management  
-**Client**: Horizon Capital Management  
-**Assets Under Management**: $500M  
-**Objective**: 15%+ annual return with risk optimization  
-**Result**: ✅ **$125.6M Portfolio Value Increase Demonstrated**  
+**Demonstration**: Real-World Institutional Investment Management
+**Client**: Horizon Capital Management
+**Assets Under Management**: $500M
+**Objective**: 15%+ annual return with risk optimization
+**Result**: ✅ **$125.6M Portfolio Value Increase Demonstrated**
 
 ---
 
@@ -122,8 +122,8 @@ EchoesAssistantV2 as a **C-Suite Investment Advisor** delivers:
 - Thesis: Attractive valuations, dollar weakness
 - Timeframe: 24 months
 
-**Total Capital Deployed**: $50M  
-**Expected Return**: $13.1M (26.2%)  
+**Total Capital Deployed**: $50M
+**Expected Return**: $13.1M (26.2%)
 **Value**: $13.1M from new high-conviction positions
 
 ---
@@ -298,7 +298,7 @@ EchoesAssistantV2 as a **C-Suite Investment Advisor** delivers:
 
 **For a $10B AUM client**:
 - 7.6% alpha = $760M additional value
-- License fee: $1M/year  
+- License fee: $1M/year
 - **ROI: 760x**
 
 ### Competitive Moat
@@ -312,28 +312,28 @@ EchoesAssistantV2 as a **C-Suite Investment Advisor** delivers:
 ## 🎯 Use Cases
 
 ### 1. Portfolio Rebalancing
-**Frequency**: Quarterly  
-**Value**: $15M annual alpha  
+**Frequency**: Quarterly
+**Value**: $15M annual alpha
 **Time Savings**: 80% reduction in analysis time
 
 ### 2. Opportunity Identification
-**Frequency**: Continuous  
-**Value**: $13M from 4 high-conviction ideas  
+**Frequency**: Continuous
+**Value**: $13M from 4 high-conviction ideas
 **Hit Rate**: 85%+ confidence level
 
 ### 3. Risk Management
-**Frequency**: Daily monitoring  
-**Value**: Downside protection, portfolio beta optimization  
+**Frequency**: Daily monitoring
+**Value**: Downside protection, portfolio beta optimization
 **Benefit**: Sleep well at night
 
 ### 4. Sector Rotation
-**Frequency**: Monthly adjustment  
-**Value**: $10M from optimal positioning  
+**Frequency**: Monthly adjustment
+**Value**: $10M from optimal positioning
 **Advantage**: Ahead of economic cycles
 
 ### 5. Executive Reporting
-**Frequency**: Weekly/monthly  
-**Value**: Clear decision-making framework  
+**Frequency**: Weekly/monthly
+**Value**: Clear decision-making framework
 **Impact**: Better governance and oversight
 
 ---
@@ -415,12 +415,12 @@ python demo_investment_advisor.py
 
 **EchoesAssistantV2** as a **C-Suite Investment Advisor** delivers:
 
-✅ **$125.6M** Portfolio Value Increase  
-✅ **$38.1M** Alpha Generated (7.6%)  
-✅ **25.1%** Total Expected Return  
-✅ **85%+** Confidence Level  
-✅ **Zero** Errors or Crashes  
-✅ **100%** Institutional Grade  
+✅ **$125.6M** Portfolio Value Increase
+✅ **$38.1M** Alpha Generated (7.6%)
+✅ **25.1%** Total Expected Return
+✅ **85%+** Confidence Level
+✅ **Zero** Errors or Crashes
+✅ **100%** Institutional Grade
 
 **Ready for**: Hedge funds, institutional investors, wealth management, asset managers
 
@@ -464,13 +464,13 @@ EchoesAssistantV2 Investment Advisor
 
 ---
 
-**Last Updated**: October 22, 2025, 9:27 AM  
-**Demo Version**: 1.0  
-**Status**: ✅ **PRODUCTION READY**  
+**Last Updated**: October 22, 2025, 9:27 AM
+**Demo Version**: 1.0
+**Status**: ✅ **PRODUCTION READY**
 **Commit**: `92686a07`
 
 ---
 
-**For Institutional Sales**: Contact institutional@echoes-ai.com  
-**For Partnership Inquiries**: Contact partners@echoes-ai.com  
+**For Institutional Sales**: Contact institutional@echoes-ai.com
+**For Partnership Inquiries**: Contact partners@echoes-ai.com
 **For Investment Opportunities**: Contact investors@echoes-ai.com

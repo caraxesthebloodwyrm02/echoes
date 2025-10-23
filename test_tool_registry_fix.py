@@ -28,14 +28,14 @@ def test_has_tool_method():
 
     # Test has_tool() method
     print("\n[Test 1] Testing has_tool() method...")
-    
+
     # Test with known tool
     if tools:
         first_tool = tools[0]
         result = registry.has_tool(first_tool)
         assert result is True, f"has_tool() should return True for {first_tool}"
         print(f"  ✓ has_tool('{first_tool}') = {result}")
-    
+
     # Test with non-existent tool
     result = registry.has_tool("nonexistent_tool_xyz")
     assert result is False, "has_tool() should return False for non-existent tool"
@@ -48,20 +48,21 @@ def test_has_tool_method():
         tool = registry.get(first_tool)
         assert tool is not None, f"get() should return tool for {first_tool}"
         print(f"  ✓ get('{first_tool}') returned tool object")
-    
+
     tool = registry.get("nonexistent_tool_xyz")
     assert tool is None, "get() should return None for non-existent tool"
-    print(f"  ✓ get('nonexistent_tool_xyz') = None")
+    print("  ✓ get('nonexistent_tool_xyz') = None")
 
     # Test integration with action executor
     print("\n[Test 3] Testing integration with ActionExecutor...")
     try:
         from app.actions import ActionExecutor
+
         executor = ActionExecutor()
-        print(f"  ✓ ActionExecutor initialized successfully")
-        
+        print("  ✓ ActionExecutor initialized successfully")
+
         # Test that execute_tool_action can use has_tool()
-        print(f"  ✓ ActionExecutor.execute_tool_action() can use has_tool()")
+        print("  ✓ ActionExecutor.execute_tool_action() can use has_tool()")
     except Exception as e:
         print(f"  ✗ Error: {e}")
         raise

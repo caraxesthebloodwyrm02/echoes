@@ -1,7 +1,7 @@
 # EchoesAssistantV2 — Agentic Capabilities Enabled
 
-**Date**: October 22, 2025, 8:35 AM  
-**Status**: ✅ **ACTION-TAKING ENABLED**  
+**Date**: October 22, 2025, 8:35 AM
+**Status**: ✅ **ACTION-TAKING ENABLED**
 
 ---
 
@@ -21,29 +21,29 @@ The `EchoesAssistantV2` assistant now has **autonomous action-taking capabilitie
 
 #### Inventory Actions (via ATLAS)
 ```python
-assistant.execute_action("inventory", "add_item", 
-    sku="SKU-001", name="Mouse", category="Peripherals", 
+assistant.execute_action("inventory", "add_item",
+    sku="SKU-001", name="Mouse", category="Peripherals",
     quantity=50, location="A1")
 
-assistant.execute_action("inventory", "list_items", 
+assistant.execute_action("inventory", "list_items",
     category="Peripherals")
 
-assistant.execute_action("inventory", "adjust_quantity", 
+assistant.execute_action("inventory", "adjust_quantity",
     sku="SKU-001", delta=-2)
 
-assistant.execute_action("inventory", "move_item", 
+assistant.execute_action("inventory", "move_item",
     sku="SKU-001", new_location="B2")
 
-assistant.execute_action("inventory", "report", 
+assistant.execute_action("inventory", "report",
     report_type="summary")
 ```
 
 #### Tool Actions (via Registry)
 ```python
-assistant.execute_action("tool", "calculator", 
+assistant.execute_action("tool", "calculator",
     expression="2+2")
 
-assistant.execute_action("tool", "search", 
+assistant.execute_action("tool", "search",
     query="inventory management")
 ```
 
@@ -100,7 +100,7 @@ from assistant_v2_core import EchoesAssistantV2
 assistant = EchoesAssistantV2(enable_tools=True)
 
 result = assistant.execute_action(
-    "inventory", 
+    "inventory",
     "add_item",
     sku="SKU-MOUSE-001",
     name="Wireless Mouse",
@@ -365,5 +365,5 @@ The `EchoesAssistantV2` can now:
 
 ---
 
-**Enabled**: October 22, 2025, 8:35 AM  
+**Enabled**: October 22, 2025, 8:35 AM
 **Status**: ✅ **PRODUCTION READY**

@@ -44,7 +44,7 @@ from tools.registry import get_registry
 from tools.examples import *  # Load all built-in tools
 
 # Action Execution
-from app.actions import ActionExecutor, ActionResult
+from app.actions import ActionExecutor
 
 # Knowledge Management
 from app.knowledge import KnowledgeManager
@@ -332,19 +332,19 @@ class EchoesAssistantV2:
 
         # Action execution
         self.action_executor = ActionExecutor()
-        print(f"✓ Action executor initialized")
+        print("✓ Action executor initialized")
 
         # Knowledge management
         self.knowledge_manager = KnowledgeManager()
-        print(f"✓ Knowledge manager initialized")
+        print("✓ Knowledge manager initialized")
 
         # Filesystem tools
         self.fs_tools = FilesystemTools(root_dir=os.getcwd())
-        print(f"✓ Filesystem tools initialized")
+        print("✓ Filesystem tools initialized")
 
         # Agent workflow system
         self.agent_workflow = AgentWorkflow(self)
-        print(f"✓ Agent workflow system initialized")
+        print("✓ Agent workflow system initialized")
 
         # RAG system
         self.enable_rag = enable_rag and RAG_AVAILABLE
@@ -563,7 +563,9 @@ class EchoesAssistantV2:
 
                 # Initialize status for tool execution
                 if status and iteration == 0:
-                    status.start_phase(f"{STATUS_TOOL} Planning and executing {len(tool_calls)} action(s)", len(tool_calls))
+                    status.start_phase(
+                        f"{STATUS_TOOL} Planning and executing {len(tool_calls)} action(s)", len(tool_calls)
+                    )
 
                 # Add assistant message
                 messages.append(response_message)
@@ -591,7 +593,9 @@ class EchoesAssistantV2:
 
             if status and iteration > 0:
                 successful = sum(1 for r in all_tool_results if r.get("success", False))
-                status.complete_phase(f"Completed {iteration} action round(s) ({successful}/{len(all_tool_results)} successful)")
+                status.complete_phase(
+                    f"Completed {iteration} action round(s) ({successful}/{len(all_tool_results)} successful)"
+                )
 
             # Get final response
             if stream:
@@ -662,12 +666,7 @@ class EchoesAssistantV2:
             return []
         return self.tool_registry.list_tools(category)
 
-    def execute_action(
-        self,
-        action_type: str,
-        action_name: str,
-        **kwargs
-    ) -> Dict[str, Any]:
+    def execute_action(self, action_type: str, action_name: str, **kwargs) -> Dict[str, Any]:
         """
         Execute an action on behalf of the user.
 
@@ -706,11 +705,15 @@ class EchoesAssistantV2:
         """Get summary of actions executed."""
         return self.action_executor.get_action_summary()
 
-    def gather_knowledge(self, content: str, source: str, category: str = "general", tags: Optional[List[str]] = None) -> str:
+    def gather_knowledge(
+        self, content: str, source: str, category: str = "general", tags: Optional[List[str]] = None
+    ) -> str:
         """Gather and store knowledge."""
         return self.knowledge_manager.add_knowledge(content, source, category, tags)
 
-    def search_knowledge(self, query: Optional[str] = None, category: Optional[str] = None, limit: int = 10) -> List[Dict[str, Any]]:
+    def search_knowledge(
+        self, query: Optional[str] = None, category: Optional[str] = None, limit: int = 10
+    ) -> List[Dict[str, Any]]:
         """Search knowledge base."""
         entries = self.knowledge_manager.search_knowledge(query, category, limit=limit)
         return [e.to_dict() for e in entries]
@@ -747,22 +750,17 @@ class EchoesAssistantV2:
         """Run an agent workflow."""
         if workflow_type == "triage":
             result = self.agent_workflow.run_triage_workflow(
-                user_input=kwargs.get("user_input", ""),
-                context=kwargs.get("context")
+                user_input=kwargs.get("user_input", ""), context=kwargs.get("context")
             )
         elif workflow_type == "comparison":
-            result = self.agent_workflow.run_comparison_workflow(
-                file1=kwargs.get("file1"),
-                file2=kwargs.get("file2")
-            )
+            result = self.agent_workflow.run_comparison_workflow(file1=kwargs.get("file1"), file2=kwargs.get("file2"))
         elif workflow_type == "data_enrichment":
             result = self.agent_workflow.run_data_enrichment_workflow(
-                topic=kwargs.get("topic"),
-                context=kwargs.get("context")
+                topic=kwargs.get("topic"), context=kwargs.get("context")
             )
         else:
             return {"success": False, "error": f"Unknown workflow type: {workflow_type}"}
-        
+
         return result.to_dict()
 
     def get_stats(self) -> Dict[str, Any]:
@@ -1108,11 +1106,17 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
                     print(f"\n📋 Action History ({len(history)} actions):")
                     for action in history:
                         status_icon = "✓" if action["success"] else "✗"
-                        print(f"  {status_icon} {action['action_id']}: {action['action_type']} ({action['duration_ms']:.1f}ms)")
+                        print(
+                            f"  {status_icon} {action['action_id']}: {action['action_type']} ({action['duration_ms']:.1f}ms)"
+                        )
                     summary = assistant.get_action_summary()
-                    print(f"\n📊 Action Summary:")
-                    print(f"  Total: {summary['total_actions']} | Success: {summary['successful']} | Failed: {summary['failed']}")
-                    print(f"  Success Rate: {summary['success_rate']:.1f}% | Avg Duration: {summary['avg_duration_ms']:.1f}ms")
+                    print("\n📊 Action Summary:")
+                    print(
+                        f"  Total: {summary['total_actions']} | Success: {summary['successful']} | Failed: {summary['failed']}"
+                    )
+                    print(
+                        f"  Success Rate: {summary['success_rate']:.1f}% | Avg Duration: {summary['avg_duration_ms']:.1f}ms"
+                    )
                     continue
 
                 if command.startswith("action "):
@@ -1125,7 +1129,8 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
 
                     if action_cmd == "add" and len(parts) >= 6:
                         result = assistant.execute_action(
-                            "inventory", "add_item",
+                            "inventory",
+                            "add_item",
                             sku=parts[1],
                             name=parts[2],
                             category=parts[3],
@@ -1144,10 +1149,7 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
 
                     if action_cmd == "list":
                         category = parts[1] if len(parts) > 1 else None
-                        result = assistant.execute_action(
-                            "inventory", "list_items",
-                            category=category
-                        )
+                        result = assistant.execute_action("inventory", "list_items", category=category)
                         if result["success"]:
                             items = result["result"]
                             print(f"\n📦 Inventory Items ({len(items)} total):")
@@ -1161,10 +1163,7 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
 
                     if action_cmd == "report":
                         report_type = parts[1] if len(parts) > 1 else "summary"
-                        result = assistant.execute_action(
-                            "inventory", "report",
-                            report_type=report_type
-                        )
+                        result = assistant.execute_action("inventory", "report", report_type=report_type)
                         if result["success"]:
                             print(f"\n📊 Inventory Report ({report_type}):")
                             print(json.dumps(result["result"], indent=2))

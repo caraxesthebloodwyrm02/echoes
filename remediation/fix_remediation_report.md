@@ -100,7 +100,7 @@ Successfully hardened the Glimpse ML prototype with comprehensive supply-chain s
 - **pip 25.2**: GHSA-4xh5-x5gv-qwph (CVE-2025-8869) - tarfile extraction in source distributions
   - **Mitigation**: Using `--only-binary=:all:` prevents source distribution extraction
   - **Risk**: LOW (mitigated by binary-only enforcement)
-  
+
 - **setuptools 70.2.0**: PYSEC-2025-49 - package installation vulnerabilities
   - **Mitigation**: Dependency of PyTorch, not directly used in production
   - **Risk**: LOW (transitive dependency, binary wheel installation only)
@@ -108,12 +108,12 @@ Successfully hardened the Glimpse ML prototype with comprehensive supply-chain s
 ### Manual Review Items
 1. ⚠️  **PyTorch Checksum**: Automated verification not implemented
    - Manual verification recommended: `sha256sum` against official PyTorch release checksums
-   
+
 2. ✅ **pip-audit Findings**: Reviewed - 2 non-critical vulnerabilities acceptable
-   
+
 3. ⚠️  **Docker Image Scanning**: Requires Docker Desktop running
    - Run `trivy image glimpse-test:hardening` after build
-   
+
 4. ✅ **SBOM Completeness**: Verified - 61 dependencies documented
 
 ## Next Steps

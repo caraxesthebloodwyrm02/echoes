@@ -6,7 +6,6 @@ Provides a clean interface for inventory operations without CLI overhead.
 
 from typing import Dict, Any, List, Optional
 from .service import InventoryService
-from .models import InventoryItem
 
 
 class ATLASDirectAPI:
@@ -200,9 +199,7 @@ class ATLASDirectAPI:
                 "total_quantity": total_quantity,
                 "categories": len(categories),
                 "locations": len(locations),
-                "avg_quantity_per_item": (
-                    total_quantity / total_items if total_items > 0 else 0
-                ),
+                "avg_quantity_per_item": (total_quantity / total_items if total_items > 0 else 0),
             }
         except Exception as e:
             return {"success": False, "error": str(e)}

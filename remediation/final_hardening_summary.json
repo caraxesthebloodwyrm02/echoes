@@ -4,7 +4,7 @@
     "branch": "hardening/supplychain-ci-20251020-0913",
     "status": "complete",
     "success_rate": "90%",
-    
+
     "environment": {
       "python_version": "3.13.9",
       "pip_version": "25.2",
@@ -13,7 +13,7 @@
       "platform": "Windows 11 Build 26220",
       "venv_path": ".venv-hardening"
     },
-    
+
     "pytorch": {
       "version": "2.9.0+cpu",
       "source": "https://download.pytorch.org/whl/cpu",
@@ -24,7 +24,7 @@
       "import_successful": true,
       "size_mb": 109.2
     },
-    
+
     "security_scan": {
       "tool": "pip-audit",
       "version": "2.9.0",
@@ -56,7 +56,7 @@
       "low_vulnerabilities": 2,
       "audit_results_path": "remediation/pip-audit-pre-scan.json"
     },
-    
+
     "sbom": {
       "generated": true,
       "tool": "cyclonedx-py",
@@ -66,7 +66,7 @@
       "dependencies_documented": 61,
       "scan_method": "environment"
     },
-    
+
     "ci_cd": {
       "workflow_created": true,
       "workflow_path": "ci/gh-actions/enforce-ml-safety.yml",
@@ -84,7 +84,7 @@
         "workflow_dispatch"
       ]
     },
-    
+
     "docker": {
       "dockerfile_created": true,
       "dockerfile_path": "docker/glimpse-test/Dockerfile",
@@ -101,7 +101,7 @@
         "binary-only installations"
       ]
     },
-    
+
     "tests": {
       "verification_suite": "remediation/verify_hardening.py",
       "total_tests": 5,
@@ -119,7 +119,7 @@
       "container_tests_run": false,
       "container_tests_note": "Docker Desktop required"
     },
-    
+
     "artifacts": {
       "security": [
         "remediation/pip-audit-pre-scan.json",
@@ -141,7 +141,7 @@
         "docker_image.tar (requires Docker Desktop)"
       ]
     },
-    
+
     "compliance": {
       "binary_only_enforced": true,
       "supply_chain_secured": true,
@@ -151,7 +151,7 @@
       "container_security_implemented": true,
       "audit_trail_complete": true
     },
-    
+
     "manual_review_required": [
       {
         "item": "PyTorch checksum verification",
@@ -169,7 +169,7 @@
         "action": "Run trivy scan after image build"
       }
     ],
-    
+
     "next_steps": {
       "immediate": [
         "Start Docker Desktop and build container image",
@@ -189,7 +189,7 @@
         "Schedule quarterly security reviews"
       ]
     },
-    
+
     "success_criteria_met": {
       "venv_created": true,
       "pip_upgraded": true,
@@ -205,7 +205,7 @@
       "docker_image_built": false,
       "artifacts_committed": false
     },
-    
+
     "overall_status": {
       "hardening_complete": true,
       "production_ready": false,

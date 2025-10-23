@@ -15,7 +15,6 @@ Scientific Impact: $2.7B cost savings, 3 breakthrough discoveries, 12 patents
 """
 
 import json
-import time
 from datetime import datetime
 from assistant_v2_core import EchoesAssistantV2
 
@@ -26,10 +25,7 @@ class SpaceResearchDemo:
     def __init__(self):
         """Initialize the demo."""
         self.assistant = EchoesAssistantV2(
-            enable_tools=True,
-            enable_rag=False,
-            enable_streaming=False,
-            enable_status=False
+            enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False
         )
         self.discoveries = []
         self.cost_savings = 0
@@ -79,13 +75,15 @@ class SpaceResearchDemo:
         self.print_section("PHASE 1: Trajectory Optimization via Pattern Recognition", "🛰️")
 
         print("\n[Step 1.1] Analyzing 25 years of Mars mission data...")
-        
+
         missions = {"missions": 5, "fuel_average": 950, "current_estimate": 85000}
         self.assistant.gather_knowledge(json.dumps(missions), "nasa_db", "mission_data", ["historical"])
 
         print("\n[Step 1.2] Running pattern recognition...")
-        result = self.assistant.run_workflow("data_enrichment", topic="Optimize Mars trajectory", context={"data": missions})
-        
+        result = self.assistant.run_workflow(
+            "data_enrichment", topic="Optimize Mars trajectory", context={"data": missions}
+        )
+
         if result["success"]:
             print(f"  ✓ Analysis: {len(result['steps'])} steps, {result['total_duration_ms']:.0f}ms")
             print("\n[Step 1.3] Discovery: Hybrid Cycler-Hohmann Trajectory")
@@ -104,8 +102,10 @@ class SpaceResearchDemo:
         self.assistant.gather_knowledge(json.dumps(data), "life_support_db", "life_support", ["current"])
 
         print("\n[Step 2.2] Context-aware synthesis...")
-        result = self.assistant.run_workflow("triage", user_input="Innovate life support via cross-domain", context={"data": data})
-        
+        result = self.assistant.run_workflow(
+            "triage", user_input="Innovate life support via cross-domain", context={"data": data}
+        )
+
         if result["success"]:
             print(f"  ✓ Synthesis: {len(result['steps'])} steps")
             print("\n[Step 2.3] Innovation: Triple-Function Algae Bioreactor")
@@ -125,7 +125,7 @@ class SpaceResearchDemo:
 
         print("\n[Step 3.2] Pattern-based breakthrough analysis...")
         result = self.assistant.run_workflow("data_enrichment", topic="Breakthrough propulsion", context={"data": data})
-        
+
         if result["success"]:
             print(f"  ✓ Analysis: {result['total_duration_ms']:.0f}ms")
             print("\n[Step 3.3] Breakthrough: Adaptive Tri-Mode Propulsion")
@@ -146,7 +146,7 @@ class SpaceResearchDemo:
         print("\n[Step 4.2] Creating multi-level educational framework...")
         ed_data = {"levels": 4, "reach": "565K/year", "universities": 150}
         self.assistant.gather_knowledge(json.dumps(ed_data), "education", "education", ["framework"])
-        
+
         print("\n[Step 4.3] Educational Impact:")
         print("  • 4 audience levels: High school → Industry")
         print("  • 565K students/researchers/year")
@@ -163,14 +163,14 @@ class SpaceResearchDemo:
             "primary_paper": "Nature Astronomy (500+ citations expected)",
             "supporting_papers": 3,
             "patents": self.patents_identified,
-            "open_access": True
+            "open_access": True,
         }
         self.assistant.write_file("data/space_research_publication.json", json.dumps(pub, indent=2))
-        
+
         print(f"\n  📄 Primary Paper: {pub['primary_paper']}")
         print(f"  📚 Supporting Papers: {pub['supporting_papers']}")
         print(f"  🏛️  Patent Applications: {pub['patents']}")
-        print(f"  🌐 Open Access: Yes")
+        print("  🌐 Open Access: Yes")
         print("\n  ✓ Publication package saved")
 
     def _final_summary(self):
@@ -180,8 +180,8 @@ class SpaceResearchDemo:
         stats = self.assistant.get_stats()
         print("\n📊 SYSTEM PERFORMANCE:")
         print(f"  • Knowledge Entries: {stats['knowledge']['total_entries']}")
-        print(f"  • Workflows: 5 (100% success)")
-        print(f"  • Processing Time: ~2 minutes")
+        print("  • Workflows: 5 (100% success)")
+        print("  • Processing Time: ~2 minutes")
 
         print("\n🔬 SCIENTIFIC IMPACT:")
         print(f"  • Breakthrough Discoveries: {len(self.discoveries)}")
@@ -189,7 +189,7 @@ class SpaceResearchDemo:
             print(f"    {i}. {d}")
         print(f"  • Total Cost Savings: {self.format_currency(self.cost_savings)}")
         print(f"  • Patent Applications: {self.patents_identified}")
-        print(f"  • Educational Reach: 565K/year")
+        print("  • Educational Reach: 565K/year")
 
         print("\n🚀 CAPABILITIES DEMONSTRATED:")
         caps = [
@@ -200,7 +200,7 @@ class SpaceResearchDemo:
             "✓ Multi-level educational content creation",
             "✓ Research publication generation",
             "✓ Patent strategy development",
-            "✓ Knowledge democratization (open access)"
+            "✓ Knowledge democratization (open access)",
         ]
         for cap in caps:
             print(f"  {cap}")
@@ -226,5 +226,5 @@ if __name__ == "__main__":
     print("\nECHOES AI - SPACE RESEARCH INTELLIGENCE & DISCOVERY SYSTEM")
     print("Breakthrough AI for Scientific Discovery & Space Exploration")
     print("\n" + "🚀" * 40)
-    
+
     run_space_research_demo()

@@ -8,17 +8,16 @@ Enables the assistant to take autonomous actions:
 - Provide feedback to the assistant
 """
 
-import json
 import time
 from typing import Dict, Any, Optional, List
 from datetime import datetime, timezone
-from pathlib import Path
 from dataclasses import dataclass, asdict
 
 
 @dataclass
 class ActionResult:
     """Result of an executed action."""
+
     action_id: str
     action_type: str
     status: str  # success, failed, pending
@@ -38,11 +37,7 @@ class ActionExecutor:
         self.action_history: List[ActionResult] = []
         self.action_counter = 0
 
-    def execute_inventory_action(
-        self,
-        action_type: str,
-        **kwargs
-    ) -> ActionResult:
+    def execute_inventory_action(self, action_type: str, **kwargs) -> ActionResult:
         """Execute an inventory action via ATLAS."""
         self.action_counter += 1
         action_id = f"action_{self.action_counter}"
@@ -87,9 +82,7 @@ class ActionExecutor:
                 ).to_dict()
 
             elif action_type == "report":
-                result_data = svc.report(
-                    report_type=kwargs.get("report_type", "summary")
-                )
+                result_data = svc.report(report_type=kwargs.get("report_type", "summary"))
 
             else:
                 raise ValueError(f"Unknown inventory action: {action_type}")
@@ -119,11 +112,7 @@ class ActionExecutor:
         self.action_history.append(result)
         return result
 
-    def execute_tool_action(
-        self,
-        tool_name: str,
-        **kwargs
-    ) -> ActionResult:
+    def execute_tool_action(self, tool_name: str, **kwargs) -> ActionResult:
         """Execute a tool action via the tool registry."""
         self.action_counter += 1
         action_id = f"action_{self.action_counter}"
@@ -176,11 +165,7 @@ class ActionExecutor:
         total = len(self.action_history)
         successful = sum(1 for a in self.action_history if a.status == "success")
         failed = sum(1 for a in self.action_history if a.status == "failed")
-        avg_duration = (
-            sum(a.duration_ms for a in self.action_history) / total
-            if total > 0
-            else 0
-        )
+        avg_duration = sum(a.duration_ms for a in self.action_history) / total if total > 0 else 0
 
         return {
             "total_actions": total,
