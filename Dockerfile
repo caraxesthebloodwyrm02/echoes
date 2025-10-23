@@ -45,6 +45,7 @@ COPY --from=builder /opt/venv /opt/venv
 COPY --chown=appuser:appuser app ./app
 COPY --chown=appuser:appuser api ./api
 COPY --chown=appuser:appuser automation ./automation
+COPY --chown=appuser:appuser echoes ./echoes
 COPY --chown=appuser:appuser src ./src
 COPY --chown=appuser:appuser tools ./tools
 COPY --chown=appuser:appuser main.py* .
@@ -67,4 +68,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the application
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "api.server:app", "--host", "0.0.0.0", "--port", "8000"]
