@@ -21,7 +21,7 @@ COPY requirements.txt* ./
 # Install core dependencies (skip Windows-specific packages)
 RUN pip install --no-cache-dir fastapi uvicorn pydantic pydantic-settings \
     httpx pytest pytest-cov python-multipart python-dotenv \
-    PyJWT cryptography || true
+    PyJWT cryptography slowapi openai || true
 
 # Final stage
 FROM python:3.11-slim-bookworm
@@ -37,6 +37,9 @@ RUN groupadd -r appuser -g 1000 && \
     useradd -u 1000 -r -g appuser -d /home/appuser -s /sbin/nologin -c "Application User" appuser && \
     mkdir -p /home/appuser && \
     chown -R appuser:appuser /home/appuser
+
+# Create data directory with proper permissions
+RUN mkdir -p /app/data && chown -R appuser:appuser /app/data
 
 # Copy virtual environment from builder
 COPY --from=builder /opt/venv /opt/venv
@@ -68,4 +71,4 @@ HEALTHCHECK --interval=30s --timeout=30s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:8000/health || exit 1
 
 # Run the application
-CMD ["uvicorn", "api.server:app", "--host", "0.0.0.0", "--port", "8000"]
+CMD ["uvicorn", "echoes.api.server:app", "--host", "0.0.0.0", "--port", "8000"]
