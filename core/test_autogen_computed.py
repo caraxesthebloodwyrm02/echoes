@@ -7,14 +7,14 @@ from sqlalchemy import MetaData
 from sqlalchemy import Table
 
 from ._autogen_fixtures import AutogenFixtureTest
-from ... import testing
-from ...testing import config
-from ...testing import eq_
-from ...testing import expect_warnings
-from ...testing import is_
-from ...testing import is_true
-from ...testing import mock
-from ...testing import TestBase
+from core import testing
+from core.testing import config
+from core.testing import eq_
+from core.testing import expect_warnings
+from core.testing import is_
+from core.testing import is_true
+from core.testing import mock
+from core.testing import TestBase
 
 
 class AutogenerateComputedTest(AutogenFixtureTest, TestBase):

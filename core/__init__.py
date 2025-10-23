@@ -21,3 +21,34 @@
 # SOFTWARE.
 
 """Test suite for trajectory efficiency analysis."""
+
+# ============================================================================
+# CRITICAL: Pre-initialize pyarrow to break circular dependency
+# ============================================================================
+import sys
+import importlib
+
+# Pre-initialize pyarrow to break circular dependency
+if 'pyarrow' not in sys.modules:
+    try:
+        import pyarrow as _pa
+    except ImportError:
+        pass
+
+# ============================================================================
+# Core module imports
+# ============================================================================
+from . import _stats_py as _stats
+from . import _distn_infrastructure
+from . import _continuous_distns
+from . import _discrete_distns
+
+# ============================================================================
+# Public API exports
+# ============================================================================
+__all__ = [
+    '_stats',
+    '_distn_infrastructure',
+    '_continuous_distns',
+    '_discrete_distns',
+]

@@ -21,7 +21,7 @@ import scipy.special._ufuncs as scu
 from scipy._lib._util import _lazyselect
 import scipy._lib.array_api_extra as xpx
 
-from . import _stats
+from . import _stats_py as _stats
 from ._tukeylambda_stats import tukeylambda_variance as _tlvar, tukeylambda_kurtosis as _tlkurt
 from ._distn_infrastructure import (
     _vectorize_rvs_over_shapes,

@@ -5,9 +5,9 @@ from sqlalchemy import String
 from sqlalchemy import Table
 
 from ._autogen_fixtures import AutogenFixtureTest
-from ...testing import eq_
-from ...testing import mock
-from ...testing import TestBase
+from core.testing import eq_
+from core.testing import mock
+from core.testing import TestBase
 
 
 class AutogenerateCommentsTest(AutogenFixtureTest, TestBase):
