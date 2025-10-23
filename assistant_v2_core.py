@@ -31,9 +31,11 @@ from pathlib import Path
 
 try:
     import yaml
+    YAML_AVAILABLE = True
 except ImportError:
     print("⚠️  Missing: pyyaml. Install with: pip install pyyaml")
-    sys.exit(1)
+    yaml = None
+    YAML_AVAILABLE = False
 
 # Core dependencies
 from dotenv import load_dotenv
@@ -92,6 +94,10 @@ def show_prompt_content(prompt_name: str) -> None:
 
 def load_prompt(prompt_name: str) -> str:
     """Load a prompt from the prompts directory."""
+    if not YAML_AVAILABLE:
+        print(f"Warning: YAML not available, cannot load prompt {prompt_name}")
+        return ""
+
     prompt_path = Path("prompts") / f"{prompt_name}.yaml"
     try:
         with open(prompt_path, "r", encoding="utf-8") as f:
