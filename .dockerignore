@@ -25,7 +25,6 @@
 **/docker-compose*.yml
 **/Dockerfile*
 **/scripts/
-**/automation/
 **/ci/
 **/misc/
 **/archives/
