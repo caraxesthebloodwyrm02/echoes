@@ -37,7 +37,7 @@ A RESTful API for multimodal AI processing with webhook support, built on FastAP
    Edit `.env` file:
    ```env
    OPENAI_API_KEY=your-openai-api-key
-   ECHOES_API_KEYS=user1-key-123:1000/hour,user2-key-456:500/hour
+   ECHOES_API_KEYS=user1-key-qwerty123456:1000/hour,user2-key-456:500/hour
    ```
 
 ## 🚀 Quick Start
@@ -205,7 +205,7 @@ GET /api/v1/analytics
 | `ECHOES_API_HOST` | `0.0.0.0` | Server host |
 | `ECHOES_API_PORT` | `8000` | Server port |
 | `ECHOES_API_DEBUG` | `false` | Debug mode |
-| `ECHOES_API_KEYS` | `dev-key-12345:1000/hour` | API keys with limits |
+| `ECHOES_API_KEYS` | `dev-key-qwerty123456:1000/hour` | API keys with limits |
 | `ECHOES_RATE_LIMIT_REQUESTS` | `100` | Requests per window |
 | `ECHOES_RATE_LIMIT_WINDOW` | `3600` | Rate limit window (seconds) |
 | `ECHOES_MAX_FILE_SIZE` | `26214400` | Max file size (25MB) |

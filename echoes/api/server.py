@@ -182,12 +182,12 @@ def load_api_keys():
 
     # Default API key for development
     if not api_keys and config.debug:
-        api_keys["dev-key-12345"] = {
+        api_keys["dev-key-qwerty123456"] = {
             "limits": "1000/hour",
             "created_at": datetime.now(),
             "active": True
         }
-        logger.warning("⚠️ Using default development API key: dev-key-12345")
+        logger.warning("⚠️ Using default development API key: dev-key-qwerty123456")
 
 def load_webhooks():
     """Load webhooks from storage."""
