@@ -26,7 +26,7 @@ import sys
 from pathlib import Path
 
 # Setup logging paths
-LOG_DIR = Path("e:/Projects/Development/logs")
+LOG_DIR = Path(__file__).parent.parent / "logs"
 LOG_DIR.mkdir(exist_ok=True)
 
 
