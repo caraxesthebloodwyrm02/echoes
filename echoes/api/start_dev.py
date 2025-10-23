@@ -22,6 +22,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
+
 def main():
     """Start the API server in development mode."""
     # Set development environment variables
@@ -34,6 +35,7 @@ def main():
     if env_file.exists():
         try:
             from dotenv import load_dotenv
+
             load_dotenv(env_file)
             print(f"Loaded environment from {env_file}")
         except ImportError:
@@ -50,7 +52,7 @@ def main():
     try:
         print(f"Project root: {project_root}")
         print(f"Python path: {sys.path[:3]}")
-        
+
         from echoes.api.server import app
         import uvicorn
 
@@ -61,7 +63,7 @@ def main():
             reload=True,
             reload_dirs=[str(project_root)],
             log_level="info",
-            access_log=True
+            access_log=True,
         )
 
     except ImportError as e:
@@ -73,6 +75,7 @@ def main():
     except Exception as e:
         print(f"Server error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

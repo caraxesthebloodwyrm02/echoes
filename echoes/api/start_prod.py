@@ -23,6 +23,7 @@ from pathlib import Path
 project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
+
 def main():
     """Start the API server in production mode."""
     # Set production environment variables
@@ -35,6 +36,7 @@ def main():
     if env_file.exists():
         try:
             from dotenv import load_dotenv
+
             load_dotenv(env_file)
             print(f"Loaded environment from {env_file}")
         except ImportError:
@@ -66,7 +68,7 @@ def main():
             log_level="info",
             access_log=True,
             server_header=False,  # Hide server info for security
-            date_header=False     # Hide date for security
+            date_header=False,  # Hide date for security
         )
 
     except ImportError as e:
@@ -78,6 +80,7 @@ def main():
     except Exception as e:
         print(f"Server error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
