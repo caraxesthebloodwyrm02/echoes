@@ -1,0 +1,32 @@
+# Exclude unnecessary files to reduce image size and attack surface
+**/.git
+**/.gitignore
+**/.env*
+**/node_modules
+**/__pycache__
+**/*.pyc
+**/*.pyo
+**/*.pyd
+**/.pytest_cache
+**/.coverage
+**/.mypy_cache
+**/*.log
+**/logs/
+**/tests/
+**/docs/
+**/.github/
+**/README.md
+**/CHANGELOG.md
+**/Makefile
+**/*.code-workspace
+**/requirements-hardening.txt
+**/requirements-lock-hardened.txt
+**/requirements-lock.txt
+**/docker-compose*.yml
+**/Dockerfile*
+**/scripts/
+**/automation/
+**/ci/
+**/misc/
+**/archives/
+**/research report/

@@ -1,5 +1,9 @@
 # Use a specific Python version that has better package compatibility
-FROM python:3.11-slim as builder
+FROM python:3.11-slim-bookworm as builder
+
+# Install security updates in builder stage
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /opt/venv
@@ -20,7 +24,11 @@ RUN pip install --no-cache-dir fastapi uvicorn pydantic pydantic-settings \
     PyJWT cryptography || true
 
 # Final stage
-FROM python:3.11-slim
+FROM python:3.11-slim-bookworm
+
+# Install security updates in final stage
+RUN apt-get update && apt-get upgrade -y --no-install-recommends && \
+    apt-get clean && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /app
 
