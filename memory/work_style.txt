@@ -1,0 +1,30 @@
+Project Preferences:
+- Always use virtual environments (venv or conda)
+- Include comprehensive README files with setup instructions
+- Use requirements.txt for Python dependencies
+- Implement proper logging with structured output
+- Add docstrings to all public functions and classes
+- Use type hints for better code maintainability
+
+Work Style:
+- Prefer pair programming and code reviews
+- Document decisions and architecture choices
+- Break large tasks into smaller, manageable pieces
+- Test early and often
+- Refactor regularly to maintain code quality
+- Use Git commits with descriptive messages
+
+Communication Style:
+- Prefer clear, concise communication
+- Ask questions when something is unclear
+- Provide context and reasoning for decisions
+- Welcome feedback and constructive criticism
+- Value collaboration and knowledge sharing
+
+Problem Solving:
+- Start with understanding the problem thoroughly
+- Break complex problems into smaller components
+- Research and evaluate multiple solutions
+- Prototype and test approaches
+- Iterate based on feedback and results
+- Document lessons learned

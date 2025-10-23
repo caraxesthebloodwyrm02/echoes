@@ -1,0 +1,28 @@
+# Echoes API Server Requirements
+# ==============================
+
+# Core FastAPI and async support
+fastapi>=0.104.0
+uvicorn[standard]>=0.24.0
+pydantic>=2.5.0
+
+# HTTP client for webhooks and downloads
+httpx>=0.25.0
+
+# Rate limiting
+slowapi>=0.1.9
+
+# Image processing (for validation)
+Pillow>=10.0.0
+
+# Additional utilities
+python-multipart>=0.0.6
+python-dotenv>=1.0.0
+
+# OpenAI client (should be already installed)
+openai>=1.0.0
+
+# Local development and testing
+# pytest>=7.4.0
+# pytest-asyncio>=0.21.0
+# httpx>=0.25.0  # For testing API calls
