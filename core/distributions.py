@@ -11,7 +11,11 @@ from . import _continuous_distns
 from . import _discrete_distns
 
 from ._continuous_distns import *  # noqa: F403
-from ._levy_stable import levy_stable
+try:
+    from ._levy_stable import levy_stable
+except ImportError:
+    # Fallback when _levy_stable module is not available
+    levy_stable = None
 from ._discrete_distns import *  # noqa: F403
 from ._entropy import entropy
 

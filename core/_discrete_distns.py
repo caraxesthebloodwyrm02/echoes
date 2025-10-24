@@ -22,8 +22,18 @@ from ._distn_infrastructure import (
     _isintegral,
     rv_discrete_frozen,
 )
-from ._biasedurn import _PyFishersNCHypergeometric, _PyWalleniusNCHypergeometric, _PyStochasticLib3
-from ._stats_pythran import _poisson_binom
+try:
+    from ._biasedurn import _PyFishersNCHypergeometric, _PyWalleniusNCHypergeometric, _PyStochasticLib3
+except ImportError:
+    # Fallback when _biasedurn module is not available
+    _PyFishersNCHypergeometric = None
+    _PyWalleniusNCHypergeometric = None
+    _PyStochasticLib3 = None
+try:
+    from ._stats_pythran import _poisson_binom
+except ImportError:
+    # Fallback when _stats_pythran module is not available
+    _poisson_binom = None
 
 import scipy.special._ufuncs as scu
 

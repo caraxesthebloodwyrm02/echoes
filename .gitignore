@@ -181,6 +181,23 @@ test_output/
 .devcontainer/
 .vscode/
 
+# Generated tree output
+tree_structure.txt
+
+# Temporary files
+*.tmp
+*.temp
+temp/
+tmp/
+
+# Generated Python files from templates
+*generated_*.py
+*_generated.py
+
+# Large data files (add specific patterns as needed)
+*.sqlite3
+*.db
+
 # =============================================================================
 # PROJECT SPECIFIC
 # =============================================================================
