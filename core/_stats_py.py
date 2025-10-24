@@ -11160,3 +11160,111 @@ class _SimpleStudentT:
 
     def sf(self, t):
         return special.stdtr(self.df, -t)
+
+
+# ============================================================================
+# BASIC STATISTICAL FUNCTIONS - SIMPLIFIED IMPLEMENTATION
+# ============================================================================
+
+import numpy as np
+
+def mean(a, axis=None, dtype=None, keepdims=False):
+    """
+    Compute the arithmetic mean along the specified axis.
+
+    Parameters
+    ----------
+    a : array_like
+        Array containing data to be averaged. If `a` is not an array, a
+        precision may be lost.
+    axis : None or int or tuple of ints, optional
+        Axis or axes along which the means are computed.
+    dtype : data-type, optional
+        Type to use in computing the mean.
+    keepdims : bool, optional
+        If this is set to True, the axes which are reduced are left
+        in the result as dimensions with size one.
+
+    Returns
+    -------
+    m : ndarray, see dtype parameter above
+        If `out=None`, returns a new array containing the mean values.
+    """
+    return np.mean(a, axis=axis, dtype=dtype, keepdims=keepdims)
+
+
+def std(a, axis=None, dtype=None, ddof=0, keepdims=False):
+    """
+    Compute the standard deviation along the specified axis.
+
+    Parameters
+    ----------
+    a : array_like
+        Calculate the standard deviation of these values.
+    axis : None or int or tuple of ints, optional
+        Axis or axes along which the standard deviation is computed.
+    dtype : dtype, optional
+        Type to use in computing the standard deviation.
+    ddof : int, optional
+        Means Delta Degrees of Freedom: the divisor used in the calculation
+        is ``N - ddof``, where ``N`` represents the number of elements.
+    keepdims : bool, optional
+        If this is set to True, the axes which are reduced are left
+        in the result as dimensions with size one.
+
+    Returns
+    -------
+    standard_deviation : ndarray
+        If `out` is None, return a new array containing the standard deviation.
+    """
+    return np.std(a, axis=axis, dtype=dtype, ddof=ddof, keepdims=keepdims)
+
+
+def var(a, axis=None, dtype=None, ddof=0, keepdims=False):
+    """
+    Compute the variance along the specified axis.
+
+    Parameters
+    ----------
+    a : array_like
+        Array containing data to be averaged. If `a` is not an array, a
+        precision may be lost.
+    axis : None or int or tuple of ints, optional
+        Axis or axes along which the variance is computed.
+    dtype : data-type, optional
+        Type to use in computing the variance.
+    ddof : int, optional
+        "Delta Degrees of Freedom": the divisor used in the calculation
+        is ``N - ddof``, where ``N`` represents the number of elements.
+    keepdims : bool, optional
+        If this is set to True, the axes which are reduced are left
+        in the result as dimensions with size one.
+
+    Returns
+    -------
+    variance : ndarray
+        If ``out=None``, returns a new array containing the variance.
+    """
+    return np.var(a, axis=axis, dtype=dtype, ddof=ddof, keepdims=keepdims)
+
+
+def median(a, axis=None, keepdims=False):
+    """
+    Compute the median along the specified axis.
+
+    Parameters
+    ----------
+    a : array_like
+        Input array or object that can be converted to an array.
+    axis : {int, sequence of int, None}, optional
+        Axis or axes along which the medians are computed.
+    keepdims : bool, optional
+        If this is set to True, the axes which are reduced are left
+        in the result as dimensions with size one.
+
+    Returns
+    -------
+    median : ndarray
+        A new array holding the result.
+    """
+    return np.median(a, axis=axis, keepdims=keepdims)
