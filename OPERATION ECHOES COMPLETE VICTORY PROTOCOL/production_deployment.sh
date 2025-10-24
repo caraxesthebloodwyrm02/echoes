@@ -33,18 +33,11 @@ if ! docker info > /dev/null 2>&1; then
 fi
 echo -e "${GREEN}✓${NC} Docker is running"
 
-# Clean up any existing containers
-echo -e "${YELLOW}Cleaning up existing containers...${NC}"
-docker stop ${CONTAINER_NAME} 2>/dev/null || true
-docker rm ${CONTAINER_NAME} 2>/dev/null || true
-echo -e "${GREEN}✓${NC} Existing containers cleaned up"
-
 # Check port is available
 if lsof -Pi :${PORT} -sTCP:LISTEN -t >/dev/null 2>&1; then
-    echo -e "${YELLOW}⚠ Port ${PORT} still in use by another process${NC}"
-    # Kill any process using the port (not our container)
-    lsof -ti:${PORT} | xargs kill -9 2>/dev/null || true
-    sleep 2
+    echo -e "${YELLOW}⚠ Port ${PORT} is in use, stopping existing container...${NC}"
+    docker stop ${CONTAINER_NAME} 2>/dev/null || true
+    docker rm ${CONTAINER_NAME} 2>/dev/null || true
 fi
 echo -e "${GREEN}✓${NC} Port ${PORT} is available"
 
@@ -92,7 +85,7 @@ while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
         echo -e "${GREEN}✓${NC} Application is healthy!"
         break
     fi
-
+    
     ATTEMPT=$((ATTEMPT + 1))
     echo -ne "${YELLOW}⏳${NC} Attempt ${ATTEMPT}/${MAX_ATTEMPTS}...\r"
     sleep 2

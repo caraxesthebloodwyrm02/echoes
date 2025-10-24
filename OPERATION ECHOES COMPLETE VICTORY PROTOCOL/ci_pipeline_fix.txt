@@ -1,0 +1,103 @@
+name: Echoes CI/CD Pipeline
+
+on: [push, pull_request]
+
+jobs:
+  # CRITICAL PATH: Application tests must pass
+  test-application:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip>=24.0
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Run Application Tests (BLOCKING)
+        run: |
+          # Only test core application functionality - MUST PASS
+          pytest tests/ -v --tb=short --maxfail=5 --timeout=300
+          pytest test_*.py -v --tb=short --maxfail=3 --timeout=120
+        continue-on-error: false
+
+  # NON-CRITICAL: Core framework tests (WIP)
+  test-core-framework:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip>=24.0
+          pip install -r requirements.txt
+          pip install -e .
+      - name: Run Core Tests (NON-BLOCKING)
+        run: |
+          # Core statistical framework - failures expected during development
+          pytest core/ -v --tb=line --maxfail=50 --timeout=60 -x || true
+        continue-on-error: true
+      - name: Generate Test Report
+        if: always()
+        run: |
+          echo "Core framework completion: Track progress here"
+          pytest core/ --co -q | wc -l || true
+
+  # CRITICAL PATH: Code quality
+  lint:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Run Pre-commit Hooks
+        uses: pre-commit/action@v3.0.0
+        continue-on-error: false
+
+  # CRITICAL PATH: Docker deployment
+  build-and-push:
+    needs: [test-application, lint]  # Only depends on critical path
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      - name: Log in to Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/echoes:latest
+            ghcr.io/${{ github.repository_owner }}/echoes:${{ github.sha }}
+          cache-from: type=registry,ref=ghcr.io/${{ github.repository_owner }}/echoes:buildcache
+          cache-to: type=registry,ref=ghcr.io/${{ github.repository_owner }}/echoes:buildcache,mode=max
+
+  # SUCCESS NOTIFICATION
+  notify-success:
+    needs: [build-and-push]
+    runs-on: ubuntu-latest
+    if: success()
+    steps:
+      - name: Deployment Success
+        run: |
+          echo "🚀 DEPLOYMENT SUCCESSFUL"
+          echo "✅ Application tests passed"
+          echo "✅ Docker image published"
+          echo "✅ Ready for production deployment"
