@@ -6,6 +6,7 @@ Verifies that ATLAS can be accessed and used directly without CLI.
 """
 
 from ATLAS import ATLASDirectAPI
+import time
 
 
 def test_direct_atlas_interaction():
@@ -14,6 +15,9 @@ def test_direct_atlas_interaction():
     print("Testing Direct ATLAS Interaction")
     print("=" * 60)
 
+    # Generate unique test ID to avoid conflicts
+    test_id = str(int(time.time()))
+    
     # Initialize API
     api = ATLASDirectAPI()
     print("\n✓ ATLAS API initialized")
@@ -21,11 +25,11 @@ def test_direct_atlas_interaction():
     # Test 1: Add items
     print("\n[Test 1] Adding inventory items...")
     result = api.add_item(
-        sku="TEST-001",
+        sku=f"TEST-{test_id}-001",
         name="Test Item 1",
         category="Testing",
         quantity=100,
-        location="TEST-LOC-1",
+        location=f"TEST-LOC-{test_id}-1",
         min_stock=10,
         max_stock=500,
     )
@@ -33,11 +37,11 @@ def test_direct_atlas_interaction():
     print(f"  ✓ Added: {result['item']['sku']} - {result['item']['name']}")
 
     result = api.add_item(
-        sku="TEST-002",
+        sku=f"TEST-{test_id}-002",
         name="Test Item 2",
         category="Testing",
         quantity=50,
-        location="TEST-LOC-2",
+        location=f"TEST-LOC-{test_id}-2",
     )
     assert result["success"], f"Failed to add item: {result['error']}"
     print(f"  ✓ Added: {result['item']['sku']} - {result['item']['name']}")
@@ -58,21 +62,21 @@ def test_direct_atlas_interaction():
 
     # Test 4: Get specific item
     print("\n[Test 4] Getting specific item...")
-    result = api.get_item("TEST-001")
+    result = api.get_item(f"TEST-{test_id}-001")
     assert result["success"], f"Failed to get item: {result['error']}"
     print(f"  ✓ Retrieved: {result['item']['sku']} - {result['item']['name']}")
 
     # Test 5: Adjust quantity
     print("\n[Test 5] Adjusting quantity...")
-    result = api.adjust_quantity("TEST-001", -10)
+    result = api.adjust_quantity(f"TEST-{test_id}-001", -10)
     assert result["success"], f"Failed to adjust: {result['error']}"
-    print(f"  ✓ Adjusted TEST-001: {result['item']['quantity']} units")
+    print(f"  ✓ Adjusted TEST-{test_id}-001: {result['item']['quantity']} units")
 
     # Test 6: Move item
     print("\n[Test 6] Moving item to new location...")
-    result = api.move_item("TEST-002", "TEST-LOC-3")
+    result = api.move_item(f"TEST-{test_id}-002", f"TEST-LOC-{test_id}-3")
     assert result["success"], f"Failed to move: {result['error']}"
-    print(f"  ✓ Moved TEST-002 to {result['item']['location']}")
+    print(f"  ✓ Moved TEST-{test_id}-002 to {result['item']['location']}")
 
     # Test 7: Reports
     print("\n[Test 7] Generating reports...")
@@ -96,18 +100,18 @@ def test_direct_atlas_interaction():
     print("\n[Test 9] Batch adding items...")
     items = [
         {
-            "sku": "BATCH-001",
+            "sku": f"BATCH-{test_id}-001",
             "name": "Batch Item 1",
             "category": "Batch",
             "quantity": 25,
-            "location": "BATCH-LOC",
+            "location": f"BATCH-LOC-{test_id}",
         },
         {
-            "sku": "BATCH-002",
+            "sku": f"BATCH-{test_id}-002",
             "name": "Batch Item 2",
             "category": "Batch",
             "quantity": 30,
-            "location": "BATCH-LOC",
+            "location": f"BATCH-LOC-{test_id}",
         },
     ]
     result = api.bulk_add_items(items)

@@ -198,9 +198,8 @@ tmp/
 *.sqlite3
 *.db
 
-# =============================================================================
-# PROJECT SPECIFIC
-# =============================================================================
+# Project specific ignores
+c_o_r_e/
 # Generated documentation
 docs/_build/
 docs/api/

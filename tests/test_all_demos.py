@@ -493,7 +493,7 @@ class TestDemoExecutionIntegrity(unittest.TestCase):
 
         try:
             # Import and check demo exists
-            import demo_business_scenario
+            from demos import demo_business_scenario
 
             self.assertTrue(hasattr(demo_business_scenario, "BusinessScenarioDemo"), "Demo class should exist")
             self.assertTrue(hasattr(demo_business_scenario, "run_business_demo"), "Run function should exist")
@@ -507,7 +507,7 @@ class TestDemoExecutionIntegrity(unittest.TestCase):
         print("\n[Test 5.2] Investment Demo Execution...")
 
         try:
-            import demo_investment_advisor
+            from demos import demo_investment_advisor
 
             self.assertTrue(hasattr(demo_investment_advisor, "InvestmentAdvisorDemo"), "Demo class should exist")
             self.assertTrue(hasattr(demo_investment_advisor, "run_investment_demo"), "Run function should exist")
@@ -521,7 +521,7 @@ class TestDemoExecutionIntegrity(unittest.TestCase):
         print("\n[Test 5.3] Space Research Demo Execution...")
 
         try:
-            import demo_space_research
+            from demos import demo_space_research
 
             self.assertTrue(hasattr(demo_space_research, "SpaceResearchDemo"), "Demo class should exist")
             self.assertTrue(hasattr(demo_space_research, "run_space_research_demo"), "Run function should exist")
