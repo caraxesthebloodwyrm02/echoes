@@ -1,0 +1,9 @@
+# Create a directory for storing tree data
+mkdir /E:/projects/echoes/tree
+
+# Run 'show-tree' command to generate tree output in JSON format
+show-tree --json > c:/users/irfan/documents/tree_data.json
+
+# Open the saved JSON file in a text editor or any text interface of your choice
+nano /c:/users/irfan/documents/tree_data.json # For Nano, hold down the "Shift" key and press "I" on the keyboard, then type
+"/path/to/tree/output.json". Press enter to open the file.

@@ -1,6 +1,9 @@
 # EchoesAssistantV2: Enterprise Multimodal AI Platform
 
 **Transforming AI assistants into programmable multimodal platforms**
+> **Consent-Based License**: This project requires explicit consent for use. Please read the [LICENSE](LICENSE) file and contact the licensor for usage terms.
+>
+> We look for clusters of order in noisy data. When signals don't repeat or break known physics, we pause and observe. Dormant is a pause for clarity, not a failure.
 
 [![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Python](https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54)](https://python.org)
@@ -12,7 +15,7 @@ A production-ready, enterprise-grade AI assistant platform featuring advanced mu
 ## 🚀 Key Features
 
 ### 🤖 Core AI Assistant
-- **Advanced RAG System**: Semantic knowledge retrieval with FAISS-based vector search
+- **Advanced RAG System**: Semantic knowledge retrieval with FAISS-based vector search and OpenAI embeddings
 - **Tool Integration**: 50+ built-in tools for enhanced capabilities
 - **Context Management**: Persistent conversation history and memory
 - **Streaming Responses**: Real-time response generation
@@ -44,6 +47,7 @@ A production-ready, enterprise-grade AI assistant platform featuring advanced mu
 - [Development](#-development)
 - [Contributing](#-contributing)
 - [License](#-license)
+- [Acknowledgements](#-acknowledgements)
 
 ## 🏃 Quick Start
 
@@ -63,6 +67,9 @@ pip install -r requirements.txt
 # Configure environment
 cp echoes/api/.env.example echoes/api/.env
 # Edit .env with your OpenAI API key
+
+# (Optional) Configure OpenAI embeddings RAG preset
+# See docs/RAG_OPENAI_MIGRATION.md for openai-* presets
 
 # Run development server
 python echoes/api/start_dev.py
@@ -106,6 +113,20 @@ When running the API server, visit:
 - **Swagger UI**: `http://localhost:8000/docs`
 - **ReDoc**: `http://localhost:8000/redoc`
 - **OpenAPI Schema**: `http://localhost:8000/openapi.json`
+
+### RAG with OpenAI Embeddings
+Configure OpenAI-embeddings RAG presets:
+- **Migration Guide**: See `docs/RAG_OPENAI_MIGRATION.md`
+- **Presets**: `openai-fast`, `openai-balanced`, `openai-accurate`
+- **Usage**: `EchoesAssistantV2(rag_preset='openai-balanced')`
+- **Bulk Loading**: See `docs/LANGCHAIN_RAG_LOADER.md` for LangChain integration
+#### Scientific Validation API (research-only)
+
+- `GET /api/v1/research/license` – read the research-only license
+- `POST /api/v1/research/token` – request a research token (institution + purpose)
+- `POST /api/v1/validate/sensory` – validate signals using physics guardrails, sidechain smoothing, consensus, and optional 7-scenario benchmark
+
+See docs/SCIENTIFIC_API_REFERENCE.md for plain-language details.
 
 ## 🏗️ Architecture
 
@@ -261,6 +282,13 @@ curl -X POST "http://localhost:8000/api/v1/process/media" \
 - **CORS Configuration**: Configurable cross-origin settings
 - **HTTPS Enforcement**: Production SSL/TLS support
 - **Audit Logging**: Complete request/response logging
+  
+Research-only safeguards:
+- **Research Tokens**: Access to validation endpoints requires institution+purpose tokens
+- **Physics Guardrails**: Wavelength/temperature ranges, Wien’s consistency, visible-band checks
+- **Sidechain Smoothing**: Reduces spikes to reveal repeating patterns
+- **Consensus Verdicts**: Multi-domain votes; forwarding only when physics is active and consensus is sufficient
+- **Encryption**: AES-GCM requests/responses and webhooks; set ECHOES_ENCRYPTION_FORCE=true in production
 
 ## 📊 Cost Optimization
 
@@ -314,10 +342,27 @@ We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) f
 
 ## 📄 License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+This project uses a **Consent-Based License** that requires explicit permission for use. Before using, modifying, or distributing this software, you must:
 
-## 🙏 Acknowledgments
+1. Read the complete [LICENSE](LICENSE) file
+2. Contact the licensor (Erfan Kabir) at irfankabir02@gmail.com
+3. Obtain explicit written consent for your intended use case
 
+### Key Requirements:
+- **Consent Required**: No usage without explicit approval
+- **Ethical Principles**: Adherence to responsible use guidelines
+- **Use Case Declaration**: Clear description of intended application
+- **Revocable**: License can be withdrawn at any time
+
+**Contact**: Erfan Kabir (irfankabir02@gmail.com) | GitHub: [@caraxesthebloodwyrm02](https://github.com/caraxesthebloodwyrm02)
+
+---
+
+## 🙏 Acknowledgements
+
+We extend our deepest gratitude to all who have contributed to this project. See [ACKNOWLEDGEMENTS.md](ACKNOWLEDGEMENTS.md) for detailed recognition of contributors, technologies, and inspirations that made Echoes possible.
+
+**Special Thanks:**
 - **OpenAI** for GPT-4o Vision and Whisper APIs
 - **FastAPI** framework for the API foundation
 - **FAISS** for efficient vector search
@@ -325,6 +370,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**EchoesAssistantV2**: Transforming AI assistants into programmable multimodal platforms for the enterprise.
+**EchoesAssistantV2**: Transforming AI assistants into programmable multimodal platforms through responsible innovation.
 
-**🌟 Ready for production deployment worldwide! 🚀**
+**🌟 Ready for ethical deployment worldwide! 🚀**
