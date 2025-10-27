@@ -19,10 +19,9 @@ Supports two modes:
 - Website extraction: fetches a web page, extracts the main article text, and writes a
   textual report to the configured output directory.
 
-Dependencies (install what you need):
-    pip install yt-dlp openai-whisper torch \
+Dependencies (all included in main requirements):
+    pip install yt-dlp openai-whisper torch requests beautifulsoup4 readability-lxml \
         --extra-index-url https://download.pytorch.org/whl/cu121
-    pip install requests beautifulsoup4 readability-lxml
 
 Note: FFmpeg must be installed and available on PATH for yt_dlp post-processing
 and Whisper audio decoding.
@@ -39,19 +38,8 @@ from pathlib import Path
 from typing import Any, Dict, Tuple
 
 import requests
-
-OUTPUT_DIR = Path(r"D:\reprots")
-DEFAULT_MODEL = "base"
-
-try:
-    import yt_dlp  # type: ignore
-except ImportError:  # pragma: no cover - optional dependency
-    yt_dlp = None  # type: ignore
-
-try:
-    import whisper  # type: ignore
-except ImportError:  # pragma: no cover - optional dependency
-    whisper = None  # type: ignore
+import yt_dlp  # type: ignore
+import whisper  # type: ignore
 
 try:  # Optional imports for web content extraction
     from bs4 import BeautifulSoup  # type: ignore
@@ -238,12 +226,6 @@ def main() -> None:
         report_path = _save_report(report, metadata.get("title"))
         print(f"Website report written to: {report_path}")
         return
-
-    if yt_dlp is None or whisper is None:
-        print(
-            "YouTube transcription requires yt-dlp and openai-whisper. " "Install the missing packages before retrying."
-        )
-        sys.exit(1)
 
     if shutil.which("ffmpeg") is None:
         print("ffmpeg is required but not found on PATH. Install ffmpeg and try again.")

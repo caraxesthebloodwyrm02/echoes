@@ -36,9 +36,10 @@ Pillow==10.4.0               # Image processing
 beautifulsoup4>=4.12.0       # HTML parsing for web content
 readability-lxml>=0.8.1      # Article extraction from web pages
 
-# Streaming & Async I/O
-sseclient-py>=1.8.0          # Server-Sent Events
-aiofiles>=23.2.0             # Async file operations
+# YouTube & Audio Processing
+yt-dlp>=2024.8.0                     # YouTube audio/video downloading
+openai-whisper>=20231117             # OpenAI Whisper transcription
+torch>=2.0.0                         # PyTorch for Whisper models
 
 # Development & Testing - Hardened for stability
 pytest==8.3.3
