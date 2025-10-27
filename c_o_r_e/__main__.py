@@ -1,15 +1,15 @@
-## Consent-Based License
-
-**Version 1.0**
-**Effective Date: October 27, 2025**
-
-This module is part of the Echoes AI Assistant project and requires explicit consent for use.
-Please read the main LICENSE file and contact the licensor for usage terms.
-
-**Licensor Contact Information**
-Erfan Kabir
-irfankabir02@gmail.com
-GitHub: caraxesthebloodwyrm02
+# Consent-Based License
+#
+# Version 1.0
+# Effective Date: October 27, 2025
+#
+# This module is part of the Echoes AI Assistant project and requires explicit consent for use.
+# Please read the main LICENSE file and contact the licensor for usage terms.
+#
+# Author Contact Information
+# Erfan Kabir
+# irfankabir02@gmail.com
+# GitHub: caraxesthebloodwyrm02
 
 ---
 
