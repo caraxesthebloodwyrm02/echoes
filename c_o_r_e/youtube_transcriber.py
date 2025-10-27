@@ -39,13 +39,11 @@ from pathlib import Path
 from typing import Any, Dict, Tuple
 
 import requests
-from bs4 import BeautifulSoup
-from readability import Document
 
 OUTPUT_DIR = Path(r"D:\reprots")
 DEFAULT_MODEL = "base"
 
-try:  # Optional imports for audio transcription
+try:
     import yt_dlp  # type: ignore
 except ImportError:  # pragma: no cover - optional dependency
     yt_dlp = None  # type: ignore
@@ -54,6 +52,16 @@ try:
     import whisper  # type: ignore
 except ImportError:  # pragma: no cover - optional dependency
     whisper = None  # type: ignore
+
+try:  # Optional imports for web content extraction
+    from bs4 import BeautifulSoup  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    BeautifulSoup = None  # type: ignore
+
+try:
+    from readability import Document  # type: ignore
+except ImportError:  # pragma: no cover - optional dependency
+    Document = None  # type: ignore
 
 
 def _slugify(value: str) -> str:
@@ -66,7 +74,7 @@ def _format_duration(seconds: Any) -> str:
     try:
         total = int(float(seconds))
     except (TypeError, ValueError):
-        return "unknown"
+        return "--:--"
     hours, remainder = divmod(total, 3600)
     minutes, secs = divmod(remainder, 60)
     if hours:
@@ -160,6 +168,9 @@ def _save_report(report: str, title: str) -> Path:
 
 
 def _fetch_website(url: str) -> Dict[str, Any]:
+    if BeautifulSoup is None or Document is None:
+        raise ImportError("Website extraction requires beautifulsoup4 and readability-lxml. Install with 'pip install beautifulsoup4 readability-lxml'.")
+
     headers = {"User-Agent": "Mozilla/5.0 (Cascade Content Reporter)"}
     response = requests.get(url, headers=headers, timeout=20)
     response.raise_for_status()
