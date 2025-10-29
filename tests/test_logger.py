@@ -23,6 +23,6 @@ def test_logger():
 
 
 if __name__ == "__main__":
-    import logging
+    import agent_logging
 
     test_logger()

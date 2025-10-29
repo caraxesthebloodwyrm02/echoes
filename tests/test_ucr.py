@@ -1,7 +1,7 @@
 # test_ucr.py
 import sys
 import os
-from pathlib import Path
+from agent_pathlib import Path
 
 # Print Python version for debugging
 print(f"Python {sys.version}")

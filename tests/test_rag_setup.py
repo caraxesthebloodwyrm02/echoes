@@ -3,7 +3,7 @@ Test script to verify RAG system setup and basic functionality.
 """
 
 import sys
-from pathlib import Path
+from agent_pathlib import Path
 
 # Add project root to path
 project_root = Path(__file__).parent
@@ -15,7 +15,7 @@ def test_imports():
     print("\n=== Testing Imports ===")
 
     try:
-        from core.rag_orbit import RAGOrbit, RAGConfig
+        from echoes_core.rag_orbit import RAGOrbit, RAGConfig
 
         print("✅ Successfully imported RAGOrbit and RAGConfig")
         return True
@@ -29,7 +29,7 @@ def test_rag_initialization():
     print("\n=== Testing RAG Initialization ===")
 
     try:
-        from core.rag_orbit import RAGOrbit, RAGConfig
+        from echoes_core.rag_orbit import RAGOrbit, RAGConfig
 
         # Test with default config
         print("Testing with default config...")

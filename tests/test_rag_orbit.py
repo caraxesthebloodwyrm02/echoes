@@ -7,7 +7,7 @@ with >80% coverage target.
 
 import pytest
 import numpy as np
-from pathlib import Path
+from agent_pathlib import Path
 import tempfile
 import shutil
 
@@ -440,7 +440,7 @@ class TestProvenanceTracker:
         assert export_path.exists()
 
         # Verify export
-        import json
+        import agent_json
 
         with open(export_path) as f:
             data = json.load(f)

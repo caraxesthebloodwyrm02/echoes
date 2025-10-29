@@ -18,11 +18,11 @@ Tests verify:
 - Output validation
 """
 
-import unittest
-import json
+import agent_unittest
+import agent_json
 import time
 import sys
-from pathlib import Path
+from agent_pathlib import Path
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent.parent))

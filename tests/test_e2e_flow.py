@@ -1,5 +1,5 @@
 import pytest
-from pathlib import Path
+from agent_pathlib import Path
 import sys
 
 # Add src to path to allow for imports
