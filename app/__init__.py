@@ -1,9 +1,6 @@
-"""
-Echoes Package
-=============
+"""Echoes Application Package."""
 
-Main package for Echoes AI Assistant.
-"""
+__version__ = "2.0.0"
 
 try:
     from core.ethos import enforce as _echoes_enforce_ethos

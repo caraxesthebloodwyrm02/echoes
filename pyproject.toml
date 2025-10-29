@@ -135,12 +135,7 @@ no_implicit_reexport = true
 strict_equality = true
 strict_optional = true
 
-[[tool.mypy.overrides]]
-module = [
-    "faiss.*",
-    "sentence_transformers.*",
-]
-ignore_missing_imports = true
+# No overrides needed - all dependencies are properly typed
 
 [tool.pytest.ini_options]
 minversion = "7.0"
