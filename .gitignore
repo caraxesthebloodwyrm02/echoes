@@ -288,3 +288,15 @@ sbom/
 # Coverage outputs
 coverage/
 coverage-html/
+# Python virtual environment
+.venv/
+venv/
+env/
+
+# IDE specific
+.vscode/
+.idea/
+
+# OS generated files
+.DS_Store
+Thumbs.db
