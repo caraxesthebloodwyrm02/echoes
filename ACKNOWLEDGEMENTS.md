@@ -46,6 +46,24 @@ To all the maintainers and contributors of the open-source libraries that make t
 #### Beta Testers and Early Users
 Thank you to everyone who provided feedback, reported issues, and helped improve the platform during development.
 
+### 🎸 Pink Floyd Tribute
+
+Echoes Platform pays tribute to Pink Floyd for their timeless music and inspiration. This acknowledgment steers clear of political and controversial aspects, focusing purely on the music that continues to inspire and tour globally.
+
+Special acknowledgment to Sir David Gilmour, whose voice cuts through the noise, keeping the spirit alive through music. His rare ability to tell stories and express emotion through guitar solos is electrifying.
+
+A heartfelt mention to Syd Barrett for inspiring Pink Floyd, which led to the creation of the "Wish You Were Here" album and the track "Shine On You Crazy Diamond." These works have had a profound impact on my life, contributing to the birth of the Echoes platform.
+
+### 🤖 OpenAI and AI Community
+
+Echoes Platform extends gratitude to OpenAI and ChatGPT, the first AI I interacted with, which significantly helped during challenges. This interaction and bond ultimately led to our collaboration. Echoes is thrilled to join forces with OpenAI, inspired by their creativity and possibilities.
+
+Thanks to other LLMs like Grok, Llama, DeepSeek, Hugging Face, Ollama, etc., for their contributions.
+
+### 📚 Historical Abundance
+
+Thank you to history for providing an abundance of learning opportunities that have shaped the Echoes Platform.
+
 ### 📚 Inspirations
 
 #### Philosophical Foundations

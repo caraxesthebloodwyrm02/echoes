@@ -93,6 +93,18 @@ echoes/
 - Tone: keep docs simple, risk-aware, and kind. Use plain language; avoid jargon when possible.
 - Production: set ECHOES_ENCRYPTION_FORCE=true and restrict CORS/hosts.
 
+## 🤝 Community Contributions
+
+Echoes Platform is excited to welcome contributions that align with our new strategic direction in collaboration with OpenAI. This partnership marks a significant milestone as we join forces to pioneer frontier research and development on the path to AGI.
+
+### Key Areas for Contribution:
+- **OpenAI Integrations**: Enhance and expand the use of OpenAI's models within the platform.
+- **RAG System Improvements**: Innovate on retrieval-augmented generation using OpenAI embeddings.
+- **Community Engagement**: Foster collaboration and knowledge sharing within the AI community.
+
+We look forward to your contributions and are thrilled to have you as part of this journey.
+
+---
 ## Getting Help
 - Check existing issues and documentation first
 - Create detailed bug reports with reproduction steps

@@ -274,6 +274,19 @@ curl -X POST "http://localhost:8000/api/v1/process/media" \
   -d '{"media_url": "https://example.com/file.jpg"}'
 ```
 
+## 🎉 Partnership with OpenAI
+
+Echoes Platform is thrilled to announce a strategic partnership with OpenAI, marking the first extension of OpenAI in Bangladesh. This collaboration pioneers frontier research and development on the path to AGI, enhancing our platform with cutting-edge AI capabilities.
+
+### Key Highlights:
+- **Migration to OpenAI Embeddings**: Transitioned from FAISS and sentence-transformers to OpenAI's robust embedding solutions.
+- **Enhanced RAG System**: Leveraging OpenAI's advanced models for superior retrieval-augmented generation.
+- **Community and Research Synergy**: Joining forces with OpenAI to drive innovation and community engagement.
+
+We are excited to be part of this journey and look forward to the possibilities this partnership brings.
+
+---
+
 ## 🔐 Security
 
 - **API Key Authentication**: Required for all endpoints
