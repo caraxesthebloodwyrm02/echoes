@@ -28,12 +28,12 @@ classifiers = [
 ]
 dependencies = [
     # Core AI & API Layers
-    "openai==2.5.0",
+    "openai==2.6.1",
     "fastapi==0.120.2",
     "uvicorn==0.38.0",
     "httpx==0.28.1",
     "requests==2.32.5",
-    "python-dotenv==1.0.1",
+    "python-dotenv==1.2.1",
 
     # Security & Rate Limiting
     "slowapi==0.1.9",
