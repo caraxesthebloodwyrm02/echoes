@@ -4,10 +4,10 @@
 
 # Core AI & API Layers - Pinned for 99.77% alignment score
 openai==2.5.0
-fastapi==0.115.0       # Match uvicorn's latest tested pair
-uvicorn==0.32.0
+fastapi==0.120.2       # Updated for starlette compatibility
+uvicorn==0.38.0         # Updated for security
 httpx==0.28.1
-requests==2.32.3
+requests==2.32.5        # Updated for security
 python-dotenv==1.0.1
 
 # Security & Rate Limiting

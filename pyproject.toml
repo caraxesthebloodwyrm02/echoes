@@ -29,10 +29,10 @@ classifiers = [
 dependencies = [
     # Core AI & API Layers
     "openai==2.5.0",
-    "fastapi==0.115.0",
-    "uvicorn==0.32.0",
+    "fastapi==0.120.2",
+    "uvicorn==0.38.0",
     "httpx==0.28.1",
-    "requests==2.32.3",
+    "requests==2.32.5",
     "python-dotenv==1.0.1",
 
     # Security & Rate Limiting
@@ -42,7 +42,7 @@ dependencies = [
     # LangChain Ecosystem
     "langchain==0.3.21",
     "langchain-core>=0.3.45,<1.0.0",
-    "langchain-community==0.3.21",
+    "langchain-community==0.4.1",
     "langchain-openai==0.2.0",
 
     # Data Science & ML
