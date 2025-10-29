@@ -6,6 +6,8 @@ Provides sample implementations of tools that can be registered with the tool re
 
 from typing import Any, Dict, List
 from .base import BaseTool, ToolResult
+from .filesystem_tools import create_filesystem_tools
+from .enhanced_web_search import create_enhanced_web_search_tools
 
 
 class CalculatorTool(BaseTool):
@@ -119,7 +121,15 @@ def get_example_tools() -> List[BaseTool]:
     Returns:
         List of example tool instances
     """
-    return [
+    tools = [
         CalculatorTool(),
         TextAnalyzerTool(),
     ]
+    
+    # Add filesystem tools
+    tools.extend(create_filesystem_tools())
+    
+    # Add enhanced web search tools
+    tools.extend(create_enhanced_web_search_tools())
+    
+    return tools

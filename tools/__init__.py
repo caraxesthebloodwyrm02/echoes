@@ -30,8 +30,10 @@ except ImportError:
 
 try:
     from .business_tools import get_business_tools
-except ImportError:
-    from tools.business_tools import get_business_tools
+except (ImportError, ModuleNotFoundError):
+    # business_tools module not available
+    def get_business_tools():
+        return []
 
 # Make these available when importing from tools
 __all__ = [

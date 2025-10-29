@@ -142,6 +142,7 @@ temp/
 data/vector_index/
 data/models/cache/
 data/memory/cache/
+data/memory/*.json
 
 # Large model files
 *.bin
@@ -153,6 +154,21 @@ data/memory/cache/
 .cache/
 .cache-*
 .cache/
+
+# Notebooks
+*.ipynb
+
+# Large data files (add specific patterns as needed)
+*.sqlite3
+*.db
+
+# Project run outputs
+results/
+demo_workspace/
+
+# Generated Python files from templates
+*generated_*.py
+*_generated.py
 
 # =============================================================================
 # BUILD & DEPLOYMENT ARTIFACTS

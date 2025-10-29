@@ -12,21 +12,19 @@ Integrates:
 """
 
 # ============================================================================
-# CRITICAL: Force stdlib path precedence to avoid shadowed modules
+# Standard library imports
 # ============================================================================
 import sys
-from pathlib import Path as _Path
-
-_stdlib_path = _Path(sys.executable).parent / "Lib"
-if str(_stdlib_path) not in sys.path:
-    sys.path.insert(0, str(_stdlib_path))
-
-# Now safe to import stdlib modules
 import os
 import json
 import time
+import asyncio
 from typing import Dict, Any, Optional, List, Iterator, Union
 from datetime import datetime, timezone
+
+# Status constants
+STATUS_RETRY = "🔄"  # Unicode character for retry/refresh
+
 from pathlib import Path
 
 try:
@@ -44,6 +42,7 @@ from openai import OpenAI, APIError, AuthenticationError
 # Tool Framework
 from tools.registry import get_registry
 from tools.examples import *  # Load all built-in tools
+from glimpse.engine import GlimpseEngine, Draft, PrivacyGuard
 
 # Action Execution
 from app.actions import ActionExecutor
@@ -57,14 +56,20 @@ from app.filesystem import FilesystemTools
 # Agent Workflow System
 from app.agents import AgentWorkflow
 
+# Dynamic Model Router
+from app.model_router import ModelRouter, ModelResponseCache, ModelMetrics
+
 # RAG System V2
 try:
-    from echoes.core.rag_v2 import create_rag_system
-
+    from echoes.core.rag_v2 import create_rag_system, OPENAI_RAG_AVAILABLE
     RAG_AVAILABLE = True
+    if OPENAI_RAG_AVAILABLE:
+        print("✓ OpenAI RAG system available")
+    else:
+        print("✓ Legacy RAG system available (OpenAI RAG not available)")
 except ImportError:
     RAG_AVAILABLE = False
-    print("Warning: RAG V2 not available. Install with: pip install sentence-transformers faiss-cpu")
+    print("Warning: RAG V2 not available")
 
 # Load environment variables
 load_dotenv()
@@ -316,6 +321,21 @@ class EchoesAssistantV2:
         self.model = model
         self.temperature = temperature
         self.max_tokens = max_tokens
+        
+        # Dynamic Model Router
+        self.model_router = ModelRouter()
+        self.response_cache = ModelResponseCache()
+        self.model_metrics = ModelMetrics()
+        
+        # Available models for dynamic selection
+        self.available_models = {
+            "mini": "gpt-4o-mini",
+            "standard": "gpt-4o",
+            "search": "gpt-4o-search-preview",
+            "specialist": "o3",
+            "specialist_mini": "o3-mini",
+        }
+        self.default_model = self.available_models["mini"]
 
         # Session management
         self.session_id = session_id or f"session_{int(time.time())}"
@@ -334,6 +354,13 @@ class EchoesAssistantV2:
         self.tool_registry = None
         if enable_tools:
             self.tool_registry = get_registry()
+            
+            # Register all available tools
+            from tools.examples import get_example_tools
+            example_tools = get_example_tools()
+            for tool in example_tools:
+                self.tool_registry.register(tool, category="general")
+            
             print(f"✓ Loaded {len(self.tool_registry.list_tools())} tools")
 
         # Action execution
@@ -366,6 +393,10 @@ class EchoesAssistantV2:
         # Configuration
         self.enable_streaming = enable_streaming
         self.enable_status = enable_status
+
+        # Human-in-the-loop / policy configuration
+        self.hitl_enabled = os.getenv("HITL_ENABLED", "false").lower() in ("1", "true", "yes")
+        self.policy_model = "gpt-4o"
 
         print(f"✓ Echoes Assistant V2 ready (session: {self.session_id})")
 
@@ -408,11 +439,19 @@ class EchoesAssistantV2:
                 status.start_phase(f"{STATUS_SEARCH} Searching knowledge base", 0)
 
             result = self.rag.search(query, top_k=top_k)
+            
+            # Handle different result formats
+            if isinstance(result, dict):
+                results = result.get("results", [])
+            elif isinstance(result, list):
+                results = result
+            else:
+                results = []
 
-            if status and result.results:
-                status.complete_phase(f"Found {len(result.results)} relevant documents")
+            if status and results:
+                status.complete_phase(f"Found {len(results)} relevant documents")
 
-            return [{"text": r.text, "score": r.score, "metadata": r.metadata} for r in result.results]
+            return [{"text": r.get("content", r.get("text", "")), "score": r.get("score", 0.0), "metadata": r.get("metadata", {})} for r in results]
         except Exception as e:
             if status:
                 status.error(f"RAG search failed: {str(e)}")
@@ -474,6 +513,7 @@ class EchoesAssistantV2:
         show_status: Optional[bool] = None,
         context_limit: int = 5,
         prompt_file: Optional[str] = None,
+        require_approval: Optional[bool] = None,
     ) -> Union[str, Iterator[str]]:
         """
         Chat with the assistant.
@@ -492,6 +532,7 @@ class EchoesAssistantV2:
         """
         stream = stream if stream is not None else self.enable_streaming
         show_status = show_status if show_status is not None else self.enable_status
+        require_approval = require_approval if require_approval is not None else self.hitl_enabled
 
         # Status indicator
         status = EnhancedStatusIndicator(enabled=show_status)
@@ -535,24 +576,57 @@ class EchoesAssistantV2:
             iteration = 0
             all_tool_results = []
             tool_calling_enabled = self.enable_tools and self.tool_registry is not None
+            
+            # Select the best model for this request
+            selected_model = self.model_router.select_model(message, tools)
+            start_time = time.time()
 
             while iteration < MAX_TOOL_ITERATIONS:
-                # Make API call
+                # Make API call with dynamic model selection
                 try:
                     response = self.client.chat.completions.create(
-                        model=self.model,
+                        model=selected_model,
                         messages=messages,
                         tools=tools if tool_calling_enabled else None,
                         tool_choice="auto" if (tools and tool_calling_enabled) else None,
                         temperature=self.temperature,
-                        max_tokens=self.max_tokens,
+                        max_completion_tokens=self.max_tokens if 'o3' in selected_model else None,
+                        max_tokens=self.max_tokens if 'o3' not in selected_model else None,
                         stream=False,
                     )
                 except APIError as e:
-                    error_msg = f"API error during tool calling: {str(e)}"
+                    error_msg = f"API error during tool calling with {selected_model}: {str(e)}"
                     if status:
                         status.error(error_msg)
-                    return error_msg
+                    
+                    # Record metrics and try fallback
+                    response_time = time.time() - start_time
+                    # Use sync version since chat method is not async
+                    self.model_metrics.record_usage_sync(selected_model, response_time, success=False)
+                    
+                    # Fallback to default model if different
+                    if selected_model != self.default_model:
+                        if status:
+                            status.start_phase(f"{STATUS_RETRY} Retrying with {self.default_model}", 0)
+                        try:
+                            response = self.client.chat.completions.create(
+                                model=self.default_model,
+                                messages=messages,
+                                tools=tools if tool_calling_enabled else None,
+                                tool_choice="auto" if (tools and tool_calling_enabled) else None,
+                                temperature=self.temperature,
+                                max_completion_tokens=self.max_tokens if 'o3' in self.default_model else None,
+                                max_tokens=self.max_tokens if 'o3' not in self.default_model else None,
+                                stream=False,
+                            )
+                            selected_model = self.default_model
+                        except APIError as fallback_error:
+                            error_msg = f"Fallback also failed: {str(fallback_error)}"
+                            if status:
+                                status.error(error_msg)
+                            return error_msg
+                    else:
+                        return error_msg
 
                 response_message = response.choices[0].message
                 tool_calls = getattr(response_message, "tool_calls", None)
@@ -610,7 +684,7 @@ class EchoesAssistantV2:
                     print("Echoes: ", end="", flush=True)
 
                 response_stream = self.client.chat.completions.create(
-                    model=self.model,
+                    model=selected_model,
                     messages=messages,
                     temperature=self.temperature,
                     stream=True,
@@ -629,9 +703,18 @@ class EchoesAssistantV2:
                 assistant_response = full_response
             else:
                 final_response = self.client.chat.completions.create(
-                    model=self.model, messages=messages, temperature=self.temperature
+                    model=selected_model, messages=messages, temperature=self.temperature
                 )
                 assistant_response = final_response.choices[0].message.content
+
+            # Optional human-in-the-loop approval gate (non-streaming only)
+            if (not stream) and require_approval:
+                review_packet = {
+                    "status": "pending_approval",
+                    "model": selected_model,
+                    "assistant_draft": assistant_response,
+                }
+                return json.dumps(review_packet)
 
             # Update conversation history
             self.context_manager.add_message(self.session_id, "user", message)
@@ -639,6 +722,10 @@ class EchoesAssistantV2:
 
             # Save to persistent storage
             self.memory_store.save_conversation(self.session_id, self.context_manager.conversations[self.session_id])
+
+            # Record metrics for successful completion
+            response_time = time.time() - start_time
+            self.model_metrics.record_usage_sync(selected_model, response_time, success=True)
 
             return assistant_response if not stream else ""
 
@@ -869,7 +956,8 @@ class EchoesAssistantV2:
                     {"role": "user", "content": analysis_prompt},
                 ],
                 temperature=0.3,
-                max_tokens=3000,
+                max_completion_tokens=3000 if 'o3' in self.model else None,
+                max_tokens=3000 if 'o3' not in self.model else None,
             )
             analysis["analysis"] = response.choices[0].message.content
             status.complete_phase("Analysis complete")
@@ -1034,6 +1122,57 @@ class EchoesAssistantV2:
 
         return "\n".join(lines)
 
+    async def get_model_metrics(self) -> Dict[str, Any]:
+        """
+        Get current model usage metrics.
+        
+        Returns:
+            Dict containing model metrics
+        """
+        return await self.model_metrics.get_metrics()
+        
+    def print_model_metrics(self):
+        """Print current model metrics in a formatted way."""
+        import asyncio
+        
+        async def _print_metrics():
+            metrics = await self.model_metrics.get_metrics()
+            
+            print("\n" + "="*50)
+            print("ECHOES ASSISTANT - MODEL METRICS")
+            print("="*50)
+            print(f"Total Requests: {metrics['total_requests']}")
+            
+            print("\nModel Usage:")
+            for model, count in metrics['model_usage'].items():
+                print(f"  - {model}: {count} requests")
+                
+            print("\nAverage Response Times:")
+            for model, stats in metrics['response_times'].items():
+                if stats['count'] > 0:
+                    print(f"  - {model}: {stats['avg']:.2f}s (min: {stats['min']:.2f}s, max: {stats['max']:.2f}s)")
+            
+            if metrics['errors']:
+                print("\nErrors:")
+                for model, count in metrics['errors'].items():
+                    print(f"  - {model}: {count} errors")
+                    
+            if 'cache_hit_rate' in metrics:
+                print("\nCache Hit Rates:")
+                for model, rate in metrics['cache_hit_rate'].items():
+                    print(f"  - {model}: {rate:.1%}")
+            
+            print("="*50 + "\n")
+        
+        # Run the async function
+        asyncio.run(_print_metrics())
+        
+    def reset_model_metrics(self):
+        """Reset all model metrics."""
+        import asyncio
+        asyncio.run(self.model_metrics.reset_metrics())
+        print("✓ Model metrics reset")
+
 
 def interactive_mode(system_prompt: Optional[str] = None) -> None:
     """Run the assistant in interactive mode."""
@@ -1049,6 +1188,9 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
     print("  'actions'            - Show action history")
     print("  'add knowledge'      - Add documents to knowledge base")
     print("  'stream on/off'      - Toggle streaming")
+    print("  'preflight on/off'   - Toggle Glimpse preflight (default: on)")
+    print("  'anchors'            - Set preflight goal and constraints")
+    print("  'essence-only on/off'- Toggle essence-only glimpse (user-chosen)")
     print("  'prompt <name>'      - Load prompt from prompts/<name>.yaml")
     print("  'prompt list'        - List available prompts")
     print("  'prompt show <name>' - Show content of a prompt")
@@ -1068,6 +1210,29 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
 
         streaming_enabled = True
         status_enabled = True
+        preflight_enabled = True  # Intent verification before commit: ON by default
+        preflight_goal = ""
+        preflight_constraints = ""
+
+        # Minimal, safe persistence on commit
+        def _commit_sink(d: Draft) -> None:
+            try:
+                os.makedirs("results", exist_ok=True)
+                import json as _json
+                from datetime import datetime as _dt, timezone as _tz
+                rec = {
+                    "ts": _dt.now(_tz.utc).isoformat(),
+                    "input_text": d.input_text,
+                    "goal": d.goal,
+                    "constraints": d.constraints,
+                }
+                with open(os.path.join("results", "glimpse_commits.jsonl"), "a", encoding="utf-8") as f:
+                    f.write(_json.dumps(rec, ensure_ascii=False) + "\n")
+            except Exception:
+                # Silent best-effort; never block user flow
+                pass
+
+        glimpse_engine = GlimpseEngine(privacy_guard=PrivacyGuard(on_commit=_commit_sink))
 
         while True:
             try:
@@ -1197,6 +1362,39 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
                     print("✓ Status indicators disabled")
                     continue
 
+                if command == "preflight on":
+                    preflight_enabled = True
+                    print("✓ Glimpse preflight enabled")
+                    continue
+
+                if command == "preflight off":
+                    preflight_enabled = False
+                    print("✓ Glimpse preflight disabled")
+                    continue
+
+                if command == "anchors":
+                    try:
+                        g = input("Goal (enter to keep current): ").strip()
+                        if g:
+                            preflight_goal = g
+                        c = input("Constraints (enter to keep current): ").strip()
+                        if c:
+                            preflight_constraints = c
+                        print("✓ Anchors updated")
+                    except KeyboardInterrupt:
+                        print("\n(anchors update canceled)")
+                    continue
+
+                if command == "essence-only on":
+                    glimpse_engine.set_essence_only(True)
+                    print("✓ Essence-only glimpses enabled (no auto-apply)")
+                    continue
+
+                if command == "essence-only off":
+                    glimpse_engine.set_essence_only(False)
+                    print("✓ Essence-only glimpses disabled")
+                    continue
+
                 if command.startswith("prompt "):
                     prompt_name = command.split(maxsplit=1)[1]
                     if prompt_name == "list":
@@ -1216,8 +1414,113 @@ def interactive_mode(system_prompt: Optional[str] = None) -> None:
 
                 system_prompt_var = system_prompt if "system_prompt" in locals() else None
 
+                # Optional Glimpse preflight before sending to model
+                final_message = user_input
+                if preflight_enabled:
+                    draft = Draft(
+                        input_text=final_message,
+                        goal=preflight_goal,
+                        constraints=preflight_constraints,
+                    )
+                    # First glimpse
+                    res1 = asyncio.run(glimpse_engine.glimpse(draft))
+                    print("\n— Glimpse 1 —")
+                    if res1.status_history:
+                        print("Status:", " | ".join(res1.status_history))
+                    if res1.sample:
+                        print("Sample:", res1.sample)
+                    if res1.essence:
+                        print("Essence:", res1.essence)
+                    if res1.delta:
+                        print("Delta:", res1.delta)
+                        if isinstance(res1.delta, str) and res1.delta.startswith("Clarifier:"):
+                            ans = input("Answer clarifier [Y/N]: ").strip().lower()
+                            if ans == "y":
+                                preflight_constraints = (preflight_constraints + " | audience: external").strip().strip("|").strip()
+                            elif ans == "n":
+                                preflight_constraints = (preflight_constraints + " | audience: internal").strip().strip("|").strip()
+
+                    # Offer essence-only toggle if latency options appeared (≥800 ms)
+                    if any("Options:" in s for s in res1.status_history):
+                        eo = input("Latency is high. Enable essence-only for next attempt? [y/N]: ").strip().lower()
+                        if eo == "y":
+                            glimpse_engine.set_essence_only(True)
+                            print("✓ Essence-only glimpses enabled")
+
+                    proceed = "n"
+                    if res1.status == "aligned":
+                        proceed = input("Proceed with commit? [y/N]: ").strip().lower() or "n"
+                    else:
+                        choice = input("Adjust once (a), Redial (r), or Proceed (y)? [a/r/y]: ").strip().lower()
+                        if choice == "r":
+                            print("Clean reset. Same channel. Let’s try again.")
+                            continue
+                        elif choice == "y":
+                            proceed = "y"
+                        else:
+                            # Adjust once
+                            try:
+                                edited = input("Edit message (enter to keep): ").strip()
+                                if edited:
+                                    final_message = edited
+                                g2 = input("Edit goal (enter to keep): ").strip()
+                                if g2:
+                                    preflight_goal = g2
+                                c2 = input("Edit constraints (enter to keep): ").strip()
+                                if c2:
+                                    preflight_constraints = c2
+                            except KeyboardInterrupt:
+                                print("\n(adjustment canceled)")
+                                continue
+
+                            draft = Draft(
+                                input_text=final_message,
+                                goal=preflight_goal,
+                                constraints=preflight_constraints,
+                            )
+                            res2 = asyncio.run(glimpse_engine.glimpse(draft))
+                            print("\n— Glimpse 2 —")
+                            if res2.status_history:
+                                print("Status:", " | ".join(res2.status_history))
+                            if res2.sample:
+                                print("Sample:", res2.sample)
+                            if res2.essence:
+                                print("Essence:", res2.essence)
+                            if res2.delta:
+                                print("Delta:", res2.delta)
+                                if isinstance(res2.delta, str) and res2.delta.startswith("Clarifier:"):
+                                    ans2 = input("Answer clarifier [Y/N]: ").strip().lower()
+                                    if ans2 == "y":
+                                        preflight_constraints = (preflight_constraints + " | audience: external").strip().strip("|").strip()
+                                    elif ans2 == "n":
+                                        preflight_constraints = (preflight_constraints + " | audience: internal").strip().strip("|").strip()
+
+                            # Offer essence-only toggle if latency options appeared (≥800 ms)
+                            if any("Options:" in s for s in res2.status_history):
+                                eo2 = input("Latency is high. Enable essence-only for next attempt? [y/N]: ").strip().lower()
+                                if eo2 == "y":
+                                    glimpse_engine.set_essence_only(True)
+                                    print("✓ Essence-only glimpses enabled")
+
+                            if res2.status != "aligned":
+                                print("Clean reset. Same channel. Let’s try again.")
+                                continue
+                            proceed = input("Proceed with commit? [y/N]: ").strip().lower() or "n"
+
+                    if proceed != "y":
+                        print("(Canceled before commit)")
+                        continue
+
+                # Mark preflight committed (side effects begin here)
+                if preflight_enabled:
+                    glimpse_engine.commit(Draft(
+                        input_text=final_message,
+                        goal=preflight_goal,
+                        constraints=preflight_constraints,
+                    ))
+
                 response = assistant.chat(
-                    user_input,
+                    final_message,
                     system_prompt=system_prompt,
                     stream=streaming_enabled,
                     show_status=status_enabled,
