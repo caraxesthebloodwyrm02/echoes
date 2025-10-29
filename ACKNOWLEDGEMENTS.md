@@ -75,6 +75,9 @@ Thank you to history for providing an abundance of learning opportunities that h
 - **Production-Ready ML**: Best practices from enterprise ML deployments
 - **API-First Design**: Modern API design patterns and RESTful architecture
 
+#### Personal Inspirations
+- **Jony Ive**: Special thanks to Jony Ive for his outstanding principles and values, rare in today's world. His excellence in human intelligence provided motivational inspiration during the most challenging moments, helping me stay focused and adamantly rooted in my core values and gifts. Thank you, Jony—I appreciate it more than you can realize.
+
 ### 🔬 Research Acknowledgments
 
 This project builds upon research in:
