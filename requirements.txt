@@ -15,15 +15,16 @@ slowapi==0.1.9
 pygments==2.19.2
 
 # LangChain Ecosystem - Unified for zero internal API mismatches
-langchain==0.1.16
-langchain-core==0.1.42
-langchain-community==0.0.36
+langchain==0.3.21
+langchain-core>=0.3.45,<1.0.0
+langchain-community==0.4.1
+langchain-openai==0.2.0
 langchain-text-splitters==0.3.11
 
 # spaCy and Pydantic Dependencies - Aligned to prevent collision
 spacy==3.7.4
-pydantic==2.9.2
-numpy==1.26.4
+pydantic>=2.0.0
+numpy>=2.0.0
 thinc==8.2.3
 
 # Document Processing
