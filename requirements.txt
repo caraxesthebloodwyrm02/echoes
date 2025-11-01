@@ -63,7 +63,7 @@ flake8==7.1.1
 mypy==1.13.0
 
 # Development Tools
-pre-commit==4.6.0
+pre-commit>=4.3.0
 pip-audit==2.11.0
 pipdeptree==2.30.0
 tqdm==4.67.1
