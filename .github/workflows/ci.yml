@@ -102,20 +102,21 @@ jobs:
 
   # === UNIT TESTS (PARALLELIZED) ===
   unit-tests:
-    name: Unit Tests
+    name: Unit Tests (Python ${{ matrix.python-version }})
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
       matrix:
+        python-version: ['3.12', '3.13']
         test-group: [core, api, tools, integration]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Setup Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
 
       - name: Install Dependencies
@@ -126,7 +127,7 @@ jobs:
 
       - name: Run Tests
         run: |
-          echo "🧪 Running ${{ matrix.test-group }} tests..."
+          echo "🧪 Running ${{ matrix.test-group }} tests on Python ${{ matrix.python-version }}..."
           case "${{ matrix.test-group }}" in
             "core")
               pytest tests/test_ucr.py tests/test_tool_registry_fix.py tests/glimpse/test_glimpse_tools_standalone.py -v --tb=short --maxfail=5 --timeout=300 --cov=core --cov-report=xml || true
