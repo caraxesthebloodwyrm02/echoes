@@ -65,7 +65,7 @@ jobs:
           if [ -f safety-report.json ]; then
             critical_vulns=$(cat safety-report.json | jq '.vulnerabilities[] | select(.vulnerability.severity == "CRITICAL") | .vulnerability.id' | wc -l)
             if [ "$critical_vulns" -gt 0 ]; then
-              echo "❌ CRITICAL vulnerabilities found: $critical_vulns"
+              echo "CRITICAL vulnerabilities found: $critical_vulns"
               exit 1
             fi
           fi
@@ -186,7 +186,7 @@ jobs:
           if [ -f trivy-report.json ]; then
             critical=$(cat trivy-report.json | jq '.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL") | .VulnerabilityID' | wc -l)
             if [ "$critical" -gt 0 ]; then
-              echo "❌ CRITICAL Docker vulnerabilities found: $critical"
+              echo "CRITICAL Docker vulnerabilities found: $critical"
               exit 1
             fi
           fi
@@ -255,15 +255,15 @@ jobs:
         if: needs.deploy.result == 'success'
         run: |
           echo "🚀 Echoes CI/CD Pipeline Completed Successfully!"
-          echo "✅ All security scans passed"
-          echo "✅ Code quality checks passed"
-          echo "✅ All tests passed"
-          echo "✅ Docker image built and pushed"
+          echo "All security scans passed"
+          echo "Code quality checks passed"
+          echo "All tests passed"
+          echo "Docker image built and pushed"
           echo "📦 Image: ghcr.io/${{ github.repository_owner }}/echoes:latest"
 
       - name: Failure Notification
         if: needs.deploy.result == 'failure' || needs.deploy.result == 'skipped'
         run: |
-          echo "❌ Echoes CI/CD Pipeline Failed!"
+          echo "Echoes CI/CD Pipeline Failed!"
           echo "🔍 Check the job logs for details"
           exit 1
