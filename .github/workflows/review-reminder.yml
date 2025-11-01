@@ -1,8 +1,8 @@
-name: Monthly Review Reminder
+name: Quarterly Review Reminder
 
 on:
   schedule:
-    - cron: '0 9 1 * *'
+    - cron: '0 9 1 1,4,7,10 *'
   workflow_dispatch:
 
 jobs:
