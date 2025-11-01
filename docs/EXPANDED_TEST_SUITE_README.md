@@ -4,7 +4,7 @@ This comprehensive test suite addresses rate limiting issues and provides robust
 
 ## 🚀 Components
 
-### 1. `expanded_evaluation_suite.py` - Main Evaluation Engine
+### 1. `expanded_evaluation_suite.py` - Main Evaluation Glimpse
 - **Rate Limiting Detection**: Automatically detects and handles rate limiting
 - **Exponential Backoff**: Implements intelligent retry with exponential backoff
 - **Concurrent Processing**: Configurable concurrent request handling

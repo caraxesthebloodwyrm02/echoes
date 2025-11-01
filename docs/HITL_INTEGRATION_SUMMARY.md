@@ -86,7 +86,7 @@ print(f"Realtime/HITL connected: {status['connections']['glimpse']}")
 
 ### Core Components
 
-1. **GPT-OSS:120B** - HITL inference engine
+1. **GPT-OSS:120B** - HITL inference Glimpse
    - Constraint inference and solution generation
    - Knowledge integration without retraining
    - Interactive validation capabilities
@@ -228,7 +228,7 @@ glimpse docs "constraint validation patterns"
 
 The HITL middleware implementation represents a fundamental shift from reactive, expensive debugging to proactive, intelligent intervention. By positioning humans as intelligent intermediaries rather than passive observers, we've created a system that learns, adapts, and resolves issues faster than traditional automated approaches alone.
 
-**Key Takeaway**: "By shifting 'middleware' from a silent software layer to a Human-in-the-Loop component, we've turned the GPT-OSS:120B from a powerful language model into a proactive, real-time diagnostic engine. Combined with Glimpse and Realtime Preview, this approach turns costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles."
+**Key Takeaway**: "By shifting 'middleware' from a silent software layer to a Human-in-the-Loop component, we've turned the GPT-OSS:120B from a powerful language model into a proactive, real-time diagnostic Glimpse. Combined with Glimpse and Realtime Preview, this approach turns costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles."
 
 ---
 

@@ -1,0 +1,14 @@
+SCENARIO ANALYSIS
+Scenario,Payback Days,ROI %,Monthly Net,Annual Benefit
+Conservative,7,350%,"$45,000","$540,000"
+Base Case,3,750%,"$85,000","$1,020,000"
+Aggressive,3,750%,"$85,000","$1,020,000"
+""
+SENSITIVITY ANALYSIS
+What If,Impact on ROI,New Payback
+Hours saved = 30/week,-20%,6 days
+Hours saved = 50/week,+25%,4 days
+Error reduction = 50%,-15%,6 days
+Error reduction = 90%,+10%,5 days
+Team size = 4 FTEs,-20%,6 days
+Team size = 6 FTEs,+20%,4 days

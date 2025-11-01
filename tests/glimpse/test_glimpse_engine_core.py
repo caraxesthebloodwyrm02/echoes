@@ -1,6 +1,6 @@
 import asyncio
 
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 
 
 def test_two_tries_then_redial_and_reset():
@@ -8,20 +8,20 @@ def test_two_tries_then_redial_and_reset():
         engine = GlimpseEngine()
         d = Draft(input_text="hello", goal="", constraints="")
 
-        r1 = await engine.glimpse(d)
+        r1 = await Glimpse.glimpse(d)
         assert r1.attempt == 1
 
-        r2 = await engine.glimpse(d)
+        r2 = await Glimpse.glimpse(d)
         assert r2.attempt == 2
 
         # Third attempt should immediately request redial
-        r3 = await engine.glimpse(d)
+        r3 = await Glimpse.glimpse(d)
         assert r3.status == "redial"
         assert r3.status_history == ["Clean reset. Same channel. Let’s try again."]
 
         # After commit/reset we can start again from attempt 1
-        engine.commit(d)
-        r4 = await engine.glimpse(d)
+        Glimpse.commit(d)
+        r4 = await Glimpse.glimpse(d)
         assert r4.attempt == 1
 
     asyncio.run(run())
@@ -60,7 +60,7 @@ def test_cancel_on_edit_does_not_consume_try_and_debounces():
         task = asyncio.create_task(engine.glimpse(Draft(input_text="x", goal="", constraints="")))
         # Cancel quickly (simulate user editing)
         await asyncio.sleep(0.05)
-        engine.cancel()
+        Glimpse.cancel()
         r_cancel = await task
 
         # Cancel returns not_aligned and should not consume the try
@@ -89,12 +89,12 @@ def test_clarifier_when_intent_unspecified():
 def test_essence_only_mode_hides_sample():
     async def run():
         engine = GlimpseEngine()
-        engine.set_essence_only(True)
+        Glimpse.set_essence_only(True)
         r = await engine.glimpse(Draft(input_text="some long message that would normally produce a sample", goal="g", constraints=""))
         assert r.essence
         assert r.sample == ""
 
-        engine.set_essence_only(False)
+        Glimpse.set_essence_only(False)
         r2 = await engine.glimpse(Draft(input_text="some long message again", goal="g", constraints=""))
         assert r2.sample != ""
 

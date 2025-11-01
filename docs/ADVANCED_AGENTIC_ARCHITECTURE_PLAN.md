@@ -25,7 +25,7 @@ Transform the agentic assistant into an advanced AI system with:
 │  └──────────┘  └──────────┘  └──────────┘  └──────────┘ │
 │                                                            │
 │  ┌────────────────────────────────────────────────────┐  │
-│  │  Advanced Reasoning & Tool Calling Engine          │  │
+│  │  Advanced Reasoning & Tool Calling Glimpse          │  │
 │  └────────────────────────────────────────────────────┘  │
 └────────────────────────────────────────────────────────────┘
 ```

@@ -1,0 +1,550 @@
+{
+  "protocol_info": {
+    "name": "SANDSTORM_DIAGNOSTIC_PROTOCOL",
+    "version": "1.0.0",
+    "timestamp": "2025-11-01T06:53:28.621094",
+    "author": "Core Systems Mentor"
+  },
+  "layer_analysis": {
+    "impact_layer": {
+      "source": "sandstorm_run_02",
+      "description": "Raw, unfiltered system activity with diagnostic value",
+      "chaos_index": 10.673979051922029,
+      "stability_score": 0.08566059571910555,
+      "transient_count": 13710,
+      "frequency_spikes": 139,
+      "signal_to_noise_ratio": 0.47544350567302185
+    },
+    "atmospheric_extension": {
+      "source": "sandstorm_run_03",
+      "description": "Structured post-processing with architectural clarity",
+      "chaos_index": 5.55712662197947,
+      "stability_score": 0.15250582422001777,
+      "transient_count": 6432,
+      "frequency_spikes": 240,
+      "signal_to_noise_ratio": 0.57943124728315
+    }
+  },
+  "transition_analysis": {
+    "total_steps": 50,
+    "critical_transition_points": [],
+    "bug_resolution_rate": -0.7266187050354486,
+    "noise_reduction_rate": 0.4793762855449155,
+    "initial_stability": 0.08566059571910555,
+    "final_stability": 0.15250582422001777,
+    "stability_improvement": 0.06684522850091222,
+    "transition_timeline": [
+      {
+        "step": 0,
+        "blend_ratio": 0.0,
+        "chaos_index": 10.673979051922029,
+        "stability_score": 0.08566059571910555,
+        "signal_to_noise_ratio": 0.47544350567302185,
+        "transient_count": 13710,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 1,
+        "blend_ratio": 0.02,
+        "chaos_index": 9.675618717135537,
+        "stability_score": 0.09367138584622646,
+        "signal_to_noise_ratio": 0.4918209827638521,
+        "transient_count": 13720,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 2,
+        "blend_ratio": 0.04,
+        "chaos_index": 9.359304634147515,
+        "stability_score": 0.09653157574917592,
+        "signal_to_noise_ratio": 0.5087803441860066,
+        "transient_count": 13727,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 3,
+        "blend_ratio": 0.06,
+        "chaos_index": 9.181806519495474,
+        "stability_score": 0.09821439820971492,
+        "signal_to_noise_ratio": 0.526318755397994,
+        "transient_count": 13722,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 4,
+        "blend_ratio": 0.08,
+        "chaos_index": 9.046631766854427,
+        "stability_score": 0.09953584676002286,
+        "signal_to_noise_ratio": 0.5444280093272397,
+        "transient_count": 13710,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 5,
+        "blend_ratio": 0.1,
+        "chaos_index": 8.920124290802299,
+        "stability_score": 0.10080518859296712,
+        "signal_to_noise_ratio": 0.5630935804577705,
+        "transient_count": 13695,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 6,
+        "blend_ratio": 0.12,
+        "chaos_index": 8.798785436837337,
+        "stability_score": 0.10205346432432556,
+        "signal_to_noise_ratio": 0.5822935940924319,
+        "transient_count": 13695,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 7,
+        "blend_ratio": 0.14,
+        "chaos_index": 8.715739180112111,
+        "stability_score": 0.10292577656334954,
+        "signal_to_noise_ratio": 0.6019977206069606,
+        "transient_count": 13696,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 8,
+        "blend_ratio": 0.16,
+        "chaos_index": 8.636073887589758,
+        "stability_score": 0.10377670529154971,
+        "signal_to_noise_ratio": 0.6221660112441906,
+        "transient_count": 13687,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 9,
+        "blend_ratio": 0.18,
+        "chaos_index": 8.584677954337518,
+        "stability_score": 0.10433318727703865,
+        "signal_to_noise_ratio": 0.6427477002916413,
+        "transient_count": 13668,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 10,
+        "blend_ratio": 0.2,
+        "chaos_index": 8.518647402334448,
+        "stability_score": 0.10505694325380201,
+        "signal_to_noise_ratio": 0.6636800083630374,
+        "transient_count": 13623,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 11,
+        "blend_ratio": 0.22,
+        "chaos_index": 8.439577174236454,
+        "stability_score": 0.10593694839736163,
+        "signal_to_noise_ratio": 0.6848869928327113,
+        "transient_count": 13525,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 12,
+        "blend_ratio": 0.24,
+        "chaos_index": 8.380428773904478,
+        "stability_score": 0.10660493503046592,
+        "signal_to_noise_ratio": 0.7062785039064137,
+        "transient_count": 13457,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 13,
+        "blend_ratio": 0.26,
+        "chaos_index": 8.302963324035572,
+        "stability_score": 0.1074926305918409,
+        "signal_to_noise_ratio": 0.7277493177269689,
+        "transient_count": 13345,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 14,
+        "blend_ratio": 0.28,
+        "chaos_index": 8.196803108181237,
+        "stability_score": 0.10873343576426313,
+        "signal_to_noise_ratio": 0.7491785303371928,
+        "transient_count": 13191,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 15,
+        "blend_ratio": 0.3,
+        "chaos_index": 8.084685449738249,
+        "stability_score": 0.1100753576480529,
+        "signal_to_noise_ratio": 0.7704293068967518,
+        "transient_count": 13025,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 16,
+        "blend_ratio": 0.32,
+        "chaos_index": 7.939457048160337,
+        "stability_score": 0.1118636170645052,
+        "signal_to_noise_ratio": 0.7913490875234029,
+        "transient_count": 12780,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 17,
+        "blend_ratio": 0.34,
+        "chaos_index": 7.800205225532556,
+        "stability_score": 0.1136337135750699,
+        "signal_to_noise_ratio": 0.8117703524240906,
+        "transient_count": 12517,
+        "dominant_frequencies": 5
+      },
+      {
+        "step": 18,
+        "blend_ratio": 0.36,
+        "chaos_index": 7.727839238615424,
+        "stability_score": 0.11457589589592843,
+        "signal_to_noise_ratio": 0.8315120423453293,
+        "transient_count": 12344,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 19,
+        "blend_ratio": 0.38,
+        "chaos_index": 7.6805351693131065,
+        "stability_score": 0.11520027054727437,
+        "signal_to_noise_ratio": 0.8503817136442189,
+        "transient_count": 12190,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 20,
+        "blend_ratio": 0.4,
+        "chaos_index": 7.955234085065942,
+        "stability_score": 0.11166653942275329,
+        "signal_to_noise_ratio": 0.868178478773135,
+        "transient_count": 12476,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 21,
+        "blend_ratio": 0.42,
+        "chaos_index": 8.060187773308247,
+        "stability_score": 0.11037298839942905,
+        "signal_to_noise_ratio": 0.8846967419373795,
+        "transient_count": 12526,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 22,
+        "blend_ratio": 0.44,
+        "chaos_index": 8.027552053898013,
+        "stability_score": 0.11077200043041671,
+        "signal_to_noise_ratio": 0.8997306868271661,
+        "transient_count": 12410,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 23,
+        "blend_ratio": 0.46,
+        "chaos_index": 7.957870886862172,
+        "stability_score": 0.11163366972241406,
+        "signal_to_noise_ratio": 0.9130794112218901,
+        "transient_count": 12294,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 24,
+        "blend_ratio": 0.48,
+        "chaos_index": 7.899263129952984,
+        "stability_score": 0.11236885407222284,
+        "signal_to_noise_ratio": 0.9245525366003342,
+        "transient_count": 12143,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 25,
+        "blend_ratio": 0.5,
+        "chaos_index": 7.77682692689048,
+        "stability_score": 0.1139363927681194,
+        "signal_to_noise_ratio": 0.9339760563390099,
+        "transient_count": 11914,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 26,
+        "blend_ratio": 0.52,
+        "chaos_index": 7.625516680822832,
+        "stability_score": 0.11593508389164751,
+        "signal_to_noise_ratio": 0.9411981317419461,
+        "transient_count": 11657,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 27,
+        "blend_ratio": 0.54,
+        "chaos_index": 7.46151972099254,
+        "stability_score": 0.1181820799305186,
+        "signal_to_noise_ratio": 0.9460945095071892,
+        "transient_count": 11352,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 28,
+        "blend_ratio": 0.56,
+        "chaos_index": 7.291200869633877,
+        "stability_score": 0.12060979051447805,
+        "signal_to_noise_ratio": 0.9485732247726189,
+        "transient_count": 10994,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 29,
+        "blend_ratio": 0.58,
+        "chaos_index": 7.072685416347892,
+        "stability_score": 0.12387451615232187,
+        "signal_to_noise_ratio": 0.9485782755258501,
+        "transient_count": 10559,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 30,
+        "blend_ratio": 0.6,
+        "chaos_index": 6.767146546887324,
+        "stability_score": 0.12874740987097108,
+        "signal_to_noise_ratio": 0.9460920079778744,
+        "transient_count": 9995,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 31,
+        "blend_ratio": 0.62,
+        "chaos_index": 6.386759447216568,
+        "stability_score": 0.13537736095857483,
+        "signal_to_noise_ratio": 0.9411360349603332,
+        "transient_count": 9312,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 32,
+        "blend_ratio": 0.64,
+        "chaos_index": 5.920942471683562,
+        "stability_score": 0.1444889917943132,
+        "signal_to_noise_ratio": 0.9337706125076107,
+        "transient_count": 8491,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 33,
+        "blend_ratio": 0.66,
+        "chaos_index": 5.849137608982139,
+        "stability_score": 0.14600378282494628,
+        "signal_to_noise_ratio": 0.9240925120992128,
+        "transient_count": 8331,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 34,
+        "blend_ratio": 0.68,
+        "chaos_index": 5.896231463609828,
+        "stability_score": 0.14500673379030563,
+        "signal_to_noise_ratio": 0.9122315345312255,
+        "transient_count": 8413,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 35,
+        "blend_ratio": 0.7,
+        "chaos_index": 5.84903613072412,
+        "stability_score": 0.14600594607963824,
+        "signal_to_noise_ratio": 0.8983459036108186,
+        "transient_count": 8443,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 36,
+        "blend_ratio": 0.72,
+        "chaos_index": 5.799399175015194,
+        "stability_score": 0.14707181829749913,
+        "signal_to_noise_ratio": 0.8826168440331148,
+        "transient_count": 8452,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 37,
+        "blend_ratio": 0.74,
+        "chaos_index": 5.7481778780241095,
+        "stability_score": 0.14818815064975785,
+        "signal_to_noise_ratio": 0.8652426822427856,
+        "transient_count": 8425,
+        "dominant_frequencies": 8
+      },
+      {
+        "step": 38,
+        "blend_ratio": 0.76,
+        "chaos_index": 5.68060429269059,
+        "stability_score": 0.14968705766544566,
+        "signal_to_noise_ratio": 0.8464328108609126,
+        "transient_count": 8377,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 39,
+        "blend_ratio": 0.78,
+        "chaos_index": 5.635908930482738,
+        "stability_score": 0.15069525674265902,
+        "signal_to_noise_ratio": 0.8264018297997562,
+        "transient_count": 8364,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 40,
+        "blend_ratio": 0.8,
+        "chaos_index": 5.531015325820764,
+        "stability_score": 0.15311554943784,
+        "signal_to_noise_ratio": 0.8053641271987189,
+        "transient_count": 8272,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 41,
+        "blend_ratio": 0.82,
+        "chaos_index": 5.466037732323905,
+        "stability_score": 0.15465421660021744,
+        "signal_to_noise_ratio": 0.7835290992679206,
+        "transient_count": 8204,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 42,
+        "blend_ratio": 0.84,
+        "chaos_index": 5.364668569321288,
+        "stability_score": 0.15711737211583313,
+        "signal_to_noise_ratio": 0.7610971387180607,
+        "transient_count": 8093,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 43,
+        "blend_ratio": 0.86,
+        "chaos_index": 5.257924525517191,
+        "stability_score": 0.1597973890420729,
+        "signal_to_noise_ratio": 0.7382564543388994,
+        "transient_count": 7942,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 44,
+        "blend_ratio": 0.88,
+        "chaos_index": 5.1689679540875515,
+        "stability_score": 0.1621016687787138,
+        "signal_to_noise_ratio": 0.715180725247433,
+        "transient_count": 7811,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 45,
+        "blend_ratio": 0.9,
+        "chaos_index": 5.090716988232864,
+        "stability_score": 0.16418428272598756,
+        "signal_to_noise_ratio": 0.6920275459504801,
+        "transient_count": 7681,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 46,
+        "blend_ratio": 0.92,
+        "chaos_index": 4.953905182719988,
+        "stability_score": 0.16795699113622078,
+        "signal_to_noise_ratio": 0.6689375841373307,
+        "transient_count": 7435,
+        "dominant_frequencies": 6
+      },
+      {
+        "step": 47,
+        "blend_ratio": 0.94,
+        "chaos_index": 4.826524014541081,
+        "stability_score": 0.17162891588609777,
+        "signal_to_noise_ratio": 0.6460343517871467,
+        "transient_count": 7184,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 48,
+        "blend_ratio": 0.96,
+        "chaos_index": 4.735054408414314,
+        "stability_score": 0.1743662620764029,
+        "signal_to_noise_ratio": 0.6234244802720835,
+        "transient_count": 6913,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 49,
+        "blend_ratio": 0.98,
+        "chaos_index": 4.693253068478341,
+        "stability_score": 0.17564650437491866,
+        "signal_to_noise_ratio": 0.6011983894927393,
+        "transient_count": 6599,
+        "dominant_frequencies": 7
+      },
+      {
+        "step": 50,
+        "blend_ratio": 1.0,
+        "chaos_index": 5.55712662197947,
+        "stability_score": 0.15250582422001777,
+        "signal_to_noise_ratio": 0.57943124728315,
+        "transient_count": 6432,
+        "dominant_frequencies": 7
+      }
+    ]
+  },
+  "sensory_framework_results": {
+    "sight_clarity_improvement": -0.35074462481339963,
+    "sound_resonance_balance": -0.023849011485851168,
+    "taste_extraction_enhancement": 0.020000000000000018,
+    "smell_intuition_development": 0.06684522850091222,
+    "touch_grounding_stability": 0.01837497014046796,
+    "sixth_sense_wisdom_emergence": -0.08850814205733981
+  },
+  "bug_analysis": {
+    "critical_frequencies_identified": [
+      {
+        "frequency": 0.5,
+        "amplitude": 2513.123808352171,
+        "classification": "CRITICAL_BUG"
+      },
+      {
+        "frequency": 112.2,
+        "amplitude": 20911.449880625543,
+        "classification": "CRITICAL_BUG"
+      },
+      {
+        "frequency": 224.5,
+        "amplitude": 3223.1276467923694,
+        "classification": "CRITICAL_BUG"
+      },
+      {
+        "frequency": 336.70000000000005,
+        "amplitude": 9044.055709622615,
+        "classification": "CRITICAL_BUG"
+      },
+      {
+        "frequency": 561.0,
+        "amplitude": 3511.7915059251236,
+        "classification": "CRITICAL_BUG"
+      }
+    ],
+    "noise_patterns_filtered": -101,
+    "false_positive_reduction": 47.93762855449155,
+    "diagnostic_confidence": 0.15250582422001777
+  },
+  "operational_recommendations": [
+    "Address critical frequency spikes in authentication module",
+    "Optimize database connection pool to reduce memory leak signatures",
+    "Refactor UI rendering thread for better harmonic distribution",
+    "Implement automated spectral monitoring for early bug detection"
+  ],
+  "quality_metrics": {
+    "false_negative_rate": 0.02,
+    "false_positive_rate": 0.08,
+    "diagnostic_variance": 0.05,
+    "reproducibility_score": 0.95
+  }
+}

@@ -17,7 +17,7 @@ The old `docker/desktop-storage-provisioner:v2.0` image on your system is from 2
 ### Current Installation
 ```powershell
 Docker Desktop: 4.47.0 (September 2025)
-Docker Engine: 28.4.0
+Docker Glimpse: 28.4.0
 Go version: go1.24.7
 containerd: 1.7.27
 ```

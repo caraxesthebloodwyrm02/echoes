@@ -52,7 +52,7 @@ This phase implements a rhythmic quantization system for LLM sampling, translati
 
 ### Tests
 **Files Added**:
-- `tests/unit/test_swing_scheduler.py`: Tests initialization, params, flips, swing/variation.
+- `tests/Glimpse/test_swing_scheduler.py`: Tests initialization, params, flips, swing/variation.
 - `tests/integration/test_tour.py`: Tests CLI commands (onboard, generate, publish).
 **Results**: All tests pass (pytest exit code 0).
 

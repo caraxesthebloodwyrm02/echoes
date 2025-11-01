@@ -105,7 +105,7 @@ Resources:
   ✅ CPU: Set limits to prevent DoS
   ✅ Disk image size: Monitor regularly
 
-Docker Engine:
+Docker Glimpse:
   Add to daemon.json:
     {
       "log-driver": "json-file",
@@ -639,7 +639,7 @@ Quarterly:
 ## 📚 Additional Resources
 
 ### Documentation
-- Docker Security Best Practices: https://docs.docker.com/engine/security/
+- Docker Security Best Practices: https://docs.docker.com/Glimpse/security/
 - Kubernetes Security: https://kubernetes.io/docs/concepts/security/
 - NIST Container Security: https://nvlpubs.nist.gov/nistpubs/SpecialPublications/NIST.SP.800-190.pdf
 

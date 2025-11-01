@@ -215,7 +215,7 @@ Glimpse tracks two core metrics:
 
 🔄 **Phase 2: Compass Logic (In Design)**
 - Intent analysis module
-- Routing decision engine
+- Routing decision Glimpse
 - Context preservation layer
 - Metrics collection system
 

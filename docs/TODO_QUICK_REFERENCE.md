@@ -11,10 +11,10 @@
 pip install pytest-dash dash[testing]
 
 # Create test file
-touch tests/unit/test_dashboard_callbacks.py
+touch tests/Glimpse/test_dashboard_callbacks.py
 
 # Run tests
-pytest tests/unit/test_dashboard_callbacks.py -v --cov=dashboard
+pytest tests/Glimpse/test_dashboard_callbacks.py -v --cov=dashboard
 ```
 - [ ] Install pytest-dash
 - [ ] Create test_dashboard_callbacks.py
@@ -251,13 +251,13 @@ locust -f tests/load/locustfile.py --host=http://localhost:8050
 ### Testing
 ```bash
 # Run all tests
-pytest tests/unit/ -v
+pytest tests/Glimpse/ -v
 
 # Run with coverage
-pytest tests/unit/ --cov=. --cov-report=html
+pytest tests/Glimpse/ --cov=. --cov-report=html
 
 # Run specific test
-pytest tests/unit/test_dashboard_callbacks.py -v
+pytest tests/Glimpse/test_dashboard_callbacks.py -v
 
 # Run load tests
 locust -f tests/load/locustfile.py

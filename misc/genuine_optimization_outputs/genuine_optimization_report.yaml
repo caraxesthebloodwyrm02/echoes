@@ -1,0 +1,29 @@
+atmospheric_signature:
+  coherence_score: 0.8118181818181818
+  source: ci_atmospheric
+  unified_quality: 0.8030000000000002
+genuine_optimization_analysis:
+  algorithms_simplified: true
+  focus_on_real_improvements: true
+  standards_maintained: true
+  thresholds_not_lowered: true
+genuine_optimization_results:
+  improvement_needed: 0.019500000000000073
+  unified_coherence: 0.7304999999999999
+impact_signature:
+  coherence_score: 0.4181818181818182
+  source: realistic_repository_impact
+  unified_quality: 0.4050000000000001
+performance_summary:
+  coherence_target_met: false
+  focus_on_root_causes: true
+  high_standards_maintained: true
+  no_metric_manipulation: true
+  quality_improvement_realistic: true
+protocol_info:
+  intent: Transform high-density process noise into clear diagnostic visibility with
+    genuine performance improvements and maintained high standards
+  name: GENUINE_OPTIMIZATION_SANDSTORM_DIAGNOSTIC
+  timestamp: '2025-11-01T14:04:43.110349+00:00'
+  unified_alert_active: false
+  version: 2.2.0

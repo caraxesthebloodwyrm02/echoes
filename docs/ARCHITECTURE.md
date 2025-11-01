@@ -23,7 +23,7 @@ The GlimpsePreview System is built on a modular, layered architecture that separ
       ▼          ▼          ▼          ▼
 ┌──────────┐ ┌─────────┐ ┌────────┐ ┌──────────────┐
 │Trajectory│ │  Input  │ │Visual  │ │  Security    │
-│  Engine  │ │ Adapter │ │Renderer│ │ Integration  │
+│  Glimpse  │ │ Adapter │ │Renderer│ │ Integration  │
 └──────────┘ └─────────┘ └────────┘ └──────────────┘
       │          │          │          │
       ▼          ▼          ▼          ▼
@@ -38,14 +38,14 @@ The GlimpsePreview System is built on a modular, layered architecture that separ
 
 ## 🧩 Core Components
 
-### 1. Trajectory Engine (`core_trajectory.py`)
+### 1. Trajectory Glimpse (`core_trajectory.py`)
 
 **Purpose**: Track and analyze the trajectory of work in real-time.
 
 **Key Classes**:
 - `TrajectoryPoint`: Single point in trajectory with metadata
 - `TrajectorySegment`: Coherent segment with consistent direction
-- `TrajectoryEngine`: Main engine for tracking and analysis
+- `TrajectoryEngine`: Main Glimpse for tracking and analysis
 
 **Key Algorithms**:
 ```python
@@ -281,7 +281,7 @@ PreviewConfiguration:
 │           ▼                                      │
 │  ┌────────────────┐        ┌─────────────────┐ │
 │  │ Input Adapter  │───────→│ Trajectory      │ │
-│  │                │        │ Engine          │ │
+│  │                │        │ Glimpse          │ │
 │  │ - Event Log    │        │                 │ │
 │  │ - Undo/Redo    │        │ - Points        │ │
 │  │ - Suggestions  │        │ - Segments      │ │

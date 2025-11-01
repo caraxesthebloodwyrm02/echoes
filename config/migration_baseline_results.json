@@ -1,0 +1,103 @@
+{
+  "test_run_timestamp": 1761988487.805905,
+  "api_calls_tested": [
+    {
+      "operation": "simple_chat",
+      "response_time_seconds": 6.21976113319397,
+      "success": true,
+      "response_length_chars": 1760,
+      "error": null,
+      "timestamp": 1761988494.2516713
+    },
+    {
+      "operation": "tool_calling",
+      "response_time_seconds": 2.8902742862701416,
+      "success": true,
+      "response_length_chars": 40,
+      "error": null,
+      "timestamp": 1761988497.142133
+    },
+    {
+      "operation": "streaming_response",
+      "response_time_seconds": 8.455053329467773,
+      "success": true,
+      "response_length_chars": 0,
+      "error": null,
+      "timestamp": 1761988505.597344
+    },
+    {
+      "operation": "directory_analysis",
+      "response_time_seconds": 10.046922445297241,
+      "success": true,
+      "response_length_chars": 4195,
+      "error": null,
+      "timestamp": 1761988515.6444876
+    },
+    {
+      "operation": "error_fallback",
+      "response_time_seconds": 2.3069047927856445,
+      "success": true,
+      "response_length_chars": 34,
+      "error": null,
+      "timestamp": 1761988517.952697
+    }
+  ],
+  "performance_metrics": {
+    "simple_chat": {
+      "operation": "simple_chat",
+      "response_time_seconds": 6.21976113319397,
+      "success": true,
+      "response_length_chars": 1760,
+      "error": null,
+      "timestamp": 1761988494.2516713
+    },
+    "tool_calling": {
+      "operation": "tool_calling",
+      "response_time_seconds": 2.8902742862701416,
+      "success": true,
+      "response_length_chars": 40,
+      "error": null,
+      "timestamp": 1761988497.142133
+    },
+    "streaming_response": {
+      "operation": "streaming_response",
+      "response_time_seconds": 8.455053329467773,
+      "success": true,
+      "response_length_chars": 0,
+      "error": null,
+      "timestamp": 1761988505.597344
+    },
+    "value_guard_improvement": {
+      "operation": "value_guard_improvement",
+      "response_time_seconds": 2.1219253540039062e-05,
+      "improvement_applied": true,
+      "original_length": 68,
+      "improved_length": 68
+    },
+    "directory_analysis": {
+      "operation": "directory_analysis",
+      "response_time_seconds": 10.046922445297241,
+      "success": true,
+      "response_length_chars": 4195,
+      "error": null,
+      "timestamp": 1761988515.6444876
+    },
+    "error_fallback": {
+      "operation": "error_fallback",
+      "response_time_seconds": 2.3069047927856445,
+      "success": true,
+      "response_length_chars": 34,
+      "error": null,
+      "timestamp": 1761988517.952697
+    }
+  },
+  "behavioral_checks": {
+    "simple_chat_relevant": false,
+    "tool_calling_used": false,
+    "streaming_fast_start": true,
+    "value_guard_works": true,
+    "directory_analysis_complete": false,
+    "fallback_works": true
+  },
+  "errors": []
+}

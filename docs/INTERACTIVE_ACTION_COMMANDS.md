@@ -137,7 +137,7 @@ action add <sku> <name> <category> <quantity> <location> [min_stock] [max_stock]
 ```
 
 **Parameters**:
-- `sku`: Stock keeping unit (e.g., SKU-001)
+- `sku`: Stock keeping Glimpse (e.g., SKU-001)
 - `name`: Item name (e.g., "Wireless Mouse")
 - `category`: Product category (e.g., Peripherals)
 - `quantity`: Initial quantity (integer)

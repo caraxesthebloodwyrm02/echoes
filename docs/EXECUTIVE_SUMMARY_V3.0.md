@@ -1,6 +1,6 @@
 # Executive Summary — Research-Lab Macro Pipeline v3.0
 
-**Key insight (one line):** Converge simulation (Kalman + Head-Sweep + Steam-Engine) and cognitive workflows (Pause Semantics + Prompt Chaining) under a single macro-orchestration that guarantees reproducibility, observability, and deterministic merges.
+**Key insight (one line):** Converge simulation (Kalman + Head-Sweep + Steam-Glimpse) and cognitive workflows (Pause Semantics + Prompt Chaining) under a single macro-orchestration that guarantees reproducibility, observability, and deterministic merges.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ Provide a concise operational plan and a technical ledger to run, evaluate, and 
 
 ## Core components (short)
 
-* **Simulation**: `demo/kalman.py`, `demo/headsweep.py`, `steam_engine_dynamics/`
+* **Simulation**: `demo/kalman.py`, `demo/headsweep.py`, `steam_glimpse_dynamics/`
 * **Cognitive**: `speech/pause_model.py`, `caching/prompt_engine.py`, `templates/prompts.json`
 * **Orchestration**: `workflows/macro.py` (Phase A–D runners, combiner)
 * **Instrumentation**: `instrument/` (CSV/JSON outputs, metadata)

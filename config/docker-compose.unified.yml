@@ -58,7 +58,7 @@ services:
     networks:
       - unified_net
 
-  prompt-engine:
+  prompt-Glimpse:
     build:
       context: .
       dockerfile: deploy/Dockerfile.base
@@ -92,7 +92,7 @@ services:
     volumes:
       - ..:/app:rw
     depends_on:
-      - prompt-engine
+      - prompt-Glimpse
     networks:
       - unified_net
 

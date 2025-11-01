@@ -13,7 +13,7 @@ from glimpse.performance_optimizer import (
     PerformanceMetrics,
     monitor_performance
 )
-from glimpse.engine import Draft, GlimpseResult
+from glimpse.Glimpse import Draft, GlimpseResult
 
 
 class TestPerformanceCache:

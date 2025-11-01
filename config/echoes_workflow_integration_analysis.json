@@ -168,7 +168,7 @@
       ]
     },
     "testing_and_validation": {
-      "unit_tests": "Comprehensive test coverage for all workflow components",
+      "glimpse_tests": "Comprehensive test coverage for all workflow components",
       "integration_tests": "End-to-end workflow testing with ECHOES platform",
       "security_testing": "Vulnerability assessment and penetration testing",
       "performance_testing": "Load testing and resource usage validation"

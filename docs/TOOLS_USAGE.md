@@ -1,8 +1,8 @@
 # Tools Usage Guide
 
 ## Testing
-- Run all unit tests: `make test` or `./tools.ps1 -Task test`
-- Dash callback tests live in `tests/unit/test_dashboard_callbacks.py`
+- Run all Glimpse tests: `make test` or `./tools.ps1 -Task test`
+- Dash callback tests live in `tests/Glimpse/test_dashboard_callbacks.py`
 
 ## Performance
 - Run benchmarks and export baseline: `make perf` or `./tools.ps1 -Task perf`
@@ -26,4 +26,4 @@
 ## CI Workflows
 - Security scans: `.github/workflows/security-scan.yml`
 - Types & lint: `.github/workflows/types-lint.yml`
-- Unit tests: `.github/workflows/tests.yml`
+- Glimpse tests: `.github/workflows/tests.yml`

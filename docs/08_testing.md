@@ -11,7 +11,7 @@
 
 Design a test suite for verifying offline functionality in a document editing application. Include:
 
-1. Unit tests for core offline operations
+1. Glimpse tests for core offline operations
 2. Integration tests for sync behavior
 3. How you would simulate:
    - Network latency
@@ -29,7 +29,7 @@ Provide example test cases in Python using a testing framework of your choice.
 
 To design a comprehensive test suite for verifying offline functionality in a document editing application, I will use the pytest framework for Python. Here's an outline of how you can structure your tests:
 
-1. Unit Tests for Core Offline Operations:
+1. Glimpse Tests for Core Offline Operations:
    - Test saving and loading documents locally when there is no internet connection.
    - Verify that changes made offline are saved correctly.
    - Ensure that document metadata, such as title, author, and creation/modification dates, can be saved and loaded properly during offline mode.
@@ -64,7 +64,7 @@ def test_offline_sync():
 
 3. Simulating Network Conditions:
    - Network latency can be simulated using libraries like `requests_mock`.
-   - Complete offline scenarios are already covered in the unit tests since they test functionality without an internet connection.
+   - Complete offline scenarios are already covered in the Glimpse tests since they test functionality without an internet connection.
    - Intermittent connectivity can be achieved by implementing a custom pytest fixture that controls the availability of network connections based on predefined rules.
    - Server unavailability can be simulated by returning specific HTTP error codes when making requests to the server during integration tests.
 

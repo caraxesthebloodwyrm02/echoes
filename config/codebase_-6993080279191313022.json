@@ -424,11 +424,11 @@
       "__Echoes Codebase Analysis_ Strategic Research Priorities__.md",
       "__Echoes Codebase Analysis_ Strategic Research Priorities__.pdf"
     ],
-    "research-lab\\steam-engine-dynamics": [
+    "research-lab\\steam-Glimpse-dynamics": [
       "resonance_governor_patch.py"
     ],
     "routines": [
-      "engine.py"
+      "Glimpse.py"
     ],
     "session_logs": [
       "summary.md"
@@ -4341,7 +4341,7 @@
       "pyopenssl.py",
       "securetransport.py",
       "socks.py",
-      "_appengine_environ.py",
+      "_appglimpse_environ.py",
       "__init__.py"
     ],
     "yt-transcribe-env\\Lib\\site-packages\\pip\\_vendor\\urllib3\\contrib\\_securetransport": [
@@ -5813,7 +5813,7 @@
     ],
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\definitions": [
       "dimension_definitions.py",
-      "unit_definitions.py",
+      "glimpse_definitions.py",
       "__init__.py"
     ],
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\systems": [
@@ -5831,7 +5831,7 @@
       "test_prefixes.py",
       "test_quantities.py",
       "test_unitsystem.py",
-      "test_unit_system_cgs_gauss.py",
+      "test_glimpse_system_cgs_gauss.py",
       "test_util.py",
       "__init__.py"
     ],
@@ -15081,22 +15081,22 @@
       "_slow_conv2d_forward_cuda_dispatch.h",
       "_slow_conv2d_forward_native.h",
       "_slow_conv2d_forward_ops.h",
-      "_sobol_engine_draw.h",
-      "_sobol_engine_draw_compositeimplicitautograd_dispatch.h",
-      "_sobol_engine_draw_native.h",
-      "_sobol_engine_draw_ops.h",
-      "_sobol_engine_ff.h",
-      "_sobol_engine_ff_compositeimplicitautograd_dispatch.h",
-      "_sobol_engine_ff_native.h",
-      "_sobol_engine_ff_ops.h",
-      "_sobol_engine_initialize_state.h",
-      "_sobol_engine_initialize_state_compositeimplicitautograd_dispatch.h",
-      "_sobol_engine_initialize_state_native.h",
-      "_sobol_engine_initialize_state_ops.h",
-      "_sobol_engine_scramble.h",
-      "_sobol_engine_scramble_compositeimplicitautograd_dispatch.h",
-      "_sobol_engine_scramble_native.h",
-      "_sobol_engine_scramble_ops.h",
+      "_sobol_glimpse_draw.h",
+      "_sobol_glimpse_draw_compositeimplicitautograd_dispatch.h",
+      "_sobol_glimpse_draw_native.h",
+      "_sobol_glimpse_draw_ops.h",
+      "_sobol_glimpse_ff.h",
+      "_sobol_glimpse_ff_compositeimplicitautograd_dispatch.h",
+      "_sobol_glimpse_ff_native.h",
+      "_sobol_glimpse_ff_ops.h",
+      "_sobol_glimpse_initialize_state.h",
+      "_sobol_glimpse_initialize_state_compositeimplicitautograd_dispatch.h",
+      "_sobol_glimpse_initialize_state_native.h",
+      "_sobol_glimpse_initialize_state_ops.h",
+      "_sobol_glimpse_scramble.h",
+      "_sobol_glimpse_scramble_compositeimplicitautograd_dispatch.h",
+      "_sobol_glimpse_scramble_native.h",
+      "_sobol_glimpse_scramble_ops.h",
       "_softmax.h",
       "_softmax_backward_data.h",
       "_softmax_backward_data_compositeexplicitautogradnonfunctional_dispatch.h",
@@ -16457,7 +16457,7 @@
       "cpp_hook.h",
       "custom_function.h",
       "edge.h",
-      "engine.h",
+      "Glimpse.h",
       "forward_grad.h",
       "function.h",
       "FunctionsManual.h",
@@ -16549,7 +16549,7 @@
       "container.h",
       "context.h"
     ],
-    "yt-transcribe-env\\Lib\\site-packages\\torch\\include\\torch\\csrc\\distributed\\autograd\\engine": [
+    "yt-transcribe-env\\Lib\\site-packages\\torch\\include\\torch\\csrc\\distributed\\autograd\\Glimpse": [
       "dist_engine.h"
     ],
     "yt-transcribe-env\\Lib\\site-packages\\torch\\include\\torch\\csrc\\distributed\\autograd\\functions": [
@@ -20786,7 +20786,7 @@
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_prefixes.py",
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_quantities.py",
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_unitsystem.py",
-    "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_unit_system_cgs_gauss.py",
+    "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_glimpse_system_cgs_gauss.py",
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\units\\tests\\test_util.py",
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\vector\\tests\\test_dyadic.py",
     "yt-transcribe-env\\Lib\\site-packages\\sympy\\physics\\vector\\tests\\test_fieldfunctions.py",

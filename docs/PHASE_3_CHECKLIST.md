@@ -18,7 +18,7 @@
   - [ ] WebSocket communication
   - [ ] JSON-RPC handling
 - [ ] Create `app/core/mcp/__init__.py`
-- [ ] Unit tests: `tests/test_mcp_client.py`
+- [ ] Glimpse tests: `tests/test_mcp_client.py`
 
 **Success Criteria**: Connect to AI Toolkit filesystem server
 
@@ -236,7 +236,7 @@ lumina:
 
 ### Quality
 - [ ] Integration tests pass 100%
-- [ ] Unit test coverage >80%
+- [ ] Glimpse test coverage >80%
 - [ ] No critical bugs
 - [ ] Documentation complete
 

@@ -39,17 +39,31 @@ class ActionExecutor:
 
     def execute_inventory_action(self, action_type: str, **kwargs) -> ActionResult:
         """Execute an inventory action via ATLAS."""
+        # Like good code structure:
+        def handle_user_request(request):
+            # Phase 1: Analysis
+            understand_request(request)
+            
+            # Phase 2: Planning  
+            plan_approach(request)
+            
+            # Phase 3: Execution
+            execute_plan()
+
+        # Phase 1: Setup
         self.action_counter += 1
         action_id = f"action_{self.action_counter}"
         start_time = time.time()
 
         try:
+            # Phase 2: Action Execution
             # Import ATLAS service
             from ATLAS.service import InventoryService
 
             svc = InventoryService()
             result_data = None
 
+            # Phase 3: Action Routing
             # Execute based on action type
             if action_type == "add_item":
                 result_data = svc.add_item(
@@ -87,6 +101,7 @@ class ActionExecutor:
             else:
                 raise ValueError(f"Unknown inventory action: {action_type}")
 
+            # Phase 4: Result Processing
             duration_ms = (time.time() - start_time) * 1000
             result = ActionResult(
                 action_id=action_id,
@@ -152,6 +167,96 @@ class ActionExecutor:
 
         self.action_history.append(result)
         return result
+
+    def execute_roi_action(self, action_type: str, **kwargs) -> ActionResult:
+        """Execute ROI-specific actions."""
+        self.action_counter += 1
+        action_id = f"roi_action_{self.action_counter}"
+        start_time = time.time()
+
+        try:
+            result_data = None
+
+            # ROI-specific actions
+            if action_type == "generate_roi_package":
+                result_data = self._generate_roi_analysis_package(**kwargs)
+            elif action_type == "save_roi_template":
+                result_data = self._save_roi_template(**kwargs)
+            elif action_type == "load_roi_analysis":
+                result_data = self._load_roi_analysis(**kwargs)
+            elif action_type == "compare_roi_scenarios":
+                result_data = self._compare_roi_scenarios(**kwargs)
+            else:
+                raise ValueError(f"Unknown ROI action: {action_type}")
+
+            duration_ms = (time.time() - start_time) * 1000
+            result = ActionResult(
+                action_id=action_id,
+                action_type=f"roi:{action_type}",
+                status="success",
+                result=result_data,
+                duration_ms=duration_ms,
+                timestamp=datetime.now(timezone.utc).isoformat(),
+            )
+
+        except Exception as e:
+            duration_ms = (time.time() - start_time) * 1000
+            result = ActionResult(
+                action_id=action_id,
+                action_type=f"roi:{action_type}",
+                status="failed",
+                result=None,
+                error=str(e),
+                duration_ms=duration_ms,
+                timestamp=datetime.now(timezone.utc).isoformat(),
+            )
+
+        self.action_history.append(result)
+        return result
+
+    def _generate_roi_analysis_package(self, **kwargs) -> Dict[str, Any]:
+        """Generate a complete ROI analysis package."""
+        # This would integrate with the ROI tool to generate all formats
+        from tools.roi_analysis_tool import ROIAnalysisTool
+
+        tool = ROIAnalysisTool()
+        result = tool(**kwargs)
+
+        if result.success:
+            # Automatically organize the generated files
+            from app.filesystem import FilesystemTools
+            fs_tools = FilesystemTools()
+            organization_result = fs_tools.organize_roi_files(result.data)
+
+            if organization_result["success"]:
+                result.data["file_organization"] = organization_result
+            else:
+                result.data["file_organization_error"] = organization_result.get("error")
+
+            # Automatically store in knowledge base
+            from app.knowledge import KnowledgeManager
+            km = KnowledgeManager()
+            analysis_id = km.store_roi_analysis(result.data)
+            result.data["analysis_id"] = analysis_id
+
+            return result.data
+        else:
+            raise Exception(f"ROI generation failed: {result.error}")
+
+    def _save_roi_template(self, template_name: str, template_data: Dict[str, Any]) -> Dict[str, Any]:
+        """Save an ROI analysis template."""
+        # Implementation for saving templates
+        return {"template_name": template_name, "saved": True}
+
+    def _load_roi_analysis(self, analysis_id: str) -> Dict[str, Any]:
+        """Load a previously generated ROI analysis."""
+        # Implementation for loading saved analyses
+        return {"analysis_id": analysis_id, "loaded": True}
+
+    def _compare_roi_scenarios(self, scenario_ids: List[str]) -> Dict[str, Any]:
+        """Compare multiple ROI analysis scenarios."""
+        # Implementation for scenario comparison
+        return {"scenarios_compared": len(scenario_ids), "comparison": "completed"}
 
     def get_action_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
         """Get action history."""

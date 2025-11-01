@@ -930,7 +930,7 @@
           "Arts"
         ],
         "summary": "Start Therapeutic Session",
-        "description": "Start AI-powered therapeutic music session.\n\nIntegrates with HarmonyHub's emotional therapy engine.",
+        "description": "Start AI-powered therapeutic music session.\n\nIntegrates with HarmonyHub's emotional therapy Glimpse.",
         "operationId": "start_therapeutic_session_api_arts_harmonyhub_therapeutic_session_post",
         "requestBody": {
           "content": {
@@ -970,7 +970,7 @@
           "Arts"
         ],
         "summary": "Create Personalized Content Feed",
-        "description": "Create personalized emotional content feed.\n\nUses HarmonyHub's Resonance Engine for AI-tailored content delivery.",
+        "description": "Create personalized emotional content feed.\n\nUses HarmonyHub's Resonance Glimpse for AI-tailored content delivery.",
         "operationId": "create_personalized_content_feed_api_arts_harmonyhub_personalized_feed_post",
         "requestBody": {
           "content": {

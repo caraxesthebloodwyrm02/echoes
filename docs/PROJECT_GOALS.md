@@ -10,7 +10,7 @@
 
 ## Quality & DX Targets
 - Lint-clean (Ruff) and formatted (Black) project-wide
-- Pytest green on unit tests; add basic integration tests for natural language executor
+- Pytest green on Glimpse tests; add basic integration tests for natural language executor
 - Bootstrap script validates environment and context inputs
 - CI or local scripts to run lint + tests consistently
 

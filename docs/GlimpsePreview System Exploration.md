@@ -51,7 +51,7 @@ Let me break down the key components and flow of the GlimpsePreview System:
 This is an innovative system that provides real-time visualization and predictive guidance for creative work. Think of it like a "GPS for creativity" - it doesn't just show your current state, but predicts and visualizes where you're heading based on your current trajectory.
 
 ### Main Components:
-1. **Trajectory Engine** ([core_trajectory.py](cci:7://file:///d:/realtime/core_trajectory.py:0:0-0:0)):
+1. **Trajectory Glimpse** ([core_trajectory.py](cci:7://file:///d:/realtime/core_trajectory.py:0:0-0:0)):
    - Tracks your work's "trajectory" - the path your work is taking
    - Analyzes patterns to predict where you might be heading
    - Provides confidence scores for these predictions
@@ -123,7 +123,7 @@ Let me break down the input-output flow of the GlimpsePreview System:
    - Calculates confidence levels in current direction
    - Maps cause-effect relationships
 
-2. **Prediction Engine**:
+2. **Prediction Glimpse**:
    - Forecasts likely next states
    - Suggests potential completions
    - Identifies potential issues/errors
@@ -406,7 +406,7 @@ where is understanding in this trajectory of clusters?
 Understanding in trajectory clusters is the core output: system analyzes patterns to show work direction, confidence, and predictions, accelerating comprehension of current state and future paths.
 
 Key locations:
-- **Trajectory Engine** ([core_trajectory.py](cci:7://file:///d:/realtime/core_trajectory.py:0:0-0:0)): Computes health scores and confidence for understanding trajectory coherence
+- **Trajectory Glimpse** ([core_trajectory.py](cci:7://file:///d:/realtime/core_trajectory.py:0:0-0:0)): Computes health scores and confidence for understanding trajectory coherence
 - **Research Charter**: Addresses "comprehension burden" and "time-to-understanding current state"
 - **Applications**: In education domain, "accelerates comprehension" via momentum understanding
 
@@ -665,7 +665,7 @@ A real-time trajectory visualization framework that shows where your work is hea
 
 **Core Architecture:**
 - **Input Adapter**: Processes edits, maintains undo/redo, generates suggestions
-- **Trajectory Engine**: Tracks direction (expanding/converging/pivoting/stable), analyzes patterns, predicts next states
+- **Trajectory Glimpse**: Tracks direction (expanding/converging/pivoting/stable), analyzes patterns, predicts next states
 - **Visual Renderer**: Multiple views (timeline/tree/flow/heatmap)
 - **Security Integration**: Validates operations, assesses risk levels
 
@@ -1001,7 +1001,7 @@ It seems like you're looking for a metaphorical understanding of how different c
 - **Nest (Structure/Framework):**
   - **Purpose**: Provides a safe, organized structure where activities take place.
   - **In Projects**: Represents the foundational architecture or framework. It's where all the components (like modules or phases) reside and interact.
-  - **Example**: In GlimpsePreview, the `Trajectory Engine` and `Input Adapter` form the "nest" where data is processed and organized.
+  - **Example**: In GlimpsePreview, the `Trajectory Glimpse` and `Input Adapter` form the "nest" where data is processed and organized.
 
 - **Honey (Output/Value):**
   - **Purpose**: The valuable product that results from the activities within the nest.
@@ -1032,7 +1032,7 @@ To visualize a concept on a 10-100-1000 scale, you can think of it as a way to c
 ### **100 - Medium Scale:**
 - **Scope**: A complete module or a collection of related tasks.
 - **Example**: An entire module like the `Input Adapter` that handles input processing.
-- **Visual**: A subsystem within a larger system, like the engine of a car, which powers and integrates multiple components.
+- **Visual**: A subsystem within a larger system, like the Glimpse of a car, which powers and integrates multiple components.
 
 ### **1000 - Large Scale:**
 - **Scope**: The entire system or project.
@@ -1057,12 +1057,12 @@ For the **large scale (1000)**, here's how you can visualize and understand it:
 ### **Large Scale (1000) - Entire System:**
 
 - **Scope**: Represents the entire project or system, integrating all modules, features, and functionalities.
-- **Example**: The full GlimpsePreview system, which includes the `Trajectory Engine`, `Input Adapter`, `Visual Renderer`, and all other components working together.
-- **Visual**: Picture a fully assembled and operational vehicle, like a car or a plane. Each part (engine, wheels, navigation) works in harmony to achieve the overall goal of transportation.
+- **Example**: The full GlimpsePreview system, which includes the `Trajectory Glimpse`, `Input Adapter`, `Visual Renderer`, and all other components working together.
+- **Visual**: Picture a fully assembled and operational vehicle, like a car or a plane. Each part (Glimpse, wheels, navigation) works in harmony to achieve the overall goal of transportation.
 
 ### **Characteristics:**
 
-- **Integration**: All components and modules are connected, communicating, and functioning as a cohesive unit.
+- **Integration**: All components and modules are connected, communicating, and functioning as a cohesive Glimpse.
 - **Complexity**: High complexity due to the interaction of multiple subsystems and dependencies.
 - **Impact**: Significant impact, as changes at this scale affect the entire system and its outputs.
 - **Management**: Requires strategic oversight, resource allocation, and continuous monitoring to ensure everything runs smoothly.
@@ -1087,7 +1087,7 @@ Absolutely! Having a clear reference point helps frame your thoughts and questio
 1. **Identify Key Areas**: With the large-scale view, pinpoint which components or interactions you're curious about. Are you interested in how different modules communicate, or how the system handles large data sets?
 
 2. **Ask About Integration**: Consider how well the parts fit together. Questions might include:
-   - How does the `Trajectory Engine` interact with the `Visual Renderer`?
+   - How does the `Trajectory Glimpse` interact with the `Visual Renderer`?
    - What are the data flow pathways between modules?
 
 3. **Explore Complexities**: Think about the challenges of managing the whole system.

@@ -1,0 +1,6 @@
+metric,value,threshold,status
+false_negative_rate,0.02,0.1,PASS
+false_positive_rate,0.08,0.1,PASS
+variance_threshold,0.05,0.9,FAIL
+reproducibility_score,0.95,0.9,PASS
+diagnostic_confidence,0.15250582422001777,0.9,FAIL

@@ -30,7 +30,7 @@ Implemented a rhythmic quantization system for LLM sampling, translating musical
 - **Purpose**: Enforces persona-specific prompts, refusals, tone.
 
 ### Tests
-- **Files**: `tests/unit/test_swing_scheduler.py`, `tests/integration/test_tour.py`
+- **Files**: `tests/Glimpse/test_swing_scheduler.py`, `tests/integration/test_tour.py`
 - **Result**: All tests pass (7/7).
 
 ### Documentation

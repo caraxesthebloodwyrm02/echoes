@@ -44,7 +44,7 @@ def main():
             "metadata": {"source": "system_overview.txt", "type": "documentation"},
         },
         {
-            "text": "Caraxes is the core reasoning engine in Echoes, responsible for processing and generating responses based on learned patterns and retrieved information.",
+            "text": "Caraxes is the core reasoning Glimpse in Echoes, responsible for processing and generating responses based on learned patterns and retrieved information.",
             "metadata": {"source": "caraxes_docs.md", "type": "documentation"},
         },
         {

@@ -40,7 +40,7 @@ CACHE_HITS = Counter('prompt_cache_hits_total', 'Total number of cache hits')
 CACHE_MISSES = Counter('prompt_cache_misses_total', 'Total number of cache misses')
 CACHE_SIZE = Gauge('prompt_cache_size', 'Current number of items in the cache')
 
-# Glimpse Engine Metrics
+# Glimpse Glimpse Metrics
 GLIMPSE_ATTEMPTS = Counter(
     'glimpse_attempts_total',
     'Total number of glimpse attempts',

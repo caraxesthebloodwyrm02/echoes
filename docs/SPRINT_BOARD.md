@@ -22,7 +22,7 @@ This sprint board addresses critical warning vectors that could impact the v2.0 
 |------|-------------|----------|-------------|--------|
 | **Coverage Analysis** | Run coverage XML locally and list modules below 80% | QA Lead | 2025-10-31 | ⏳ Pending |
 | **Coverage Sprint** | Create 2-week sprint focused on low-coverage modules | QA Lead + Backend Engineers | 2025-10-31 | ⏳ Pending |
-| **Unit Test Addition** | Add missing unit tests for public functions | Backend Engineers | 2025-10-31 | ⏳ Pending |
+| **Glimpse Test Addition** | Add missing Glimpse tests for public functions | Backend Engineers | 2025-10-31 | ⏳ Pending |
 | **Pre-commit Hook** | Add hook that fails if coverage drop >5% | QA Lead | 2025-10-31 | ⏳ Pending |
 | **CI Enforcement** | Update CI to enforce ≥95% coverage before merging | QA Lead + DevOps | 2025-10-31 | ⏳ Pending |
 

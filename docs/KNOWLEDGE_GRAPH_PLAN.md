@@ -16,7 +16,7 @@ Build an intelligent knowledge graph system that learns the codebase structure, 
 │  └──────────────┘  └──────────────┘  └──────────────┘│
 │                           ↓                            │
 │                  ┌──────────────┐                      │
-│                  │Query Engine  │                      │
+│                  │Query Glimpse  │                      │
 │                  └──────────────┘                      │
 └────────────────────────────────────────────────────────┘
 ```
@@ -284,12 +284,12 @@ class SemanticCodeIndexer:
         return results
 ```
 
-## 4. Query Engine
+## 4. Query Glimpse
 
 ```python
 class KnowledgeQueryEngine:
     """
-    Natural language query engine for knowledge graph.
+    Natural language query Glimpse for knowledge graph.
     """
 
     def __init__(
@@ -381,7 +381,7 @@ class KnowledgeQueryEngine:
 - [ ] Semantic search
 - [ ] Result ranking
 
-### Week 7-8: Query Engine
+### Week 7-8: Query Glimpse
 - [ ] Natural language query parsing
 - [ ] Query type classification
 - [ ] Result aggregation
@@ -430,5 +430,5 @@ knowledge:
 1. Integrate with existing MemoryMCPServer
 2. Implement learning pipeline
 3. Set up semantic indexing
-4. Build query engine
+4. Build query Glimpse
 5. Create monitoring dashboard

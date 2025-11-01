@@ -1,0 +1,143 @@
+{
+  "protocol_info": {
+    "name": "SANDSTORM_DEV_DIAGNOSTIC_PROTOCOL",
+    "version": "2.1.0",
+    "timestamp": "2025-11-01T14:02:40.683303+00:00",
+    "unified_alert_active": true,
+    "current_alert_level": "BRONZE_ALERT",
+    "intent": "Transform high-density process noise into clear diagnostic visibility with enhanced coherence optimization"
+  },
+  "enhanced_analysis": {
+    "retry_attempts": 2,
+    "historical_performance": [
+      {
+        "attempt": 2,
+        "threshold": 0.6839999999999999,
+        "success": true,
+        "coherence": 0.6898173076923075
+      }
+    ],
+    "validation_score": 0.6916666666666668,
+    "technical_debt_score": 0.42000000000000004,
+    "quality_gap": 0.31046538461538487
+  },
+  "impact_signature": {
+    "source": "enhanced_repository_impact",
+    "impact_analysis": {
+      "issues_density": 0.75,
+      "coverage": 0.6,
+      "complexity": 0.6,
+      "duplication_ratio": 0.5,
+      "diagnostic_clarity": 0.19999999999999996,
+      "security_score": 0.8,
+      "performance_score": 0.7,
+      "dependency_health": 0.85,
+      "code_smell_score": 0.7,
+      "technical_debt_ratio": 0.4
+    },
+    "atmospheric_metrics": {
+      "error_rate": 0.7,
+      "cpu_spikes": 0.6,
+      "memory_leak_risk": 0.5,
+      "p99_latency": 0.6,
+      "harmonic_balance": 0.30000000000000004
+    },
+    "throughput_dynamics": {
+      "rps_observed": 0.6,
+      "queue_backpressure": 0.5,
+      "throughput_stability": 0.6,
+      "flow_resonance": 0.6
+    },
+    "observability_streams": {
+      "error_density": 0.7,
+      "warning_noise": 0.6,
+      "observability_gaps": 0.5,
+      "signal_clarity": 0.4
+    },
+    "validation_intelligence": {
+      "glimpse_coverage": 0.7,
+      "integration_stability": 0.6,
+      "flaky_test_rate": 0.6,
+      "validation_confidence": 0.7,
+      "test_success_rate": 0.85,
+      "commit_quality_score": 0.8
+    },
+    "unified_quality": 0.8187499999999999,
+    "coherence_score": 0.7866666666666666,
+    "validation_score": 0.6916666666666668,
+    "technical_debt_score": 0.42000000000000004
+  },
+  "atmospheric_signature": {
+    "source": "enhanced_ci_atmospheric",
+    "impact_analysis": {
+      "issues_density": 0.15,
+      "coverage": 0.95,
+      "complexity": 0.44999999999999996,
+      "duplication_ratio": 0.1,
+      "diagnostic_clarity": 0.95
+    },
+    "atmospheric_metrics": {
+      "error_rate": 0.1,
+      "cpu_spikes": 0.1,
+      "memory_leak_risk": 0.05,
+      "p99_latency": 0.2,
+      "harmonic_balance": 0.95,
+      "performance_trend": 0.85,
+      "security_compliance": 0.98
+    },
+    "throughput_dynamics": {
+      "rps_observed": 0.95,
+      "queue_backpressure": 0.1,
+      "throughput_stability": 0.9,
+      "flow_resonance": 0.9
+    },
+    "observability_streams": {
+      "error_density": 0.1,
+      "warning_noise": 0.15,
+      "observability_gaps": 0.05,
+      "signal_clarity": 0.95
+    },
+    "validation_intelligence": {
+      "glimpse_coverage": 0.95,
+      "integration_stability": 0.9,
+      "flaky_test_rate": 0.05,
+      "validation_confidence": 0.9,
+      "coverage_gate_passed": 1.0,
+      "performance_gate_passed": 1.0
+    },
+    "unified_quality": 1.1292153846153847,
+    "coherence_score": 1.2236
+  },
+  "sandstorm_analysis": {
+    "impact_coherence": 1.0,
+    "atmospheric_coherence": 0.25650000000000006,
+    "throughput_coherence": 1.0,
+    "observability_coherence": 0.59375,
+    "validation_coherence": 1.0,
+    "ai_anomaly_signature": {
+      "anomaly_confidence": 0.6208355769230768,
+      "root_cause_score": 0.4828721153846152,
+      "autofix_suggestion_strength": 0.34490865384615377,
+      "pattern_recognition_confidence": 0.551853846153846,
+      "technical_debt_influence": 0.58,
+      "validation_confidence": 0.6916666666666668
+    },
+    "unified_coherence": 0.6898173076923075,
+    "quality_state_achieved": false,
+    "alert_level": "BRONZE_ALERT",
+    "alert_message": "System needs attention - Partial transformation in progress",
+    "retry_attempts": 2,
+    "validation_score": 0.6916666666666668,
+    "technical_debt_score": 0.42000000000000004
+  },
+  "diagnostic_summary": {
+    "dimensions_analyzed": 6,
+    "sandstorm_alert_status": "ACTIVE",
+    "current_alert_level": "BRONZE_ALERT",
+    "quality_state": false,
+    "quality_improvement_pct": "37.9%",
+    "chaos_to_clarity_transformation": true,
+    "coherence_achievement": "0.690",
+    "threshold_met": "0.690 >= 0.684"
+  }
+}

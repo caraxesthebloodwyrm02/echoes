@@ -12,13 +12,13 @@ Real-world references (public)
 Outcomes
 - Data artifacts in data/podcasts/ with timestamps, context, and pause annotations.
 - A seedable pause model scaffold (speech/pause_model.py) with tests.
-- Routines engine implementing the 10-step workflow.
-- Prompt templates and a simple caching engine with similarity search.
+- Routines Glimpse implementing the 10-step workflow.
+- Prompt templates and a simple caching Glimpse with similarity search.
 
 Constraints
 - Public/transcribed materials only; respect licensing.
 - Fixed seeds; cross-platform execution (Windows-friendly).
-- Modular: does not alter existing steam-engine dynamics behavior.
+- Modular: does not alter existing steam-Glimpse dynamics behavior.
 <<<<<<< Updated upstream
 =======
 

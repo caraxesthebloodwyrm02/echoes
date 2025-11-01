@@ -941,7 +941,7 @@
         "pattern": "Potential secret/credential reference"
       },
       {
-        "file": "src\\repl\\engine.py",
+        "file": "src\\repl\\Glimpse.py",
         "pattern": "Potential secret/credential reference"
       },
       {
@@ -1088,10 +1088,10 @@
       "simple_audit.py",
       "actions-runner\\_work\\echoes\\echoes\\examples\\prompting_system_demo.py",
       "actions-runner\\_work\\echoes\\echoes\\prompting\\core\\inference_engine.py",
-      "actions-runner\\_work\\echoes\\echoes\\research-lab\\steam-engine-dynamics\\resonance_governor_patch.py",
+      "actions-runner\\_work\\echoes\\echoes\\research-lab\\steam-Glimpse-dynamics\\resonance_governor_patch.py",
       "examples\\prompting_system_demo.py",
       "prompting\\core\\inference_engine.py",
-      "research-lab\\steam-engine-dynamics\\resonance_governor_patch.py"
+      "research-lab\\steam-Glimpse-dynamics\\resonance_governor_patch.py"
     ],
     "ai_orchestration": [
       "comprehensive_analysis.py",
@@ -2095,11 +2095,11 @@
       },
       {
         "term": "echoes",
-        "file": "research-lab\\steam-engine-dynamics\\resonance_governor_patch.py"
+        "file": "research-lab\\steam-Glimpse-dynamics\\resonance_governor_patch.py"
       },
       {
         "term": "echoes",
-        "file": "routines\\engine.py"
+        "file": "routines\\Glimpse.py"
       },
       {
         "term": "echoes",
@@ -2175,7 +2175,7 @@
       },
       {
         "term": "echoes",
-        "file": "src\\repl\\engine.py"
+        "file": "src\\repl\\Glimpse.py"
       },
       {
         "term": "echoes",

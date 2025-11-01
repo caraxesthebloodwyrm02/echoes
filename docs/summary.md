@@ -13,7 +13,7 @@ With the core prototype validated and CI green, we are pivoting toward voice/spe
 - Added annotated podcast datasets: `data/podcasts/lex_musk.json`, `data/podcasts/jre_trump.json`.
 - Extended `speech/pause_model.py` to load JSON, learn pause thresholds from label means, and predict labels with thresholding + priors fallback.
 - Expanded tests: pause model, macro workflow parallelism/merge, and prompt cache similarity ordering (6 tests passing with plugin autoload disabled).
-- Enhanced `routines/engine.py` with example handlers that wire to `workflows/macro.py`.
+- Enhanced `routines/Glimpse.py` with example handlers that wire to `workflows/macro.py`.
 - Enriched `templates/prompts.json` with pause analysis and follow-up templates.
 - Updated `docs/speech-module.md` to document datasets, thresholds, and tests.
 

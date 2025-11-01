@@ -2,7 +2,7 @@
 
 Design a test suite for verifying offline functionality in a document editing application. Include:
 
-1. Unit tests for core offline operations
+1. Glimpse tests for core offline operations
 2. Integration tests for sync behavior
 3. How you would simulate:
    - Network latency

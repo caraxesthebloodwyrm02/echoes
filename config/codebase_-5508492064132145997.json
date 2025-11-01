@@ -401,11 +401,11 @@
       "docs.txt",
       "requirements.txt"
     ],
-    "research-lab\\steam-engine-dynamics": [
+    "research-lab\\steam-Glimpse-dynamics": [
       "resonance_governor_patch.py"
     ],
     "routines": [
-      "engine.py"
+      "Glimpse.py"
     ],
     "session_logs": [
       "summary.md"

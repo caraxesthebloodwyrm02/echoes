@@ -1,0 +1,388 @@
+{
+  "effort_test_user_001_session_1762000997_2025-11-01T05:43:18.046803": {
+    "user_id": "test_user_001",
+    "session_id": "session_1762000997",
+    "timestamp": "2025-11-01T05:43:18.046808",
+    "effort_duration_minutes": 45.0,
+    "cognitive_complexity_score": 0.8,
+    "creativity_score": 0.9,
+    "innovation_potential": 0.7,
+    "joules_of_work": 2760.9379200000003,
+    "thought_processes": [
+      "analytical_reasoning",
+      "creative_synthesis",
+      "pattern_recognition"
+    ],
+    "insights_generated": 3,
+    "problems_solved": 2,
+    "value_created": 6.8057119728
+  },
+  "effort_test_user_001_session_1762000997_2025-11-01T05:43:18.050180": {
+    "user_id": "test_user_001",
+    "session_id": "session_1762000997",
+    "timestamp": "2025-11-01T05:43:18.050184",
+    "effort_duration_minutes": 30.0,
+    "cognitive_complexity_score": 0.6,
+    "creativity_score": 0.8,
+    "innovation_potential": 0.9,
+    "joules_of_work": 1701.0470400000006,
+    "thought_processes": [
+      "innovative_thinking",
+      "cross_modal_analysis",
+      "resonance_mapping"
+    ],
+    "insights_generated": 5,
+    "problems_solved": 1,
+    "value_created": 4.524785126400001
+  },
+  "effort_test_user_001_session_1762000997_2025-11-01T05:43:18.053391": {
+    "user_id": "test_user_001",
+    "session_id": "session_1762000997",
+    "timestamp": "2025-11-01T05:43:18.053394",
+    "effort_duration_minutes": 60.0,
+    "cognitive_complexity_score": 0.95,
+    "creativity_score": 0.85,
+    "innovation_potential": 0.95,
+    "joules_of_work": 4803.0855599999995,
+    "thought_processes": [
+      "deep_learning",
+      "knowledge_graph_integration",
+      "multimodal_resonance"
+    ],
+    "insights_generated": 8,
+    "problems_solved": 4,
+    "value_created": 13.34657399985
+  },
+  "effort_test_user_002_session_1762000997_2025-11-01T05:43:18.061552": {
+    "user_id": "test_user_002",
+    "session_id": "session_1762000997",
+    "timestamp": "2025-11-01T05:43:18.061555",
+    "effort_duration_minutes": 25.0,
+    "cognitive_complexity_score": 0.7,
+    "creativity_score": 0.6,
+    "innovation_potential": 0.8,
+    "joules_of_work": 1240.1376,
+    "thought_processes": [
+      "research_analysis",
+      "data_synthesis"
+    ],
+    "insights_generated": 2,
+    "problems_solved": 1,
+    "value_created": 2.9019219840000003
+  },
+  "effort_test_user_003_session_1762000997_2025-11-01T05:43:18.068291": {
+    "user_id": "test_user_003",
+    "session_id": "session_1762000997",
+    "timestamp": "2025-11-01T05:43:18.068294",
+    "effort_duration_minutes": 25.0,
+    "cognitive_complexity_score": 0.7,
+    "creativity_score": 0.6,
+    "innovation_potential": 0.8,
+    "joules_of_work": 1240.1376,
+    "thought_processes": [
+      "research_analysis",
+      "data_synthesis"
+    ],
+    "insights_generated": 2,
+    "problems_solved": 1,
+    "value_created": 2.9019219840000003
+  },
+  "effort_healthcare_researcher_001_session_1762001247_2025-11-01T05:47:27.662094": {
+    "user_id": "healthcare_researcher_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.662097",
+    "effort_duration_minutes": 60.0,
+    "cognitive_complexity_score": 0.9,
+    "creativity_score": 0.7,
+    "innovation_potential": 0.8,
+    "joules_of_work": 3746.52096,
+    "thought_processes": [
+      "medical_analysis",
+      "patient_data_insights",
+      "clinical_reasoning"
+    ],
+    "insights_generated": 5,
+    "problems_solved": 2,
+    "value_created": 9.1040459328
+  },
+  "effort_financial_analyst_001_session_1762001247_2025-11-01T05:47:27.696966": {
+    "user_id": "financial_analyst_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.696969",
+    "effort_duration_minutes": 45.0,
+    "cognitive_complexity_score": 0.85,
+    "creativity_score": 0.6,
+    "innovation_potential": 0.7,
+    "joules_of_work": 2318.10336,
+    "thought_processes": [
+      "financial_modeling",
+      "risk_analysis",
+      "portfolio_optimization"
+    ],
+    "insights_generated": 4,
+    "problems_solved": 3,
+    "value_created": 5.123008425600001
+  },
+  "effort_educator_001_session_1762001247_2025-11-01T05:47:27.729223": {
+    "user_id": "educator_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.729227",
+    "effort_duration_minutes": 50.0,
+    "cognitive_complexity_score": 0.7,
+    "creativity_score": 0.9,
+    "innovation_potential": 0.8,
+    "joules_of_work": 3067.7088000000003,
+    "thought_processes": [
+      "curriculum_design",
+      "learning_assessment",
+      "content_personalization"
+    ],
+    "insights_generated": 6,
+    "problems_solved": 2,
+    "value_created": 8.006719968000002
+  },
+  "effort_developer_001_session_1762001247_2025-11-01T05:47:27.764668": {
+    "user_id": "developer_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.764673",
+    "effort_duration_minutes": 75.0,
+    "cognitive_complexity_score": 0.95,
+    "creativity_score": 0.8,
+    "innovation_potential": 0.9,
+    "joules_of_work": 5605.7232,
+    "thought_processes": [
+      "algorithm_design",
+      "code_optimization",
+      "system_architecture"
+    ],
+    "insights_generated": 8,
+    "problems_solved": 5,
+    "value_created": 14.911223712
+  },
+  "effort_legal_analyst_001_session_1762001247_2025-11-01T05:47:27.783088": {
+    "user_id": "legal_analyst_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.783092",
+    "effort_duration_minutes": 55.0,
+    "cognitive_complexity_score": 0.9,
+    "creativity_score": 0.5,
+    "innovation_potential": 0.6,
+    "joules_of_work": 2480.6936,
+    "thought_processes": [
+      "legal_reasoning",
+      "document_analysis",
+      "compliance_checking"
+    ],
+    "insights_generated": 4,
+    "problems_solved": 3,
+    "value_created": 4.961387200000001
+  },
+  "effort_cross_sector_user_001_session_1762001247_2025-11-01T05:47:27.828366": {
+    "user_id": "cross_sector_user_001",
+    "session_id": "session_1762001247",
+    "timestamp": "2025-11-01T05:47:27.828369",
+    "effort_duration_minutes": 40.0,
+    "cognitive_complexity_score": 0.8,
+    "creativity_score": 0.7,
+    "innovation_potential": 0.8,
+    "joules_of_work": 2319.27488,
+    "thought_processes": [
+      "cross_sector_analysis",
+      "medical_billing",
+      "financial_integration"
+    ],
+    "insights_generated": 5,
+    "problems_solved": 2,
+    "value_created": 5.635837958400001
+  },
+  "effort_lifelong_learner_001_session_1762001362_2025-11-01T05:49:23.017532": {
+    "user_id": "lifelong_learner_001",
+    "session_id": "session_1762001362",
+    "timestamp": "2025-11-01T05:49:23.017535",
+    "effort_duration_minutes": 45.0,
+    "cognitive_complexity_score": 0.7,
+    "creativity_score": 0.8,
+    "innovation_potential": 0.6,
+    "joules_of_work": 2187.06048,
+    "thought_processes": [
+      "knowledge_synthesis",
+      "pattern_recognition",
+      "learning_organization"
+    ],
+    "insights_generated": 4,
+    "problems_solved": 2,
+    "value_created": 4.8990154752
+  },
+  "effort_creative_writer_001_session_1762001362_2025-11-01T05:49:23.063479": {
+    "user_id": "creative_writer_001",
+    "session_id": "session_1762001362",
+    "timestamp": "2025-11-01T05:49:23.063483",
+    "effort_duration_minutes": 60.0,
+    "cognitive_complexity_score": 0.8,
+    "creativity_score": 0.95,
+    "innovation_potential": 0.85,
+    "joules_of_work": 4273.57944,
+    "thought_processes": [
+      "creative_writing",
+      "story_development",
+      "content_organization"
+    ],
+    "insights_generated": 7,
+    "problems_solved": 3,
+    "value_created": 11.661529896900003
+  },
+  "effort_productivity_seeker_001_session_1762001362_2025-11-01T05:49:23.117551": {
+    "user_id": "productivity_seeker_001",
+    "session_id": "session_1762001362",
+    "timestamp": "2025-11-01T05:49:23.117555",
+    "effort_duration_minutes": 35.0,
+    "cognitive_complexity_score": 0.6,
+    "creativity_score": 0.7,
+    "innovation_potential": 0.8,
+    "joules_of_work": 1717.15544,
+    "thought_processes": [
+      "goal_planning",
+      "routine_optimization",
+      "time_management"
+    ],
+    "insights_generated": 5,
+    "problems_solved": 4,
+    "value_created": 4.172687719200001
+  },
+  "effort_health_conscious_001_session_1762001362_2025-11-01T05:49:23.165360": {
+    "user_id": "health_conscious_001",
+    "session_id": "session_1762001362",
+    "timestamp": "2025-11-01T05:49:23.165364",
+    "effort_duration_minutes": 40.0,
+    "cognitive_complexity_score": 0.75,
+    "creativity_score": 0.6,
+    "innovation_potential": 0.7,
+    "joules_of_work": 1907.904,
+    "thought_processes": [
+      "health_analysis",
+      "wellness_planning",
+      "fitness_optimization"
+    ],
+    "insights_generated": 6,
+    "problems_solved": 3,
+    "value_created": 4.216467840000001
+  },
+  "effort_financial_planner_001_session_1762001362_2025-11-01T05:49:23.214429": {
+    "user_id": "financial_planner_001",
+    "session_id": "session_1762001362",
+    "timestamp": "2025-11-01T05:49:23.214434",
+    "effort_duration_minutes": 50.0,
+    "cognitive_complexity_score": 0.85,
+    "creativity_score": 0.7,
+    "innovation_potential": 0.8,
+    "joules_of_work": 3010.5972,
+    "thought_processes": [
+      "financial_analysis",
+      "investment_planning",
+      "budget_optimization"
+    ],
+    "insights_generated": 8,
+    "problems_solved": 5,
+    "value_created": 7.315751196000002
+  },
+  "effort_quantum_researcher_001_session_1762001436_2025-11-01T05:50:36.985076": {
+    "user_id": "quantum_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:36.985082",
+    "effort_duration_minutes": 90.0,
+    "cognitive_complexity_score": 0.95,
+    "creativity_score": 0.9,
+    "innovation_potential": 0.95,
+    "joules_of_work": 7442.143559999999,
+    "thought_processes": [
+      "quantum_mechanical_modeling",
+      "theoretical_framework_development",
+      "mathematical_abstraction",
+      "hypothesis_generation",
+      "experimental_design"
+    ],
+    "insights_generated": 12,
+    "problems_solved": 5,
+    "value_created": 21.042660915899997
+  },
+  "effort_biomedical_researcher_001_session_1762001436_2025-11-01T05:50:37.059388": {
+    "user_id": "biomedical_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.059393",
+    "effort_duration_minutes": 85.0,
+    "cognitive_complexity_score": 0.9,
+    "creativity_score": 0.85,
+    "innovation_potential": 0.9,
+    "joules_of_work": 6343.195039999999,
+    "thought_processes": [
+      "molecular_modeling",
+      "protein_structure_analysis",
+      "compound_synthesis_planning",
+      "clinical_trial_design",
+      "biochemical_pathway_analysis"
+    ],
+    "insights_generated": 10,
+    "problems_solved": 6,
+    "value_created": 17.174200570799997
+  },
+  "effort_ai_researcher_001_session_1762001436_2025-11-01T05:50:37.137418": {
+    "user_id": "ai_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.137423",
+    "effort_duration_minutes": 95.0,
+    "cognitive_complexity_score": 0.98,
+    "creativity_score": 0.95,
+    "innovation_potential": 0.98,
+    "joules_of_work": 8445.2098624,
+    "thought_processes": [
+      "neural_architecture_design",
+      "optimization_algorithm_development",
+      "agi_safety_framework",
+      "computational_efficiency_analysis",
+      "ethical_ai_design"
+    ],
+    "insights_generated": 15,
+    "problems_solved": 7,
+    "value_created": 24.664235403139195
+  },
+  "effort_climate_researcher_001_session_1762001436_2025-11-01T05:50:37.222957": {
+    "user_id": "climate_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.222962",
+    "effort_duration_minutes": 80.0,
+    "cognitive_complexity_score": 0.85,
+    "creativity_score": 0.8,
+    "innovation_potential": 0.85,
+    "joules_of_work": 5368.239360000002,
+    "thought_processes": [
+      "climate_modeling",
+      "environmental_data_analysis",
+      "carbon_capture_design",
+      "renewable_energy_optimization",
+      "sustainability_planning"
+    ],
+    "insights_generated": 9,
+    "problems_solved": 5,
+    "value_created": 13.903739942400005
+  },
+  "effort_interdisciplinary_researcher_001_session_1762001436_2025-11-01T05:50:37.305814": {
+    "user_id": "interdisciplinary_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.305818",
+    "effort_duration_minutes": 100.0,
+    "cognitive_complexity_score": 0.99,
+    "creativity_score": 0.98,
+    "innovation_potential": 0.99,
+    "joules_of_work": 9177.4316192,
+    "thought_processes": [
+      "cross_domain_synthesis",
+      "interdisciplinary_modeling",
+      "novel_application_design",
+      "breakthrough_innovation",
+      "paradigm_shift_development"
+    ],
+    "insights_generated": 18,
+    "problems_solved": 8,
+    "value_created": 27.21200249408992
+  }
+}

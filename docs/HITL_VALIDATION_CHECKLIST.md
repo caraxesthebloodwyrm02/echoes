@@ -60,7 +60,7 @@
 - [x] **Productivity Gain**: 3x operator efficiency
 
 ### Technology Stack
-- [x] **GPT-OSS:120B**: HITL inference engine defined
+- [x] **GPT-OSS:120B**: HITL inference Glimpse defined
 - [x] **Glimpse**: Contextual search integration documented
 - [x] **Realtime Preview**: Interactive validation canvas described
 

@@ -114,7 +114,7 @@ e:/Projects/Development/
 │   │   └── compliance/          # Audit logs
 │   └── main.py                  # NEW: FastAPI application entry
 ├── tests/
-│   ├── unit/
+│   ├── Glimpse/
 │   │   ├── test_provenance.py
 │   │   ├── test_hil.py
 │   │   ├── test_agent_safety.py
@@ -201,7 +201,7 @@ e:/Projects/Development/
    - [ ] Create `ProvenanceEnforcerMiddleware`
    - [ ] Implement provenance validation logic
    - [ ] Add X-Provenance-Checked header
-   - [ ] Create unit tests for provenance validation
+   - [ ] Create Glimpse tests for provenance validation
 
 2. **HIL Feedback System**
    - [ ] Implement `/api/hil/feedback` endpoint
@@ -223,7 +223,7 @@ e:/Projects/Development/
    - [ ] `/api/agent/kill` - emergency stop
 
 5. **Testing**
-   - [ ] Unit tests for all endpoints
+   - [ ] Glimpse tests for all endpoints
    - [ ] Integration tests for agent safety
    - [ ] Test dry-run vs real execution
    - [ ] Test provenance rejection scenarios
@@ -326,7 +326,7 @@ e:/Projects/Development/
    - [ ] Revenue forecasting
 
 5. **Arts Cultural Preservation**
-   - [ ] Language evolution engine
+   - [ ] Language evolution Glimpse
    - [ ] Historical trend mapper
    - [ ] Cultural bias detection
 
@@ -347,7 +347,7 @@ e:/Projects/Development/
 
 #### Tasks:
 1. **Comprehensive Testing**
-   - [ ] Unit test coverage >80%
+   - [ ] Glimpse test coverage >80%
    - [ ] Integration test suite
    - [ ] Security penetration tests
    - [ ] Load testing

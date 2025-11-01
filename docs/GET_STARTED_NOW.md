@@ -303,7 +303,7 @@ pytest tests/test_api_contracts.py -v --cov=src --cov-report=term
 - HIPAA compliance filters
 
 **2. Implement Commerce Domain**
-- UBI simulation engine
+- UBI simulation Glimpse
 - Employment matcher
 - Artisan connector (Quick Win!)
 

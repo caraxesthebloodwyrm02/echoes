@@ -27,7 +27,7 @@ school/
 ├── docs/            # Documentation (10 files)
 ├── scripts/         # Utility scripts (1 file)
 ├── src/             # Source code (organized)
-│   ├── ai/         # AI engine (2 files)
+│   ├── ai/         # AI Glimpse (2 files)
 │   ├── core/       # Core system (2 files)
 │   ├── modules/    # Ecosystem modules (6 files)
 │   └── utils/      # Utilities (3 files)
@@ -63,7 +63,7 @@ school/
 - ✅ time_manager.py
 - ✅ safe_ai.py
 
-**AI Engine (2 files → src/ai/):**
+**AI Glimpse (2 files → src/ai/):**
 - ✅ ai_engine.py
 - ✅ inference.py (from huggingface/)
 
@@ -278,7 +278,7 @@ school/
 ├── docs/            # All documentation
 ├── scripts/         # All scripts
 ├── src/             # All source code
-│   ├── ai/         # AI engine
+│   ├── ai/         # AI Glimpse
 │   ├── core/       # Core system
 │   ├── modules/    # Ecosystem modules
 │   └── utils/      # Utilities

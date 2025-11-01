@@ -11,9 +11,9 @@ This guide outlines the complete workflow for operating the HarmonyHub ecosystem
 ### **1. System Health Check**
 ```bash
 # Validate all engines
-python -c "from engines.realtime_valuation_engine import valuation_engine; print('✅ Valuation Engine OK')"
-python -c "from innovation_engines.novelty_engine import get_novelty_engine; print('✅ Novelty Engine OK')"
-python -c "from innovation_engines.sac_integration_engine import get_sac_engine; print('✅ SAC Engine OK')"
+python -c "from engines.realtime_valuation_engine import valuation_engine; print('✅ Valuation Glimpse OK')"
+python -c "from innovation_engines.novelty_engine import get_novelty_engine; print('✅ Novelty Glimpse OK')"
+python -c "from innovation_engines.sac_integration_engine import get_sac_engine; print('✅ SAC Glimpse OK')"
 ```
 
 ### **2. Real-Time Valuation Monitoring**
@@ -98,7 +98,7 @@ print(f"Risk score: {assessment['emotional_risk_score']}")
 
 ### **Phase 1: Challenge Identification**
 ```bash
-# Use SAC engine to identify convergence opportunities
+# Use SAC Glimpse to identify convergence opportunities
 python innovation_engines/sac_integration_engine.py --challenge "Sustainable urban mobility"
 ```
 

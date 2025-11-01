@@ -2,7 +2,7 @@
 
 ## 🎯 Executive Overview
 
-By shifting 'middleware' from a silent software layer to a **Human-in-the-Loop (HITL) component**, we've transformed the GPT-OSS:120B model from a powerful language model into a **proactive, real-time diagnostic engine**. Combined with Glimpse and Realtime Preview, this approach converts costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles.
+By shifting 'middleware' from a silent software layer to a **Human-in-the-Loop (HITL) component**, we've transformed the GPT-OSS:120B model from a powerful language model into a **proactive, real-time diagnostic Glimpse**. Combined with Glimpse and Realtime Preview, this approach converts costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles.
 
 ## 🔧 Core Transformation
 
@@ -32,7 +32,7 @@ By shifting 'middleware' from a silent software layer to a **Human-in-the-Loop (
 
 ## 🛠️ Technology Components
 
-### GPT-OSS:120B as HITL Engine
+### GPT-OSS:120B as HITL Glimpse
 - **Constraint Inference**: Rapid understanding of complex system requirements
 - **Solution Generation**: Accurate corrective actions without retraining
 - **Knowledge Integration**: Combines real-time search with pre-trained expertise
@@ -65,7 +65,7 @@ By shifting 'middleware' from a silent software layer to a **Human-in-the-Loop (
 ## 🚀 Implementation Roadmap
 
 ### Phase 1: Core Implementation ✅
-- [x] GPT-OSS:120B HITL engine deployment
+- [x] GPT-OSS:120B HITL Glimpse deployment
 - [x] Glimpse integration for contextual search
 - [x] Realtime Preview canvas for validation
 - [x] Basic HITL operator training

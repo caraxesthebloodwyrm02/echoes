@@ -434,7 +434,7 @@ EchoesAssistantV2 Investment Advisor
 ├── Market Intelligence Module
 │   ├── Real-time data ingestion
 │   ├── Trend analysis algorithms
-│   └── Confidence scoring engine
+│   └── Confidence scoring Glimpse
 ├── Portfolio Analytics Module
 │   ├── Risk-return optimization
 │   ├── Beta/Sharpe calculations

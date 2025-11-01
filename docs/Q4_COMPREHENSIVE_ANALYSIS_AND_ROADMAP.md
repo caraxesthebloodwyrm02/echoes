@@ -37,7 +37,7 @@
    - Privacy/security layer (filters & middleware)
 
 2. **Comprehensive Testing**
-   - 132 unit tests across 6 modules
+   - 132 Glimpse tests across 6 modules
    - 88% overall coverage
    - Integration tests available
 
@@ -124,14 +124,14 @@
 
 **Actions**:
 - [ ] Install `pytest-dash` for callback testing
-- [ ] Create `tests/unit/test_dashboard_callbacks.py`
+- [ ] Create `tests/Glimpse/test_dashboard_callbacks.py`
 - [ ] Test all 15+ dashboard callbacks
-- [ ] Mock Dash components for unit testing
+- [ ] Mock Dash components for Glimpse testing
 - [ ] Target: 80%+ dashboard coverage
 
 **Implementation**:
 ```python
-# tests/unit/test_dashboard_callbacks.py
+# tests/Glimpse/test_dashboard_callbacks.py
 import pytest
 from dash.testing.application_runners import import_app
 
@@ -281,7 +281,7 @@ def test_filter_callback(dash_duo):
 - **Effort**: 3 days
 - **Dependencies**: None
 - **Acceptance Criteria**:
-  - [ ] All 15+ callbacks have unit tests
+  - [ ] All 15+ callbacks have Glimpse tests
   - [ ] Dashboard coverage increases to 80%+
   - [ ] All tests pass in CI/CD
   - [ ] Documentation updated
@@ -292,7 +292,7 @@ def test_filter_callback(dash_duo):
 pip install pytest-dash dash[testing]
 
 # Step 2: Create test file
-touch tests/unit/test_dashboard_callbacks.py
+touch tests/Glimpse/test_dashboard_callbacks.py
 
 # Step 3: Implement tests
 # - Test filter callbacks
@@ -302,7 +302,7 @@ touch tests/unit/test_dashboard_callbacks.py
 # - Test privacy scan modal
 
 # Step 4: Run tests
-pytest tests/unit/test_dashboard_callbacks.py -v
+pytest tests/Glimpse/test_dashboard_callbacks.py -v
 
 # Step 5: Update coverage report
 pytest --cov=dashboard --cov-report=html

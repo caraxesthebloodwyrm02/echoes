@@ -332,7 +332,7 @@ class BusinessScenarioDemo:
                     "impact": "$35K/month revenue",
                 },
                 {
-                    "name": "Dynamic Pricing Engine",
+                    "name": "Dynamic Pricing Glimpse",
                     "timeline": "Week 4-10",
                     "team": "Engineering + Data",
                     "impact": "$40K/month margin improvement",

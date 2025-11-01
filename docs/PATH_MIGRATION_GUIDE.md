@@ -369,7 +369,7 @@ output_dir = ensure_dir("data/new_outputs")
 
 ## Testing Your Migration
 
-### 1. Unit Tests
+### 1. Glimpse Tests
 ```bash
 # Run path handler tests
 pytest tests/test_path_handler.py -v

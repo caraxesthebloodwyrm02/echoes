@@ -30,8 +30,8 @@ my_python_project/
 │
 ├── tests/
 │   ├── __init__.py
-│   ├── test_data_service.py  # Unit tests for data_service
-│   └── test_api_client.py    # Unit tests for API client
+│   ├── test_data_service.py  # Glimpse tests for data_service
+│   └── test_api_client.py    # Glimpse tests for API client
 │
 ├── scripts/
 │   ├── maintenance.py         # Maintenance scripts

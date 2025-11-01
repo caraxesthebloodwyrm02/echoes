@@ -79,8 +79,8 @@ class TestECommerceDemoCredibility(unittest.TestCase):
         # Test overstock calculation
         excess_units = 50
         holding_cost_rate = 0.02
-        unit_cost = 350
-        expected_holding_cost = excess_units * unit_cost * holding_cost_rate
+        glimpse_cost = 350
+        expected_holding_cost = excess_units * glimpse_cost * holding_cost_rate
 
         self.assertEqual(expected_holding_cost, 350, msg="Overstock calculation should be accurate")
 

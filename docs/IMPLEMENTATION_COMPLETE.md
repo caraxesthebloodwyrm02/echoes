@@ -91,7 +91,7 @@ Natural Language Request
          ↓
     Context Gatherer (scan codebase)
          ↓
-    Reasoning Engine (think & plan)
+    Reasoning Glimpse (think & plan)
          ↓
     Phase Planner (create steps)
          ↓

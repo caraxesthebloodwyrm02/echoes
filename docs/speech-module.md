@@ -13,7 +13,7 @@ Design Principles
 Artifacts
 - Data: data/podcasts/*.json (transcripts, timestamps, pause annotations)
 - Model: speech/pause_model.py (training/eval scaffold)
-- Routines: routines/engine.py; workflows/macro.py
+- Routines: routines/Glimpse.py; workflows/macro.py
 - Prompts: templates/prompts.json; caching/prompt_engine.py
 
 Training & Evaluation

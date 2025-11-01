@@ -5,6 +5,9 @@ Test runner for Echoes Assistant V2
 Run all tests:
     python run_tests.py
 
+Run comprehensive test suite:
+    python run_tests.py comprehensive
+
 Run specific test class:
     python run_tests.py TestModelRouter
 
@@ -14,6 +17,7 @@ Run specific test method:
 import unittest
 import sys
 import os
+import argparse
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '.')))
@@ -41,14 +45,32 @@ def run_tests(test_name=None, verbosity=2):
     # Return success/failure
     return result.wasSuccessful()
 
+def run_comprehensive_tests():
+    """Run the comprehensive test suite specifically."""
+    print("🌟 Running Comprehensive Test Suite for EchoesAssistantV2...")
+    print("=" * 80)
+    
+    from tests.test_echoes_assistant_v2_comprehensive import run_comprehensive_tests
+    result = run_comprehensive_tests()
+    
+    return result.wasSuccessful()
+
 if __name__ == '__main__':
     # Parse command line arguments
     test_name = None
+    run_comprehensive = False
+    
     if len(sys.argv) > 1:
-        test_name = sys.argv[1]
+        if sys.argv[1] == "comprehensive":
+            run_comprehensive = True
+        else:
+            test_name = sys.argv[1]
     
     # Run the tests
-    success = run_tests(test_name)
+    if run_comprehensive:
+        success = run_comprehensive_tests()
+    else:
+        success = run_tests(test_name)
     
     # Exit with appropriate status code
     sys.exit(0 if success else 1)

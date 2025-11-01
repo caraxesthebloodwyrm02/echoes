@@ -15,7 +15,7 @@
 **Features:**
 - Semantic search with SPARQL
 - Insight synchronization to RDF graph
-- Pattern inference engine
+- Pattern inference Glimpse
 - Recommendation generation
 - LRU caching system
 - Graceful fallback mode
@@ -48,7 +48,7 @@
 **Features:**
 - Side-by-side keyword vs semantic comparison
 - Pattern inference showcase
-- Recommendation engine demo
+- Recommendation Glimpse demo
 - Statistics monitoring
 
 ### 5. ✅ Documentation

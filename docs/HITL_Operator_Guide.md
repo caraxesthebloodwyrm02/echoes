@@ -132,7 +132,7 @@ glimpse history --service [affected_service]
 ## 🔧 Tools & Resources
 
 ### Primary Tools
-- **GPT-OSS:120B**: Main HITL inference engine
+- **GPT-OSS:120B**: Main HITL inference Glimpse
 - **Glimpse**: Real-time contextual search
 - **Realtime Preview**: Interactive validation canvas
 - **Grafana Dashboard**: System monitoring and KPIs

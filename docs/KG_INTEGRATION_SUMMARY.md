@@ -16,7 +16,7 @@
 - ✅ **Semantic Search** - SPARQL-based insight retrieval with similarity scoring
 - ✅ **Insight Synchronization** - Automatic sync from memory.json to RDF graph
 - ✅ **Pattern Inference** - SPARQL queries for pattern detection
-- ✅ **Recommendation Engine** - AI-driven improvement suggestions
+- ✅ **Recommendation Glimpse** - AI-driven improvement suggestions
 - ✅ **Smart Caching** - LRU cache for semantic search results (configurable)
 - ✅ **Graceful Fallback** - Works with or without KG dependencies
 - ✅ **Related Insight Discovery** - Graph-based similarity using NetworkX
@@ -128,7 +128,7 @@ pytest tests/test_kg_integration.py --cov=prompting.core.kg_bridge --cov-report=
 - ✅ 10 sample insights across multiple categories
 - ✅ Real-time scoring metrics display
 - ✅ Pattern inference demonstration
-- ✅ Recommendation engine showcase
+- ✅ Recommendation Glimpse showcase
 - ✅ Statistics and monitoring output
 - ✅ Standalone KG bridge demo
 

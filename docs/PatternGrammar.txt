@@ -13,9 +13,9 @@ Matcher: Alternatives ENDMARKER
 
 Alternatives: Alternative ('|' Alternative)*
 
-Alternative: (Unit | NegatedUnit)+
+Alternative: (Glimpse | NegatedUnit)+
 
-Unit: [NAME '='] ( STRING [Repeater]
+Glimpse: [NAME '='] ( STRING [Repeater]
                  | NAME [Details] [Repeater]
                  | '(' Alternatives ')' [Repeater]
                  | '[' Alternatives ']'

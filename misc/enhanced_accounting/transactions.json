@@ -1,0 +1,197 @@
+{
+  "tx_quantum_researcher_001_2025-11-01T05:50:36.986906": {
+    "transaction_id": "tx_quantum_researcher_001_2025-11-01T05:50:36.986906",
+    "user_id": "quantum_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:36.986909",
+    "value_type": "ValueType.COGNITIVE_JOULES",
+    "gross_value": "7.4421435599999990",
+    "tax_rate": "0.15",
+    "platform_cut": "0.10",
+    "net_value": "5.581607669999999250",
+    "cognitive_joules": 7442.143559999999,
+    "effort_metrics": {
+      "user_id": "quantum_researcher_001",
+      "session_id": "session_1762001436",
+      "timestamp": "2025-11-01T05:50:36.985082",
+      "effort_duration_minutes": 90.0,
+      "cognitive_complexity_score": 0.95,
+      "creativity_score": 0.9,
+      "innovation_potential": 0.95,
+      "joules_of_work": 7442.143559999999,
+      "thought_processes": [
+        "quantum_mechanical_modeling",
+        "theoretical_framework_development",
+        "mathematical_abstraction",
+        "hypothesis_generation",
+        "experimental_design"
+      ],
+      "insights_generated": 12,
+      "problems_solved": 5,
+      "value_created": 21.042660915899997
+    },
+    "consent_compliance": {
+      "compliant": true,
+      "consent_id": "consent_quantum_researcher_001_2025-11-01T05:50:36.978110",
+      "consent_type": "research",
+      "protection_level": "enhanced"
+    },
+    "blockchain_hash": "4402ca7ba265880a414eec0638eacc5fdda0059416b88c4a815b9f3d452b78a4"
+  },
+  "tx_biomedical_researcher_001_2025-11-01T05:50:37.061507": {
+    "transaction_id": "tx_biomedical_researcher_001_2025-11-01T05:50:37.061507",
+    "user_id": "biomedical_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.061510",
+    "value_type": "ValueType.COGNITIVE_JOULES",
+    "gross_value": "6.3431950399999990",
+    "tax_rate": "0.15",
+    "platform_cut": "0.10",
+    "net_value": "4.757396279999999250",
+    "cognitive_joules": 6343.195039999999,
+    "effort_metrics": {
+      "user_id": "biomedical_researcher_001",
+      "session_id": "session_1762001436",
+      "timestamp": "2025-11-01T05:50:37.059393",
+      "effort_duration_minutes": 85.0,
+      "cognitive_complexity_score": 0.9,
+      "creativity_score": 0.85,
+      "innovation_potential": 0.9,
+      "joules_of_work": 6343.195039999999,
+      "thought_processes": [
+        "molecular_modeling",
+        "protein_structure_analysis",
+        "compound_synthesis_planning",
+        "clinical_trial_design",
+        "biochemical_pathway_analysis"
+      ],
+      "insights_generated": 10,
+      "problems_solved": 6,
+      "value_created": 17.174200570799997
+    },
+    "consent_compliance": {
+      "compliant": true,
+      "consent_id": "consent_biomedical_researcher_001_2025-11-01T05:50:37.052212",
+      "consent_type": "research",
+      "protection_level": "enhanced"
+    },
+    "blockchain_hash": "4e5a582b3e5da84f0aa8e4ca1b076e64a4f72234b5d519657e1dfd4053c97ba4"
+  },
+  "tx_ai_researcher_001_2025-11-01T05:50:37.139407": {
+    "transaction_id": "tx_ai_researcher_001_2025-11-01T05:50:37.139407",
+    "user_id": "ai_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.139410",
+    "value_type": "ValueType.COGNITIVE_JOULES",
+    "gross_value": "8.44520986240",
+    "tax_rate": "0.15",
+    "platform_cut": "0.10",
+    "net_value": "6.3339073968000",
+    "cognitive_joules": 8445.2098624,
+    "effort_metrics": {
+      "user_id": "ai_researcher_001",
+      "session_id": "session_1762001436",
+      "timestamp": "2025-11-01T05:50:37.137423",
+      "effort_duration_minutes": 95.0,
+      "cognitive_complexity_score": 0.98,
+      "creativity_score": 0.95,
+      "innovation_potential": 0.98,
+      "joules_of_work": 8445.2098624,
+      "thought_processes": [
+        "neural_architecture_design",
+        "optimization_algorithm_development",
+        "agi_safety_framework",
+        "computational_efficiency_analysis",
+        "ethical_ai_design"
+      ],
+      "insights_generated": 15,
+      "problems_solved": 7,
+      "value_created": 24.664235403139195
+    },
+    "consent_compliance": {
+      "compliant": true,
+      "consent_id": "consent_ai_researcher_001_2025-11-01T05:50:37.130919",
+      "consent_type": "research",
+      "protection_level": "enhanced"
+    },
+    "blockchain_hash": "4760e203b5dbe6abfe62457a8be534a000f5d47f06ff2548d8f8df3a05f244ce"
+  },
+  "tx_climate_researcher_001_2025-11-01T05:50:37.225208": {
+    "transaction_id": "tx_climate_researcher_001_2025-11-01T05:50:37.225208",
+    "user_id": "climate_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.225211",
+    "value_type": "ValueType.COGNITIVE_JOULES",
+    "gross_value": "5.3682393600000020",
+    "tax_rate": "0.15",
+    "platform_cut": "0.10",
+    "net_value": "4.026179520000001500",
+    "cognitive_joules": 5368.239360000002,
+    "effort_metrics": {
+      "user_id": "climate_researcher_001",
+      "session_id": "session_1762001436",
+      "timestamp": "2025-11-01T05:50:37.222962",
+      "effort_duration_minutes": 80.0,
+      "cognitive_complexity_score": 0.85,
+      "creativity_score": 0.8,
+      "innovation_potential": 0.85,
+      "joules_of_work": 5368.239360000002,
+      "thought_processes": [
+        "climate_modeling",
+        "environmental_data_analysis",
+        "carbon_capture_design",
+        "renewable_energy_optimization",
+        "sustainability_planning"
+      ],
+      "insights_generated": 9,
+      "problems_solved": 5,
+      "value_created": 13.903739942400005
+    },
+    "consent_compliance": {
+      "compliant": true,
+      "consent_id": "consent_climate_researcher_001_2025-11-01T05:50:37.215875",
+      "consent_type": "research",
+      "protection_level": "enhanced"
+    },
+    "blockchain_hash": "af087afe37dfe5b83633ef1d426490ce998d6492babcd6ca6c44216e7bafed7f"
+  },
+  "tx_interdisciplinary_researcher_001_2025-11-01T05:50:37.307533": {
+    "transaction_id": "tx_interdisciplinary_researcher_001_2025-11-01T05:50:37.307533",
+    "user_id": "interdisciplinary_researcher_001",
+    "session_id": "session_1762001436",
+    "timestamp": "2025-11-01T05:50:37.307536",
+    "value_type": "ValueType.COGNITIVE_JOULES",
+    "gross_value": "9.17743161920",
+    "tax_rate": "0.15",
+    "platform_cut": "0.10",
+    "net_value": "6.8830737144000",
+    "cognitive_joules": 9177.4316192,
+    "effort_metrics": {
+      "user_id": "interdisciplinary_researcher_001",
+      "session_id": "session_1762001436",
+      "timestamp": "2025-11-01T05:50:37.305818",
+      "effort_duration_minutes": 100.0,
+      "cognitive_complexity_score": 0.99,
+      "creativity_score": 0.98,
+      "innovation_potential": 0.99,
+      "joules_of_work": 9177.4316192,
+      "thought_processes": [
+        "cross_domain_synthesis",
+        "interdisciplinary_modeling",
+        "novel_application_design",
+        "breakthrough_innovation",
+        "paradigm_shift_development"
+      ],
+      "insights_generated": 18,
+      "problems_solved": 8,
+      "value_created": 27.21200249408992
+    },
+    "consent_compliance": {
+      "compliant": true,
+      "consent_id": "consent_interdisciplinary_researcher_001_2025-11-01T05:50:37.297551",
+      "consent_type": "research",
+      "protection_level": "enhanced"
+    },
+    "blockchain_hash": "c8e9ed7f74e4f9fd15fad4c96ae2ed665ee3681cf64a6793aa3e4ec12eab4c91"
+  }
+}

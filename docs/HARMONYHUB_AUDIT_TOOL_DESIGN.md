@@ -28,7 +28,7 @@ This document outlines the unified design of an AI safety auditing tool that com
 
 ### Key Components
 
-#### 1. Technical Auditing Engine (Petri-Core)
+#### 1. Technical Auditing Glimpse (Petri-Core)
 - **Model Fabrication & Testing**:
   - Automated pipelines for training misaligned models (e.g., reward-hacking variants)
   - Blind auditing games where independent teams investigate hidden objectives
@@ -50,7 +50,7 @@ This document outlines the unified design of an AI safety auditing tool that com
 - **Hybrid Approach**: EQ enhances human-AI interactions while maintaining clear separation from computational logic and decision algorithms
 
 #### Technical Feasibility & Project Status
-- **Novelty Engine Realism**: Position as "inspiration tools" for human-curated innovation rather than automated invention machines
+- **Novelty Glimpse Realism**: Position as "inspiration tools" for human-curated innovation rather than automated invention machines
 - **Project Status Clarity**: Current implementation may be more conceptual than production-ready; align messaging with actual TRL
 - **Practical Implementation**: Focus on demonstrable capabilities with clear limitations and boundaries
 

@@ -1,0 +1,128 @@
+{
+  "timestamp": "2025-10-31T15:30:25.184094+00:00",
+  "protocol": "Echoes Reconstruction Protocol v1.0",
+  "phase": "Step 1: Data Integrity Verification",
+  "files": {
+    "api/main.py": {
+      "checksum_sha256": "8fba8eceb50e9815db74a7b4f9a2bd71d0099e4f042adf39f4b2c476c2a37ed7",
+      "expected_checksum": "8f4d2e6c9b7a1f5e8d3a9c6b2e4f7a1",
+      "size_bytes": 11729,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "api/pattern_detection.py": {
+      "checksum_sha256": "70a0c23e83ea1efc11735b0a72badd21cc9ce773710d2e7c9cb90eb0cc0b16cf",
+      "expected_checksum": "5e8d3a9c6b2e4f7a1d5c8b9e2f6a3d",
+      "size_bytes": 11877,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "api/self_rag.py": {
+      "checksum_sha256": "3b1b9b40e22849f84f7bd51a63dafeb3e0b2753012e0acf4d1c8cc70cf61af6c",
+      "expected_checksum": "9c6b2e4f7a1d5c8b9e2f6a3d4e7b8f5",
+      "size_bytes": 10850,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "glimpse/sampler_openai.py": {
+      "checksum_sha256": "739ee1c5b9d006bc64489704131b6a6a904c256ae8bd3f4d6f8ea60f88ae636b",
+      "expected_checksum": "2e4f7a1d5c8b9e2f6a3d4e7b8f5c9a",
+      "size_bytes": 4469,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "glimpse/batch_helpers.py": {
+      "checksum_sha256": "8d52d492ffb18e57b5cdcfc6ae5db81e8ed17c40ef532aa1f94e0be7b74d45ef",
+      "expected_checksum": "7a1d5c8b9e2f6a3d4e7b8f5c9a2e4f",
+      "size_bytes": 2922,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "app/agents/agent.py": {
+      "checksum_sha256": "a361a0a68254f2316b284af61f5733032fff55813dc022ff7ac0f751240e1773",
+      "expected_checksum": "1d5c8b9e2f6a3d4e7b8f5c9a2e4f7a",
+      "size_bytes": 1896,
+      "exists": true,
+      "integrity_verified": false
+    },
+    "app/agents/models.py": {
+      "checksum_sha256": "0dcebbc7c131643b213c69bd94d61c9e2b28ddbfd21f3756465a79459dc4ff22",
+      "expected_checksum": "8b9e2f6a3d4e7b8f5c9a2e4f7a1d5c",
+      "size_bytes": 1257,
+      "exists": true,
+      "integrity_verified": false
+    }
+  },
+  "directories": [
+    ".cache",
+    ".git",
+    ".github",
+    ".pytest_cache",
+    ".venv",
+    "Accounting",
+    "ai_modules",
+    "api",
+    "app",
+    "assets",
+    "ATLAS",
+    "automation",
+    "backend",
+    "ci",
+    "cli",
+    "components",
+    "config",
+    "core_modules",
+    "csharp",
+    "c_o_r_e",
+    "data",
+    "demos",
+    "demo_workspace",
+    "deploy",
+    "docker",
+    "docs",
+    "echoes",
+    "echoes.egg-info",
+    "examples",
+    "game",
+    "glimpse",
+    "htmlcov",
+    "integrations",
+    "internal",
+    "memory",
+    "monitoring",
+    "OPERATION ECHOES COMPLETE VICTORY PROTOCOL",
+    "packages",
+    "quantum_state",
+    "remediation",
+    "requirements",
+    "research report",
+    "results",
+    "roi_analysis",
+    "sbom",
+    "scripts",
+    "src",
+    "tests",
+    "tools",
+    "vector_index",
+    "vector_index_openai",
+    "__pycache__"
+  ],
+  "anomalies": [
+    "Checksum mismatch for api/main.py",
+    "Checksum mismatch for api/pattern_detection.py",
+    "Checksum mismatch for api/self_rag.py",
+    "Checksum mismatch for glimpse/sampler_openai.py",
+    "Checksum mismatch for glimpse/batch_helpers.py",
+    "Checksum mismatch for app/agents/agent.py",
+    "Checksum mismatch for app/agents/models.py"
+  ],
+  "baseline_checksums": {
+    "api/main.py": "8f4d2e6c9b7a1f5e8d3a9c6b2e4f7a1",
+    "api/pattern_detection.py": "5e8d3a9c6b2e4f7a1d5c8b9e2f6a3d",
+    "api/self_rag.py": "9c6b2e4f7a1d5c8b9e2f6a3d4e7b8f5",
+    "glimpse/sampler_openai.py": "2e4f7a1d5c8b9e2f6a3d4e7b8f5c9a",
+    "glimpse/batch_helpers.py": "7a1d5c8b9e2f6a3d4e7b8f5c9a2e4f",
+    "app/agents/agent.py": "1d5c8b9e2f6a3d4e7b8f5c9a2e4f7a",
+    "app/agents/models.py": "8b9e2f6a3d4e7b8f5c9a2e4f7a1d5c"
+  }
+}

@@ -340,7 +340,7 @@ Our layered security architecture is now fully operational:
 
 ### **✅ Core Components Delivered:**
 - **Configuration Layer**: Detector thresholds integrated into Config class
-- **Detection Engine**: BaseDetector with shadow mode and approval workflows
+- **Detection Glimpse**: BaseDetector with shadow mode and approval workflows
 - **Audit System**: Comprehensive JSON logging for compliance
 - **Dashboard**: Real-time monitoring with FP/FN metrics
 - **Approval Workflow**: Human oversight for WARN/BLOCK tiers

@@ -161,9 +161,9 @@ def test_feature_description():
 ```python
 import pytest
 
-@pytest.mark.unit
-def test_unit_function():
-    """Unit test example."""
+@pytest.mark.Glimpse
+def test_glimpse_function():
+    """Glimpse test example."""
     pass
 
 @pytest.mark.integration

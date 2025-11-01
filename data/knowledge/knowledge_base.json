@@ -1,0 +1,225 @@
+{
+  "0a1aebad5fc4": {
+    "id": "0a1aebad5fc4",
+    "content": "ROI Analysis for Demo Bank Corp\nBusiness Type: financial\nMonthly Investment: $12,000\nMonthly Savings: $71,822\nPayback Period: 5 days\nROI: 499%\n",
+    "source": "ROI Analysis Tool - aac24f79d403",
+    "category": "roi_analysis",
+    "timestamp": "2025-10-30T00:52:11.470254+00:00",
+    "metadata": {
+      "analysis_id": "aac24f79d403",
+      "roi_metrics": {
+        "monthly_investment": 12000.0,
+        "monthly_savings": 71822.0,
+        "net_monthly_benefit": 59822.0,
+        "payback_days": 5.01239174626159,
+        "roi_percentage": 498.51666666666665,
+        "annual_net_benefit": 717864.0,
+        "three_year_value": 2153592.0,
+        "savings_breakdown": {
+          "labor_efficiency": 14723.509999999998,
+          "error_reduction": 56236.626000000004,
+          "audit_preparation": 861.864
+        }
+      },
+      "stakeholder_config": {
+        "institution_name": "Demo Bank Corp",
+        "email_subject": "Echoes AI ROI Analysis - 5-Day Payback Opportunity",
+        "email_to": [
+          "cfo@demobank.com",
+          "cto@demobank.com",
+          "cco@demobank.com"
+        ],
+        "email_from": "Sarah Chen, Echoes AI <sarah.chen@echoes.ai>",
+        "team_size": 5,
+        "decision_deadline": "November 1, 2025",
+        "contract_duration": "12-month minimum",
+        "rollout_timeline": "4-6 weeks",
+        "stakeholder_priorities": {
+          "CFO": "Investment pays for itself in 5 days - $717,864 annual net benefit",
+          "CTO": "75% reduction in compliance errors with AI automation",
+          "CCO": "Automated audit trails eliminate manual review cycles"
+        }
+      },
+      "file_organization": {},
+      "generated_files": [
+        "yaml",
+        "csv",
+        "spreadsheet",
+        "report"
+      ]
+    },
+    "tags": [
+      "roi",
+      "analysis",
+      "financial",
+      "financial"
+    ]
+  },
+  "59dd49ad7537": {
+    "id": "59dd49ad7537",
+    "content": "ROI Analysis for Demo Bank Corp\nBusiness Type: financial\nMonthly Investment: $12,000\nMonthly Savings: $71,822\nPayback Period: 5 days\nROI: 499%\n",
+    "source": "ROI Analysis Tool - 37fcb183c3ac",
+    "category": "roi_analysis",
+    "timestamp": "2025-10-30T00:52:34.741783+00:00",
+    "metadata": {
+      "analysis_id": "37fcb183c3ac",
+      "roi_metrics": {
+        "monthly_investment": 12000.0,
+        "monthly_savings": 71822.0,
+        "net_monthly_benefit": 59822.0,
+        "payback_days": 5.01239174626159,
+        "roi_percentage": 498.51666666666665,
+        "annual_net_benefit": 717864.0,
+        "three_year_value": 2153592.0,
+        "savings_breakdown": {
+          "labor_efficiency": 14723.509999999998,
+          "error_reduction": 56236.626000000004,
+          "audit_preparation": 861.864
+        }
+      },
+      "stakeholder_config": {
+        "institution_name": "Demo Bank Corp",
+        "email_subject": "Echoes AI ROI Analysis - 5-Day Payback Opportunity",
+        "email_to": [
+          "cfo@demobank.com",
+          "cto@demobank.com",
+          "cco@demobank.com"
+        ],
+        "email_from": "Sarah Chen, Echoes AI <sarah.chen@echoes.ai>",
+        "team_size": 5,
+        "decision_deadline": "November 1, 2025",
+        "contract_duration": "12-month minimum",
+        "rollout_timeline": "4-6 weeks",
+        "stakeholder_priorities": {
+          "CFO": "Investment pays for itself in 5 days - $717,864 annual net benefit",
+          "CTO": "75% reduction in compliance errors with AI automation",
+          "CCO": "Automated audit trails eliminate manual review cycles"
+        }
+      },
+      "file_organization": {},
+      "generated_files": [
+        "yaml",
+        "csv",
+        "spreadsheet",
+        "report"
+      ]
+    },
+    "tags": [
+      "roi",
+      "analysis",
+      "financial",
+      "financial"
+    ]
+  },
+  "b9b0e84e5cfb": {
+    "id": "b9b0e84e5cfb",
+    "content": "ROI Analysis for Demo Bank Corp\nBusiness Type: financial\nMonthly Investment: $12,000\nMonthly Savings: $71,822\nPayback Period: 5 days\nROI: 499%\n",
+    "source": "ROI Analysis Tool - c1297c7f98cf",
+    "category": "roi_analysis",
+    "timestamp": "2025-10-30T00:55:43.587933+00:00",
+    "metadata": {
+      "analysis_id": "c1297c7f98cf",
+      "roi_metrics": {
+        "monthly_investment": 12000.0,
+        "monthly_savings": 71822.0,
+        "net_monthly_benefit": 59822.0,
+        "payback_days": 5.01239174626159,
+        "roi_percentage": 498.51666666666665,
+        "annual_net_benefit": 717864.0,
+        "three_year_value": 2153592.0,
+        "savings_breakdown": {
+          "labor_efficiency": 14723.509999999998,
+          "error_reduction": 56236.626000000004,
+          "audit_preparation": 861.864
+        }
+      },
+      "stakeholder_config": {
+        "institution_name": "Demo Bank Corp",
+        "email_subject": "Echoes AI ROI Analysis - 5-Day Payback Opportunity",
+        "email_to": [
+          "cfo@demobank.com",
+          "cto@demobank.com",
+          "cco@demobank.com"
+        ],
+        "email_from": "Sarah Chen, Echoes AI <sarah.chen@echoes.ai>",
+        "team_size": 5,
+        "decision_deadline": "November 1, 2025",
+        "contract_duration": "12-month minimum",
+        "rollout_timeline": "4-6 weeks",
+        "stakeholder_priorities": {
+          "CFO": "Investment pays for itself in 5 days - $717,864 annual net benefit",
+          "CTO": "75% reduction in compliance errors with AI automation",
+          "CCO": "Automated audit trails eliminate manual review cycles"
+        }
+      },
+      "file_organization": {},
+      "generated_files": [
+        "yaml",
+        "csv",
+        "spreadsheet",
+        "report"
+      ]
+    },
+    "tags": [
+      "roi",
+      "analysis",
+      "financial",
+      "financial"
+    ]
+  },
+  "dfe8761c92ba": {
+    "id": "dfe8761c92ba",
+    "content": "ROI Analysis for Test Bank Corp\nBusiness Type: financial\nMonthly Investment: $12,000\nMonthly Savings: $71,822\nPayback Period: 5 days\nROI: 499%\n",
+    "source": "ROI Analysis Tool - 1b3a40457f5e",
+    "category": "roi_analysis",
+    "timestamp": "2025-10-30T00:57:33.494940+00:00",
+    "metadata": {
+      "analysis_id": "1b3a40457f5e",
+      "roi_metrics": {
+        "monthly_investment": 12000.0,
+        "monthly_savings": 71822.0,
+        "net_monthly_benefit": 59822.0,
+        "payback_days": 5.01239174626159,
+        "roi_percentage": 498.51666666666665,
+        "annual_net_benefit": 717864.0,
+        "three_year_value": 2153592.0,
+        "savings_breakdown": {
+          "labor_efficiency": 14723.509999999998,
+          "error_reduction": 56236.626000000004,
+          "audit_preparation": 861.864
+        }
+      },
+      "stakeholder_config": {
+        "institution_name": "Test Bank Corp",
+        "email_subject": "Echoes AI ROI Analysis - 5-Day Payback Opportunity",
+        "email_to": [
+          "cfo@testbank.com",
+          "cto@testbank.com"
+        ],
+        "email_from": "Sarah Chen, Echoes AI <sarah.chen@echoes.ai>",
+        "team_size": 5,
+        "decision_deadline": "November 1, 2025",
+        "contract_duration": "12-month minimum",
+        "rollout_timeline": "4-6 weeks",
+        "stakeholder_priorities": {
+          "CFO": "Investment pays for itself in 5 days - $717,864 annual net benefit",
+          "CTO": "75% reduction in compliance errors with AI automation",
+          "CCO": "Automated audit trails eliminate manual review cycles"
+        }
+      },
+      "file_organization": {},
+      "generated_files": [
+        "yaml",
+        "csv",
+        "spreadsheet",
+        "report"
+      ]
+    },
+    "tags": [
+      "roi",
+      "analysis",
+      "financial",
+      "financial"
+    ]
+  }
+}

@@ -85,7 +85,7 @@ Parent → Action choice → Participation → Results
 Admin → Dashboard → Management → Compliance
 ```
 
-#### **3. Gamification Engine**
+#### **3. Gamification Glimpse**
 - **Points System**: Earn points for every action
 - **Badge System**: 🏆 Gold, 🥈 Silver, 🥉 Bronze, ⭐ Participant
 - **Progress Tracking**: Real-time stats and achievements
@@ -146,7 +146,7 @@ d:/school/school/
 │
 └── huggingface/
     ├── __init__.py
-    └── inference.py                    # 🤖 AI inference engine
+    └── inference.py                    # 🤖 AI inference Glimpse
 ```
 
 ---

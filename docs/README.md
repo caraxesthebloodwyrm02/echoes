@@ -65,7 +65,7 @@ Echoes follows a modular, harmonic resonance design pattern:
          └────────────────────────┼────────────────────────┘
                                   │
                     ┌─────────────────┐
-                    │  Core Engine   │
+                    │  Core Glimpse   │
                     │   Workflows     │
                     └─────────────────┘
          ┌────────────────────────┼────────────────────────┐
@@ -216,7 +216,7 @@ echoes/
 ├── security/           # Security scanning
 ├── knowledge_graph/    # Semantic knowledge
 ├── synthetic_data/     # Data generation
-├── workflows/          # Core execution engine
+├── workflows/          # Core execution Glimpse
 ├── tools/              # Utility tools
 └── tests/              # Comprehensive test suite
 ```

@@ -300,7 +300,7 @@ Best,
 **Frequency:** Pre-commit hook + CI/CD
 
 **Test Suites:**
-1. **Unit Tests:** Individual functions and classes
+1. **Glimpse Tests:** Individual functions and classes
 2. **Integration Tests:** Module interactions
 3. **End-to-End Tests:** Full RAG pipeline
 4. **Provenance Tests:** Validate audit trail

@@ -1,0 +1,66 @@
+{
+  "timestamp": "2025-11-01T03:47:02.132896",
+  "tests": [
+    {
+      "name": "Assistant Import Test",
+      "status": "passed",
+      "duration": 14.042246103286743,
+      "details": {
+        "success": true,
+        "response_length": 34,
+        "assistant_created": true
+      }
+    },
+    {
+      "name": "Streaming Functionality Test",
+      "status": "passed",
+      "duration": 3.1355490684509277,
+      "details": {
+        "success": true,
+        "duration": 2.9081227779388428,
+        "response_length": 85,
+        "streaming_enabled": true
+      }
+    },
+    {
+      "name": "Configuration Loading Test",
+      "status": "failed",
+      "duration": 0.00029754638671875,
+      "details": {
+        "success": false,
+        "error": "Expecting property name enclosed in double quotes: line 2 column 5 (char 6)"
+      }
+    },
+    {
+      "name": "Extension Compatibility Test",
+      "status": "passed",
+      "duration": 0.00015997886657714844,
+      "details": {
+        "success": true,
+        "extensions_configured": true,
+        "recommendations_count": 12,
+        "has_essential_extensions": true
+      }
+    },
+    {
+      "name": "Performance Benchmarks Test",
+      "status": "passed",
+      "duration": 0.10242199897766113,
+      "details": {
+        "success": true,
+        "benchmark_duration": 0.10241317749023438,
+        "operations_completed": 10,
+        "no_javascript_interference": true
+      }
+    }
+  ],
+  "summary": {
+    "total_tests": 5,
+    "passed_tests": 4,
+    "failed_tests": 1,
+    "error_tests": 0,
+    "success_rate": 0.8,
+    "total_duration": 17.280674695968628,
+    "javascript_issues_mitigated": true
+  }
+}

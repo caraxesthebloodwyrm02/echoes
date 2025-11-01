@@ -12,7 +12,7 @@
     "owner": "workflow_expert",
     "task": "Implement 10-step routines and macro parallel workflow",
     "artifacts": [
-      "routines/engine.py",
+      "routines/Glimpse.py",
       "workflows/macro.py"
     ]
   },

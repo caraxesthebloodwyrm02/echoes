@@ -1,0 +1,42 @@
+{
+  "openai": {
+    "api_key_required": true,
+    "timeout": 30,
+    "max_retries": 3,
+    "retry_delay": 1.0
+  },
+  "deployment": {
+    "feature_flags": {
+      "use_responses_api": false,
+      "rollout_percentage": 0,
+      "fallback_enabled": true
+    },
+    "monitoring": {
+      "enabled": true,
+      "metrics_interval": 60,
+      "alert_thresholds": {
+        "error_rate": 0.05,
+        "response_time_p95": 5.0
+      }
+    },
+    "rollback": {
+      "auto_rollback_enabled": true,
+      "rollback_on_error_rate": 0.05,
+      "rollback_on_response_time": 10.0
+    }
+  },
+  "logging": {
+    "level": "INFO",
+    "format": "json",
+    "handlers": [
+      "console",
+      "file"
+    ],
+    "file_path": "/var/log/echoes_assistant.log"
+  },
+  "security": {
+    "api_key_rotation": true,
+    "rate_limiting_enabled": true,
+    "request_validation": true
+  }
+}

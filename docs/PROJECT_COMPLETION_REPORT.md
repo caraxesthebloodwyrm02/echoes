@@ -43,7 +43,7 @@ Successfully delivered a comprehensive trajectory analysis and optimization rese
 | Implement Sonnet track | ✅ | cli, plotting, package exports |
 | Add finalization layer | ✅ | Provenance, checksums, security controls |
 | Create experiment runner | ✅ | run_experiment.py with full pipeline |
-| Write unit tests | ✅ | 17/17 passing (test_vector_ops.py) |
+| Write Glimpse tests | ✅ | 17/17 passing (test_vector_ops.py) |
 | Create protocol docs | ✅ | EXPERIMENT_PROTOCOL.md (400+ lines) |
 
 ### ✅ Phase 3: Optimization Research (COMPLETE)
@@ -214,7 +214,7 @@ ff22dac42902d472b05b549553b7eb0aec90f4b8ee57676a40caec64d74e25ac  summary.txt
 | Check | Result | Status |
 |-------|--------|--------|
 | JSON schema compliance | All fields present and typed | ✅ Valid |
-| Vector normalization | All vectors unit length (±1e-6) | ✅ Valid |
+| Vector normalization | All vectors Glimpse length (±1e-6) | ✅ Valid |
 | Angle ranges | All angles in [0°, 180°] | ✅ Valid |
 | Efficiency scores | All scores in [-1, 1] | ✅ Valid |
 | Classification labels | All in {Aligned, Imbalanced, Fragmented} | ✅ Valid |

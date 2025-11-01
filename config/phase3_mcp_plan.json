@@ -68,7 +68,7 @@
     "MCP protocol library (implemented)"
   ],
   "testing": [
-    "Unit tests for MCP client/registry - COMPLETED",
+    "Glimpse tests for MCP client/registry - COMPLETED",
     "Integration tests with sample MCP servers - COMPLETED",
     "End-to-end automation workflows using MCP tools - COMPLETED"
   ],

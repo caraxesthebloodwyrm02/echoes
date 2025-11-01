@@ -42,7 +42,7 @@
 - Artisan-to-market connector
 
 🎨 **Arts Domain**
-- Creative intelligence engine
+- Creative intelligence Glimpse
 - Cultural preservation tools
 - Language evolution modeling
 
@@ -176,7 +176,7 @@ ai-advisor/
 │   └── monitoring/                  # Metrics, health checks
 │
 ├── tests/
-│   ├── unit/                        # Unit tests
+│   ├── Glimpse/                        # Glimpse tests
 │   ├── integration/                 # Integration tests
 │   └── security/                    # Security tests
 │
@@ -356,7 +356,7 @@ pre-commit run --all-files
 ### 🔄 Sprint 2 (Weeks 4-5) - IN PROGRESS
 
 - [ ] Science domain: Biomedical search integration
-- [ ] Commerce domain: UBI simulation engine
+- [ ] Commerce domain: UBI simulation Glimpse
 - [ ] Privacy filters and compliance validators
 - [ ] Model routing with telemetry
 - [ ] Cross-domain data flow architecture

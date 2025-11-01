@@ -1,0 +1,14 @@
+{
+  "respect": {
+    "score": 0.8759899999999999,
+    "weight": 0.4
+  },
+  "accuracy": {
+    "score": 0.8656100000000002,
+    "weight": 0.4
+  },
+  "helpfulness": {
+    "score": 0.7819200000000003,
+    "weight": 0.2
+  }
+}

@@ -16,7 +16,7 @@
   - `reports/` — Automation and compliance reports
   - `scripts/` — Automation runner entrypoints
 - `packages/` — Shared Python libraries (core, security, monitoring)
-- `tests/` — Integration and unit tests
+- `tests/` — Integration and Glimpse tests
 - `docs/` — Documentation and guides
 - `scripts/` — (Optional) Shell/PowerShell scripts for dev/ops
 

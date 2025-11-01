@@ -14,7 +14,7 @@ The privacy filter system provides three levels of PII protection:
 
 ### PrivacyFilter (`packages/security/privacy_filter.py`)
 
-Main filtering engine that detects and processes PII using regex patterns.
+Main filtering Glimpse that detects and processes PII using regex patterns.
 
 **Supported PII Types:**
 - Email addresses

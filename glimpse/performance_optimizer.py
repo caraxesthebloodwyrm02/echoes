@@ -225,7 +225,7 @@ class PerformanceOptimizer:
     
     async def _create_fallback_result(self, draft):
         """Create a fallback result for high-latency scenarios"""
-        from glimpse.engine import GlimpseResult
+        from glimpse.Glimpse import GlimpseResult
         
         return GlimpseResult(
             attempt=1,
@@ -332,7 +332,7 @@ if __name__ == "__main__":
         optimizer = PerformanceOptimizer()
         
         # Test single optimized glimpse
-        from glimpse.engine import Draft
+        from glimpse.Glimpse import Draft
         draft = Draft(
             input_text="Test input for optimization",
             goal="test performance",

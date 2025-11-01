@@ -177,7 +177,7 @@ Successfully implemented the **safety-first foundation** for AI Advisor, a domai
 **Week 6-7: Advanced Features**
 - Cross-domain fusion layer
 - Cost metering and quotas
-- UBI simulation engine
+- UBI simulation Glimpse
 - Creative intelligence tools
 
 **Week 8-9: Production Hardening**
@@ -251,7 +251,7 @@ Successfully implemented the **safety-first foundation** for AI Advisor, a domai
 - Biomedical research search
 - Employment opportunity matching
 - Artisan marketplace connector
-- Economic simulation engine
+- Economic simulation Glimpse
 
 **Market Readiness:**
 - API stable and documented

@@ -1,152 +1,182 @@
 #!/bin/bash
-# 🚀 Echoes Production Deployment Script
-# Execute with: ./deploy_production.sh
+# Echoes Assistant V2 Production Deployment Script
+# OpenAI Responses API Migration Rollout
 
-set -euo pipefail
+set -e
+
+echo "Starting Echoes Assistant V2 Production Deployment"
+echo "=================================================="
+
+# Configuration
+DEPLOYMENT_DIR="/opt/echoes_assistant"
+CONFIG_DIR="$DEPLOYMENT_DIR/config"
+BACKUP_DIR="$DEPLOYMENT_DIR/backups"
 
 # Colors for output
 RED='\033[0;31m'
 GREEN='\033[0;32m'
 YELLOW='\033[1;33m'
-BLUE='\033[0;34m'
 NC='\033[0m' # No Color
 
-echo -e "${BLUE}╔════════════════════════════════════════════╗${NC}"
-echo -e "${BLUE}║  🚀 ECHOES PRODUCTION DEPLOYMENT          ║${NC}"
-echo -e "${BLUE}╚════════════════════════════════════════════╝${NC}"
-echo ""
-
-# Configuration
-REGISTRY="ghcr.io"
-IMAGE_NAME="echoes-api"
-CONTAINER_NAME="echoes-production"
-PORT="8000"
-HEALTH_ENDPOINT="http://localhost:${PORT}/health"
-
-# Step 1: Pre-deployment Checks
-echo -e "${YELLOW}[1/7]${NC} Running pre-deployment checks..."
-
-# Check Docker is running
-if ! docker info > /dev/null 2>&1; then
-    echo -e "${RED}❌ Docker is not running${NC}"
-    exit 1
-fi
-echo -e "${GREEN}✓${NC} Docker is running"
-
-# Clean up any existing containers
-echo -e "${YELLOW}Cleaning up existing containers...${NC}"
-docker stop ${CONTAINER_NAME} 2>/dev/null || true
-docker rm ${CONTAINER_NAME} 2>/dev/null || true
-echo -e "${GREEN}✓${NC} Existing containers cleaned up"
-
-# Check port is available
-if lsof -Pi :${PORT} -sTCP:LISTEN -t >/dev/null 2>&1; then
-    echo -e "${YELLOW}⚠ Port ${PORT} still in use by another process${NC}"
-    # Kill any process using the port (not our container)
-    lsof -ti:${PORT} | xargs kill -9 2>/dev/null || true
-    sleep 2
-fi
-echo -e "${GREEN}✓${NC} Port ${PORT} is available"
-
-# Step 2: Build Docker Image
-echo -e "\n${YELLOW}[2/7]${NC} Building Docker image..."
-docker build -t ${IMAGE_NAME}:latest . || {
-    echo -e "${RED}❌ Docker build failed${NC}"
-    exit 1
+# Functions
+log() {
+    echo -e "${GREEN}[$(date +'%Y-%m-%d %H:%M:%S')] $1${NC}"
 }
-echo -e "${GREEN}✓${NC} Docker image built successfully"
 
-# Step 3: Tag Image
-echo -e "\n${YELLOW}[3/7]${NC} Tagging image..."
-COMMIT_SHA=$(git rev-parse --short HEAD 2>/dev/null || echo "local")
-docker tag ${IMAGE_NAME}:latest ${IMAGE_NAME}:${COMMIT_SHA}
-echo -e "${GREEN}✓${NC} Image tagged: ${IMAGE_NAME}:${COMMIT_SHA}"
+error() {
+    echo -e "${RED}[ERROR] $1${NC}" >&2
+}
 
-# Step 4: Run Container
-echo -e "\n${YELLOW}[4/7]${NC} Starting production container..."
-docker run -d \
-    --name ${CONTAINER_NAME} \
-    --restart unless-stopped \
-    -p ${PORT}:8000 \
-    -e ENVIRONMENT=production \
-    -e LOG_LEVEL=info \
-    -e OPENAI_API_KEY=${OPENAI_API_KEY:-dummy_key_for_testing} \
-    --health-cmd="curl -f ${HEALTH_ENDPOINT} || exit 1" \
-    --health-interval=30s \
-    --health-timeout=10s \
-    --health-retries=3 \
-    ${IMAGE_NAME}:latest || {
-        echo -e "${RED}❌ Container failed to start${NC}"
-        docker logs ${CONTAINER_NAME}
+warning() {
+    echo -e "${YELLOW}[WARNING] $1${NC}"
+}
+
+# Pre-deployment checks
+check_prerequisites() {
+    log "Checking prerequisites..."
+
+    # Check if deployment directory exists
+    if [ ! -d "$DEPLOYMENT_DIR" ]; then
+        error "Deployment directory $DEPLOYMENT_DIR does not exist"
         exit 1
-    }
-echo -e "${GREEN}✓${NC} Container started: ${CONTAINER_NAME}"
-
-# Step 5: Wait for Health Check
-echo -e "\n${YELLOW}[5/7]${NC} Waiting for application to be healthy..."
-MAX_ATTEMPTS=30
-ATTEMPT=0
-
-while [ $ATTEMPT -lt $MAX_ATTEMPTS ]; do
-    if curl -sf ${HEALTH_ENDPOINT} > /dev/null 2>&1; then
-        echo -e "${GREEN}✓${NC} Application is healthy!"
-        break
     fi
 
-    ATTEMPT=$((ATTEMPT + 1))
-    echo -ne "${YELLOW}⏳${NC} Attempt ${ATTEMPT}/${MAX_ATTEMPTS}...\r"
-    sleep 2
-done
+    # Check for required environment variables
+    if [ -z "$OPENAI_API_KEY" ]; then
+        error "OPENAI_API_KEY environment variable not set"
+        exit 1
+    fi
 
-if [ $ATTEMPT -eq $MAX_ATTEMPTS ]; then
-    echo -e "\n${RED}❌ Health check failed after ${MAX_ATTEMPTS} attempts${NC}"
-    echo -e "${RED}Container logs:${NC}"
-    docker logs ${CONTAINER_NAME}
-    exit 1
-fi
+    log "Prerequisites check completed"
+}
 
-# Step 6: Verify Endpoints
-echo -e "\n${YELLOW}[6/7]${NC} Verifying endpoints..."
+# Backup current deployment
+create_backup() {
+    log "Creating backup..."
 
-# Check health endpoint
-HEALTH_RESPONSE=$(curl -s ${HEALTH_ENDPOINT})
-echo -e "${GREEN}✓${NC} Health: ${HEALTH_RESPONSE}"
+    TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+    BACKUP_PATH="$BACKUP_DIR/backup_$TIMESTAMP"
 
-# Check root endpoint
-ROOT_RESPONSE=$(curl -s http://localhost:${PORT}/)
-echo -e "${GREEN}✓${NC} Root endpoint responding"
+    mkdir -p "$BACKUP_PATH"
 
-# Step 7: Display Status
-echo -e "\n${YELLOW}[7/7]${NC} Deployment summary..."
-echo ""
-echo -e "${GREEN}╔════════════════════════════════════════════╗${NC}"
-echo -e "${GREEN}║  ✅ DEPLOYMENT SUCCESSFUL                  ║${NC}"
-echo -e "${GREEN}╚════════════════════════════════════════════╝${NC}"
-echo ""
-echo -e "${BLUE}📊 Container Information:${NC}"
-echo -e "   Name:      ${CONTAINER_NAME}"
-echo -e "   Image:     ${IMAGE_NAME}:${COMMIT_SHA}"
-echo -e "   Port:      ${PORT}"
-echo -e "   Status:    $(docker inspect -f '{{.State.Status}}' ${CONTAINER_NAME})"
-echo ""
-echo -e "${BLUE}🌐 Endpoints:${NC}"
-echo -e "   Health:    ${HEALTH_ENDPOINT}"
-echo -e "   API:       http://localhost:${PORT}/api"
-echo -e "   Docs:      http://localhost:${PORT}/docs"
-echo ""
-echo -e "${BLUE}📝 Useful Commands:${NC}"
-echo -e "   View logs:    docker logs -f ${CONTAINER_NAME}"
-echo -e "   Stop:         docker stop ${CONTAINER_NAME}"
-echo -e "   Restart:      docker restart ${CONTAINER_NAME}"
-echo -e "   Shell:        docker exec -it ${CONTAINER_NAME} /bin/bash"
-echo ""
-echo -e "${GREEN}🚀 Echoes is now running in production mode!${NC}"
-echo ""
+    # Backup configuration
+    if [ -d "$CONFIG_DIR" ]; then
+        cp -r "$CONFIG_DIR" "$BACKUP_PATH/"
+    fi
 
-# Optional: Run smoke tests
-if [ -f "tests/smoke_tests.sh" ]; then
-    echo -e "${YELLOW}Running smoke tests...${NC}"
-    bash tests/smoke_tests.sh
-fi
+    # Backup application code
+    if [ -f "$DEPLOYMENT_DIR/assistant_v2_core.py" ]; then
+        cp "$DEPLOYMENT_DIR/assistant_v2_core.py" "$BACKUP_PATH/"
+    fi
 
-exit 0
+    log "Backup created: $BACKUP_PATH"
+}
+
+# Deploy new version
+deploy_application() {
+    log "Deploying application..."
+
+    # Copy new files
+    cp assistant_v2_core.py "$DEPLOYMENT_DIR/"
+    cp -r config/* "$CONFIG_DIR/" 2>/dev/null || true
+
+    # Set permissions
+    chmod 644 "$DEPLOYMENT_DIR/assistant_v2_core.py"
+    chmod 600 "$CONFIG_DIR"/*.json 2>/dev/null || true
+
+    log "Application deployed successfully"
+}
+
+# Configure feature flags
+configure_rollout() {
+    local rollout_percentage=$1
+
+    log "Configuring rollout: ${rollout_percentage}%"
+
+    # Set environment variables
+    cat > "$DEPLOYMENT_DIR/.env" << EOF
+OPENAI_API_KEY=$OPENAI_API_KEY
+USE_RESPONSES_API=true
+USE_RESPONSES_API_ROLLOUT=$rollout_percentage
+EOF
+
+    log "Rollout configured: ${rollout_percentage}%"
+}
+
+# Health check
+health_check() {
+    log "Performing health check..."
+
+    # Basic syntax check
+    if ! python3 -m py_compile "$DEPLOYMENT_DIR/assistant_v2_core.py"; then
+        error "Syntax check failed"
+        return 1
+    fi
+
+    log "Health check passed"
+    return 0
+}
+
+# Rollback function
+rollback() {
+    log "Initiating rollback..."
+
+    LAST_BACKUP=$(cat "$DEPLOYMENT_DIR/last_backup" 2>/dev/null)
+    if [ -z "$LAST_BACKUP" ] || [ ! -d "$LAST_BACKUP" ]; then
+        error "No backup found for rollback"
+        exit 1
+    fi
+
+    # Restore files
+    if [ -f "$LAST_BACKUP/assistant_v2_core.py" ]; then
+        cp "$LAST_BACKUP/assistant_v2_core.py" "$DEPLOYMENT_DIR/"
+    fi
+
+    if [ -d "$LAST_BACKUP/config" ]; then
+        cp -r "$LAST_BACKUP/config" "$CONFIG_DIR/"
+    fi
+
+    log "Rollback completed successfully"
+}
+
+# Main deployment function
+deploy() {
+    local rollout_percentage=${1:-10}
+
+    echo "Starting deployment with ${rollout_percentage}% rollout..."
+
+    check_prerequisites
+    create_backup
+    deploy_application
+    configure_rollout "$rollout_percentage"
+
+    if health_check; then
+        log "Deployment completed successfully!"
+        log "Monitoring rollout at ${rollout_percentage}% capacity"
+        log "Use 'rollback' command if issues arise"
+    else
+        error "Health check failed, initiating rollback..."
+        rollback
+        exit 1
+    fi
+}
+
+# Command line interface
+case "${1:-deploy}" in
+    "deploy")
+        deploy "${2:-10}"
+        ;;
+    "rollback")
+        rollback
+        ;;
+    "health")
+        health_check
+        ;;
+    *)
+        echo "Usage: $0 [deploy <percentage>|rollback|health]"
+        echo "  deploy <percentage>  - Deploy with specified rollout percentage (default: 10)"
+        echo "  rollback             - Rollback to previous version"
+        echo "  health              - Run health checks"
+        exit 1
+        ;;
+esac

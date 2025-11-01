@@ -24,7 +24,7 @@ pip install -r requirements/dev.txt
 pytest
 
 # Run specific test types
-pytest -m unit        # Fast unit tests
+pytest -m Glimpse        # Fast Glimpse tests
 pytest -m integration # Integration tests
 pytest -m e2e         # End-to-end tests
 ```

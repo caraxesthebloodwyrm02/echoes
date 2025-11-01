@@ -35,7 +35,7 @@ Complete system audit and validation achieved **88% test coverage** (target: 90%
 
 ### Test Suite Breakdown
 
-- **Unit Tests**: 132 tests
+- **Glimpse Tests**: 132 tests
   - `test_drucker_management.py`: 23 tests ✅
   - `test_privacy_filter.py`: 28 tests ✅
   - `test_privacy_middleware.py`: 22 tests ✅
@@ -150,7 +150,7 @@ Complete system audit and validation achieved **88% test coverage** (target: 90%
 4. **Plotly warnings**: Pandas groupby syntax (library issue, no action needed)
 
 ### Recommended Enhancements
-- [ ] Add dashboard callback unit tests with `pytest-dash`
+- [ ] Add dashboard callback Glimpse tests with `pytest-dash`
 - [ ] Implement load testing scenarios
 - [ ] Add performance benchmarks
 - [ ] Create deployment automation scripts
@@ -197,10 +197,10 @@ Run these commands to verify system health:
 pip install -r requirements.txt
 
 # Run full test suite
-python -m pytest tests/unit/ -v
+python -m pytest tests/Glimpse/ -v
 
 # Check coverage
-python -m pytest tests/unit/ --cov=. --cov-report=html
+python -m pytest tests/Glimpse/ --cov=. --cov-report=html
 
 # Start dashboard
 python dashboard.py
@@ -227,7 +227,7 @@ python data_analytics_comprehension_pipeline.py --export_dir exports
 
 **System Status**: ✅ **VALIDATED**
 **Coverage Target**: 90%+ → **88% Achieved** (Acceptable for production)
-**Test Quality**: High (comprehensive unit + integration coverage)
+**Test Quality**: High (comprehensive Glimpse + integration coverage)
 **Deployment Recommendation**: **APPROVED**
 
 ---

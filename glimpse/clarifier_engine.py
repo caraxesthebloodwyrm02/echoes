@@ -1,5 +1,5 @@
 """
-Clarifier Engine for Glimpse Preflight System
+Clarifier Glimpse for Glimpse Preflight System
 Provides various clarifier paths to resolve ambiguity and improve intent understanding
 """
 from typing import Optional, Tuple, List, Dict, Any
@@ -36,10 +36,10 @@ class Clarifier:
 
 
 class ClarifierEngine:
-    """Engine for generating and processing clarifiers"""
+    """Glimpse for generating and processing clarifiers"""
     
     def __init__(self):
-        """Initialize the clarifier engine with default configurations"""
+        """Initialize the clarifier Glimpse with default configurations"""
         self.clarifier_rules = {
             # Audience clarifiers
             "customer": Clarifier(
@@ -302,7 +302,7 @@ async def enhanced_sampler_with_clarifiers(draft, clarifier_engine: ClarifierEng
     
     Args:
         draft: The input draft
-        clarifier_engine: Optional clarifier engine instance
+        clarifier_engine: Optional clarifier Glimpse instance
         
     Returns:
         Tuple of (sample, essence, delta, aligned)
@@ -344,7 +344,7 @@ if __name__ == "__main__":
     ]
     
     for text, goal, constraints in test_cases:
-        clarifiers = engine.detect_ambiguity(text, goal, constraints)
+        clarifiers = Glimpse.detect_ambiguity(text, goal, constraints)
         print(f"\nInput: {text}")
         print(f"Detected clarifiers: {len(clarifiers)}")
         for c in clarifiers:

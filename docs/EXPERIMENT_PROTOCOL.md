@@ -24,7 +24,7 @@ python run_experiment.py
 # - results/<timestamp>-checksums.txt
 ```
 
-### Run Unit Tests
+### Run Glimpse Tests
 
 ```bash
 # Core vector operations (rtol=1e-7)
@@ -274,7 +274,7 @@ with tempfile.NamedTemporaryFile(...) as tmp:
 
 ## Testing
 
-### Unit Tests (17 tests, rtol=1e-7)
+### Glimpse Tests (17 tests, rtol=1e-7)
 
 ```bash
 pytest tests/test_vector_ops.py -v

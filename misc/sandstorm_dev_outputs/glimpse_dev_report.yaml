@@ -1,0 +1,75 @@
+atmospheric_signature:
+  atmospheric_metrics:
+    cpu_spikes: 0.2
+    error_rate: 0.15
+    harmonic_balance: 0.92
+    memory_leak_risk: 0.1
+    p99_latency: 0.3
+  coherence_score: 1.0553636363636363
+  impact_analysis:
+    complexity: 0.55
+    coverage: 0.92
+    diagnostic_clarity: 0.92
+    duplication_ratio: 0.18
+    issues_density: 0.25
+  observability_streams:
+    error_density: 0.2
+    observability_gaps: 0.1
+    signal_clarity: 0.92
+    warning_noise: 0.25
+  source: ci_atmospheric
+  throughput_dynamics:
+    flow_resonance: 0.8
+    queue_backpressure: 0.15
+    rps_observed: 0.9
+    throughput_stability: 0.8
+  unified_quality: 0.9636000000000001
+  validation_intelligence:
+    flaky_test_rate: 0.08
+    integration_stability: 0.86
+    glimpse_coverage: 0.93
+    validation_confidence: 0.86
+diagnostic_summary:
+  chaos_to_clarity_transformation: false
+  dimensions_analyzed: 6
+  quality_improvement_pct: 153.6%
+  quality_state: false
+  sandstorm_alert_status: INACTIVE
+impact_signature:
+  atmospheric_metrics:
+    cpu_spikes: 0.8
+    error_rate: 0.9
+    harmonic_balance: 0.09999999999999998
+    memory_leak_risk: 0.7
+    p99_latency: 0.8
+  coherence_score: 0.3909090909090909
+  impact_analysis:
+    complexity: 0.8
+    coverage: 0.4
+    diagnostic_clarity: 0.19999999999999996
+    duplication_ratio: 0.7
+    issues_density: 0.85
+  observability_streams:
+    error_density: 0.9
+    observability_gaps: 0.7
+    signal_clarity: 0.19999999999999996
+    warning_noise: 0.8
+  source: repository_impact
+  throughput_dynamics:
+    flow_resonance: 0.4
+    queue_backpressure: 0.7
+    rps_observed: 0.5
+    throughput_stability: 0.4
+  unified_quality: 0.38
+  validation_intelligence:
+    flaky_test_rate: 0.8
+    integration_stability: 0.4
+    glimpse_coverage: 0.5
+    validation_confidence: 0.5
+protocol_info:
+  intent: Transform high-density process noise into clear diagnostic visibility
+  name: SANDSTORM_DEV_DIAGNOSTIC_PROTOCOL
+  timestamp: '2025-11-01T13:59:32.766768Z'
+  unified_alert_active: false
+  version: 2.0.0
+sandstorm_analysis: {}

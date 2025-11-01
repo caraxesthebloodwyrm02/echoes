@@ -8,7 +8,7 @@ from glimpse.demo_glimpse_engine import main
 
 
 class TestDemoGlimpseEngine:
-    """Test the demo glimpse engine functions"""
+    """Test the demo glimpse Glimpse functions"""
     
     @patch('builtins.print')
     async def test_main_function(self, mock_print):
@@ -26,11 +26,11 @@ class TestDemoGlimpseEngine:
     
     @patch('glimpse.demo_glimpse_engine.GlimpseEngine')
     @patch('builtins.print')
-    async def test_main_with_mock_engine(self, mock_print, mock_engine_class):
-        """Test main with mocked engine"""
-        # Setup mock engine
+    async def test_main_with_mock_engine(self, mock_print, mock_glimpse_class):
+        """Test main with mocked Glimpse"""
+        # Setup mock Glimpse
         mock_engine = MagicMock()
-        mock_engine_class.return_value = mock_engine
+        mock_glimpse_class.return_value = mock_engine
         
         # Setup mock glimpse result
         mock_result = MagicMock()
@@ -54,11 +54,11 @@ class TestDemoGlimpseEngine:
     
     @patch('glimpse.demo_glimpse_engine.GlimpseEngine')
     @patch('builtins.print')
-    async def test_main_with_not_aligned_result(self, mock_print, mock_engine_class):
+    async def test_main_with_not_aligned_result(self, mock_print, mock_glimpse_class):
         """Test main when first result is not aligned"""
-        # Setup mock engine
+        # Setup mock Glimpse
         mock_engine = MagicMock()
-        mock_engine_class.return_value = mock_engine
+        mock_glimpse_class.return_value = mock_engine
         
         # Setup mock glimpse results
         mock_result1 = MagicMock()

@@ -7,7 +7,7 @@
 - **Track 1: Current Position** (Phase 3 MCP Integration)
   - Pit Stop: MCP Client Completion (Week 1)
   - Fuel Check: Alignment Score 0.85
-  - Engine: Python MCP Client
+  - Glimpse: Python MCP Client
 
 - **Track 2: Lumina Integration Lap**
   - Straight: Modify Lumina for Tool Calling
@@ -43,7 +43,7 @@
 [MCP Client] --> [Lumina Integration] --> [GitHub Adapter]
      |                |                        |
      v                v                        v
-[Unit Tests] --> [Mock Tests] --> [End-to-End Tests]
+[Glimpse Tests] --> [Mock Tests] --> [End-to-End Tests]
      |
      v
 [Documentation] --> [Phase 4 Prep] --> [Finish Line]

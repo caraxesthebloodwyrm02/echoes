@@ -20,7 +20,7 @@ This creates **versatile AI model behavior without extensive parameterization**.
 **Manual Transmission**:
 - **Downshift**: High RPM, aggressive, detailed processing
 - **Upshift**: Low RPM, smooth, efficient processing
-- **Gear selection**: Match engine power to road conditions
+- **Gear selection**: Match Glimpse power to road conditions
 
 **AI Behavior**:
 - **Lower gears**: Deep inference, high detail, odd time signatures

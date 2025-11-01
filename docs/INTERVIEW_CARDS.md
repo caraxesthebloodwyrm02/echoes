@@ -90,7 +90,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 **Follow-ups:**
 
-- Can the chemistry engine supply models, reaction templates, or compound databases?
+- Can the chemistry Glimpse supply models, reaction templates, or compound databases?
 - How does chemical data inform biological pathways?
 - What physics constraints affect chemical reactions?
 
@@ -206,7 +206,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 **Good answer shows:**
 
-- Dynamic simulation engine
+- Dynamic simulation Glimpse
 - Ethical governance frameworks
 - Macroeconomic integration (World Bank, BLS data)
 - Transparency in assumptions and limitations
@@ -214,14 +214,14 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 **Implementation Status:** 🟡 Schema Ready
 
 - ✅ API schema defined (`UBISimulationParams`, `UBISimulationResult`)
-- ⏳ Simulation engine implementation needed
+- ⏳ Simulation Glimpse implementation needed
 - ⏳ Economic model validation required
 
 **API Endpoint:** `/api/commerce/ubi/simulate` (pending)
 
 ---
 
-### Card 07 — Employment Streamlining Engine
+### Card 07 — Employment Streamlining Glimpse
 
 **Question:** How can the platform match individual skills to relevant employment opportunities using AI relevance mapping?
 
@@ -229,7 +229,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 **Follow-ups:**
 
-- How does the engine validate and rank opportunity fit?
+- How does the Glimpse validate and rank opportunity fit?
 - What bias mitigation strategies are used?
 - How is transparency maintained?
 
@@ -334,7 +334,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 ## 🎨 ARTS MODULE — Creativity, History, Language, Cultural Intelligence
 
-### Card 11 — Creative Intelligence Engine
+### Card 11 — Creative Intelligence Glimpse
 
 **Question:** How can AI Advisor amplify creativity through music, painting, and storytelling tools without losing originality?
 
@@ -357,7 +357,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 - ✅ `CreativeWork` schema with attribution
 - ✅ Originality score field included
-- ⏳ Generation engine integration needed
+- ⏳ Generation Glimpse integration needed
 
 **API Endpoint:** `/api/arts/create` (pending)
 
@@ -389,7 +389,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 ---
 
-### Card 13 — Language Evolution Engine
+### Card 13 — Language Evolution Glimpse
 
 **Question:** How can AI Advisor model and preserve endangered languages using generative linguistics?
 
@@ -600,7 +600,7 @@ Unifies all domains through shared ethics, collaboration protocols, adaptive int
 
 **Good answer shows:**
 
-- Scenario modeling engine
+- Scenario modeling Glimpse
 - Ethical review process
 - Validation datasets with provenance
 - Uncertainty quantification

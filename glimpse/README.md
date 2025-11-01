@@ -44,9 +44,9 @@ pip install -r requirements.txt
 ### Basic Usage
 
 ```python
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 
-# Initialize the engine
+# Initialize the Glimpse
 engine = GlimpseEngine()
 
 # Create a draft
@@ -57,7 +57,7 @@ draft = Draft(
 )
 
 # Get a preview
-result = await engine.glimpse(draft)
+result = await Glimpse.glimpse(draft)
 
 print(f"Status: {result.status}")
 print(f"Sample: {result.sample}")
@@ -65,7 +65,7 @@ print(f"Essence: {result.essence}")
 
 # If aligned, commit the action
 if result.status == "aligned":
-    engine.commit(draft)
+    Glimpse.commit(draft)
 ```
 
 ### Interactive Mode
@@ -149,11 +149,11 @@ Automatically switch to essence-only mode for high latency:
 
 ```python
 # Enable essence-only mode manually
-engine.set_essence_only(True)
+Glimpse.set_essence_only(True)
 
 # Or let the system decide based on latency
 if avg_latency > 0.8:  # 800ms threshold
-    engine.set_essence_only(True)
+    Glimpse.set_essence_only(True)
 ```
 
 ## API Reference
@@ -187,7 +187,7 @@ class GlimpseResult:
 ```
 
 #### `GlimpseEngine`
-Main engine for generating previews.
+Main Glimpse for generating previews.
 
 ```python
 class GlimpseEngine:
@@ -251,7 +251,7 @@ engine = GlimpseEngine(privacy_guard=privacy_guard)
 pytest tests/glimpse/ -v
 
 # Run specific test suites
-pytest tests/glimpse/test_glimpse_engine_core.py -v
+pytest tests/glimpse/test_glimpse_glimpse_core.py -v
 pytest tests/glimpse/test_glimpse_edge_cases.py -v
 
 # Run with coverage
@@ -274,7 +274,7 @@ The test suite covers:
 ### Example 1: Email Generation
 
 ```python
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 
 engine = GlimpseEngine()
 
@@ -284,7 +284,7 @@ draft = Draft(
     constraints="audience: customers | tone: professional | length: brief"
 )
 
-result = await engine.glimpse(draft)
+result = await Glimpse.glimpse(draft)
 print(result.sample)
 # Output: "We're excited to announce our new AI-powered features..."
 ```
@@ -298,7 +298,7 @@ draft = Draft(
     constraints="format: structured | language: technical"
 )
 
-result = await engine.glimpse(draft)
+result = await Glimpse.glimpse(draft)
 print(result.essence)
 # Output: "Generate comprehensive technical documentation..."
 ```
@@ -320,7 +320,7 @@ result, exec_time = await optimizer.optimized_glimpse(draft, slow_sampler)
 
 # System automatically suggests essence-only mode
 if optimizer.adaptive_essence_only(exec_time):
-    engine.set_essence_only(True)
+    Glimpse.set_essence_only(True)
 ```
 
 ## Best Practices
@@ -338,11 +338,11 @@ draft = Draft(
 ### 2. Handle Latency Gracefully
 ```python
 try:
-    result = await engine.glimpse(draft)
+    result = await Glimpse.glimpse(draft)
 except asyncio.TimeoutError:
     # Handle high latency scenarios
-    engine.set_essence_only(True)
-    result = await engine.glimpse(draft)
+    Glimpse.set_essence_only(True)
+    result = await Glimpse.glimpse(draft)
 ```
 
 ### 3. Use Clarifiers for Ambiguity
@@ -389,7 +389,7 @@ import logging
 logging.basicConfig(level=logging.DEBUG)
 
 # Run glimpse with debug output
-result = await engine.glimpse(draft)
+result = await Glimpse.glimpse(draft)
 ```
 
 ## Contributing

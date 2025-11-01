@@ -169,12 +169,12 @@ We created an innovative security system that:
 
 ### Glimpse System Architecture
 
-The Glimpse system is the core real-time preview and trajectory tracking engine. Here's its conceptual design:
+The Glimpse system is the core real-time preview and trajectory tracking Glimpse. Here's its conceptual design:
 
 ```mermaid
 graph TD
     A[User Input] --> B[Input Adapter]
-    B --> C[Trajectory Engine]
+    B --> C[Trajectory Glimpse]
     C --> D[Visual Renderer]
     C --> E[Security Manager]
     D --> F[Preview Frame]

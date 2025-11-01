@@ -77,7 +77,7 @@
 
 ### 4. Testing & Deployment
 
-- [x] Unit tests passing (17/17)
+- [x] Glimpse tests passing (17/17)
 - [x] Integration tests passing (30/30)
 - [x] Optimizer tests passing (12/12)
 - [x] Regenerator tests passing (10/10)

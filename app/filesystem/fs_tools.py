@@ -37,6 +37,18 @@ class FilesystemTools:
 
     def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> Dict[str, Any]:
         """List directory contents safely."""
+        # Like good code structure:
+        def handle_user_request(request):
+            # Phase 1: Analysis
+            understand_request(request)
+            
+            # Phase 2: Planning  
+            plan_approach(request)
+            
+            # Phase 3: Execution
+            execute_plan()
+
+        # Phase 1: Path Validation
         try:
             path = Path(dirpath).resolve()
 
@@ -49,6 +61,7 @@ class FilesystemTools:
             if not path.is_dir():
                 return {"success": False, "error": f"Not a directory: {dirpath}"}
 
+            # Phase 2: Directory Scanning
             files = []
             dirs = []
 
@@ -72,6 +85,7 @@ class FilesystemTools:
                     elif item.is_dir():
                         dirs.append({"path": rel_path, "name": item.name})
 
+            # Phase 3: Result Compilation
             return {
                 "success": True,
                 "directory": dirpath,
@@ -88,6 +102,18 @@ class FilesystemTools:
         self, filepath: str, encoding: str = "utf-8", max_size: int = 1024 * 1024  # 1MB default
     ) -> Dict[str, Any]:
         """Read file contents safely."""
+        # Like good code structure:
+        def handle_user_request(request):
+            # Phase 1: Analysis
+            understand_request(request)
+            
+            # Phase 2: Planning  
+            plan_approach(request)
+            
+            # Phase 3: Execution
+            execute_plan()
+
+        # Phase 1: Path and Size Validation
         try:
             path = Path(filepath).resolve()
 
@@ -100,21 +126,22 @@ class FilesystemTools:
             if not path.is_file():
                 return {"success": False, "error": f"Not a file: {filepath}"}
 
-            # Check file size
             file_size = path.stat().st_size
             if file_size > max_size:
                 return {"success": False, "error": f"File too large: {file_size} bytes (max: {max_size})"}
 
-            # Read file
+            # Phase 2: File Reading
             with open(path, "r", encoding=encoding) as f:
                 content = f.read()
 
+            # Phase 3: Result Compilation
             return {
                 "success": True,
                 "filepath": filepath,
                 "content": content,
                 "size": file_size,
-                "lines": content.count("\n") + 1,
+                "encoding": encoding,
+                "lines": len(content.splitlines()) if content else 0,
             }
 
         except Exception as e:
@@ -248,3 +275,93 @@ class FilesystemTools:
 
         except Exception as e:
             return {"success": False, "error": f"Error building tree: {str(e)}"}
+
+    def organize_roi_files(self, roi_results: Dict[str, Any], base_dir: str = "roi_analysis") -> Dict[str, Any]:
+        """
+        Organize ROI analysis files into a structured directory.
+
+        Args:
+            roi_results: Results from ROI analysis tool
+            base_dir: Base directory name for organization
+
+        Returns:
+            Organization results
+        """
+        try:
+            # Create base directory
+            base_path = Path(base_dir)
+            base_path.mkdir(parents=True, exist_ok=True)
+
+            organized_files = {}
+            institution_name = roi_results.get("stakeholder_config", {}).get("institution_name", "unknown").lower().replace(" ", "_")
+
+            # Create institution-specific directory
+            inst_dir = base_path / institution_name
+            inst_dir.mkdir(exist_ok=True)
+
+            # Create subdirectories
+            configs_dir = inst_dir / "configs"
+            data_dir = inst_dir / "data"
+            reports_dir = inst_dir / "reports"
+
+            for d in [configs_dir, data_dir, reports_dir]:
+                d.mkdir(exist_ok=True)
+
+            # Write files based on generated formats
+            generated_files = roi_results.get("generated_files", {})
+
+            if "yaml" in generated_files:
+                yaml_data = generated_files["yaml"]
+                yaml_path = configs_dir / yaml_data["filename"]
+                with open(yaml_path, "w", encoding="utf-8") as f:
+                    f.write(yaml_data["content"])
+                organized_files["yaml_config"] = str(yaml_path)
+
+            if "csv" in generated_files:
+                csv_data = generated_files["csv"]
+                csv_path = data_dir / csv_data["filename"]
+                with open(csv_path, "w", encoding="utf-8") as f:
+                    f.write(csv_data["content"])
+                organized_files["csv_data"] = str(csv_path)
+
+            if "spreadsheet" in generated_files:
+                sheet_data = generated_files["spreadsheet"]
+                sheet_path = data_dir / sheet_data["filename"]
+                with open(sheet_path, "w", encoding="utf-8") as f:
+                    f.write(sheet_data["content"])
+                organized_files["spreadsheet"] = str(sheet_path)
+
+            if "report" in generated_files:
+                report_data = generated_files["report"]
+                report_path = reports_dir / report_data["filename"]
+                with open(report_path, "w", encoding="utf-8") as f:
+                    f.write(report_data["content"])
+                organized_files["executive_report"] = str(report_path)
+
+            # Create metadata file
+            metadata = {
+                "institution": institution_name,
+                "generated_at": roi_results.get("timestamp"),
+                "business_type": roi_results.get("business_type"),
+                "customization_level": roi_results.get("customization_level"),
+                "roi_metrics": roi_results.get("roi_metrics"),
+                "file_count": len(organized_files),
+                "organized_files": organized_files
+            }
+
+            metadata_path = inst_dir / "metadata.json"
+            with open(metadata_path, "w", encoding="utf-8") as f:
+                json.dump(metadata, f, indent=2)
+
+            organized_files["metadata"] = str(metadata_path)
+
+            return {
+                "success": True,
+                "base_directory": str(base_path),
+                "institution_directory": str(inst_dir),
+                "organized_files": organized_files,
+                "total_files": len(organized_files)
+            }
+
+        except Exception as e:
+            return {"success": False, "error": f"Error organizing ROI files: {str(e)}"}

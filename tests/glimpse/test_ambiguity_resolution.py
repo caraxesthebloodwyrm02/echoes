@@ -6,7 +6,7 @@ like the differing interpretations of the bookcase incident.
 """
 
 import pytest
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 
 
 class TestFreudJungDisagreement:
@@ -28,9 +28,9 @@ class TestFreudJungDisagreement:
             constraints=""  # No constraints
         )
         
-        result = await engine.glimpse(vague_draft)
+        result = await Glimpse.glimpse(vague_draft)
         
-        # Should process (engine handles ambiguity gracefully)
+        # Should process (Glimpse handles ambiguity gracefully)
         assert result.status in ["aligned", "not_aligned", "redial"]
         assert len(result.essence) > 0
     
@@ -49,7 +49,7 @@ class TestFreudJungDisagreement:
             constraints=""  # No context about WHICH logs or WHAT to look for
         )
         
-        result = await engine.glimpse(ambiguous_draft)
+        result = await Glimpse.glimpse(ambiguous_draft)
         
         # Should handle gracefully
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -70,9 +70,9 @@ class TestFreudJungDisagreement:
             constraints="no breaking changes, maintain backward compatibility, zero downtime"
         )
         
-        result = await engine.glimpse(conflict_draft)
+        result = await Glimpse.glimpse(conflict_draft)
         
-        # Should process (engine is resilient to contradictions)
+        # Should process (Glimpse is resilient to contradictions)
         assert result.status in ["aligned", "not_aligned", "redial"]
         assert result.essence is not None
 
@@ -95,7 +95,7 @@ class TestUncertaintyQuantification:
             constraints=""
         )
         
-        result = await engine.glimpse(minimal_draft)
+        result = await Glimpse.glimpse(minimal_draft)
         
         # Should process gracefully
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -116,9 +116,9 @@ class TestUncertaintyQuantification:
             constraints=""  # Missing: which queries? what metrics?
         )
         
-        result = await engine.glimpse(partial_draft)
+        result = await Glimpse.glimpse(partial_draft)
         
-        # Should work (engine handles partial info)
+        # Should work (Glimpse handles partial info)
         assert result.status in ["aligned", "not_aligned", "redial"]
         assert len(result.essence) > 0
 
@@ -141,9 +141,9 @@ class TestClarifierActivation:
             constraints="technical accuracy"
         )
         
-        result = await engine.glimpse(no_goal_draft)
+        result = await Glimpse.glimpse(no_goal_draft)
         
-        # Should process (engine handles empty goals)
+        # Should process (Glimpse handles empty goals)
         assert result.status in ["aligned", "not_aligned", "redial"]
         assert len(result.essence) > 0
     
@@ -162,9 +162,9 @@ class TestClarifierActivation:
             constraints="no modifications"
         )
         
-        result = await engine.glimpse(contradiction_draft)
+        result = await Glimpse.glimpse(contradiction_draft)
         
-        # Should process (engine handles contradictions)
+        # Should process (Glimpse handles contradictions)
         assert result.status in ["aligned", "not_aligned", "redial"]
         assert len(result.essence) > 0
     
@@ -182,7 +182,7 @@ class TestClarifierActivation:
             constraints=""
         )
         
-        result = await engine.glimpse(draft)
+        result = await Glimpse.glimpse(draft)
         
         # Should always provide meaningful essence
         assert len(result.essence) > 0
@@ -206,7 +206,7 @@ class TestEdgeCaseHandling:
             constraints="production"
         )
         
-        result = await engine.glimpse(unicode_draft)
+        result = await Glimpse.glimpse(unicode_draft)
         
         # Should handle gracefully
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -228,7 +228,7 @@ class TestEdgeCaseHandling:
             constraints="production"
         )
         
-        result = await engine.glimpse(long_draft)
+        result = await Glimpse.glimpse(long_draft)
         
         # Should handle without crashing
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -248,7 +248,7 @@ class TestEdgeCaseHandling:
             constraints="PRODUCTION"
         )
         
-        result = await engine.glimpse(mixed_draft)
+        result = await Glimpse.glimpse(mixed_draft)
         
         # Should normalize and process
         assert result.status in ["aligned", "not_aligned", "redial"]

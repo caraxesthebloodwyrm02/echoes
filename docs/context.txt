@@ -295,14 +295,14 @@ A  Q4/test_pipeline.py
 RD AGENTS.md -> Q4/tests/__init__.py
 RD openapi-spec.json -> Q4/tests/integration/__init__.py
 RD openapi_response.json -> Q4/tests/load/__init__.py
-AD Q4/tests/unit/__init__.py
-AD Q4/tests/unit/test_dashboard_helpers.py
-AD Q4/tests/unit/test_data_analytics_pipeline.py
-AD Q4/tests/unit/test_drucker_management.py
-AD Q4/tests/unit/test_export_roadmap.py
-AD Q4/tests/unit/test_metering_models.py
-AD Q4/tests/unit/test_privacy_filter.py
-AD Q4/tests/unit/test_privacy_middleware.py
+AD Q4/tests/Glimpse/__init__.py
+AD Q4/tests/Glimpse/test_dashboard_helpers.py
+AD Q4/tests/Glimpse/test_data_analytics_pipeline.py
+AD Q4/tests/Glimpse/test_drucker_management.py
+AD Q4/tests/Glimpse/test_export_roadmap.py
+AD Q4/tests/Glimpse/test_metering_models.py
+AD Q4/tests/Glimpse/test_privacy_filter.py
+AD Q4/tests/Glimpse/test_privacy_middleware.py
 D  QUICK_START.md
 MD README.md
 A  REORGANIZATION_COMPLETE.md
@@ -790,10 +790,10 @@ MD tests/test_integration_doc_links.py
 MD tests/test_memory_system.py
 AD tests/test_nl_execution.py
 MD tests/test_security.py
-AD tests/unit/test_dashboard_callbacks.py
- D tests/unit/test_diff_core.py
-AD tests/unit/test_guardrails.py
-MD tests/unit/test_swing_scheduler.py
+AD tests/Glimpse/test_dashboard_callbacks.py
+ D tests/Glimpse/test_diff_core.py
+AD tests/Glimpse/test_guardrails.py
+MD tests/Glimpse/test_swing_scheduler.py
 A  tools.ps1
  D tools/scripts/.gitkeep
 A  ubi_simulator/README.md

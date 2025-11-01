@@ -1,0 +1,22 @@
+{
+  "work_id": "9cd7afbd982abaa8",
+  "user_id": "demo_user_1",
+  "timestamp": "2025-10-31T16:15:41.710038+00:00",
+  "task_type": "assistant_code_generation",
+  "description": "Assistant interaction: AI assistance",
+  "time_invested_minutes": 60,
+  "intellectual_effort": 7.5,
+  "motivation_level": 7.5,
+  "quality_rating": 8.0,
+  "assistant_interaction": {
+    "query": "What's a fair price for development work?",
+    "response": "Based on market rates...",
+    "tokens_used": 80,
+    "processing_time": 1.1,
+    "interaction_type": "consultation"
+  },
+  "tags": [
+    "ai/ml"
+  ],
+  "status": "completed"
+}

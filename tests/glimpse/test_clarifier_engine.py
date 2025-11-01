@@ -8,7 +8,7 @@ from glimpse.clarifier_engine import (
     ClarifierType, 
     enhanced_sampler_with_clarifiers
 )
-from glimpse.engine import Draft
+from glimpse.Glimpse import Draft
 
 
 class TestClarifier:
@@ -53,18 +53,18 @@ class TestClarifier:
 class TestClarifierEngine:
     """Test the ClarifierEngine class"""
     
-    def test_engine_initialization(self):
+    def test_glimpse_initialization(self):
         engine = ClarifierEngine()
-        assert len(engine.clarifier_rules) > 0
-        assert "customer" in engine.clarifier_rules
-        assert "formal" in engine.clarifier_rules
-        assert "brief" in engine.clarifier_rules
+        assert len(Glimpse.clarifier_rules) > 0
+        assert "customer" in Glimpse.clarifier_rules
+        assert "formal" in Glimpse.clarifier_rules
+        assert "brief" in Glimpse.clarifier_rules
     
     def test_detect_audience_ambiguity(self):
         engine = ClarifierEngine()
         
         # Test customer mention
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Write an email to customers",
             "inform users",
             ""
@@ -76,7 +76,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test email/presentation triggers tone clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Create a presentation",
             "explain concept",
             ""
@@ -88,7 +88,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test explain/describe triggers length clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Explain the process",
             "help user understand",
             ""
@@ -100,7 +100,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test list/organize triggers format clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "List the benefits",
             "organize information",
             ""
@@ -112,7 +112,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test focus/scope triggers scope clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Focus on technical aspects",
             "provide overview",
             ""
@@ -124,7 +124,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test simplify/explain triggers language clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Simplify the technical details",
             "make it understandable",
             ""
@@ -136,7 +136,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test urgent/asap triggers urgency clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "urgent fix needed",
             "resolve immediately",
             ""
@@ -148,7 +148,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Test detail/comprehensive triggers detail level clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Provide comprehensive details",
             "thorough analysis",
             ""
@@ -160,7 +160,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Empty goal should always trigger audience clarifier
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Some input text",
             "",
             ""
@@ -172,7 +172,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Clear input with goal should not trigger clarifiers
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "Simple task",
             "clear goal provided",
             "audience: internal"
@@ -183,7 +183,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine()
         
         # Even with multiple triggers, should limit to 3
-        clarifiers = engine.detect_ambiguity(
+        clarifiers = Glimpse.detect_ambiguity(
             "urgent email to customers explaining technical details comprehensively",
             "",
             ""
@@ -192,46 +192,46 @@ class TestClarifierEngine:
     
     def test_apply_clarifier_response_yes_no(self):
         engine = ClarifierEngine()
-        clarifier = engine.clarifier_rules["customer"]
+        clarifier = Glimpse.clarifier_rules["customer"]
         
         # Test yes response
-        result = engine.apply_clarifier_response(
+        result = Glimpse.apply_clarifier_response(
             clarifier, "y", ""
         )
         assert "audience: customers" in result
         
         # Test no response
-        result = engine.apply_clarifier_response(
+        result = Glimpse.apply_clarifier_response(
             clarifier, "n", ""
         )
         assert "audience: internal" in result
     
     def test_apply_clarifier_response_explicit_options(self):
         engine = ClarifierEngine()
-        clarifier = engine.clarifier_rules["formal"]
+        clarifier = Glimpse.clarifier_rules["formal"]
         
         # Test explicit option
-        result = engine.apply_clarifier_response(
+        result = Glimpse.apply_clarifier_response(
             clarifier, "formal", ""
         )
         assert "tone: formal" in result
     
     def test_apply_clarifier_response_invalid_uses_default(self):
         engine = ClarifierEngine()
-        clarifier = engine.clarifier_rules["customer"]
+        clarifier = Glimpse.clarifier_rules["customer"]
         
         # Test invalid response uses default
-        result = engine.apply_clarifier_response(
+        result = Glimpse.apply_clarifier_response(
             clarifier, "invalid", ""
         )
         assert "audience: internal" in result  # default value
     
     def test_apply_clarifier_response_appends_to_existing(self):
         engine = ClarifierEngine()
-        clarifier = engine.clarifier_rules["customer"]
+        clarifier = Glimpse.clarifier_rules["customer"]
         
         # Test appending to existing constraints
-        result = engine.apply_clarifier_response(
+        result = Glimpse.apply_clarifier_response(
             clarifier, "y", "existing: constraint"
         )
         assert "existing: constraint" in result
@@ -240,9 +240,9 @@ class TestClarifierEngine:
     
     def test_generate_clarifier_delta_single(self):
         engine = ClarifierEngine()
-        clarifiers = [engine.clarifier_rules["customer"]]
+        clarifiers = [Glimpse.clarifier_rules["customer"]]
         
-        delta = engine.generate_clarifier_delta(clarifiers)
+        delta = Glimpse.generate_clarifier_delta(clarifiers)
         assert "Clarifier: Is this for customers or internal team?" in delta
         assert "[customers | internal]" in delta
         assert "(default: internal)" in delta
@@ -250,11 +250,11 @@ class TestClarifierEngine:
     def test_generate_clarifier_delta_multiple(self):
         engine = ClarifierEngine()
         clarifiers = [
-            engine.clarifier_rules["customer"],
-            engine.clarifier_rules["formal"]
+            Glimpse.clarifier_rules["customer"],
+            Glimpse.clarifier_rules["formal"]
         ]
         
-        delta = engine.generate_clarifier_delta(clarifiers)
+        delta = Glimpse.generate_clarifier_delta(clarifiers)
         assert "Clarifier: Please specify:" in delta
         assert "1. Clarifier:" in delta
         assert "2. Clarifier:" in delta
@@ -262,7 +262,7 @@ class TestClarifierEngine:
     def test_generate_clarifier_delta_empty(self):
         engine = ClarifierEngine()
         
-        delta = engine.generate_clarifier_delta([])
+        delta = Glimpse.generate_clarifier_delta([])
         assert delta == ""
 
 
@@ -316,7 +316,7 @@ class TestEnhancedSampler:
         result = await enhanced_sampler_with_clarifiers(draft, custom_engine)
         sample, essence, delta, aligned = result
         
-        # Should use custom engine to detect ambiguity
+        # Should use custom Glimpse to detect ambiguity
         assert delta is not None
         assert "Clarifier:" in delta
 

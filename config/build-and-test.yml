@@ -81,8 +81,8 @@ jobs:
           python -m pip install --upgrade pip
           pip install -e .[test]
 
-      - name: Run diarisation unit tests
-        run: pytest -q tests/test_diarisation.py -m unit
+      - name: Run diarisation Glimpse tests
+        run: pytest -q tests/test_diarisation.py -m Glimpse
 
       - name: Run diarisation integration test (optional)
         if: ${{ env.RUN_DIARISATION_INTEGRATION == '1' }}

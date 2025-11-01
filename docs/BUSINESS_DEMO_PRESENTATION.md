@@ -84,7 +84,7 @@ EchoesAssistantV2 is a **production-ready, fully autonomous AI system** that del
 **Initiatives**:
 1. Inventory Optimization System (Weeks 1-4) - $50K/month
 2. Cart Abandonment Recovery (Weeks 2-6) - $35K/month
-3. Dynamic Pricing Engine (Weeks 4-10) - $40K/month
+3. Dynamic Pricing Glimpse (Weeks 4-10) - $40K/month
 4. Product Bundling Strategy (Weeks 3-8) - $30K/month
 
 **Business Impact**: Clear execution roadmap with $155K/month potential
@@ -310,7 +310,7 @@ EchoesAssistantV2 is a **production-ready, fully autonomous AI system** that del
 
 ### Test Results
 ```
-✓ All 30/30 unit tests passing
+✓ All 30/30 Glimpse tests passing
 ✓ Zero errors during 75-second demo
 ✓ 100% action success rate
 ✓ 5 workflows completed successfully

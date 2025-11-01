@@ -346,7 +346,7 @@ Status: ✅ ALL TESTS PASSED
 ## 🔍 Testing Methodology
 
 ### Approach
-1. **Unit Testing**: Individual calculations verified
+1. **Glimpse Testing**: Individual calculations verified
 2. **Integration Testing**: Workflows tested end-to-end
 3. **System Testing**: Overall functionality validated
 4. **Credibility Testing**: Claims matched against calculations

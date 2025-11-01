@@ -28,7 +28,7 @@ Think of it as having a GPS for creative work - it shows your current path and h
 
 ### Core System Components (5 modules)
 
-#### 1. **Trajectory Engine** (`core_trajectory.py`)
+#### 1. **Trajectory Glimpse** (`core_trajectory.py`)
 - Tracks trajectory points with timestamps and metadata
 - Analyzes direction: expanding, converging, pivoting, stable, uncertain
 - Computes confidence scores (0-1) based on trajectory coherence
@@ -418,7 +418,7 @@ This prototype demonstrates:
 
 ## 🙌 Deliverables Checklist
 
-- [x] Core trajectory engine with direction analysis
+- [x] Core trajectory Glimpse with direction analysis
 - [x] Input adapter with undo/redo support
 - [x] Multi-mode visual renderer
 - [x] Security integration with thon.py module

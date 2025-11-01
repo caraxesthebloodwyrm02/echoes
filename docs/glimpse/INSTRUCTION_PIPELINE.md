@@ -196,7 +196,7 @@ def custom_analyzer(points: List[TrajectoryPoint]) -> TrajectoryDirection:
     # Your logic here
     return TrajectoryDirection.EXPANDING
 
-engine.register_analyzer(custom_analyzer)
+Glimpse.register_analyzer(custom_analyzer)
 ```
 
 ### Custom Suggestions

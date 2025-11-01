@@ -1,135 +1,43 @@
 """
-Example tools for demonstration purposes.
+Tools examples module.
 
-Provides sample implementations of tools that can be registered with the tool registry.
+This module provides example tools for the registry.
 """
 
-from typing import Any, Dict, List
-from .base import BaseTool, ToolResult
-from .filesystem_tools import create_filesystem_tools
-from .enhanced_web_search import create_enhanced_web_search_tools
+from typing import Dict, Any
 
 
-class CalculatorTool(BaseTool):
-    """A simple calculator tool."""
-
-    def __init__(self) -> None:
-        super().__init__("calculator", "Perform basic arithmetic operations")
-
-    def __call__(
-        self, operation: str, a: float, b: float, **kwargs: Any
-    ) -> ToolResult:
-        """Execute calculator operation."""
-        try:
-            if operation == "add":
-                result = a + b
-            elif operation == "subtract":
-                result = a - b
-            elif operation == "multiply":
-                result = a * b
-            elif operation == "divide":
-                if b == 0:
-                    return ToolResult(success=False, error="Division by zero")
-                result = a / b
-            else:
-                return ToolResult(
-                    success=False, error=f"Unknown operation: {operation}"
-                )
-
-            return ToolResult(success=True, data=result)
-        except Exception as e:
-            return ToolResult(success=False, error=str(e))
-
-    def to_openai_schema(self) -> Dict[str, Any]:
-        """Return OpenAI function schema."""
-        return {
-            "type": "function",
-            "function": {
-                "name": "calculator",
-                "description": "Perform basic arithmetic operations",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "operation": {
-                            "type": "string",
-                            "enum": ["add", "subtract", "multiply", "divide"],
-                            "description": "The arithmetic operation to perform",
-                        },
-                        "a": {"type": "number", "description": "First number"},
-                        "b": {
-                            "type": "number",
-                            "description": "Second number",
-                        },
-                    },
-                    "required": ["operation", "a", "b"],
-                },
-            },
-        }
+def reverse_text_tool(payload: dict) -> Dict[str, Any]:
+    """Example tool that reverses text."""
+    txt = payload.get("text", "")
+    return {"result": txt[::-1]}
 
 
-class TextAnalyzerTool(BaseTool):
-    """A tool for analyzing text."""
-
-    def __init__(self) -> None:
-        super().__init__("text_analyzer", "Analyze text for basic statistics")
-
-    def __call__(self, text: str, **kwargs: Any) -> ToolResult:
-        """Analyze text and return statistics."""
-        try:
-            word_count = len(text.split())
-            char_count = len(text)
-            sentence_count = len([s for s in text.split(".") if s.strip()])
-
-            result = {
-                "word_count": word_count,
-                "character_count": char_count,
-                "sentence_count": sentence_count,
-                "average_word_length": (
-                    char_count / word_count if word_count > 0 else 0
-                ),
-            }
-
-            return ToolResult(success=True, data=result)
-        except Exception as e:
-            return ToolResult(success=False, error=str(e))
-
-    def to_openai_schema(self) -> Dict[str, Any]:
-        """Return OpenAI function schema."""
-        return {
-            "type": "function",
-            "function": {
-                "name": "text_analyzer",
-                "description": "Analyze text for basic statistics",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "text": {
-                            "type": "string",
-                            "description": "The text to analyze",
-                        }
-                    },
-                    "required": ["text"],
-                },
-            },
-        }
+def echo_tool(payload: dict) -> Dict[str, Any]:
+    """Example tool that echoes back the input."""
+    return {"echo": payload}
 
 
-def get_example_tools() -> List[BaseTool]:
-    """
-    Get a list of example tools for demonstration.
-
-    Returns:
-        List of example tool instances
-    """
-    tools = [
-        CalculatorTool(),
-        TextAnalyzerTool(),
+def get_example_tools():
+    """Get a list of example tools to register."""
+    return [
+        ("reverse_text", "Reverse text string", reverse_text_tool),
+        ("echo", "Echo back input", echo_tool),
     ]
-    
-    # Add filesystem tools
-    tools.extend(create_filesystem_tools())
-    
-    # Add enhanced web search tools
-    tools.extend(create_enhanced_web_search_tools())
-    
-    return tools
+
+
+# Auto-register example tools when imported
+def _register_examples():
+    """Register example tools with the global registry."""
+    try:
+        from . import register_tool
+        for name, desc, func in get_example_tools():
+            register_tool(name, desc, func)
+    except ImportError as e:
+        print(f"Warning: Could not register example tools: {e}")
+
+
+# Register examples on import
+_register_examples()
+
+__all__ = ['get_example_tools', 'reverse_text_tool', 'echo_tool']

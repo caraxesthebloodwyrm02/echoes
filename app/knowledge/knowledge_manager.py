@@ -90,6 +90,18 @@ class KnowledgeManager:
         metadata: Optional[Dict[str, Any]] = None,
     ) -> str:
         """Add knowledge entry."""
+        # Like good code structure:
+        def handle_user_request(request):
+            # Phase 1: Analysis
+            understand_request(request)
+            
+            # Phase 2: Planning  
+            plan_approach(request)
+            
+            # Phase 3: Execution
+            execute_plan()
+
+        # Phase 1: Input Processing
         import hashlib
 
         # Generate ID
@@ -183,4 +195,91 @@ class KnowledgeManager:
             "categories": categories,
             "context_keys": len(self.context),
             "storage_path": str(self.storage_path),
+        }
+
+    def store_roi_analysis(self, roi_results: Dict[str, Any], analysis_id: Optional[str] = None) -> str:
+        """Store ROI analysis results in knowledge base."""
+        if not analysis_id:
+            import hashlib
+            timestamp = roi_results.get("timestamp", "")
+            institution = roi_results.get("stakeholder_config", {}).get("institution_name", "unknown")
+            analysis_id = hashlib.md5(f"roi_{institution}_{timestamp}".encode()).hexdigest()[:12]
+
+        content = f"ROI Analysis for {roi_results.get('stakeholder_config', {}).get('institution_name', 'Unknown Institution')}\n"
+        content += f"Business Type: {roi_results.get('business_type', 'unknown')}\n"
+        content += f"Monthly Investment: ${roi_results.get('roi_metrics', {}).get('monthly_investment', 0):,.0f}\n"
+        content += f"Monthly Savings: ${roi_results.get('roi_metrics', {}).get('monthly_savings', 0):,.0f}\n"
+        content += f"Payback Period: {roi_results.get('roi_metrics', {}).get('payback_days', 0):.0f} days\n"
+        content += f"ROI: {roi_results.get('roi_metrics', {}).get('roi_percentage', 0):.0f}%\n"
+
+        # Add file organization info
+        file_org = roi_results.get("file_organization", {})
+        if file_org.get("success"):
+            content += f"Files organized in: {file_org.get('institution_directory', '')}\n"
+
+        self.add_knowledge(
+            content=content,
+            source=f"ROI Analysis Tool - {analysis_id}",
+            category="roi_analysis",
+            tags=["roi", "analysis", roi_results.get("business_type", "unknown"), "financial"],
+            metadata={
+                "analysis_id": analysis_id,
+                "roi_metrics": roi_results.get("roi_metrics", {}),
+                "stakeholder_config": roi_results.get("stakeholder_config", {}),
+                "file_organization": roi_results.get("file_organization", {}),
+                "generated_files": list(roi_results.get("generated_files", {}).keys())
+            }
+        )
+
+        return analysis_id
+
+    def search_roi_analyses(self, institution: Optional[str] = None, business_type: Optional[str] = None, limit: int = 10) -> List[KnowledgeEntry]:
+        """Search ROI analyses by institution or business type."""
+        query = "ROI Analysis"
+        tags = ["roi"]
+        if business_type:
+            tags.append(business_type)
+
+        results = self.search_knowledge(query=query, category="roi_analysis", tags=tags, limit=limit)
+
+        if institution:
+            # Filter by institution in content
+            results = [r for r in results if institution.lower() in r.content.lower()]
+
+        return results
+
+    def get_roi_summary(self) -> Dict[str, Any]:
+        """Get summary of all ROI analyses."""
+        roi_entries = self.search_knowledge(category="roi_analysis", limit=1000)
+
+        total_analyses = len(roi_entries)
+        business_types = {}
+        total_investment = 0
+        total_savings = 0
+        institutions = set()
+
+        for entry in roi_entries:
+            # Extract business type from tags
+            for tag in entry.tags:
+                if tag != "roi" and tag != "analysis" and tag != "financial":
+                    business_types[tag] = business_types.get(tag, 0) + 1
+
+            # Extract metrics from metadata
+            metrics = entry.metadata.get("roi_metrics", {})
+            total_investment += metrics.get("monthly_investment", 0)
+            total_savings += metrics.get("monthly_savings", 0)
+
+            # Extract institution
+            stakeholder_config = entry.metadata.get("stakeholder_config", {})
+            institution = stakeholder_config.get("institution_name", "")
+            if institution:
+                institutions.add(institution)
+
+        return {
+            "total_analyses": total_analyses,
+            "business_types": business_types,
+            "institutions_analyzed": list(institutions),
+            "total_monthly_investment": total_investment,
+            "total_monthly_savings": total_savings,
+            "average_roi": (total_savings / total_investment * 100) if total_investment > 0 else 0
         }

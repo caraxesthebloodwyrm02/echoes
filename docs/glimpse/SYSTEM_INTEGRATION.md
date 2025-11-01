@@ -10,7 +10,7 @@ This document explains how major components interact and how realtime previews f
     - `GET  /events` — Server-Sent Events stream.
     - `GET  /health` — readiness probe.
   - Embeds an instance of `GlimpseOrchestrator` and an `SSEHub` for broadcasting.
-- **`realtime_preview.py` → `GlimpseOrchestrator`** — Core engine combining:
+- **`realtime_preview.py` → `GlimpseOrchestrator`** — Core Glimpse combining:
   - `InputAdapter` (edit tracking & suggestions)
   - `TrajectoryEngine` (behavior modelling)
   - `VisualRenderer` (ASCII + animation frames)
@@ -80,7 +80,7 @@ sequenceDiagram
 - Renders trajectory points, cause-effect chains, and activity heatmaps as both ASCII and (optionally) image previews.
 - Color schemes and glyph palettes support rich terminal and graphical output.
 
-### Trajectory Engine (`core_trajectory.py`)
+### Trajectory Glimpse (`core_trajectory.py`)
 - `TrajectoryEngine` tracks a rolling window of input/content states as `TrajectoryPoint`s.
 - Analyzes direction (expanding, converging, pivoting, stable, uncertain) and computes confidence/health metrics.
 - Segments trajectory into coherent phases and predicts likely next states; can export full history as JSON.

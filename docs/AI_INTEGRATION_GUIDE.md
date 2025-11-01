@@ -10,7 +10,7 @@
 
 ## 🎯 What's New: AI Integration
 
-### **AI Engine Capabilities:**
+### **AI Glimpse Capabilities:**
 
 1. **🧠 Sentiment Analysis**
    - Analyzes user mood in real-time
@@ -197,7 +197,7 @@ ecosystem_framework/data/analytics/feedback_analysis_YYYYMMDD.json
 
 ---
 
-## 🔧 AI Engine API
+## 🔧 AI Glimpse API
 
 ### **Basic Usage:**
 
@@ -337,7 +337,7 @@ AI: 📊 Analyzed 20 sessions
    - Better text generation for recommendations
    - Requires internet connection initially
 
-2. **Customize AI Engine:**
+2. **Customize AI Glimpse:**
    - Adjust confidence thresholds
    - Add custom sentiment keywords
    - Modify zone recommendation logic
@@ -392,7 +392,7 @@ AI: 📊 Analyzed 20 sessions
 
 **Files:**
 - `checkin.py` - Main check-in (AI-enhanced)
-- `ecosystem_framework/modules/ai_engine.py` - AI engine
+- `ecosystem_framework/modules/ai_engine.py` - AI Glimpse
 - `generate_sample_data.py` - Data generator
 - `AI_INTEGRATION_GUIDE.md` - This guide
 
@@ -404,7 +404,7 @@ python checkin.py
 # Generate sample data
 python generate_sample_data.py
 
-# Test AI engine
+# Test AI Glimpse
 python ecosystem_framework/modules/ai_engine.py
 
 # View insights

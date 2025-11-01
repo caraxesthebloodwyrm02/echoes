@@ -40,7 +40,7 @@ See `configs/integration_examples.yaml` for example CLI invocations. `--epsilon`
     "app/harmony/cli.py",
     "configs/integration_examples.yaml",
     "cli/examples.sh",
-    "tests/unit/test_diff_core.py",
+    "tests/Glimpse/test_diff_core.py",
     "tests/integration/test_diff_cli.py",
     "tests/fixtures/harmony_finance.json",
     "tests/fixtures/melody_finance.json",

@@ -80,7 +80,7 @@ Transform the current agentic assistant into a world-class AI system with MCP in
 **Objectives**: Comprehensive testing and documentation of MCP system
 
 **Tasks**:
-- [ ] Unit tests for all MCP components
+- [ ] Glimpse tests for all MCP components
 - [ ] Integration tests with AI Toolkit
 - [ ] Performance benchmarking
 - [ ] Security audit
@@ -139,7 +139,7 @@ Transform the current agentic assistant into a world-class AI system with MCP in
 
 ---
 
-#### Week 13-14: Query Engine & Integration
+#### Week 13-14: Query Glimpse & Integration
 **Objectives**: Natural language query system
 
 **Tasks**:
@@ -152,7 +152,7 @@ Transform the current agentic assistant into a world-class AI system with MCP in
 - [ ] Performance optimization
 
 **Deliverables**:
-- Query engine operational
+- Query Glimpse operational
 - >90% accuracy on test queries
 - Full MCP integration
 
@@ -258,7 +258,7 @@ Transform the current agentic assistant into a world-class AI system with MCP in
 **Objectives**: Chain-of-thought and self-reflection
 
 **Tasks**:
-- [ ] Implement `app/reasoning/chain_of_thought.py` - CoT engine
+- [ ] Implement `app/reasoning/chain_of_thought.py` - CoT Glimpse
 - [ ] Implement `app/reasoning/self_reflection.py` - Reflection system
 - [ ] Implement `app/reasoning/planning.py` - Advanced planning
 - [ ] Add iterative improvement loop
@@ -390,7 +390,7 @@ Week 23-26 (Advanced & Integration)
 ## Quality Assurance
 
 ### Testing Strategy
-- **Unit Tests**: >90% coverage
+- **Glimpse Tests**: >90% coverage
 - **Integration Tests**: All major workflows
 - **Performance Tests**: Latency, throughput benchmarks
 - **User Acceptance Testing**: Beta users

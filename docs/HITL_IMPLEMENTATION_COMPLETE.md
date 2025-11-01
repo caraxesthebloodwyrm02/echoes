@@ -80,7 +80,7 @@ Successfully verified, integrated, and documented the comprehensive HITL (Human-
 
 ### Core Components
 
-1. **GPT-OSS:120B** - HITL inference engine
+1. **GPT-OSS:120B** - HITL inference Glimpse
    - Constraint inference and solution generation
    - Knowledge integration without retraining
    - Interactive validation capabilities
@@ -269,7 +269,7 @@ e:\Projects\Development\
 
 ### Primary Innovation
 
-> "By shifting 'middleware' from a silent software layer to a Human-in-the-Loop component, we've turned the GPT-OSS:120B from a powerful language model into a proactive, real-time diagnostic engine. Combined with Glimpse and Realtime Preview, this approach turns costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles."
+> "By shifting 'middleware' from a silent software layer to a Human-in-the-Loop component, we've turned the GPT-OSS:120B from a powerful language model into a proactive, real-time diagnostic Glimpse. Combined with Glimpse and Realtime Preview, this approach turns costly batch diagnostics into interactive corrections—cutting errors, shaving hours off MTTR, and eliminating expensive retraining cycles."
 
 ### Business Impact
 

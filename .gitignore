@@ -231,10 +231,111 @@ local_settings.py
 local_config.py
 
 # =============================================================================
+# ECHOES PROJECT SPECIFIC
+# =============================================================================
+# Backup directories
+.root_backup/
+backup/
+backups/
+
+# Generated alignment reports (keep template)
+glimpse/alignment_report_*.json
+!glimpse/alignment_report.json
+
+# Temporary diagnostic files
+scripts/*_diagnostic_*.py
+scripts/*_fixed.py
+scripts/*_temp.py
+scripts/*_backup.py
+
+# Model artifacts and checkpoints
+models/experiment_*/
+models/quick_start/
+*.pth
+*.pt
+*.h5
+*.hdf5
+
+# Vector indices
+vector_index/
+*.faiss
+*.pkl
+
+# Configuration backups
+config/*backup*
+config/*old*
+
+# Test outputs and artifacts
+test_outputs/
+test_results/
+*.test
+tests/temp/
+
+# Monitoring and metrics
+monitoring/
+metrics/
+*.metrics
+
+# Deployment artifacts
+deploy/
+docker/.env
+docker-compose.override.yml
+
+# Large datasets
+data/cifar-10-batches-py/
+datasets/
+data/raw/
+data/processed/
+
+# Training artifacts
+checkpoints/
+wandb/
+mlruns/
+tensorboard_logs/
+
+# Download and temporary files
+*.download
+*.crdownload
+
+# Audio/Video files (if temporary)
+*.m4a
+*.mp3
+*.wav
+*.mp4
+*.avi
+
+# Archive files
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# Project-specific temporary directories
+Q4/outputs/
+Chat/
+autosave/
+demo_workspace/
+
+# Generated documentation builds
+docs/_build/
+docs/build/
+
+# Local development files
+local_settings.py
+local_config.py
+.local/
+local/
+
+# Windsurf (keep config)
+.windsurf/
+!.windsurf/config.json
+
+# =============================================================================
 # EXCEPTIONS - Files that should NOT be ignored
 # =============================================================================
 !requirements.txt
 !requirements-dev.txt
+!requirements-full.txt
 !Pipfile.lock
 !poetry.lock
 !package-lock.json
@@ -249,11 +350,47 @@ local_config.py
 !README.md
 !CHANGELOG.md
 !LICENSE
+!CONTRIBUTING.md
+!SECURITY.md
+!VERSION
+!Makefile
+!pyproject.toml
+!pytest.ini
+!setup.py
+
+# Keep essential docs
 !docs/
+!docs/*.md
+!docs/*.txt
 
 # Keep test fixtures that are small and essential
 !tests/fixtures/*.json
 !tests/fixtures/*.py
+!tests/test_*.py
+
+# Keep core Python files
+!assistant_v2_core.py
+!enhanced_accounting.py
+!tools/*.py
+!app/*.py
+!api/*.py
+!core/*.py
+!automation/*.py
+!demos/*.py
+!examples/*.py
+
+# Keep essential scripts
+!start_api.py
+!run_tests.py
+!deploy_production.sh
+
+# Keep configuration files
+!.gitattributes
+!.gitignore
+!.gitmodules
+!.pre-commit-config.yaml
+!Dockerfile
+!docker-compose*.yml
 
 # =============================================================================
 # CUSTOM PROJECT SPECIFIC

@@ -1,0 +1,27 @@
+{
+  "inputs": {
+    "avg_hourly_rate": 85.0,
+    "weekly_hours_saved": 40.0,
+    "error_reduction_pct": 75.0,
+    "avg_cost_per_error_per_fte": 15000.0,
+    "audit_prep_hours_saved": 30.0,
+    "audits_per_year": 4.0,
+    "compliance_team_size": 5,
+    "echoes_investment": 12000.0,
+    "institution_name": "\"Pilot A Bank\"",
+    "currency": "USD"
+  },
+  "metrics": {
+    "hours_per_month": 4.33,
+    "monthly_labor_savings": 14721.999999999998,
+    "annual_labor_savings": 176663.99999999997,
+    "error_reduction_savings": 56250.0,
+    "audit_savings": 850.0,
+    "total_monthly_savings": 71822.0,
+    "echoes_investment": 12000.0,
+    "net_monthly_benefit": 59822.0,
+    "roi_pct": 498.51666666666665,
+    "payback_days": 5.012391746261591
+  },
+  "timestamp": "2025-10-29T23:37:36.544844Z"
+}

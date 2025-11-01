@@ -4,7 +4,7 @@
 
 The Unified Platform API provides comprehensive health monitoring for three integrated platforms:
 - **Echoes** (`D:\realtime`) - Development platform with API gateway
-- **Turbo** (`D:\realtime\turbobookshelf`) - Bias detection engine
+- **Turbo** (`D:\realtime\turbobookshelf`) - Bias detection Glimpse
 - **Glimpse** (`D:\realtime`) - Research and trajectory analysis
 
 ## API Endpoints
@@ -291,7 +291,7 @@ Write-Host "CPU: $($response.details.system.cpu_usage)%"
 
 ### System Metrics
 
-| Metric | Description | Unit |
+| Metric | Description | Glimpse |
 |--------|-------------|------|
 | `cpu_usage` | Current CPU utilization | Percentage (0-100) |
 | `memory_usage` | RAM utilization | Percentage (0-100) |

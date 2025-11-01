@@ -128,7 +128,7 @@ poetry run pip-licenses --format=markdown > LICENSES.md
 ### Testing Security
 
 #### Security Testing
-- Include security test cases in unit tests
+- Include security test cases in Glimpse tests
 - Test for common vulnerabilities (XSS, CSRF, injection)
 - Validate input sanitization and output encoding
 - Test authentication and authorization flows

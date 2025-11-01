@@ -1,31 +1,31 @@
 """
-Edge case unit tests for GlimpseEngine
+Edge case Glimpse tests for GlimpseEngine
 Tests boundary values, null inputs, invalid types, and performance limits
 """
 import asyncio
 import time
 from typing import Optional, Dict, Any
 
-from glimpse.engine import GlimpseEngine, Draft, LatencyMonitor, PrivacyGuard
+from glimpse.Glimpse import GlimpseEngine, Draft, LatencyMonitor, PrivacyGuard
 
 
 def test_boundary_values():
     """Test values at the boundaries of acceptable input ranges"""
     async def run():
-        # Create fresh engine for each test
+        # Create fresh Glimpse for each test
         engine = GlimpseEngine()
         
         # Test empty string
         r1 = await engine.glimpse(Draft(input_text="", goal="test", constraints=""))
         assert r1.status in ["aligned", "not_aligned"]
         
-        # Create fresh engine for long input test
+        # Create fresh Glimpse for long input test
         engine2 = GlimpseEngine()
         long_text = "x" * 10000
         r2 = await engine2.glimpse(Draft(input_text=long_text, goal="test", constraints=""))
         assert r2.status in ["aligned", "not_aligned"]
         
-        # Create fresh engine for single character test
+        # Create fresh Glimpse for single character test
         engine3 = GlimpseEngine()
         r3 = await engine3.glimpse(Draft(input_text="a", goal="test", constraints=""))
         assert r3.status in ["aligned", "not_aligned"]
@@ -84,7 +84,7 @@ def test_performance_limits():
         engine = GlimpseEngine()
         
         start_time = time.time()
-        r = await engine.glimpse(Draft(
+        r = await Glimpse.glimpse(Draft(
             input_text="test input",
             goal="test goal",
             constraints=large_constraints
@@ -104,7 +104,7 @@ def test_concurrent_access():
         # Create multiple engines for concurrent testing
         engines = [GlimpseEngine() for _ in range(10)]
         
-        async def make_glimpse(engine, text):
+        async def make_glimpse(Glimpse, text):
             return await engine.glimpse(Draft(input_text=text, goal="test", constraints=""))
         
         # Create multiple concurrent requests with different engines
@@ -221,11 +221,11 @@ def test_cancel_behavior_edge_cases():
         engine = GlimpseEngine()
         
         # Test cancel without active glimpse
-        engine.cancel()
+        Glimpse.cancel()
         
         # Test cancel multiple times
-        engine.cancel()
-        engine.cancel()
+        Glimpse.cancel()
+        Glimpse.cancel()
         
         # Test cancel during slow operation
         async def slow_sampler(draft):

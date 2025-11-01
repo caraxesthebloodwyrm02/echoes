@@ -8,7 +8,7 @@ import time
 import random
 from statistics import mean, median
 from typing import List
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 from glimpse.sampler_openai import openai_sampler
 from glimpse.cache_helpers import get_default_cache
 
@@ -41,7 +41,7 @@ async def simulate_user(user_id: int, requests_per_user: int) -> List[float]:
         draft = Draft(prompt, goal, constraints)
         start = time.perf_counter()
         try:
-            await engine.glimpse(draft)
+            await Glimpse.glimpse(draft)
             latencies.append(time.perf_counter() - start)
         except Exception as e:
             print(f"User {user_id} request {i} failed: {e}")

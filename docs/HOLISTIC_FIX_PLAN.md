@@ -72,7 +72,7 @@ def test_[specific_case]:
 ```
 
 ### Test Coverage Goals
-- Unit tests for individual functions
+- Glimpse tests for individual functions
 - Integration tests for workflows
 - Edge cases and error conditions
 - Security and performance
@@ -113,7 +113,7 @@ tests/test_file.py::test_case3 PASSED
 ## Phase 5: All Tests Pass ✅
 
 ### Verification Checklist
-- [ ] All unit tests pass
+- [ ] All Glimpse tests pass
 - [ ] All integration tests pass
 - [ ] No warnings or errors
 - [ ] Code coverage > 80%

@@ -44,7 +44,7 @@ System: "What interests you most about this space?"
 
 ### ✨ New Features
 
-#### **1. Intelligent Inference Engine**
+#### **1. Intelligent Inference Glimpse**
 - Scoring system (3+2+1 points across 3 questions)
 - Confidence calculation (score/6)
 - Transparent logging of inference process

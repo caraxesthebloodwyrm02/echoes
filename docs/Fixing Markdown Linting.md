@@ -74,7 +74,7 @@ The codebase is an **AI Advisor** project - a unified platform containing multip
 
 **🏫 Educational Ecosystem Framework (Primary System)**
 - **AI-Powered Check-In System**: Single-command (`python checkin.py`) interactive system that automatically routes users based on their role (student, teacher, parent, admin)
-- **Gamification Engine**: Points system (10-75 per session), badge levels (🏆 Gold, 🥈 Silver, 🥉 Bronze, ⭐ Participant), progress tracking, and leaderboards
+- **Gamification Glimpse**: Points system (10-75 per session), badge levels (🏆 Gold, 🥈 Silver, 🥉 Bronze, ⭐ Participant), progress tracking, and leaderboards
 - **Five Educational Zones**:
   - 🧘 Chill Zone (Lake): Stress relief, emotional wellness
   - 🌿 Nature Spot (Wilderness): Environmental connection, observation
@@ -143,7 +143,7 @@ Good answer shows: Verified sources, peer-review validation, and AI-driven summa
 Card 02 — Chemistry as Catalyst
 Question: How can chemistry modules support both biology and physics simulations within the system?
 Why ask: Promotes cross-disciplinary data flow.
-Follow-ups: Can the chemistry engine supply models, reaction templates, or compound databases?
+Follow-ups: Can the chemistry Glimpse supply models, reaction templates, or compound databases?
 Good answer shows: Modular APIs, physics-biology integration pipelines, and reaction prediction systems.
 
 Card 03 — Physics of Multiplanetary Travel
@@ -169,12 +169,12 @@ Card 06 — Universal Basic Income Simulation
 Question: Can AI Advisor model and simulate universal income distribution based on dynamic economic data?
 Why ask: Tests economic modeling capability for equity systems.
 Follow-ups: How does it account for inflation, regional variance, and productivity?
-Good answer shows: Dynamic simulation engine, ethical governance, macroeconomic integration.
+Good answer shows: Dynamic simulation Glimpse, ethical governance, macroeconomic integration.
 
-Card 07 — Employment Streamlining Engine
+Card 07 — Employment Streamlining Glimpse
 Question: How can the platform match individual skills to relevant employment opportunities using AI relevance mapping?
 Why ask: Bridges job discovery gaps.
-Follow-ups: How does the engine validate and rank opportunity fit?
+Follow-ups: How does the Glimpse validate and rank opportunity fit?
 Good answer shows: Semantic match algorithms, bias-free recommendations, transparent scoring.
 
 Card 08 — Craft-to-Commerce Connector
@@ -196,7 +196,7 @@ Follow-ups: What transparency mechanisms exist for such forecasts?
 Good answer shows: Risk dashboards, multi-agent forecasting, and verifiable models.
 
 🎨 ARTS MODULE — Creativity, History, Language, Cultural Intelligence
-Card 11 — Creative Intelligence Engine
+Card 11 — Creative Intelligence Glimpse
 Question: How can AI Advisor amplify creativity through music, painting, and storytelling tools without losing originality?
 Why ask: Builds ethical AI-driven art generation.
 Follow-ups: Are generated outputs labeled and owned transparently?
@@ -208,7 +208,7 @@ Why ask: Encourages cultural and historical literacy.
 Follow-ups: What datasets back its interpretations?
 Good answer shows: Verified sources, time-series analysis, contextual correlation.
 
-Card 13 — Language Evolution Engine
+Card 13 — Language Evolution Glimpse
 Question: How can AI Advisor model and preserve endangered languages using generative linguistics?
 Why ask: Strengthens cultural heritage and inclusivity.
 Follow-ups: Does it collaborate with open linguistic databases?
@@ -255,7 +255,7 @@ Card 20 — Future-State Simulation
 Question: Can AI Advisor simulate societal outcomes of scientific, economic, and artistic innovations collectively?
 Why ask: Tests long-term systemic effects.
 Follow-ups: How are simulations validated and governed?
-Good answer shows: Scenario modeling engine, ethical review, validation datasets.
+Good answer shows: Scenario modeling Glimpse, ethical review, validation datasets.
 
 AI Advisor — Domain-Aligned Interview Cards
 Curated 20 interview cards segmented into Science, Commerce, and Arts domains to extend the AI Advisor codebase. Each card aligns with real-world applications, innovation pathways, and safe expansion strategies.
@@ -270,7 +270,7 @@ Good answer shows: Verified sources, peer-review validation, and AI-driven summa
 Card 02 — Chemistry as Catalyst
 Question: How can chemistry modules support both biology and physics simulations within the system?
 Why ask: Promotes cross-disciplinary data flow.
-Follow-ups: Can the chemistry engine supply models, reaction templates, or compound databases?
+Follow-ups: Can the chemistry Glimpse supply models, reaction templates, or compound databases?
 Good answer shows: Modular APIs, physics-biology integration pipelines, and reaction prediction systems.
 
 Card 03 — Physics of Multiplanetary Travel
@@ -296,12 +296,12 @@ Card 06 — Universal Basic Income Simulation
 Question: Can AI Advisor model and simulate universal income distribution based on dynamic economic data?
 Why ask: Tests economic modeling capability for equity systems.
 Follow-ups: How does it account for inflation, regional variance, and productivity?
-Good answer shows: Dynamic simulation engine, ethical governance, macroeconomic integration.
+Good answer shows: Dynamic simulation Glimpse, ethical governance, macroeconomic integration.
 
-Card 07 — Employment Streamlining Engine
+Card 07 — Employment Streamlining Glimpse
 Question: How can the platform match individual skills to relevant employment opportunities using AI relevance mapping?
 Why ask: Bridges job discovery gaps.
-Follow-ups: How does the engine validate and rank opportunity fit?
+Follow-ups: How does the Glimpse validate and rank opportunity fit?
 Good answer shows: Semantic match algorithms, bias-free recommendations, transparent scoring.
 
 Card 08 — Craft-to-Commerce Connector
@@ -323,7 +323,7 @@ Follow-ups: What transparency mechanisms exist for such forecasts?
 Good answer shows: Risk dashboards, multi-agent forecasting, and verifiable models.
 
 🎨 ARTS MODULE — Creativity, History, Language, Cultural Intelligence
-Card 11 — Creative Intelligence Engine
+Card 11 — Creative Intelligence Glimpse
 Question: How can AI Advisor amplify creativity through music, painting, and storytelling tools without losing originality?
 Why ask: Builds ethical AI-driven art generation.
 Follow-ups: Are generated outputs labeled and owned transparently?
@@ -335,7 +335,7 @@ Why ask: Encourages cultural and historical literacy.
 Follow-ups: What datasets back its interpretations?
 Good answer shows: Verified sources, time-series analysis, contextual correlation.
 
-Card 13 — Language Evolution Engine
+Card 13 — Language Evolution Glimpse
 Question: How can AI Advisor model and preserve endangered languages using generative linguistics?
 Why ask: Strengthens cultural heritage and inclusivity.
 Follow-ups: Does it collaborate with open linguistic databases?
@@ -382,7 +382,7 @@ Card 20 — Future-State Simulation
 Question: Can AI Advisor simulate societal outcomes of scientific, economic, and artistic innovations collectively?
 Why ask: Tests long-term systemic effects.
 Follow-ups: How are simulations validated and governed?
-Good answer shows: Scenario modeling engine, ethical review, validation datasets.
+Good answer shows: Scenario modeling Glimpse, ethical review, validation datasets.
 
 Overview
 The AI Advisor Domain-Aligned Interview Deck is a structured framework designed to guide interdisciplinary expansion of the AI Advisor codebase. It bridges science, commerce, and arts to establish a unified AI ecosystem capable of scientific innovation, socioeconomic empowerment, and creative evolution — all under safe, ethical, and transparent AI governance.
@@ -1306,7 +1306,7 @@ Sprint 0 (1 week): repo scaffolding, secrets + SCA, provenance schema, ethics va
 Sprint 1 (2 weeks): implement provenance enforcement, basic HIL feedback capture, API contract for domain cards.
 Sprint 2 (2 weeks): Agent Safety Layer (dry-run, kill-switch), model-routing telemetry, CI checks for drift/cost alerts.
 Testing & validation checklist (must-have)
-Unit tests for provenance and redaction.
+Glimpse tests for provenance and redaction.
 Integration tests for HIL flow and retrain pipeline with synthetic labels.
 Security tests: SAST, SCA, infra secrets leak scan.
 Compliance checklist: HIPAA/GDPR mapping for biomedical and finance endpoints.

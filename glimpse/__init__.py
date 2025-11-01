@@ -1,7 +1,7 @@
 """Glimpse package public API.
 
 Avoid eager imports to prevent runpy warnings when executing
-`python -m glimpse.engine`. Symbols are exposed lazily via __getattr__.
+`python -m glimpse.Glimpse`. Symbols are exposed lazily via __getattr__.
 """
 
 from importlib import import_module
@@ -30,7 +30,7 @@ __all__ = [
 def __getattr__(name: str) -> Any:
     # Core components
     if name in {"GlimpseEngine", "PrivacyGuard", "Draft", "GlimpseResult"}:
-        mod = import_module(".engine", __name__)
+        mod = import_module(".Glimpse", __name__)
         return getattr(mod, name)
     
     # Metrics server

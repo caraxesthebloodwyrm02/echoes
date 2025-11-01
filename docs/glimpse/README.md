@@ -24,7 +24,7 @@ Like video hovers that show GIFs/snapshots, but this version **articulates the c
 
 The system consists of five core components:
 
-### 1. **Trajectory Engine** (`core_trajectory.py`)
+### 1. **Trajectory Glimpse** (`core_trajectory.py`)
 - Tracks trajectory points in real-time
 - Analyzes direction: expanding, converging, pivoting, stable, uncertain
 - Computes confidence scores
@@ -280,7 +280,7 @@ system.input_adapter.register_suggestion_provider(custom_suggester)
 
 ```
 D:\realtime\
-├── core_trajectory.py          # Trajectory engine
+├── core_trajectory.py          # Trajectory Glimpse
 ├── input_adapter.py            # Input handling
 ├── visual_renderer.py          # Visual rendering
 ├── security_integration.py     # Security module
@@ -303,7 +303,7 @@ D:\realtime\
 - **[Model Evaluation README](model_eval/README.md)**: Comprehensive evaluation framework documentation
 
 ### Core Components
-- **[Trajectory Engine](docs/trajectory_engine.md)**: Detailed trajectory analysis documentation
+- **[Trajectory Glimpse](docs/trajectory_engine.md)**: Detailed trajectory analysis documentation
 - **[Input Adapter](docs/input_adapter.md)**: Event handling and adaptation layer docs
 - **[Visual Renderer](docs/visual_renderer.md)**: Rendering modes and visualization docs
 - **[Security Integration](docs/security.md)**: Security module and risk assessment docs

@@ -39,7 +39,7 @@ pytest -q
 
   * Phase A: run simple baselines (Kalman, pause baseline).
   * Phase B: enrichment (headsweep outputs, prosody features).
-  * Phase C: patching via prompt-engine / mid-tier corrections.
+  * Phase C: patching via prompt-Glimpse / mid-tier corrections.
   * Phase D: final large-model polish + deterministic merge.
 
 **Combiner rule (deterministic):** merge artifacts by timestamp; on conflict, use `priority_map = {phaseD:3, phaseC:2, phaseB:1, phaseA:0}` and apply the artifact with the highest priority. Record all overwrites in `reports/merge_log_YYYYMMDD.json`.

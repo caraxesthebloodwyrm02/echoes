@@ -1,0 +1,3431 @@
+[
+  {
+    "id": "mem_20251101_121906_685408",
+    "content": "Dr. Sarah Chen presented the EchoesAssistantV2 project at the AI conference",
+    "context": {
+      "event": "AI Conference 2024",
+      "location": "San Francisco",
+      "date": "2024-10-15"
+    },
+    "entities": [
+      "echoesassistantv2"
+    ],
+    "concepts": [
+      "Dr",
+      "Sarah",
+      "Chen"
+    ],
+    "timestamp": "2025-11-01T12:19:06.685432+00:00",
+    "importance": 0.9,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121906_686318",
+    "content": "The knowledge graph integration enables meaningful communication with context awareness",
+    "context": {
+      "feature": "Knowledge Graph",
+      "benefit": "context_awareness"
+    },
+    "entities": [],
+    "concepts": [
+      "The"
+    ],
+    "timestamp": "2025-11-01T12:19:06.686337+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121913_048916",
+    "content": "Tell me about Dr. Sarah Chen's work on the EchoesAssistantV2 project",
+    "context": {
+      "response": "Dr. Sarah Chen has made significant contributions to the EchoesAssistantV2 project, particularly in the areas of natural language processing and user experience design. Her background in computational linguistics has enabled her to enhance the conversational capabilities of the assistant, making it more intuitive and responsive to user queries.\n\nSarah's work focuses on refining the algorithms that drive the assistant's understanding of context and intent, allowing it to provide more contextually relevant responses. She also plays a crucial role in user testing, gathering feedback to iteratively improve the system's usability and effectiveness. Her collaborative spirit and technical expertise have been pivotal in shaping the EchoesAssistantV2 into a more engaging and intelligent virtual assistant.",
+      "confidence": 0.8,
+      "entities": [
+        "echoesassistantv2"
+      ],
+      "concepts": [
+        "She",
+        "Sarah",
+        "Her",
+        "Dr",
+        "Chen",
+        "Tell"
+      ]
+    },
+    "entities": [
+      "echoesassistantv2"
+    ],
+    "concepts": [
+      "She",
+      "Sarah",
+      "Her",
+      "Dr",
+      "Chen",
+      "Tell"
+    ],
+    "timestamp": "2025-11-01T12:19:13.048932+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121913_050487",
+    "content": "What is the relationship between NLP and knowledge graphs?",
+    "context": {
+      "response": "NLP and knowledge graphs are closely related - knowledge graphs provide structured semantic information that enhances NLP systems, while NLP techniques can extract and populate knowledge graphs from unstructured text.",
+      "confidence": 0.9,
+      "entities": [],
+      "concepts": [
+        "What"
+      ]
+    },
+    "entities": [],
+    "concepts": [
+      "What"
+    ],
+    "timestamp": "2025-11-01T12:19:13.050501+00:00",
+    "importance": 0.9,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121937_143423",
+    "content": "TechCorp Q4 2024 revenue reached $50M, representing 25% YoY growth",
+    "context": {
+      "period": "Q4_2024",
+      "revenue": "50M",
+      "growth": "25%"
+    },
+    "entities": [],
+    "concepts": [
+      "TechCorp"
+    ],
+    "timestamp": "2025-11-01T12:19:37.143440+00:00",
+    "importance": 0.9,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121937_144187",
+    "content": "Alex Johnson announced expansion into European market in Q1 2025",
+    "context": {
+      "event": "expansion",
+      "market": "Europe",
+      "timeline": "Q1_2025"
+    },
+    "entities": [
+      "alex johnson"
+    ],
+    "concepts": [
+      "Johnson",
+      "European",
+      "Alex"
+    ],
+    "timestamp": "2025-11-01T12:19:37.144196+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121949_789309",
+    "content": "Analyze TechCorp's Q4 performance and provide strategic recommendations for 2025",
+    "context": {
+      "response": "To provide you with a detailed analysis and strategic recommendations for TechCorp's Q4 performance concerning 2025, I'll need to make some general assumptions based on typical business contexts as I don't have the specific Q4 report. Here is a structured approach you might consider:\n\n### Q4 Performance Analysis\n\n1. **Revenue Trends:**\n   - Assess if there was growth or decline compared to previous quarters.\n   - Identify key products or services that drove revenue.\n\n2. **Market Share:**\n   - Evaluate TechCorp's position relative to competitors.\n   - Observe any shifts in market dynamics or new entrants.\n\n3. **Customer Base:**\n   - Examine growth or retention rates.\n   - Review customer feedback and satisfaction scores.\n\n4. **Operational Efficiency:**\n   - Analyze cost management and operational improvements.\n   - Look into supply chain efficiency and potential bottlenecks.\n\n5. **Innovation & R&D:**\n   - Consider new product launches or technological advancements.\n   - Evaluate R&D investment effectiveness.\n\n6. **Financial Health:**\n   - Review key financial metrics like profit margins, EBITDA, and cash flow.\n   - Assess debt levels and investment capacity.\n\n### Strategic Recommendations for 2025\n\n1. **Market Expansion:**\n   - Consider entering emerging markets or expanding product lines in high-growth areas.\n   - Evaluate strategic partnerships or acquisitions to enhance market presence.\n\n2. **Innovation and Technology:**\n   - Increase investment in R&D for cutting-edge technologies, especially AI and IoT.\n   - Focus on enhancing product differentiation and customer value propositions.\n\n3. **Customer Engagement:**\n   - Develop personalized marketing strategies leveraging data analytics.\n   - Enhance customer experience through digital transformation initiatives.\n\n4. **Sustainability Initiatives:**\n   - Invest in sustainable practices and products to meet regulatory demands and enhance brand image.\n   - Explore clean energy solutions and sustainable supply chain management.\n\n5. **Operational Excellence:**\n   - Continue cost optimization strategies to improve margins.\n   - Implement advanced technologies for supply chain and logistics efficiencies.\n\n6. **Talent Development:**\n   - Focus on attracting top talent and retaining employees through competitive compensation and a strong company culture.\n   - Invest in continuous learning and development programs.\n\n7. **Risk Management:**\n   - Strengthen cybersecurity and data privacy measures.\n   - Prepare for economic uncertainties through diversified revenue streams.\n\nThese recommendations aim to capitalize on TechCorp's strengths and address any potential weaknesses observed in the Q4 performance analysis.",
+      "confidence": 0.8,
+      "entities": [],
+      "concepts": [
+        "Financial",
+        "Increase",
+        "Trends",
+        "Identify",
+        "Evaluate",
+        "Innovation",
+        "Strategic",
+        "Risk",
+        "Strengthen",
+        "Share",
+        "Development",
+        "Review",
+        "These",
+        "Revenue",
+        "Develop",
+        "Sustainability",
+        "Talent",
+        "Explore",
+        "Management",
+        "Here",
+        "Observe",
+        "Invest",
+        "Analysis",
+        "Analyze",
+        "Consider",
+        "Expansion",
+        "Examine",
+        "Continue",
+        "Performance",
+        "Engagement",
+        "Enhance",
+        "Initiatives",
+        "Efficiency",
+        "Assess",
+        "Technology",
+        "Focus",
+        "Look",
+        "Excellence",
+        "Prepare",
+        "Customer",
+        "Market",
+        "TechCorp",
+        "Implement",
+        "Health",
+        "Recommendations",
+        "To",
+        "Operational",
+        "Base"
+      ]
+    },
+    "entities": [],
+    "concepts": [
+      "Financial",
+      "Increase",
+      "Trends",
+      "Identify",
+      "Evaluate",
+      "Innovation",
+      "Strategic",
+      "Risk",
+      "Strengthen",
+      "Share",
+      "Development",
+      "Review",
+      "These",
+      "Revenue",
+      "Develop",
+      "Sustainability",
+      "Talent",
+      "Explore",
+      "Management",
+      "Here",
+      "Observe",
+      "Invest",
+      "Analysis",
+      "Analyze",
+      "Consider",
+      "Expansion",
+      "Examine",
+      "Continue",
+      "Performance",
+      "Engagement",
+      "Enhance",
+      "Initiatives",
+      "Efficiency",
+      "Assess",
+      "Technology",
+      "Focus",
+      "Look",
+      "Excellence",
+      "Prepare",
+      "Customer",
+      "Market",
+      "TechCorp",
+      "Implement",
+      "Health",
+      "Recommendations",
+      "To",
+      "Operational",
+      "Base"
+    ],
+    "timestamp": "2025-11-01T12:19:49.789325+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_121949_792026",
+    "content": "What's the competitive landscape for AI platforms in 2025?",
+    "context": {
+      "response": "The AI platform market in 2025 is highly competitive with key players including OpenAI, Anthropic, and TechCorp. TechCorp's EchoesAI Platform differentiates through its advanced knowledge graph capabilities and enterprise focus.",
+      "confidence": 0.9,
+      "entities": [
+        "echoesai platform"
+      ],
+      "concepts": [
+        "The",
+        "What",
+        "Platform",
+        "TechCorp",
+        "Anthropic"
+      ]
+    },
+    "entities": [
+      "echoesai platform"
+    ],
+    "concepts": [
+      "The",
+      "What",
+      "Platform",
+      "TechCorp",
+      "Anthropic"
+    ],
+    "timestamp": "2025-11-01T12:19:49.792038+00:00",
+    "importance": 0.9,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_749187",
+    "content": "Processed multimodal file eveningketchup with resonance 0.30",
+    "context": {
+      "file_path": "e:/Projects/Echoes/all_my_work/Notes/eveningketchup.txt",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_747271",
+        "modality_vector": {
+          "extension": ".txt",
+          "modality_type": "text",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.5,
+          "semantic_density": 0.9
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.2,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-1609673812214648954",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [
+      "eveningketchup"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.749201+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_755772",
+    "content": "Processed multimodal file eveningketchup with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\Notes\\eveningketchup.txt",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_754308",
+        "modality_vector": {
+          "extension": ".txt",
+          "modality_type": "text",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.5,
+          "semantic_density": 0.9
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.2,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-6863242475984195953",
+          "entities_extracted": [
+            [
+              "eveningketchup"
+            ],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [
+      "eveningketchup"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.755783+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_758206",
+    "content": "Processed multimodal file my-system() with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\Notes\\my-system().txt",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_756747",
+        "modality_vector": {
+          "extension": ".txt",
+          "modality_type": "text",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.5,
+          "semantic_density": 0.9
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.2,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_2743309132631284570",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [
+      "my-system()"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.758214+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_760867",
+    "content": "Processed multimodal file nextup with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\Notes\\nextup.txt",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_759232",
+        "modality_vector": {
+          "extension": ".txt",
+          "modality_type": "text",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.5,
+          "semantic_density": 0.9
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.2,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_6792692284485750283",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [
+      "nextup"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.760876+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_761923",
+    "content": "Analyzed 3 multimodal files in e:/Projects/Echoes/all_my_work/Notes",
+    "context": {
+      "directory": "e:/Projects/Echoes/all_my_work/Notes",
+      "files_processed": 3,
+      "modality_distribution": {
+        "text": 3
+      },
+      "average_resonance": 0.3,
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Projects",
+      "Echoes",
+      "Analyzed",
+      "Notes"
+    ],
+    "timestamp": "2025-11-01T12:29:24.761932+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_771497",
+    "content": "Processed multimodal file Implementation Plan for -The Chamber of Secrets- with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\frameworks\\Implementation Plan for -The Chamber of Secrets-.docx",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_769147",
+        "modality_vector": {
+          "extension": ".docx",
+          "modality_type": "text",
+          "resonance_frequency": 0.7,
+          "quality_factor": 0.6,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.5,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-5362313919750283436",
+          "entities_extracted": [
+            [],
+            [
+              "Plan",
+              "Implementation",
+              "The",
+              "Chamber",
+              "Secrets"
+            ]
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Plan",
+      "Implementation",
+      "The",
+      "Chamber",
+      "Processed",
+      "Secrets"
+    ],
+    "timestamp": "2025-11-01T12:29:24.771509+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_775234",
+    "content": "Processed multimodal file StepBloom Framework Documentation with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\frameworks\\StepBloom Framework Documentation.docx",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_772821",
+        "modality_vector": {
+          "extension": ".docx",
+          "modality_type": "text",
+          "resonance_frequency": 0.7,
+          "quality_factor": 0.6,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.5,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_4687447941639335999",
+          "entities_extracted": [
+            [],
+            [
+              "StepBloom",
+              "Framework",
+              "Documentation"
+            ]
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Processed",
+      "StepBloom",
+      "Framework",
+      "Documentation"
+    ],
+    "timestamp": "2025-11-01T12:29:24.775249+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_779001",
+    "content": "Processed multimodal file StepBloom+FASTEX Framework Documentation with resonance 0.30",
+    "context": {
+      "file_path": "e:\\Projects\\Echoes\\all_my_work\\frameworks\\StepBloom+FASTEX Framework Documentation.docx",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_122924_776595",
+        "modality_vector": {
+          "extension": ".docx",
+          "modality_type": "text",
+          "resonance_frequency": 0.7,
+          "quality_factor": 0.6,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "text",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.5,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_8019549189439219333",
+          "entities_extracted": [
+            [],
+            [
+              "StepBloom",
+              "Framework",
+              "Documentation"
+            ]
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Processed",
+      "StepBloom",
+      "Framework",
+      "Documentation"
+    ],
+    "timestamp": "2025-11-01T12:29:24.779011+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_780286",
+    "content": "Analyzed 3 multimodal files in e:/Projects/Echoes/all_my_work/frameworks",
+    "context": {
+      "directory": "e:/Projects/Echoes/all_my_work/frameworks",
+      "files_processed": 3,
+      "modality_distribution": {
+        "text": 3
+      },
+      "average_resonance": 0.3,
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Projects",
+      "Echoes",
+      "Analyzed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.780296+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_122924_836256",
+    "content": "Analyzed 0 multimodal files in e:/Projects/Echoes/all_my_work/blackbook",
+    "context": {
+      "directory": "e:/Projects/Echoes/all_my_work/blackbook",
+      "files_processed": 0,
+      "modality_distribution": {},
+      "average_resonance": 0,
+      "extraction_target": "text"
+    },
+    "entities": [],
+    "concepts": [
+      "Projects",
+      "Echoes",
+      "Analyzed"
+    ],
+    "timestamp": "2025-11-01T12:29:24.836265+00:00",
+    "importance": 0.8,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124318_048315",
+    "content": "User test_user_001 completed cognitive session: 45.0min, complexity 0.80",
+    "context": {
+      "user_id": "test_user_001",
+      "session_id": "session_1762000997",
+      "cognitive_joules": 2760.9379200000003,
+      "value_created": 6.8057119728,
+      "insights_generated": 3,
+      "problems_solved": 2
+    },
+    "entities": [
+      "user test_user_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:43:18.048331+00:00",
+    "importance": 0.068057119728,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124318_051502",
+    "content": "User test_user_001 completed cognitive session: 30.0min, complexity 0.60",
+    "context": {
+      "user_id": "test_user_001",
+      "session_id": "session_1762000997",
+      "cognitive_joules": 1701.0470400000006,
+      "value_created": 4.524785126400001,
+      "insights_generated": 5,
+      "problems_solved": 1
+    },
+    "entities": [
+      "user test_user_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:43:18.051514+00:00",
+    "importance": 0.045247851264000015,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124318_054981",
+    "content": "User test_user_001 completed cognitive session: 60.0min, complexity 0.95",
+    "context": {
+      "user_id": "test_user_001",
+      "session_id": "session_1762000997",
+      "cognitive_joules": 4803.0855599999995,
+      "value_created": 13.34657399985,
+      "insights_generated": 8,
+      "problems_solved": 4
+    },
+    "entities": [
+      "user test_user_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:43:18.054992+00:00",
+    "importance": 0.1334657399985,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124318_062943",
+    "content": "User test_user_002 completed cognitive session: 25.0min, complexity 0.70",
+    "context": {
+      "user_id": "test_user_002",
+      "session_id": "session_1762000997",
+      "cognitive_joules": 1240.1376,
+      "value_created": 2.9019219840000003,
+      "insights_generated": 2,
+      "problems_solved": 1
+    },
+    "entities": [
+      "user test_user_002"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:43:18.062955+00:00",
+    "importance": 0.029019219840000002,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124318_069830",
+    "content": "User test_user_003 completed cognitive session: 25.0min, complexity 0.70",
+    "context": {
+      "user_id": "test_user_003",
+      "session_id": "session_1762000997",
+      "cognitive_joules": 1240.1376,
+      "value_created": 2.9019219840000003,
+      "insights_generated": 2,
+      "problems_solved": 1
+    },
+    "entities": [
+      "user test_user_003"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:43:18.069844+00:00",
+    "importance": 0.029019219840000002,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_663991",
+    "content": "User healthcare_researcher_001 completed cognitive session: 60.0min, complexity 0.90",
+    "context": {
+      "user_id": "healthcare_researcher_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 3746.52096,
+      "value_created": 9.1040459328,
+      "insights_generated": 5,
+      "problems_solved": 2
+    },
+    "entities": [
+      "user healthcare_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.664007+00:00",
+    "importance": 0.091040459328,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_674287",
+    "content": "Processed multimodal file patient_records_sample with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmputlgj5i1\\patient_records_sample.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_669840",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "medical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-7506644976939407992",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "medical_insights"
+    },
+    "entities": [
+      "patient_records_sample"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.674302+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_683507",
+    "content": "Processed multimodal file medical_imaging_analysis with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpqaz27zl_\\medical_imaging_analysis.png",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_679290",
+        "modality_vector": {
+          "extension": ".png",
+          "modality_type": "vision",
+          "resonance_frequency": 0.85,
+          "quality_factor": 0.9,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "medical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "edges",
+            "shapes",
+            "objects",
+            "scenes",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.6,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "vision_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-5190350929648443640",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "medical_insights"
+    },
+    "entities": [
+      "medical_imaging_analysis"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.683518+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_699020",
+    "content": "User financial_analyst_001 completed cognitive session: 45.0min, complexity 0.85",
+    "context": {
+      "user_id": "financial_analyst_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 2318.10336,
+      "value_created": 5.123008425600001,
+      "insights_generated": 4,
+      "problems_solved": 3
+    },
+    "entities": [
+      "user financial_analyst_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.699035+00:00",
+    "importance": 0.05123008425600001,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_707575",
+    "content": "Processed multimodal file market_analysis_report with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp7a8sx0to\\market_analysis_report.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_703297",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "financial_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-8923046585477150891",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "financial_insights"
+    },
+    "entities": [
+      "market_analysis_report"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.707590+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_715601",
+    "content": "Processed multimodal file risk_assessment with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp2r2abe36\\risk_assessment.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_710680",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "financial_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_1760435645108122996",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "financial_insights"
+    },
+    "entities": [
+      "risk_assessment"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.715614+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_731723",
+    "content": "User educator_001 completed cognitive session: 50.0min, complexity 0.70",
+    "context": {
+      "user_id": "educator_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 3067.7088000000003,
+      "value_created": 8.006719968000002,
+      "insights_generated": 6,
+      "problems_solved": 2
+    },
+    "entities": [
+      "user educator_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.731739+00:00",
+    "importance": 0.08006719968000002,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_739094",
+    "content": "Processed multimodal file curriculum_guide with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpyqwk06la\\curriculum_guide.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_734233",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "learning_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-5058862034915853019",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "learning_insights"
+    },
+    "entities": [
+      "curriculum_guide"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.739107+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_748048",
+    "content": "Processed multimodal file learning_materials with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpwzpygg09\\learning_materials.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_743046",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "learning_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_4688147338043860",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "learning_insights"
+    },
+    "entities": [
+      "learning_materials"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.748063+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_766875",
+    "content": "User developer_001 completed cognitive session: 75.0min, complexity 0.95",
+    "context": {
+      "user_id": "developer_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 5605.7232,
+      "value_created": 14.911223712,
+      "insights_generated": 8,
+      "problems_solved": 5
+    },
+    "entities": [
+      "user developer_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.766890+00:00",
+    "importance": 0.14911223712,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_774783",
+    "content": "Processed multimodal file technical_documentation with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpxh997i9v\\technical_documentation.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_769962",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "development_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-6689329196135498861",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "development_insights"
+    },
+    "entities": [
+      "technical_documentation"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.774797+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_785480",
+    "content": "User legal_analyst_001 completed cognitive session: 55.0min, complexity 0.90",
+    "context": {
+      "user_id": "legal_analyst_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 2480.6936,
+      "value_created": 4.961387200000001,
+      "insights_generated": 4,
+      "problems_solved": 3
+    },
+    "entities": [
+      "user legal_analyst_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.785494+00:00",
+    "importance": 0.04961387200000001,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_793670",
+    "content": "Processed multimodal file contract_agreement with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp_us3zy2u\\contract_agreement.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_788377",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "legal_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_5718412875826378180",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "legal_insights"
+    },
+    "entities": [
+      "contract_agreement"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.793683+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_801332",
+    "content": "Processed multimodal file compliance_policy with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpeozto7x2\\compliance_policy.docx",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_796439",
+        "modality_vector": {
+          "extension": ".docx",
+          "modality_type": "text",
+          "resonance_frequency": 0.7,
+          "quality_factor": 0.6,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "legal_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.5,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_6742417314747627628",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "legal_insights"
+    },
+    "entities": [
+      "compliance_policy"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.801344+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_809325",
+    "content": "Processed multimodal file case_law_analysis with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpo0ufqna0\\case_law_analysis.txt",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_804090",
+        "modality_vector": {
+          "extension": ".txt",
+          "modality_type": "text",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.5,
+          "semantic_density": 0.9
+        },
+        "resonance_analysis": {
+          "target_modality": "legal_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.2,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_1316443595599739501",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "legal_insights"
+    },
+    "entities": [
+      "case_law_analysis"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.809338+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_831049",
+    "content": "User cross_sector_user_001 completed cognitive session: 40.0min, complexity 0.80",
+    "context": {
+      "user_id": "cross_sector_user_001",
+      "session_id": "session_1762001247",
+      "cognitive_joules": 2319.27488,
+      "value_created": 5.635837958400001,
+      "insights_generated": 5,
+      "problems_solved": 2
+    },
+    "entities": [
+      "user cross_sector_user_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:47:27.831067+00:00",
+    "importance": 0.05635837958400001,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_840609",
+    "content": "Processed multimodal file insurance_claims with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpxin758ae\\insurance_claims.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_835439",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "cross_sector_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_727860435143033187",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "cross_sector_insights"
+    },
+    "entities": [
+      "insurance_claims"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.840622+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124727_849708",
+    "content": "Processed multimodal file healthcare_financial_report with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmptfad8ufv\\healthcare_financial_report.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124727_844250",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "cross_sector_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ]
+      },
+      "extraction_target": "cross_sector_insights"
+    },
+    "entities": [
+      "healthcare_financial_report"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:47:27.849722+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_019979",
+    "content": "User lifelong_learner_001 completed cognitive session: 45.0min, complexity 0.70",
+    "context": {
+      "user_id": "lifelong_learner_001",
+      "session_id": "session_1762001362",
+      "cognitive_joules": 2187.06048,
+      "value_created": 4.8990154752,
+      "insights_generated": 4,
+      "problems_solved": 2
+    },
+    "entities": [
+      "user lifelong_learner_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:49:23.019995+00:00",
+    "importance": 0.048990154752,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_029930",
+    "content": "Processed multimodal file research_notes with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpxm2t5qt9\\research_notes.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_024417",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "learning_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-6606128733969487226",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "learning_insights"
+    },
+    "entities": [
+      "research_notes"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.029943+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_038916",
+    "content": "Processed multimodal file book_summaries with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpnh0qmft_\\book_summaries.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_033206",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "learning_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_6313312701283943830",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "learning_insights"
+    },
+    "entities": [
+      "book_summaries"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.038931+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_065998",
+    "content": "User creative_writer_001 completed cognitive session: 60.0min, complexity 0.80",
+    "context": {
+      "user_id": "creative_writer_001",
+      "session_id": "session_1762001362",
+      "cognitive_joules": 4273.57944,
+      "value_created": 11.661529896900003,
+      "insights_generated": 7,
+      "problems_solved": 3
+    },
+    "entities": [
+      "user creative_writer_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:49:23.066013+00:00",
+    "importance": 0.11661529896900003,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_075351",
+    "content": "Processed multimodal file story_drafts with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpd0auh6v3\\story_drafts.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_069472",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "creative_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-8264807745952432637",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "creative_insights"
+    },
+    "entities": [
+      "story_drafts"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.075368+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_085023",
+    "content": "Processed multimodal file character_notes with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpm93ezph5\\character_notes.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_078889",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "creative_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_757597716113595921",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "creative_insights"
+    },
+    "entities": [
+      "character_notes"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.085038+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_094347",
+    "content": "Processed multimodal file inspiration_collection with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpos4a4z15\\inspiration_collection.png",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_088333",
+        "modality_vector": {
+          "extension": ".png",
+          "modality_type": "vision",
+          "resonance_frequency": 0.85,
+          "quality_factor": 0.9,
+          "semantic_density": 0.8
+        },
+        "resonance_analysis": {
+          "target_modality": "creative_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "edges",
+            "shapes",
+            "objects",
+            "scenes",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.6,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "vision_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_6998183112603057127",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "creative_insights"
+    },
+    "entities": [
+      "inspiration_collection"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.094361+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_120375",
+    "content": "User productivity_seeker_001 completed cognitive session: 35.0min, complexity 0.60",
+    "context": {
+      "user_id": "productivity_seeker_001",
+      "session_id": "session_1762001362",
+      "cognitive_joules": 1717.15544,
+      "value_created": 4.172687719200001,
+      "insights_generated": 5,
+      "problems_solved": 4
+    },
+    "entities": [
+      "user productivity_seeker_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:49:23.120392+00:00",
+    "importance": 0.04172687719200001,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_132304",
+    "content": "Processed multimodal file goal_tracking with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpacxtxc0p\\goal_tracking.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_125518",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "productivity_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_1682359452821547246",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "productivity_insights"
+    },
+    "entities": [
+      "goal_tracking"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.132319+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_144726",
+    "content": "Processed multimodal file habit_tracker with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpcbgsuq4r\\habit_tracker.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_138490",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "productivity_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_7574842614202644526",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "productivity_insights"
+    },
+    "entities": [
+      "habit_tracker"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.144739+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_168599",
+    "content": "User health_conscious_001 completed cognitive session: 40.0min, complexity 0.75",
+    "context": {
+      "user_id": "health_conscious_001",
+      "session_id": "session_1762001362",
+      "cognitive_joules": 1907.904,
+      "value_created": 4.216467840000001,
+      "insights_generated": 6,
+      "problems_solved": 3
+    },
+    "entities": [
+      "user health_conscious_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:49:23.168617+00:00",
+    "importance": 0.04216467840000001,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_180577",
+    "content": "Processed multimodal file workout_log with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpsqpgpjf1\\workout_log.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_174158",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "health_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_2899524793959799885",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "health_insights"
+    },
+    "entities": [
+      "workout_log"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.180591+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_191777",
+    "content": "Processed multimodal file sleep_patterns with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp3uedrcaa\\sleep_patterns.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_185659",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "health_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-786066372965427234",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "health_insights"
+    },
+    "entities": [
+      "sleep_patterns"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.191843+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_217313",
+    "content": "User financial_planner_001 completed cognitive session: 50.0min, complexity 0.85",
+    "context": {
+      "user_id": "financial_planner_001",
+      "session_id": "session_1762001362",
+      "cognitive_joules": 3010.5972,
+      "value_created": 7.315751196000002,
+      "insights_generated": 8,
+      "problems_solved": 5
+    },
+    "entities": [
+      "user financial_planner_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:49:23.217329+00:00",
+    "importance": 0.07315751196000002,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_230686",
+    "content": "Processed multimodal file investment_portfolio with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpvo72fnh1\\investment_portfolio.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_222402",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "financial_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_8200684464023717043",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "financial_insights"
+    },
+    "entities": [
+      "investment_portfolio"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.230700+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_124923_242330",
+    "content": "Processed multimodal file expense_analysis with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpjcu0ak_a\\expense_analysis.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_124923_235578",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "financial_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-3830461775285150993",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "financial_insights"
+    },
+    "entities": [
+      "expense_analysis"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:49:23.242344+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125036_988176",
+    "content": "User quantum_researcher_001 completed cognitive session: 90.0min, complexity 0.95",
+    "context": {
+      "user_id": "quantum_researcher_001",
+      "session_id": "session_1762001436",
+      "cognitive_joules": 7442.143559999999,
+      "value_created": 21.042660915899997,
+      "insights_generated": 12,
+      "problems_solved": 5
+    },
+    "entities": [
+      "user quantum_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:50:36.988194+00:00",
+    "importance": 0.21042660915899997,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_000858",
+    "content": "Processed multimodal file quantum_entanglement_theory with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpxxn4i_i0\\quantum_entanglement_theory.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125036_993635",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "theoretical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_4705249993922788481",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "theoretical_insights"
+    },
+    "entities": [
+      "quantum_entanglement_theory"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.000873+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_011718",
+    "content": "Processed multimodal file multiverse_hypothesis with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp3yrfvhm2\\multiverse_hypothesis.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_004777",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "theoretical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_7627798773574460848",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "theoretical_insights"
+    },
+    "entities": [
+      "multiverse_hypothesis"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.011731+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_027621",
+    "content": "Processed multimodal file experimental_data with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpv84hcsm1\\experimental_data.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_020538",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "theoretical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-2338561891394315219",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "theoretical_insights"
+    },
+    "entities": [
+      "experimental_data"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.027635+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_063138",
+    "content": "User biomedical_researcher_001 completed cognitive session: 85.0min, complexity 0.90",
+    "context": {
+      "user_id": "biomedical_researcher_001",
+      "session_id": "session_1762001436",
+      "cognitive_joules": 6343.195039999999,
+      "value_created": 17.174200570799997,
+      "insights_generated": 10,
+      "problems_solved": 6
+    },
+    "entities": [
+      "user biomedical_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:50:37.063159+00:00",
+    "importance": 0.17174200570799997,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_077540",
+    "content": "Processed multimodal file protein_structures with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp3lwlpk74\\protein_structures.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_070340",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "biomedical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_7605587643370764528",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "biomedical_insights"
+    },
+    "entities": [
+      "protein_structures"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.077558+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_091609",
+    "content": "Processed multimodal file clinical_trial_data with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpwn1f4thq\\clinical_trial_data.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_084133",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "biomedical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_6249617106815577720",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "biomedical_insights"
+    },
+    "entities": [
+      "clinical_trial_data"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.091625+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_103932",
+    "content": "Processed multimodal file biochemical_pathways with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpaycvw_4_\\biochemical_pathways.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_096046",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "biomedical_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_480491192376776374",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "biomedical_insights"
+    },
+    "entities": [
+      "biochemical_pathways"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.103950+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_140665",
+    "content": "User ai_researcher_001 completed cognitive session: 95.0min, complexity 0.98",
+    "context": {
+      "user_id": "ai_researcher_001",
+      "session_id": "session_1762001436",
+      "cognitive_joules": 8445.2098624,
+      "value_created": 24.664235403139195,
+      "insights_generated": 15,
+      "problems_solved": 7
+    },
+    "entities": [
+      "user ai_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:50:37.140680+00:00",
+    "importance": 0.24664235403139195,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_152523",
+    "content": "Processed multimodal file neural_architectures with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpn3my5g8n\\neural_architectures.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_145193",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "ai_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-8870844139829008660",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "ai_insights"
+    },
+    "entities": [
+      "neural_architectures"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.152540+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_165058",
+    "content": "Processed multimodal file optimization_algorithms with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpy11tlyst\\optimization_algorithms.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_157059",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "ai_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_7297900825132394748",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "ai_insights"
+    },
+    "entities": [
+      "optimization_algorithms"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.165074+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_186506",
+    "content": "Processed multimodal file safety_frameworks with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp31u_sovy\\safety_frameworks.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_171579",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "ai_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_3887870948845325917",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "ai_insights"
+    },
+    "entities": [
+      "safety_frameworks"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.186526+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_226756",
+    "content": "User climate_researcher_001 completed cognitive session: 80.0min, complexity 0.85",
+    "context": {
+      "user_id": "climate_researcher_001",
+      "session_id": "session_1762001436",
+      "cognitive_joules": 5368.239360000002,
+      "value_created": 13.903739942400005,
+      "insights_generated": 9,
+      "problems_solved": 5
+    },
+    "entities": [
+      "user climate_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:50:37.226774+00:00",
+    "importance": 0.13903739942400006,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_240885",
+    "content": "Processed multimodal file climate_data with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpmp8nr5fq\\climate_data.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_232398",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "climate_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-512066225541872509",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "climate_insights"
+    },
+    "entities": [
+      "climate_data"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.240901+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_254316",
+    "content": "Processed multimodal file carbon_capture_tech with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpweaavmpb\\carbon_capture_tech.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_245462",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "climate_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_7885914126483835305",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "climate_insights"
+    },
+    "entities": [
+      "carbon_capture_tech"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.254333+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_268203",
+    "content": "Processed multimodal file environmental_impact with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp5v6fwemd\\environmental_impact.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_260376",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "climate_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_-2635955030713048457",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "climate_insights"
+    },
+    "entities": [
+      "environmental_impact"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.268217+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_309131",
+    "content": "User interdisciplinary_researcher_001 completed cognitive session: 100.0min, complexity 0.99",
+    "context": {
+      "user_id": "interdisciplinary_researcher_001",
+      "session_id": "session_1762001436",
+      "cognitive_joules": 9177.4316192,
+      "value_created": 27.21200249408992,
+      "insights_generated": 18,
+      "problems_solved": 8
+    },
+    "entities": [
+      "user interdisciplinary_researcher_001"
+    ],
+    "concepts": [
+      "User"
+    ],
+    "timestamp": "2025-11-01T12:50:37.309148+00:00",
+    "importance": 0.2721200249408992,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_326661",
+    "content": "Processed multimodal file quantum_biology_interfaces with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp838quhbc\\quantum_biology_interfaces.pdf",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_315139",
+        "modality_vector": {
+          "extension": ".pdf",
+          "modality_type": "vision",
+          "resonance_frequency": 0.65,
+          "quality_factor": 0.7,
+          "semantic_density": 0.85
+        },
+        "resonance_analysis": {
+          "target_modality": "interdisciplinary_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "raw_pixels",
+            "ocr",
+            "text_layout",
+            "content_blocks",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.8,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "vision_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_5248846026787338500",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "interdisciplinary_insights"
+    },
+    "entities": [
+      "quantum_biology_interfaces"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.326674+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_342873",
+    "content": "Processed multimodal file biomedical_physics_applications with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmpovfqjoau\\biomedical_physics_applications.csv",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_333924",
+        "modality_vector": {
+          "extension": ".csv",
+          "modality_type": "structured",
+          "resonance_frequency": 0.6,
+          "quality_factor": 0.6,
+          "semantic_density": 0.7
+        },
+        "resonance_analysis": {
+          "target_modality": "interdisciplinary_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "cells",
+            "rows",
+            "columns",
+            "tables",
+            "relationships",
+            "insights",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.4,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "structured_to_text",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_9156602101057515948",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "interdisciplinary_insights"
+    },
+    "entities": [
+      "biomedical_physics_applications"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.342887+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  },
+  {
+    "id": "mem_20251101_125037_357481",
+    "content": "Processed multimodal file cross_domain_synthesis with resonance 0.30",
+    "context": {
+      "file_path": "C:\\WINDOWS\\Temp\\tmp9ecuw25_\\cross_domain_synthesis.md",
+      "processing_result": {
+        "success": true,
+        "memory_id": "mm_20251101_125037_348563",
+        "modality_vector": {
+          "extension": ".md",
+          "modality_type": "text",
+          "resonance_frequency": 0.8,
+          "quality_factor": 0.7,
+          "semantic_density": 0.95
+        },
+        "resonance_analysis": {
+          "target_modality": "interdisciplinary_insights",
+          "resonance_strength": 0.3,
+          "processing_pathway": [
+            "characters",
+            "words",
+            "sentences",
+            "paragraphs",
+            "semantics",
+            "context",
+            "cross_modal_mapping",
+            "semantic_reconstruction"
+          ],
+          "extraction_complexity": 0.3,
+          "semantic_preservation": 0.5
+        },
+        "cross_modal_bridges": [
+          "text_to_vision",
+          "text_to_audio",
+          "text_to_structured"
+        ],
+        "knowledge_graph_integration": {
+          "node_id": "file_5218816816356037281",
+          "entities_extracted": [
+            [],
+            []
+          ],
+          "memory_created": true
+        }
+      },
+      "extraction_target": "interdisciplinary_insights"
+    },
+    "entities": [
+      "cross_domain_synthesis"
+    ],
+    "concepts": [
+      "Processed"
+    ],
+    "timestamp": "2025-11-01T12:50:37.357497+00:00",
+    "importance": 0.3,
+    "decay_rate": 0.1,
+    "associated_nodes": []
+  }
+]

@@ -25,7 +25,7 @@ Maintain interpretive depth while moving from prototype to production via versio
 - **Deployment**: bump minor version; document deltas
 
 ## Interfaces and Ownership
-- **Core Engine**: trajectory + renderer (engineering)
+- **Core Glimpse**: trajectory + renderer (engineering)
 - **Adapters**: input sources (integration teams)
 - **Security**: policy and enforcement (security team)
 - **Analytics**: research data scripts (research team)

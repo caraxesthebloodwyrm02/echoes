@@ -1,0 +1,206 @@
+{
+  "timestamp": "2025-10-31T15:35:26.752663+00:00",
+  "protocol": "Echoes Reconstruction Protocol v1.0",
+  "phase": "Step 4: Deep Clean",
+  "extraction_directory": "extracted_components_step3",
+  "cleaned_components": {
+    "api\\main.py": {
+      "file_path": "api\\main.py",
+      "file_size": 11729,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": [
+          "# Import existing engines - REMOVED: RAG middleware eliminated for authentic responses\n# from src.rag_orbit.retrieval import RetrievalEngine\n# from src.rag_orbit.embeddings import EmbeddingEngine\n# from src.rag_orbit.chunking import ChunkingEngine\n\n# Import pattern detection\nfrom api.pattern_detection import detect_patterns\nfrom api.self_rag import verify_truth\n\n# Import configuration\nfrom api.config import get_config, setup_logging\n\n# Import middleware\nfrom api.middleware import setup_middleware\n\n# Configure logging\nlogging.basicConfig(level=logging.INFO)\nlogger = logging.getLogger(__name__)\n\n# Global engines - REMOVED: No more RAG middleware for authentic responses\n# retrieval_engine = None\n# embedding_engine = None\n# chunking_engine = None\n\nclass ConnectionManager:\n    \"\"\"WebSocket connection manager for real-time streaming\"\"\"\n\n    def __init__(self):\n        self.active_connections: List[WebSocket] = []\n\n    async def connect(self, websocket: WebSocket):\n        \"\"\"Accept and register a new WebSocket connection\"\"\"\n        await websocket.accept()\n        self.active_connections.append(websocket)\n        logger.info(f\"New WebSocket connection. Total: {len(self.active_connections)}\")\n\n    def disconnect(self, websocket: WebSocket):\n        \"\"\"Remove a WebSocket connection\"\"\"\n        self.active_connections.remove(websocket)\n        logger.info(f\"WebSocket disconnected. Remaining: {len(self.active_connections)}\")\n\n    async def broadcast(self, message: dict):\n        \"\"\"Broadcast a message to all connected clients\"\"\"\n        for connection in self.active_connections:\n            try:\n                await connection.send_json(message)\n            except Exception as e:\n                logger.error(f\"Failed to send message to client: {e}\")\n                self.disconnect(connection)\n\n    async def send_personal_message(self, message: dict, websocket: WebSocket):\n        \"\"\"Send a message to a specific client\"\"\"\n        try:\n            await websocket.send_json(message)\n        except Exception as e:\n            logger.error(f\"Failed to send personal message: {e}\")\n\n# Global connection manager\nmanager = ConnectionManager()\n\n# Pydantic models for API requests/responses\nclass PatternDetectionRequest(BaseModel):\n    text: str = Field(..., description=\"Text to analyze for patterns\")\n    context: Optional[Dict[str, Any]] = Field(None, description=\"Additional context\")\n    options: Optional[Dict[str, Any]] = Field(None, description=\"Detection options\")\n\nclass PatternDetectionResponse(BaseModel):\n    patterns: List[Dict[str, Any]] = Field(..., description=\"Detected patterns\")\n    confidence: float = Field(..., description=\"Overall confidence score\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n\n# REMOVED: Search models - RAG middleware eliminated for authentic responses\n# class SearchRequest(BaseModel):\n#     query: str = Field(..., description=\"Search query\")\n#     top_k: int = Field(10, description=\"Number of results to return\")\n#     filters: Optional[Dict[str, Any]] = Field(None, description=\"Search filters\")\n#\n# class SearchResponse(BaseModel):\n#     results: List[Dict[str, Any]] = Field(..., description=\"Search results\")\n#     total_found: int = Field(..., description=\"Total results found\")\n#     timestamp: datetime = Field(default_factory=datetime.utcnow)\n\nclass TruthVerificationRequest(BaseModel):\n    claim: str = Field(..., description=\"Claim to verify\")\n    evidence: Optional[List[str]] = Field(None, description=\"Supporting evidence\")\n    context: Optional[Dict[str, Any]] = Field(None, description=\"Verification context\")\n\nclass TruthVerificationResponse(BaseModel):\n    verdict: str = Field(..., description=\"TRUE/FALSE/UNCERTAIN\")\n    confidence: float = Field(..., description=\"Confidence score 0-1\")\n    explanation: str = Field(..., description=\"Explanation of the verdict\")\n    evidence_used: List[str] = Field(..., description=\"Evidence used in verification\")\n    timestamp: datetime = Field(default_factory=datetime.utcnow)\n\n@asynccontextmanager\nasync def lifespan(app: FastAPI):\n    \"\"\"Application lifespan manager - Simplified: No RAG middleware for authentic responses\"\"\"\n    config = get_config()\n    setup_logging(config)\n\n    logger.info(\"Echoes API starting - Direct AI responses (no RAG middleware)\")\n\n    yield\n\n    # Shutdown\n    logger.info(\"Shutting down Echoes API...\")\n\n# Create FastAPI application\napp = FastAPI(\n    title=\"Echoes Research API\",\n    description=\"Real-time streaming API for research insights and pattern detection\",\n    version=\"2.0.0\",\n    lifespan=lifespan\n)\n\n# Add CORS middleware\nconfig = get_config()\napp.add_middleware(\n    CORSMiddleware,\n    allow_origins=config.security.cors_origins,\n    allow_credentials=config.security.cors_allow_credentials,\n    allow_methods=config.security.cors_allow_methods,\n    allow_headers=config.security.cors_allow_headers,\n)\n\n# Setup additional middleware\nsetup_middleware(app, config)\n\n@app.get(\"/health\")\nasync def health_check():\n    \"\"\"Health check endpoint - Simplified: No RAG middleware\"\"\"\n    return {\n        \"status\": \"healthy\",\n        \"timestamp\": datetime.utcnow().isoformat(),\n        \"middleware\": \"none\",  # Direct AI responses only\n        \"connections\": len(manager.active_connections)\n    }\n\n@app.websocket(\"/ws/stream\")\nasync def websocket_endpoint(websocket: WebSocket):\n    \"\"\"Main WebSocket endpoint for real-time streaming\"\"\"\n    await manager.connect(websocket)\n\n    try:\n        while True:\n            # Receive message from client\n            data = await websocket.receive_text()\n            message = json.loads(data)\n\n            # Process based on message type\n            message_type = message.get(\"type\", \"unknown\")\n\n            if message_type == \"pattern_detection\":\n                await handle_pattern_detection_websocket(message, websocket)\n            # REMOVED: Search functionality - RAG middleware eliminated for authentic responses\n            # elif message_type == \"search\":\n            #     await handle_search_websocket(message, websocket)\n            elif message_type == \"truth_verification\":\n                await handle_truth_verification_websocket(message, websocket)\n            else:\n                await manager.send_personal_message({\n                    \"type\": \"error\",\n                    \"message\": f\"Unknown message type: {message_type}\"\n                }, websocket)\n\n    except WebSocketDisconnect:\n        manager.disconnect(websocket)\n    except Exception as e:\n        logger.error(f\"WebSocket error: {e}\")\n        manager.disconnect(websocket)\n\nasync def handle_pattern_detection_websocket(message: dict, websocket: WebSocket):\n    \"\"\"Handle pattern detection via WebSocket\"\"\"\n    try:\n        request = PatternDetectionRequest(**message.get(\"data\", {}))\n\n        # Send processing start notification\n        await manager.send_personal_message({\n            \"type\": \"processing_start\",\n            \"operation\": \"pattern_detection\",\n            \"text_length\": len(request.text)\n        }, websocket)\n\n        # Perform pattern detection (placeholder - integrate with actual engine)\n        patterns = await detect_patterns(request.text, request.context, request.options)\n\n        # Send results\n        response = PatternDetectionResponse(\n            patterns=patterns,\n            confidence=0.85  # Placeholder confidence\n        )\n\n        await manager.send_personal_message({\n            \"type\": \"pattern_detection_result\",\n            \"data\": response.dict()\n        }, websocket)\n\n    except Exception as e:\n        await manager.send_personal_message({\n            \"type\": \"error\",\n            \"operation\": \"pattern_detection\",\n            \"message\": str(e)\n        }, websocket)\n\nasync def handle_truth_verification_websocket(message: dict, websocket: WebSocket):\n    \"\"\"Handle truth verification via WebSocket\"\"\"\n    try:\n        request = TruthVerificationRequest(**message.get(\"data\", {}))\n\n        # Send processing start notification\n        await manager.send_personal_message({\n            \"type\": \"processing_start\",\n            \"operation\": \"truth_verification\",\n            \"claim\": request.claim[:100] + \"...\" if len(request.claim) > 100 else request.claim\n        }, websocket)\n\n        # Perform truth verification (placeholder - integrate with SELF-RAG)\n        verdict = await verify_truth(request.claim, request.evidence, request.context)\n\n        # Send results\n        response = TruthVerificationResponse(\n            verdict=verdict.get(\"verdict\", \"UNCERTAIN\"),\n            confidence=verdict.get(\"confidence\", 0.5),\n            explanation=verdict.get(\"explanation\", \"Analysis incomplete\"),\n            evidence_used=request.evidence or []\n        )\n\n        await manager.send_personal_message({\n            \"type\": \"truth_verification_result\",\n            \"data\": response.dict()\n        }, websocket)\n\n    except Exception as e:\n        await manager.send_personal_message({\n            \"type\": \"error\",\n            \"operation\": \"truth_verification\",\n            \"message\": str(e)\n        }, websocket)\n\n# REST API endpoints for backward compatibility\n@app.post(\"/api/patterns/detect\", response_model=PatternDetectionResponse)\nasync def detect_patterns_rest(request: PatternDetectionRequest):\n    \"\"\"REST endpoint for pattern detection\"\"\"\n    patterns = await detect_patterns(request.text, request.context, request.options)\n    return PatternDetectionResponse(\n        patterns=patterns,\n        confidence=0.85\n    )\n\n# REMOVED: Search REST endpoint - RAG",
+          "from src.rag_orbit",
+          "from src.rag_orbit",
+          "from src.rag_orbit"
+        ]
+      },
+      "issues_found": 4,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "8fba8eceb50e9815db74a7b4f9a2bd71d0099e4f042adf39f4b2c476c2a37ed7",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "api\\pattern_detection.py": {
+      "file_path": "api\\pattern_detection.py",
+      "file_size": 11877,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": [
+          "# REMOVED: numpy import - not needed for simplified pattern detection\n# REMOVED: RAG middleware imports - pattern detection now works without retrieval\n# from src.rag_orbit.embeddings import EmbeddingEngine\n# from src.rag_orbit.retrieval import FAISSRetriever\n# from src.rag_orbit.chunking import ChunkingEngine\n\nlogger = logging.getLogger(__name__)\n\n@dataclass\nclass DetectedPattern:\n    \"\"\"A detected pattern with metadata\"\"\"\n\n    pattern_type: str\n    description: str\n    confidence: float\n    span: Tuple[int, int]  # (start, end) character positions\n    evidence: List[str]\n    related_patterns: List[str] = None\n    metadata: Dict[str, Any] = None\n\n    def __post_init__(self):\n        if self.related_patterns is None:\n            self.related_patterns = []\n        if self.metadata is None:\n            self.metadata = {}\n\n    def to_dict(self) -> Dict[str, Any]:\n        return {\n            \"pattern_type\": self.pattern_type,\n            \"description\": self.description,\n            \"confidence\": self.confidence,\n            \"span\": self.span,\n            \"evidence\": self.evidence,\n            \"related_patterns\": self.related_patterns,\n            \"metadata\": self.metadata\n        }\n\n@dataclass\nclass PatternDetectionResult:\n    \"\"\"Result of pattern detection analysis\"\"\"\n\n    patterns: List[DetectedPattern]\n    confidence: float\n    processing_time: float\n    text_length: int\n    timestamp: datetime\n    metadata: Dict[str, Any] = None\n\n    def __post_init__(self):\n        if self.metadata is None:\n            self.metadata = {}\n\nclass PatternDetector:\n    \"\"\"\n    Simplified pattern detection engine without RAG middleware.\n\n    Provides basic pattern recognition for authentic AI responses.\n    \"\"\"\n\n    def __init__(self):\n        # REMOVED: RAG middleware dependencies - simplified for direct responses\n        # self.embedding_engine = embedding_engine or EmbeddingEngine()\n        # self.retriever = retriever\n        # self.chunking_engine = chunking_engine or ChunkingEngine()\n\n        # Pattern recognition templates\n        self.pattern_templates = {\n            \"temporal\": [\n                r\"\\b(before|after|during|when|then|now|future|past|present)\\b\",\n                r\"\\b(\\d{1,2}[:/]\\d{2}|\\d{4}[-/]\\d{1,2}[-/]\\d{1,2})\\b\",\n                r\"\\b(week|month|year|day|hour|minute)s?\\b\"\n            ],\n            \"causal\": [\n                r\"\\b(because|therefore|thus|hence|consequently|resulting)\\b\",\n                r\"\\b(causes?|effects?|leads? to|results? in)\\b\",\n                r\"\\b(if|then|when|whenever)\\b.*?\\b(then|follows?|occurs?)\\b\"\n            ],\n            \"comparative\": [\n                r\"\\b(more|less|better|worse|greater|smaller|faster|slower)\\b\",\n                r\"\\b(compared? to|versus|vs\\.?|than)\\b\",\n                r\"\\b(similar|different|alike|distinct)\\b\"\n            ],\n            \"quantitative\": [\n                r\"\\b(\\d+(?:\\.\\d+)?%|\\d+(?:\\.\\d+)?(?:k|m|b|trillion))\\b\",\n                r\"\\b(increase|decrease|grow|decline|rise|fall)\\b.*?\\b(\\d+(?:\\.\\d+)?%?)\\b\",\n                r\"\\b(approximately|about|around|roughly)\\b.*?\\b\\d+\\b\"\n            ],\n            \"relational\": [\n                r\"\\b(associated|correlated|linked|connected|related)\\b\",\n                r\"\\b(depends? on|relies? on|influenced? by)\\b\",\n                r\"\\b(interacts?|interactions?|relationships?)\\b\"\n            ]\n        }\n\n    async def detect_patterns(\n        self,\n        text: str,\n        context: Optional[Dict[str, Any]] = None,\n        options: Optional[Dict[str, Any]] = None\n    ) -> PatternDetectionResult:\n        \"\"\"\n        Detect patterns in text using multiple analysis techniques.\n\n        Args:\n            text: Text to analyze\n            context: Additional context information\n            options: Detection options and parameters\n\n        Returns:\n            PatternDetectionResult with detected patterns\n        \"\"\"\n        start_time = datetime.utcnow()\n\n        options = options or {}\n        min_confidence = options.get(\"min_confidence\", 0.6)\n        max_patterns = options.get(\"max_patterns\", 10)\n\n        # Multi-stage pattern detection - simplified without RAG\n        patterns = []\n\n        # Stage 1: Rule-based pattern detection\n        rule_patterns = await self._detect_rule_based_patterns(text)\n        patterns.extend(rule_patterns)\n\n        # REMOVED: Stage 2: Semantic pattern detection (requires RAG middleware)\n        # if self.retriever:\n        #     semantic_patterns = await self._detect_semantic_patterns(text, context)\n        #     patterns.extend(semantic_patterns)\n\n        # Stage 3: Statistical pattern analysis\n        statistical_patterns = await self._detect_statistical_patterns(text)\n        patterns.extend(statistical_patterns)\n\n        # Filter and rank patterns\n        filtered_patterns = [\n            p for p in patterns\n            if p.confidence >= min_confidence\n        ]\n\n        # Sort by confidence and limit results\n        filtered_patterns.sort(key=lambda x: x.confidence, reverse=True)\n        filtered_patterns = filtered_patterns[:max_patterns]\n\n        # Calculate overall confidence - simplified without numpy\n        overall_confidence = (\n            sum([p.confidence for p in filtered_patterns]) / len(filtered_patterns)\n            if filtered_patterns else 0.0\n        )\n\n        processing_time = (datetime.utcnow() - start_time).total_seconds()\n\n        return PatternDetectionResult(\n            patterns=filtered_patterns,\n            confidence=overall_confidence,\n            processing_time=processing_time,\n            text_length=len(text),\n            timestamp=datetime.utcnow(),\n            metadata={\n                \"detection_method\": \"simplified_rule_based\",\n                \"stages_used\": [\"rule_based\", \"statistical\"],\n                \"rag_middleware\": False  # No RAG middleware for authentic responses\n            }\n        )\n\n    async def _detect_rule_based_patterns(self, text: str) -> List[DetectedPattern]:\n        \"\"\"Rule-based pattern detection using regex patterns\"\"\"\n        patterns = []\n        text_lower = text.lower()\n\n        for pattern_type, regexes in self.pattern_templates.items():\n            for regex in regexes:\n                matches = list(re.finditer(regex, text_lower, re.IGNORECASE))\n                for match in matches:\n                    # Calculate confidence based on match quality\n                    confidence = min(0.9, len(match.group()) / 20)  # Longer matches = higher confidence\n\n                    pattern = DetectedPattern(\n                        pattern_type=pattern_type,\n                        description=f\"{pattern_type.title()} pattern detected: '{match.group()}'\",\n                        confidence=confidence,\n                        span=(match.start(), match.end()),\n                        evidence=[f\"Regex match: {regex}\"],\n                        metadata={\n                            \"regex\": regex,\n                            \"match_text\": match.group(),\n                            \"method\": \"rule_based\"\n                        }\n                    )\n                    patterns.append(pattern)\n\n        return patterns\n\n    async def _detect_statistical_patterns(self, text: str) -> List[DetectedPattern]:\n        \"\"\"Statistical pattern analysis\"\"\"\n        patterns = []\n\n        # Word frequency analysis\n        words = re.findall(r'\\b\\w+\\b', text.lower())\n        word_freq = {}\n        for word in words:\n            word_freq[word] = word_freq.get(word, 0) + 1\n\n        # Detect repetitive patterns\n        total_words = len(words)\n        for word, freq in word_freq.items():\n            if freq > total_words * 0.05:  # Word appears in >5% of text\n                confidence = min(0.8, freq / total_words * 10)\n                pattern = DetectedPattern(\n                    pattern_type=\"repetitive\",\n                    description=f\"Repetitive word pattern: '{word}' ({freq} occurrences)\",\n                    confidence=confidence,\n                    span=(0, len(text)),  # Whole text\n                    evidence=[f\"Frequency: {freq}/{total_words}\"],\n                    metadata={\n                        \"method\": \"statistical\",\n                        \"word\": word,\n                        \"frequency\": freq,\n                        \"total_words\": total_words\n                    }\n                )\n                patterns.append(pattern)\n\n        # Sentence length analysis - simplified without numpy\n        sentences = re.split(r'[.!?]+', text)\n        sentence_lengths = [len(s.strip().split()) for s in sentences if s.strip()]\n\n        if sentence_lengths:\n            avg_length = sum(sentence_lengths) / len(sentence_lengths)\n\n            # Simple variance calculation\n            variance = sum((x - avg_length) ** 2 for x in sentence_lengths) / len(sentence_lengths)\n            std_length = variance ** 0.5\n\n            if std_length > avg_length * 0.5:  # High variation in sentence length\n                confidence = min(0.75, std_length / avg_length)\n                pattern = DetectedPattern(\n                    pattern_type=\"structural_variation\",\n                    description=\"High variation in sentence structure detected\",\n                    confidence=confidence,\n                    span=(0, len(text)),\n                    evidence=[f\"Avg length: {avg_length:.1f}, Std: {std_length:.1f}\"],\n                    metadata={\n                        \"method\": \"statistical\",\n                        \"avg_sentence_length\": avg_length,\n                        \"std_sentence_length\": std_length\n                    }\n                )\n                patterns.append(pattern)\n\n        return patterns\n\n    async def analyze_relationships(\n        self,\n        patterns: List[DetectedPattern]\n    ) -> List[DetectedPattern]:\n        \"\"\"Analyze relationships between detected patterns\"\"\"\n        # Group patterns by type and proximity\n        for i, pattern in enumerate(patterns):\n            related = []\n\n            for j, other in enumerate(patterns):\n                if i == j:\n                    continue\n\n                # Check if patterns are related by proximity\n                if abs(pattern.span[0] - other.span[0]) < 500:  # Within 500 chars\n                    if pattern.pattern_type != other.pattern_type:\n                        related.append(f\"{other.pattern_type}_{j}\")\n\n                # Check semantic relationships\n                if (pattern.pattern_type == \"causal\" and\n                    other.pattern_type in [\"temporal\", \"comparative\"]):\n                    related.append(f\"causal_link_{j}\")\n\n            pattern.related_patterns = related\n\n        return patterns\n\n# Global pattern detector instance\npattern_detector = None\n\nasync def detect_patterns(\n    text: str,\n    context: Optional[Dict[str, Any]] = None,\n    options: Optional[Dict[str, Any]] = None\n) -> List[Dict[str, Any]]:\n    \"\"\"\n    Main entry point for pattern detection.\n\n    Simplified version without RAG middleware for authentic AI responses.\n    \"\"\"\n    global pattern_detector\n\n    # Initialize pattern detector if needed\n    if pattern_detector is None:\n        pattern_detector = PatternDetector()\n\n    # Perform detection\n    result = await pattern_detector.detect_patterns(text, context, options)\n\n    # Analyze relationships (simplified without RAG",
+          "from src.rag_orbit",
+          "from src.rag_orbit",
+          "from src.rag_orbit"
+        ]
+      },
+      "issues_found": 4,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "70a0c23e83ea1efc11735b0a72badd21cc9ce773710d2e7c9cb90eb0cc0b16cf",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "api\\self_rag.py": {
+      "file_path": "api\\self_rag.py",
+      "file_size": 10850,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": [
+          "# REMOVED: RAG middleware imports - using direct AI responses\n# from src.rag_orbit.embeddings import EmbeddingEngine\n# from src.rag_orbit.retrieval import FAISSRetriever\n# from src.rag_orbit.chunking import ChunkingEngine\n\nlogger = logging.getLogger(__name__)\n\n@dataclass\nclass VerificationResult:\n    \"\"\"Result of truth verification\"\"\"\n\n    verdict: str  # TRUE, FALSE, UNCERTAIN\n    confidence: float  # 0-1\n    explanation: str\n    evidence_used: List[str]\n    contradictions: List[str]\n    supporting_evidence: List[str]\n    processing_time: float\n    timestamp: datetime\n\n@dataclass\nclass EvidenceChunk:\n    \"\"\"A piece of evidence with relevance score\"\"\"\n\n    text: str\n    relevance_score: float\n    source: str\n    metadata: Dict[str, Any]\n\nclass SelfRAGVerifier:\n    \"\"\"\n    Simplified truth verification without RAG middleware.\n\n    Basic claim verification for authentic AI responses.\n    \"\"\"\n\n    def __init__(self):\n        # REMOVED: RAG middleware dependencies\n        # self.embedding_engine = embedding_engine or EmbeddingEngine()\n        # self.retriever = retriever\n        # self.chunking_engine = chunking_engine or ChunkingEngine()\n\n        # Verification thresholds - simplified\n        self.min_evidence_threshold = 0.5\n        self.contradiction_threshold = 0.6\n        self.uncertainty_threshold = 0.4\n\n    async def verify_claim(\n        self,\n        claim: str,\n        evidence: Optional[List[str]] = None,\n        context: Optional[Dict[str, Any]] = None\n    ) -> VerificationResult:\n        \"\"\"\n        Verify the truth of a claim using SELF-RAG methodology.\n\n        Args:\n            claim: The claim to verify\n            evidence: Optional additional evidence to consider\n            context: Additional context information\n\n        Returns:\n            VerificationResult with verdict and explanation\n        \"\"\"\n        start_time = datetime.utcnow()\n\n        try:\n            # Step 1: Gather relevant evidence\n            relevant_evidence = await self._gather_evidence(claim, evidence, context)\n\n            # Step 2: Analyze claim against evidence\n            analysis = await self._analyze_claim_against_evidence(claim, relevant_evidence)\n\n            # Step 3: Generate verdict with confidence\n            verdict, confidence, explanation = await self._generate_verdict(\n                claim, analysis, relevant_evidence\n            )\n\n            processing_time = (datetime.utcnow() - start_time).total_seconds()\n\n            return VerificationResult(\n                verdict=verdict,\n                confidence=confidence,\n                explanation=explanation,\n                evidence_used=[e.text for e in relevant_evidence],\n                contradictions=analysis.get(\"contradictions\", []),\n                supporting_evidence=analysis.get(\"supporting\", []),\n                processing_time=processing_time,\n                timestamp=datetime.utcnow()\n            )\n\n        except Exception as e:\n            logger.error(f\"Truth verification failed: {e}\")\n            processing_time = (datetime.utcnow() - start_time).total_seconds()\n\n            return VerificationResult(\n                verdict=\"UNCERTAIN\",\n                confidence=0.0,\n                explanation=f\"Verification failed due to error: {str(e)}\",\n                evidence_used=[],\n                contradictions=[],\n                supporting_evidence=[],\n                processing_time=processing_time,\n                timestamp=datetime.utcnow()\n            )\n\n    async def _gather_evidence(\n        self,\n        claim: str,\n        provided_evidence: Optional[List[str]] = None,\n        context: Optional[Dict[str, Any]] = None\n    ) -> List[EvidenceChunk]:\n        \"\"\"\n        Gather relevant evidence for claim verification.\n\n        Simplified version using only provided evidence and context.\n        \"\"\"\n        evidence_chunks = []\n\n        # Add provided evidence\n        if provided_evidence:\n            for i, text in enumerate(provided_evidence):\n                chunk = EvidenceChunk(\n                    text=text,\n                    relevance_score=0.8,  # High confidence for provided evidence\n                    source=\"provided\",\n                    metadata={\"index\": i}\n                )\n                evidence_chunks.append(chunk)\n\n        # REMOVED: Knowledge base retrieval - no RAG middleware\n        # if self.retriever:\n        #     try:\n        #         # Get embedding for claim\n        #         claim_embedding = await self.embedding_engine.get_embedding(claim)\n        #\n        #         # Search for relevant documents\n        #         results, _ = self.retriever.search(claim_embedding, top_k=5)\n        #\n        #         for result in results:\n        #             if result.similarity_score > self.min_evidence_threshold:\n        #                 chunk = EvidenceChunk(\n        #                     text=result.text,\n        #                     relevance_score=result.similarity_score,\n        #                     source=\"knowledge_base\",\n        #                     metadata={\n        #                         \"chunk_id\": result.chunk_id,\n        #                         \"similarity\": result.similarity_score\n        #                     }\n        #                 )\n        #                 evidence_chunks.append(chunk)\n        #\n        #     except Exception as e:\n        #         logger.warning(f\"Knowledge base retrieval failed: {e}\")\n\n        # Add context as evidence if available\n        if context:\n            context_text = str(context)\n            if context_text:\n                chunk = EvidenceChunk(\n                    text=context_text,\n                    relevance_score=0.5,  # Medium confidence for context\n                    source=\"context\",\n                    metadata={\"type\": \"context\"}\n                )\n                evidence_chunks.append(chunk)\n\n        return evidence_chunks\n\n    async def _analyze_claim_against_evidence(\n        self,\n        claim: str,\n        evidence: List[EvidenceChunk]\n    ) -> Dict[str, Any]:\n        \"\"\"\n        Analyze claim against gathered evidence to identify support and contradictions.\n        \"\"\"\n        supporting_evidence = []\n        contradictions = []\n        neutral_evidence = []\n\n        # Simple semantic analysis (can be enhanced with LLM)\n        claim_lower = claim.lower()\n\n        for chunk in evidence:\n            text_lower = chunk.text.lower()\n\n            # Check for direct support\n            support_keywords = [\"true\", \"correct\", \"verified\", \"confirmed\", \"supports\"]\n            contradiction_keywords = [\"false\", \"incorrect\", \"contradicts\", \"denies\", \"refutes\"]\n\n            support_score = sum(1 for word in support_keywords if word in text_lower)\n            contradiction_score = sum(1 for word in contradiction_keywords if word in text_lower)\n\n            # Calculate semantic similarity (simple approach)\n            claim_words = set(claim_lower.split())\n            text_words = set(text_lower.split())\n            overlap = len(claim_words.intersection(text_words))\n            similarity = overlap / max(len(claim_words), len(text_words)) if max(len(claim_words), len(text_words)) > 0 else 0\n\n            if contradiction_score > support_score and similarity > 0.3:\n                contradictions.append(chunk.text)\n            elif support_score > contradiction_score and similarity > 0.2:\n                supporting_evidence.append(chunk.text)\n            else:\n                neutral_evidence.append(chunk.text)\n\n        return {\n            \"supporting\": supporting_evidence,\n            \"contradictions\": contradictions,\n            \"neutral\": neutral_evidence,\n            \"evidence_count\": len(evidence)\n        }\n\n    async def _generate_verdict(\n        self,\n        claim: str,\n        analysis: Dict[str, Any],\n        evidence: List[EvidenceChunk]\n    ) -> Tuple[str, float, str]:\n        \"\"\"\n        Generate final verdict based on evidence analysis.\n        \"\"\"\n        supporting_count = len(analysis[\"supporting\"])\n        contradiction_count = len(analysis[\"contradictions\"])\n        total_evidence = len(evidence)\n\n        if total_evidence == 0:\n            return \"UNCERTAIN\", 0.0, \"No evidence available for verification\"\n\n        # Calculate confidence based on evidence balance\n        support_ratio = supporting_count / total_evidence\n        contradiction_ratio = contradiction_count / total_evidence\n\n        if contradiction_ratio > support_ratio and contradiction_count > 0:\n            # Contradictions outweigh support\n            confidence = min(0.9, contradiction_ratio)\n            verdict = \"FALSE\"\n            explanation = f\"Claim contradicted by {contradiction_count} evidence sources\"\n        elif support_ratio > contradiction_ratio and supporting_count > 0:\n            # Support outweighs contradictions\n            confidence = min(0.9, support_ratio)\n            verdict = \"TRUE\"\n            explanation = f\"Claim supported by {supporting_count} evidence sources\"\n        else:\n            # Balanced or insufficient evidence\n            confidence = max(0.1, 1.0 - (support_ratio + contradiction_ratio))\n            verdict = \"UNCERTAIN\"\n            explanation = f\"Insufficient evidence: {supporting_count} supporting, {contradiction_count} contradicting\"\n\n        # Adjust confidence based on evidence quality - simplified without numpy\n        avg_relevance = sum([e.relevance_score for e in evidence]) / len(evidence) if evidence else 0\n        confidence *= avg_relevance\n\n        return verdict, confidence, explanation\n\n# Global verifier instance\nverifier = None\n\nasync def verify_truth(\n    claim: str,\n    evidence: Optional[List[str]] = None,\n    context: Optional[Dict[str, Any]] = None\n) -> Dict[str, Any]:\n    \"\"\"\n    Main entry point for truth verification.\n\n    Simplified version without RAG middleware for authentic AI responses.\n    \"\"\"\n    global verifier\n\n    # Initialize verifier if needed - simplified without RAG engines\n    if verifier is None:\n        verifier = SelfRAG",
+          "from src.rag_orbit",
+          "from src.rag_orbit",
+          "from src.rag_orbit"
+        ]
+      },
+      "issues_found": 4,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "3b1b9b40e22849f84f7bd51a63dafeb3e0b2753012e0acf4d1c8cc70cf61af6c",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "app\\agents\\agent.py": {
+      "file_path": "app\\agents\\agent.py",
+      "file_size": 1896,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": []
+      },
+      "issues_found": 0,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "a361a0a68254f2316b284af61f5733032fff55813dc022ff7ac0f751240e1773",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "app\\agents\\models.py": {
+      "file_path": "app\\agents\\models.py",
+      "file_size": 1257,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": []
+      },
+      "issues_found": 0,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "0dcebbc7c131643b213c69bd94d61c9e2b28ddbfd21f3756465a79459dc4ff22",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "glimpse\\batch_helpers.py": {
+      "file_path": "glimpse\\batch_helpers.py",
+      "file_size": 2922,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": []
+      },
+      "issues_found": 0,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "8d52d492ffb18e57b5cdcfc6ae5db81e8ed17c40ef532aa1f94e0be7b74d45ef",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    },
+    "glimpse\\sampler_openai.py": {
+      "file_path": "glimpse\\sampler_openai.py",
+      "file_size": 4469,
+      "scan_results": {
+        "malware_signatures": [],
+        "backdoors": [],
+        "data_corruption": [],
+        "tampering_indicators": []
+      },
+      "issues_found": 0,
+      "critical_issues": 0,
+      "clean": true,
+      "integrity_check": {
+        "current_checksum": "739ee1c5b9d006bc64489704131b6a6a904c256ae8bd3f4d6f8ea60f88ae636b",
+        "verified": false,
+        "syntax_valid": true,
+        "encoding_valid": true
+      }
+    }
+  },
+  "security_scans": {},
+  "integrity_verifications": {},
+  "corruption_checks": {},
+  "anomalies": [],
+  "quarantine_items": [],
+  "final_integrity_verification": {
+    "api\\main.py": {
+      "final_checksum": "8fba8eceb50e9815db74a7b4f9a2bd71d0099e4f042adf39f4b2c476c2a37ed7",
+      "size_bytes": 11729,
+      "verified": true
+    },
+    "api\\pattern_detection.py": {
+      "final_checksum": "70a0c23e83ea1efc11735b0a72badd21cc9ce773710d2e7c9cb90eb0cc0b16cf",
+      "size_bytes": 11877,
+      "verified": true
+    },
+    "api\\self_rag.py": {
+      "final_checksum": "3b1b9b40e22849f84f7bd51a63dafeb3e0b2753012e0acf4d1c8cc70cf61af6c",
+      "size_bytes": 10850,
+      "verified": true
+    },
+    "app\\agents\\agent.py": {
+      "final_checksum": "a361a0a68254f2316b284af61f5733032fff55813dc022ff7ac0f751240e1773",
+      "size_bytes": 1896,
+      "verified": true
+    },
+    "app\\agents\\models.py": {
+      "final_checksum": "0dcebbc7c131643b213c69bd94d61c9e2b28ddbfd21f3756465a79459dc4ff22",
+      "size_bytes": 1257,
+      "verified": true
+    },
+    "glimpse\\batch_helpers.py": {
+      "final_checksum": "8d52d492ffb18e57b5cdcfc6ae5db81e8ed17c40ef532aa1f94e0be7b74d45ef",
+      "size_bytes": 2922,
+      "verified": true
+    },
+    "glimpse\\sampler_openai.py": {
+      "final_checksum": "739ee1c5b9d006bc64489704131b6a6a904c256ae8bd3f4d6f8ea60f88ae636b",
+      "size_bytes": 4469,
+      "verified": true
+    }
+  },
+  "summary": {
+    "files_scanned": 7,
+    "files_clean": 4,
+    "files_quarantined": 0,
+    "files_sanitized": 0,
+    "total_anomalies": 0,
+    "clean_percentage": 57.14285714285714
+  }
+}

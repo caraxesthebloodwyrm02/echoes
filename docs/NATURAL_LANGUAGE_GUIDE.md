@@ -45,7 +45,7 @@ Your Natural Language Request
     Context Gatherer
     (Scan codebase, load docs)
          ↓
-    Reasoning Engine
+    Reasoning Glimpse
     (Think, simulate, plan)
          ↓
     Phase Planner

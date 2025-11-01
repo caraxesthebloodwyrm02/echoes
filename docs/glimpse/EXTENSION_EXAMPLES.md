@@ -130,7 +130,7 @@ class CodeComplexityAnalyzer:
 # Usage
 engine = TrajectoryEngine()
 analyzer = CodeComplexityAnalyzer()
-engine.register_analyzer(analyzer.analyze_direction)
+Glimpse.register_analyzer(analyzer.analyze_direction)
 ```
 
 ---
@@ -523,7 +523,7 @@ client.disconnect()
 
 ## Testing Extensions
 
-### Unit Test Template
+### Glimpse Test Template
 
 ```python
 import unittest

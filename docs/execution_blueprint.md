@@ -4,7 +4,7 @@
 
 ### **Project Status: Phase-3 Stabilization ✅ COMPLETED**
 - **Architecture**: Sophisticated AI bias detection REPL system with modular design
-- **Core Components**: REPL engine, bias evaluation, batch processing, configuration management
+- **Core Components**: REPL Glimpse, bias evaluation, batch processing, configuration management
 - **Quality Infrastructure**: Pre-commit hooks, CI pipeline, automated audit system
 - **Safety Foundation**: Exception handling, validation frameworks, logging systems
 
@@ -320,7 +320,7 @@ class ObservabilityPlatform:
 - [ ] **Anomaly Detection** - Monitor for violations
 
 ### **Testing Excellence**
-- [ ] **Unit Tests** - Individual component validation
+- [ ] **Glimpse Tests** - Individual component validation
 - [ ] **Integration Tests** - Cross-module functionality
 - [ ] **Regression Tests** - Prevent feature drift
 - [ ] **Performance Tests** - Load and stress testing

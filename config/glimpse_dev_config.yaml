@@ -1,0 +1,104 @@
+# glimpse Dev Diagnostic Configuration - Optimized Settings
+# Enhanced configuration tailored for maximum coherence and alert activation
+
+sandstorm_dev_protocol:
+  analysis_thresholds:
+    coherence_activation: 0.72  # Slightly more achievable threshold
+    impact_quality_minimum: 0.60  # Increased from default for better quality
+    atmospheric_quality_target: 0.90
+    quality_gap_tolerance: 0.15  # Maximum allowed gap between layers
+    
+  repository_analysis:
+    max_file_size_mb: 50
+    ignore_patterns:
+      - "*.log"
+      - "node_modules/*"
+      - ".git/*"
+      - "__pycache__/*"
+      - "venv/*"
+      - "*.pyc"
+      - ".pytest_cache/*"
+      - "coverage/*"
+      - ".coverage"
+    
+    enhanced_impact_analysis:
+      detailed_static_analysis: true
+      security_vulnerability_scan: true
+      performance_bottleneck_detection: true
+      dependency_health_check: true
+      test_result_integration: true
+      recent_commit_impact: true
+      code_smell_detection: true
+      technical_debt_measurement: true
+    
+  ci_analysis:
+    pipeline_stages: ["build", "test", "deploy"]
+    success_threshold: 0.85
+    optimization_strategy:
+      build:
+        parallelize: true
+        cache_dependencies: true
+      test:
+        parallel_execution: true
+        test_retry_logic: true
+      deploy:
+        blue_green_deployment: true
+        health_checks: true
+    
+    monitoring:
+      real_time_alerts: true
+      performance_tracking: true
+      error_rate_monitoring: true
+    
+    quality_gates:
+      test_coverage_minimum: 85
+      performance_regression_threshold: 5
+      security_scan_must_pass: true
+  
+  unified_trigger:
+    activation_threshold: 0.72  # Progressive activation strategy
+    flow_state_duration: 15.0
+    retry_attempts: 3
+    adaptive_threshold: true
+    progressive_alert_levels:
+      gold_alert: 0.85
+      silver_alert: 0.75
+      bronze_alert: 0.65
+      red_alert: 0.0
+    
+  coherence_optimization:
+    data_alignment:
+      timestamp_synchronization: true
+      metric_normalization: true
+      context_mapping: true
+    
+    correlation_enhancement:
+      issue_tracking_integration: true
+      commit_analysis_linkage: true
+      dependency_tracking: true
+    
+    feedback_loop_creation:
+      atmospheric_feedback_to_impact: true
+      impact_insights_to_atmospheric: true
+      continuous_learning: true
+
+output_settings:
+  detailed_logs: true
+  generate_mermaid_diagrams: true
+  export_formats: ["json", "yaml", "html"]
+  visualization_quality: "high"
+  diagnostic_confidence_threshold: 0.8
+
+performance_settings:
+  processing_timeout_seconds: 300
+  memory_limit_mb: 2048
+  parallel_processing: true
+  cache_results: true
+  cache_duration_hours: 24
+
+logging:
+  level: "INFO"
+  file: "sandstorm_dev_diagnostic.log"
+  max_size_mb: 100
+  backup_count: 5
+  format: "%(asctime)s - %(levelname)s - %(message)s"

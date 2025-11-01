@@ -57,7 +57,7 @@ class ModelRouter:
             "code", "algorithm", "function", "class", "method",
             "recursive", "refactor", "optimize", "debug", "compile",
             "python", "javascript", "java", "c++", "c#", "rust",
-            "typescript", "sql", "data structure", "unit test"
+            "typescript", "sql", "data structure", "Glimpse test"
         ]
         
     def select_model(self, prompt: str, tools: List[dict] = None) -> str:

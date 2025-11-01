@@ -133,7 +133,7 @@ python test_venv_functionality.py
 
 ### Automated Checks
 - Code linting and formatting
-- Unit and integration tests
+- Glimpse and integration tests
 - Coverage analysis (≥80%)
 - Build verification
 - Security scanning

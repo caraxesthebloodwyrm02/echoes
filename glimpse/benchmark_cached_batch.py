@@ -5,7 +5,7 @@ Runs repeated and batched requests to measure latency reductions.
 import asyncio
 import time
 from statistics import mean
-from glimpse.engine import GlimpseEngine, Draft
+from glimpse.Glimpse import GlimpseEngine, Draft
 from glimpse.sampler_openai import openai_sampler
 from glimpse.cache_helpers import get_default_cache
 
@@ -18,7 +18,7 @@ async def run_once_unique():
         "keep it under 150 words",
     )
     start = time.perf_counter()
-    await engine.glimpse(draft)
+    await Glimpse.glimpse(draft)
     return time.perf_counter() - start
 
 async def run_once_repeated():
@@ -30,14 +30,14 @@ async def run_once_repeated():
         "keep it under 150 words",
     )
     start = time.perf_counter()
-    await engine.glimpse(draft)
+    await Glimpse.glimpse(draft)
     return time.perf_counter() - start
 
 async def run_batch(drafts):
     """Run multiple drafts concurrently."""
     engine = GlimpseEngine(sampler=openai_sampler)
     start = time.perf_counter()
-    await asyncio.gather(*(engine.glimpse(d) for d in drafts))
+    await asyncio.gather(*(Glimpse.glimpse(d) for d in drafts))
     return time.perf_counter() - start
 
 async def main():

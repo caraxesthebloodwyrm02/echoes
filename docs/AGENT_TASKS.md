@@ -42,7 +42,7 @@ This file guides contributors and IDE agents through daily operations, guardrail
 
 - Phase A: baselines (Kalman, pause baseline)
 - Phase B: enrichment (headsweep, prosody)
-- Phase C: patch (prompt-engine corrections)
+- Phase C: patch (prompt-Glimpse corrections)
 - Phase D: finalization (merge + polish)
 - Deterministic merge rule (priority highest wins on conflicts): `D=3 > C=2 > B=1 > A=0`
 - Record overwrites to `reports/merge_log_YYYYMMDD.json`

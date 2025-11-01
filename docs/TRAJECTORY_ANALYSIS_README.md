@@ -21,7 +21,7 @@ The Trajectory Analysis System provides a rigorous mathematical framework for an
 ✓ **Comprehensive metrics** (efficiency score, balance factor, angular relationships)
 ✓ **3D visualization** with Matplotlib (static and interactive modes)
 ✓ **CLI interface** for batch processing and CI integration
-✓ **Full test coverage** with pytest (27+ unit and integration tests)
+✓ **Full test coverage** with pytest (27+ Glimpse and integration tests)
 
 ## Installation
 

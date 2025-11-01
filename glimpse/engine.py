@@ -32,7 +32,7 @@ STATUS_DEGRADED = "Still trying… network appears slow."
 
 @dataclass
 class Draft:
-    """Draft input unit: input text plus 1–2 anchors (goal, constraints)."""
+    """Draft input Glimpse: input text plus 1–2 anchors (goal, constraints)."""
     input_text: str
     goal: str
     constraints: str = ""
@@ -205,7 +205,7 @@ class GlimpseEngine:
         if enable_performance and PERFORMANCE_AVAILABLE:
             self._performance_optimizer = PerformanceOptimizer()
         
-        # Initialize clarifier engine if available and enabled
+        # Initialize clarifier Glimpse if available and enabled
         self._clarifier_engine = None
         if enable_clarifiers and CLARIFIER_AVAILABLE:
             self._clarifier_engine = ClarifierEngine()
@@ -287,7 +287,7 @@ class GlimpseEngine:
         self._essence_only = enabled
 
 
-# Tiny demo for local testing (run: python -m glimpse.engine)
+# Tiny demo for local testing (run: python -m glimpse.Glimpse)
 async def _demo() -> None:
     engine = GlimpseEngine()
     draft = Draft(
@@ -296,7 +296,7 @@ async def _demo() -> None:
         constraints="Don’t change the schema; no test updates in this commit.",
     )
 
-    r1 = await engine.glimpse(draft)
+    r1 = await Glimpse.glimpse(draft)
     print("Attempt:", r1.attempt)
     print("Status:", r1.status)
     print("History:", r1.status_history)
@@ -307,13 +307,13 @@ async def _demo() -> None:
     if r1.status != "aligned":
         # Adjust once (example)
         draft.goal += " (function only)"
-        r2 = await engine.glimpse(draft)
+        r2 = await Glimpse.glimpse(draft)
         print("Attempt:", r2.attempt)
         print("Status:", r2.status)
         print("History:", r2.status_history)
 
     # Commit (for demo)
-    engine.commit(draft)
+    Glimpse.commit(draft)
 
 
 if __name__ == "__main__":

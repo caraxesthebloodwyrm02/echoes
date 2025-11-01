@@ -1,0 +1,43 @@
+{
+  "timestamp": 1761805324.0417488,
+  "results": [
+    {
+      "query": "What is the symbolic meaning and significance of the transition from number 5 to 6 and sun?",
+      "query_num": 1,
+      "answer": "[1] NUMEROLOGY AND SYMBOLISM:\n    Number 5: Freedom, adventure, versatility, curiosity, senses. Represents the human experience and need for variety. Associated with pentagram and five elements.\n    Number 6: Harmony, balance, responsibility, nurturing, service. Represents family, community, material world. Symbolizes union of opposites - material and spiritual.\n    Transition 5\u21926: Journey from personal exploration to communal responsibility. Shift from sensory freedom to balanced nurturing, achieving harmony while maintaining vitality.\n    Sun Symbolism: Consciousness, enlightenment, vitality, life force, masculine energy. Represents higher self, spiritual awakening, divine masculine. Symbolizes clarity, illumination, power of creation.",
+      "response_time": 0.5358877182006836,
+      "results_count": 1,
+      "success": true
+    },
+    {
+      "query": "What is the symbolic meaning and significance of the number 8 to 11 and moon?",
+      "query_num": 2,
+      "answer": "[1] NUMBERS 8-11 AND LUNAR SYMBOLISM:\n    Number 8: Infinity, abundance, power, material success, karma. Infinity loop symbol representing infinite possibilities and law of cause and effect.\n    Number 9: Completion, humanitarianism, wisdom, spiritual enlightenment. End of cycle, new wisdom. Represents mastery and new beginnings.\n    Number 10: Completion of cycle, new beginnings, divine order. Combines leadership (1) and potential (0), representing mastery and new cycles.\n    Number 11: Master number - intuition, spiritual insight, enlightenment, connection to higher realms. \"Spiritual messenger.\"\n    Moon Symbolism: Subconscious, intuition, emotions, feminine energy, cycles, divine feminine. Mystery, dreams, psychic abilities, inner world. Lunar cycles = change, renewal, natural rhythms.",
+      "response_time": 0.5134694576263428,
+      "results_count": 1,
+      "success": true
+    },
+    {
+      "query": "What is signal? What is noise? What is the signal to noise ratio?",
+      "query_num": 3,
+      "answer": "No relevant information found in knowledge base.",
+      "response_time": 0.64430832862854,
+      "results_count": 0,
+      "success": true
+    },
+    {
+      "query": "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone.",
+      "query_num": 4,
+      "answer": "No relevant information found in knowledge base.",
+      "response_time": 0.4890561103820801,
+      "results_count": 0,
+      "success": true
+    }
+  ],
+  "summary": {
+    "total_queries": 4,
+    "successful_queries": 4,
+    "total_response_time": 2.1827216148376465,
+    "average_response_time": 0.5456804037094116
+  }
+}

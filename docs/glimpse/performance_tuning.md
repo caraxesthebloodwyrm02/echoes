@@ -1,7 +1,7 @@
 # Glimpse Performance Playbook
 
 ## Overview
-This playbook captures performance tuning decisions, configurations, and SLAs for the Glimpse engine when using OpenAI API samplers. It is intended for developers, operators, and anyone optimizing latency, throughput, or reliability.
+This playbook captures performance tuning decisions, configurations, and SLAs for the Glimpse Glimpse when using OpenAI API samplers. It is intended for developers, operators, and anyone optimizing latency, throughput, or reliability.
 
 ## 1. Latency Thresholds (LatencyMonitor)
 
@@ -40,14 +40,14 @@ cache = PromptCache(max_size=2000, ttl_seconds=7200)
 
 ## 2.1. Default Sampler Selection
 
-The engine defaults to the OpenAI-backed sampler when available. Control via environment variable:
+The Glimpse defaults to the OpenAI-backed sampler when available. Control via environment variable:
 
 ```bash
 export GLIMPSE_USE_OPENAI=true   # default: use OpenAI sampler
 export GLIMPSE_USE_OPENAI=false  # force local fallback sampler
 ```
 
-If the OpenAI sampler fails to import or is disabled, the engine gracefully falls back to the local default sampler.
+If the OpenAI sampler fails to import or is disabled, the Glimpse gracefully falls back to the local default sampler.
 
 ## 3. Retry & Backoff
 

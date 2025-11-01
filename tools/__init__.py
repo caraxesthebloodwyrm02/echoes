@@ -1,45 +1,68 @@
 """
-Tools Package
+Tools module - backward compatibility layer.
 
-This package contains all the tools available in the Echoes Assistant.
+This module provides backward compatibility for tools.
 """
 
-import os
-import sys
-import importlib
+# Use fallback implementation directly to avoid scipy import issues
+import threading
+from typing import Any, Callable, Dict, List
 
-# Add project root to path for consistent imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+class ToolRegistry:
+    """Thread-safe tool registry with required methods."""
+    
+    def __init__(self):
+        self._registry = {}
+        self._lock = threading.Lock()
+    
+    def register_tool(self, name, desc, func):
+        """Register a tool with the registry."""
+        with self._lock:
+            self._registry[name] = {"description": desc, "func": func}
+    
+    def get_tool(self, name):
+        """Get a tool by name."""
+        with self._lock:
+            return self._registry.get(name)
+    
+    def get(self, name):
+        """Get a tool by name (alias for get_tool)."""
+        return self.get_tool(name)
+    
+    def has_tool(self, name):
+        """Check if a tool is registered."""
+        with self._lock:
+            return name in self._registry
+    
+    def list_tools(self):
+        """List all registered tool names."""
+        with self._lock:
+            return list(self._registry.keys())
+    
+    def execute_tool(self, name, payload):
+        """Execute a registered tool."""
+        tool = self.get_tool(name)
+        if not tool:
+            raise KeyError(f"Tool '{name}' not found")
+        return tool["func"](payload)
 
-try:
-    _m = importlib.import_module("core.ethos")
-    getattr(_m, "enforce")()
-except Exception:
-    pass
+# Global registry instance
+_global_registry = ToolRegistry()
 
-# Import tool modules to make them available when importing from tools
-try:
-    from .base import BaseTool, ToolResult, ToolError
-except ImportError:
-    from tools.base import BaseTool, ToolResult, ToolError
+def get_registry():
+    """Get the global tool registry instance."""
+    return _global_registry
 
-try:
-    from .examples import get_example_tools
-except ImportError:
-    from tools.examples import get_example_tools
+def register_tool(name, desc, func):
+    """Register a tool with the global registry."""
+    _global_registry.register_tool(name, desc, func)
 
-try:
-    from .business_tools import get_business_tools
-except (ImportError, ModuleNotFoundError):
-    # business_tools module not available
-    def get_business_tools():
-        return []
+def get_tool(name):
+    """Get a tool from the global registry."""
+    return _global_registry.get_tool(name)
 
-# Make these available when importing from tools
-__all__ = [
-    'BaseTool',
-    'ToolResult',
-    'ToolError',
-    'get_example_tools',
-    'get_business_tools'
-]
+def execute_tool(name, payload):
+    """Execute a tool from the global registry."""
+    return _global_registry.execute_tool(name, payload)
+
+__all__ = ['get_registry', 'ToolRegistry', 'register_tool', 'get_tool', 'execute_tool']

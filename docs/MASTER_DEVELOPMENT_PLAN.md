@@ -56,7 +56,7 @@ This master plan outlines the complete development trajectory of Lumina, from fo
 │  │   ├─ Semantic Index                                         │
 │  │   └─ Pattern Recognition                                    │
 │  │                                                              │
-│  └─ Reasoning Engine (✅ PARTIAL - using QwQ-32B)              │
+│  └─ Reasoning Glimpse (✅ PARTIAL - using QwQ-32B)              │
 │      ├─ Chain-of-Thought                                       │
 │      ├─ Self-Reflection                                        │
 │      └─ Planning & Simulation                                  │
@@ -635,7 +635,7 @@ model = expert.get_optimized_model(gear, reward_model)
 
 ## Testing Strategy
 
-### Unit Testing (Continuous)
+### Glimpse Testing (Continuous)
 ```python
 # tests/test_stick_shift.py
 def test_gear_selection():

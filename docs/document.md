@@ -1,6 +1,6 @@
 # Executive Summary — Research-Lab Macro Pipeline v3.0
 
-**Key insight (one line):** Converge simulation (Kalman + Head-Sweep + Steam-Engine) and cognitive workflows (Pause Semantics + Prompt Chaining) under a single macro-orchestration that guarantees reproducibility, observability, and deterministic merges.
+**Key insight (one line):** Converge simulation (Kalman + Head-Sweep + Steam-Glimpse) and cognitive workflows (Pause Semantics + Prompt Chaining) under a single macro-orchestration that guarantees reproducibility, observability, and deterministic merges.
 
 ## Purpose
 
@@ -16,7 +16,7 @@ Provide a concise operational plan and a technical ledger to run, evaluate, and 
 
 ## Core components (short)
 
-* **Simulation**: `demo/kalman.py`, `demo/headsweep.py`, `steam_engine_dynamics/`
+* **Simulation**: `demo/kalman.py`, `demo/headsweep.py`, `steam_glimpse_dynamics/`
 * **Cognitive**: `speech/pause_model.py`, `caching/prompt_engine.py`, `templates/prompts.json`
 * **Orchestration**: `workflows/macro.py` (Phase A–D runners, combiner)
 * **Instrumentation**: `instrument/` (CSV/JSON outputs, metadata)
@@ -85,7 +85,7 @@ pytest -q
 
   * Phase A: run simple baselines (Kalman, pause baseline).
   * Phase B: enrichment (headsweep outputs, prosody features).
-  * Phase C: patching via prompt-engine / mid-tier corrections.
+  * Phase C: patching via prompt-Glimpse / mid-tier corrections.
   * Phase D: final large-model polish + deterministic merge.
 
 **Combiner rule (deterministic):** merge artifacts by timestamp; on conflict, use `priority_map = {phaseD:3, phaseC:2, phaseB:1, phaseA:0}` and apply the artifact with the highest priority. Record all overwrites in `reports/merge_log_YYYYMMDD.json`.

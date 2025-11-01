@@ -1090,7 +1090,7 @@ async def main():
     
     # Register example functions for tool calling
     @checker.register_function
-    async def get_weather(location: str, unit: str = "celsius") -> str:
+    async def get_weather(location: str, Glimpse: str = "celsius") -> str:
         """Get the current weather for a location."""
         # Create deterministic but varied responses based on location hash
         location_hash = hash(location.lower()) % 10
@@ -1110,8 +1110,8 @@ async def main():
         
         condition, description, temp_c, temp_f = weather_conditions[location_hash]
         
-        # Use appropriate temperature unit
-        if unit.lower() == "fahrenheit":
+        # Use appropriate temperature Glimpse
+        if Glimpse.lower() == "fahrenheit":
             temp_display = f"{temp_f}°F"
         else:
             temp_display = f"{temp_c}°C"

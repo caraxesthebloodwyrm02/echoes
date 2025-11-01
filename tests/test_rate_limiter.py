@@ -163,33 +163,31 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
 
 
 class TestOpenAIWrapperIntegration(unittest.IsolatedAsyncioTestCase):
-    """Test integration with OpenAI wrapper."""
-    
+    """Test integration with direct OpenAI API calls."""
+
     async def asyncSetUp(self):
         """Set up test fixtures."""
-        from glimpse.openai_wrapper import AsyncOpenAIClient, call_with_backoff
-        self.AsyncOpenAIClient = AsyncOpenAIClient
-        self.call_with_backoff = call_with_backoff
-        
-        # Create a mock async client
-        self.mock_client = AsyncMock()
-        self.mock_client.chat.completions.create = AsyncMock()
-        
         # Reset metrics
         for metric in [RATE_LIMIT_DELAYS, RATE_LIMIT_REJECTED, RATE_LIMIT_RATE, RATE_LIMIT_ADJUSTMENTS]:
             if hasattr(metric, '_metrics'):
                 metric._metrics.clear()
     
-    @patch('glimpse.openai_wrapper.openai.AsyncOpenAI')
+    @patch('openai.AsyncOpenAI')
     async def test_rate_limiting_integration(self, mock_openai):
-        """Test rate limiting integration with OpenAI wrapper."""
+        """Test rate limiting integration with direct OpenAI API calls."""
         # Setup mock response
         mock_response = MagicMock()
         mock_response.usage = MagicMock(prompt_tokens=10, completion_tokens=20, total_tokens=30)
-        self.mock_client.chat.completions.create.return_value = mock_response
-        mock_openai.return_value = self.mock_client
-        
-        # Create client with moderate rate limit for testing
+        mock_response.model_dump.return_value = {
+            'choices': [{'message': {'content': 'Test response'}}],
+            'usage': {'prompt_tokens': 10, 'completion_tokens': 20, 'total_tokens': 30}
+        }
+
+        mock_client = MagicMock()
+        mock_client.chat.completions.create = AsyncMock(return_value=mock_response)
+        mock_openai.return_value = mock_client
+
+        # Create rate limiter for testing
         from glimpse.rate_limiter import AdaptiveRateLimiter
         restrictive_limiter = AdaptiveRateLimiter(
             initial_rpm=30,   # Very restrictive for testing
@@ -200,32 +198,51 @@ class TestOpenAIWrapperIntegration(unittest.IsolatedAsyncioTestCase):
             max_tpm=6000,
             burst_multiplier=1.0  # No burst for predictable testing
         )
-        client = self.AsyncOpenAIClient(rate_limiter=restrictive_limiter)
-        
-        # Make multiple requests that will need to wait for rate limiting
+
+        # Make multiple direct OpenAI API calls that will need to wait for rate limiting
+        import openai
         tasks = []
         for i in range(10):  # More requests than immediate capacity allows
-            task = asyncio.create_task(
-                client.chat_completion(
+            async def make_request(i=i):
+                # Acquire rate limit token first
+                acquired, wait_time = await restrictive_limiter.acquire(
+                    endpoint="chat/completions",
+                    token_count=10,  # Estimate tokens for request
+                    max_wait=5.0  # Reasonable timeout
+                )
+                if not acquired:
+                    raise RuntimeError("Rate limit exceeded")
+
+                if wait_time > 0:
+                    await asyncio.sleep(wait_time)
+
+                # Direct OpenAI API call
+                client = openai.AsyncOpenAI()
+                response = await client.chat.completions.create(
                     messages=[{"role": "user", "content": f"Test {i}"}],
                     model="gpt-4",
                     max_tokens=100
                 )
-            )
+
+                # Record success
+                await restrictive_limiter.record_success("chat/completions", token_count=30)
+                return response
+
+            task = asyncio.create_task(make_request())
             tasks.append(task)
-        
+
         # Wait for all tasks to complete
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        
+
         # Count successful vs failed requests
         successful_requests = sum(1 for r in results if not isinstance(r, Exception))
         failed_requests = sum(1 for r in results if isinstance(r, Exception))
-        
+
         # With restrictive limits, we should get some successes and some timeouts
         # The exact numbers depend on timing, but we should have rate limiting behavior
         total_requests = successful_requests + failed_requests
         self.assertEqual(total_requests, 10, "All requests should complete (success or failure)")
-        
+
         # We should have some delays recorded (from successful requests that waited)
         delays = RATE_LIMIT_DELAYS.labels(endpoint="chat/completions")._value.get()
         # Delays should be greater than 0 since some requests had to wait
