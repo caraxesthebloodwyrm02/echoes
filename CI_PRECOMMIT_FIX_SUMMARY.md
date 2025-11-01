@@ -22,6 +22,11 @@
 - **Error**: `No matching distribution found for pipdeptree==2.30.0`
 - **Fix**: Updated to `pipdeptree>=2.29.0` in `requirements.txt`
 
+### 5. **LangChain Dependency Conflict**
+- **Problem**: `langchain-community==0.4.1` requires `langchain-core>=1.0.1,<2.0.0` but we had `langchain-core<1.0.0`
+- **Error**: `ResolutionImpossible: langchain-core<1.0.0,>=0.3.45 conflicts with langchain-core<2.0.0,>=1.0.1`
+- **Fix**: Updated `langchain-core` to `>=1.0.1,<2.0.0` in `requirements.txt`
+
 ## 🔧 Changes Made
 
 ### requirements.txt
@@ -32,6 +37,8 @@
 + pip-audit>=2.9.0
 - pipdeptree==2.30.0
 + pipdeptree>=2.29.0
+- langchain-core>=0.3.45,<1.0.0
++ langchain-core>=1.0.1,<2.0.0
 ```
 
 ### .pre-commit-config.yaml
