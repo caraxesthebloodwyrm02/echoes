@@ -20,10 +20,21 @@ import json
 import hashlib
 import uuid
 import time
-import math
+# Import numpy for calculations
+try:
+    import numpy as np
+    NUMPY_AVAILABLE = True
+except ImportError:
+    print("Warning: numpy not available, using fallback calculations")
+    NUMPY_AVAILABLE = False
+    # Fallback mean function
+    def mean(data):
+        return sum(data) / len(data) if data else 0
+    np = type('obj', (object,), {'mean': mean})()
 import re
 import asyncio
-from datetime import datetime, timezone
+# Import timedelta from datetime
+from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Any, Optional, Iterator, Union, Callable
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -294,9 +305,9 @@ DEFAULT_TEMPERATURE = 0.7
 DEFAULT_MAX_TOKENS = 4000
 MAX_TOOL_ITERATIONS = 5
 
-# Status indicator characters
-STATUS_SPINNER = ["", "", "", "", "", "", "", "", "", ""]
-STATUS_COMPLETE = ""
+# Status constants
+STATUS_SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
+STATUS_COMPLETE = "✅"
 STATUS_ERROR = ""
 STATUS_WORKING = ""
 STATUS_SEARCH = ""
@@ -470,17 +481,6 @@ class EchoesAssistantV2:
             enable_value_system: Enable value-based response filtering
             session_id: Session ID for conversation persistence
         """
-        # Like good code structure:
-        def handle_user_request(request):
-            # Phase 1: Analysis
-            understand_request(request)
-            
-            # Phase 2: Planning  
-            plan_approach(request)
-            
-            # Phase 3: Execution
-            execute_plan()
-
         # Phase 1: Core Configuration
         # OpenAI client
         self.api_key = os.getenv("OPENAI_API_KEY")
@@ -859,6 +859,58 @@ class EchoesAssistantV2:
         
         return messages
 
+    def update_context(self, key: str, value: Any) -> Dict[str, Any]:
+        """Update context information for the assistant.
+        
+        Args:
+            key: Context key (e.g., 'current_project', 'working_directory')
+            value: Context value
+            
+        Returns:
+            Updated context dictionary
+        """
+        if not hasattr(self, '_context'):
+            self._context = {}
+        
+        self._context[key] = value
+        return self._context.copy()
+    
+    def get_context(self, key: Optional[str] = None) -> Any:
+        """Get context information.
+        
+        Args:
+            key: Specific context key to retrieve, or None for all context
+            
+        Returns:
+            Context value or entire context dictionary
+        """
+        if not hasattr(self, '_context'):
+            self._context = {}
+        
+        if key is None:
+            return self._context.copy()
+        return self._context.get(key)
+    
+    def get_context_summary(self) -> str:
+        """Get a formatted summary of current context.
+        
+        Returns:
+            Formatted string with context information
+        """
+        context = self.get_context()
+        if not context:
+            return "No context set"
+        
+        summary_lines = ["Current Context:"]
+        for key, value in context.items():
+            if isinstance(value, list):
+                value_str = ", ".join(str(v) for v in value)
+            else:
+                value_str = str(value)
+            summary_lines.append(f"  {key}: {value_str}")
+        
+        return "\n".join(summary_lines)
+    
     def _retrieve_context(
         self,
         query: str,
@@ -1777,6 +1829,41 @@ class EchoesAssistantV2:
     def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> Dict[str, Any]:
         return self.fs_tools.list_directory(dirpath, pattern, recursive)
 
+    def get_directory_tree(self, dirpath: str, max_depth: int = 3, exclude_dirs: List[str] = None) -> Dict[str, Any]:
+        """Get a tree structure of a directory.
+        
+        Args:
+            dirpath: Directory path to analyze
+            max_depth: Maximum depth to traverse
+            exclude_dirs: List of directory names to exclude
+            
+        Returns:
+            Dictionary with tree structure and formatted output
+        """
+        if exclude_dirs is None:
+            exclude_dirs = ['.git', '__pycache__', '.pytest_cache', 'node_modules']
+        
+        try:
+            path = Path(dirpath)
+            if not path.exists():
+                return {"success": False, "error": f"Directory not found: {dirpath}"}
+            
+            if not path.is_dir():
+                return {"success": False, "error": f"Path is not a directory: {dirpath}"}
+            
+            structure = self._get_directory_structure(path, max_depth, exclude_dirs)
+            formatted = self._format_directory_structure(structure, max_lines=200)
+            
+            return {
+                "success": True,
+                "directory": dirpath,
+                "structure": structure,
+                "formatted_tree": formatted
+            }
+            
+        except Exception as e:
+            return {"success": False, "error": str(e)}
+
     def read_file(self, filepath: str) -> Dict[str, Any]:
         return self.fs_tools.read_file(filepath)
 
@@ -1820,11 +1907,11 @@ class EchoesAssistantV2:
             "external_contact_enabled": self.enable_external_contact,
             "actions": self.get_action_summary(),
             "knowledge": self.knowledge_manager.get_stats(),
-            "knowledge_graph_stats": self.knowledge_graph.get_stats() if hasattr(self, 'knowledge_graph') else {}
+            "knowledge_graph_stats": self.knowledge_graph.get_stats() if hasattr(self, 'knowledge_graph') and hasattr(self.knowledge_graph, 'get_stats') else {}
         }
 
         # Add multimodal resonance stats if available
-        if self.enable_multimodal_resonance:
+        if self.enable_multimodal_resonance and hasattr(self.multimodal_engine, 'get_resonance_statistics'):
             mm_stats = self.multimodal_engine.get_resonance_statistics()
             if mm_stats['success']:
                 stats["multimodal_resonance_stats"] = mm_stats['statistics']
@@ -1837,7 +1924,7 @@ class EchoesAssistantV2:
                 stats["enhanced_accounting_stats"] = legal_stats['enhanced_accounting']
                 stats["values_implementation"] = legal_stats['values_implementation']
 
-        if self.tool_registry:
+        if self.tool_registry and hasattr(self.tool_registry, 'get_stats'):
             stats["tool_stats"] = self.tool_registry.get_stats()
 
         if self.rag:
@@ -3707,7 +3794,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         try:
             # Calculate period dates
             period_end = datetime.now(timezone.utc).isoformat()
-            period_start = (datetime.now(timezone.utc) - datetime.timedelta(days=period_days)).isoformat()
+            period_start = (datetime.now(timezone.utc) - timedelta(days=period_days)).isoformat()
             
             # Generate statement from accounting system
             statement = self.accounting_system.generate_user_statement(

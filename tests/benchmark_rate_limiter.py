@@ -7,14 +7,29 @@ import statistics
 import random
 import sys
 import os
-from typing import List, Dict, Any
-import matplotlib.pyplot as plt
+from typing import List, Dict, Any, Optional
+try:
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    plt = None
+    import matplotlib.pyplot as plt
+    MATPLOTLIB_AVAILABLE = True
+except ImportError:
+    MATPLOTLIB_AVAILABLE = False
+    plt = None
+
 from datetime import datetime
 
 # Add the parent directory to the path so we can import glimpse modules
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from glimpse.rate_limiter import AdaptiveRateLimiter
+from glimpse.rate_limiter import (
+    AdaptiveRateLimiter, 
+    get_default_rate_limiter,
+    set_default_rate_limiter
+)
 
 class RateLimiterBenchmark:
     """Benchmark class for testing rate limiter performance."""

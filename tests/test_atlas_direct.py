@@ -5,6 +5,11 @@ Test direct ATLAS interaction.
 Verifies that ATLAS can be accessed and used directly without CLI.
 """
 
+import sys
+import os
+# Add parent directory to path to access misc/ATLAS
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'misc'))
+
 from ATLAS import ATLASDirectAPI
 import time
 

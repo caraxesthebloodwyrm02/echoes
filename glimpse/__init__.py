@@ -13,17 +13,17 @@ if TYPE_CHECKING:
 __all__ = [
     # Core components
     "GlimpseEngine",
-    "PrivacyGuard",
+    "PrivacyGuard", 
     "Draft",
     "GlimpseResult",
-    
-    # Metrics
-    "start_metrics_server",
-    "stop_metrics_server",
-    "get_metrics_server",
-    "MetricsServer",
     "LatencyMonitor",
     "default_sampler",
+
+    # Metrics server components
+    "start_metrics_server",
+    "stop_metrics_server", 
+    "get_metrics_server",
+    "MetricsServer",
 ]
 
 

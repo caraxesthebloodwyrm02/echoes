@@ -5,7 +5,12 @@ Test Agentic Assistant Capabilities
 Tests knowledge management, filesystem interaction, and context building.
 """
 
+import sys
 import os
+# Add parent directory to path to access assistant_v2_core
+sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
+
+import os as os_module
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -48,7 +53,7 @@ def test_agentic_capabilities():
     # Test context management
     print("\n[Test 4] Testing context management...")
     assistant.update_context("current_project", "Echoes")
-    assistant.update_context("working_directory", os.getcwd())
+    assistant.update_context("working_directory", os_module.getcwd())
     assistant.update_context("active_features", ["ATLAS", "Assistant", "Tools"])
     print("✓ Context updated")
 
