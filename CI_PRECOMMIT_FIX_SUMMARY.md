@@ -17,6 +17,11 @@
 - **Error**: `No matching distribution found for pip-audit==2.11.0`
 - **Fix**: Updated to `pip-audit>=2.9.0` in `requirements.txt`
 
+### 4. **Pipdeptree Version Issue**
+- **Problem**: `pipdeptree==2.30.0` doesn't exist for Python 3.14
+- **Error**: `No matching distribution found for pipdeptree==2.30.0`
+- **Fix**: Updated to `pipdeptree>=2.29.0` in `requirements.txt`
+
 ## 🔧 Changes Made
 
 ### requirements.txt
@@ -25,6 +30,8 @@
 + pre-commit>=4.3.0
 - pip-audit==2.11.0
 + pip-audit>=2.9.0
+- pipdeptree==2.30.0
++ pipdeptree>=2.29.0
 ```
 
 ### .pre-commit-config.yaml
