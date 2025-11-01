@@ -29,7 +29,7 @@ __all__ = [
 
 def __getattr__(name: str) -> Any:
     # Core components
-    if name in {"GlimpseEngine", "PrivacyGuard", "Draft", "GlimpseResult"}:
+    if name in {"GlimpseEngine", "PrivacyGuard", "Draft", "GlimpseResult", "LatencyMonitor", "default_sampler"}:
         mod = import_module(".Glimpse", __name__)
         return getattr(mod, name)
     
