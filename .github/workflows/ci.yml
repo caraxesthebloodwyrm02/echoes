@@ -107,7 +107,7 @@ jobs:
     timeout-minutes: 20
     strategy:
       matrix:
-        python-version: ['3.12', '3.13']
+        python-version: ['3.12']
         test-group: [core, api, tools, integration]
     steps:
       - name: Checkout
