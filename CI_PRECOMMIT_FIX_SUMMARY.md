@@ -12,12 +12,19 @@
 - **Error**: Repository clone failure in CI pipeline
 - **Fix**: Updated to `v4.5.0` in `.pre-commit-config.yaml`
 
+### 3. **Pip-audit Version Issue**
+- **Problem**: `pip-audit==2.11.0` doesn't exist for Python 3.14
+- **Error**: `No matching distribution found for pip-audit==2.11.0`
+- **Fix**: Updated to `pip-audit>=2.9.0` in `requirements.txt`
+
 ## 🔧 Changes Made
 
 ### requirements.txt
 ```diff
 - pre-commit==4.6.0
 + pre-commit>=4.3.0
+- pip-audit==2.11.0
++ pip-audit>=2.9.0
 ```
 
 ### .pre-commit-config.yaml
