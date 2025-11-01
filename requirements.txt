@@ -64,7 +64,7 @@ mypy==1.13.0
 
 # Development Tools
 pre-commit>=4.3.0
-pip-audit==2.11.0
+pip-audit>=2.9.0
 pipdeptree==2.30.0
 tqdm==4.67.1
 
