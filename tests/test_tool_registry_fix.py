@@ -32,24 +32,60 @@ except ImportError as e:
     REGISTRY_AVAILABLE = False
     
 # Test decorator for better output
-def test_case(name):
+def _test_decorator(name):
     def decorator(test_func):
         def wrapper(*args, **kwargs):
             print(f"\n{'='*60}")
             print(f"TEST: {name}")
             print(f"{'='*60}")
             try:
-                return test_func(*args, **kwargs)
+                result = test_func(*args, **kwargs)
+                print(f"✅ {name} PASSED")
+                return result
             except Exception as e:
-                print(f"❌ Test failed: {e}")
+                print(f"❌ {name} FAILED: {e}")
                 raise
-            finally:
-                print(f"{'='*60}\n")
         return wrapper
     return decorator
 
+@_test_decorator("Basic Registry Functionality")
+def test_case():
+    """Test basic registry functionality."""
+    if not REGISTRY_AVAILABLE:
+        print("Skipping test: Registry not available")
+        return
 
-@test_case("ToolRegistry has_tool() Method Test")
+    # Get registry with error handling
+    try:
+        registry = get_registry()
+        print("✓ Registry initialized successfully")
+    except Exception as e:
+        print(f"❌ Failed to initialize registry: {e}")
+        raise
+
+    # Test basic functionality
+    try:
+        tools = registry.list_tools()
+        print(f"✓ Registry has {len(tools)} tools")
+        
+        # Test has_tool method
+        if tools:
+            first_tool = tools[0]
+            has_tool = registry.has_tool(first_tool)
+            assert has_tool is True, f"has_tool should return True for {first_tool}"
+            print(f"✓ has_tool('{first_tool}') = {has_tool}")
+        
+        # Test non-existent tool
+        has_fake = registry.has_tool("nonexistent_tool_xyz123")
+        assert has_fake is False, "has_tool should return False for non-existent tool"
+        print(f"✓ has_tool('nonexistent_tool_xyz123') = {has_fake}")
+        
+    except Exception as e:
+        print(f"❌ Test failed: {e}")
+        raise
+
+
+@_test_decorator("ToolRegistry has_tool() Method Test")
 def test_has_tool_method():
     """Test that has_tool() method works correctly."""
     if not REGISTRY_AVAILABLE:

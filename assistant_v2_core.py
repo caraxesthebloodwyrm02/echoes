@@ -59,7 +59,38 @@ except ImportError as e:
     def get_registry():
         return DummyRegistry()
     
-from glimpse.Glimpse import GlimpseEngine, Draft, PrivacyGuard
+# Glimpse Suite - Streamlined imports with fallback
+try:
+    from glimpse import GlimpseEngine, Draft, PrivacyGuard, GlimpseResult
+    GLIMPSE_AVAILABLE = True
+except ImportError as e:
+    print(f"Warning: Glimpse suite not available: {e}")
+    GLIMPSE_AVAILABLE = False
+    # Fallback dummy classes
+    class Draft:
+        def __init__(self, input_text: str, goal: str, constraints: str = ""):
+            self.input_text = input_text
+            self.goal = goal
+            self.constraints = constraints
+    
+    class GlimpseResult:
+        def __init__(self, sample: str, essence: str, **kwargs):
+            self.sample = sample
+            self.essence = essence
+            self.status = "aligned"
+    
+    class PrivacyGuard:
+        def commit(self, result): pass
+    
+    class GlimpseEngine:
+        def __init__(self, **kwargs):
+            self.privacy_guard = PrivacyGuard()
+        
+        async def glimpse(self, draft: Draft) -> GlimpseResult:
+            return GlimpseResult(
+                sample=draft.input_text[:100] + "..." if len(draft.input_text) > 100 else draft.input_text,
+                essence=f"Intent: {draft.goal}; constraints: {draft.constraints or 'none'}"
+            )
 
 # Action Execution
 try:
