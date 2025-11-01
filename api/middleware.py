@@ -194,7 +194,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             process_time = time.time() - start_time
 
             # Log response
-            logger.info(".2f"
+            logger.info(f"Response time: {process_time:.2f}")
             # Check for errors
             if response.status_code >= 400:
                 self.error_count += 1
@@ -205,7 +205,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             # Log error
             process_time = time.time() - start_time
             self.error_count += 1
-            logger.error(".2f"
+            logger.error(f"Request failed after {process_time:.2f}s: {str(e)}")
             # Re-raise exception
             raise
 

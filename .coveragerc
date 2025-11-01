@@ -12,6 +12,8 @@ omit =
 [report]
 show_missing = true
 skip_covered = true
+# Fail if total coverage drops below 75%
+fail_under = 75
 exclude_lines =
     pragma: no cover
     def __repr__

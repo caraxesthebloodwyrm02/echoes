@@ -151,6 +151,12 @@ jobs:
           flags: ${{ matrix.test-group }}
           name: ${{ matrix.test-group }}-coverage
 
+      - name: Coverage Check (75% minimum)
+        run: |
+          echo "🔍 Checking coverage threshold (75% minimum)..."
+          coverage report --fail-under=75
+          echo "✅ Coverage check passed - 75% threshold met"
+
   # === DOCKER BUILD & SCAN ===
   docker-build:
     name: Docker Build & Security Scan
