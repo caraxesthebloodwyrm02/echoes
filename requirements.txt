@@ -1,10 +1,10 @@
 # Echoes AI Assistant - Production Dependencies
-# Optimized for Python 3.12 and CI/CD pipeline
-# Following Microsoft DevOps best practices
+# Updated to match actually installed and working versions
+# Python 3.12+ compatible with security fixes applied
 
 # Core AI & API Layers
 openai==2.6.1
-fastapi==0.120.2
+fastapi==0.120.4
 uvicorn==0.38.0
 httpx==0.28.1
 requests==2.32.5
@@ -12,7 +12,7 @@ python-dotenv==1.2.1
 
 # Security & Rate Limiting
 slowapi==0.1.9
-pygments==2.19.2
+Pygments==2.19.2
 
 # LangChain Ecosystem - Unified versions
 langchain==0.3.21
@@ -22,9 +22,10 @@ langchain-openai==0.2.0
 langchain-text-splitters==0.3.11
 
 # Core Dependencies - Python 3.12 compatible
-pydantic>=2.0.0,<3.0.0
-numpy>=1.26.0,<2.0.0
-PyYAML>=6.0.0
+pydantic==2.12.3
+numpy==2.3.4
+PyYAML==6.0.3
+networkx==3.5
 
 # Data Processing - Compatible versions
 PyMuPDF==1.26.5
@@ -64,8 +65,9 @@ mypy==1.13.0
 
 # Development Tools
 pre-commit>=4.3.0
-pip-audit>=2.9.0
-pipdeptree>=2.29.0
+pip-audit==2.9.0
+pip-api==0.0.34
+pip-requirements-parser==32.0.1
 tqdm==4.67.1
 
 # Security scanning
@@ -73,5 +75,8 @@ bandit==1.7.6
 safety==3.2.7
 
 # Additional utilities
-click==8.1.7
+click==8.3.0
 packaging==25.0
+rich==14.2.0
+CacheControl==0.14.3
+cyclonedx-python-lib==9.1.0
