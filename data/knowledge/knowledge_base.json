@@ -365,5 +365,77 @@
       "echoes",
       "assistant"
     ]
+  },
+  "73c89ce26e7c": {
+    "id": "73c89ce26e7c",
+    "content": "ATLAS is an inventory management system",
+    "source": "ATLAS/README.md",
+    "category": "inventory",
+    "timestamp": "2025-11-01T16:14:07.415544+00:00",
+    "metadata": {},
+    "tags": [
+      "atlas",
+      "inventory"
+    ]
+  },
+  "b67319034742": {
+    "id": "b67319034742",
+    "content": "EchoesAssistantV2 supports tool calling and RAG",
+    "source": "assistant_v2_core.py",
+    "category": "assistant",
+    "timestamp": "2025-11-01T16:14:07.416637+00:00",
+    "metadata": {},
+    "tags": [
+      "echoes",
+      "assistant"
+    ]
+  },
+  "6337590d520a": {
+    "id": "6337590d520a",
+    "content": "ATLAS is an inventory management system",
+    "source": "ATLAS/README.md",
+    "category": "inventory",
+    "timestamp": "2025-11-01T16:16:12.347463+00:00",
+    "metadata": {},
+    "tags": [
+      "atlas",
+      "inventory"
+    ]
+  },
+  "889ad7cf1745": {
+    "id": "889ad7cf1745",
+    "content": "EchoesAssistantV2 supports tool calling and RAG",
+    "source": "assistant_v2_core.py",
+    "category": "assistant",
+    "timestamp": "2025-11-01T16:16:12.348522+00:00",
+    "metadata": {},
+    "tags": [
+      "echoes",
+      "assistant"
+    ]
+  },
+  "4580cdec4b22": {
+    "id": "4580cdec4b22",
+    "content": "ATLAS is an inventory management system",
+    "source": "ATLAS/README.md",
+    "category": "inventory",
+    "timestamp": "2025-11-01T16:16:16.455656+00:00",
+    "metadata": {},
+    "tags": [
+      "atlas",
+      "inventory"
+    ]
+  },
+  "23c80cf51dbf": {
+    "id": "23c80cf51dbf",
+    "content": "EchoesAssistantV2 supports tool calling and RAG",
+    "source": "assistant_v2_core.py",
+    "category": "assistant",
+    "timestamp": "2025-11-01T16:16:16.456692+00:00",
+    "metadata": {},
+    "tags": [
+      "echoes",
+      "assistant"
+    ]
   }
 }

@@ -55,6 +55,8 @@ Sampler = Callable[[Draft], Awaitable[tuple[str, str, Optional[str], bool]]]
 
 # Default sampler: use OpenAI if available and enabled; otherwise fall back to local default
 USE_OPENAI_DEFAULT = os.getenv("GLIMPSE_USE_OPENAI", "true").lower() in {"true", "1", "yes"}
+# Gate legacy pre-execution clarifier (default: off)
+PREEXEC_CLARIFIER_ENABLED = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {"true", "1", "yes"}
 if USE_OPENAI_DEFAULT:
     try:
         from .sampler_openai import openai_sampler as default_sampler
@@ -79,8 +81,8 @@ if USE_OPENAI_DEFAULT:
             if "refactor" in lower and ("no change" in lower or "don’t change" in lower or "don't change" in lower):
                 delta = "Potential conflict: mentions refactor while requesting no change."
 
-            # Clarifier path: ask a single yes/no when intent confidence is low
-            if not intent_text:
+            # Clarifier path (legacy): only if explicitly enabled via env flag
+            if PREEXEC_CLARIFIER_ENABLED and not intent_text:
                 delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
 
             aligned = delta is None
@@ -105,8 +107,8 @@ else:
         if "refactor" in lower and ("no change" in lower or "don’t change" in lower or "don't change" in lower):
             delta = "Potential conflict: mentions refactor while requesting no change."
 
-        # Clarifier path: ask a single yes/no when intent confidence is low
-        if not intent_text:
+        # Clarifier path (legacy): only if explicitly enabled via env flag
+        if PREEXEC_CLARIFIER_ENABLED and not intent_text:
             delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
 
         aligned = delta is None
@@ -184,7 +186,7 @@ class GlimpseEngine:
 
     def __init__(
         self,
-        sampler: Sampler = default_sampler,
+        sampler: Sampler = None,
         latency_monitor: Optional[LatencyMonitor] = None,
         privacy_guard: Optional[PrivacyGuard] = None,
         debounce_ms: int = 300,
@@ -192,7 +194,6 @@ class GlimpseEngine:
         enable_performance: bool = True,
         enable_clarifiers: bool = True,
     ) -> None:
-        self._sampler = sampler
         self._latency = latency_monitor or LatencyMonitor()
         self._privacy = privacy_guard or PrivacyGuard()
         self._debounce_ms = debounce_ms
@@ -209,6 +210,18 @@ class GlimpseEngine:
         self._clarifier_engine = None
         if enable_clarifiers and CLARIFIER_AVAILABLE:
             self._clarifier_engine = ClarifierEngine()
+        
+        # Use enhanced sampler if clarifiers are enabled, otherwise use default
+        if sampler is None:
+            if enable_clarifiers and CLARIFIER_AVAILABLE:
+                # Create a wrapper that uses this instance's clarifier engine
+                async def _wrapped_sampler(draft):
+                    return await enhanced_sampler_with_clarifiers(draft, self._clarifier_engine)
+                self._sampler = _wrapped_sampler
+            else:
+                self._sampler = default_sampler
+        else:
+            self._sampler = sampler
 
     def reset(self) -> None:
         self._tries = 0

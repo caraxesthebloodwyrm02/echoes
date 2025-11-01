@@ -49,6 +49,27 @@ except ImportError:
             if not tool:
                 raise KeyError(f"Tool '{name}' not found")
             return tool["func"](payload)
+        
+        def get_openai_schemas(self):
+            """Get OpenAI function schemas for all registered tools."""
+            schemas = []
+            with self._lock:
+                for name, info in self._registry.items():
+                    # Create a basic OpenAI function schema
+                    schema = {
+                        "type": "function",
+                        "function": {
+                            "name": name,
+                            "description": info.get("description", ""),
+                            "parameters": {
+                                "type": "object",
+                                "properties": {},
+                                "required": []
+                            }
+                        }
+                    }
+                    schemas.append(schema)
+            return schemas
     
     _global_registry = ToolRegistry()
     

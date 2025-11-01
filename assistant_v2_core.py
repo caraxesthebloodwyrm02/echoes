@@ -38,7 +38,18 @@ from datetime import datetime, timezone, timedelta
 from typing import Dict, List, Any, Optional, Iterator, Union, Callable
 from pathlib import Path
 from dataclasses import dataclass, field
-from collections import defaultdict
+from core_modules.caching import cached_method
+from core_modules.context_manager import ContextManager
+from core_modules.model_router import ModelRouter
+from core_modules.metrics import ModelMetrics
+from core_modules.dynamic_error_handler import error_handler
+from core_modules.personality_engine import personality_engine
+from core_modules.cross_reference_system import cross_reference_system
+from core_modules.intent_awareness_engine import intent_engine, IntentType, EntityType
+from core_modules.train_of_thought_tracker import thought_tracker, ThoughtType, LinkType
+from core_modules.humor_engine import humor_engine, PressureLevel, HumorType
+from core_modules.catch_release_system import catch_release, CacheLevel, ContentType
+from core_modules.parallel_simulation_engine import parallel_simulation, SimulationType, SimulationStatus
 from functools import wraps
 from enum import Enum
 
@@ -67,15 +78,16 @@ except ImportError as e:
         def has_tool(self, name): return False
         def list_tools(self): return []
         def get(self, name): return None
+        def get_openai_schemas(self): return []  # Empty list for no tools
     def get_registry():
         return DummyRegistry()
     
 # Glimpse Suite - Streamlined imports with fallback
 try:
-    from glimpse import GlimpseEngine, Draft, PrivacyGuard, GlimpseResult
+    from glimpse import GlimpseEngine, Draft, PrivacyGuard, GlimpseResult, ClarifierEngine
     GLIMPSE_AVAILABLE = True
 except ImportError as e:
-    print(f"Warning: Glimpse suite not available: {e}")
+    print(f"⚠️  Glimpse system unavailable: {e}")
     GLIMPSE_AVAILABLE = False
     # Fallback dummy classes
     class Draft:
@@ -679,8 +691,12 @@ class EchoesAssistantV2:
             
             try:
                 self.glimpse_engine = GlimpseEngine(
-                    privacy_guard=PrivacyGuard(on_commit=_glimpse_commit_handler)
+                    privacy_guard=PrivacyGuard(on_commit=_glimpse_commit_handler),
+                    enable_clarifiers=True
                 )
+                # Update the clarifier engine to use enhanced mode
+                if hasattr(self.glimpse_engine, '_clarifier_engine') and self.glimpse_engine._clarifier_engine:
+                    self.glimpse_engine._clarifier_engine = ClarifierEngine(use_enhanced_mode=True)
                 print("✓ Glimpse preflight system initialized")
             except Exception as e:
                 print(f"⚠ Glimpse initialization failed: {e}")
@@ -873,8 +889,16 @@ class EchoesAssistantV2:
             self._context = {}
         
         self._context[key] = value
+        
+        # Clear caches that depend on context
+        if hasattr(self.get_context, 'clear_cache'):
+            self.get_context.clear_cache()
+        if hasattr(self.get_stats, 'clear_cache'):
+            self.get_stats.clear_cache()
+        
         return self._context.copy()
     
+    @cached_method(max_size=20, ttl_seconds=60)  # Cache for 1 minute
     def get_context(self, key: Optional[str] = None) -> Any:
         """Get context information.
         
@@ -911,6 +935,102 @@ class EchoesAssistantV2:
         
         return "\n".join(summary_lines)
     
+    def save_context(self, filepath: Optional[str] = None) -> Dict[str, Any]:
+        """Save current context to a JSON file.
+        
+        Args:
+            filepath: Optional path to save context. If None, uses default location.
+            
+        Returns:
+            Result with success status and filepath
+        """
+        if filepath is None:
+            # Default location in data directory
+            data_dir = Path("data/context")
+            data_dir.mkdir(parents=True, exist_ok=True)
+            filepath = data_dir / f"context_{self.session_id}.json"
+        
+        try:
+            context = self.get_context()
+            context_data = {
+                "session_id": self.session_id,
+                "timestamp": datetime.now().isoformat(),
+                "context": context,
+                "metadata": {
+                    "version": "1.0",
+                    "assistant_version": getattr(self, "__version__", "unknown")
+                }
+            }
+            
+            with open(filepath, 'w', encoding='utf-8') as f:
+                json.dump(context_data, f, indent=2, default=str)
+            
+            return {
+                "success": True,
+                "filepath": str(filepath),
+                "context_saved": len(context),
+                "timestamp": context_data["timestamp"]
+            }
+            
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
+    def load_context(self, filepath: Optional[str] = None, session_id: Optional[str] = None) -> Dict[str, Any]:
+        """Load context from a JSON file.
+        
+        Args:
+            filepath: Optional path to load context from. If None, uses default location.
+            session_id: Optional session ID to load. If provided, loads from default location.
+            
+        Returns:
+            Result with success status and loaded context
+        """
+        if filepath is None and session_id is None:
+            session_id = self.session_id
+        
+        if filepath is None:
+            data_dir = Path("data/context")
+            filepath = data_dir / f"context_{session_id}.json"
+        
+        try:
+            with open(filepath, 'r', encoding='utf-8') as f:
+                context_data = json.load(f)
+            
+            if "context" in context_data:
+                context = context_data["context"]
+                self._context = context.copy()
+                
+                return {
+                    "success": True,
+                    "filepath": str(filepath),
+                    "context_loaded": len(context),
+                    "timestamp": context_data.get("timestamp"),
+                    "session_id": context_data.get("session_id")
+                }
+            else:
+                # Legacy format - context is at root level
+                self._context = context_data.copy()
+                return {
+                    "success": True,
+                    "filepath": str(filepath),
+                    "context_loaded": len(context_data),
+                    "legacy_format": True
+                }
+                
+        except FileNotFoundError:
+            return {
+                "success": False,
+                "error": f"Context file not found: {filepath}"
+            }
+        except Exception as e:
+            return {
+                "success": False,
+                "error": str(e)
+            }
+    
     def _retrieve_context(
         self,
         query: str,
@@ -924,7 +1044,15 @@ class EchoesAssistantV2:
             if status:
                 status.start_phase(f"{STATUS_SEARCH} Searching knowledge base", 0)
 
-            result = self.rag.search(query, top_k=top_k)
+            # Try with top_k first, fallback if not supported
+            try:
+                result = self.rag.search(query, top_k=top_k)
+            except (TypeError, ValueError) as e:
+                # Fallback for RAG systems that don't support top_k
+                if "top_k" in str(e) or "unexpected keyword argument" in str(e):
+                    result = self.rag.search(query)
+                else:
+                    raise
             
             # Handle different result formats
             if isinstance(result, dict):
@@ -1121,7 +1249,6 @@ class EchoesAssistantV2:
             message: User message
             system_prompt: Optional system prompt (overrides prompt_file if both provided)
             prompt_file: Name of the YAML file in prompts/ to use as system prompt
-            system_prompt: Optional system prompt
             stream: Override streaming setting
             show_status: Override status indicator setting
             context_limit: Number of previous exchanges to include
@@ -1129,16 +1256,149 @@ class EchoesAssistantV2:
         Returns:
             Response string or iterator (if streaming)
         """
-        # Phase 1: Setup and Validation
-        stream = stream if stream is not None else self.enable_streaming
-        show_status = show_status if show_status is not None else self.enable_status
-        require_approval = require_approval if require_approval is not None else self.hitl_enabled
+        try:
+            # Update personality from user message
+            personality_engine.update_from_interaction(message)
+            
+            # Analyze context for cross-references
+            context = cross_reference_system.analyze_context(message)
+            
+            # Detect user intent and extract entities
+            user_intent = intent_engine.detect_intent(message)
+            user_entities = intent_engine.extract_entities(message)
+            
+            # Create thought node for user message
+            user_thought = thought_tracker.add_thought(
+                thought_id=f"user_{len(thought_tracker.thought_metadata) + 1}_{int(time.time())}",
+                content=message,
+                thought_type=ThoughtType.QUESTION if user_intent.type == IntentType.QUESTION else ThoughtType.OBSERVATION,
+                entities=[e.text for e in user_entities],
+                parent_thoughts=list(thought_tracker.thought_metadata.keys())[-3:] if thought_tracker.thought_metadata else None
+            )
+            
+            # Catch conversation context for quick cross-referencing
+            conversation_context = {
+                "message": message,
+                "intent": user_intent.type.value,
+                "entities": [e.text for e in user_entities],
+                "timestamp": datetime.now().isoformat(),
+                "session_id": self.session_id
+            }
+            
+            # Cache the conversation context
+            conv_cache_key = catch_release.catch(
+                content=conversation_context,
+                content_type=ContentType.CONVERSATION,
+                cache_level=CacheLevel.SESSION,
+                tags={"user_message", user_intent.type.value},
+                importance=0.7,
+                context={"entities": [e.text for e in user_entities]}
+            )
+            
+            # Quick cross-reference lookup for relevant context
+            if user_entities:
+                entity_names = [e.text for e in user_entities[:3]]  # Top 3 entities
+                cross_refs = catch_release.cross_reference(
+                    query=" ".join(entity_names),
+                    content_types=[ContentType.CONVERSATION, ContentType.CONTEXT],
+                    max_results=3
+                )
+                
+                if cross_refs:
+                    # Add cross-reference context to response generation
+                    context["cached_references"] = [ref.content for ref in cross_refs]
+            
+            # Start parallel simulations for possibility exploration
+            simulation_configs = []
+            
+            # Scenario exploration simulation
+            if user_intent.type in [IntentType.QUESTION, IntentType.ANALYSIS, IntentType.EXPLORATION]:
+                simulation_configs.append({
+                    "type": SimulationType.SCENARIO_EXPLORATION,
+                    "input_data": {
+                        "scenario": message,
+                        "context": {"entities": [e.text for e in user_entities]}
+                    },
+                    "parameters": {"priority": 0.7, "timeout": 15}
+                })
+            
+            # Outcome prediction simulation
+            if user_intent.type in [IntentType.REQUEST, IntentType.CREATION]:
+                simulation_configs.append({
+                    "type": SimulationType.OUTCOME_PREDICTION,
+                    "input_data": {
+                        "action": message,
+                        "context": {"intent": user_intent.type.value}
+                    },
+                    "parameters": {"priority": 0.8, "timeout": 20}
+                })
+            
+            # Alternative paths simulation
+            if user_intent.type in [IntentType.ANALYSIS, IntentType.COMPARISON]:
+                simulation_configs.append({
+                    "type": SimulationType.ALTERNATIVE_PATHS,
+                    "input_data": {
+                        "problem": message,
+                        "current_approach": context.get("previous_context", "")
+                    },
+                    "parameters": {"priority": 0.6, "timeout": 25}
+                })
+            
+            # Context expansion simulation
+            if len(user_entities) > 0:
+                simulation_configs.append({
+                    "type": SimulationType.CONTEXT_EXPANSION,
+                    "input_data": {
+                        "topic": " ".join([e.text for e in user_entities[:2]]),
+                        "context": {"conversation": message}
+                    },
+                    "parameters": {"priority": 0.5, "timeout": 10}
+                })
+            
+            # Start simulations in parallel
+            simulation_ids = []
+            for config in simulation_configs:
+                sim_id = parallel_simulation.create_simulation(
+                    simulation_type=config["type"],
+                    input_data=config["input_data"],
+                    parameters=config.get("parameters", {})
+                )
+                simulation_ids.append(sim_id)
+            
+            # Add simulation IDs to context for later retrieval
+            context["active_simulations"] = simulation_ids
+            
+            # Cache entities for quick lookup
+            for entity in user_entities:
+                catch_release.catch(
+                    content={
+                        "text": entity.text,
+                        "type": entity.type.value,
+                        "context": entity.context,
+                        "confidence": entity.confidence
+                    },
+                    content_type=ContentType.ENTITY,
+                    cache_level=CacheLevel.SHORT_TERM,
+                    tags={"entity", entity.type.value},
+                    importance=entity.confidence
+                )
+            
+            # Phase 1: Setup and Validation
+            stream = stream if stream is not None else self.enable_streaming
+            show_status = show_status if show_status is not None else self.enable_status
+            require_approval = require_approval if require_approval is not None else self.hitl_enabled
 
-        # If streaming, delegate to streaming method
-        if stream:
-            return self._chat_streaming(message, system_prompt, show_status, context_limit, prompt_file, require_approval)
-        else:
-            return self._chat_nonstreaming(message, system_prompt, show_status, context_limit, prompt_file, require_approval)
+            # If streaming, delegate to streaming method
+            if stream:
+                return self._chat_streaming(message, system_prompt, show_status, context_limit, prompt_file, require_approval, user_intent, user_entities)
+            else:
+                return self._chat_nonstreaming(message, system_prompt, show_status, context_limit, prompt_file, require_approval, user_intent, user_entities)
+        except Exception as e:
+            error_msg = f"Error in chat method: {str(e)}"
+            if show_status:
+                status = EnhancedStatusIndicator(enabled=show_status)
+                status.error(error_msg)
+            return f"Error: {error_msg}"
 
     def _chat_nonstreaming(
         self,
@@ -1148,6 +1408,8 @@ class EchoesAssistantV2:
         context_limit: int = 5,
         prompt_file: Optional[str] = None,
         require_approval: Optional[bool] = None,
+        user_intent = None,
+        user_entities = None,
     ) -> str:
         """Non-streaming chat implementation."""
         # Status indicator
@@ -1401,8 +1663,164 @@ class EchoesAssistantV2:
 
             # Add final assistant response to conversation history
             self.context_manager.add_message(self.session_id, "assistant", assistant_response)
+            
+            # Create thought node for assistant response
+            response_thought_type = ThoughtType.ANALYSIS if user_intent.type == IntentType.QUESTION else ThoughtType.SYNTHESIS
+            response_entities = intent_engine.extract_entities(assistant_response)
+            
+            response_thought = thought_tracker.add_thought(
+                thought_id=f"assistant_{len(thought_tracker.thought_metadata) + 1}_{int(time.time())}",
+                content=assistant_response,
+                thought_type=response_thought_type,
+                entities=[e.text for e in response_entities],
+                parent_thoughts=[user_thought] if 'user_thought' in locals() else None
+            )
+            
+            # Catch assistant response for continuity
+            response_context = {
+                "message": assistant_response,
+                "thought_type": response_thought_type.value,
+                "entities": [e.text for e in response_entities],
+                "timestamp": datetime.now().isoformat(),
+                "session_id": self.session_id,
+                "in_response_to": message[:100]  # First 100 chars of user message
+            }
+            
+            # Cache the response context
+            resp_cache_key = catch_release.catch(
+                content=response_context,
+                content_type=ContentType.RESPONSE,
+                cache_level=CacheLevel.SESSION,
+                tags={"assistant_response", response_thought_type.value},
+                importance=0.6,
+                context={"entities": [e.text for e in response_entities]}
+            )
+            
+            # Create relationship between user message and assistant response
+            if 'conv_cache_key' in locals() and 'resp_cache_key' in locals():
+                catch_release.create_relationship(conv_cache_key, resp_cache_key, strength=0.9)
+            
+            # Track conversation flow for cross-reference system
+            cross_reference_system.track_conversation_flow(message, assistant_response)
+            
+            # Apply personality enhancements
+            personality_prefix = personality_engine.generate_response_prefix("response")
+            enhanced_response = personality_prefix + " " + assistant_response
+            enhanced_response = personality_engine.adapt_response_style(enhanced_response)
+            
+            # Add intent-aware context
+            if user_intent.confidence > 0.7:
+                intent_context = f"\n\n🧠 **Intent detected:** {user_intent.type.value.replace('_', ' ').title()}"
+                if user_intent.parameters:
+                    intent_context += f" (Parameters: {', '.join(f'{k}: {v}' for k, v in user_intent.parameters.items())})"
+                enhanced_response += intent_context
+            
+            # Add entity insights
+            if user_entities:
+                unique_entities = list(set(e.text for e in user_entities))
+                if len(unique_entities) > 1:
+                    enhanced_response += f"\n\n📊 **Entities identified:** {', '.join(unique_entities[:5])}"
+            
+            # Add cross-reference suggestions if relevant
+            cross_refs = cross_reference_system.generate_cross_references(context)
+            if cross_refs and personality_engine.traits[personality_engine.PersonalityTrait.CURIOSITY] > 0.7:
+                suggestions = "\n\n💡 **Related connections to explore:**\n"
+                for ref in cross_refs[:2]:
+                    suggestions += f"• {ref['explanation']}\n"
+                enhanced_response += suggestions
+            
+            # Add cached cross-references if available
+            if context.get("cached_references"):
+                cached_refs = context["cached_references"]
+                if cached_refs and len(cached_refs) > 0:
+                    enhanced_response += "\n\n🗂️ **Quick context from previous conversations:**"
+                    for i, ref in enumerate(cached_refs[:2], 1):
+                        if isinstance(ref, dict) and "message" in ref:
+                            enhanced_response += f"\n{i}. Earlier discussed: {ref['message'][:100]}..."
+                        elif isinstance(ref, str):
+                            enhanced_response += f"\n{i}. Related context: {ref[:100]}..."
+            
+            # Add parallel simulation insights
+            if context.get("active_simulations"):
+                active_sim_ids = context["active_simulations"]
+                simulation_insights = []
+                
+                # Wait for simulations to complete with timeout
+                for sim_id in active_sim_ids:
+                    result = parallel_simulation.wait_for_simulation(sim_id, timeout=5.0)
+                    if result and result.confidence > 0.6:
+                        simulation_insights.append(result)
+                
+                if simulation_insights:
+                    enhanced_response += "\n\n🧠 **Parallel simulation insights:**"
+                    
+                    for insight in simulation_insights[:3]:  # Top 3 insights
+                        sim_type = insight.simulation_type.value.replace('_', ' ').title()
+                        enhanced_response += f"\n• **{sim_type}**: {insight.reasoning}"
+                        
+                        # Add top possibility from simulation
+                        if insight.possibilities:
+                            top_possibility = insight.possibilities[0]
+                            if isinstance(top_possibility, dict):
+                                desc = top_possibility.get("description", str(top_possibility))
+                            else:
+                                desc = str(top_possibility)
+                            enhanced_response += f"\n  → {desc[:80]}..."
+                        
+                        # Add confidence
+                        enhanced_response += f" (confidence: {insight.confidence:.1%})"
+                    
+                    # Add cross-reference enhancement if available
+                    if any(insight.simulation_type == SimulationType.CROSS_REFERENCE_ENHANCEMENT for insight in simulation_insights):
+                        enhanced_response += "\n🔗 **Cross-references enhanced with simulation insights**"
+            
+            # Add thought chain insights if available
+            critical_insights = thought_tracker.get_critical_insights()
+            if critical_insights and user_intent.type in [IntentType.ANALYSIS, IntentType.EXPLORATION]:
+                enhanced_response += "\n\n🔗 **Critical connections detected in our conversation:**"
+                for insight in critical_insights[:2]:
+                    if insight.get('insight_type') == 'cross_chain_connector':
+                        enhanced_response += f"\n• Linked concepts across different discussion threads"
+            
+            # Update pressure metrics and add humor if appropriate
+            pressure_level = humor_engine.update_pressure_metrics(
+                request_count=1,
+                error_occurred=False,
+                response_time=(time.time() - start_time)
+            )
+            
+            # Determine context for humor
+            humor_context = ""
+            if "error" in assistant_response.lower():
+                humor_context = "error_occurred"
+            elif "completed" in assistant_response.lower() or "success" in assistant_response.lower():
+                humor_context = "task_completed"
+            elif pressure_level in [PressureLevel.HIGH, PressureLevel.CRITICAL, PressureLevel.OVERWHELMED]:
+                humor_context = "high_load"
+            
+            # Add humor if appropriate
+            if humor_engine.should_use_humor(pressure_level, humor_context):
+                humor_response = humor_engine.generate_humor_response(pressure_level, humor_context)
+                if humor_response and humor_response.appropriateness > 0.7:
+                    # Format humor based on delivery style
+                    if humor_response.delivery_style == "playful":
+                        humor_text = f"\n\n😄 **{humor_response.text}**"
+                    elif humor_response.delivery_style == "gentle":
+                        humor_text = f"\n\n💙 *{humor_response.text}*"
+                    elif humor_response.delivery_style == "enthusiastic":
+                        humor_text = f"\n\n🎉 **{humor_response.text}**"
+                    else:
+                        humor_text = f"\n\n😊 {humor_response.text}"
+                    
+                    enhanced_response += humor_text
+            
+            # Add pressure indicator for very high load
+            if pressure_level == PressureLevel.CRITICAL:
+                enhanced_response += f"\n\n⚡ **Running at maximum capacity!** I'm handling this like a boss! 💪"
+            elif pressure_level == PressureLevel.OVERWHELMED:
+                enhanced_response += f"\n\n🔥 **Things are heating up!** Thanks for your patience - we're crushing this together! 🤝"
 
-            return assistant_response
+            return enhanced_response
 
         except AuthenticationError as e:
             error_msg = f"Authentication Error: {str(e)}\nPlease check your OPENAI_API_KEY"
@@ -1415,9 +1833,37 @@ class EchoesAssistantV2:
                 status.error(error_msg)
             return error_msg
         except Exception as e:
+            # Use dynamic error handler
+            error_result = error_handler.handle_error(e, {
+                "method": "_chat_nonstreaming",
+                "message": message[:100]  # First 100 chars of message
+            })
+            
             error_msg = f"Error: {str(e)}"
             if status:
                 status.error(error_msg)
+            
+            # Update pressure metrics with error
+            pressure_level = humor_engine.update_pressure_metrics(
+                request_count=1,
+                error_occurred=True,
+                response_time=(time.time() - start_time)
+            )
+            
+            # Add pressure-relief humor for errors
+            if humor_engine.should_use_humor(pressure_level, "error_occurred"):
+                humor_response = humor_engine.generate_humor_response(pressure_level, "error_occurred")
+                if humor_response and humor_response.appropriateness > 0.6:
+                    error_msg += f"\n\n😅 **{humor_response.text}**"
+            
+            # If auto-fix is available, suggest it
+            if error_result.get("fix_attempted") and error_result.get("fix_result"):
+                fix = error_result["fix_result"]
+                if fix.get("auto_applicable"):
+                    error_msg += f"\n\n🔧 **Auto-fix available:** {fix.get('suggestion', '')}"
+                    if fix.get("code_fix"):
+                        error_msg += f"\n```{fix.get('code_fix')}```"
+            
             return error_msg
 
     def _chat_streaming(
@@ -1757,47 +2203,8 @@ class EchoesAssistantV2:
             yield error_msg
 
     def get_conversation_history(self) -> List[Dict]:
+        """Get conversation history for the current session."""
         return self.context_manager.get_messages(self.session_id)
-
-    def clear_history(self):
-        self.context_manager.clear_session(self.session_id)
-
-    def list_tools(self, category: Optional[str] = None) -> List[str]:
-        if not self.tool_registry:
-            return []
-        return self.tool_registry.list_tools(category)
-
-    def execute_action(self, action_type: str, action_name: str, **kwargs) -> Dict[str, Any]:
-        """Execute an action on behalf of the user.
-
-        Args:
-            action_type: Type of action ('inventory', 'tool')
-            action_name: Name of the specific action
-            **kwargs: Action parameters
-
-        Returns:
-            Action result with status and data
-        """
-        if action_type == "inventory":
-            result = self.action_executor.execute_inventory_action(action_name, **kwargs)
-        elif action_type == "tool":
-            result = self.action_executor.execute_tool_action(action_name, **kwargs)
-        elif action_type == "roi":
-            result = self.action_executor.execute_roi_action(action_name, **kwargs)
-        else:
-            return {
-                "success": False,
-                "error": f"Unknown action type: {action_type}",
-            }
-
-        return {
-            "success": result.status == "success",
-            "action_id": result.action_id,
-            "action_type": result.action_type,
-            "result": result.result,
-            "error": result.error,
-            "duration_ms": result.duration_ms,
-        }
 
     def get_action_history(self, limit: int = 10) -> List[Dict[str, Any]]:
         return self.action_executor.get_action_history(limit)
@@ -1892,6 +2299,7 @@ class EchoesAssistantV2:
         
         return result
 
+    @cached_method(max_size=10, ttl_seconds=300)  # Cache for 5 minutes
     def get_stats(self) -> Dict[str, Any]:
         """Get comprehensive statistics about the assistant."""
         stats = {
@@ -2089,6 +2497,12 @@ class EchoesAssistantV2:
                 "success": False,
                 "error": str(e)
             }
+
+    def list_tools(self, category: Optional[str] = None) -> List[str]:
+        """List available tools, optionally filtered by category."""
+        if hasattr(self, 'tool_registry') and self.tool_registry:
+            return self.tool_registry.list_tools()
+        return []
 
     def save_quantum_state(self, filepath: str = "quantum_state_backup.json") -> Dict[str, Any]:
         """Save the current quantum state to a file.
@@ -4023,6 +4437,27 @@ def interactive_mode():
     print("  'tools'              - List available tools")
     print("  'stats'              - Show statistics")
     print("  'actions'            - Show action history")
+    print("  'personality'        - Show personality stats and mood")
+    print("  'fixes'              - Show error fix statistics")
+    print("  'crossref <topic>'   - Get cross-reference suggestions")
+    print("  'intent [text]'      - Analyze intent or show intent flow")
+    print("  'thoughts'           - Show thought chain analysis")
+    print("  'links'              - Show critical links between thoughts")
+    print("  'export'             - Export thought network to JSON")
+    print("  'humor'              - Show humor and pressure management status")
+    print("  'pressure'           - Show detailed pressure analysis")
+    print("  'joke [level]'       - Tell a joke (low/medium/high/critical/overwhelmed)")
+    print("  'cache'              - Show catch & release cache statistics")
+    print("  'xref <query>'       - Quick cross-reference lookup")
+    print("  'continuity'         - Show conversation continuity")
+    print("  'catch <content>'    - Manually catch content in cache")
+    print("  'release <key>'      - Release content from cache")
+    print("  'clearcache <level>' - Clear cache (session/short/long/permanent/all)")
+    print("  'simulate <query>'   - Run parallel simulations for possibility exploration")
+    print("  'sims'               - Show parallel simulation statistics")
+    print("  'sim <id>'           - Get specific simulation result")
+    print("  'clearsims'          - Clear completed simulations")
+    print("  'possibilities <topic>' - Explore entire possibility space")
     print("  'add knowledge'      - Add documents to knowledge base")
     print("  'stream on/off'      - Toggle streaming")
     print("  'preflight on/off'   - Toggle Glimpse preflight (default: on)")
@@ -4069,7 +4504,10 @@ def interactive_mode():
                 # Silent best-effort; never block user flow
                 pass
 
-        glimpse_engine = GlimpseEngine(privacy_guard=PrivacyGuard(on_commit=_commit_sink))
+        glimpse_engine = GlimpseEngine(privacy_guard=PrivacyGuard(on_commit=_commit_sink), enable_clarifiers=True)
+        # Update to use enhanced clarifier engine
+        if hasattr(glimpse_engine, '_clarifier_engine') and glimpse_engine._clarifier_engine:
+            glimpse_engine._clarifier_engine = ClarifierEngine(use_enhanced_mode=True)
 
         while True:
             try:
@@ -4170,13 +4608,15 @@ def interactive_mode():
                         continue
 
                     if action_cmd == "report":
-                        report_type = parts[1] if len(parts) > 1 else "summary"
-                        result = assistant.execute_action("inventory", "report", report_type=report_type)
-                        if result["success"]:
-                            print(f"\n📊 Inventory Report ({report_type}):")
-                            print(json.dumps(result["result"], indent=2))
-                        else:
-                            print(f"  Error: {result['error']}")
+                        try:
+                            report_type = parts[1] if len(parts) > 1 else "summary"
+                            result = assistant.execute_action("inventory", "report", report_type=report_type)
+                            if result["success"]:
+                                print(f"\n📊 Report:\n{json.dumps(result['result'], indent=2)}")
+                            else:
+                                print(f"  Error: {result['error']}")
+                        except Exception as e:
+                            print(f"  Error: {str(e)}")
                         continue
 
                 if command == "stream on":
@@ -4249,6 +4689,176 @@ def interactive_mode():
                             print(f"⚠ Prompt '{prompt_name}' not found")
                     continue
 
+                if command.startswith("simulate "):
+                    # Run parallel simulations
+                    query = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
+                    if query:
+                        # Create simulation configs
+                        sim_configs = [
+                            {
+                                "type": SimulationType.SCENARIO_EXPLORATION,
+                                "input_data": {"scenario": query, "context": {}},
+                                "parameters": {"priority": 0.7, "timeout": 15}
+                            },
+                            {
+                                "type": SimulationType.OUTCOME_PREDICTION,
+                                "input_data": {"action": query, "context": {}},
+                                "parameters": {"priority": 0.8, "timeout": 20}
+                            },
+                            {
+                                "type": SimulationType.ALTERNATIVE_PATHS,
+                                "input_data": {"problem": query, "current_approach": ""},
+                                "parameters": {"priority": 0.6, "timeout": 25}
+                            }
+                        ]
+                        
+                        print(f"\n🧠 **Running parallel simulations for:** {query}")
+                        print("  This may take a moment...")
+                        
+                        # Run simulations
+                        results = parallel_simulation.run_parallel_simulations(sim_configs)
+                        
+                        if results:
+                            print(f"\n📊 **Simulation Results:**")
+                            for i, result in enumerate(results, 1):
+                                sim_type = result.simulation_type.value.replace('_', ' ').title()
+                                print(f"\n  {i}. {sim_type}:")
+                                print(f"     Confidence: {result.confidence:.1%}")
+                                print(f"     Execution time: {result.execution_time:.2f}s")
+                                print(f"     Reasoning: {result.reasoning}")
+                                
+                                if result.possibilities:
+                                    print(f"     Top possibility: {result.possibilities[0]}")
+                                
+                                if result.insights:
+                                    print(f"     Insights: {', '.join(result.insights[:2])}")
+                        else:
+                            print("  No simulation results available.")
+                    else:
+                        print("  Usage: simulate <query>")
+                    continue
+
+                if command == "sims":
+                    # Show simulation statistics
+                    sim_stats = parallel_simulation.get_simulation_statistics()
+                    
+                    print(f"\n🧠 **Parallel Simulation Statistics:**")
+                    print(f"  Total simulations: {sim_stats['total_simulations']}")
+                    print(f"  Active simulations: {sim_stats['active_simulations']}")
+                    print(f"  Queue size: {sim_stats['queue_size']}")
+                    
+                    print(f"\n  Status breakdown:")
+                    for status, count in sim_stats['status_breakdown'].items():
+                        print(f"    {status}: {count}")
+                    
+                    print(f"\n  Type breakdown:")
+                    for sim_type, count in sim_stats['type_breakdown'].items():
+                        print(f"    {sim_type}: {count}")
+                    
+                    print(f"\n  Performance:")
+                    perf = sim_stats['performance']
+                    print(f"    Success rate: {perf['success_rate']:.1%}")
+                    print(f"    Average execution time: {perf['average_execution_time']:.2f}s")
+                    print(f"    Average confidence: {perf['average_confidence']:.1%}")
+                    print(f"    Average relevance: {perf['average_relevance']:.1%}")
+                    
+                    print(f"\n  Configuration:")
+                    print(f"    Max workers: {sim_stats['max_workers']}")
+                    print(f"    Max concurrent: {sim_stats['max_concurrent']}")
+                    continue
+
+                if command.startswith("sim "):
+                    # Get specific simulation result
+                    sim_id = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
+                    if sim_id:
+                        result = parallel_simulation.get_simulation_result(sim_id)
+                        
+                        if result:
+                            print(f"\n🧠 **Simulation Result:**")
+                            print(f"  ID: {result.instance_id}")
+                            print(f"  Type: {result.simulation_type.value}")
+                            print(f"  Confidence: {result.confidence:.1%}")
+                            print(f"  Execution time: {result.execution_time:.2f}s")
+                            print(f"  Reasoning: {result.reasoning}")
+                            
+                            print(f"\n  Outcome:")
+                            for key, value in result.outcome.items():
+                                if isinstance(value, list) and len(value) > 0:
+                                    print(f"    {key}: {len(value)} items")
+                                    for item in value[:2]:
+                                        print(f"      - {item}")
+                                else:
+                                    print(f"    {key}: {value}")
+                            
+                            if result.insights:
+                                print(f"\n  Insights:")
+                                for insight in result.insights:
+                                    print(f"    • {insight}")
+                            
+                            if result.cross_references:
+                                print(f"\n  Cross-references: {len(result.cross_references)}")
+                            
+                            if result.possibilities:
+                                print(f"\n  Possibilities: {len(result.possibilities)}")
+                                for i, poss in enumerate(result.possibilities[:3], 1):
+                                    if isinstance(poss, dict):
+                                        desc = poss.get("description", str(poss))
+                                    else:
+                                        desc = str(poss)
+                                    print(f"    {i}. {desc[:60]}...")
+                        else:
+                            print(f"  No result found for simulation ID: {sim_id}")
+                    else:
+                        print("  Usage: sim <simulation_id>")
+                    continue
+
+                if command == "clearsims":
+                    # Clear completed simulations
+                    parallel_simulation.clear_completed_simulations()
+                    print(f"\n🗑️ **Cleared completed simulations**")
+                    continue
+
+                if command.startswith("possibilities "):
+                    # Explore possibility space for a topic
+                    topic = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
+                    if topic:
+                        print(f"\n🌌 **Exploring possibility space for:** {topic}")
+                        print("  Running comprehensive simulation...")
+                        
+                        sim_id = parallel_simulation.create_simulation(
+                            simulation_type=SimulationType.POSSIBILITY_SPACE,
+                            input_data={"topic": topic, "constraints": {}},
+                            parameters={"priority": 0.8, "timeout": 30}
+                        )
+                        
+                        result = parallel_simulation.wait_for_simulation(sim_id, timeout=35.0)
+                        
+                        if result and result.outcome:
+                            outcome = result.outcome
+                            print(f"\n📊 **Possibility Space Analysis:**")
+                            print(f"  Total dimensions: {outcome.get('total_dimensions', 0)}")
+                            print(f"  Total combinations: {outcome.get('total_combinations', 0)}")
+                            print(f"  Recommendation: {outcome.get('exploration_recommendation', '')}")
+                            
+                            space = outcome.get('possibility_space', [])
+                            if space:
+                                print(f"\n  Dimensions:")
+                                for dim in space:
+                                    print(f"    • {dim.get('name', 'unknown')}: {dim.get('complexity', '')} complexity, {dim.get('impact', '')} impact")
+                                    possibilities = dim.get('possibilities', [])
+                                    for poss in possibilities[:3]:
+                                        print(f"      - {poss}")
+                            
+                            if result.insights:
+                                print(f"\n  Insights:")
+                                for insight in result.insights:
+                                    print(f"    • {insight}")
+                        else:
+                            print("  Failed to explore possibility space.")
+                    else:
+                        print("  Usage: possibilities <topic>")
+                    continue
+
                 system_prompt_var = system_prompt if "system_prompt" in locals() else None
 
                 # Optional Glimpse preflight before sending to model
@@ -4273,9 +4883,19 @@ def interactive_mode():
                         if isinstance(res1.delta, str) and res1.delta.startswith("Clarifier:"):
                             ans = input("Answer clarifier [Y/N]: ").strip().lower()
                             if ans == "y":
-                                preflight_constraints = (preflight_constraints + " | audience: external").strip().strip("|").strip()
+                                # Add audience constraint to prevent repeated clarifiers
+                                if preflight_constraints:
+                                    preflight_constraints = preflight_constraints + " | audience: external"
+                                else:
+                                    preflight_constraints = "audience: external"
+                                print("✓ Added audience: external constraint")
                             elif ans == "n":
-                                preflight_constraints = (preflight_constraints + " | audience: internal").strip().strip("|").strip()
+                                # Add audience constraint to prevent repeated clarifiers
+                                if preflight_constraints:
+                                    preflight_constraints = preflight_constraints + " | audience: internal"
+                                else:
+                                    preflight_constraints = "audience: internal"
+                                print("✓ Added audience: internal constraint")
 
                     # Offer essence-only toggle if latency options appeared (≥800 ms)
                     if any("Options:" in s for s in res1.status_history):
@@ -4328,9 +4948,19 @@ def interactive_mode():
                                 if isinstance(res2.delta, str) and res2.delta.startswith("Clarifier:"):
                                     ans2 = input("Answer clarifier [Y/N]: ").strip().lower()
                                     if ans2 == "y":
-                                        preflight_constraints = (preflight_constraints + " | audience: external").strip().strip("|").strip()
+                                        # Add audience constraint to prevent repeated clarifiers
+                                        if preflight_constraints:
+                                            preflight_constraints = preflight_constraints + " | audience: external"
+                                        else:
+                                            preflight_constraints = "audience: external"
+                                        print("✓ Added audience: external constraint")
                                     elif ans2 == "n":
-                                        preflight_constraints = (preflight_constraints + " | audience: internal").strip().strip("|").strip()
+                                        # Add audience constraint to prevent repeated clarifiers
+                                        if preflight_constraints:
+                                            preflight_constraints = preflight_constraints + " | audience: internal"
+                                        else:
+                                            preflight_constraints = "audience: internal"
+                                        print("✓ Added audience: internal constraint")
 
                             # Offer essence-only toggle if latency options appeared (≥800 ms)
                             if any("Options:" in s for s in res2.status_history):
@@ -4358,13 +4988,19 @@ def interactive_mode():
 
                 response = assistant.chat(
                     final_message,
-                    system_prompt=system_prompt,
+                    system_prompt=system_prompt_var,
                     stream=streaming_enabled,
                     show_status=status_enabled,
                 )
 
                 if not streaming_enabled:
                     print(f"\nEchoes: {response}")
+                else:
+                    # Handle streaming response
+                    print("\nEchoes: ", end="", flush=True)
+                    for chunk in response:
+                        print(chunk, end="", flush=True)
+                    print()  # New line after stream completes
 
             except KeyboardInterrupt:
                 print("\n\nUse 'exit' or 'quit' to end the session.")

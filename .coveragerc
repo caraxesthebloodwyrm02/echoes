@@ -1,0 +1,26 @@
+[run]
+source = .
+omit = 
+    */tests/*
+    */__pycache__/*
+    */venv/*
+    */.git/*
+    */misc/*
+    */examples/*
+    */demos/*
+
+[report]
+show_missing = true
+skip_covered = true
+exclude_lines =
+    pragma: no cover
+    def __repr__
+    raise NotImplementedError
+    if __name__ == .__main__.:
+    pass
+    raise ImportError
+    @abstractmethod
+    @property
+    @classmethod
+    @staticmethod
+    @.*\.setter

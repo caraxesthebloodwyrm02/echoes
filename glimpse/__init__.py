@@ -18,6 +18,7 @@ __all__ = [
     "GlimpseResult",
     "LatencyMonitor",
     "default_sampler",
+    "ClarifierEngine",
 
     # Metrics server components
     "start_metrics_server",
@@ -29,7 +30,7 @@ __all__ = [
 
 def __getattr__(name: str) -> Any:
     # Core components
-    if name in {"GlimpseEngine", "PrivacyGuard", "Draft", "GlimpseResult", "LatencyMonitor", "default_sampler"}:
+    if name in {"GlimpseEngine", "PrivacyGuard", "Draft", "GlimpseResult", "LatencyMonitor", "default_sampler", "ClarifierEngine"}:
         mod = import_module(".Glimpse", __name__)
         return getattr(mod, name)
     
