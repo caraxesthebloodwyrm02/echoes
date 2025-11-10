@@ -41,7 +41,13 @@ jobs:
         run: ruff check . --output-format concise --exclude=tests/broken --exclude=security_audit --exclude=.root_backup || exit 1
 
       - name: Check formatting with Black
-        run: black --check . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/' || exit 1
+        run: |
+          black --check . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/' || (
+            echo "Files need formatting. Running Black to fix..." 
+            black . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/'
+            echo "Files have been formatted. Please commit these changes locally."
+            exit 1
+          )
 
       - name: Check for security issues with Bandit
         run: |
