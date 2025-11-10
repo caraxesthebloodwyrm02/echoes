@@ -26,6 +26,7 @@ from smart_terminal.interface.terminal import (
     TerminalInterface,
     TerminalPreset,
 )
+
 # SuggestionMode is now a nested class of TerminalPreset
 SuggestionMode = TerminalPreset.SuggestionMode
 
