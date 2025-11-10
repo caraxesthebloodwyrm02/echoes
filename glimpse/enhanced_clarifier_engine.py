@@ -193,7 +193,7 @@ class EnhancedClarifierEngine:
             List of critical clarifiers (usually 0 or 1)
         """
         clarifiers = []
-        text_lower = input_text.lower()
+        text_lower = (input_text or "").lower()
 
         # Only detect critical issues that could cause harm
         if (
@@ -201,7 +201,7 @@ class EnhancedClarifierEngine:
                 word in text_lower
                 for word in ["delete", "remove", "cancel", "terminate"]
             )
-            and "critical_action" not in constraints.lower()
+            and "critical_action" not in (constraints or "").lower()
         ):
             clarifiers.append(self.critical_clarifiers["critical_audience"])
 

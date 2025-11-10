@@ -8,6 +8,7 @@ to improve user engagement and continuous learning.
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
+import os
 
 # Import enhanced clarifier engine for new functionality
 try:
@@ -58,7 +59,18 @@ class ClarifierEngine:
     def __init__(self, use_enhanced_mode: bool = True):
         """Initialize the clarifier Glimpse with default configurations"""
         # Try to use enhanced mode if available
-        self.enhanced_mode = use_enhanced_mode and ENHANCED_CLARIFIER_AVAILABLE
+        # Allow tests or env to force legacy (pre-exec) clarifier behavior
+        env_force_legacy = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {
+            "true",
+            "1",
+            "yes",
+        }
+
+        # If the environment requests pre-exec clarifier, force legacy mode
+        if env_force_legacy:
+            self.enhanced_mode = False
+        else:
+            self.enhanced_mode = use_enhanced_mode and ENHANCED_CLARIFIER_AVAILABLE
         if self.enhanced_mode:
             self.enhanced_engine = EnhancedClarifierEngine()
             print("✅ Using enhanced clarifier engine with post-execution curiosity")
@@ -107,6 +119,34 @@ class ClarifierEngine:
                 options=["bullet points", "paragraphs", "numbered list"],
                 default="bullet points",
             ),
+            # Scope clarifiers
+            "scope": Clarifier(
+                type=ClarifierType.SCOPE,
+                question="Should this cover a broad scope or be narrowly focused?",
+                options=["broad", "narrow"],
+                default="narrow",
+            ),
+            # Language clarifiers
+            "language": Clarifier(
+                type=ClarifierType.LANGUAGE,
+                question="Should the language be simple or technical?",
+                options=["simple", "technical"],
+                default="simple",
+            ),
+            # Urgency clarifiers
+            "urgency": Clarifier(
+                type=ClarifierType.URGENCY,
+                question="What is the urgency level?",
+                options=["urgent", "normal", "low"],
+                default="normal",
+            ),
+            # Detail level clarifier
+            "detail_level": Clarifier(
+                type=ClarifierType.DETAIL_LEVEL,
+                question="What level of detail is required?",
+                options=["high-level", "detailed", "deep-dive"],
+                default="high-level",
+            ),
         }
 
     def detect_ambiguity(
@@ -137,15 +177,22 @@ class ClarifierEngine:
     ) -> list[Clarifier]:
         """Legacy ambiguity detection (blocking questions)"""
         clarifiers = []
-        text_lower = input_text.lower()
-        constraints_lower = constraints.lower()
+        text_lower = (input_text or "").lower()
+        constraints_lower = (constraints or "").lower()
+        goal_stripped = (goal or "").strip()
 
         # Check for audience ambiguity
-        if (
-            any(word in text_lower for word in ["customer", "client", "user"])
-            and "audience" not in constraints_lower
-        ):
-            clarifiers.append(self.clarifier_rules["customer"])
+        # If no explicit goal is provided, prompt for audience as a safe default
+        if not goal_stripped and "audience" not in constraints_lower:
+            if "customer" in self.clarifier_rules:
+                clarifiers.append(self.clarifier_rules["customer"])
+        else:
+            if (
+                any(word in text_lower for word in ["customer", "client", "user"])
+                and "audience" not in constraints_lower
+            ):
+                if "customer" in self.clarifier_rules:
+                    clarifiers.append(self.clarifier_rules["customer"])
 
         # Check for tone ambiguity
         if (
@@ -176,6 +223,42 @@ class ClarifierEngine:
             and "format" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["list"])
+
+        # Check for scope ambiguity
+        scope_keywords = ["scope", "range", "extent", "include", "exclude", "focus", "focus on"]
+        if (
+            any(word in text_lower for word in scope_keywords)
+            and "scope" not in constraints_lower
+            and "scope" in self.clarifier_rules
+        ):
+            clarifiers.append(self.clarifier_rules["scope"])
+
+        # Check for language ambiguity
+        language_keywords = ["language", "translate", "simplify", "simplified", "technical", "layman", "layman's"]
+        if (
+            any(word in text_lower for word in language_keywords)
+            and "language" not in constraints_lower
+            and "language" in self.clarifier_rules
+        ):
+            clarifiers.append(self.clarifier_rules["language"])
+
+        # Check for urgency ambiguity
+        urgency_keywords = ["urgent", "asap", "asap", "immediately", "soon", "urgently"]
+        if (
+            any(word in text_lower for word in urgency_keywords)
+            and "urgency" not in constraints_lower
+            and "urgency" in self.clarifier_rules
+        ):
+            clarifiers.append(self.clarifier_rules["urgency"])
+
+        # Check for detail level ambiguity
+        detail_keywords = ["detailed", "depth", "deep-dive", "deep dive", "summary", "high-level", "high level", "comprehensive", "comprehensively"]
+        if (
+            any(word in text_lower for word in detail_keywords)
+            and "detail_level" not in constraints_lower
+            and "detail_level" in self.clarifier_rules
+        ):
+            clarifiers.append(self.clarifier_rules["detail_level"])
 
         # Limit to maximum 3 clarifiers
         return clarifiers[:3]
