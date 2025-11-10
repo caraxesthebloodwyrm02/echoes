@@ -88,7 +88,7 @@ def demo_filesystem_operations():
                 continue
 
             print("\n🤖 Assistant: ", end="", flush=True)
-            response = assistant.chat(user_input, stream=True)
+            assistant.chat(user_input, stream=True)
 
             # The stream=True option prints the response directly
             # If you want to capture it, use stream=False

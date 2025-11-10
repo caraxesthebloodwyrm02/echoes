@@ -11,17 +11,14 @@ Features:
 """
 
 import asyncio
-import json
 import logging
-from datetime import datetime, timedelta
-from typing import Dict, Any, List, Optional
+from datetime import datetime
+from typing import Dict, Any, List
 from dataclasses import dataclass
 from enum import Enum
 
-import pandas as pd
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
-from fastapi.staticfiles import StaticFiles
 
 class HealthStatus(Enum):
     HEALTHY = "healthy"
@@ -49,7 +46,7 @@ class DependencyStatus:
 
 class ResilienceDashboard:
     """Comprehensive resilience monitoring dashboard"""
-    
+
     def __init__(self):
         self.logger = logging.getLogger(__name__)
         self.health_metrics: Dict[str, HealthMetric] = {}
@@ -57,16 +54,16 @@ class ResilienceDashboard:
         self.alerts: List[Dict[str, Any]] = []
         self.performance_history: List[Dict[str, Any]] = []
         self.connected_clients: List[WebSocket] = []
-        
+
         # Initialize health checks
         self._initialize_health_checks()
         self._initialize_dependency_monitoring()
-    
+
     def _initialize_health_checks(self):
         """Initialize system health monitoring"""
         self.health_metrics = {
             "cpu_usage": HealthMetric(
-                "CPU Usage", HealthStatus.HEALTHY, 0.0, 80.0, 
+                "CPU Usage", HealthStatus.HEALTHY, 0.0, 80.0,
                 datetime.now(), "Percentage of CPU utilization"
             ),
             "memory_usage": HealthMetric(
@@ -86,7 +83,7 @@ class ResilienceDashboard:
                 datetime.now(), "Cognitive load reduction percentage"
             )
         }
-    
+
     def _initialize_dependency_monitoring(self):
         """Initialize third-party dependency monitoring"""
         self.dependencies = {
@@ -107,13 +104,13 @@ class ResilienceDashboard:
                 datetime.now(), False
             )
         }
-    
+
     async def update_health_metrics(self):
         """Update all health metrics"""
         try:
             # Simulate metric collection (replace with actual monitoring)
             import psutil
-            
+
             # Update CPU usage
             cpu_percent = psutil.cpu_percent(interval=1)
             self.health_metrics["cpu_usage"].value = cpu_percent
@@ -121,7 +118,7 @@ class ResilienceDashboard:
                 HealthStatus.WARNING if cpu_percent > 70 else HealthStatus.CRITICAL if cpu_percent > 90 else HealthStatus.HEALTHY
             )
             self.health_metrics["cpu_usage"].last_updated = datetime.now()
-            
+
             # Update memory usage
             memory = psutil.virtual_memory()
             memory_percent = memory.percent
@@ -130,17 +127,17 @@ class ResilienceDashboard:
                 HealthStatus.WARNING if memory_percent > 75 else HealthStatus.CRITICAL if memory_percent > 95 else HealthStatus.HEALTHY
             )
             self.health_metrics["memory_usage"].last_updated = datetime.now()
-            
+
             # Simulate other metrics
             self.health_metrics["response_time"].value = 250.0 + (hash(str(datetime.now())) % 200)
             self.health_metrics["error_rate"].value = max(0, 2.0 + (hash(str(datetime.now())) % 5))
-            
+
             # Check for alerts
             await self._check_for_alerts()
-            
+
         except Exception as e:
             self.logger.error(f"Failed to update health metrics: {e}")
-    
+
     async def update_dependency_status(self):
         """Update third-party dependency status"""
         for name, dependency in self.dependencies.items():
@@ -149,12 +146,12 @@ class ResilienceDashboard:
                 import random
                 response_time = 50 + random.random() * 300
                 error_rate = random.random() * 10
-                
+
                 dependency.response_time = response_time
                 dependency.error_rate = error_rate
                 dependency.last_check = datetime.now()
                 dependency.circuit_breaker_active = error_rate > 8.0
-                
+
                 # Update status based on metrics
                 if error_rate > 8.0 or response_time > 500:
                     dependency.status = HealthStatus.CRITICAL
@@ -162,16 +159,16 @@ class ResilienceDashboard:
                     dependency.status = HealthStatus.WARNING
                 else:
                     dependency.status = HealthStatus.HEALTHY
-                    
+
             except Exception as e:
                 self.logger.error(f"Failed to update dependency {name}: {e}")
                 dependency.status = HealthStatus.CRITICAL
                 dependency.circuit_breaker_active = True
-    
+
     async def _check_for_alerts(self):
         """Check for conditions that require alerts"""
         current_time = datetime.now()
-        
+
         for name, metric in self.health_metrics.items():
             if metric.status == HealthStatus.CRITICAL:
                 alert = {
@@ -184,7 +181,7 @@ class ResilienceDashboard:
                 }
                 self.alerts.append(alert)
                 await self._broadcast_alert(alert)
-    
+
     async def _broadcast_alert(self, alert: Dict[str, Any]):
         """Broadcast alert to all connected clients"""
         message = {
@@ -197,7 +194,7 @@ class ResilienceDashboard:
             except Exception as e:
                 self.logger.error(f"Failed to send alert to client: {e}")
                 self.connected_clients.remove(client)
-    
+
     async def get_dashboard_data(self) -> Dict[str, Any]:
         """Get comprehensive dashboard data"""
         return {
@@ -228,22 +225,22 @@ class ResilienceDashboard:
             "system_health": self._calculate_overall_health(),
             "timestamp": datetime.now().isoformat()
         }
-    
+
     def _calculate_overall_health(self) -> Dict[str, Any]:
         """Calculate overall system health score"""
         total_metrics = len(self.health_metrics)
         healthy_metrics = sum(1 for m in self.health_metrics.values() if m.status == HealthStatus.HEALTHY)
         critical_metrics = sum(1 for m in self.health_metrics.values() if m.status == HealthStatus.CRITICAL)
-        
+
         health_score = (healthy_metrics / total_metrics) * 100 if total_metrics > 0 else 0
-        
+
         if critical_metrics > 0:
             overall_status = HealthStatus.CRITICAL
         elif health_score < 80:
             overall_status = HealthStatus.WARNING
         else:
             overall_status = HealthStatus.HEALTHY
-        
+
         return {
             "status": overall_status.value,
             "score": health_score,
@@ -251,35 +248,35 @@ class ResilienceDashboard:
             "total_metrics": total_metrics,
             "critical_metrics": critical_metrics
         }
-    
+
     async def register_websocket_client(self, websocket: WebSocket):
         """Register a new WebSocket client for real-time updates"""
         await websocket.accept()
         self.connected_clients.append(websocket)
-        
+
         # Send initial data
         dashboard_data = await self.get_dashboard_data()
         await websocket.send_json({
             "type": "initial_data",
             "data": dashboard_data
         })
-    
+
     def unregister_websocket_client(self, websocket: WebSocket):
         """Unregister a WebSocket client"""
         if websocket in self.connected_clients:
             self.connected_clients.remove(websocket)
-    
+
     async def broadcast_updates(self):
         """Broadcast updates to all connected clients"""
         if not self.connected_clients:
             return
-        
+
         dashboard_data = await self.get_dashboard_data()
         message = {
             "type": "update",
             "data": dashboard_data
         }
-        
+
         for client in self.connected_clients[:]:  # Copy list to avoid modification during iteration
             try:
                 await client.send_json(message)
@@ -337,25 +334,25 @@ async def get_dashboard():
                 <canvas id="performance-chart"></canvas>
             </div>
         </div>
-        
+
         <script>
             const ws = new WebSocket('ws://localhost:8000/ws');
-            
+
             ws.onmessage = function(event) {
                 const data = JSON.parse(event.data);
-                
+
                 if (data.type === 'update' || data.type === 'initial_data') {
                     updateDashboard(data.data);
                 } else if (data.type === 'alert') {
                     addAlert(data.data);
                 }
             };
-            
+
             function updateDashboard(data) {
                 // Update health metrics
                 const healthDiv = document.getElementById('health-metrics');
                 healthDiv.innerHTML = '';
-                
+
                 Object.values(data.health_metrics).forEach(metric => {
                     const metricDiv = document.createElement('div');
                     metricDiv.className = `metric ${metric.status}`;
@@ -366,11 +363,11 @@ async def get_dashboard():
                     `;
                     healthDiv.appendChild(metricDiv);
                 });
-                
+
                 // Update dependencies
                 const depsDiv = document.getElementById('dependencies');
                 depsDiv.innerHTML = '';
-                
+
                 Object.values(data.dependencies).forEach(dep => {
                     const depDiv = document.createElement('div');
                     depDiv.className = `metric ${dep.status}`;
@@ -382,11 +379,11 @@ async def get_dashboard():
                     `;
                     depsDiv.appendChild(depDiv);
                 });
-                
+
                 // Update alerts
                 const alertsDiv = document.getElementById('alerts');
                 alertsDiv.innerHTML = '';
-                
+
                 data.alerts.forEach(alert => {
                     const alertDiv = document.createElement('div');
                     alertDiv.className = 'alert';
@@ -397,7 +394,7 @@ async def get_dashboard():
                     alertsDiv.appendChild(alertDiv);
                 });
             }
-            
+
             function addAlert(alert) {
                 // Handle real-time alerts
                 console.log('New alert:', alert);
@@ -433,7 +430,7 @@ async def acknowledge_alert(alert_id: int):
 
 if __name__ == "__main__":
     import uvicorn
-    
+
     # Start background monitoring
     async def monitor_background():
         while True:
@@ -441,9 +438,9 @@ if __name__ == "__main__":
             await dashboard.update_dependency_status()
             await dashboard.broadcast_updates()
             await asyncio.sleep(5)  # Update every 5 seconds
-    
+
     # Start monitoring in background
     asyncio.create_task(monitor_background())
-    
+
     # Run the dashboard
     uvicorn.run(app, host="0.0.0.0", port=8000)

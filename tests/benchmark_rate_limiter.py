@@ -83,12 +83,10 @@ class RateLimiterBenchmark:
                 # Randomly fail 5% of requests to test error handling
                 if random.random() < 0.05:
                     await self.rate_limiter.record_error("benchmark")
-                    success = False
                 else:
                     await self.rate_limiter.record_success(
                         "benchmark", token_count=token_count
                     )
-                    success = True
 
                 # Record metrics
                 self.metrics["successful_requests"] += 1

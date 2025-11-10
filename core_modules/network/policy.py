@@ -35,9 +35,9 @@ import sys
 import threading
 import time
 from collections import deque
-from typing import Iterable, Optional
+from typing import Optional
 
-from .policy_engine import decide, PolicyDecision
+from .policy_engine import decide
 from .policy_types import PolicyConfig, PolicyEvent, load_config
 
 try:
@@ -460,7 +460,6 @@ def write_summary(output_path: str) -> None:
 
 def _cli() -> None:
     """Command line interface."""
-    import argparse
 
     parser = argparse.ArgumentParser(description="Egress Policy Management")
     parser.add_argument("--print", action="store_true", help="Print current configuration")

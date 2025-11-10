@@ -186,7 +186,7 @@ def demo_friendly_correspondence():
 
     # Initialize assistant with all features
     try:
-        assistant = EchoesAssistantV2(
+        EchoesAssistantV2(
             enable_rag=False,  # Disable for demo simplicity
             enable_tools=False,
             enable_streaming=False,

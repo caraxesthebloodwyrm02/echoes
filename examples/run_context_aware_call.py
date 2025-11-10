@@ -307,7 +307,7 @@ def main():
     glimpse_system.start()
 
     # Simulate realistic development trajectory
-    trajectory_context = simulate_realistic_trajectory(glimpse_system)
+    simulate_realistic_trajectory(glimpse_system)
 
     # Initialize the Context-Aware API handler
     print("\n🤖 Initializing Context-Aware API Handler...")
@@ -317,7 +317,7 @@ def main():
         # Run custom query
         print(f"\n🔍 Running custom query: {args.query}")
         start_time = time.time()
-        result = context_api.run(args.query)
+        context_api.run(args.query)
         execution_time = time.time() - start_time
         print(f"\n✅ Query completed in {execution_time:.2f}s")
 
@@ -328,7 +328,7 @@ def main():
         based on documentation. Include key implementation details."""
 
         start_time = time.time()
-        result = context_api.run(quick_query)
+        context_api.run(quick_query)
         execution_time = time.time() - start_time
         print(f"\n✅ Quick demo completed in {execution_time:.2f}s")
 

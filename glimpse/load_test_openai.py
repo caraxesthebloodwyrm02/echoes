@@ -69,7 +69,7 @@ PROMPT_POOL = [
 
 async def simulate_user(user_id: int, requests_per_user: int) -> list[float]:
     """Simulate one user making sequential requests."""
-    engine = GlimpseEngine(sampler=openai_sampler)
+    GlimpseEngine(sampler=openai_sampler)
     latencies = []
     for i in range(requests_per_user):
         # Choose prompt: 70% from pool (cache hits), 30% unique (cache misses)

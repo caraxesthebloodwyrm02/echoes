@@ -95,7 +95,7 @@ def test_performance_limits():
     async def run():
         # Test with very large constraints
         large_constraints = " ".join(["constraint"] * 1000)
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         start_time = time.time()
         r = await Glimpse.glimpse(
@@ -205,13 +205,13 @@ def test_essence_only_mode_edge_cases():
         # Test toggling essence-only multiple times
         engine1 = GlimpseEngine()
         engine1.set_essence_only(True)
-        assert engine1._essence_only == True
+        assert engine1._essence_only
 
         engine1.set_essence_only(False)
-        assert engine1._essence_only == False
+        assert not engine1._essence_only
 
         engine1.set_essence_only(True)
-        assert engine1._essence_only == True
+        assert engine1._essence_only
 
         # Test glimpse with essence-only on
         engine2 = GlimpseEngine()
@@ -237,7 +237,7 @@ def test_cancel_behavior_edge_cases():
     """Test cancel behavior in various scenarios"""
 
     async def run():
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Test cancel without active glimpse
         Glimpse.cancel()
@@ -290,7 +290,7 @@ def test_status_history_edge_cases():
 
         assert isinstance(r2.status_history, list)
         assert any("trying" in s.lower() for s in r2.status_history)
-        assert r2.stale == True
+        assert r2.stale
 
     asyncio.run(run())
 

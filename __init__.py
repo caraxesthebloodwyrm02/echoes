@@ -17,7 +17,7 @@ try:
     import os
     ecosystem_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     sys.path.append(ecosystem_root)
-    
+
     from ecosystem import get_ecosystem
     ECOSYSTEM_AVAILABLE = True
 except ImportError:
@@ -34,16 +34,16 @@ def get_echoes_status():
             "ecosystem_coordination"
         ]
     }
-    
+
     if ECOSYSTEM_AVAILABLE:
         try:
-            ecosystem = get_ecosystem()
+            get_ecosystem()
             status["ecosystem_status"] = "connected"
         except:
             status["ecosystem_status"] = "available"
     else:
         status["ecosystem_status"] = "disconnected"
-    
+
     return status
 
 def main():
@@ -62,12 +62,12 @@ def main():
     print("=" * 30)
     print("Advanced AI research platform")
     print("Ecosystem Integration: {}".format("✅ Available" if ECOSYSTEM_AVAILABLE else "❌ Not Available"))
-    
+
     status = get_echoes_status()
-    
+
     if status.get("ecosystem_status") == "connected":
         print("🌍 Ecosystem: Connected")
-    
+
     print("")
     print("Usage:")
     print("  python -m Echoes")

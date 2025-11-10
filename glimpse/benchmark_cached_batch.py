@@ -13,7 +13,7 @@ from glimpse.sampler_openai import openai_sampler
 
 async def run_once_unique():
     """Run a unique draft (cache miss)."""
-    engine = GlimpseEngine(sampler=openai_sampler)
+    GlimpseEngine(sampler=openai_sampler)
     draft = Draft(
         f"Unique input {time.time()}",
         "summarize quarterly sales",
@@ -26,7 +26,7 @@ async def run_once_unique():
 
 async def run_once_repeated():
     """Run a repeated draft (should hit cache)."""
-    engine = GlimpseEngine(sampler=openai_sampler)
+    GlimpseEngine(sampler=openai_sampler)
     draft = Draft(
         "Summarize the quarterly sales report for leadership.",
         "summarize quarterly sales",
@@ -39,7 +39,7 @@ async def run_once_repeated():
 
 async def run_batch(drafts):
     """Run multiple drafts concurrently."""
-    engine = GlimpseEngine(sampler=openai_sampler)
+    GlimpseEngine(sampler=openai_sampler)
     start = time.perf_counter()
     await asyncio.gather(*(Glimpse.glimpse(d) for d in drafts))
     return time.perf_counter() - start

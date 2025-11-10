@@ -127,9 +127,9 @@ def demo_network_communication():
             )
 
             # Send message
-            start_time = time.time()
+            time.time()
             result = framework.send_message(message)
-            end_time = time.time()
+            time.time()
 
             # Display results
             if result.success:

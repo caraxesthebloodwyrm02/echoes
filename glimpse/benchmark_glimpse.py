@@ -6,7 +6,7 @@ from glimpse.Glimpse import Draft, GlimpseEngine
 
 
 async def run_once():
-    engine = GlimpseEngine()
+    GlimpseEngine()
     draft = Draft(
         "Analyze system logs for anomalies",
         "summarize logs",

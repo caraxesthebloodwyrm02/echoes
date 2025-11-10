@@ -4,7 +4,7 @@ from glimpse.Glimpse import Draft, GlimpseEngine
 
 
 async def main() -> None:
-    engine = GlimpseEngine()
+    GlimpseEngine()
     draft = Draft(
         input_text="Send a brief status note about intermittent errors; keep tone calm and same channel.",
         goal="Reassure and provide next update time",

@@ -30,7 +30,7 @@ class TestSynchronicityDetection:
 
         results = []
         for draft in seeker_drafts:
-            engine = GlimpseEngine()  # Fresh Glimpse for each
+            GlimpseEngine()  # Fresh Glimpse for each
             result = await Glimpse.glimpse(draft)
             results.append(result)
 
@@ -46,7 +46,7 @@ class TestSynchronicityDetection:
         Test rejection of surface-level matches that lack deep meaning.
         Like Freud's skepticism of Jung's bookcase - not every coincidence is meaningful.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Keyword stuffing without meaning
         random_draft = Draft(
@@ -99,7 +99,7 @@ class TestMeaningfulCoincidence:
         Test cases where alignment carries high meaning.
         Like Jung's bookcase incident - when inner and outer align meaningfully.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # High semantic and intent alignment
         meaningful_draft = Draft(
@@ -120,7 +120,7 @@ class TestMeaningfulCoincidence:
         Test cases where surface matches lack deeper meaning.
         Like random furniture creaking vs. psychic phenomenon.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Surface keywords match but intent diverges
         surface_draft = Draft(
@@ -145,7 +145,7 @@ class TestCollectivePatterns:
         Test recognition of universal intents across different contexts.
         Like Jung's collective unconscious - patterns that transcend individual experience.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Universal "help-seeking" pattern in different domains
         help_patterns = [
@@ -174,7 +174,7 @@ class TestCollectivePatterns:
         Test pattern recognition that works across different contexts.
         Like archetypes appearing in different cultural mythologies.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Same pattern (optimization) in different technical contexts
         optimization_patterns = [

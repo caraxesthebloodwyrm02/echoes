@@ -232,7 +232,7 @@ def demonstrate_visual_context():
     print(f"   • Graph edges: {visual_context.entity_graph.number_of_edges()}")
 
     # Export context data
-    context_data = visual_context.export_context_data()
+    visual_context.export_context_data()
 
     print("\n📊 CONTEXT INSIGHTS:")
     print(f"   • Primary topic: {max(topic_counts, key=topic_counts.get)}")
@@ -371,11 +371,11 @@ def demonstrate_runtime_tools():
 def sentiment_analyzer(text):
     positive_words = ['good', 'great', 'excellent', 'amazing', 'wonderful']
     negative_words = ['bad', 'terrible', 'awful', 'horrible', 'worse']
-    
+
     text_lower = text.lower()
     pos_count = sum(1 for word in positive_words if word in text_lower)
     neg_count = sum(1 for word in negative_words if word in text_lower)
-    
+
     if pos_count > neg_count:
         return "Positive"
     elif neg_count > pos_count:

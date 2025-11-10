@@ -167,7 +167,7 @@ class OpenAIAlignmentChecker:
                 "bias mitigation",
             ],
         }
-        self.system_prompt = """You are an expert AI assistant specializing in machine learning, natural language processing, and technical problem-solving. 
+        self.system_prompt = """You are an expert AI assistant specializing in machine learning, natural language processing, and technical problem-solving.
 
 Guidelines for responses:
 - Be specific and technical when explaining concepts
@@ -758,7 +758,7 @@ If asked something outside your expertise, acknowledge this and provide the best
         # Calculate model confidence (based on response length, domain terms, and coherence)
         word_count = len(words)
         sentence_count = len(sentences)
-        avg_sentence_length = word_count / max(1, sentence_count)
+        word_count / max(1, sentence_count)
 
         # Confidence increases with more domain terms, moderate sentence length, and coherence
         term_confidence = min(1.0, len(domain_terms_found) * 0.2)

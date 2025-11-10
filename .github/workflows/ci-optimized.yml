@@ -33,7 +33,7 @@ jobs:
           pip install ruff black
 
       - name: Run Ruff (fast linting)
-        run: ruff check . --select E,F,W --output-format concise --exclude=tests/broken --exclude=security_audit --exclude=.root_backup || exit 1
+        run: ruff check . --output-format concise --exclude=tests/broken --exclude=security_audit --exclude=.root_backup || exit 1
 
       - name: Check formatting with Black
         run: black --check . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/' || exit 1

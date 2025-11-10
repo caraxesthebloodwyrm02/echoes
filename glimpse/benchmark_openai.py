@@ -11,7 +11,7 @@ from glimpse.sampler_openai import openai_sampler
 
 
 async def run_once():
-    engine = GlimpseEngine(sampler=openai_sampler)
+    GlimpseEngine(sampler=openai_sampler)
     draft = Draft(
         "Summarize the quarterly sales report for leadership.",
         "summarize quarterly sales",

@@ -57,7 +57,7 @@ class TestGlimpseInit:
         assert result.sample == "test sample"
         assert result.essence == "test essence"
         assert result.delta is None
-        assert result.stale == False
+        assert not result.stale
         assert result.status_history == ["test"]
 
     def test_create_latency_monitor(self):
@@ -83,7 +83,7 @@ class TestGlimpseInit:
         """Test PrivacyGuard creation"""
         guard = PrivacyGuard()
 
-        assert guard.committed == False
+        assert not guard.committed
         assert guard._on_commit is None
 
     def test_create_privacy_guard_with_commit_handler(self):
@@ -95,7 +95,7 @@ class TestGlimpseInit:
 
         guard = PrivacyGuard(on_commit=test_handler)
 
-        assert guard.committed == False
+        assert not guard.committed
         assert guard._on_commit == test_handler
 
     def test_privacy_guard_commit(self):
@@ -110,7 +110,7 @@ class TestGlimpseInit:
 
         guard.commit(draft)
 
-        assert guard.committed == True
+        assert guard.committed
         assert len(committed_drafts) == 1
         assert committed_drafts[0] == draft
 
@@ -122,7 +122,7 @@ class TestGlimpseInit:
         # Should not raise error
         guard.commit(draft)
 
-        assert guard.committed == True
+        assert guard.committed
 
     def test_privacy_guard_commit_handler_exception(self):
         """Test PrivacyGuard commit when handler raises exception"""
@@ -136,7 +136,7 @@ class TestGlimpseInit:
         # Should not raise error - exceptions are caught
         guard.commit(draft)
 
-        assert guard.committed == True
+        assert guard.committed
 
 
 @pytest.mark.asyncio
@@ -190,7 +190,7 @@ class TestDefaultSampler:
 
         assert delta is not None
         assert "conflict" in delta.lower()
-        assert aligned == False
+        assert not aligned
 
     async def test_default_sampler_clarifier_for_empty_goal(self):
         """Test default sampler adds clarifier for empty goal"""
@@ -201,7 +201,7 @@ class TestDefaultSampler:
         assert delta is not None
         assert "Clarifier:" in delta
         assert "audience" in delta.lower()
-        assert aligned == False
+        assert not aligned
 
     async def test_default_sampler_no_conflict(self):
         """Test default sampler with no conflicts"""
@@ -214,7 +214,7 @@ class TestDefaultSampler:
         sample, essence, delta, aligned = await default_sampler(draft)
 
         assert delta is None
-        assert aligned == True
+        assert aligned
 
 
 if __name__ == "__main__":

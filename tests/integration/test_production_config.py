@@ -38,7 +38,7 @@ def test_search_config():
 
         # Test provider creation (may fail if API keys not set)
         try:
-            provider = config.create_provider()
+            config.create_provider()
             print(f"✅ Search: {config.provider} provider ready")
         except Exception as e:
             print(f"⚠️ Search: Provider not configured - {e}")
@@ -158,7 +158,7 @@ def test_atlas_integration():
         import time
 
         sku = f"CONFIG-TEST-{int(time.time())}"
-        item = service.add_item(
+        service.add_item(
             sku=sku,
             name="Configuration Test Item",
             category="Testing",

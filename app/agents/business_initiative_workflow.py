@@ -8,7 +8,7 @@ It includes agents for triaging requests, generating launch plans, and collectin
 from dataclasses import dataclass, field
 from datetime import datetime, timezone
 from enum import Enum
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional
 
 from pydantic import BaseModel, Field
 
@@ -61,7 +61,7 @@ class BusinessInitiativeWorkflow:
         self.assistant = assistant
         self.conversation_history: List[Dict[str, Any]] = []
         self.workflow_counter = 0
-        
+
         # Initialize agents
         self.triage_agent = self._create_triage_agent()
         self.launch_helper_agent = self._create_launch_helper_agent()
@@ -102,7 +102,7 @@ If all three details are present anywhere in the conversation, respond with a JS
                     temperature=0.7,
                     max_tokens=2000,
                 ),
-                system_prompt="""You are an expert at helping teams launch new business initiatives. 
+                system_prompt="""You are an expert at helping teams launch new business initiatives.
 
 Your task is to create a comprehensive, actionable plan that includes:
 1. Clear objectives and success metrics
@@ -141,31 +141,31 @@ Be concise and ask one clear question at a time. Once you have all the informati
     async def run_workflow(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
         """
         Run the business initiative planning workflow.
-        
+
         Args:
             user_input: The user's initial request or query
             context: Additional context for the workflow
-            
+
         Returns:
             WorkflowResult containing the execution results
         """
         self.workflow_counter += 1
         workflow_id = f"biz_init_{self.workflow_counter}_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S')}"
-        
+
         # Initialize workflow result
         result = WorkflowResult(
             success=False,
             output={"workflow_id": workflow_id},
             steps=[]
         )
-        
+
         # Add user input to conversation history
         self.conversation_history.append({
             "role": "user",
             "content": user_input,
             "timestamp": datetime.now(timezone.utc).isoformat()
         })
-        
+
         try:
             # Step 1: Triage the request
             triage_step = await self._execute_step(
@@ -175,12 +175,12 @@ Be concise and ask one clear question at a time. Once you have all the informati
                 workflow_id=workflow_id
             )
             result.steps.append(self._format_step_result(triage_step))
-            
+
             # Parse triage result
             try:
                 triage_result = TriageSchema.model_validate_json(triage_step.output["response"])
                 result.output["triage"] = triage_result.model_dump()
-                
+
                 if triage_result.has_all_details:
                     # Step 2: If we have all details, generate a launch plan
                     launch_step = await self._execute_step(
@@ -215,19 +215,19 @@ Be concise and ask one clear question at a time. Once you have all the informati
                     result.steps.append(self._format_step_result(data_step))
                     result.output["missing_info_request"] = data_step.output["response"]
                     result.success = False  # Incomplete, needs user input
-            
+
             except Exception as e:
                 self._log_error(f"Error parsing triage result: {str(e)}")
                 result.output["error"] = f"Failed to process request: {str(e)}"
                 result.success = False
-        
+
         except Exception as e:
             self._log_error(f"Workflow execution failed: {str(e)}")
             result.output["error"] = f"Workflow execution failed: {str(e)}"
             result.success = False
-        
+
         return result
-    
+
     async def _execute_step(
         self,
         agent: Agent,
@@ -244,18 +244,18 @@ Be concise and ask one clear question at a time. Once you have all the informati
             input_data=input_data,
             timestamp=start_time.isoformat()
         )
-        
+
         try:
             # Execute the agent
             response = await agent.process(
                 query=input_data.get("query", ""),
                 context=input_data.get("context", {})
             )
-            
+
             # Record successful execution
             step.output = {"response": response}
             step.success = True
-            
+
             # Add to conversation history
             self.conversation_history.append({
                 "role": "assistant",
@@ -264,18 +264,18 @@ Be concise and ask one clear question at a time. Once you have all the informati
                 "workflow_id": workflow_id,
                 "timestamp": datetime.now(timezone.utc).isoformat()
             })
-            
+
         except Exception as e:
             error_msg = f"{agent.name} execution failed: {str(e)}"
             self._log_error(error_msg)
             step.output = {"error": error_msg}
             step.success = False
-        
+
         # Calculate duration
         step.duration_ms = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
-        
+
         return step
-    
+
     def _format_step_result(self, step: AgentStep) -> Dict[str, Any]:
         """Format a step result for the workflow output."""
         return {
@@ -287,7 +287,7 @@ Be concise and ask one clear question at a time. Once you have all the informati
             "input": step.input_data,
             "output": step.output
         }
-    
+
     def _log_error(self, message: str):
         """Log an error message."""
         # In a real implementation, this would use proper logging
@@ -298,24 +298,24 @@ Be concise and ask one clear question at a time. Once you have all the informati
 if __name__ == "__main__":
     import asyncio
     from ..core import EchoesAssistantV2  # Assuming this is the correct import path
-    
+
     async def test_workflow():
         assistant = EchoesAssistantV2()  # Initialize with appropriate config
         workflow = BusinessInitiativeWorkflow(assistant)
-        
+
         # Test with a sample input
         result = await workflow.run_workflow(
             "We need to launch a new customer portal by Q2 2024. "
             "We have a team of 3 developers and a budget of $50,000. "
             "The goal is to improve customer self-service and reduce support tickets by 30%."
         )
-        
+
         print("\nWorkflow Result:")
         print(f"Success: {result.success}")
         print("Output:", result.output)
-        
+
         if result.success:
             print("\nLaunch Plan:")
             print(result.output.get("launch_plan", "No launch plan generated"))
-    
+
     asyncio.run(test_workflow())

@@ -128,7 +128,6 @@ def record_openai_request(
     endpoint: str, model: str, duration: float, status_code: int = 200
 ) -> None:
     """Record metrics for an OpenAI API request."""
-    status = "success" if 200 <= status_code < 300 else "error"
     OPENAI_REQUESTS.labels(
         endpoint=endpoint, status_code=status_code, model=model
     ).inc()

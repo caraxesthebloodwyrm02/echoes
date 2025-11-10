@@ -242,7 +242,7 @@ class DocumentationAuditor:
             try:
                 with open(doc_file, encoding="utf-8", errors="ignore") as f:
                     content = f.read()
-                    lines = content.split("\n")
+                    content.split("\n")
 
                 rel_path = str(doc_file.relative_to(self.project_root))
                 issues = []

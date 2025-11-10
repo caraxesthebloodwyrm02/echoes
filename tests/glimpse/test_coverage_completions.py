@@ -315,7 +315,7 @@ class TestEngineUncoveredPaths:
         # Mock the import flags to simulate missing dependencies
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
             with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
-                engine = GlimpseEngine()
+                GlimpseEngine()
 
                 # Glimpse should still work without optional dependencies
                 draft = Draft("test input", "test goal", "test constraints")
@@ -426,7 +426,7 @@ class TestIntegrationEdgeCases:
     async def test_glimpse_clarifier_integration_missing(self):
         """Test Glimpse behavior when clarifier is missing"""
         with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
-            engine = GlimpseEngine()
+            GlimpseEngine()
 
             # Should work without clarifier
             draft = Draft("test", "goal", "")
@@ -437,7 +437,7 @@ class TestIntegrationEdgeCases:
     async def test_glimpse_performance_integration_missing(self):
         """Test Glimpse behavior when performance optimizer is missing"""
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
-            engine = GlimpseEngine()
+            GlimpseEngine()
 
             # Should work without performance optimizer
             draft = Draft("test", "goal", "")
@@ -450,7 +450,7 @@ class TestIntegrationEdgeCases:
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
             with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
                 # System should still function
-                engine = GlimpseEngine()
+                GlimpseEngine()
 
                 drafts = [
                     Draft("input1", "goal1", "constraints1"),

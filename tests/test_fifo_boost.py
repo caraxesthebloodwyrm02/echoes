@@ -63,14 +63,14 @@ class TestMiddlewareBoost:
         client_ip = "192.168.1.1"
 
         # First requests should pass
-        assert limiter.is_allowed(client_ip) == True
-        assert limiter.is_allowed(client_ip) == True
+        assert limiter.is_allowed(client_ip)
+        assert limiter.is_allowed(client_ip)
 
         # Third should be limited
-        assert limiter.is_allowed(client_ip) == False
+        assert not limiter.is_allowed(client_ip)
 
         # Different client should pass
-        assert limiter.is_allowed("192.168.1.2") == True
+        assert limiter.is_allowed("192.168.1.2")
 
     def test_authentication_middleware_paths(self):
         """Test authentication middleware error paths"""

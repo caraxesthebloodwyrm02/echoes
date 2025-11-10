@@ -58,19 +58,19 @@ class PolicyDecision:
 def load_config() -> PolicyConfig:
     """Load policy configuration from environment variables."""
     enforce = _parse_bool(_env("EGRESS_ENFORCE", None), True)
-    
+
     allowlist_str = _env("EGRESS_ALLOWLIST", "openai").strip()
     allowlist = tuple()
     if allowlist_str:
         allowlist = tuple(token.strip().lower() for token in allowlist_str.split(",") if token.strip())
-    
+
     log_level_str = _env("EGRESS_LOG", "1").strip()
     try:
         log_level = int(log_level_str)
     except ValueError:
         log_level = 1
     log_level = max(0, min(2, log_level))
-    
+
     log_format = _env("EGRESS_LOG_FORMAT", "text").strip().lower()
     if log_format not in ("text", "json"):
         log_format = "text"

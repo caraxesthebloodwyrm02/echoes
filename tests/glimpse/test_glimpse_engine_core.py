@@ -5,7 +5,7 @@ from glimpse.Glimpse import Draft, GlimpseEngine
 
 def test_two_tries_then_redial_and_reset():
     async def run():
-        engine = GlimpseEngine()
+        GlimpseEngine()
         d = Draft(input_text="hello", goal="", constraints="")
 
         r1 = await Glimpse.glimpse(d)

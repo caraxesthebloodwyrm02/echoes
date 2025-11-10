@@ -8,7 +8,7 @@ without API dependencies, load constraints, or lingering resource usage.
 
 Features Demonstrated:
 ✅ Conversational Autocomplete with Intent Prediction
-✅ Advanced History Navigation with Search & Threading  
+✅ Advanced History Navigation with Search & Threading
 ✅ Visual Context Visualization with Relationship Mapping
 ✅ API Logging Dashboard (Simulated)
 ✅ Session Management with Versioning
@@ -179,7 +179,7 @@ class LightweightDemoManager:
             print(f"   '{input_text}' → Intent: {intent}")
 
         # Simulate dynamic suggestions
-        conversation_context = [
+        [
             msg["content"] for msg in self.demo_data["conversation_history"][-3:]
         ]
         dynamic_suggestions = [
@@ -379,7 +379,7 @@ class LightweightDemoManager:
             print(f"   • {model}: {count} requests ({percentage:.1f}%)")
 
         # Simulate export
-        export_data = {
+        {
             "timestamp": datetime.now().isoformat(),
             "metrics": {
                 "total_requests": total_requests,
@@ -623,21 +623,21 @@ class LightweightDemoManager:
 def text_analyzer(text):
     words = text.split()
     sentences = text.split('.')
-    
+
     # Simple sentiment analysis
     positive_words = ['good', 'great', 'excellent', 'helpful', 'amazing']
     negative_words = ['bad', 'terrible', 'awful', 'difficult', 'confusing']
-    
+
     pos_count = sum(1 for word in positive_words if word in text.lower())
     neg_count = sum(1 for word in negative_words if word in text.lower())
-    
+
     if pos_count > neg_count:
         sentiment = "Positive"
     elif neg_count > pos_count:
         sentiment = "Negative"
     else:
         sentiment = "Neutral"
-    
+
     return {
         'word_count': len(words),
         'sentence_count': len([s for s in sentences if s.strip()]),
@@ -691,7 +691,6 @@ def code_validator(code):
         )
 
         # Test code validator
-        sample_code = "def hello_world():\n    print('Hello, World!')"
         print("   • Code Validator: Checking Python syntax")
         print("      Result: ✅ Valid syntax")
 

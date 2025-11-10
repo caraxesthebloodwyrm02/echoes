@@ -305,7 +305,7 @@ class AdaptiveRateLimiter:
     def get_status(self) -> dict[str, Any]:
         """Get current rate limiter status."""
         now = time.monotonic()
-        elapsed_since_update = now - self.last_update
+        now - self.last_update
 
         return {
             "current_rpm": self.current_rpm,

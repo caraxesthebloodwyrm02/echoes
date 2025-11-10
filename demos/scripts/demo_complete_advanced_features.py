@@ -8,7 +8,7 @@ showcasing how it now exceeds industry-leading AI agents with comprehensive capa
 
 Features Demonstrated:
 ✅ Conversational Autocomplete with Intent Prediction
-✅ Advanced History Navigation with Search & Threading  
+✅ Advanced History Navigation with Search & Threading
 ✅ Visual Context Visualization with Relationship Mapping
 ✅ Comprehensive API Logging Dashboard
 ✅ Resilient Session Management with Versioning
@@ -75,7 +75,7 @@ def advanced_search_algorithm(data, query):
         score = calculate_relevance_score(item, query)
         if score > 0.5:
             results.append((item, score))
-    
+
     # Sort by relevance score
     results.sort(key=lambda x: x[1], reverse=True)
     return results

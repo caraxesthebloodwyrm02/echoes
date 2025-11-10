@@ -20,7 +20,7 @@ class TestRetryLogic:
         Test that the system retries after initial misalignment.
         First attempt fails, second attempt may succeed.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Draft that might need refinement
         draft = Draft(
@@ -48,7 +48,7 @@ class TestRetryLogic:
         Test that the system respects the 2-attempt limit.
         After 2 tries, should trigger redial.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         draft = Draft(
             input_text="contradictory task",
@@ -75,7 +75,7 @@ class TestRetryLogic:
         Test that refinement between retries can lead to success.
         Progressive clarification should improve alignment.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Start vague
         draft = Draft(input_text="improve system", goal="enhance", constraints="")
@@ -104,7 +104,7 @@ class TestRedialBehavior:
         Test that redial status is set after exceeding attempt limit.
         User should be prompted to rephrase or reconnect.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Use same draft repeatedly to exhaust attempts
         draft = Draft("vague", "", "")
@@ -123,7 +123,7 @@ class TestRedialBehavior:
         Test that attempt counter resets for new drafts.
         Redial is per-draft, not per-Glimpse.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Exhaust attempts on first draft
         draft1 = Draft("first", "task", "")
@@ -147,7 +147,7 @@ class TestFallbackMechanisms:
         Test that the system degrades gracefully under failure.
         Should provide useful feedback even when alignment fails.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Problematic draft
         draft = Draft(
@@ -166,7 +166,7 @@ class TestFallbackMechanisms:
         Test that status history is maintained across attempts.
         Helps diagnose why alignment failed.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         draft = Draft("test", "goal", "constraints")
 
@@ -185,7 +185,7 @@ class TestFallbackMechanisms:
         Test that essence is always provided, even on failure.
         Essential for understanding what went wrong.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Various failure scenarios
         failure_cases = [
@@ -213,7 +213,7 @@ class TestSafeExecution:
         Test that the system never crashes, always returns a result.
         Critical for production safety.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Edge cases that might break naive implementations
         edge_cases = [
@@ -244,11 +244,11 @@ class TestSafeExecution:
         Test that Glimpse remains in safe state after failures.
         Should be reusable for subsequent requests.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Cause a failure
         bad_draft = Draft("", "", "")
-        r1 = await Glimpse.glimpse(bad_draft)
+        await Glimpse.glimpse(bad_draft)
 
         # Glimpse should still work for good drafts
         good_draft = Draft(
@@ -270,7 +270,7 @@ class TestErrorRecovery:
         Test recovery from transient failures (network, etc.).
         System should retry and potentially succeed.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Simulate recovery by successful subsequent attempt
         draft = Draft("task", "goal", "constraints")
@@ -291,7 +291,7 @@ class TestErrorRecovery:
         Test that error states provide informative feedback.
         Users need to understand what went wrong.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Cause various error conditions
         error_cases = [

@@ -110,7 +110,6 @@ class ArchitectureAuditor:
         # DFS to detect cycles
         visited = set()
         rec_stack = set()
-        cycle_path = []
 
         def dfs(node: str, path: list[str]):
             if node in rec_stack:

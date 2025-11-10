@@ -1,5 +1,4 @@
-import os
-from core_modules.network.policy_engine import decide, PolicyDecision
+from core_modules.network.policy_engine import decide
 from core_modules.network.policy import PolicyConfig
 
 

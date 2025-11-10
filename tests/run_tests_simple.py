@@ -11,27 +11,27 @@ def run_test_suite():
     """Run all test suites and report results."""
     print("🧪 Running Test Suite")
     print("=" * 50)
-    
+
     test_suites = [
         ("Component Tests", "tests/test_self_aware_routing.py::TestComponent -v"),
         ("Smoke Tests", "tests/test_self_aware_routing.py::TestSmoke -v"),
         ("Client Smoke Tests", "tests/test_intelligent_client_smoke.py::TestIntelligentClientSmoke -v"),
         ("Integration Tests", "tests/test_intelligent_client_smoke.py::TestIntegrationSmoke -v")
     ]
-    
+
     all_passed = 0
     all_failed = 0
-    
+
     for name, cmd in test_suites:
         print(f"\n📋 Running {name}...")
-        
+
         result = subprocess.run(
             [sys.executable, "-m", "pytest"] + cmd.split(),
             capture_output=True,
             text=True,
             cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
         )
-        
+
         # Count passed/failed from output
         output = result.stdout
         if "passed" in output:
@@ -57,13 +57,13 @@ def run_test_suite():
                             all_failed += failed
                             print(f"   ⚠️ {passed} passed, {failed} failed")
                             break
-    
+
     print("\n" + "=" * 50)
     print("📊 SUMMARY")
     print("=" * 50)
     print(f"Total Passed: {all_passed} ✅")
     print(f"Total Failed: {all_failed} ❌")
-    
+
     if all_failed == 0:
         print("\n🎉 All tests passed! System is ready.")
         print("\nRun the demo:")

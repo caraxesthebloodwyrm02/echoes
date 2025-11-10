@@ -82,6 +82,15 @@ Thumbs.db
 **/data/memory/session_*.json
 **/data/cifar-10-batches-py/
 **/data/cifar-10-python.tar.gz
+audit_results/
+misc/
+attachments/
+onboarding/
+results/
+sample_files/
+sessions/
+*.ipynb
+stage_files.ps1
 
 # Testing
 .coverage

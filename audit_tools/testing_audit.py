@@ -197,7 +197,7 @@ class TestingAuditor:
 
         for pattern, ci_type in ci_patterns.items():
             if "*" in pattern:
-                base_pattern = pattern.split("*")[0]
+                pattern.split("*")[0]
                 for ci_file in self.project_root.rglob(pattern.replace("*", "*")):
                     self.ci_configs.append((ci_file, ci_type))
             else:
@@ -303,7 +303,6 @@ class TestingAuditor:
             else [],
         }
 
-        test_org_issues = []
 
         # Check for orphaned tests (tests without corresponding source)
         for test_file in self.test_files:

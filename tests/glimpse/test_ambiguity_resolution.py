@@ -20,7 +20,7 @@ class TestFreudJungDisagreement:
         Like the bookcase noise - is it meaningful or random?
         Needs more context to decide.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Deliberately vague input
         vague_draft = Draft(
@@ -41,7 +41,7 @@ class TestFreudJungDisagreement:
         Test inputs with multiple valid interpretations.
         Like Freud seeing furniture settling vs. Jung seeing synchronicity.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Ambiguous: could mean several things
         ambiguous_draft = Draft(
@@ -62,7 +62,7 @@ class TestFreudJungDisagreement:
         Test handling of internally conflicting requirements.
         Like asking for both stability and radical change.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Conflicting constraints
         conflict_draft = Draft(
@@ -87,7 +87,7 @@ class TestUncertaintyQuantification:
         Test cases where alignment confidence is low.
         The system should acknowledge uncertainty.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Edge case: minimal information
         minimal_draft = Draft(
@@ -108,7 +108,7 @@ class TestUncertaintyQuantification:
         Test cases where some aspects align but others don't.
         Like Jung and Freud agreeing the noise happened but disagreeing on cause.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Partial match: good intent but missing constraints
         partial_draft = Draft(
@@ -133,7 +133,7 @@ class TestClarifierActivation:
         Test that empty/missing goals trigger clarifiers.
         Can't validate alignment without knowing the intent.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Input but no clear goal
         no_goal_draft = Draft(
@@ -154,7 +154,7 @@ class TestClarifierActivation:
         Test clarifier activation for contradictory inputs.
         Like the Jung-Freud disagreement - need to clarify the interpretation.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Contradictory input
         contradiction_draft = Draft(
@@ -174,7 +174,7 @@ class TestClarifierActivation:
         """
         Test that clarifier questions are relevant and helpful.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Trigger clarifier with vague input
         draft = Draft(input_text="help with the thing", goal="", constraints="")
@@ -194,7 +194,7 @@ class TestEdgeCaseHandling:
         Test handling of non-ASCII and special characters.
         Edge case that might reveal encoding issues.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Unicode and emojis
         unicode_draft = Draft(
@@ -215,7 +215,7 @@ class TestEdgeCaseHandling:
         Test handling of very long inputs.
         Edge case for token limits and processing.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Very long input
         long_input = "optimize " * 500  # 500 repetitions
@@ -234,7 +234,7 @@ class TestEdgeCaseHandling:
         Test handling of mixed case and formatting.
         Should recognize patterns regardless of formatting.
         """
-        engine = GlimpseEngine()
+        GlimpseEngine()
 
         # Mixed formatting
         mixed_draft = Draft(

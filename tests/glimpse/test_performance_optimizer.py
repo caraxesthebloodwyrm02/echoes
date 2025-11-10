@@ -260,7 +260,7 @@ class TestPerformanceOptimizer:
         optimizer = PerformanceOptimizer(cache_size=100, max_concurrent=5)
         assert optimizer.cache.max_size == 100
         assert optimizer.queue.max_concurrent == 5
-        assert optimizer.optimization_enabled == True
+        assert optimizer.optimization_enabled
 
     @pytest.mark.asyncio
     async def test_optimized_glimpse_with_cache(self):
@@ -399,24 +399,24 @@ class TestPerformanceOptimizer:
         optimizer = PerformanceOptimizer()
 
         # Low latency - should not enable essence-only
-        assert optimizer.adaptive_essence_only(0.5) == False
+        assert not optimizer.adaptive_essence_only(0.5)
 
         # High latency - should enable essence-only
-        assert optimizer.adaptive_essence_only(1.0) == True
+        assert optimizer.adaptive_essence_only(1.0)
 
         # Very high latency - should enable essence-only
-        assert optimizer.adaptive_essence_only(2.0) == True
+        assert optimizer.adaptive_essence_only(2.0)
 
     def test_enable_disable_optimization(self):
         optimizer = PerformanceOptimizer()
 
         # Disable optimization
         optimizer.enable_optimization(False)
-        assert optimizer.optimization_enabled == False
+        assert not optimizer.optimization_enabled
 
         # Re-enable optimization
         optimizer.enable_optimization(True)
-        assert optimizer.optimization_enabled == True
+        assert optimizer.optimization_enabled
 
 
 class TestMonitorDecorator:

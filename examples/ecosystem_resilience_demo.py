@@ -257,7 +257,7 @@ def demo_schooling_load_balancer():
     for i in range(request_count):
         request = f"request_{i}"
         selected_node = balancer.get_target_node(request)
-        result = selected_node.process_request(request)
+        selected_node.process_request(request)
         node_usage[selected_node.node_id] += 1
 
     print(f"\nProcessed {request_count} requests")

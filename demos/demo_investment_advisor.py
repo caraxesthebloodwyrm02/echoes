@@ -609,7 +609,7 @@ class InvestmentAdvisorDemo:
         print("\n[Step 5.1] Compiling investment thesis and recommendations...")
 
         # Get comprehensive intelligence
-        context = self.assistant.get_context_summary()
+        self.assistant.get_context_summary()
         stats = self.assistant.knowledge_manager.get_stats()
 
         print(f"\n✓ Intelligence gathered: {stats['total_entries']} data points")

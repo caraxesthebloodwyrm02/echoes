@@ -660,10 +660,10 @@ Keyboard Shortcuts:
   F2                Show command history
   F3                Cycle suggestion mode
   F4                Show typing stats
-  
+
 Preset Shortcuts:
   Ctrl+A            Developer mode
-  Ctrl+S            Writer mode  
+  Ctrl+S            Writer mode
   Ctrl+D            Admin mode
   Ctrl+F            Data Science mode
 
@@ -680,7 +680,7 @@ Current Settings:
         print("\nCommand History:")
         print("=" * 50)
         for i, cmd in enumerate(list(self.predictor.commands.keys())[-10:], 1):
-            count = self.predictor.commands[cmd]
+            self.predictor.commands[cmd]
             print("2d")
         print()
 
