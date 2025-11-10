@@ -315,11 +315,11 @@ class TestEngineUncoveredPaths:
         # Mock the import flags to simulate missing dependencies
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
             with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
-                GlimpseEngine()
+                engine = GlimpseEngine()
 
                 # Glimpse should still work without optional dependencies
                 draft = Draft("test input", "test goal", "test constraints")
-                result = await Glimpse.glimpse(draft)
+                result = await engine.glimpse(draft)
 
                 # Should return a valid result
                 assert isinstance(result, GlimpseResult)
@@ -426,22 +426,22 @@ class TestIntegrationEdgeCases:
     async def test_glimpse_clarifier_integration_missing(self):
         """Test Glimpse behavior when clarifier is missing"""
         with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
-            GlimpseEngine()
+            engine = GlimpseEngine()
 
             # Should work without clarifier
             draft = Draft("test", "goal", "")
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             assert isinstance(result, GlimpseResult)
 
     @pytest.mark.asyncio
     async def test_glimpse_performance_integration_missing(self):
         """Test Glimpse behavior when performance optimizer is missing"""
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
-            GlimpseEngine()
+            engine = GlimpseEngine()
 
             # Should work without performance optimizer
             draft = Draft("test", "goal", "")
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             assert isinstance(result, GlimpseResult)
 
     @pytest.mark.asyncio
@@ -450,7 +450,7 @@ class TestIntegrationEdgeCases:
         with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
             with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
                 # System should still function
-                GlimpseEngine()
+                engine = GlimpseEngine()
 
                 drafts = [
                     Draft("input1", "goal1", "constraints1"),
@@ -460,7 +460,7 @@ class TestIntegrationEdgeCases:
 
                 results = []
                 for draft in drafts:
-                    result = await Glimpse.glimpse(draft)
+                    result = await engine.glimpse(draft)
                     assert isinstance(result, GlimpseResult)
                     results.append(result)
 

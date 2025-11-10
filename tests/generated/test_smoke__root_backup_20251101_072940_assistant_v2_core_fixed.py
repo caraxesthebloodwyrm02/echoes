@@ -10,14 +10,11 @@ sys.path.insert(0, r"E:\Projects\Echoes")
 
 # ---------- Echoes-specific mocks ----------
 COMMON_PATCHES = [
-    (".root_backup.20251101_072940_assistant_v2_core_fixed.OpenAIClient", "mock.Mock"),
-    (
-        ".root_backup.20251101_072940_assistant_v2_core_fixed.DatabaseClient",
-        "mock.Mock",
-    ),
-    (".root_backup.20251101_072940_assistant_v2_core_fixed.RedisClient", "mock.Mock"),
-    (".root_backup.20251101_072940_assistant_v2_core_fixed.requests.get", "mock.Mock"),
-    (".root_backup.20251101_072940_assistant_v2_core_fixed.asyncio.sleep", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core_fixed.OpenAIClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core_fixed.DatabaseClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core_fixed.RedisClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core_fixed.requests.get", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core_fixed.asyncio.sleep", "mock.Mock"),
 ]
 
 
@@ -32,7 +29,7 @@ def test_import_and_basic_init():
 
     try:
         mod = importlib.import_module(
-            ".root_backup.20251101_072940_assistant_v2_core_fixed"
+            "root_backup_20251101_072940_assistant_v2_core_fixed"
         )
     finally:
         mock.patch.stopall()
@@ -72,11 +69,11 @@ def test_module_functions():
 
     try:
         mod = importlib.import_module(
-            ".root_backup.20251101_072940_assistant_v2_core_fixed"
+            "root_backup_20251101_072940_assistant_v2_core_fixed"
         )
     except ImportError:
         pytest.skip(
-            "Cannot import module .root_backup.20251101_072940_assistant_v2_core_fixed"
+            "Cannot import module root_backup_20251101_072940_assistant_v2_core_fixed"
         )
 
     # Test common function patterns

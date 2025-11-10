@@ -10,11 +10,11 @@ sys.path.insert(0, r"E:\Projects\Echoes")
 
 # ---------- Echoes-specific mocks ----------
 COMMON_PATCHES = [
-    ("root_backup.20251101_072940_assistant_v2_core.OpenAIClient", "mock.Mock"),
-    ("root_backup.20251101_072940_assistant_v2_core.DatabaseClient", "mock.Mock"),
-    ("root_backup.20251101_072940_assistant_v2_core.RedisClient", "mock.Mock"),
-    ("root_backup.20251101_072940_assistant_v2_core.requests.get", "mock.Mock"),
-    ("root_backup.20251101_072940_assistant_v2_core.asyncio.sleep", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core.OpenAIClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core.DatabaseClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core.RedisClient", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core.requests.get", "mock.Mock"),
+    ("root_backup_20251101_072940_assistant_v2_core.asyncio.sleep", "mock.Mock"),
 ]
 
 
@@ -28,7 +28,7 @@ def test_import_and_basic_init():
             pass  # Skip if target doesn't exist
 
     try:
-        mod = importlib.import_module(".root_backup.20251101_072940_assistant_v2_core")
+        mod = importlib.import_module("root_backup_20251101_072940_assistant_v2_core")
     finally:
         mock.patch.stopall()
 
