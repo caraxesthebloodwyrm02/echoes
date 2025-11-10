@@ -12,15 +12,19 @@ profile = "black"
 line_length = 88
 
 [tool.ruff]
+target-version = "py311"
+line-length = 88
+
+[tool.ruff.lint]
 # Basic error checking
-extend-select = ["E", "W", "F", "I"]
+select = ["E", "W", "F", "I"]
 
 # Ignore these specific rules
-extend-ignore = [
+ignore = [
     "E501",  # line too long (handled by black)
     "E203",  # whitespace before ':' (incompatible with black)
 ]
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.per-file-ignores]
 # Allow unused imports in __init__.py
 "__init__.py" = ["F401"]
