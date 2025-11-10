@@ -3,12 +3,12 @@ import os
 import time
 from datetime import datetime, timedelta, timezone
 
-UTC = timezone.utc
-
 from tweepy import TooManyRequests
 from twitter_credentials import check_credentials, get_twitter_credentials
 
 from app.social_monitoring import TwitterMonitor
+
+UTC = timezone.utc
 
 AUTO_WAIT = os.getenv("TWITTER_WAIT_ON_RATE_LIMIT", "0").lower() in {"1", "true", "yes"}
 MAX_WAIT_SECONDS = int(os.getenv("TWITTER_MAX_WAIT_SECONDS", "180"))

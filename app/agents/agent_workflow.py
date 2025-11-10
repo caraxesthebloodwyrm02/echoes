@@ -7,10 +7,10 @@ Multi-agent orchestration with chaining, triage, and conditional execution.
 import json
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
-
-UTC = timezone.utc
 from enum import Enum
 from typing import Any
+
+UTC = timezone.utc
 
 
 class AgentRole(Enum):

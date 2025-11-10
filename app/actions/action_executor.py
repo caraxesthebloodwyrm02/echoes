@@ -14,9 +14,9 @@ import os
 import time
 from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
+from typing import Any
 
 UTC = timezone.utc
-from typing import Any
 
 # ATLAS Integration
 try:
