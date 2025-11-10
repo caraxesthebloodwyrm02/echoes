@@ -5,23 +5,23 @@ from glimpse.Glimpse import Draft, GlimpseEngine
 
 def test_two_tries_then_redial_and_reset():
     async def run():
-        GlimpseEngine()
+        engine = GlimpseEngine()
         d = Draft(input_text="hello", goal="", constraints="")
 
-        r1 = await Glimpse.glimpse(d)
+        r1 = await engine.glimpse(d)
         assert r1.attempt == 1
 
-        r2 = await Glimpse.glimpse(d)
+        r2 = await engine.glimpse(d)
         assert r2.attempt == 2
 
         # Third attempt should immediately request redial
-        r3 = await Glimpse.glimpse(d)
+        r3 = await engine.glimpse(d)
         assert r3.status == "redial"
         assert r3.status_history == ["Clean reset. Same channel. Let’s try again."]
 
         # After commit/reset we can start again from attempt 1
-        Glimpse.commit(d)
-        r4 = await Glimpse.glimpse(d)
+        engine.commit(d)
+        r4 = await engine.glimpse(d)
         assert r4.attempt == 1
 
     asyncio.run(run())
@@ -62,7 +62,7 @@ def test_cancel_on_edit_does_not_consume_try_and_debounces():
         )
         # Cancel quickly (simulate user editing)
         await asyncio.sleep(0.05)
-        Glimpse.cancel()
+        engine.cancel()
         r_cancel = await task
 
         # Cancel returns not_aligned and should not consume the try
@@ -91,7 +91,7 @@ def test_clarifier_when_intent_unspecified():
 def test_essence_only_mode_hides_sample():
     async def run():
         engine = GlimpseEngine()
-        Glimpse.set_essence_only(True)
+        engine.set_essence_only(True)
         r = await engine.glimpse(
             Draft(
                 input_text="some long message that would normally produce a sample",
@@ -102,7 +102,7 @@ def test_essence_only_mode_hides_sample():
         assert r.essence
         assert r.sample == ""
 
-        Glimpse.set_essence_only(False)
+        engine.set_essence_only(False)
         r2 = await engine.glimpse(
             Draft(input_text="some long message again", goal="g", constraints="")
         )
