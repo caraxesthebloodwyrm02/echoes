@@ -177,7 +177,9 @@ class GlimpseApiGetTool:
             result = await self.glimpse_tools.process_draft(
                 input_text=f"GET {url}",
                 goal="Retrieve data",
-                constraints=json.dumps({"params": params or {}, "headers": headers or {}}),
+                constraints=json.dumps(
+                    {"params": params or {}, "headers": headers or {}}
+                ),
             )
 
             return {
@@ -302,11 +304,13 @@ class GlimpseApiPostTool:
             result = await self.glimpse_tools.process_draft(
                 input_text=f"POST {url}",
                 goal="Send data",
-                constraints=json.dumps({
-                    "data": data or {},
-                    "headers": headers or {},
-                    "content_type": content_type or "json",
-                }),
+                constraints=json.dumps(
+                    {
+                        "data": data or {},
+                        "headers": headers or {},
+                        "content_type": content_type or "json",
+                    }
+                ),
             )
 
             return {
@@ -339,7 +343,9 @@ class GlimpseApiPostTool:
         # If assistant is available and has the method, use it
         if self.assistant and hasattr(self.assistant, "glimpse_api_post"):
             try:
-                return self.assistant.glimpse_api_post(url, data, headers=headers, content_type=content_type)
+                return self.assistant.glimpse_api_post(
+                    url, data, headers=headers, content_type=content_type
+                )
             except Exception as e:
                 self._error_count += 1
                 raise e
@@ -347,7 +353,15 @@ class GlimpseApiPostTool:
         try:
             import asyncio
 
-            return asyncio.run(self.run(url, data, headers=headers, content_type=content_type, timeout=timeout))
+            return asyncio.run(
+                self.run(
+                    url,
+                    data,
+                    headers=headers,
+                    content_type=content_type,
+                    timeout=timeout,
+                )
+            )
         except Exception as e:
             self._error_count += 1
             raise e
@@ -383,9 +397,7 @@ class GlimpseConnectPlatformsTool:
     """Tool for connecting to different platforms."""
 
     name = "glimpse_connect_platforms"
-    description = (
-        "Platform connector tool to establish intelligent connections across systems with automatic compatibility analysis"
-    )
+    description = "Platform connector tool to establish intelligent connections across systems with automatic compatibility analysis"
 
     def __init__(self, assistant=None, config: dict[str, Any] | None = None):
         self.assistant = assistant
@@ -404,7 +416,12 @@ class GlimpseConnectPlatformsTool:
                 "target_path": {"type": "string"},
                 "integration_mode": {
                     "type": "string",
-                    "enum": ["reference_bridge", "full_sync", "read_only", "write_only"],
+                    "enum": [
+                        "reference_bridge",
+                        "full_sync",
+                        "read_only",
+                        "write_only",
+                    ],
                     "default": "reference_bridge",
                 },
                 "sync_frequency": {"type": "string", "default": "manual"},
