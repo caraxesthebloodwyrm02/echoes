@@ -64,7 +64,7 @@ class ContextualFeedback:
 
 
 # Define TerminalPreset and related classes outside the try block
-from enum import Enum, member
+from enum import Enum
 
 
 class TerminalPreset(Enum):
@@ -120,7 +120,6 @@ class TerminalPreset(Enum):
         except KeyError:
             return cls.DEVELOPER  # Default to developer mode
 
-    @member
     class SuggestionMode(Enum):
         FUZZY = 1
         EXACT = 2
