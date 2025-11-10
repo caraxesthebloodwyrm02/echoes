@@ -50,12 +50,15 @@ def get_monitor_summary(limit: int = 10) -> Dict[str, Any]:
             }
         )
     latest = runs[0] if runs else None
-    return {"generated": datetime.utcnow().isoformat() + "Z", "latest": latest, "history": runs}
+    return {
+        "generated": datetime.utcnow().isoformat() + "Z",
+        "latest": latest,
+        "history": runs,
+    }
 
 
 def get_monitor_dashboard_html() -> str:
-    return (
-        """
+    return """
 <!DOCTYPE html>
 <html>
 <head>
@@ -109,4 +112,3 @@ def get_monitor_dashboard_html() -> str:
 </body>
 </html>
         """
-    )

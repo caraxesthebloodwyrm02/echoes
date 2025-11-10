@@ -71,6 +71,7 @@ def main() -> dict:
     if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in ("1", "true", "yes", "on"):
         try:
             import sys
+
             base = Path(__file__).resolve().parents[2]
             sys.path.append(str(base / "Routing"))
             sys.path.append(str(base / "Arcade"))
@@ -80,7 +81,9 @@ def main() -> dict:
             routed = []
             for item in top4:
                 payload = item if isinstance(item, dict) else {"data": item}
-                res = __import__("asyncio").run(route_orchestral_data(payload, "hybrid_processing"))
+                res = __import__("asyncio").run(
+                    route_orchestral_data(payload, "hybrid_processing")
+                )
                 arc = __import__("asyncio").run(receive_orchestral_data(res))
                 routed.append({"routing": res, "arcade": arc})
             report["routed"] = routed
@@ -88,7 +91,10 @@ def main() -> dict:
             report["routing_error"] = str(e)
 
     # 6) Persist report
-    out_file = RESULTS_DIR / f"orchestral_smoke_{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}.json"
+    out_file = (
+        RESULTS_DIR
+        / f"orchestral_smoke_{datetime.utcnow().strftime('%Y%m%dT%H%M%SZ')}.json"
+    )
     out_file.write_text(json.dumps(report, indent=2, default=str))
 
     return report

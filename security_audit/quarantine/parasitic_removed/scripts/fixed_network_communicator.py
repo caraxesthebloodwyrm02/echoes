@@ -8,8 +8,12 @@ import queue
 import socket
 from threading import RLock
 
-from communication import (BaseCommunicator, CommunicationConfig,
-                           CommunicationMessage, CommunicationResult)
+from communication import (
+    BaseCommunicator,
+    CommunicationConfig,
+    CommunicationMessage,
+    CommunicationResult,
+)
 
 
 class FixedNetworkCommunicator(BaseCommunicator):

@@ -90,8 +90,12 @@ def test_complete_integration():
 
     # Import here to avoid path issues
     sys.path.append(".")
-    from communication import (ArcherFramework, CommunicationMessage,
-                               CommunicationType, create_communicator)
+    from communication import (
+        ArcherFramework,
+        CommunicationMessage,
+        CommunicationType,
+        create_communicator,
+    )
 
     framework = ArcherFramework(max_workers=15)
 

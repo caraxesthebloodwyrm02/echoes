@@ -10,11 +10,13 @@ from unittest.mock import Mock, patch
 import pytest
 
 # Import the ecosystem components
-from automation.ecosystem_resilience import (DecoySystem,
-                                             HerdImmunityRateLimiter,
-                                             HibernationManager,
-                                             SchoolingLoadBalancer,
-                                             SymbioticService)
+from automation.ecosystem_resilience import (
+    DecoySystem,
+    HerdImmunityRateLimiter,
+    HibernationManager,
+    SchoolingLoadBalancer,
+    SymbioticService,
+)
 
 
 class TestHerdImmunityRateLimiter:

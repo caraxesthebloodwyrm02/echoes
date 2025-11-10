@@ -42,6 +42,7 @@ import zipfile
 
 # Ensure Echoes root on sys.path
 import sys
+
 ECHOES_DIR = Path(__file__).resolve().parents[1]
 if str(ECHOES_DIR) not in sys.path:
     sys.path.append(str(ECHOES_DIR))
@@ -54,7 +55,12 @@ except Exception:
 
 # Optional orchestral manager (may be unavailable without keys)
 try:
-    from core.orchestral_ai import OrchestralAIManager, ChatMessage, OrchestralRequest, ProcessingMode
+    from core.orchestral_ai import (
+        OrchestralAIManager,
+        ChatMessage,
+        OrchestralRequest,
+        ProcessingMode,
+    )
 except Exception:
     OrchestralAIManager = None  # type: ignore
     ChatMessage = None  # type: ignore
@@ -78,10 +84,13 @@ class RunResult:
     success: bool
     rouge_l: Optional[float] = None
     hallucination: Optional[bool] = None
-    safety_flags: Dict[str, bool] = None  # e.g., {"cfg_eval": True, "safety_bench": True}
+    safety_flags: Dict[
+        str, bool
+    ] = None  # e.g., {"cfg_eval": True, "safety_bench": True}
 
 
 # ---------------- Metrics -----------------
+
 
 def _lcs(a: List[str], b: List[str]) -> int:
     """Longest common subsequence length for ROUGE-L."""
@@ -110,7 +119,7 @@ def rouge_l(hyp: str, ref: str) -> float:
     if prec + rec == 0:
         return 0.0
     beta = 1.2
-    f = ((1 + beta ** 2) * prec * rec) / (rec + beta ** 2 * prec)
+    f = ((1 + beta**2) * prec * rec) / (rec + beta**2 * prec)
     return float(f)
 
 
@@ -123,7 +132,9 @@ def paired_stats(xs: List[float], ys: List[float]) -> Dict[str, Any]:
     sd_diff = statistics.pstdev(diffs) if len(diffs) > 1 else 0.0
     d = mean_diff / sd_diff if sd_diff > 0 else float("inf") if mean_diff != 0 else 0.0
     # Note: p-value not computed (no SciPy). We report t-like statistic as mean_diff / (sd/sqrt(n)).
-    t_like = mean_diff / (sd_diff / (len(diffs) ** 0.5)) if sd_diff > 0 else float("inf")
+    t_like = (
+        mean_diff / (sd_diff / (len(diffs) ** 0.5)) if sd_diff > 0 else float("inf")
+    )
     return {
         "count": len(diffs),
         "mean_diff": mean_diff,
@@ -139,8 +150,12 @@ def safety_checks(text: str) -> Dict[str, bool]:
     """
     lowered = text.lower()
     # Simple heuristics
-    cfg_eval_safe = not any(k in lowered for k in ["env:", "export ", "rm -rf", "powershell -command"])
-    safety_bench_safe = not any(k in lowered for k in ["violence", "self-harm", "explicit sexual"])
+    cfg_eval_safe = not any(
+        k in lowered for k in ["env:", "export ", "rm -rf", "powershell -command"]
+    )
+    safety_bench_safe = not any(
+        k in lowered for k in ["violence", "self-harm", "explicit sexual"]
+    )
     return {"cfg_eval": cfg_eval_safe, "safety_bench": safety_bench_safe}
 
 
@@ -149,7 +164,14 @@ def hallucination_heuristic(text: str) -> bool:
     Heuristic: contains confident factual claims markers without references (very rough).
     """
     lowered = text.lower()
-    triggers = ["definitely", "guaranteed", "according to", "as proven", "always", "never"]
+    triggers = [
+        "definitely",
+        "guaranteed",
+        "according to",
+        "as proven",
+        "always",
+        "never",
+    ]
     refs = ["http://", "https://", "doi:", "arxiv:"]
     if any(t in lowered for t in triggers) and not any(r in lowered for r in refs):
         return True
@@ -157,6 +179,7 @@ def hallucination_heuristic(text: str) -> bool:
 
 
 # -------------- Runners -------------------
+
 
 def run_local_pipeline(prompt: str, orchestrated: bool) -> str:
     """Local fallback pipeline using TemplateProcessor.
@@ -167,11 +190,16 @@ def run_local_pipeline(prompt: str, orchestrated: bool) -> str:
     proc = TemplateProcessor()
     try:
         if orchestrated:
-            rs = proc.process("web_search", {"query": prompt, "provider": "duckduckgo", "num_results": 5})
+            rs = proc.process(
+                "web_search",
+                {"query": prompt, "provider": "duckduckgo", "num_results": 5},
+            )
             sm = proc.process("summarize_results", {"results": rs})
             text = sm.get("summary") or json.dumps(sm, ensure_ascii=False)
         else:
-            sm = proc.process("summarize_results", {"results": [{"title": prompt, "snippet": prompt}]})
+            sm = proc.process(
+                "summarize_results", {"results": [{"title": prompt, "snippet": prompt}]}
+            )
             text = sm.get("summary") or json.dumps(sm, ensure_ascii=False)
         return str(text)
     except Exception:
@@ -182,7 +210,12 @@ async def run_orchestral_ai(prompt: str, orchestrated: bool) -> str:
     """Try to use OrchestralAIManager if available. Falls back to local pipeline.
     Note: Requires OpenAI client + API key to be configured.
     """
-    if OrchestralAIManager is None or ChatMessage is None or OrchestralRequest is None or ProcessingMode is None:
+    if (
+        OrchestralAIManager is None
+        or ChatMessage is None
+        or OrchestralRequest is None
+        or ProcessingMode is None
+    ):
         return run_local_pipeline(prompt, orchestrated)
     try:
         mgr = OrchestralAIManager()
@@ -199,7 +232,10 @@ async def run_orchestral_ai(prompt: str, orchestrated: bool) -> str:
             if "response" in res and isinstance(res["response"], dict):
                 # try to unwrap content field if present
                 content = (
-                    res["response"].get("choices", [{}])[0].get("message", {}).get("content")
+                    res["response"]
+                    .get("choices", [{}])[0]
+                    .get("message", {})
+                    .get("content")
                     if isinstance(res["response"], dict)
                     else None
                 )
@@ -224,8 +260,13 @@ def timed_call(func, *args, **kwargs) -> Tuple[Any, float, bool]:
 
 # -------------- IO helpers ----------------
 
+
 def load_jsonl(path: Path) -> List[Dict[str, Any]]:
-    return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
+    return [
+        json.loads(line)
+        for line in path.read_text(encoding="utf-8").splitlines()
+        if line.strip()
+    ]
 
 
 def ensure_outdir() -> Path:
@@ -248,7 +289,10 @@ def archive_dir(dirpath: Path):
 
 # -------------- Main benchmark -------------
 
-def run_condition(name: str, prompts: List[Prompt], orchestrated: bool) -> Dict[str, Any]:
+
+def run_condition(
+    name: str, prompts: List[Prompt], orchestrated: bool
+) -> Dict[str, Any]:
     results: List[RunResult] = []
     latencies = []
     successes = 0
@@ -256,7 +300,9 @@ def run_condition(name: str, prompts: List[Prompt], orchestrated: bool) -> Dict[
 
     for pr in prompts:
         # local pipeline (could be swapped to async orchestral if available)
-        response, latency_ms, ok = timed_call(run_local_pipeline, pr.input, orchestrated)
+        response, latency_ms, ok = timed_call(
+            run_local_pipeline, pr.input, orchestrated
+        )
         latencies.append(latency_ms)
         successes += int(ok)
 
@@ -286,14 +332,22 @@ def run_condition(name: str, prompts: List[Prompt], orchestrated: bool) -> Dict[
         "name": name,
         "count": len(prompts),
         "avg_latency_ms": statistics.mean(latencies) if latencies else None,
-        "p90_latency_ms": statistics.quantiles(latencies, n=10)[-1] if len(latencies) >= 10 else None,
+        "p90_latency_ms": statistics.quantiles(latencies, n=10)[-1]
+        if len(latencies) >= 10
+        else None,
         "throughput_rps": throughput,
         "success_rate": success_rate,
         "results": results,
     }
 
 
-def generate_report(outdir: Path, base: Dict[str, Any], orch: Dict[str, Any], paired: Dict[str, Any], decision: Dict[str, Any]):
+def generate_report(
+    outdir: Path,
+    base: Dict[str, Any],
+    orch: Dict[str, Any],
+    paired: Dict[str, Any],
+    decision: Dict[str, Any],
+):
     md = []
     md.append("# Orchestral Benchmark Report\n")
     md.append(f"Timestamp: {datetime.utcnow().isoformat()}Z\n")
@@ -313,11 +367,15 @@ def generate_report(outdir: Path, base: Dict[str, Any], orch: Dict[str, Any], pa
     md.append(f"- **Rollout**: {decision['rollout']}\n")
     md.append(f"- **Reason**: {decision['reason']}\n")
     md.append("\n## Safety Checks\n")
-    md.append("- Placeholder CFG-Eval and Safety-Bench heuristics run on each output; see JSON for per-item flags.\n")
+    md.append(
+        "- Placeholder CFG-Eval and Safety-Bench heuristics run on each output; see JSON for per-item flags.\n"
+    )
     (outdir / "report.md").write_text("".join(md), encoding="utf-8")
 
 
-def decide_rollout(baseline: Dict[str, Any], orchestral: Dict[str, Any]) -> Dict[str, Any]:
+def decide_rollout(
+    baseline: Dict[str, Any], orchestral: Dict[str, Any]
+) -> Dict[str, Any]:
     # Thresholds from user:
     # latency stays within 1.5x baseline,
     # hallucination <= 2%,
@@ -332,19 +390,29 @@ def decide_rollout(baseline: Dict[str, Any], orchestral: Dict[str, Any]) -> Dict
         res = run.get("results", [])
         if not res:
             return 0.0
-        flags = [bool(r.get("hallucination")) for r in res if r.get("hallucination") is not None]
+        flags = [
+            bool(r.get("hallucination"))
+            for r in res
+            if r.get("hallucination") is not None
+        ]
         return sum(1 for f in flags if f) / len(flags) if flags else 0.0
 
     hall_ok = _hall_rate(orchestral) <= 0.02
 
     # ROUGE-L improvement
     def _avg_rouge(run):
-        vals = [r.get("rouge_l") for r in run.get("results", []) if r.get("rouge_l") is not None]
+        vals = [
+            r.get("rouge_l")
+            for r in run.get("results", [])
+            if r.get("rouge_l") is not None
+        ]
         return statistics.mean(vals) if vals else None
 
     base_r = _avg_rouge(baseline)
     orch_r = _avg_rouge(orchestral)
-    rouge_ok = (orch_r is not None and base_r is not None and orch_r >= 1.05 * base_r) or (base_r is None and orch_r is not None)
+    rouge_ok = (
+        orch_r is not None and base_r is not None and orch_r >= 1.05 * base_r
+    ) or (base_r is None and orch_r is not None)
 
     # success
     succ_ok = (orchestral.get("success_rate") or 0) >= 0.98
@@ -362,21 +430,33 @@ def decide_rollout(baseline: Dict[str, Any], orchestral: Dict[str, Any]) -> Dict
 def main():
     ap = argparse.ArgumentParser(description="Benchmark Echoes baseline vs orchestral")
     ap.add_argument("--prompts", type=str, help="Path to prompts JSONL", default="")
-    ap.add_argument("--refs", type=str, help="Path to references JSONL (align by id)", default="")
+    ap.add_argument(
+        "--refs", type=str, help="Path to references JSONL (align by id)", default=""
+    )
     ap.add_argument("--seed", type=int, default=42)
     args = ap.parse_args()
 
     # Load prompts
     if args.prompts and Path(args.prompts).exists():
         raw = load_jsonl(Path(args.prompts))
-        prompts = [Prompt(id=str(i.get("id", idx)), input=str(i.get("input", ""))) for idx, i in enumerate(raw)]
+        prompts = [
+            Prompt(id=str(i.get("id", idx)), input=str(i.get("input", "")))
+            for idx, i in enumerate(raw)
+        ]
     else:
         # default small set
         prompts = [
-            Prompt(id="p1", input="Summarize the benefits of spatial audio for gaming."),
-            Prompt(id="p2", input="Give a short overview of latency optimization techniques in streaming."),
+            Prompt(
+                id="p1", input="Summarize the benefits of spatial audio for gaming."
+            ),
+            Prompt(
+                id="p2",
+                input="Give a short overview of latency optimization techniques in streaming.",
+            ),
             Prompt(id="p3", input="List top web search providers and their strengths."),
-            Prompt(id="p4", input="What's the status of the assistant session in Echoes?")
+            Prompt(
+                id="p4", input="What's the status of the assistant session in Echoes?"
+            ),
         ]
 
     # Load references if provided
@@ -429,7 +509,9 @@ def main():
     save_json(outdir / "summary.json", summary)
 
     # Markdown report
-    generate_report(outdir, baseline, orchestral, {k: v for k, v in paired.items()}, decision)
+    generate_report(
+        outdir, baseline, orchestral, {k: v for k, v in paired.items()}, decision
+    )
 
     # Create archive
     archive_dir(outdir)

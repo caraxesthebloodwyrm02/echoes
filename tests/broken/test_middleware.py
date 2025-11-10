@@ -5,8 +5,11 @@ Tests for API middleware components.
 import time
 from unittest.mock import Mock
 
-from api.middleware import (AuthenticationMiddleware, RateLimiter,
-                            RequestLoggingMiddleware)
+from api.middleware import (
+    AuthenticationMiddleware,
+    RateLimiter,
+    RequestLoggingMiddleware,
+)
 
 
 class TestRateLimiter:

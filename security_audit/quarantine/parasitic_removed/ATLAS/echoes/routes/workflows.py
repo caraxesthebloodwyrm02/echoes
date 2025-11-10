@@ -10,8 +10,7 @@ from typing import Any
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
-from ..exceptions import (ValidationError, WorkflowError,
-                          create_success_response)
+from ..exceptions import ValidationError, WorkflowError, create_success_response
 from ..workflows import WorkflowConfig, WorkflowType, get_workflow_manager
 
 logger = logging.getLogger(__name__)

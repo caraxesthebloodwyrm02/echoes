@@ -7,8 +7,12 @@ import asyncio
 import threading
 import time
 
-from communication import (ArcherFramework, CommunicationMessage,
-                           CommunicationType, create_communicator)
+from communication import (
+    ArcherFramework,
+    CommunicationMessage,
+    CommunicationType,
+    create_communicator,
+)
 
 
 def test_connection_pooling():

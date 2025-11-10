@@ -13,8 +13,7 @@ from fastapi import HTTPException, Request, Response
 from slowapi import Limiter
 from slowapi.errors import RateLimitExceeded
 from slowapi.util import get_remote_address
-from starlette.middleware.base import (BaseHTTPMiddleware,
-                                       RequestResponseEndpoint)
+from starlette.middleware.base import BaseHTTPMiddleware, RequestResponseEndpoint
 
 from .config import Settings
 from .exceptions import RateLimitError

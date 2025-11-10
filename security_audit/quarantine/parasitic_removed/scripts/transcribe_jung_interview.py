@@ -14,8 +14,12 @@ from pathlib import Path
 # Add core modules to path
 sys.path.insert(0, str(Path(__file__).parent / "c_o_r_e"))
 
-from youtube_transcriber import (_build_youtube_report, _download_audio,
-                                 _slugify, _transcribe)
+from youtube_transcriber import (
+    _build_youtube_report,
+    _download_audio,
+    _slugify,
+    _transcribe,
+)
 
 # Configuration
 OUTPUT_DIR = Path(__file__).parent / "glimpse"

@@ -44,8 +44,11 @@ def test_network_communicator_direct():
         import sys
 
         sys.path.append(".")
-        from communication import (CommunicationMessage, CommunicationType,
-                                   NetworkCommunicator)
+        from communication import (
+            CommunicationMessage,
+            CommunicationType,
+            NetworkCommunicator,
+        )
 
         # Create communicator
         config = {

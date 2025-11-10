@@ -13,6 +13,7 @@ Integrates:
 
 import asyncio
 import json
+
 # ============================================================================
 # Standard library imports
 # ============================================================================
@@ -35,32 +36,45 @@ except ImportError:
 # Core dependencies
 from dotenv import load_dotenv
 from enhanced_accounting import ValueType, get_enhanced_accounting
+
 # Knowledge Graph Integration
-from knowledge_graph import (KnowledgeNode, KnowledgeRelation, MemoryFragment,
-                             get_knowledge_graph)
+from knowledge_graph import (
+    KnowledgeNode,
+    KnowledgeRelation,
+    MemoryFragment,
+    get_knowledge_graph,
+)
+
 # Legal Safeguards & Enhanced Accounting
-from legal_safeguards import (ConsentType, ProtectionLevel,
-                              get_cognitive_accounting)
+from legal_safeguards import ConsentType, ProtectionLevel, get_cognitive_accounting
+
 # Multimodal Resonance Glimpse
 from multimodal_resonance import get_multimodal_resonance_engine
 from openai import APIError, AuthenticationError, OpenAI
+
 # Quantum State Management
 from quantum_state import QuantumStateManager
 
 # Action Execution
 from app.actions import ActionExecutor
+
 # Agent Workflow System
 from app.agents import AgentWorkflow
+
 # Filesystem Tools
 from app.filesystem import FilesystemTools
+
 # Knowledge Management
 from app.knowledge import KnowledgeManager
+
 # Dynamic Model Router
 from app.model_router import ModelMetrics, ModelResponseCache, ModelRouter
+
 # Value System Integration
 from app.values import get_value_system
 from glimpse.Glimpse import Draft, GlimpseEngine, PrivacyGuard
 from tools.examples import *  # Load all built-in tools
+
 # Tool Framework
 from tools.registry import get_registry
 

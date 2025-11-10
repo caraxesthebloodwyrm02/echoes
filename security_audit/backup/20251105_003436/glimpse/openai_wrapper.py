@@ -27,9 +27,14 @@ except ImportError:
 
 
 # Import metrics and rate limiter
-from .metrics import (record_openai_request, record_openai_tokens,
-                      record_rate_limit_delay, record_rate_limit_metrics,
-                      record_rate_limit_rejection, record_rate_limit_wait_time)
+from .metrics import (
+    record_openai_request,
+    record_openai_tokens,
+    record_rate_limit_delay,
+    record_rate_limit_metrics,
+    record_rate_limit_rejection,
+    record_rate_limit_wait_time,
+)
 from .rate_limiter import AdaptiveRateLimiter, get_default_rate_limiter
 
 logger = logging.getLogger(__name__)

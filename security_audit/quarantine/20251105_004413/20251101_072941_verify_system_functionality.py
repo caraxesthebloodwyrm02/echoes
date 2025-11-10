@@ -173,8 +173,7 @@ def main():
     print("4. Model Router & Metrics")
     print("-" * 80)
     try:
-        from app.model_router import (ModelMetrics, ModelResponseCache,
-                                      ModelRouter)
+        from app.model_router import ModelMetrics, ModelResponseCache, ModelRouter
 
         router = ModelRouter()
         ModelMetrics()

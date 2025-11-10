@@ -13,12 +13,21 @@ import datetime
 import json
 import tempfile
 
-from enhanced_accounting_system import (EnhancedAccountingSystem, PayoutMethod,
-                                        TaxJurisdiction, ValueType)
+from enhanced_accounting_system import (
+    EnhancedAccountingSystem,
+    PayoutMethod,
+    TaxJurisdiction,
+    ValueType,
+)
+
 # Import enhanced systems
-from enhanced_legal_safeguards import (ConsentType, DataRetention,
-                                       EnhancedCognitiveEffortAccounting,
-                                       PrivacyControl, ProtectionLevel)
+from enhanced_legal_safeguards import (
+    ConsentType,
+    DataRetention,
+    EnhancedCognitiveEffortAccounting,
+    PrivacyControl,
+    ProtectionLevel,
+)
 
 
 class SimpleEnhancedProtectionTest:

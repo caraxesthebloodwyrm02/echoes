@@ -12,11 +12,19 @@ import asyncio
 import datetime
 import json
 
-from enhanced_accounting_system import (PayoutMethod, TaxJurisdiction,
-                                        ValueType, get_enhanced_accounting)
-from enhanced_legal_safeguards import (ConsentType, DataRetention,
-                                       PrivacyControl, ProtectionLevel,
-                                       get_enhanced_cognitive_accounting)
+from enhanced_accounting_system import (
+    PayoutMethod,
+    TaxJurisdiction,
+    ValueType,
+    get_enhanced_accounting,
+)
+from enhanced_legal_safeguards import (
+    ConsentType,
+    DataRetention,
+    PrivacyControl,
+    ProtectionLevel,
+    get_enhanced_cognitive_accounting,
+)
 
 
 class EnhancedProtectionTestSuite:

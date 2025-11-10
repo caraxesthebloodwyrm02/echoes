@@ -24,6 +24,7 @@ from pydantic import BaseModel, Field
 
 # Import configuration
 from api.config import get_config, setup_logging
+
 # Import existing engines
 # from src.rag_orbit.retrieval import RetrievalEngine
 # from src.rag_orbit.embeddings import EmbeddingEngine
@@ -31,9 +32,12 @@ from api.config import get_config, setup_logging
 # Import pattern detection
 from api.pattern_detection import detect_patterns
 from api.self_rag import verify_truth
+
 # Import selective attention utilities from consolidated module
-from echoes.utils.selective_attention import (selective_attention,
-                                              selective_attention_dataframe)
+from echoes.utils.selective_attention import (
+    selective_attention,
+    selective_attention_dataframe,
+)
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -60,7 +64,9 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket):
         """Remove a WebSocket connection"""
         self.active_connections.remove(websocket)
-        logger.info("WebSocket disconnected. Remaining: %d", len(self.active_connections))
+        logger.info(
+            "WebSocket disconnected. Remaining: %d", len(self.active_connections)
+        )
 
     async def broadcast(self, message: dict):
         """Broadcast a message to all connected clients"""
@@ -128,7 +134,13 @@ async def lifespan(_app: FastAPI):
     cfg = get_config()
     try:
         import os
-        if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in ("1", "true", "yes", "on"):
+
+        if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in (
+            "1",
+            "true",
+            "yes",
+            "on",
+        ):
             setattr(cfg, "orchestral_enabled", True)
     except Exception:
         pass
@@ -162,6 +174,7 @@ config = get_config()
 if getattr(config, "orchestral_enabled", False):
     try:
         from api.orchestral_integration import OrchestralAPIEndpoints
+
         _orchestral = OrchestralAPIEndpoints()
 
         @app.get("/orchestral/status")
@@ -171,6 +184,7 @@ if getattr(config, "orchestral_enabled", False):
         @app.websocket("/ws/orchestral")
         async def orchestral_websocket(websocket: WebSocket):
             await _orchestral.orchestral_websocket_endpoint(websocket)
+
     except Exception as e:
         logger.warning("Orchestral endpoints not available: %s", e)
 
@@ -184,13 +198,18 @@ try:
 
     # HTML dashboard is optional; disabled by default for CI/pipelines
     import os as _os
+
     if _os.getenv("ECHOES_MONITOR_HTML", "").lower() in ("1", "true", "yes", "on"):
+
         @app.get("/monitor")
         async def monitor_dashboard():
             from fastapi.responses import HTMLResponse
+
             return HTMLResponse(get_monitor_dashboard_html())
+
 except Exception as e:
     logger.warning("Monitoring endpoints not available: %s", e)
+
 
 @app.get("/health")
 async def health_check():
@@ -198,6 +217,7 @@ async def health_check():
     # Only run selective attention demo if we have pandas
     try:
         import pandas as pd
+
         # Demonstrate selective attention with sample data
         numbers = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
         even_numbers = selective_attention(numbers)
@@ -210,7 +230,7 @@ async def health_check():
         }
         sample_df = pd.DataFrame(sample_data)
         filtered_df = selective_attention_dataframe(sample_df, 50)
-        
+
         demo_data = {
             "even_numbers": even_numbers,
             "filtered_people": filtered_df.to_dict("records"),
@@ -340,6 +360,7 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
 
 """REST API endpoints with caching"""
 
+
 # REST API endpoints for backward compatibility
 @app.post("/api/patterns/detect", response_model=PatternDetectionResponse)
 async def detect_patterns_rest(request: PatternDetectionRequest):
@@ -365,11 +386,7 @@ async def detect_patterns_rest(request: PatternDetectionRequest):
 @app.post("/api/truth/verify", response_model=TruthVerificationResponse)
 async def verify_truth_rest(request: TruthVerificationRequest):
     """REST endpoint for truth verification"""
-    verdict = await verify_truth(
-        request.claim,
-        request.evidence,
-        request.context
-    )
+    verdict = await verify_truth(request.claim, request.evidence, request.context)
     return TruthVerificationResponse(
         verdict=verdict.get("verdict", "UNCERTAIN"),
         confidence=verdict.get("confidence", 0.5),
@@ -383,10 +400,10 @@ async def verify_truth_rest(request: TruthVerificationRequest):
 if __name__ == "__main__":
     # Get configuration
     config = get_config()
-    
+
     # Setup logging
     setup_logging(config)
-    
+
     # Start the server
     uvicorn.run(
         "api.main:app",
@@ -395,5 +412,5 @@ if __name__ == "__main__":
         reload=config.server.reload,
         log_level=config.logging.level.lower(),
         proxy_headers=True,
-        forwarded_allow_ips='*',
+        forwarded_allow_ips="*",
     )

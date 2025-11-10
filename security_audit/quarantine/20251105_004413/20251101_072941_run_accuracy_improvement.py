@@ -6,8 +6,9 @@ Unified Accuracy Improvement Results
 Execute and display the complete accuracy improvement analysis.
 """
 
-from echoes.core.unified_accuracy_improvement import \
-    execute_unified_accuracy_improvement
+from echoes.core.unified_accuracy_improvement import (
+    execute_unified_accuracy_improvement,
+)
 
 
 def main():

@@ -4,10 +4,18 @@ Tests for API configuration management.
 
 from pathlib import Path
 
-from api.config import (APIConfig, EchoesAPIConfig, EngineConfig,
-                        PatternDetectionConfig, SecurityConfig, SelfRAGConfig,
-                        get_config, load_config_from_env, setup_logging,
-                        validate_config)
+from api.config import (
+    APIConfig,
+    EchoesAPIConfig,
+    EngineConfig,
+    PatternDetectionConfig,
+    SecurityConfig,
+    SelfRAGConfig,
+    get_config,
+    load_config_from_env,
+    setup_logging,
+    validate_config,
+)
 
 
 class TestEngineConfig:

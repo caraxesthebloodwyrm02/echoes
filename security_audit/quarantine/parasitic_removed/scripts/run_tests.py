@@ -51,8 +51,7 @@ def run_comprehensive_tests():
     print("🌟 Running Comprehensive Test Suite for EchoesAssistantV2...")
     print("=" * 80)
 
-    from tests.test_echoes_assistant_v2_comprehensive import \
-        run_comprehensive_tests
+    from tests.test_echoes_assistant_v2_comprehensive import run_comprehensive_tests
 
     result = run_comprehensive_tests()
 

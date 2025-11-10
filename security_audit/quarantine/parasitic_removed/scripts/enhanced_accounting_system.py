@@ -18,9 +18,12 @@ from enum import Enum
 from pathlib import Path
 from typing import Any
 
-from enhanced_legal_safeguards import (DataRetention, PrivacyControl,
-                                       ProtectionLevel,
-                                       get_enhanced_cognitive_accounting)
+from enhanced_legal_safeguards import (
+    DataRetention,
+    PrivacyControl,
+    ProtectionLevel,
+    get_enhanced_cognitive_accounting,
+)
 
 
 class AccountingPeriod(Enum):

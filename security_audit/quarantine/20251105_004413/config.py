@@ -70,7 +70,9 @@ class SecurityConfig(BaseSettings):
     # API Keys
     openai_api_key: str | None = None
     # IMPORTANT: Set to True for production to require API key authentication
-    api_key_required: bool = False  # DISABLED - Direct Connection  # Change to True for production
+    api_key_required: bool = (
+        False  # DISABLED - Direct Connection  # Change to True for production
+    )
     allowed_api_keys: list = []
 
     # Rate limiting
@@ -258,10 +260,7 @@ def validate_config(cfg: EchoesAPIConfig) -> dict[str, Any]:
         )
 
     # Validate selective attention configuration
-    if (
-        cfg.attention.attention_threshold < 0
-        or cfg.attention.attention_threshold > 1
-    ):
+    if cfg.attention.attention_threshold < 0 or cfg.attention.attention_threshold > 1:
         issues.append("Attention threshold must be between 0 and 1")
 
     if cfg.attention.focus_criteria not in [

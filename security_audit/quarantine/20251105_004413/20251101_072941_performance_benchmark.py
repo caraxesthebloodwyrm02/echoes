@@ -123,9 +123,7 @@ class PerformanceBenchmark:
             for req in range(requests_per_user):
                 start_time = time.time()
                 try:
-                    self.assistant.chat(
-                        f"User {user_id} request {req+1}", stream=False
-                    )
+                    self.assistant.chat(f"User {user_id} request {req+1}", stream=False)
                     latency = time.time() - start_time
                     latencies.append(latency)
                 except Exception as e:

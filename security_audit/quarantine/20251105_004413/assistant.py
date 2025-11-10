@@ -29,6 +29,7 @@ from typing import Any
 
 # Import AI modules
 from core.ai import ChatMessage, ModelConfig, ModelManager, OpenAIClient
+
 # Import caching utilities
 MISSING_ECHOES_DEPENDENCIES = False
 try:
@@ -41,7 +42,9 @@ except ModuleNotFoundError as exc:
         class TokenAwareCache:  # type: ignore[override]
             """Fallback cache when optional dependencies are unavailable."""
 
-            def __init__(self, max_size: int = 1024, ttl: int = 3600, cache_dir: str = ".cache"):
+            def __init__(
+                self, max_size: int = 1024, ttl: int = 3600, cache_dir: str = ".cache"
+            ):
                 self.max_size = max_size
 
             def __call__(self, func):
@@ -3290,7 +3293,13 @@ Examples:
                 print("7. Quit")
                 try:
                     import os
-                    if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in ("1", "true", "yes", "on"):
+
+                    if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in (
+                        "1",
+                        "true",
+                        "yes",
+                        "on",
+                    ):
                         print("8. Orchestral Demo (template + strategy)")
                 except Exception:
                     pass
@@ -3315,13 +3324,17 @@ Examples:
                     print(f"  AI Mode: {status['current_model']}")
                     # Enhanced with orchestral status
                     try:
-                        from orchestral_strategy import OrchestralConductor, OrchestralConfig
+                        from orchestral_strategy import (
+                            OrchestralConductor,
+                            OrchestralConfig,
+                        )
+
                         config = OrchestralConfig(
                             echo_core_path=".",
                             reverb_module_path="../Reverb",
                             delay_module_path="../Delay",
                             routing_connector_path="../Routing",
-                            arcade_platform_path="../Arcade"
+                            arcade_platform_path="../Arcade",
                         )
                         OrchestralConductor(config)
                         print("  Orchestral: Ready for spatial/temporal optimization")
@@ -3349,18 +3362,35 @@ Examples:
                 elif choice == "8":
                     try:
                         import os
-                        if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() not in ("1", "true", "yes", "on"):
-                            print("⚠️ Orchestral disabled. Set ECHOES_ORCHESTRAL_ENABLED=1 to enable demo.")
+
+                        if os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() not in (
+                            "1",
+                            "true",
+                            "yes",
+                            "on",
+                        ):
+                            print(
+                                "⚠️ Orchestral disabled. Set ECHOES_ORCHESTRAL_ENABLED=1 to enable demo."
+                            )
                         else:
                             # Run template demo main() and strategy()
-                            from template_process import main as tpl_main, strategy as tpl_strategy
+                            from template_process import (
+                                main as tpl_main,
+                                strategy as tpl_strategy,
+                            )
+
                             print("\n=== Orchestral Demo: template_process.main() ===")
                             tpl_main()
-                            print("\n=== Orchestral Demo: orchestral_strategy.strategy() ===")
+                            print(
+                                "\n=== Orchestral Demo: orchestral_strategy.strategy() ==="
+                            )
                             from orchestral_strategy import strategy as orch_strategy
+
                             orch_strategy()
                             # Simple echo to confirm
-                            print("\n✅ Demo completed. Results and strategy printed above.")
+                            print(
+                                "\n✅ Demo completed. Results and strategy printed above."
+                            )
                     except ImportError as e:
                         print(f"❌ Demo unavailable: {e}")
                     except Exception as e:

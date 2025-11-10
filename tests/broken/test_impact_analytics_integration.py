@@ -9,14 +9,20 @@ from unittest.mock import patch
 # Add the integrations directory to path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent / "integrations"))
 
-from integrations.impact_analytics_connector import (ImpactAnalyticsConnector,
-                                                     ImpactMetrics,
-                                                     generate_impact_report,
-                                                     get_impact_status,
-                                                     record_ai_evaluation,
-                                                     record_research_progress)
-from integrations.turbo_bridge import (TurboBridge, create_bridge,
-                                       get_bridge_health, unified_analysis)
+from integrations.impact_analytics_connector import (
+    ImpactAnalyticsConnector,
+    ImpactMetrics,
+    generate_impact_report,
+    get_impact_status,
+    record_ai_evaluation,
+    record_research_progress,
+)
+from integrations.turbo_bridge import (
+    TurboBridge,
+    create_bridge,
+    get_bridge_health,
+    unified_analysis,
+)
 
 
 class TestImpactAnalyticsConnector:

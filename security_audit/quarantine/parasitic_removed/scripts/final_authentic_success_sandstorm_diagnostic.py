@@ -839,9 +839,7 @@ class FinalAuthenticSuccessSandstormDiagnostic:
             "green" if self.unified_alert_active else "orange",
         ]
 
-        ax2.bar(
-            learning_phases, learning_scores, alpha=0.8, color=learning_colors
-        )
+        ax2.bar(learning_phases, learning_scores, alpha=0.8, color=learning_colors)
 
         ax2.set_ylabel("Coherence Score")
         ax2.set_title("Learning Progression - From Chaos to Comprehension")

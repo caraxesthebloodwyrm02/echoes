@@ -9,8 +9,12 @@ import sys
 import time
 
 import requests
-from communication import (ArcherFramework, CommunicationMessage,
-                           CommunicationType, create_communicator)
+from communication import (
+    ArcherFramework,
+    CommunicationMessage,
+    CommunicationType,
+    create_communicator,
+)
 
 
 class FastAPIServerManager:

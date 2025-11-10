@@ -36,6 +36,7 @@ except ImportError:
 import asyncio
 from collections.abc import Iterator
 from dataclasses import dataclass
+
 # Import timedelta from datetime
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -111,8 +112,7 @@ except ImportError:
 
 
 from core_modules.caching import cached_method
-from core_modules.catch_release_system import (CacheLevel, ContentType,
-                                               catch_release)
+from core_modules.catch_release_system import CacheLevel, ContentType, catch_release
 from core_modules.context_manager import ContextManager
 from core_modules.cross_reference_system import cross_reference_system
 from core_modules.dynamic_error_handler import error_handler
@@ -120,8 +120,7 @@ from core_modules.humor_engine import PressureLevel, humor_engine
 from core_modules.intent_awareness_engine import IntentType, intent_engine
 from core_modules.metrics import ModelMetrics
 from core_modules.model_router import ModelRouter
-from core_modules.parallel_simulation_engine import (SimulationType,
-                                                     parallel_simulation)
+from core_modules.parallel_simulation_engine import SimulationType, parallel_simulation
 from core_modules.personality_engine import personality_engine
 from core_modules.train_of_thought_tracker import ThoughtType, thought_tracker
 
@@ -168,8 +167,13 @@ except ImportError as e:
 
 # Glimpse Suite - Streamlined imports with fallback
 try:
-    from glimpse import (ClarifierEngine, Draft, GlimpseEngine, GlimpseResult,
-                         PrivacyGuard)
+    from glimpse import (
+        ClarifierEngine,
+        Draft,
+        GlimpseEngine,
+        GlimpseResult,
+        PrivacyGuard,
+    )
 
     GLIMPSE_AVAILABLE = True
 except ImportError as e:
@@ -310,8 +314,12 @@ except ImportError as e:
 
 # Knowledge Graph Integration
 try:
-    from knowledge_graph import (KnowledgeNode, KnowledgeRelation,
-                                 MemoryFragment, get_knowledge_graph)
+    from knowledge_graph import (
+        KnowledgeNode,
+        KnowledgeRelation,
+        MemoryFragment,
+        get_knowledge_graph,
+    )
 
     KNOWLEDGE_GRAPH_AVAILABLE = True
 except ImportError as e:
@@ -327,8 +335,11 @@ except ImportError as e:
 
 # Multimodal Resonance Glimpse
 try:
-    from multimodal_resonance import (ModalityVector, MultimodalMemory,
-                                      get_multimodal_resonance_engine)
+    from multimodal_resonance import (
+        ModalityVector,
+        MultimodalMemory,
+        get_multimodal_resonance_engine,
+    )
 
     MULTIMODAL_AVAILABLE = True
 except ImportError as e:
@@ -343,8 +354,12 @@ except ImportError as e:
 
 # Legal Safeguards & Enhanced Accounting
 try:
-    from legal_safeguards import (CognitiveEffortMetrics, ConsentType,
-                                  ProtectionLevel, get_cognitive_accounting)
+    from legal_safeguards import (
+        CognitiveEffortMetrics,
+        ConsentType,
+        ProtectionLevel,
+        get_cognitive_accounting,
+    )
 
     LEGAL_SAFEGUARDS_AVAILABLE = True
 except ImportError as e:
@@ -359,8 +374,7 @@ except ImportError as e:
     ProtectionLevel = None
 
 try:
-    from enhanced_accounting import (AccountingPeriod, ValueType,
-                                     get_enhanced_accounting)
+    from enhanced_accounting import AccountingPeriod, ValueType, get_enhanced_accounting
 
     ENHANCED_ACCOUNTING_AVAILABLE = True
 except ImportError as e:

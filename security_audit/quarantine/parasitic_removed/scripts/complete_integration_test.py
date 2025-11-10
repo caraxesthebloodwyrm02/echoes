@@ -8,8 +8,12 @@ import subprocess
 import sys
 import time
 
-from communication import (ArcherFramework, CommunicationMessage,
-                           CommunicationType, create_communicator)
+from communication import (
+    ArcherFramework,
+    CommunicationMessage,
+    CommunicationType,
+    create_communicator,
+)
 
 
 def start_test_server():

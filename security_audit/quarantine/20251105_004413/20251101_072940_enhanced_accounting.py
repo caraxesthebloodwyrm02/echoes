@@ -17,8 +17,12 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional
 
 import pandas as pd
-from legal_safeguards import (CognitiveEffortMetrics, ConsentType,
-                              ProtectionLevel, get_cognitive_accounting)
+from legal_safeguards import (
+    CognitiveEffortMetrics,
+    ConsentType,
+    ProtectionLevel,
+    get_cognitive_accounting,
+)
 
 
 class AccountingPeriod(Enum):

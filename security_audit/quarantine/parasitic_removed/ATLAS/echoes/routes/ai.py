@@ -10,8 +10,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel, Field
 
 from ..config import get_settings
-from ..exceptions import (AIServiceError, ValidationError,
-                          create_success_response)
+from ..exceptions import AIServiceError, ValidationError, create_success_response
 
 logger = logging.getLogger(__name__)
 
