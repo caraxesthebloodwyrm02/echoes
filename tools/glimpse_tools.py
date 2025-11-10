@@ -132,7 +132,7 @@ class GlimpseApiGetTool:
     """Tool for making GET requests to Glimpse API."""
 
     name = "glimpse_api_get"
-    description = "API tool for trajectory tracking and data retrieval via GET requests"
+    description = "API tool for trajectory tracking, data retrieval via GET requests, and readability metrics"
 
     def __init__(self, assistant=None, config: dict[str, Any] | None = None):
         self.assistant = assistant

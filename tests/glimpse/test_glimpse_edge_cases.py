@@ -280,7 +280,7 @@ def test_status_history_edge_cases():
 
         # Test with stale result
         async def very_slow_sampler(draft):
-            await asyncio.sleep(3)
+            await asyncio.sleep(6.5)  # > 6000ms to trigger status messages
             return ("sample", "essence", None, True)
 
         slow_engine = GlimpseEngine(sampler=very_slow_sampler)

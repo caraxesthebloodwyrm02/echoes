@@ -64,8 +64,9 @@ class ClarifierEngine:
             print("✅ Using enhanced clarifier engine with post-execution curiosity")
         else:
             print("📋 Using legacy clarifier engine")
-            # Legacy clarifier rules (kept for compatibility)
-            self.clarifier_rules = {
+        
+        # Always initialize clarifier_rules for compatibility
+        self.clarifier_rules = {
                 # Audience clarifiers
                 "customer": Clarifier(
                     type=ClarifierType.AUDIENCE,
@@ -367,7 +368,7 @@ if __name__ == "__main__":
     ]
 
     for text, goal, constraints in test_cases:
-        clarifiers = Glimpse.detect_ambiguity(text, goal, constraints)
+        clarifiers = engine.detect_ambiguity(text, goal, constraints)
         print(f"\nInput: {text}")
         print(f"Detected clarifiers: {len(clarifiers)}")
         for c in clarifiers:

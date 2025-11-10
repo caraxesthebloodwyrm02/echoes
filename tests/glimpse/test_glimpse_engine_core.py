@@ -17,7 +17,7 @@ def test_two_tries_then_redial_and_reset():
         # Third attempt should immediately request redial
         r3 = await engine.glimpse(d)
         assert r3.status == "redial"
-        assert r3.status_history == ["Clean reset. Same channel. Let’s try again."]
+        assert r3.status_history == ["Clean reset. Same channel. Let's try again."]
 
         # After commit/reset we can start again from attempt 1
         engine.commit(d)
@@ -31,7 +31,7 @@ def test_latency_statuses_and_stale():
     async def run():
         # Custom sampler that delays past t4 to force stale
         async def slow_sampler(_d: Draft):
-            await asyncio.sleep(2.1)  # > 2000 ms
+            await asyncio.sleep(6.5)  # > 6000 ms (t4 threshold)
             return ("sample", "essence", None, True)
 
         engine = GlimpseEngine(sampler=slow_sampler)
@@ -76,14 +76,28 @@ def test_cancel_on_edit_does_not_consume_try_and_debounces():
 
 
 def test_clarifier_when_intent_unspecified():
+    import os
     async def run():
-        engine = GlimpseEngine()
-        r = await engine.glimpse(Draft(input_text="message", goal="", constraints=""))
+        # Enable pre-execution clarifier for this test
+        old_val = os.environ.get("GLIMPSE_PREEXEC_CLARIFIER")
+        os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = "true"
+        
+        try:
+            # Need to reimport to pick up the env var change
+            from glimpse.engine import GlimpseEngine as ReloadedEngine
+            engine = ReloadedEngine()
+            r = await engine.glimpse(Draft(input_text="message", goal="", constraints=""))
 
-        # With unspecified goal, clarifier should appear in delta and mark not_aligned
-        assert r.status == "not_aligned"
-        assert r.delta is not None
-        assert "Clarifier:" in r.delta
+            # With unspecified goal, clarifier should appear in delta and mark not_aligned
+            assert r.status == "not_aligned"
+            assert r.delta is not None
+            assert "Clarifier:" in r.delta
+        finally:
+            # Restore original value
+            if old_val is None:
+                os.environ.pop("GLIMPSE_PREEXEC_CLARIFIER", None)
+            else:
+                os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = old_val
 
     asyncio.run(run())
 

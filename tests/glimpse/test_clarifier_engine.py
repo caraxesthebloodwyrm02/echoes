@@ -55,14 +55,14 @@ class TestClarifierEngine:
     """Test the ClarifierEngine class"""
 
     def test_glimpse_initialization(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         assert len(engine.clarifier_rules) > 0
         assert "customer" in engine.clarifier_rules
         assert "formal" in engine.clarifier_rules
         assert "brief" in engine.clarifier_rules
 
     def test_detect_audience_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test customer mention
         clarifiers = engine.detect_ambiguity(
@@ -72,7 +72,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.AUDIENCE for c in clarifiers)
 
     def test_detect_tone_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test email/presentation triggers tone clarifier
         clarifiers = engine.detect_ambiguity(
@@ -82,7 +82,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.TONE for c in clarifiers)
 
     def test_detect_length_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test explain/describe triggers length clarifier
         clarifiers = engine.detect_ambiguity(
@@ -92,7 +92,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.LENGTH for c in clarifiers)
 
     def test_detect_format_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test list/organize triggers format clarifier
         clarifiers = engine.detect_ambiguity(
@@ -102,7 +102,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.FORMAT for c in clarifiers)
 
     def test_detect_scope_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test focus/scope triggers scope clarifier
         clarifiers = engine.detect_ambiguity(
@@ -112,7 +112,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.SCOPE for c in clarifiers)
 
     def test_detect_language_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test simplify/explain triggers language clarifier
         clarifiers = engine.detect_ambiguity(
@@ -122,7 +122,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.LANGUAGE for c in clarifiers)
 
     def test_detect_urgency_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test urgent/asap triggers urgency clarifier
         clarifiers = engine.detect_ambiguity(
@@ -132,7 +132,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.URGENCY for c in clarifiers)
 
     def test_detect_detail_level_ambiguity(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test detail/comprehensive triggers detail level clarifier
         clarifiers = engine.detect_ambiguity(
@@ -142,7 +142,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.DETAIL_LEVEL for c in clarifiers)
 
     def test_empty_goal_triggers_audience_clarifier(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Empty goal should always trigger audience clarifier
         clarifiers = engine.detect_ambiguity("Some input text", "", "")
@@ -150,7 +150,7 @@ class TestClarifierEngine:
         assert any(c.type == ClarifierType.AUDIENCE for c in clarifiers)
 
     def test_no_ambiguity_detected(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Clear input with goal should not trigger clarifiers
         clarifiers = engine.detect_ambiguity(
@@ -159,7 +159,7 @@ class TestClarifierEngine:
         assert len(clarifiers) == 0
 
     def test_max_three_clarifiers(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Even with multiple triggers, should limit to 3
         clarifiers = engine.detect_ambiguity(
@@ -170,7 +170,7 @@ class TestClarifierEngine:
         assert len(clarifiers) <= 3
 
     def test_apply_clarifier_response_yes_no(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifier = engine.clarifier_rules["customer"]
 
         # Test yes response
@@ -182,7 +182,7 @@ class TestClarifierEngine:
         assert "audience: internal" in result
 
     def test_apply_clarifier_response_explicit_options(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifier = engine.clarifier_rules["formal"]
 
         # Test explicit option
@@ -190,7 +190,7 @@ class TestClarifierEngine:
         assert "tone: formal" in result
 
     def test_apply_clarifier_response_invalid_uses_default(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifier = engine.clarifier_rules["customer"]
 
         # Test invalid response uses default
@@ -198,7 +198,7 @@ class TestClarifierEngine:
         assert "audience: internal" in result  # default value
 
     def test_apply_clarifier_response_appends_to_existing(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifier = engine.clarifier_rules["customer"]
 
         # Test appending to existing constraints
@@ -208,7 +208,7 @@ class TestClarifierEngine:
         assert "|" in result  # separator added
 
     def test_generate_clarifier_delta_single(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifiers = [engine.clarifier_rules["customer"]]
 
         delta = engine.generate_clarifier_delta(clarifiers)
@@ -217,7 +217,7 @@ class TestClarifierEngine:
         assert "(default: internal)" in delta
 
     def test_generate_clarifier_delta_multiple(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
         clarifiers = [
             engine.clarifier_rules["customer"],
             engine.clarifier_rules["formal"],
@@ -229,7 +229,7 @@ class TestClarifierEngine:
         assert "2. Clarifier:" in delta
 
     def test_generate_clarifier_delta_empty(self):
-        engine = ClarifierEngine()
+        engine = ClarifierEngine(use_enhanced_mode=False)
 
         delta = engine.generate_clarifier_delta([])
         assert delta == ""
@@ -271,7 +271,7 @@ class TestEnhancedSampler:
     async def test_enhanced_sampler_with_custom_clarifier_engine(self):
         from glimpse.clarifier_engine import ClarifierEngine
 
-        custom_engine = ClarifierEngine()
+        custom_engine = ClarifierEngine(use_enhanced_mode=False)
         draft = Draft(input_text="urgent request", goal="", constraints="")
 
         result = await enhanced_sampler_with_clarifiers(draft, custom_engine)
