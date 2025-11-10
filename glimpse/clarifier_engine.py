@@ -13,7 +13,6 @@ from typing import Any
 try:
     from .enhanced_clarifier_engine import (
         ClarifierType,
-        CuriosityCategory,
         EnhancedClarifierEngine,
     )
 

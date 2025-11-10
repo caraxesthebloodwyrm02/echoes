@@ -461,7 +461,7 @@ class BusinessScenarioDemo:
 
         # Get context summary
         context = self.assistant.get_context_summary()
-        print(f"\n✓ Context gathered: {len(context.split('\\n'))} data points")
+        print(f"\n✓ Context gathered: {len(context.split(chr(10)))} data points")
 
         # Get knowledge summary
         stats = self.assistant.knowledge_manager.get_stats()

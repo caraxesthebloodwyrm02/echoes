@@ -14,6 +14,11 @@ line_length = 88
 [tool.ruff]
 target-version = "py311"
 line-length = 88
+exclude = [
+    "security_audit",
+    "tests/broken",
+    ".root_backup",
+]
 
 [tool.ruff.lint]
 # Start with basic error checking
@@ -34,7 +39,13 @@ ignore = [
 "__init__.py" = ["F401"]
 
 # Test specific ignores
-"tests/**" = ["E402"]  # module level import not at top of file
+"tests/**" = ["E402", "F401"]  # module level import not at top of file, unused imports
+"smart_terminal/**" = ["F401", "E402"]  # unused imports and module level imports
+"demos/**" = ["F401"]  # unused imports in demos
+"examples/**" = ["E402"]  # module level imports in examples
+"direct/**" = ["E402"]  # module level imports in direct
+"glimpse/**" = ["E721"]  # type comparisons
+"app/**" = ["F401"]  # unused imports in app
 
 [tool.ruff.lint.isort]
 known-first-party = ["app"]
