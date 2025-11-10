@@ -4,17 +4,19 @@ Glimpse module - Core components.
 This module provides the core Glimpse components for the assistant.
 """
 
+import importlib.util
+
 # Import optional performance and clarifier modules to check availability
 try:
-    from .performance_optimizer import PerformanceOptimizer
+    importlib.util.find_spec("glimpse.performance_optimizer")
     PERFORMANCE_AVAILABLE = True
-except ImportError:
+except (ImportError, AttributeError):
     PERFORMANCE_AVAILABLE = False
 
 try:
-    from .clarifier_engine import ClarifierEngine, enhanced_sampler_with_clarifiers
+    importlib.util.find_spec("glimpse.clarifier_engine")
     CLARIFIER_AVAILABLE = True
-except ImportError:
+except (ImportError, AttributeError):
     CLARIFIER_AVAILABLE = False
 
 # Import all core components from engine module

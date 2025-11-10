@@ -64,7 +64,7 @@ class ContextualFeedback:
 
 
 # Define TerminalPreset and related classes outside the try block
-from enum import Enum, auto
+from enum import Enum
 
 class TerminalPreset(Enum):
     # Developer mode - optimized for coding
@@ -120,9 +120,9 @@ class TerminalPreset(Enum):
             return cls.DEVELOPER  # Default to developer mode
 
     class SuggestionMode(Enum):
-        FUZZY = auto()
-        EXACT = auto()
-        SMART = auto()
+        FUZZY = 1
+        EXACT = 2
+        SMART = 3
 
         def next(self):
             cls = self.__class__
