@@ -210,15 +210,33 @@ class EnhancedClarifierEngine:
             clarifiers.append(self.critical_clarifiers["critical_audience"])
 
         # Detect audience ambiguity for external communications
-        audience_keywords = ["customer", "client", "user", "external", "public", "stakeholder"]
-        communication_keywords = ["email", "message", "letter", "report", "presentation", "announcement"]
-        
+        audience_keywords = [
+            "customer",
+            "client",
+            "user",
+            "external",
+            "public",
+            "stakeholder",
+        ]
+        communication_keywords = [
+            "email",
+            "message",
+            "letter",
+            "report",
+            "presentation",
+            "announcement",
+        ]
+
         has_audience_keyword = any(word in text_lower for word in audience_keywords)
-        has_communication_keyword = any(word in text_lower for word in communication_keywords)
+        has_communication_keyword = any(
+            word in text_lower for word in communication_keywords
+        )
         has_audience_constraint = "audience" in constraints_lower
-        
+
         # If communicating with potential external audience but no audience specified
-        if (has_audience_keyword or has_communication_keyword) and not has_audience_constraint:
+        if (
+            has_audience_keyword or has_communication_keyword
+        ) and not has_audience_constraint:
             clarifiers.append(self.critical_clarifiers["critical_audience"])
 
         # Maximum 1 critical clarifier to avoid blocking

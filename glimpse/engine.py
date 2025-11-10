@@ -228,7 +228,9 @@ class GlimpseEngine:
         else:
             # Check PREEXEC_CLARIFIER_ENABLED at runtime (not module import time)
             # to support tests that set the env var after import
-            preexec_enabled = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {
+            preexec_enabled = os.getenv(
+                "GLIMPSE_PREEXEC_CLARIFIER", "false"
+            ).lower() in {
                 "true",
                 "1",
                 "yes",

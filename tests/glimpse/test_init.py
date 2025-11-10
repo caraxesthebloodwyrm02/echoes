@@ -208,10 +208,11 @@ class TestDefaultSampler:
     async def test_default_sampler_clarifier_for_empty_goal(self):
         """Test default sampler adds clarifier for empty goal"""
         import os
+
         # Enable pre-execution clarifier for this test
         original_value = os.environ.get("GLIMPSE_PREEXEC_CLARIFIER")
         os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = "true"
-        
+
         try:
             draft = Draft(input_text="some input", goal="", constraints="")
 

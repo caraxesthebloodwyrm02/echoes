@@ -69,7 +69,11 @@ class ClarifierEngine:
         if env_force_legacy:
             self.enhanced_mode = False
         else:
-            self.enhanced_mode = use_enhanced_mode and ENHANCED_CLARIFIER_AVAILABLE and EnhancedClarifierEngine is not None
+            self.enhanced_mode = (
+                use_enhanced_mode
+                and ENHANCED_CLARIFIER_AVAILABLE
+                and EnhancedClarifierEngine is not None
+            )
         if self.enhanced_mode:
             self.enhanced_engine = EnhancedClarifierEngine()
             print("✅ Using enhanced clarifier engine with post-execution curiosity")
@@ -182,7 +186,7 @@ class ClarifierEngine:
         goal_stripped = (goal or "").strip()
 
         # Ensure clarifier_rules are available
-        if not hasattr(self, 'clarifier_rules') or not self.clarifier_rules:
+        if not hasattr(self, "clarifier_rules") or not self.clarifier_rules:
             return clarifiers
 
         # Check for audience ambiguity
