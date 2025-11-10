@@ -1,0 +1,25 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PyTests (sanitized)" type="tests" factoryName="py.test">
+    <option name="ENV_FILES" value="" />
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs>
+      <env name="LOCALAPPDATA" value="C:\Users\irfan\AppData\Local" />
+      <env name="OPENAI_API_KEY" value="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" />
+    </envs>
+    <option name="SDK_HOME" value="" />
+    <option name="SDK_NAME" value="Python 3.14 (Cable)" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="IS_MODULE_SDK" value="false" />
+    <option name="ADD_CONTENT_ROOTS" value="true" />
+    <option name="ADD_SOURCE_ROOTS" value="true" />
+    <module name="" />
+    <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+    <option name="_new_keywords" value="&quot;&quot;" />
+    <option name="_new_parameters" value="&quot;&quot;" />
+    <option name="_new_additionalArguments" value="&quot;&quot;" />
+    <option name="_new_target" value="&quot;$AffectedModuleNames$&quot;" />
+    <option name="_new_targetType" value="&quot;PATH&quot;" />
+    <method v="2" />
+  </configuration>
+</component>

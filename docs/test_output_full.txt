@@ -1,0 +1,14 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-8.4.2, pluggy-1.6.0 -- E:\Projects\Echoes\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\Projects\Echoes
+configfile: pytest.ini
+plugins: anyio-4.11.0, cov-7.0.0
+collecting ... collected 456 items / 3 errors
+
+=========================== short test summary info ===========================
+ERROR tests/test_rag_setup.py
+ERROR tests/test_rag_system.py
+ERROR tests/test_rate_limiter_broken.py - NameError: name 'unittest' is not d...
+!!!!!!!!!!!!!!!!!!! Interrupted: 3 errors during collection !!!!!!!!!!!!!!!!!!!
+============================== 3 errors in 1.34s ==============================

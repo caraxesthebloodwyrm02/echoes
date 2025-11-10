@@ -1,0 +1,169 @@
+# Bandit configuration for security linting
+# Exclude test directories and known safe patterns
+exclude_dirs:
+    - tests
+    - venv
+    - __pycache__
+    - .git
+    - .pytest_cache
+    - htmlcov
+
+# Security tests to run (all by default)
+tests:
+    # Hardcoded passwords
+    - B101
+    # Hardcoded tmp directories
+    - B102
+    # Poor permissions
+    - B103
+    # Temp file path race condition
+    - B104
+    # Shell injection
+    - B108
+    # Start process with partial path
+    - B112
+    # Mako templates
+    - B201
+    # Jinja2 templates
+    - B301
+    # Mako templates
+    - B302
+    # Django templates
+    - B303
+    # Jinja2 autoescape
+    - B304
+    # Jinja2 sandbox
+    - B305
+    # Jinja2 markup
+    - B306
+    # Mark safe
+    - B307
+    # Jinja2 autoescape missing
+    - B308
+    # Django mark safe
+    - B309
+    # Django XSS
+    - B310
+    # Django XML
+    - B311
+    # Django deserialization
+    - B312
+    # Django CSRF
+    - B313
+    # Django settings
+    - B314
+    # Django debug
+    - B315
+    # Django directory traversal
+    - B316
+    - B317
+    - B318
+    - B319
+    - B320
+    - B321
+    - B322
+    - B323
+    - B324
+    # Flask debug
+    - B401
+    # Import pickle
+    - B402
+    # Import marshal
+    - B403
+    # Import subprocess
+    - B404
+    # Import XML
+    - B405
+    - B406
+    - B407
+    # Import other
+    - B408
+    - B409
+    - B410
+    - B411
+    - B412
+    - B413
+    # Weak cryptography
+    - B501
+    - B502
+    - B503
+    - B504
+    - B505
+    - B506
+    - B507
+    # SSH
+    - B601
+    - B602
+    # Paramiko
+    - B603
+    - B604
+    - B605
+    - B606
+    - B607
+    - B608
+    - B609
+    - B610
+    - B611
+    # Flask
+    - B701
+    - B702
+    - B703
+    # Django SQL
+    - B704
+    # Hardcoded SQL
+    - B705
+    # Django raw
+    - B706
+    # Mako templates
+    - B707
+    # Django XSS
+    - B708
+    # Django eval
+    - B709
+    - B710
+    - B711
+    - B712
+    - B713
+    # Try/except
+    - B701
+    # SSL
+    - B801
+    - B802
+    - B803
+    # Hardcoded IP
+    - B901
+    # Misconfiguration
+    - B902
+    # Useless exception
+    - B903
+    # Backdoor
+    - B904
+
+# Plugin settings
+plugin_name_pattern:
+  # Allow custom plugins
+  stevedore: true
+
+# Output settings
+output_format: json
+confidence_levels: medium
+severity_level: medium
+
+# Custom profiles for different contexts
+profiles:
+  all:
+    include: 
+      - '*'
+  test:
+    include: 
+      - 'B1*'
+      - 'B3*'
+      - 'B4*'
+      - 'B5*'
+      - 'B6*'
+      - 'B7*'
+      - 'B8*'
+      - 'B9*'
+
+# Ignore known safe patterns
+ignore_nosec: false

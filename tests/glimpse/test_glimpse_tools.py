@@ -6,15 +6,15 @@ Tests the GlimpseApiGetTool, GlimpseApiPostTool, and GlimpseConnectPlatformsTool
 classes to ensure they work correctly with the EchoesAssistantV2 framework.
 """
 
-import pytest
 import json
 import time
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock
+
 from tools.glimpse_tools import (
     GlimpseApiGetTool,
     GlimpseApiPostTool,
     GlimpseConnectPlatformsTool,
-    get_glimpse_tools
+    get_glimpse_tools,
 )
 
 
@@ -165,7 +165,7 @@ class TestGlimpseApiPostTool:
         result = self.tool.execute(
             url="https://api.example.com/test",
             data={"test": "data"},
-            headers={"Content-Type": "application/json"}
+            headers={"Content-Type": "application/json"},
         )
 
         assert result == mock_response
@@ -183,7 +183,7 @@ class TestGlimpseApiPostTool:
         result = self.tool.execute(
             url="https://api.example.com/form",
             data={"field1": "value1", "field2": "value2"},
-            content_type="form"
+            content_type="form",
         )
 
         assert result == mock_response
@@ -195,8 +195,7 @@ class TestGlimpseApiPostTool:
         self.mock_assistant.glimpse_api_post.return_value = mock_response
 
         result = self.tool.execute(
-            url="https://api.example.com/raw",
-            data="raw string data"
+            url="https://api.example.com/raw", data="raw string data"
         )
 
         assert result == mock_response
@@ -252,7 +251,7 @@ class TestGlimpseConnectPlatformsTool:
         result = self.tool.execute(
             source_path="E:/Projects/Echoes/c_o_r_e",
             target_path="D:/Research",
-            integration_mode="reference_bridge"
+            integration_mode="reference_bridge",
         )
 
         assert result == mock_response
@@ -261,7 +260,7 @@ class TestGlimpseConnectPlatformsTool:
             target_path="D:/Research",
             integration_mode="reference_bridge",
             sync_frequency="manual",
-            conflict_resolution="source_priority"
+            conflict_resolution="source_priority",
         )
 
 
@@ -292,8 +291,12 @@ class TestGlimpseToolIntegration:
             assert callable(tool.get_stats), f"{tool.name} get_stats not callable"
 
             # All tools must have to_openai_schema method
-            assert hasattr(tool, "to_openai_schema"), f"{tool.name} missing to_openai_schema method"
-            assert callable(tool.to_openai_schema), f"{tool.name} to_openai_schema not callable"
+            assert hasattr(
+                tool, "to_openai_schema"
+            ), f"{tool.name} missing to_openai_schema method"
+            assert callable(
+                tool.to_openai_schema
+            ), f"{tool.name} to_openai_schema not callable"
 
     def test_tool_schemas_are_valid_json(self):
         """Test that all tool schemas are valid JSON."""
@@ -331,7 +334,7 @@ if __name__ == "__main__":
         TestGlimpseApiGetTool,
         TestGlimpseApiPostTool,
         TestGlimpseConnectPlatformsTool,
-        TestGlimpseToolIntegration
+        TestGlimpseToolIntegration,
     ]
 
     total_tests = 0

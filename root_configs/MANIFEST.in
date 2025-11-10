@@ -1,0 +1,43 @@
+# Echoes AI Package Manifest
+# Includes docs, configs, source, and selected scripts. No temp, .env, logs, or artifacts.
+
+# Documentation and legal
+include README.md LICENSE CHANGELOG.md
+include pyproject.toml VERSION
+
+# Configuration files
+include echoes/config/*.yaml
+include echoes/config/*.json
+
+# Static files and templates
+recursive-include echoes/static *
+recursive-include echoes/templates *
+
+# Clusters and scripts
+recursive-include clusters *.yaml *.json *.sql *.conf
+include *.py
+recursive-include scripts *.py *.sh
+
+# Test and dev (include source, not temp-artifacts)
+recursive-include tests *.py *.json *.yaml
+recursive-include docs *.md *.rst *.yaml
+recursive-include examples *.py *.json *.yaml
+
+# Data files
+recursive-include data *.json *.csv *.txt
+
+# Typings/hints
+include echoes/py.typed
+recursive-include echoes *.pyi
+
+# Exclude unneeded/dev
+exclude .gitignore .pre-commit-config.yaml pytest.ini .coverage coverage.xml Makefile
+exclude .env* .venv* venv env build dist *.egg-info logs *.log
+exclude .tox .pytest_cache .mypy_cache node_modules
+
+# Keep always
+prune .git
+prune .github
+prune node_modules
+prune .npm
+prune .cache

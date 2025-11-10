@@ -27,21 +27,21 @@ Example Queries:
     - "Show me the integration between Glimpse and the security middleware"
 """
 
-import sys
 import argparse
+import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 # Add project root to path for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from core.realtime_preview import create_glimpse
 from core.context_aware_api import ContextAwareAPICall
+from core.realtime_preview import create_glimpse
 
 
-def simulate_realistic_trajectory(glimpse_system) -> Dict[str, Any]:
+def simulate_realistic_trajectory(glimpse_system) -> dict[str, Any]:
     """
     Simulate a realistic development trajectory that provides meaningful context
     for the AI agent to work with.
@@ -63,7 +63,12 @@ class SecurityProtocolParser:
     )
 
     # Simulate editing and refining
-    glimpse_system.process_input("replace", start=50, end=80, text="Enhanced security protocol parser with validation")
+    glimpse_system.process_input(
+        "replace",
+        start=50,
+        end=80,
+        text="Enhanced security protocol parser with validation",
+    )
 
     # Simulate adding documentation
     glimpse_system.process_input(
@@ -89,11 +94,13 @@ class SecurityProtocolParser:
         ],
     }
 
-    print(f"✅ Trajectory simulation complete. Context: {len(str(trajectory_summary))} chars")
+    print(
+        f"✅ Trajectory simulation complete. Context: {len(str(trajectory_summary))} chars"
+    )
     return trajectory_summary
 
 
-def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, Any]]:
+def run_comprehensive_demo(context_api: ContextAwareAPICall) -> list[dict[str, Any]]:
     """
     Run a comprehensive demonstration of the context-aware API capabilities
     with multiple queries that showcase different aspects of the system.
@@ -106,21 +113,33 @@ def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, A
             Can you explain how the GuardrailMiddleware class works, what security protocols it enforces,
             and how it integrates with the documentation-driven security approach?
             Please provide specific details about its implementation and key methods.""",
-            "expected_capabilities": ["file search", "content analysis", "architectural understanding"],
+            "expected_capabilities": [
+                "file search",
+                "content analysis",
+                "architectural understanding",
+            ],
         },
         {
             "title": "Context-Aware System Analysis",
             "query": """I need to understand the context-aware API system that was recently implemented.
             How does the ContextAwareAPICall class work? What tools does it have available,
             and how does it chain multiple operations together? Show me the key implementation details.""",
-            "expected_capabilities": ["self-analysis", "multi-step reasoning", "tool introspection"],
+            "expected_capabilities": [
+                "self-analysis",
+                "multi-step reasoning",
+                "tool introspection",
+            ],
         },
         {
             "title": "Integration and Workflow Analysis",
             "query": """How do the Glimpse system, GuardrailMiddleware, and ContextAwareAPICall work together?
             What's the overall workflow when a user makes a request? Please trace through the complete
             integration and explain how trajectory context is used.""",
-            "expected_capabilities": ["system integration analysis", "workflow tracing", "context synthesis"],
+            "expected_capabilities": [
+                "system integration analysis",
+                "workflow tracing",
+                "context synthesis",
+            ],
         },
     ]
 
@@ -176,7 +195,7 @@ def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, A
     return results
 
 
-def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]:
     """Generate a comprehensive performance and capability report."""
 
     successful_demos = [r for r in results if r["status"] == "success"]
@@ -190,7 +209,9 @@ def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]
             "total_demos": len(results),
             "successful": len(successful_demos),
             "failed": len(failed_demos),
-            "success_rate": len(successful_demos) / len(results) * 100 if results else 0,
+            "success_rate": (
+                len(successful_demos) / len(results) * 100 if results else 0
+            ),
             "total_execution_time": total_time,
             "average_execution_time": avg_time,
         },
@@ -204,8 +225,16 @@ def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]
             "System integration analysis",
         ],
         "performance_metrics": {
-            "fastest_query": min(results, key=lambda x: x["execution_time"])["execution_time"] if results else 0,
-            "slowest_query": max(results, key=lambda x: x["execution_time"])["execution_time"] if results else 0,
+            "fastest_query": (
+                min(results, key=lambda x: x["execution_time"])["execution_time"]
+                if results
+                else 0
+            ),
+            "slowest_query": (
+                max(results, key=lambda x: x["execution_time"])["execution_time"]
+                if results
+                else 0
+            ),
             "queries_per_minute": 60 / avg_time if avg_time > 0 else 0,
         },
         "detailed_results": results,
@@ -214,7 +243,7 @@ def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]
     return report
 
 
-def print_final_report(report: Dict[str, Any]):
+def print_final_report(report: dict[str, Any]):
     """Print a comprehensive final report of the demonstration."""
 
     print(f"\n{'='*80}")
@@ -222,13 +251,17 @@ def print_final_report(report: Dict[str, Any]):
     print(f"{'='*80}")
 
     summary = report["summary"]
-    print(f"🎯 Success Rate: {summary['success_rate']:.1f}% ({summary['successful']}/{summary['total_demos']} demos)")
+    print(
+        f"🎯 Success Rate: {summary['success_rate']:.1f}% ({summary['successful']}/{summary['total_demos']} demos)"
+    )
     print(f"⏱️  Total Time: {summary['total_execution_time']:.2f}s")
     print(f"📈 Average Time: {summary['average_execution_time']:.2f}s per query")
 
     perf = report["performance_metrics"]
     print(f"🚀 Performance: {perf['queries_per_minute']:.1f} queries/minute")
-    print(f"⚡ Fastest: {perf['fastest_query']:.2f}s | 🐌 Slowest: {perf['slowest_query']:.2f}s")
+    print(
+        f"⚡ Fastest: {perf['fastest_query']:.2f}s | 🐌 Slowest: {perf['slowest_query']:.2f}s"
+    )
 
     print("\n✨ Capabilities Demonstrated:")
     for i, capability in enumerate(report["capabilities_demonstrated"], 1):
@@ -237,7 +270,9 @@ def print_final_report(report: Dict[str, Any]):
     print("\n📋 Detailed Results:")
     for result in report["detailed_results"]:
         status_icon = "✅" if result["status"] == "success" else "❌"
-        print(f"   {status_icon} Demo {result['demo_number']}: {result['title']} ({result['execution_time']:.2f}s)")
+        print(
+            f"   {status_icon} Demo {result['demo_number']}: {result['title']} ({result['execution_time']:.2f}s)"
+        )
 
     print(f"\n{'='*80}")
     print("🎉 DEMONSTRATION COMPLETE - Context-Aware AI Agent is fully operational!")
@@ -249,8 +284,14 @@ def main():
     Main demonstration function that showcases the complete Context-Aware API system.
     """
     parser = argparse.ArgumentParser(description="Context-Aware API Demonstration")
-    parser.add_argument("--query", type=str, help="Custom query to run instead of the full demonstration")
-    parser.add_argument("--quick", action="store_true", help="Run a quick single-query demo")
+    parser.add_argument(
+        "--query",
+        type=str,
+        help="Custom query to run instead of the full demonstration",
+    )
+    parser.add_argument(
+        "--quick", action="store_true", help="Run a quick single-query demo"
+    )
 
     args = parser.parse_args()
 
@@ -266,7 +307,7 @@ def main():
     glimpse_system.start()
 
     # Simulate realistic development trajectory
-    trajectory_context = simulate_realistic_trajectory(glimpse_system)
+    simulate_realistic_trajectory(glimpse_system)
 
     # Initialize the Context-Aware API handler
     print("\n🤖 Initializing Context-Aware API Handler...")
@@ -276,7 +317,7 @@ def main():
         # Run custom query
         print(f"\n🔍 Running custom query: {args.query}")
         start_time = time.time()
-        result = context_api.run(args.query)
+        context_api.run(args.query)
         execution_time = time.time() - start_time
         print(f"\n✅ Query completed in {execution_time:.2f}s")
 
@@ -287,7 +328,7 @@ def main():
         based on documentation. Include key implementation details."""
 
         start_time = time.time()
-        result = context_api.run(quick_query)
+        context_api.run(quick_query)
         execution_time = time.time() - start_time
         print(f"\n✅ Quick demo completed in {execution_time:.2f}s")
 

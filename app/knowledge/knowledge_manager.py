@@ -5,10 +5,12 @@ Handles knowledge gathering, storage, retrieval, and context building.
 """
 
 import json
-from typing import Dict, Any, List, Optional
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from pathlib import Path
-from dataclasses import dataclass, asdict
+from typing import Any
+
+UTC = timezone.utc
 
 
 @dataclass
@@ -20,21 +22,21 @@ class KnowledgeEntry:
     source: str
     category: str
     timestamp: str
-    metadata: Dict[str, Any]
-    tags: List[str]
+    metadata: dict[str, Any]
+    tags: list[str]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     @staticmethod
-    def from_dict(data: Dict[str, Any]) -> "KnowledgeEntry":
+    def from_dict(data: dict[str, Any]) -> "KnowledgeEntry":
         return KnowledgeEntry(**data)
 
 
 class KnowledgeManager:
     """Manages knowledge gathering, storage, and retrieval."""
 
-    def __init__(self, storage_path: Optional[str] = None):
+    def __init__(self, storage_path: str | None = None):
         """Initialize the knowledge manager."""
         if storage_path:
             self.storage_path = Path(storage_path)
@@ -45,8 +47,8 @@ class KnowledgeManager:
         self.knowledge_file = self.storage_path / "knowledge_base.json"
         self.context_file = self.storage_path / "context.json"
 
-        self.knowledge: Dict[str, KnowledgeEntry] = {}
-        self.context: Dict[str, Any] = {}
+        self.knowledge: dict[str, KnowledgeEntry] = {}
+        self.context: dict[str, Any] = {}
 
         self._load_knowledge()
         self._load_context()
@@ -55,9 +57,11 @@ class KnowledgeManager:
         """Load knowledge from storage."""
         if self.knowledge_file.exists():
             try:
-                with open(self.knowledge_file, "r", encoding="utf-8") as f:
+                with open(self.knowledge_file, encoding="utf-8") as f:
                     data = json.load(f)
-                    self.knowledge = {k: KnowledgeEntry.from_dict(v) for k, v in data.items()}
+                    self.knowledge = {
+                        k: KnowledgeEntry.from_dict(v) for k, v in data.items()
+                    }
             except Exception:
                 self.knowledge = {}
 
@@ -71,7 +75,7 @@ class KnowledgeManager:
         """Load context from storage."""
         if self.context_file.exists():
             try:
-                with open(self.context_file, "r", encoding="utf-8") as f:
+                with open(self.context_file, encoding="utf-8") as f:
                     self.context = json.load(f)
             except Exception:
                 self.context = {}
@@ -86,18 +90,19 @@ class KnowledgeManager:
         content: str,
         source: str,
         category: str = "general",
-        tags: Optional[List[str]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        tags: list[str] | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """Add knowledge entry."""
+
         # Like good code structure:
         def handle_user_request(request):
             # Phase 1: Analysis
             understand_request(request)
-            
-            # Phase 2: Planning  
+
+            # Phase 2: Planning
             plan_approach(request)
-            
+
             # Phase 3: Execution
             execute_plan()
 
@@ -105,14 +110,16 @@ class KnowledgeManager:
         import hashlib
 
         # Generate ID
-        entry_id = hashlib.md5(f"{content}{source}{datetime.now(timezone.utc).isoformat()}".encode()).hexdigest()[:12]
+        entry_id = hashlib.md5(
+            f"{content}{source}{datetime.now(UTC).isoformat()}".encode()
+        ).hexdigest()[:12]
 
         entry = KnowledgeEntry(
             id=entry_id,
             content=content,
             source=source,
             category=category,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             metadata=metadata or {},
             tags=tags or [],
         )
@@ -122,17 +129,17 @@ class KnowledgeManager:
 
         return entry_id
 
-    def get_knowledge(self, entry_id: str) -> Optional[KnowledgeEntry]:
+    def get_knowledge(self, entry_id: str) -> KnowledgeEntry | None:
         """Get knowledge entry by ID."""
         return self.knowledge.get(entry_id)
 
     def search_knowledge(
         self,
-        query: Optional[str] = None,
-        category: Optional[str] = None,
-        tags: Optional[List[str]] = None,
+        query: str | None = None,
+        category: str | None = None,
+        tags: list[str] | None = None,
         limit: int = 10,
-    ) -> List[KnowledgeEntry]:
+    ) -> list[KnowledgeEntry]:
         """Search knowledge entries."""
         results = list(self.knowledge.values())
 
@@ -147,7 +154,11 @@ class KnowledgeManager:
         # Filter by query
         if query:
             query_lower = query.lower()
-            results = [e for e in results if query_lower in e.content.lower() or query_lower in e.source.lower()]
+            results = [
+                e
+                for e in results
+                if query_lower in e.content.lower() or query_lower in e.source.lower()
+            ]
 
         # Sort by timestamp (newest first)
         results.sort(key=lambda e: e.timestamp, reverse=True)
@@ -159,7 +170,7 @@ class KnowledgeManager:
         self.context[key] = value
         self._save_context()
 
-    def get_context(self, key: Optional[str] = None) -> Any:
+    def get_context(self, key: str | None = None) -> Any:
         """Get context."""
         if key:
             return self.context.get(key)
@@ -184,7 +195,7 @@ class KnowledgeManager:
 
         return "\n".join(summary_parts) if summary_parts else "No context available"
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get knowledge statistics."""
         categories = {}
         for entry in self.knowledge.values():
@@ -197,50 +208,73 @@ class KnowledgeManager:
             "storage_path": str(self.storage_path),
         }
 
-    def store_roi_analysis(self, roi_results: Dict[str, Any], analysis_id: Optional[str] = None) -> str:
+    def store_roi_analysis(
+        self, roi_results: dict[str, Any], analysis_id: str | None = None
+    ) -> str:
         """Store ROI analysis results in knowledge base."""
         if not analysis_id:
             import hashlib
+
             timestamp = roi_results.get("timestamp", "")
-            institution = roi_results.get("stakeholder_config", {}).get("institution_name", "unknown")
-            analysis_id = hashlib.md5(f"roi_{institution}_{timestamp}".encode()).hexdigest()[:12]
+            institution = roi_results.get("stakeholder_config", {}).get(
+                "institution_name", "unknown"
+            )
+            analysis_id = hashlib.md5(
+                f"roi_{institution}_{timestamp}".encode()
+            ).hexdigest()[:12]
 
         content = f"ROI Analysis for {roi_results.get('stakeholder_config', {}).get('institution_name', 'Unknown Institution')}\n"
         content += f"Business Type: {roi_results.get('business_type', 'unknown')}\n"
         content += f"Monthly Investment: ${roi_results.get('roi_metrics', {}).get('monthly_investment', 0):,.0f}\n"
         content += f"Monthly Savings: ${roi_results.get('roi_metrics', {}).get('monthly_savings', 0):,.0f}\n"
         content += f"Payback Period: {roi_results.get('roi_metrics', {}).get('payback_days', 0):.0f} days\n"
-        content += f"ROI: {roi_results.get('roi_metrics', {}).get('roi_percentage', 0):.0f}%\n"
+        content += (
+            f"ROI: {roi_results.get('roi_metrics', {}).get('roi_percentage', 0):.0f}%\n"
+        )
 
         # Add file organization info
         file_org = roi_results.get("file_organization", {})
         if file_org.get("success"):
-            content += f"Files organized in: {file_org.get('institution_directory', '')}\n"
+            content += (
+                f"Files organized in: {file_org.get('institution_directory', '')}\n"
+            )
 
         self.add_knowledge(
             content=content,
             source=f"ROI Analysis Tool - {analysis_id}",
             category="roi_analysis",
-            tags=["roi", "analysis", roi_results.get("business_type", "unknown"), "financial"],
+            tags=[
+                "roi",
+                "analysis",
+                roi_results.get("business_type", "unknown"),
+                "financial",
+            ],
             metadata={
                 "analysis_id": analysis_id,
                 "roi_metrics": roi_results.get("roi_metrics", {}),
                 "stakeholder_config": roi_results.get("stakeholder_config", {}),
                 "file_organization": roi_results.get("file_organization", {}),
-                "generated_files": list(roi_results.get("generated_files", {}).keys())
-            }
+                "generated_files": list(roi_results.get("generated_files", {}).keys()),
+            },
         )
 
         return analysis_id
 
-    def search_roi_analyses(self, institution: Optional[str] = None, business_type: Optional[str] = None, limit: int = 10) -> List[KnowledgeEntry]:
+    def search_roi_analyses(
+        self,
+        institution: str | None = None,
+        business_type: str | None = None,
+        limit: int = 10,
+    ) -> list[KnowledgeEntry]:
         """Search ROI analyses by institution or business type."""
         query = "ROI Analysis"
         tags = ["roi"]
         if business_type:
             tags.append(business_type)
 
-        results = self.search_knowledge(query=query, category="roi_analysis", tags=tags, limit=limit)
+        results = self.search_knowledge(
+            query=query, category="roi_analysis", tags=tags, limit=limit
+        )
 
         if institution:
             # Filter by institution in content
@@ -248,7 +282,7 @@ class KnowledgeManager:
 
         return results
 
-    def get_roi_summary(self) -> Dict[str, Any]:
+    def get_roi_summary(self) -> dict[str, Any]:
         """Get summary of all ROI analyses."""
         roi_entries = self.search_knowledge(category="roi_analysis", limit=1000)
 
@@ -281,5 +315,7 @@ class KnowledgeManager:
             "institutions_analyzed": list(institutions),
             "total_monthly_investment": total_investment,
             "total_monthly_savings": total_savings,
-            "average_roi": (total_savings / total_investment * 100) if total_investment > 0 else 0
+            "average_roi": (
+                (total_savings / total_investment * 100) if total_investment > 0 else 0
+            ),
         }

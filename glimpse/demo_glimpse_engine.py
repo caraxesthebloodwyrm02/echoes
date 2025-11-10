@@ -1,5 +1,7 @@
 import asyncio
-from glimpse.Glimpse import GlimpseEngine, Draft
+
+from glimpse.Glimpse import Draft, GlimpseEngine
+
 
 async def main() -> None:
     engine = GlimpseEngine()
@@ -9,7 +11,7 @@ async def main() -> None:
         constraints="No channel change; non-alarmist",
     )
 
-    res1 = await Glimpse.glimpse(draft)
+    res1 = await engine.glimpse(draft)
     print("Attempt:", res1.attempt)
     print("Status:", res1.status)
     print("History:", res1.status_history)
@@ -19,12 +21,13 @@ async def main() -> None:
 
     if res1.status != "aligned":
         draft.goal += " (internal only)"
-        res2 = await Glimpse.glimpse(draft)
+        res2 = await engine.glimpse(draft)
         print("Attempt:", res2.attempt)
         print("Status:", res2.status)
         print("History:", res2.status_history)
 
-    Glimpse.commit(draft)
+    engine.commit(draft)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

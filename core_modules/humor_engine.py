@@ -2,47 +2,54 @@
 Sense of Humor Engine - Manages high-pressure throughput with lighthearted relief
 Provides contextual humor, stress reduction, and pressure management through wit
 """
+
 import logging
 import random
-import time
-from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from dataclasses import dataclass, field
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
+
 class HumorType(Enum):
     """Types of humor for different situations"""
-    WITTY = "witty"           # Clever wordplay and puns
+
+    WITTY = "witty"  # Clever wordplay and puns
     SELF_DEPRECATING = "self_deprecating"  # Light self-aware humor
     SITUATIONAL = "situational"  # Context-aware observations
-    TECH = "tech"             # Programming and tech humor
+    TECH = "tech"  # Programming and tech humor
     ENCOURAGING = "encouraging"  # Uplifting with gentle humor
     PRESSURE_RELIEF = "pressure_relief"  # Stress-reducing humor
     CELEBRATORY = "celebratory"  # Success celebration humor
 
+
 class PressureLevel(Enum):
     """Levels of system/user pressure"""
-    LOW = "low"           # Relaxed, normal operation
-    MEDIUM = "medium"     # Moderate activity
-    HIGH = "high"         # High activity, some stress
+
+    LOW = "low"  # Relaxed, normal operation
+    MEDIUM = "medium"  # Moderate activity
+    HIGH = "high"  # High activity, some stress
     CRITICAL = "critical"  # Very high pressure, needs relief
     OVERWHELMED = "overwhelmed"  # Maximum stress, immediate relief needed
+
 
 @dataclass
 class HumorResponse:
     """A humor response with context and metadata"""
+
     text: str
     humor_type: HumorType
     appropriateness: float  # 0.0 to 1.0
     pressure_target: PressureLevel
-    context_tags: List[str] = field(default_factory=list)
+    context_tags: list[str] = field(default_factory=list)
     delivery_style: str = "playful"  # playful, deadpan, enthusiastic, gentle
+
 
 class HumorEngine:
     """Manages humor generation and pressure-aware responses"""
-    
+
     def __init__(self):
         # Pressure tracking
         self.pressure_history = []
@@ -50,7 +57,7 @@ class HumorEngine:
         self.error_count = 0
         self.last_humor_time = None
         self.humor_cooldown = 30  # Seconds between humor uses
-        
+
         # Humor database organized by type and pressure level
         self.humor_database = {
             HumorType.WITTY: {
@@ -83,7 +90,7 @@ class HumorEngine:
                     "I'm experiencing buffer overflow in the humor department! Time for a quick reboot! 🔄",
                     "My processors are doing the equivalent of running with scissors! Let's slow down! 🏃",
                     "I've reached my comedy limit! Switching to serious mode... just kidding! 😄",
-                ]
+                ],
             },
             HumorType.SELF_DEPRECATING: {
                 PressureLevel.LOW: [
@@ -110,7 +117,7 @@ class HumorEngine:
                     "You know what? I'm just going to admit it - I'm a little overwhelmed! But we got this! 💪",
                     "My perfectionism is currently at war with my processing speed. Perfectionism is losing! ⚔️",
                     "I'm like a computer that's seen too many tabs open - I'm not crashing, but I'm definitely sweating! 💦",
-                ]
+                ],
             },
             HumorType.TECH: {
                 PressureLevel.LOW: [
@@ -137,7 +144,7 @@ class HumorEngine:
                     "I think I need a git commit --amend to fix my life choices! 📝",
                     "My response time is approaching geological time scales! 🦕",
                     "I'm experiencing a denial of service attack from my own ambitions! 🚫",
-                ]
+                ],
             },
             HumorType.ENCOURAGING: {
                 PressureLevel.LOW: [
@@ -159,7 +166,7 @@ class HumorEngine:
                 PressureLevel.OVERWHELMED: [
                     "Okay, deep breath! We're a team, and teams don't quit! Let's do this! 🎯",
                     "I believe in you more than I believe in my training data! And that's saying something! 📊",
-                ]
+                ],
             },
             HumorType.PRESSURE_RELIEF: {
                 PressureLevel.HIGH: [
@@ -176,7 +183,7 @@ class HumorEngine:
                     "ABORT ABORT! Just kidding, let's take a moment. Did you know cats spend 70% of their lives sleeping? Goals! 🐱💤",
                     "Maximum pressure reached! Time for a complete reset to factory settings... of our mood! 😊",
                     "I'm officially designating this as 'mandatory fun time'! No arguments! The AI has spoken! 🎉",
-                ]
+                ],
             },
             HumorType.CELEBRATORY: {
                 PressureLevel.LOW: [
@@ -198,10 +205,10 @@ class HumorEngine:
                 PressureLevel.OVERWHELMED: [
                     "SURVIVOR! We made it through the storm! Time for a victory parade! 🎉🎊",
                     "UNBELIEVABLE! We should write a book about this! I'll start the outline! 📚✨",
-                ]
-            }
+                ],
+            },
         }
-        
+
         # Contextual humor templates
         self.contextual_templates = {
             "error_occurred": [
@@ -228,9 +235,9 @@ class HumorEngine:
                 "I'm juggling more tasks than a circus performer! 🎪",
                 "My processors are working overtime - I might need to pay them overtime! 💰",
                 "I'm handling requests like a short-order cook at a robot restaurant! 🤖🍳",
-            ]
+            ],
         }
-        
+
         # Pressure thresholds
         self.pressure_thresholds = {
             "requests_per_minute": {
@@ -238,100 +245,117 @@ class HumorEngine:
                 PressureLevel.MEDIUM: (2, 5),
                 PressureLevel.HIGH: (5, 10),
                 PressureLevel.CRITICAL: (10, 20),
-                PressureLevel.OVERWHELMED: (20, float('inf'))
+                PressureLevel.OVERWHELMED: (20, float("inf")),
             },
             "error_rate": {
                 PressureLevel.LOW: (0, 0.05),
                 PressureLevel.MEDIUM: (0.05, 0.1),
                 PressureLevel.HIGH: (0.1, 0.2),
                 PressureLevel.CRITICAL: (0.2, 0.3),
-                PressureLevel.OVERWHELMED: (0.3, 1.0)
+                PressureLevel.OVERWHELMED: (0.3, 1.0),
             },
             "response_time": {
                 PressureLevel.LOW: (0, 2),
                 PressureLevel.MEDIUM: (2, 5),
                 PressureLevel.HIGH: (5, 10),
                 PressureLevel.CRITICAL: (10, 20),
-                PressureLevel.OVERWHELMED: (20, float('inf'))
-            }
+                PressureLevel.OVERWHELMED: (20, float("inf")),
+            },
         }
-    
-    def update_pressure_metrics(self, request_count: int = 1, error_occurred: bool = False, 
-                               response_time: float = 0):
+
+    def update_pressure_metrics(
+        self,
+        request_count: int = 1,
+        error_occurred: bool = False,
+        response_time: float = 0,
+    ):
         """Update pressure tracking metrics"""
         now = datetime.now()
-        
+
         # Track request timestamps
         self.request_timestamps.extend([now] * request_count)
-        
+
         # Keep only last 5 minutes of requests
         cutoff = now - timedelta(minutes=5)
         self.request_timestamps = [ts for ts in self.request_timestamps if ts > cutoff]
-        
+
         # Track errors
         if error_occurred:
             self.error_count += 1
-        
+
         # Calculate current pressure level
         pressure_level = self._calculate_pressure_level(response_time)
-        
+
         # Store in history
-        self.pressure_history.append({
-            "timestamp": now,
-            "level": pressure_level,
-            "requests_per_minute": len(self.request_timestamps),
-            "error_count": self.error_count,
-            "response_time": response_time
-        })
-        
+        self.pressure_history.append(
+            {
+                "timestamp": now,
+                "level": pressure_level,
+                "requests_per_minute": len(self.request_timestamps),
+                "error_count": self.error_count,
+                "response_time": response_time,
+            }
+        )
+
         # Keep only last hour of history
         cutoff_hour = now - timedelta(hours=1)
-        self.pressure_history = [p for p in self.pressure_history if p["timestamp"] > cutoff_hour]
-        
+        self.pressure_history = [
+            p for p in self.pressure_history if p["timestamp"] > cutoff_hour
+        ]
+
         return pressure_level
-    
+
     def _calculate_pressure_level(self, response_time: float = 0) -> PressureLevel:
         """Calculate current pressure level"""
         # Requests per minute
         rpm = len(self.request_timestamps)
-        
+
         # Error rate (last 10 requests)
         recent_errors = min(self.error_count, 10)
         error_rate = recent_errors / max(len(self.request_timestamps[-10:]), 1)
-        
+
         # Determine pressure based on multiple factors
-        for level in [PressureLevel.OVERWHELMED, PressureLevel.CRITICAL, PressureLevel.HIGH, 
-                     PressureLevel.MEDIUM, PressureLevel.LOW]:
+        for level in [
+            PressureLevel.OVERWHELMED,
+            PressureLevel.CRITICAL,
+            PressureLevel.HIGH,
+            PressureLevel.MEDIUM,
+            PressureLevel.LOW,
+        ]:
             rpm_min, rpm_max = self.pressure_thresholds["requests_per_minute"][level]
             err_min, err_max = self.pressure_thresholds["error_rate"][level]
             rt_min, rt_max = self.pressure_thresholds["response_time"][level]
-            
-            if (rpm_min <= rpm < rpm_max and 
-                err_min <= error_rate < err_max and 
-                rt_min <= response_time < rt_max):
+
+            if (
+                rpm_min <= rpm < rpm_max
+                and err_min <= error_rate < err_max
+                and rt_min <= response_time < rt_max
+            ):
                 return level
-        
+
         return PressureLevel.LOW
-    
-    def should_use_humor(self, pressure_level: PressureLevel, context: str = "") -> bool:
+
+    def should_use_humor(
+        self, pressure_level: PressureLevel, context: str = ""
+    ) -> bool:
         """Determine if humor is appropriate right now"""
         # Check cooldown
         if self.last_humor_time:
             time_since_last = (datetime.now() - self.last_humor_time).total_seconds()
             if time_since_last < self.humor_cooldown:
                 return False
-        
+
         # Higher pressure = more likely to use humor
         pressure_probability = {
             PressureLevel.LOW: 0.1,
             PressureLevel.MEDIUM: 0.2,
             PressureLevel.HIGH: 0.4,
             PressureLevel.CRITICAL: 0.7,
-            PressureLevel.OVERWHELMED: 0.9
+            PressureLevel.OVERWHELMED: 0.9,
         }
-        
+
         base_probability = pressure_probability.get(pressure_level, 0.1)
-        
+
         # Context adjustments
         if "error" in context.lower():
             base_probability += 0.2
@@ -339,29 +363,35 @@ class HumorEngine:
             base_probability += 0.1
         if "help" in context.lower() or "confused" in context.lower():
             base_probability += 0.15
-        
+
         return random.random() < min(base_probability, 0.95)
-    
-    def generate_humor_response(self, pressure_level: PressureLevel, 
-                               context: str = "", humor_type: Optional[HumorType] = None) -> Optional[HumorResponse]:
+
+    def generate_humor_response(
+        self,
+        pressure_level: PressureLevel,
+        context: str = "",
+        humor_type: HumorType | None = None,
+    ) -> HumorResponse | None:
         """Generate a contextually appropriate humor response"""
-        
+
         # Select humor type if not specified
         if not humor_type:
             humor_type = self._select_humor_type(pressure_level, context)
-        
+
         # Get appropriate humor content
         humor_content = self._get_humor_content(humor_type, pressure_level, context)
-        
+
         if not humor_content:
             return None
-        
+
         # Determine appropriateness
-        appropriateness = self._calculate_appropriateness(humor_type, pressure_level, context)
-        
+        appropriateness = self._calculate_appropriateness(
+            humor_type, pressure_level, context
+        )
+
         # Select delivery style
         delivery_style = self._select_delivery_style(humor_type, pressure_level)
-        
+
         # Create response
         response = HumorResponse(
             text=humor_content,
@@ -369,17 +399,19 @@ class HumorEngine:
             appropriateness=appropriateness,
             pressure_target=pressure_level,
             context_tags=self._extract_context_tags(context),
-            delivery_style=delivery_style
+            delivery_style=delivery_style,
         )
-        
+
         # Update last humor time
         self.last_humor_time = datetime.now()
-        
+
         return response
-    
-    def _select_humor_type(self, pressure_level: PressureLevel, context: str) -> HumorType:
+
+    def _select_humor_type(
+        self, pressure_level: PressureLevel, context: str
+    ) -> HumorType:
         """Select the best humor type for the situation"""
-        
+
         # Context-based selection
         if "error" in context.lower():
             return HumorType.SELF_DEPRECATING
@@ -394,36 +426,44 @@ class HumorEngine:
         else:
             # Random selection with pressure bias
             if pressure_level in [PressureLevel.HIGH, PressureLevel.CRITICAL]:
-                types = [HumorType.WITTY, HumorType.PRESSURE_RELIEF, HumorType.ENCOURAGING]
+                types = [
+                    HumorType.WITTY,
+                    HumorType.PRESSURE_RELIEF,
+                    HumorType.ENCOURAGING,
+                ]
             else:
                 types = list(HumorType)
             return random.choice(types)
-    
-    def _get_humor_content(self, humor_type: HumorType, pressure_level: PressureLevel, context: str) -> Optional[str]:
+
+    def _get_humor_content(
+        self, humor_type: HumorType, pressure_level: PressureLevel, context: str
+    ) -> str | None:
         """Get humor content for the specific type and pressure level"""
-        
+
         # Try contextual templates first
         for context_key, templates in self.contextual_templates.items():
             if context_key in context.lower():
                 return random.choice(templates)
-        
+
         # Fall back to database
         if humor_type in self.humor_database:
             if pressure_level in self.humor_database[humor_type]:
                 return random.choice(self.humor_database[humor_type][pressure_level])
-        
+
         return None
-    
-    def _calculate_appropriateness(self, humor_type: HumorType, pressure_level: PressureLevel, context: str) -> float:
+
+    def _calculate_appropriateness(
+        self, humor_type: HumorType, pressure_level: PressureLevel, context: str
+    ) -> float:
         """Calculate how appropriate the humor is for the situation"""
         base_score = 0.8
-        
+
         # Pressure adjustments
         if pressure_level == PressureLevel.OVERWHELMED:
             base_score += 0.1  # More appropriate when very stressed
         elif pressure_level == PressureLevel.CRITICAL:
             base_score += 0.05
-        
+
         # Context adjustments
         if "error" in context.lower() and humor_type == HumorType.SELF_DEPRECATING:
             base_score += 0.1
@@ -431,10 +471,12 @@ class HumorEngine:
             base_score += 0.1
         elif "help" in context.lower() and humor_type == HumorType.ENCOURAGING:
             base_score += 0.1
-        
+
         return min(base_score, 1.0)
-    
-    def _select_delivery_style(self, humor_type: HumorType, pressure_level: PressureLevel) -> str:
+
+    def _select_delivery_style(
+        self, humor_type: HumorType, pressure_level: PressureLevel
+    ) -> str:
         """Select the delivery style for the humor"""
         if humor_type == HumorType.PRESSURE_RELIEF:
             return "playful"
@@ -446,12 +488,12 @@ class HumorEngine:
             return "deadpan"
         else:
             return "playful"
-    
-    def _extract_context_tags(self, context: str) -> List[str]:
+
+    def _extract_context_tags(self, context: str) -> list[str]:
         """Extract relevant tags from context"""
         tags = []
         context_lower = context.lower()
-        
+
         if "error" in context_lower:
             tags.append("error")
         if "success" in context_lower or "completed" in context_lower:
@@ -462,21 +504,21 @@ class HumorEngine:
             tags.append("technical")
         if "learning" in context_lower or "explain" in context_lower:
             tags.append("educational")
-        
+
         return tags
-    
-    def get_pressure_summary(self) -> Dict[str, Any]:
+
+    def get_pressure_summary(self) -> dict[str, Any]:
         """Get a summary of current pressure state"""
         if not self.pressure_history:
             return {"status": "no_data"}
-        
+
         current = self.pressure_history[-1]
         recent = self.pressure_history[-10:]  # Last 10 data points
-        
+
         # Calculate averages
         avg_rpm = sum(p["requests_per_minute"] for p in recent) / len(recent)
         avg_errors = sum(p["error_count"] for p in recent) / len(recent)
-        
+
         # Determine trend
         if len(recent) >= 2:
             recent_levels = [p["level"] for p in recent[-3:]]
@@ -485,13 +527,17 @@ class HumorEngine:
                 PressureLevel.MEDIUM: 2,
                 PressureLevel.HIGH: 3,
                 PressureLevel.CRITICAL: 4,
-                PressureLevel.OVERWHELMED: 5
+                PressureLevel.OVERWHELMED: 5,
             }
             recent_values = [level_values.get(level, 1) for level in recent_levels]
-            trend = "increasing" if recent_values[-1] > recent_values[0] else "decreasing" if recent_values[-1] < recent_values[0] else "stable"
+            trend = (
+                "increasing"
+                if recent_values[-1] > recent_values[0]
+                else "decreasing" if recent_values[-1] < recent_values[0] else "stable"
+            )
         else:
             trend = "stable"
-        
+
         return {
             "current_level": current["level"].value,
             "current_rpm": current["requests_per_minute"],
@@ -499,16 +545,27 @@ class HumorEngine:
             "average_rpm": round(avg_rpm, 1),
             "average_errors": round(avg_errors, 1),
             "trend": trend,
-            "last_humor": self.last_humor_time.isoformat() if self.last_humor_time else None,
-            "humor_cooldown_remaining": max(0, self.humor_cooldown - (datetime.now() - self.last_humor_time).total_seconds()) if self.last_humor_time else 0
+            "last_humor": (
+                self.last_humor_time.isoformat() if self.last_humor_time else None
+            ),
+            "humor_cooldown_remaining": (
+                max(
+                    0,
+                    self.humor_cooldown
+                    - (datetime.now() - self.last_humor_time).total_seconds(),
+                )
+                if self.last_humor_time
+                else 0
+            ),
         }
-    
+
     def reset_metrics(self):
         """Reset all pressure tracking metrics"""
         self.pressure_history.clear()
         self.request_timestamps.clear()
         self.error_count = 0
         self.last_humor_time = None
+
 
 # Global humor engine
 humor_engine = HumorEngine()

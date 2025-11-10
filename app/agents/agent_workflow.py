@@ -5,10 +5,12 @@ Multi-agent orchestration with chaining, triage, and conditional execution.
 """
 
 import json
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
 from datetime import datetime, timezone
 from enum import Enum
+from typing import Any
+
+UTC = timezone.utc
 
 
 class AgentRole(Enum):
@@ -30,13 +32,13 @@ class AgentStep:
     agent_name: str
     role: AgentRole
     instructions: str
-    input_data: Dict[str, Any]
-    output: Optional[Dict[str, Any]] = None
+    input_data: dict[str, Any]
+    output: dict[str, Any] | None = None
     duration_ms: float = 0
     timestamp: str = ""
     success: bool = False
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {**asdict(self), "role": self.role.value}
 
 
@@ -45,13 +47,13 @@ class WorkflowResult:
     """Result of a workflow execution."""
 
     workflow_id: str
-    steps: List[AgentStep]
+    steps: list[AgentStep]
     final_output: Any
     total_duration_ms: float
     success: bool
-    error: Optional[str] = None
+    error: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "workflow_id": self.workflow_id,
             "steps": [s.to_dict() for s in self.steps],
@@ -68,11 +70,15 @@ class AgentWorkflow:
     def __init__(self, assistant):
         """Initialize with reference to assistant."""
         self.assistant = assistant
-        self.conversation_history: List[Dict[str, Any]] = []
+        self.conversation_history: list[dict[str, Any]] = []
         self.workflow_counter = 0
 
     def _create_step(
-        self, agent_name: str, role: AgentRole, instructions: str, input_data: Dict[str, Any]
+        self,
+        agent_name: str,
+        role: AgentRole,
+        instructions: str,
+        input_data: dict[str, Any],
     ) -> AgentStep:
         """Create a workflow step."""
         return AgentStep(
@@ -80,7 +86,7 @@ class AgentWorkflow:
             role=role,
             instructions=instructions,
             input_data=input_data,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
     def _execute_step(self, step: AgentStep) -> AgentStep:
@@ -91,11 +97,15 @@ class AgentWorkflow:
 
         try:
             # Add instructions to conversation
-            self.conversation_history.append({"role": "system", "content": step.instructions})
+            self.conversation_history.append(
+                {"role": "system", "content": step.instructions}
+            )
 
             # Add input data
             if "query" in step.input_data:
-                self.conversation_history.append({"role": "user", "content": step.input_data["query"]})
+                self.conversation_history.append(
+                    {"role": "user", "content": step.input_data["query"]}
+                )
 
             # Execute via assistant
             response = self.assistant.chat(
@@ -116,7 +126,9 @@ class AgentWorkflow:
         step.duration_ms = (time.time() - start_time) * 1000
         return step
 
-    def run_triage_workflow(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
+    def run_triage_workflow(
+        self, user_input: str, context: dict[str, Any] | None = None
+    ) -> WorkflowResult:
         """
         Run a triage workflow to classify and route requests.
 
@@ -345,7 +357,9 @@ class AgentWorkflow:
                 error=str(e),
             )
 
-    def run_data_enrichment_workflow(self, topic: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
+    def run_data_enrichment_workflow(
+        self, topic: str, context: dict[str, Any] | None = None
+    ) -> WorkflowResult:
         """
         Run data enrichment workflow.
 
@@ -413,7 +427,7 @@ class AgentWorkflow:
                 error=str(e),
             )
 
-    def get_workflow_history(self) -> List[Dict[str, Any]]:
+    def get_workflow_history(self) -> list[dict[str, Any]]:
         """Get conversation history from workflow."""
         return self.conversation_history
 

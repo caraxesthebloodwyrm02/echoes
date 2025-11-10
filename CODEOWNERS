@@ -1,0 +1,26 @@
+# CODEOWNERS for policy and security governance
+# These files require security/maintainer review for changes
+
+# Core policy files
+* @team/maintainers
+core_modules/network/policy.py @team/security @team/maintainers
+core_modules/network/policy_allowlist.lock @team/security @team/maintainers
+
+# CI/CD workflows and security configurations
+.github/workflows/ci.yml @team/security @team/maintainers
+.github/workflows/enforce-ml-safety.yml @team/security @team/maintainers
+.github/dependabot.yml @team/security @team/maintainers
+
+# Security and policy documentation
+SECURITY.md @team/security @team/maintainers
+POLICY_SPEC.md @team/security @team/maintainers
+COMPLIANCE.md @team/security @team/maintainers
+docs/KEY_ROTATION.md @team/security @team/maintainers
+
+# Security tooling configurations
+bandit.yaml @team/security
+requirements-security.txt @team/security @team/maintainers
+tools/verify_versions.py @team/security @team/maintainers
+
+# Pre-commit hooks and security configurations
+.pre-commit-config.yaml @team/security @team/maintainers

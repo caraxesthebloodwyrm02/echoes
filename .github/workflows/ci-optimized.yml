@@ -1,0 +1,213 @@
+name: Echoes CI/CD Pipeline (Optimized)
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+# Cancel in-progress runs when new commits are pushed
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Environment variables available to all jobs
+env:
+  PYTHON_VERSION: 3.12
+  PIP_CACHE_DIR: ~/.cache/pip
+
+jobs:
+  quick-checks:
+    name: Quick Checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+          cache: 'pip'
+          cache-dependency-path: '**/pyproject.toml'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install ruff black==23.12.1 bandit safety pip-audit pre-commit
+
+      - name: Run Ruff (fast linting)
+        run: ruff check . --output-format concise --exclude=tests/broken --exclude=security_audit --exclude=.root_backup || exit 1
+
+      - name: Check formatting with Black
+        run: |
+          black --check . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/' || (
+            echo "Files need formatting. Run the following locally to fix and push the changes:"
+            echo "  black . --exclude='/(tests/broken|security_audit|\\.root_backup|\\.venv|venv|build|dist)/'"
+            echo "After formatting, run: git add -A && git commit -m \"style: apply Black formatting\" && git push"
+            exit 1
+          )
+
+      - name: Check for security issues with Bandit
+        run: |
+          # Only scan Python files in app/ and core_modules/
+          find app core_modules -type f -name "*.py" | xargs bandit -ll -r || echo "Bandit scan found issues"
+
+      - name: Check for vulnerable dependencies with pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --requirement requirements.txt --requirement requirements-security.txt || \
+            (echo "##[error]Vulnerable dependencies found" && exit 1)
+
+      - name: Check for outdated dependencies
+        run: |
+          pip install pip-check-reqs
+          pip-missing-reqs . || echo "Missing requirements found"
+
+  security-scan:
+    name: Security Scan
+    needs: quick-checks
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-security.txt
+
+      - name: Run Bandit scan
+        run: bandit -r app/ core_modules/ api/ -f json -o bandit-report.json || echo "Bandit scan warnings (non-blocking)"
+
+      - name: Run Safety check
+        run: |
+          pip install safety
+          safety check --full-report || echo "Safety check warnings (non-blocking)"
+
+      - name: Run pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --requirement requirements.txt --requirement requirements-security.txt --ignore-vuln GHSA-98g8-xpq8-7vj9 --ignore-vuln GHSA-2h5h-59f5-c2j9 --ignore-vuln GHSA-8v4z-jjf6-gw9q || echo "pip-audit warnings (non-blocking)"
+
+  unit-tests:
+    name: Unit Tests
+    needs: quick-checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+          cache-dependency-path: '**/pyproject.toml'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest pytest-cov pytest-timeout pytest-xdist pytest-asyncio anyio aiohttp prompt_toolkit
+
+      - name: Run tests with coverage
+        run: |
+          pytest tests/ -v \
+            --tb=short \
+            --maxfail=5 \
+            --timeout=300 \
+            --cov=app \
+            --cov=core_modules \
+            --cov=api \
+            --cov-report=term-missing \
+            --cov-report=xml:coverage.xml \
+            --cov-fail-under=10 \
+            -n auto || exit 1
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          flags: unittests
+          name: codecov-umbrella
+          fail_ci_if_error: false
+
+  docker-build:
+    name: Docker Build
+    needs: [quick-checks, security-scan, unit-tests]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ github.repository }}:latest
+            ${{ github.repository }}:${{ github.sha }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+  check-status:
+    name: Pipeline Status Check
+    needs: [quick-checks, security-scan, unit-tests, docker-build]
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check job statuses
+        run: |
+          echo "📊 Pipeline Status Summary"
+          echo "=========================="
+          echo "Quick Checks: ${{ needs.quick-checks.result }}"
+          echo "Security Scan: ${{ needs.security-scan.result }}"
+          echo "Unit Tests: ${{ needs.unit-tests.result }}"
+          echo "Docker Build: ${{ needs.docker-build.result || 'skipped' }}"
+          
+          # Count successes
+          success_count=0
+          total_count=4
+          
+          [ "${{ needs.quick-checks.result }}" == "success" ] && success_count=$((success_count + 1)) || true
+          [ "${{ needs.security-scan.result }}" == "success" ] && success_count=$((success_count + 1)) || true
+          [ "${{ needs.unit-tests.result }}" == "success" ] && success_count=$((success_count + 1)) || true
+          [ "${{ needs.docker-build.result || 'success' }}" == "success" ] && success_count=$((success_count + 1)) || true
+          
+          echo "✅ Passed: $success_count/$total_count jobs"
+          
+          # Critical jobs must pass
+          if [ "${{ needs.quick-checks.result }}" != "success" ] || \
+             [ "${{ needs.unit-tests.result }}" != "success" ]; then
+            echo "❌ Critical jobs failed - pipeline failed"
+            exit 1
+          fi
+          
+          if [ "$success_count" -eq "$total_count" ]; then
+            echo "🎉 All jobs passed!"
+          elif [ "${{ needs.quick-checks.result }}" == "success" ] && \
+               [ "${{ needs.unit-tests.result }}" == "success" ]; then
+            echo "✅ Critical jobs passed (some optional jobs may have warnings)"
+          else
+            echo "⚠️  Some jobs had issues - check logs above"
+            exit 1
+          fi

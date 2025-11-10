@@ -7,8 +7,8 @@ Demonstrates the integration of quantum-inspired state management with EchoesAss
 Shows how quantum concepts enhance AI assistant performance and state handling.
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -32,7 +32,7 @@ def demo_quantum_state_basics():
 
     # Show initial states
     print("\n2. Initial Quantum States:")
-    states_to_show = ['system_status', 'authentication', 'processing', 'error_state']
+    states_to_show = ["system_status", "authentication", "processing", "error_state"]
     for state_key in states_to_show:
         value = qsm.measure_state(state_key)
         print(f"   {state_key}: {value}")
@@ -47,24 +47,25 @@ def demo_entanglement():
 
     print("\n   Creating entangled states...")
     # Create user session entangled with permissions and features
-    qsm.update_state('user_session', 'active',
-                    entangle_with=['user_permissions', 'user_features'])
-    qsm.update_state('user_permissions', 'admin')
-    qsm.update_state('user_features', 'premium')
+    qsm.update_state(
+        "user_session", "active", entangle_with=["user_permissions", "user_features"]
+    )
+    qsm.update_state("user_permissions", "admin")
+    qsm.update_state("user_features", "premium")
 
     print("   User session state updated with entanglement")
 
     # Show entanglement
-    session = qsm.measure_state('user_session')
-    permissions = qsm.measure_state('user_permissions')
-    features = qsm.measure_state('user_features')
+    session = qsm.measure_state("user_session")
+    permissions = qsm.measure_state("user_permissions")
+    features = qsm.measure_state("user_features")
 
     print(f"   User session: {session}")
     print(f"   Permissions: {permissions}")
     print(f"   Features: {features}")
 
     # Get entangled states
-    entangled = qsm.get_entangled_states('user_session')
+    entangled = qsm.get_entangled_states("user_session")
     print(f"   States entangled with user_session: {list(entangled.keys())}")
     for key, value in entangled.items():
         print(f"     {key}: {value}")
@@ -78,15 +79,20 @@ def demo_superposition():
     qsm.initialize_quantum_states()
 
     # Set up multiple related states
-    qsm.update_state('conversation_context', 'business_analysis')
-    qsm.update_state('model_temperature', 0.3)
-    qsm.update_state('response_format', 'structured')
-    qsm.update_state('knowledge_cutoff', '2024-01')
+    qsm.update_state("conversation_context", "business_analysis")
+    qsm.update_state("model_temperature", 0.3)
+    qsm.update_state("response_format", "structured")
+    qsm.update_state("knowledge_cutoff", "2024-01")
 
     print("   Multiple states set up for superposition measurement")
 
     # Get superposition (all states at once)
-    keys = ['conversation_context', 'model_temperature', 'response_format', 'knowledge_cutoff']
+    keys = [
+        "conversation_context",
+        "model_temperature",
+        "response_format",
+        "knowledge_cutoff",
+    ]
     superposition = qsm.get_superposition(keys)
 
     print("   Superposition measurement:")
@@ -113,6 +119,7 @@ def demo_probabilistic_transitions():
 
     # Analyze transitions
     from collections import Counter
+
     transition_counts = Counter(transitions)
     print(f"\n   Transition analysis (performed {len(transitions)} transitions):")
     for (from_state, to_state), count in transition_counts.most_common():
@@ -130,9 +137,9 @@ def demo_performance_monitoring():
 
     # Perform various operations
     for i in range(50):
-        qsm.update_state(f'test_state_{i}', f'value_{i}')
+        qsm.update_state(f"test_state_{i}", f"value_{i}")
         if i % 10 == 0:
-            qsm.measure_state('system_status')
+            qsm.measure_state("system_status")
             qsm.transition_state()
 
     # Get metrics
@@ -157,8 +164,8 @@ def demo_persistence():
     print("   Creating quantum state and saving to file...")
     qsm1 = QuantumStateManager(persistence_file)
     qsm1.initialize_quantum_states()
-    qsm1.update_state('demo_persistence', 'saved_value')
-    qsm1.update_state('demo_timestamp', datetime.now().isoformat())
+    qsm1.update_state("demo_persistence", "saved_value")
+    qsm1.update_state("demo_timestamp", datetime.now().isoformat())
 
     try:
         qsm1.save_state()
@@ -170,8 +177,8 @@ def demo_persistence():
         qsm2.load_state()
 
         # Verify persistence
-        persisted_value = qsm2.measure_state('demo_persistence')
-        persisted_timestamp = qsm2.measure_state('demo_timestamp')
+        persisted_value = qsm2.measure_state("demo_persistence")
+        persisted_timestamp = qsm2.measure_state("demo_timestamp")
 
         print("   ✓ State loaded successfully")
         print(f"     demo_persistence: {persisted_value}")
@@ -192,8 +199,12 @@ def demo_echoes_integration_concept():
     print("\n8. Echoes Integration Concept...")
 
     print("\n   Quantum State Management Benefits for Echoes:")
-    print("   • Superposition: Process multimodal inputs (text, image, audio) in parallel")
-    print("   • Entanglement: Coordinate authentication, rate limiting, and quotas automatically")
+    print(
+        "   • Superposition: Process multimodal inputs (text, image, audio) in parallel"
+    )
+    print(
+        "   • Entanglement: Coordinate authentication, rate limiting, and quotas automatically"
+    )
     print("   • Probabilistic Transitions: Dynamic model selection based on context")
     print("   • Performance Monitoring: Real-time optimization of response times")
     print("   • Persistence: Maintain conversation state across sessions")
@@ -205,24 +216,29 @@ def demo_echoes_integration_concept():
     qsm.initialize_quantum_states()
 
     # Set up request processing states
-    qsm.update_state('request_type', 'multimodal',
-                    entangle_with=['text_processing', 'image_processing', 'audio_processing'])
-    qsm.update_state('processing_priority', 'high')
-    qsm.update_state('response_format', 'integrated')
+    qsm.update_state(
+        "request_type",
+        "multimodal",
+        entangle_with=["text_processing", "image_processing", "audio_processing"],
+    )
+    qsm.update_state("processing_priority", "high")
+    qsm.update_state("response_format", "integrated")
 
     print("   Request states initialized with entanglement")
 
     # Simulate parallel processing
-    qsm.update_state('text_processing', 'completed')
-    qsm.update_state('image_processing', 'completed')
-    qsm.update_state('audio_processing', 'completed')
+    qsm.update_state("text_processing", "completed")
+    qsm.update_state("image_processing", "completed")
+    qsm.update_state("audio_processing", "completed")
 
     # Check entangled state updates
-    request_status = qsm.measure_state('request_type')
-    entangled_states = qsm.get_entangled_states('request_type')
+    request_status = qsm.measure_state("request_type")
+    entangled_states = qsm.get_entangled_states("request_type")
 
     print(f"   Request status: {request_status}")
-    print(f"   Processing completion: {all(v == 'completed' for v in entangled_states.values())}")
+    print(
+        f"   Processing completion: {all(v == 'completed' for v in entangled_states.values())}"
+    )
     print(f"   All modalities processed: {list(entangled_states.keys())}")
 
 
@@ -252,6 +268,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Demo failed with error: {e}")
         import traceback
+
         traceback.print_exc()
         return 1
 

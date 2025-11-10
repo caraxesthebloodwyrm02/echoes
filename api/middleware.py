@@ -4,18 +4,18 @@ Middleware for Echoes API
 Provides authentication, rate limiting, and request processing middleware.
 """
 
-import time
+import asyncio
 import logging
-from typing import Optional, Dict, Any
-from fastapi import Request, HTTPException, status
+import time
+from collections import defaultdict
+
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from collections import defaultdict
-import asyncio
-
-from api.config import get_config
+from starlette.types import ASGIApp
 
 logger = logging.getLogger(__name__)
+
 
 class RateLimiter:
     """Simple in-memory rate limiter"""
@@ -23,7 +23,7 @@ class RateLimiter:
     def __init__(self, requests_per_window: int = 60, window_seconds: int = 60):
         self.requests_per_window = requests_per_window
         self.window_seconds = window_seconds
-        self.requests: Dict[str, list] = defaultdict(list)
+        self.requests: dict[str, list] = defaultdict(list)
 
     def is_allowed(self, client_id: str) -> bool:
         """Check if request is allowed for the client"""
@@ -32,7 +32,8 @@ class RateLimiter:
 
         # Remove old requests outside the window
         client_requests[:] = [
-            req_time for req_time in client_requests
+            req_time
+            for req_time in client_requests
             if now - req_time < self.window_seconds
         ]
 
@@ -50,7 +51,8 @@ class RateLimiter:
 
         # Clean old requests
         client_requests[:] = [
-            req_time for req_time in client_requests
+            req_time
+            for req_time in client_requests
             if now - req_time < self.window_seconds
         ]
 
@@ -66,6 +68,7 @@ class RateLimiter:
         oldest_request = min(client_requests)
         return max(0, self.window_seconds - (now - oldest_request))
 
+
 class AuthenticationMiddleware(BaseHTTPMiddleware):
     """Middleware for API key authentication"""
 
@@ -74,7 +77,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         self.config = config
         self.rate_limiter = RateLimiter(
             requests_per_window=config.security.rate_limit_requests,
-            window_seconds=config.security.rate_limit_window
+            window_seconds=config.security.rate_limit_window,
         )
 
     async def dispatch(self, request: Request, call_next):
@@ -96,14 +99,14 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         if not api_key:
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "API key required"}
+                content={"error": "API key required"},
             )
 
         # Validate API key
         if api_key not in self.config.security.allowed_api_keys:
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
-                content={"error": "Invalid API key"}
+                content={"error": "Invalid API key"},
             )
 
         # Apply rate limiting
@@ -119,7 +122,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         return response
 
-    def _extract_api_key(self, request: Request) -> Optional[str]:
+    def _extract_api_key(self, request: Request) -> str | None:
         """Extract API key from request"""
         # Try Authorization header
         auth_header = request.headers.get("Authorization")
@@ -160,14 +163,15 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 "error": "Rate limit exceeded",
                 "remaining_requests": remaining,
                 "reset_in_seconds": int(reset_time),
-                "retry_after": int(reset_time)
+                "retry_after": int(reset_time),
             },
             headers={
                 "X-RateLimit-Remaining": str(remaining),
                 "X-RateLimit-Reset": str(int(time.time() + reset_time)),
-                "Retry-After": str(int(reset_time))
-            }
+                "Retry-After": str(int(reset_time)),
+            },
         )
+
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):
     """Middleware for request logging and monitoring"""
@@ -184,7 +188,9 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
         self.request_count += 1
 
         # Log request
-        logger.info(f"Request: {request.method} {request.url.path} from {request.client.host if request.client else 'unknown'}")
+        logger.info(
+            f"Request: {request.method} {request.url.path} from {request.client.host if request.client else 'unknown'}"
+        )
 
         try:
             # Process request
@@ -194,7 +200,7 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             process_time = time.time() - start_time
 
             # Log response
-            logger.info(f"Response time: {process_time:.2f}")
+            logger.info("Response time: %.2f", process_time)
             # Check for errors
             if response.status_code >= 400:
                 self.error_count += 1
@@ -205,9 +211,10 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             # Log error
             process_time = time.time() - start_time
             self.error_count += 1
-            logger.error(f"Request failed after {process_time:.2f}s: {str(e)}")
+            logger.error("Request failed after %.2f seconds: %s", process_time, str(e))
             # Re-raise exception
             raise
+
 
 class TimeoutMiddleware(BaseHTTPMiddleware):
     """Middleware for request timeout handling"""
@@ -218,31 +225,47 @@ class TimeoutMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         try:
-            # Create timeout task
             return await asyncio.wait_for(
-                call_next(request),
-                timeout=self.timeout_seconds
+                call_next(request), timeout=self.timeout_seconds
             )
         except asyncio.TimeoutError:
-            logger.warning(f"Request timeout after {self.timeout_seconds}s: {request.method} {request.url.path}")
+            return JSONResponse(
+                status_code=status.HTTP_504_GATEWAY_TIMEOUT,
+                content={"detail": "Request timeout"},
+            )
             return JSONResponse(
                 status_code=status.HTTP_408_REQUEST_TIMEOUT,
-                content={"error": "Request timeout"}
+                content={"error": "Request timeout"},
             )
 
-def setup_middleware(app, config):
+
+def setup_middleware(app: ASGIApp, config) -> None:
     """Setup all middleware for the FastAPI application"""
+    # Add authentication middleware
+    app.add_middleware(
+        AuthenticationMiddleware,
+        config=config,
+    )
 
-    # Request timeout
-    app.add_middleware(TimeoutMiddleware, timeout_seconds=config.api.request_timeout)
+    # Add request logging middleware
+    app.add_middleware(
+        RequestLoggingMiddleware,
+    )
 
-    # Request logging
-    app.add_middleware(RequestLoggingMiddleware)
-
-    # Authentication and rate limiting
-    app.add_middleware(AuthenticationMiddleware, config=config)
+    # Add timeout middleware
+    app.add_middleware(
+        TimeoutMiddleware,
+        timeout_seconds=config.api.request_timeout,
+    )
 
     logger.info("Middleware configured successfully")
-    logger.info(f"Rate limiting: {config.security.rate_limit_requests} req/{config.security.rate_limit_window}s")
-    logger.info(f"Authentication: {'Enabled' if config.security.api_key_required else 'Disabled'}")
-    logger.info(f"Request timeout: {config.api.request_timeout}s")
+    logger.info(
+        "Rate limiting: %d req/%ds",
+        config.security.rate_limit_requests,
+        config.security.rate_limit_window,
+    )
+    logger.info(
+        "Authentication: %s",
+        "Enabled" if config.security.api_key_required else "Disabled",
+    )
+    logger.info("Request timeout: %ds", config.api.request_timeout)

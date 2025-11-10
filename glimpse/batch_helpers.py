@@ -2,15 +2,18 @@
 Batching helpers for Glimpse to reduce OpenAI API calls.
 Groups similar drafts and issues combined requests when possible.
 """
+
 import asyncio
 import logging
-from typing import List, Tuple, Any
+
 import openai
+
 from glimpse.Glimpse import Draft
 
 logger = logging.getLogger(__name__)
 
-def can_batch(drafts: List[Draft]) -> bool:
+
+def can_batch(drafts: list[Draft]) -> bool:
     """
     Simple heuristic: allow batching if all drafts share the same goal
     and constraints, and the total input length is reasonable.
@@ -22,7 +25,13 @@ def can_batch(drafts: List[Draft]) -> bool:
     total_len = sum(len(d.input_text) for d in drafts)
     return len(goals) == 1 and len(constraints) == 1 and total_len < 4000
 
-async def batch_chat_completion(messages_batch: List[List[dict]], model: str, temperature: float, max_tokens: int | None) -> List[dict]:
+
+async def batch_chat_completion(
+    messages_batch: list[list[dict]],
+    model: str,
+    temperature: float,
+    max_tokens: int | None,
+) -> list[dict]:
     """
     Naive batch implementation: run requests concurrently but limit concurrency.
     Returns responses in the same order as inputs.
@@ -41,7 +50,7 @@ async def batch_chat_completion(messages_batch: List[List[dict]], model: str, te
                 messages=messages,
                 model=model,
                 temperature=temperature,
-                max_tokens=max_tokens
+                max_tokens=max_tokens,
             )
             # Return compatible dict format
             return response.model_dump()
@@ -49,7 +58,8 @@ async def batch_chat_completion(messages_batch: List[List[dict]], model: str, te
     tasks = [call_one(messages) for messages in messages_batch]
     return await asyncio.gather(*tasks, return_exceptions=True)
 
-def construct_batch_prompt(drafts: List[Draft]) -> Tuple[List[List[dict]], List[int]]:
+
+def construct_batch_prompt(drafts: list[Draft]) -> tuple[list[list[dict]], list[int]]:
     """
     Convert a list of drafts into a list of message lists and return the slice indices.
     Each draft gets its own user message in a shared system context.

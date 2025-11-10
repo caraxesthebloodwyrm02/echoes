@@ -1,5 +1,6 @@
 import os
-from agent_dotenv import load_dotenv
+
+from dotenv import load_dotenv
 
 load_dotenv()
 key = os.getenv("OPENAI_API_KEY")

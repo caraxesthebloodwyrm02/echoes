@@ -1,0 +1,5 @@
+# Security and supply-chain tools used in CI
+pip-audit>=2.7.3
+safety>=3.2.4
+cyclonedx-bom>=4.3.5
+bandit>=1.7.5

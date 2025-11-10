@@ -3,18 +3,19 @@ Caching utilities for performance optimization.
 """
 
 import functools
-from typing import Any, Dict, Optional
 import time
 from collections import OrderedDict
+from typing import Any
+
 
 class SimpleLRUCache:
     """Simple LRU cache implementation for method results."""
 
-    def __init__(self, max_size: int = 100, ttl_seconds: Optional[int] = None):
+    def __init__(self, max_size: int = 100, ttl_seconds: int | None = None):
         self.max_size = max_size
         self.ttl = ttl_seconds
         self.cache: OrderedDict = OrderedDict()
-        self.timestamps: Dict[Any, float] = {}
+        self.timestamps: dict[Any, float] = {}
 
     def get(self, key: Any) -> Any:
         """Get value from cache if it exists and hasn't expired."""
@@ -50,8 +51,10 @@ class SimpleLRUCache:
         self.cache.clear()
         self.timestamps.clear()
 
-def cached_method(max_size: int = 50, ttl_seconds: Optional[int] = None):
+
+def cached_method(max_size: int = 50, ttl_seconds: int | None = None):
     """Decorator for caching method results."""
+
     def decorator(func):
         cache = SimpleLRUCache(max_size, ttl_seconds)
 
@@ -75,4 +78,5 @@ def cached_method(max_size: int = 50, ttl_seconds: Optional[int] = None):
         wrapper.clear_cache = cache.clear
 
         return wrapper
+
     return decorator

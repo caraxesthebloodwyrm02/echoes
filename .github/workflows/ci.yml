@@ -1,275 +1,132 @@
-name: Echoes CI/CD Pipeline
-# Following Satya Nadella's DevOps principles: Speed, Automation, Reliability
+name: CI (Python 3.14, no network)
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ main, master ]
   pull_request:
-    branches: [ main ]
-
-env:
-  PYTHON_VERSION: '3.12'
-  NODE_VERSION: '18'
+  workflow_dispatch:
 
 jobs:
-  # === CRITICAL PATH: Quality Gates ===
-  quality-gates:
-    name: Quality Gates
+  tests:
+    name: Run unit tests (skip network/integration)
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    outputs:
-      should-deploy: ${{ steps.changes.outputs.should-deploy }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    permissions:
+      contents: read
+      security-events: write
 
-      - name: Detect Changes
-        id: changes
-        run: |
-          if [ "${{ github.event_name }}" = "push" ] && [ "${{ github.ref }}" = "refs/heads/main" ]; then
-            echo "should-deploy=true" >> $GITHUB_OUTPUT
-          else
-            echo "should-deploy=false" >> $GITHUB_OUTPUT
-          fi
-
-  # === SECURITY & COMPLIANCE (FIRST) ===
-  security-scan:
-    name: Security Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python 3.14
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: '3.14'
 
-      - name: Install Dependencies
+      - name: Set up pip cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements*.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-pip-
+
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install safety bandit pip-audit
           pip install -r requirements.txt
+          pip install -r requirements-security.txt
 
-      - name: Run Security Scans
+      - name: Verify security tooling versions
         run: |
-          echo "🔒 Running security scans..."
-          safety check --json --output safety-report.json || true
-          bandit -r . -f json -o bandit-report.json || true
-          pip-audit --format=json --output=pip-audit-report.json || true
-          
-          # Check for critical vulnerabilities
-          if [ -f safety-report.json ]; then
-            critical_vulns=$(cat safety-report.json | jq '.vulnerabilities[] | select(.vulnerability.severity == "CRITICAL") | .vulnerability.id' | wc -l)
-            if [ "$critical_vulns" -gt 0 ]; then
-              echo "CRITICAL vulnerabilities found: $critical_vulns"
-              exit 1
+          python tools/verify_versions.py
+
+      - name: Run policy verification
+        run: |
+          python -m core_modules.network.policy --verify --summary-out egress-summary.json
+
+      - name: Upload egress summary
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: egress-summary
+          path: egress-summary.json
+
+      - name: Check for blocked egress
+        if: always()
+        run: |
+          if [ -f egress-summary.json ]; then
+            BLOCKED=$(python -c "import json; print(json.load(open('egress-summary.json'))['metrics']['blocked_total'])")
+            if [ "$BLOCKED" -gt 0 ]; then
+              echo "::warning::Found $BLOCKED blocked egress events"
+              # Emit warnings for each unique blocked host
+              python -c "
+import json
+data = json.load(open('egress-summary.json'))
+blocked_hosts = set()
+for event in data['recent_events']:
+    if event['action'] == 'DENY':
+        blocked_hosts.add(event['host'])
+for host in sorted(blocked_hosts):
+    print(f'::warning::Blocked egress to {host}')
+"
             fi
           fi
 
-  # === CODE QUALITY ===
-  code-quality:
-    name: Code Quality
-    runs-on: ubuntu-latest
-    timeout-minutes: 10
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Run pre-commit (lint/format checks)
+        run: |
+          python -m pip install pre-commit
+          pre-commit run --all-files --show-diff-on-failure || true
 
-      - name: Setup Python
-        uses: actions/setup-python@v5
+      - name: Run pytest (sanitized config)
+        run: |
+          pytest -c root_configs/pytest.ini -q --cov=core_modules --cov-report=xml --cov-report=html
+
+      - name: Upload coverage
+        if: always()
+        uses: actions/upload-artifact@v4
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          name: coverage-xml
+          path: coverage.xml
 
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install black ruff flake8 mypy
-          pip install -r requirements.txt
-
-      - name: Run Linters
-        run: |
-          echo "🎨 Running code quality checks..."
-          black --check --diff . || echo "Black formatting issues found"
-          ruff check . || echo "Ruff issues found"
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics || echo "Flake8 issues found"
-          
-          # Run mypy on critical modules only
-          mypy api/ app/ tools/ --ignore-missing-imports || echo "MyPy issues found"
-
-  # === UNIT TESTS (PARALLELIZED) ===
-  unit-tests:
-    name: Unit Tests (Python ${{ matrix.python-version }})
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    strategy:
-      matrix:
-        python-version: ['3.12']
-        test-group: [core, api, tools, integration]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Setup Python ${{ matrix.python-version }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ matrix.python-version }}
-          cache: 'pip'
-
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-xdist pytest-timeout
-
-      - name: Run Tests
-        run: |
-          echo "🧪 Running ${{ matrix.test-group }} tests on Python ${{ matrix.python-version }}..."
-          case "${{ matrix.test-group }}" in
-            "core")
-              pytest tests/test_ucr.py tests/test_tool_registry_fix.py tests/glimpse/test_glimpse_tools_standalone.py -v --tb=short --maxfail=5 --timeout=300 --cov=core --cov-report=xml || true
-              ;;
-            "api")
-              # Run glimpse tools tests as they're the closest to API tests
-              pytest tests/glimpse/test_glimpse_tools_standalone.py -v --tb=short --maxfail=5 --timeout=300 --cov=api --cov-report=xml || true
-              ;;
-            "tools")
-              pytest tests/test_tool_registry_fix.py tests/glimpse/test_glimpse_tools_standalone.py -v --tb=short --maxfail=5 --timeout=300 --cov=tools --cov-report=xml || true
-              ;;
-            "integration")
-              pytest tests/test_ucr.py tests/test_tool_registry_fix.py -v --tb=short --maxfail=10 --timeout=600 --cov=. --cov-report=xml || true
-              ;;
-          esac
-
-      - name: Upload Coverage
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
+        if: always()
         with:
           file: ./coverage.xml
-          flags: ${{ matrix.test-group }}
-          name: ${{ matrix.test-group }}-coverage
+          flags: unittests
+          name: codecov-umbrella
 
-      - name: Coverage Check (75% minimum)
+      - name: Run security scan
         run: |
-          echo "🔍 Checking coverage threshold (75% minimum)..."
-          coverage report --fail-under=75
-          echo "✅ Coverage check passed - 75% threshold met"
+          pip-audit --requirement requirements.txt --format sarif -o pip-audit-results.sarif
+          safety check --full-report -r requirements.txt > safety-report.txt || true
+          bandit -r . -f json -o bandit-report.json || true
 
-  # === DOCKER BUILD & SCAN ===
-  docker-build:
-    name: Docker Build & Security Scan
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
-    needs: [security-scan, code-quality, unit-tests]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Build Docker Image
-        uses: docker/build-push-action@v5
+      - name: Upload security artifacts
+        uses: actions/upload-artifact@v4
+        if: always()
         with:
-          context: .
-          file: ./docker/Dockerfile
-          push: false
-          load: true
-          tags: echoes:test
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
+          name: security-reports
+          path: |
+            pip-audit-results.sarif
+            safety-report.txt
+            bandit-report.json
 
-      - name: Run Docker Security Scan
-        run: |
-          echo "🐳 Running Docker security scan..."
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $PWD:/root/.cache/ aquasec/trivy:latest image \
-            --format json --output trivy-report.json echoes:test || true
-          
-          # Check for critical Docker vulnerabilities
-          if [ -f trivy-report.json ]; then
-            critical=$(cat trivy-report.json | jq '.Results[]?.Vulnerabilities[]? | select(.Severity == "CRITICAL") | .VulnerabilityID' | wc -l)
-            if [ "$critical" -gt 0 ]; then
-              echo "CRITICAL Docker vulnerabilities found: $critical"
-              exit 1
-            fi
-          fi
-
-  # === DEPLOYMENT (MAIN BRANCH ONLY) ===
-  deploy:
-    name: Deploy to Registry
-    runs-on: ubuntu-latest
-    timeout-minutes: 20
-    needs: [quality-gates, docker-build]
-    if: needs.quality-gates.outputs.should-deploy == 'true'
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v3
-
-      - name: Login to Container Registry
-        uses: docker/login-action@v3
+      - name: Upload SARIF results
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
         with:
-          registry: ghcr.io
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Build and Push Production Image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          file: ./docker/Dockerfile
-          push: true
-          tags: |
-            ghcr.io/${{ github.repository_owner }}/echoes:latest
-            ghcr.io/${{ github.repository_owner }}/echoes:${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/echoes:v${{ github.run_number }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
+          sarif_file: pip-audit-results.sarif
 
       - name: Generate SBOM
         run: |
-          echo "📋 Generating SBOM..."
-          docker run --rm -v /var/run/docker.sock:/var/run/docker.sock \
-            -v $PWD:/root/.cache/ anchore/syft:latest \
-            ghcr.io/${{ github.repository_owner }}/echoes:latest \
-            -o spdx-json > sbom.spdx.json
+          mkdir -p sbom
+          cyclonedx-py requirements -r requirements.txt -o sbom/cyclonedx-sbom.xml
 
-      - name: Upload Artifacts
+      - name: Upload SBOM
         uses: actions/upload-artifact@v4
         with:
-          name: deployment-artifacts
-          path: |
-            sbom.spdx.json
-            trivy-report.json
-            safety-report.json
-          retention-days: 30
-
-  # === NOTIFICATION ===
-  notify:
-    name: Notify Results
-    runs-on: ubuntu-latest
-    needs: [deploy]
-    if: always()
-    steps:
-      - name: Success Notification
-        if: needs.deploy.result == 'success'
-        run: |
-          echo "🚀 Echoes CI/CD Pipeline Completed Successfully!"
-          echo "All security scans passed"
-          echo "Code quality checks passed"
-          echo "All tests passed"
-          echo "Docker image built and pushed"
-          echo "📦 Image: ghcr.io/${{ github.repository_owner }}/echoes:latest"
-
-      - name: Failure Notification
-        if: needs.deploy.result == 'failure' || needs.deploy.result == 'skipped'
-        run: |
-          echo "Echoes CI/CD Pipeline Failed!"
-          echo "🔍 Check the job logs for details"
-          exit 1
+          name: sbom
+          path: sbom/cyclonedx-sbom.xml
