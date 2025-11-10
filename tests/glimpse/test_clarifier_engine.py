@@ -55,114 +55,114 @@ class TestClarifierEngine:
     """Test the ClarifierEngine class"""
 
     def test_glimpse_initialization(self):
-        ClarifierEngine()
-        assert len(Glimpse.clarifier_rules) > 0
-        assert "customer" in Glimpse.clarifier_rules
-        assert "formal" in Glimpse.clarifier_rules
-        assert "brief" in Glimpse.clarifier_rules
+        engine = ClarifierEngine()
+        assert len(engine.clarifier_rules) > 0
+        assert "customer" in engine.clarifier_rules
+        assert "formal" in engine.clarifier_rules
+        assert "brief" in engine.clarifier_rules
 
     def test_detect_audience_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test customer mention
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Write an email to customers", "inform users", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.AUDIENCE for c in clarifiers)
 
     def test_detect_tone_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test email/presentation triggers tone clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Create a presentation", "explain concept", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.TONE for c in clarifiers)
 
     def test_detect_length_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test explain/describe triggers length clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Explain the process", "help user understand", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.LENGTH for c in clarifiers)
 
     def test_detect_format_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test list/organize triggers format clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "List the benefits", "organize information", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.FORMAT for c in clarifiers)
 
     def test_detect_scope_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test focus/scope triggers scope clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Focus on technical aspects", "provide overview", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.SCOPE for c in clarifiers)
 
     def test_detect_language_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test simplify/explain triggers language clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Simplify the technical details", "make it understandable", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.LANGUAGE for c in clarifiers)
 
     def test_detect_urgency_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test urgent/asap triggers urgency clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "urgent fix needed", "resolve immediately", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.URGENCY for c in clarifiers)
 
     def test_detect_detail_level_ambiguity(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Test detail/comprehensive triggers detail level clarifier
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Provide comprehensive details", "thorough analysis", ""
         )
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.DETAIL_LEVEL for c in clarifiers)
 
     def test_empty_goal_triggers_audience_clarifier(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Empty goal should always trigger audience clarifier
-        clarifiers = Glimpse.detect_ambiguity("Some input text", "", "")
+        clarifiers = engine.detect_ambiguity("Some input text", "", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.AUDIENCE for c in clarifiers)
 
     def test_no_ambiguity_detected(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Clear input with goal should not trigger clarifiers
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "Simple task", "clear goal provided", "audience: internal"
         )
         assert len(clarifiers) == 0
 
     def test_max_three_clarifiers(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
         # Even with multiple triggers, should limit to 3
-        clarifiers = Glimpse.detect_ambiguity(
+        clarifiers = engine.detect_ambiguity(
             "urgent email to customers explaining technical details comprehensively",
             "",
             "",
@@ -170,39 +170,39 @@ class TestClarifierEngine:
         assert len(clarifiers) <= 3
 
     def test_apply_clarifier_response_yes_no(self):
-        ClarifierEngine()
-        clarifier = Glimpse.clarifier_rules["customer"]
+        engine = ClarifierEngine()
+        clarifier = engine.clarifier_rules["customer"]
 
         # Test yes response
-        result = Glimpse.apply_clarifier_response(clarifier, "y", "")
+        result = engine.apply_clarifier_response(clarifier, "y", "")
         assert "audience: customers" in result
 
         # Test no response
-        result = Glimpse.apply_clarifier_response(clarifier, "n", "")
+        result = engine.apply_clarifier_response(clarifier, "n", "")
         assert "audience: internal" in result
 
     def test_apply_clarifier_response_explicit_options(self):
-        ClarifierEngine()
-        clarifier = Glimpse.clarifier_rules["formal"]
+        engine = ClarifierEngine()
+        clarifier = engine.clarifier_rules["formal"]
 
         # Test explicit option
-        result = Glimpse.apply_clarifier_response(clarifier, "formal", "")
+        result = engine.apply_clarifier_response(clarifier, "formal", "")
         assert "tone: formal" in result
 
     def test_apply_clarifier_response_invalid_uses_default(self):
-        ClarifierEngine()
-        clarifier = Glimpse.clarifier_rules["customer"]
+        engine = ClarifierEngine()
+        clarifier = engine.clarifier_rules["customer"]
 
         # Test invalid response uses default
-        result = Glimpse.apply_clarifier_response(clarifier, "invalid", "")
+        result = engine.apply_clarifier_response(clarifier, "invalid", "")
         assert "audience: internal" in result  # default value
 
     def test_apply_clarifier_response_appends_to_existing(self):
-        ClarifierEngine()
-        clarifier = Glimpse.clarifier_rules["customer"]
+        engine = ClarifierEngine()
+        clarifier = engine.clarifier_rules["customer"]
 
         # Test appending to existing constraints
-        result = Glimpse.apply_clarifier_response(
+        result = engine.apply_clarifier_response(
             clarifier, "y", "existing: constraint"
         )
         assert "existing: constraint" in result
@@ -210,30 +210,30 @@ class TestClarifierEngine:
         assert "|" in result  # separator added
 
     def test_generate_clarifier_delta_single(self):
-        ClarifierEngine()
-        clarifiers = [Glimpse.clarifier_rules["customer"]]
+        engine = ClarifierEngine()
+        clarifiers = [engine.clarifier_rules["customer"]]
 
-        delta = Glimpse.generate_clarifier_delta(clarifiers)
+        delta = engine.generate_clarifier_delta(clarifiers)
         assert "Clarifier: Is this for customers or internal team?" in delta
         assert "[customers | internal]" in delta
         assert "(default: internal)" in delta
 
     def test_generate_clarifier_delta_multiple(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
         clarifiers = [
-            Glimpse.clarifier_rules["customer"],
-            Glimpse.clarifier_rules["formal"],
+            engine.clarifier_rules["customer"],
+            engine.clarifier_rules["formal"],
         ]
 
-        delta = Glimpse.generate_clarifier_delta(clarifiers)
+        delta = engine.generate_clarifier_delta(clarifiers)
         assert "Clarifier: Please specify:" in delta
         assert "1. Clarifier:" in delta
         assert "2. Clarifier:" in delta
 
     def test_generate_clarifier_delta_empty(self):
-        ClarifierEngine()
+        engine = ClarifierEngine()
 
-        delta = Glimpse.generate_clarifier_delta([])
+        delta = engine.generate_clarifier_delta([])
         assert delta == ""
 
 
