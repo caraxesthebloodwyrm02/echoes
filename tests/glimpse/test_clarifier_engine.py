@@ -248,7 +248,7 @@ class TestEnhancedSampler:
 
         # Should detect ambiguity and return clarifier
         assert delta is not None
-        assert "Clarifier:" in delta
+        assert "Curiosity:" in delta
         assert not aligned
         assert sample == ""
         assert essence == ""

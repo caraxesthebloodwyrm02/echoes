@@ -76,11 +76,11 @@ class TestGlimpseInit:
         """Test LatencyMonitor creation"""
         monitor = LatencyMonitor()
 
-        # Default thresholds are 100ms, 300ms, 800ms, 2000ms
-        assert monitor.t1 == 100
-        assert monitor.t2 == 300
-        assert monitor.t3 == 800
-        assert monitor.t4 == 2000
+        # Default thresholds are 1500ms, 2500ms, 4000ms, 6000ms (tuned for OpenAI API)
+        assert monitor.t1 == 1500
+        assert monitor.t2 == 2500
+        assert monitor.t3 == 4000
+        assert monitor.t4 == 6000
         assert monitor._start_ms is None
 
     def test_create_latency_monitor_custom_thresholds(self):
@@ -207,14 +207,26 @@ class TestDefaultSampler:
 
     async def test_default_sampler_clarifier_for_empty_goal(self):
         """Test default sampler adds clarifier for empty goal"""
-        draft = Draft(input_text="some input", goal="", constraints="")
+        import os
+        # Enable pre-execution clarifier for this test
+        original_value = os.environ.get("GLIMPSE_PREEXEC_CLARIFIER")
+        os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = "true"
+        
+        try:
+            draft = Draft(input_text="some input", goal="", constraints="")
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+            sample, essence, delta, aligned = await default_sampler(draft)
 
-        assert delta is not None
-        assert "Clarifier:" in delta
-        assert "audience" in delta.lower()
-        assert not aligned
+            assert delta is not None
+            assert "Clarifier:" in delta
+            assert "audience" in delta.lower()
+            assert not aligned
+        finally:
+            # Restore original environment
+            if original_value is not None:
+                os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = original_value
+            else:
+                os.environ.pop("GLIMPSE_PREEXEC_CLARIFIER", None)
 
     async def test_default_sampler_no_conflict(self):
         """Test default sampler with no conflicts"""

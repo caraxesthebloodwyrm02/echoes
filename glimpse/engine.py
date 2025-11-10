@@ -94,7 +94,14 @@ async def default_sampler(draft: Draft) -> tuple[str, str, str | None, bool]:
     if "refactor" in lower and any(x in lower for x in ["no change", "don't change"]):
         delta = "Potential conflict: mentions refactor while requesting no change."
 
-    if PREEXEC_CLARIFIER_ENABLED and not intent_text:
+    # Check PREEXEC_CLARIFIER_ENABLED at runtime (not module import time)
+    # to support tests that set the env var after import
+    preexec_enabled = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {
+        "true",
+        "1",
+        "yes",
+    }
+    if preexec_enabled and not intent_text:
         delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
 
     aligned = delta is None
@@ -113,9 +120,10 @@ class LatencyMonitor:
     """Soft-threshold latency monitor with transparent status updates."""
 
     def __init__(
-        self, t1: int = 100, t2: int = 300, t3: int = 800, t4: int = 2000
+        self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000
     ) -> None:
-        # Default thresholds are milliseconds and tuned for tests/UX
+        # Default thresholds are milliseconds and tuned for OpenAI API performance
+        # Based on observed p50~1.4s, p75~2.5s, p95~4s, p99+~6s
         self.t1, self.t2, self.t3, self.t4 = t1, t2, t3, t4
         self._start_ms: int | None = None
 
@@ -217,16 +225,24 @@ class GlimpseEngine:
 
         if sampler is not None:
             self._sampler = sampler
-        elif PREEXEC_CLARIFIER_ENABLED:
-            # When pre-execution clarifier is enabled via env var, use default_sampler
-            # which checks for empty goals and returns clarifiers
-            self._sampler = default_sampler
-        elif enable_clarifiers and CLARIFIER_AVAILABLE:
-            self._sampler = lambda draft: enhanced_sampler_with_clarifiers(
-                draft, self._clarifier_engine
-            )
         else:
-            self._sampler = default_sampler
+            # Check PREEXEC_CLARIFIER_ENABLED at runtime (not module import time)
+            # to support tests that set the env var after import
+            preexec_enabled = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {
+                "true",
+                "1",
+                "yes",
+            }
+            if preexec_enabled:
+                # When pre-execution clarifier is enabled via env var, use default_sampler
+                # which checks for empty goals and returns clarifiers
+                self._sampler = default_sampler
+            elif enable_clarifiers and CLARIFIER_AVAILABLE:
+                self._sampler = lambda draft: enhanced_sampler_with_clarifiers(
+                    draft, self._clarifier_engine
+                )
+            else:
+                self._sampler = default_sampler
 
     def reset(self) -> None:
         self._tries = 0

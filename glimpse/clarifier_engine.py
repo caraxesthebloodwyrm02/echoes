@@ -13,14 +13,12 @@ import os
 
 # Import enhanced clarifier engine for new functionality
 try:
-    from .enhanced_clarifier_engine import (
-        ClarifierType,
-        EnhancedClarifierEngine,
-    )
+    from .enhanced_clarifier_engine import EnhancedClarifierEngine
 
     ENHANCED_CLARIFIER_AVAILABLE = True
 except ImportError:
     ENHANCED_CLARIFIER_AVAILABLE = False
+    EnhancedClarifierEngine = None
     print("⚠️ Enhanced clarifier engine not available, using legacy mode")
 
 
@@ -71,11 +69,12 @@ class ClarifierEngine:
         if env_force_legacy:
             self.enhanced_mode = False
         else:
-            self.enhanced_mode = use_enhanced_mode and ENHANCED_CLARIFIER_AVAILABLE
+            self.enhanced_mode = use_enhanced_mode and ENHANCED_CLARIFIER_AVAILABLE and EnhancedClarifierEngine is not None
         if self.enhanced_mode:
             self.enhanced_engine = EnhancedClarifierEngine()
             print("✅ Using enhanced clarifier engine with post-execution curiosity")
         else:
+            self.enhanced_engine = None
             print("📋 Using legacy clarifier engine")
 
         # Always initialize clarifier_rules for compatibility
@@ -164,7 +163,7 @@ class ClarifierEngine:
         Returns:
             List of suggested clarifiers
         """
-        if self.enhanced_mode:
+        if self.enhanced_mode and self.enhanced_engine is not None:
             # Use enhanced engine - only detect critical pre-execution issues
             return self.enhanced_engine.detect_critical_ambiguity(
                 input_text, goal, constraints
@@ -181,6 +180,10 @@ class ClarifierEngine:
         text_lower = (input_text or "").lower()
         constraints_lower = (constraints or "").lower()
         goal_stripped = (goal or "").strip()
+
+        # Ensure clarifier_rules are available
+        if not hasattr(self, 'clarifier_rules') or not self.clarifier_rules:
+            return clarifiers
 
         # Check for audience ambiguity
         # If no explicit goal is provided, prompt for audience as a safe default
@@ -202,6 +205,7 @@ class ClarifierEngine:
                 for word in ["email", "report", "presentation", "document"]
             )
             and "tone" not in constraints_lower
+            and "formal" in self.clarifier_rules
         ):
             clarifiers.append(self.clarifier_rules["formal"])
 
@@ -212,6 +216,7 @@ class ClarifierEngine:
                 for word in ["explain", "describe", "detail", "overview"]
             )
             and "length" not in constraints_lower
+            and "brief" in self.clarifier_rules
         ):
             clarifiers.append(self.clarifier_rules["brief"])
 
@@ -222,6 +227,7 @@ class ClarifierEngine:
                 for word in ["list", "organize", "structure", "format"]
             )
             and "format" not in constraints_lower
+            and "list" in self.clarifier_rules
         ):
             clarifiers.append(self.clarifier_rules["list"])
 
