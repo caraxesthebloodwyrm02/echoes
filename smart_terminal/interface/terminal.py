@@ -66,6 +66,7 @@ class ContextualFeedback:
 # Define TerminalPreset and related classes outside the try block
 from enum import Enum
 
+
 class TerminalPreset(Enum):
     # Developer mode - optimized for coding
     DEVELOPER = {
@@ -134,6 +135,7 @@ class TerminalPreset(Enum):
 
         def __str__(self):
             return self.name.title()
+
 
 # Check for optional dependencies
 try:
