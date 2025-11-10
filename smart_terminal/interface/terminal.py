@@ -63,74 +63,53 @@ class ContextualFeedback:
         ]
 
 
-# Check for optional dependencies
-try:
-    from prompt_toolkit import ANSI, PromptSession
-    from prompt_toolkit.application import run_in_terminal
-    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-    from prompt_toolkit.completion import Completer, Completion, ThreadedCompleter
-    from prompt_toolkit.document import Document
-    from prompt_toolkit.filters import has_focus
-    from prompt_toolkit.formatted_text import HTML, FormattedText
-    from prompt_toolkit.history import FileHistory
-    from prompt_toolkit.key_binding import KeyBindings, KeyPressEvent
-    from prompt_toolkit.keys import Keys
-    from prompt_toolkit.layout import Dimension
-    from prompt_toolkit.layout.containers import HSplit, VSplit, Window
-    from prompt_toolkit.layout.controls import FormattedTextControl
-    from prompt_toolkit.layout.layout import Layout
-    from prompt_toolkit.layout.margins import ScrollbarMargin
-    from prompt_toolkit.layout.processors import Processor, Transformation
-    from prompt_toolkit.lexers import PygmentsLexer
-    from prompt_toolkit.styles import Style
-    from prompt_toolkit.widgets import SearchToolbar, TextArea
-    from prompt_toolkit.widgets.toolbars import ArgToolbar, CompletionsToolbar
-    from pygments.lexers.shell import BashLexer
+# Define TerminalPreset and related classes outside the try block
+from enum import Enum, auto
 
-    class TerminalPreset(Enum):
-        # Developer mode - optimized for coding
-        DEVELOPER = {
-            "name": "Developer",
-            "emoji": "👨‍💻",
-            "suggestion_mode": "SMART",
-            "show_typing_stats": True,
-            "show_command_history": True,
-            "auto_complete": True,
-            "color_scheme": "monokai",
-        }
+class TerminalPreset(Enum):
+    # Developer mode - optimized for coding
+    DEVELOPER = {
+        "name": "Developer",
+        "emoji": "👨‍💻",
+        "suggestion_mode": "SMART",
+        "show_typing_stats": True,
+        "show_command_history": True,
+        "auto_complete": True,
+        "color_scheme": "monokai",
+    }
 
-        # Writer mode - optimized for long-form text
-        WRITER = {
-            "name": "Writer",
-            "emoji": "✍️",
-            "suggestion_mode": "FUZZY",
-            "show_typing_stats": False,
-            "show_command_history": False,
-            "auto_complete": True,
-            "color_scheme": "solarized-light",
-        }
+    # Writer mode - optimized for long-form text
+    WRITER = {
+        "name": "Writer",
+        "emoji": "✍️",
+        "suggestion_mode": "FUZZY",
+        "show_typing_stats": False,
+        "show_command_history": False,
+        "auto_complete": True,
+        "color_scheme": "solarized-light",
+    }
 
-        # System Admin mode - optimized for system commands
-        ADMIN = {
-            "name": "System Admin",
-            "emoji": "🔧",
-            "suggestion_mode": "EXACT",
-            "show_typing_stats": True,
-            "show_command_history": True,
-            "auto_complete": True,
-            "color_scheme": "vim",
-        }
+    # System Admin mode - optimized for system commands
+    ADMIN = {
+        "name": "System Admin",
+        "emoji": "🔧",
+        "suggestion_mode": "EXACT",
+        "show_typing_stats": True,
+        "show_command_history": True,
+        "auto_complete": True,
+        "color_scheme": "vim",
+    }
 
-        # Data Science mode - optimized for data analysis
-        DATA_SCIENCE = {
-            "name": "Data Science",
-            "emoji": "📊",
-            "suggestion_mode": "SMART",
-            "show_typing_stats": True,
-            "show_command_history": True,
-            "auto_complete": True,
-            "color_scheme": "native",
-        }
+    # Data Science mode - optimized for data analysis
+    DATA_SCIENCE = {
+        "name": "Data Science",
+        "emoji": "📊",
+        "suggestion_mode": "SMART",
+        "show_typing_stats": True,
+        "show_command_history": True,
+        "auto_complete": True,
+        "color_scheme": "native",
+    }
 
     @classmethod
     def get_preset(cls, name: str):
@@ -155,6 +134,32 @@ try:
 
         def __str__(self):
             return self.name.title()
+
+# Check for optional dependencies
+try:
+    from prompt_toolkit import ANSI, PromptSession
+    from prompt_toolkit.application import run_in_terminal
+    from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
+    from prompt_toolkit.completion import Completer, Completion, ThreadedCompleter
+    from prompt_toolkit.document import Document
+    from prompt_toolkit.filters import has_focus
+    from prompt_toolkit.formatted_text import HTML, FormattedText
+    from prompt_toolkit.history import FileHistory
+    from prompt_toolkit.key_binding import KeyBindings, KeyPressEvent
+    from prompt_toolkit.keys import Keys
+    from prompt_toolkit.layout import Dimension
+    from prompt_toolkit.layout.containers import HSplit, VSplit, Window
+    from prompt_toolkit.layout.controls import FormattedTextControl
+    from prompt_toolkit.layout.layout import Layout
+    from prompt_toolkit.layout.margins import ScrollbarMargin
+    from prompt_toolkit.layout.processors import Processor, Transformation
+    from prompt_toolkit.lexers import PygmentsLexer
+    from prompt_toolkit.styles import Style
+    from prompt_toolkit.widgets import SearchToolbar, TextArea
+    from prompt_toolkit.widgets.toolbars import ArgToolbar, CompletionsToolbar
+    from pygments.lexers.shell import BashLexer
+
+    # TerminalPreset is already defined above, no need to redefine
 
     class Suggestion:
         def __init__(self, text: str, description: str = "", priority: int = 1):
