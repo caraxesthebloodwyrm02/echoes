@@ -448,6 +448,8 @@ class TerminalInterface:
         from prompt_toolkit.layout.containers import ConditionalContainer
 
         # Create a container that shows feedback when available
+        from prompt_toolkit.filters import Condition
+        
         feedback_container = ConditionalContainer(
             content=HSplit(
                 [
@@ -455,7 +457,7 @@ class TerminalInterface:
                     Window(height=1, char="─", style="class:separator"),
                 ]
             ),
-            filter=lambda: self.active_feedback is not None,
+            filter=Condition(lambda: self.active_feedback is not None),
         )
 
         # Main layout with feedback at the bottom

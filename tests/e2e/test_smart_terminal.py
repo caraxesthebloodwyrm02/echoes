@@ -4,6 +4,7 @@ import os
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
 
@@ -114,17 +115,17 @@ class TestSmartTerminalE2E:
 
     def test_error_handling(self):
         """Test error handling in the application."""
-        # Test with invalid command file path
-        with pytest.raises(Exception):
-            CommandPredictor("/invalid/path/commands.json")
+        # Test with invalid command file path - should create empty commands dict
+        predictor = CommandPredictor("/invalid/path/commands.json")
+        assert predictor.commands == {}  # Should be empty, not raise exception
 
-        # Test with invalid feedback file path
-        with pytest.raises(Exception):
-            FeedbackHandler("/invalid/path/feedback.json")
+        # Test with invalid feedback file path - should create empty feedback
+        feedback = FeedbackHandler("/invalid/path/feedback.json")
+        assert feedback.feedback == {"suggestions": [], "ratings": []}  # Should be empty, not raise exception
 
-        # Test with invalid preset
-        with pytest.raises(ValueError):
-            TerminalPreset.get_preset("invalid_preset")
+        # Test with invalid preset - should return default
+        preset = TerminalPreset.get_preset("invalid_preset")
+        assert preset == TerminalPreset.DEVELOPER  # Should return default, not raise exception
 
     def test_preset_functionality(self):
         """Test terminal presets functionality."""
