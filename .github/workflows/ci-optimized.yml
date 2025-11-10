@@ -57,7 +57,7 @@ jobs:
       - name: Check for vulnerable dependencies with pip-audit
         run: |
           pip install pip-audit
-          pip-audit --requirement requirements.txt --requirement requirements-dev.txt || \
+          pip-audit --requirement requirements.txt --requirement requirements-security.txt || \
             (echo "##[error]Vulnerable dependencies found" && exit 1)
 
       - name: Check for outdated dependencies
