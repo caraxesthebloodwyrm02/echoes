@@ -195,6 +195,7 @@ class GlimpseApiGetTool:
             elapsed = time.time() - start
             self._total_response_time += elapsed
             self._last_call_time = time.time()
+            self._last_call_time = time.time()
 
     def execute(
         self,
@@ -261,6 +262,8 @@ class GlimpseApiPostTool:
         self.glimpse_tools = GlimpseTools(config)
         self._total_calls = 0
         self._error_count = 0
+        self._total_response_time = 0.0
+        self._last_call_time = None
 
     @property
     def input_schema(self) -> dict[str, Any]:
@@ -493,7 +496,7 @@ class GlimpseConnectPlatformsTool:
             "total_calls": self._total_calls,
             "error_count": self._error_count,
             "success_rate": 1.0 if self._total_calls > 0 else 1.0,
-            "last_call": None,
+            "last_call_time": None,
             "average_operation_time": 0.0,
         }
 
