@@ -10,12 +10,14 @@ from enum import Enum
 # Import optional performance and clarifier modules
 try:
     from .performance_optimizer import PerformanceOptimizer
+
     PERFORMANCE_AVAILABLE = True
 except ImportError:
     PERFORMANCE_AVAILABLE = False
 
 try:
     from .clarifier_engine import ClarifierEngine, enhanced_sampler_with_clarifiers
+
     CLARIFIER_AVAILABLE = True
 except ImportError:
     CLARIFIER_AVAILABLE = False
@@ -33,6 +35,7 @@ STATUS_DEGRADED = "Still trying… network appears slow."
 @dataclass
 class Draft:
     """Draft input Glimpse: input text plus 1–2 anchors (goal, constraints)."""
+
     input_text: str
     goal: str
     constraints: str = ""
@@ -41,6 +44,7 @@ class Draft:
 @dataclass
 class GlimpseResult:
     """Minimal structured result for a glimpse."""
+
     sample: str
     essence: str
     delta: Optional[str] = None
@@ -54,9 +58,17 @@ class GlimpseResult:
 Sampler = Callable[[Draft], Awaitable[tuple[str, str, Optional[str], bool]]]
 
 # Default sampler: use OpenAI if available and enabled; otherwise fall back to local default
-USE_OPENAI_DEFAULT = os.getenv("GLIMPSE_USE_OPENAI", "true").lower() in {"true", "1", "yes"}
+USE_OPENAI_DEFAULT = os.getenv("GLIMPSE_USE_OPENAI", "true").lower() in {
+    "true",
+    "1",
+    "yes",
+}
 # Gate legacy pre-execution clarifier (default: off)
-PREEXEC_CLARIFIER_ENABLED = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {"true", "1", "yes"}
+PREEXEC_CLARIFIER_ENABLED = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lower() in {
+    "true",
+    "1",
+    "yes",
+}
 if USE_OPENAI_DEFAULT:
     try:
         from .sampler_openai import openai_sampler as default_sampler
@@ -72,22 +84,34 @@ if USE_OPENAI_DEFAULT:
             text = draft.input_text.strip().replace("\n", " ")
             sample = (text[:90] + ("…" if len(text) > 90 else "")) or "(no content)"
             intent_text = draft.goal.strip()
-            constraints_text = draft.constraints.strip() or 'none'
+            constraints_text = draft.constraints.strip() or "none"
             essence = f"Intent: {intent_text or '(unspecified)'}; constraints: {constraints_text}; tone: neutral."
             delta: Optional[str] = None
 
             # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
-            lower = (draft.input_text + " " + draft.goal + " " + draft.constraints).lower()
-            if "refactor" in lower and ("no change" in lower or "don’t change" in lower or "don't change" in lower):
-                delta = "Potential conflict: mentions refactor while requesting no change."
+            lower = (
+                draft.input_text + " " + draft.goal + " " + draft.constraints
+            ).lower()
+            if "refactor" in lower and (
+                "no change" in lower
+                or "don’t change" in lower
+                or "don't change" in lower
+            ):
+                delta = (
+                    "Potential conflict: mentions refactor while requesting no change."
+                )
 
             # Clarifier path (legacy): only if explicitly enabled via env flag
             if PREEXEC_CLARIFIER_ENABLED and not intent_text:
-                delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
+                delta = (
+                    delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
+                )
 
             aligned = delta is None
             return sample, essence, delta, aligned
+
 else:
+
     async def default_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
         """A simple, dependency-free sampler.
 
@@ -98,13 +122,15 @@ else:
         text = draft.input_text.strip().replace("\n", " ")
         sample = (text[:90] + ("…" if len(text) > 90 else "")) or "(no content)"
         intent_text = draft.goal.strip()
-        constraints_text = draft.constraints.strip() or 'none'
+        constraints_text = draft.constraints.strip() or "none"
         essence = f"Intent: {intent_text or '(unspecified)'}; constraints: {constraints_text}; tone: neutral."
         delta: Optional[str] = None
 
         # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
         lower = (draft.input_text + " " + draft.goal + " " + draft.constraints).lower()
-        if "refactor" in lower and ("no change" in lower or "don’t change" in lower or "don't change" in lower):
+        if "refactor" in lower and (
+            "no change" in lower or "don’t change" in lower or "don't change" in lower
+        ):
             delta = "Potential conflict: mentions refactor while requesting no change."
 
         # Clarifier path (legacy): only if explicitly enabled via env flag
@@ -113,6 +139,7 @@ else:
 
         aligned = delta is None
         return sample, essence, delta, aligned
+
 
 # Status strings per UX contract
 STATUS_TRYING_1 = "Glimpse 1…"
@@ -134,7 +161,9 @@ class LatencyMonitor:
       - 6000: degraded notice
     """
 
-    def __init__(self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000) -> None:
+    def __init__(
+        self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000
+    ) -> None:
         self.t1, self.t2, self.t3, self.t4 = t1, t2, t3, t4
         self._start_ms: Optional[int] = None
 
@@ -155,7 +184,9 @@ class LatencyMonitor:
         if e >= self.t2:
             out.append("Making sure it matches your intent…")
         if e >= self.t3:
-            out.append("Options: Keep waiting • Redial (no try) • Essence‑only • Commit (confirm)")
+            out.append(
+                "Options: Keep waiting • Redial (no try) • Essence‑only • Commit (confirm)"
+            )
         if e >= self.t4:
             out.append(STATUS_DEGRADED)
         return out
@@ -172,7 +203,9 @@ class LatencyMonitor:
 class PrivacyGuard:
     """Ensures ephemeral behavior: no logging or side effects until commit."""
 
-    def __init__(self, on_commit: Optional[Callable[[GlimpseResult], None]] = None) -> None:
+    def __init__(
+        self, on_commit: Optional[Callable[[GlimpseResult], None]] = None
+    ) -> None:
         # Use no-op if caller does not supply a callable
         self._on_commit = on_commit if callable(on_commit) else lambda _draft: None
 
@@ -200,23 +233,26 @@ class GlimpseEngine:
         self._tries = 0
         self._cancel_requested = False
         self._essence_only = essence_only
-        
+
         # Initialize performance optimizer if available and enabled
         self._performance_optimizer = None
         if enable_performance and PERFORMANCE_AVAILABLE:
             self._performance_optimizer = PerformanceOptimizer()
-        
+
         # Initialize clarifier Glimpse if available and enabled
         self._clarifier_engine = None
         if enable_clarifiers and CLARIFIER_AVAILABLE:
             self._clarifier_engine = ClarifierEngine()
-        
+
         # Use enhanced sampler if clarifiers are enabled, otherwise use default
         if sampler is None:
             if enable_clarifiers and CLARIFIER_AVAILABLE:
                 # Create a wrapper that uses this instance's clarifier engine
                 async def _wrapped_sampler(draft):
-                    return await enhanced_sampler_with_clarifiers(draft, self._clarifier_engine)
+                    return await enhanced_sampler_with_clarifiers(
+                        draft, self._clarifier_engine
+                    )
+
                 self._sampler = _wrapped_sampler
             else:
                 self._sampler = default_sampler
@@ -233,7 +269,13 @@ class GlimpseEngine:
 
     async def glimpse(self, draft: Draft) -> GlimpseResult:
         if self._tries >= 2:
-            return GlimpseResult(sample="", essence="", status="redial", attempt=2, status_history=[STATUS_REDIAL])
+            return GlimpseResult(
+                sample="",
+                essence="",
+                status="redial",
+                attempt=2,
+                status_history=[STATUS_REDIAL],
+            )
 
         self._tries += 1
         attempt = self._tries
@@ -254,7 +296,13 @@ class GlimpseEngine:
                     await asyncio.sleep(self._debounce_ms / 1000.0)
                     # Do not count this as a try
                     self._tries -= 1
-                    return GlimpseResult(sample="", essence="", status="not_aligned", attempt=attempt, status_history=status_history)
+                    return GlimpseResult(
+                        sample="",
+                        essence="",
+                        status="not_aligned",
+                        attempt=attempt,
+                        status_history=status_history,
+                    )
 
                 # Update status history idempotently
                 for s in self._latency.statuses_for_elapsed(attempt):
@@ -288,7 +336,13 @@ class GlimpseEngine:
         except asyncio.CancelledError:
             # Surface as a benign cancellation (no try consumed)
             self._tries -= 1
-            return GlimpseResult(sample="", essence="", status="not_aligned", attempt=attempt, status_history=status_history)
+            return GlimpseResult(
+                sample="",
+                essence="",
+                status="not_aligned",
+                attempt=attempt,
+                status_history=status_history,
+            )
 
     def commit(self, draft: Draft) -> None:
         """Commit the draft (logging/applying begins here). Resets tries."""

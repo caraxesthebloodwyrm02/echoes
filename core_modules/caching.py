@@ -7,6 +7,7 @@ from typing import Any, Dict, Optional
 import time
 from collections import OrderedDict
 
+
 class SimpleLRUCache:
     """Simple LRU cache implementation for method results."""
 
@@ -50,8 +51,10 @@ class SimpleLRUCache:
         self.cache.clear()
         self.timestamps.clear()
 
+
 def cached_method(max_size: int = 50, ttl_seconds: Optional[int] = None):
     """Decorator for caching method results."""
+
     def decorator(func):
         cache = SimpleLRUCache(max_size, ttl_seconds)
 
@@ -75,4 +78,5 @@ def cached_method(max_size: int = 50, ttl_seconds: Optional[int] = None):
         wrapper.clear_cache = cache.clear
 
         return wrapper
+
     return decorator

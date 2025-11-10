@@ -2,6 +2,7 @@
 OpenAI API wrapper with latency logging, async client, and retry/backoff.
 Intended to be imported by samplers or performance optimizer modules.
 """
+
 import asyncio
 import time
 import random
@@ -23,6 +24,7 @@ except ImportError:
         class OpenAIPermissionError(Exception):
             pass
 
+
 # Import metrics and rate limiter
 from .metrics import (
     record_openai_request,
@@ -30,11 +32,12 @@ from .metrics import (
     record_rate_limit_delay,
     record_rate_limit_rejection,
     record_rate_limit_wait_time,
-    record_rate_limit_metrics
+    record_rate_limit_metrics,
 )
 from .rate_limiter import get_default_rate_limiter, AdaptiveRateLimiter
 
 logger = logging.getLogger(__name__)
+
 
 @asynccontextmanager
 async def log_latency(label: str, payload: Dict[str, Any]):
@@ -55,10 +58,12 @@ async def log_latency(label: str, payload: Dict[str, Any]):
         # Optional: record to PerformanceMetrics if available
         try:
             from .performance_optimizer import PerformanceOptimizer
+
             # Attempt to get a shared optimizer instance if one exists
             # This is a soft integration; no hard dependency required
         except Exception:
             pass
+
 
 async def call_with_backoff(
     fn: Callable,
@@ -78,7 +83,7 @@ async def call_with_backoff(
     last_error = None
 
     # Extract model for logging/metrics
-    model = kwargs.get('model', 'unknown')
+    model = kwargs.get("model", "unknown")
 
     for attempt in range(1, max_attempts + 1):
         start_time = time.perf_counter()
@@ -89,16 +94,20 @@ async def call_with_backoff(
             try:
                 # Try to acquire a token with a reasonable timeout
                 # Estimate token usage for rate limiting (rough estimate)
-                estimated_tokens = getattr(kwargs.get('messages', [{}])[0], 'get', lambda k, d=0: d)('estimated_tokens', 0)
-                if not estimated_tokens and 'messages' in kwargs:
+                estimated_tokens = getattr(
+                    kwargs.get("messages", [{}])[0], "get", lambda k, d=0: d
+                )("estimated_tokens", 0)
+                if not estimated_tokens and "messages" in kwargs:
                     # Rough estimate: ~4 tokens per message word
-                    message_text = str(kwargs['messages'])
+                    message_text = str(kwargs["messages"])
                     estimated_tokens = len(message_text.split()) * 4
 
                 acquired, wait_time = await rate_limiter.acquire(
                     endpoint=endpoint,
-                    token_count=min(estimated_tokens, rate_limiter.current_tpm // 60),  # Cap at 1 second worth
-                    max_wait=30.0  # Allow up to 30 seconds for rate limiting
+                    token_count=min(
+                        estimated_tokens, rate_limiter.current_tpm // 60
+                    ),  # Cap at 1 second worth
+                    max_wait=30.0,  # Allow up to 30 seconds for rate limiting
                 )
 
                 if not acquired:
@@ -115,9 +124,7 @@ async def call_with_backoff(
 
             except asyncio.TimeoutError:
                 record_rate_limit_rejection(endpoint)
-                raise RuntimeError(
-                    f"Rate limit acquisition timed out for {endpoint}"
-                )
+                raise RuntimeError(f"Rate limit acquisition timed out for {endpoint}")
 
         try:
             try:
@@ -130,49 +137,57 @@ async def call_with_backoff(
                     endpoint=endpoint,
                     model=model,
                     duration=duration,
-                    status_code=status_code
+                    status_code=status_code,
                 )
 
                 # Extract token usage if available
-                usage = getattr(result, 'usage', {})
-                if hasattr(usage, 'prompt_tokens') and hasattr(usage, 'completion_tokens'):
+                usage = getattr(result, "usage", {})
+                if hasattr(usage, "prompt_tokens") and hasattr(
+                    usage, "completion_tokens"
+                ):
                     record_openai_tokens(
                         prompt_tokens=usage.prompt_tokens,
                         completion_tokens=usage.completion_tokens,
-                        model=model
+                        model=model,
                     )
 
                 # Record successful request in rate limiter with actual token consumption
-                actual_tokens = usage.total_tokens if hasattr(usage, 'total_tokens') else estimated_tokens
+                actual_tokens = (
+                    usage.total_tokens
+                    if hasattr(usage, "total_tokens")
+                    else estimated_tokens
+                )
                 await rate_limiter.record_success(endpoint, token_count=actual_tokens)
 
                 # Update rate limiter metrics
                 status = rate_limiter.get_status()
                 record_rate_limit_metrics(
                     endpoint=endpoint,
-                    tokens_available=status['tokens_available'],
-                    bucket_capacity=status['bucket_capacity'],
-                    requests_per_minute=status['current_rpm']
+                    tokens_available=status["tokens_available"],
+                    bucket_capacity=status["bucket_capacity"],
+                    requests_per_minute=status["current_rpm"],
                 )
 
                 return result, {
-                    'attempts': attempt,
-                    'duration': duration,
-                    'status': 'success',
-                    'usage': {
-                        'prompt_tokens': getattr(usage, 'prompt_tokens', 0),
-                        'completion_tokens': getattr(usage, 'completion_tokens', 0),
-                        'total_tokens': getattr(usage, 'total_tokens', 0),
+                    "attempts": attempt,
+                    "duration": duration,
+                    "status": "success",
+                    "usage": {
+                        "prompt_tokens": getattr(usage, "prompt_tokens", 0),
+                        "completion_tokens": getattr(usage, "completion_tokens", 0),
+                        "total_tokens": getattr(usage, "total_tokens", 0),
                     },
-                    'rate_limit_info': {
-                        'rpm': status['current_rpm'],
-                        'success_rate': status['success_rate']
-                    }
+                    "rate_limit_info": {
+                        "rpm": status["current_rpm"],
+                        "success_rate": status["success_rate"],
+                    },
                 }
 
             except Exception as e:
                 # Record failure in rate limiter
-                if isinstance(e, openai.RateLimitError) or (hasattr(e, 'status_code') and e.status_code == 429):
+                if isinstance(e, openai.RateLimitError) or (
+                    hasattr(e, "status_code") and e.status_code == 429
+                ):
                     await rate_limiter.record_rate_limit(endpoint)
                     record_rate_limit_rejection(endpoint)
                 else:
@@ -210,7 +225,7 @@ async def call_with_backoff(
                 endpoint=endpoint,
                 model=model,
                 duration=duration,
-                status_code=status_code
+                status_code=status_code,
             )
 
             # Use the rate limiter's backoff if available, otherwise use default
@@ -224,7 +239,7 @@ async def call_with_backoff(
 
         except OpenAIError as e:
             last_error = e
-            status_code = getattr(e, 'status_code', 500)
+            status_code = getattr(e, "status_code", 500)
 
             # Record the failed attempt
             duration = time.perf_counter() - start_time
@@ -232,7 +247,7 @@ async def call_with_backoff(
                 endpoint=endpoint,
                 model=model,
                 duration=duration,
-                status_code=status_code
+                status_code=status_code,
             )
 
             if attempt < max_attempts:
@@ -259,7 +274,7 @@ async def call_with_backoff(
                         "status_code": status_code,
                         "max_attempts": max_attempts,
                     },
-                    exc_info=True
+                    exc_info=True,
                 )
                 raise
 
@@ -271,10 +286,13 @@ async def call_with_backoff(
             "endpoint": endpoint,
             "model": model,
             "max_attempts": max_attempts,
-            "last_error": str(last_error) if last_error else "Unknown error"
-        }
+            "last_error": str(last_error) if last_error else "Unknown error",
+        },
     )
-    raise RuntimeError(f"Max retries ({max_attempts}) exceeded for OpenAI call to {endpoint}.")
+    raise RuntimeError(
+        f"Max retries ({max_attempts}) exceeded for OpenAI call to {endpoint}."
+    )
+
 
 # Example async client wrapper
 class AsyncOpenAIClient:
@@ -282,10 +300,11 @@ class AsyncOpenAIClient:
     Thin async wrapper around OpenAI client with built-in latency logging,
     adaptive rate limiting, and exponential backoff.
     """
+
     def __init__(
-        self, 
-        api_key: Optional[str] = None, 
-        rate_limiter: Optional[AdaptiveRateLimiter] = None
+        self,
+        api_key: Optional[str] = None,
+        rate_limiter: Optional[AdaptiveRateLimiter] = None,
     ):
         self._client = openai.AsyncOpenAI(api_key=api_key)
         self._rate_limiter = rate_limiter or get_default_rate_limiter()
@@ -313,9 +332,9 @@ class AsyncOpenAIClient:
                 model=model,
                 temperature=temperature,
                 max_tokens=max_tokens,
-                **kwargs
+                **kwargs,
             )
-            return result.model_dump() if hasattr(result, 'model_dump') else result
+            return result.model_dump() if hasattr(result, "model_dump") else result
 
         except Exception as e:
             logger.error(
@@ -327,7 +346,7 @@ class AsyncOpenAIClient:
                     "temperature": temperature,
                     "max_tokens": max_tokens,
                 },
-                exc_info=True
+                exc_info=True,
             )
             raise
 
@@ -338,19 +357,26 @@ class AsyncOpenAIClient:
         **extra_kwargs,
     ) -> dict:
         """Async embeddings.create with latency and retry."""
+
         async def _call():
-            async with log_latency("embeddings", {"model": model, "input": input, **extra_kwargs}):
+            async with log_latency(
+                "embeddings", {"model": model, "input": input, **extra_kwargs}
+            ):
                 response = await self._client.embeddings.create(
-                    model=model,
-                    input=input,
-                    **extra_kwargs
+                    model=model, input=input, **extra_kwargs
                 )
-                return response.model_dump() if hasattr(response, 'model_dump') else response
+                return (
+                    response.model_dump()
+                    if hasattr(response, "model_dump")
+                    else response
+                )
 
         return await call_with_backoff(_call, endpoint="embeddings")
 
+
 # Convenience global client (can be replaced or configured)
 _default_client: Optional[AsyncOpenAIClient] = None
+
 
 def get_default_client() -> AsyncOpenAIClient:
     """Return a shared AsyncOpenAIClient instance."""
@@ -358,6 +384,7 @@ def get_default_client() -> AsyncOpenAIClient:
     if _default_client is None:
         _default_client = AsyncOpenAIClient()
     return _default_client
+
 
 # Example usage in a sampler:
 #

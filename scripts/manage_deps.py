@@ -39,7 +39,11 @@ class DependencyManager:
     def _get_pip_version(self) -> str:
         """Get pip version"""
         try:
-            result = subprocess.run([sys.executable, "-m", "pip", "--version"], capture_output=True, text=True)
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "--version"],
+                capture_output=True,
+                text=True,
+            )
             return result.stdout.split()[1] if result.returncode == 0 else "Unknown"
         except Exception:
             return "Not installed"
@@ -47,7 +51,9 @@ class DependencyManager:
     def _check_poetry(self) -> bool:
         """Check if poetry is available"""
         try:
-            result = subprocess.run(["poetry", "--version"], capture_output=True, text=True)
+            result = subprocess.run(
+                ["poetry", "--version"], capture_output=True, text=True
+            )
             return result.returncode == 0
         except FileNotFoundError:
             return False
@@ -62,11 +68,22 @@ class DependencyManager:
 
         try:
             # Upgrade pip first
-            subprocess.run([sys.executable, "-m", "pip", "install", "--upgrade", "pip"], check=True)
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", "--upgrade", "pip"], check=True
+            )
 
             # Install/upgrade requirements
             subprocess.run(
-                [sys.executable, "-m", "pip", "install", "-r", str(self.requirements_path), "--upgrade"], check=True
+                [
+                    sys.executable,
+                    "-m",
+                    "pip",
+                    "install",
+                    "-r",
+                    str(self.requirements_path),
+                    "--upgrade",
+                ],
+                check=True,
             )
 
             print("✅ Root dependencies updated successfully")
@@ -87,7 +104,9 @@ class DependencyManager:
         if not self._check_poetry():
             print("⚠️  Poetry not available, attempting to install...")
             try:
-                subprocess.run([sys.executable, "-m", "pip", "install", "poetry"], check=True)
+                subprocess.run(
+                    [sys.executable, "-m", "pip", "install", "poetry"], check=True
+                )
             except subprocess.CalledProcessError:
                 print("❌ Failed to install Poetry")
                 return False
@@ -104,7 +123,11 @@ class DependencyManager:
             # Try to fix Poetry environment
             try:
                 # Use current Python for Poetry
-                subprocess.run(["poetry", "env", "use", sys.executable], cwd=self.backend_path, check=True)
+                subprocess.run(
+                    ["poetry", "env", "use", sys.executable],
+                    cwd=self.backend_path,
+                    check=True,
+                )
 
                 # Retry update
                 subprocess.run(["poetry", "update"], cwd=self.backend_path, check=True)
@@ -122,7 +145,12 @@ class DependencyManager:
         lock_path = self.root_path / "requirements-lock.txt"
 
         try:
-            result = subprocess.run([sys.executable, "-m", "pip", "freeze"], capture_output=True, text=True, check=True)
+            result = subprocess.run(
+                [sys.executable, "-m", "pip", "freeze"],
+                capture_output=True,
+                text=True,
+                check=True,
+            )
 
             with open(lock_path, "w") as f:
                 f.write(f"# Generated lock file - {Path(__file__).name}\n")
@@ -142,11 +170,17 @@ class DependencyManager:
 
         try:
             # Ensure pip-audit is installed
-            subprocess.run([sys.executable, "-m", "pip", "install", "pip-audit"], capture_output=True, check=True)
+            subprocess.run(
+                [sys.executable, "-m", "pip", "install", "pip-audit"],
+                capture_output=True,
+                check=True,
+            )
 
             # Run audit
             result = subprocess.run(
-                [sys.executable, "-m", "pip_audit", "-r", str(self.requirements_path)], capture_output=True, text=True
+                [sys.executable, "-m", "pip_audit", "-r", str(self.requirements_path)],
+                capture_output=True,
+                text=True,
             )
 
             print(result.stdout)
@@ -208,7 +242,9 @@ class DependencyManager:
         status = self.check_environment()
         print(f"  Python: {status['python_version'].split()[0]}")
         print(f"  Pip: {status['pip_version']}")
-        print(f"  Poetry: {'Available' if status['poetry_available'] else 'Not available'}")
+        print(
+            f"  Poetry: {'Available' if status['poetry_available'] else 'Not available'}"
+        )
         print(f"  Virtual Env: {'Active' if status['virtual_env'] else 'Not active'}")
 
         if status["issues"]:

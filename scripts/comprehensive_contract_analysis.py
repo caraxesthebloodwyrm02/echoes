@@ -9,6 +9,7 @@ with a complete professional contract risk assessment.
 import asyncio
 from advanced_echoes_assistant import create_advanced_assistant, DecisionDomain
 
+
 async def comprehensive_contract_analysis():
     """Perform comprehensive contract risk analysis."""
     print("⚖️ COMPREHENSIVE CONTRACT RISK ANALYSIS")
@@ -99,13 +100,16 @@ async def comprehensive_contract_analysis():
     print("- Governing Law: California")
 
     # Perform comprehensive analysis
-    analysis_results = await perform_detailed_contract_analysis(assistant, contract_text)
+    analysis_results = await perform_detailed_contract_analysis(
+        assistant, contract_text
+    )
 
-    print("\\n" + "="*60)
+    print("\\n" + "=" * 60)
     print("📋 COMPREHENSIVE CONTRACT RISK ANALYSIS REPORT")
-    print("="*60)
+    print("=" * 60)
 
     print(analysis_results)
+
 
 def generate_comprehensive_risk_report(contract_text: str) -> str:
     """Generate a comprehensive professional contract risk analysis."""
@@ -265,24 +269,32 @@ def generate_comprehensive_risk_report(contract_text: str) -> str:
 
     return report
 
+
 async def perform_detailed_contract_analysis(assistant, contract_text: str) -> str:
     """Perform detailed contract analysis using assistant tools."""
 
     # Use direct tools for analysis
     risk_analysis = await assistant._analyze_contract_risks(
         contract_text=contract_text,
-        risk_categories=["payment", "liability", "intellectual_property", "confidentiality", "termination"]
+        risk_categories=[
+            "payment",
+            "liability",
+            "intellectual_property",
+            "confidentiality",
+            "termination",
+        ],
     )
 
     legal_precedence = await assistant._evaluate_legal_precedence(
         legal_issue="software development contract risks in California",
-        jurisdiction="California"
+        jurisdiction="California",
     )
 
     # Generate comprehensive report
     report = generate_comprehensive_risk_report(contract_text)
 
     return report
+
 
 if __name__ == "__main__":
     asyncio.run(comprehensive_contract_analysis())

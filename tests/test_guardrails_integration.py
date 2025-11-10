@@ -4,6 +4,7 @@ import pytest
 # Try to import c_o_r_e modules, skip if not available
 try:
     from c_o_r_e.server_sse import start_server
+
     c_o_r_e_available = True
 except ImportError:
     c_o_r_e_available = False
@@ -27,7 +28,10 @@ class TestGuardrailIntegration:
         server.shutdown()
         server.server_close()
 
-    @pytest.mark.skipif(not c_o_r_e_available, reason="c_o_r_e import issues - relative import beyond top-level package")
+    @pytest.mark.skipif(
+        not c_o_r_e_available,
+        reason="c_o_r_e import issues - relative import beyond top-level package",
+    )
     def test_01_valid_request(self, server_setup):
         """Test a valid request should pass with a 200 OK."""
         import agent_requests
@@ -35,11 +39,19 @@ class TestGuardrailIntegration:
 
         server, base_url = server_setup
         payload = {"prompt": "hello", "stage": "draft"}
-        headers = {"Authorization": "Bearer test-token", "Content-Type": "application/json"}
-        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
+        headers = {
+            "Authorization": "Bearer test-token",
+            "Content-Type": "application/json",
+        }
+        response = requests.post(
+            f"{base_url}/input", data=json.dumps(payload), headers=headers
+        )
         assert response.status_code == 200
 
-    @pytest.mark.skipif(not c_o_r_e_available, reason="c_o_r_e import issues - relative import beyond top-level package")
+    @pytest.mark.skipif(
+        not c_o_r_e_available,
+        reason="c_o_r_e import issues - relative import beyond top-level package",
+    )
     def test_02_missing_auth(self, server_setup):
         """Test a request with a missing auth header should fail with a 401 Unauthorized."""
         import agent_requests
@@ -48,10 +60,15 @@ class TestGuardrailIntegration:
         server, base_url = server_setup
         payload = {"prompt": "hello", "stage": "draft"}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
+        response = requests.post(
+            f"{base_url}/input", data=json.dumps(payload), headers=headers
+        )
         assert response.status_code == 401
 
-    @pytest.mark.skipif(not c_o_r_e_available, reason="c_o_r_e import issues - relative import beyond top-level package")
+    @pytest.mark.skipif(
+        not c_o_r_e_available,
+        reason="c_o_r_e import issues - relative import beyond top-level package",
+    )
     def test_03_invalid_prompt(self, server_setup):
         """Test a request with an invalid prompt should fail with a 400 Bad Request."""
         import agent_requests
@@ -59,11 +76,19 @@ class TestGuardrailIntegration:
 
         server, base_url = server_setup
         payload = {"stage": "draft"}  # Missing prompt
-        headers = {"Authorization": "Bearer test-token", "Content-Type": "application/json"}
-        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
+        headers = {
+            "Authorization": "Bearer test-token",
+            "Content-Type": "application/json",
+        }
+        response = requests.post(
+            f"{base_url}/input", data=json.dumps(payload), headers=headers
+        )
         assert response.status_code == 400
 
-    @pytest.mark.skipif(not c_o_r_e_available, reason="c_o_r_e import issues - relative import beyond top-level package")
+    @pytest.mark.skipif(
+        not c_o_r_e_available,
+        reason="c_o_r_e import issues - relative import beyond top-level package",
+    )
     def test_04_rate_limiting(self, server_setup):
         """Test that excessive requests are blocked with a 429 Too Many Requests."""
         import agent_requests
@@ -71,7 +96,10 @@ class TestGuardrailIntegration:
 
         server, base_url = server_setup
         payload = {"prompt": "rate limit test", "stage": "draft"}
-        headers = {"Authorization": "Bearer test-token", "Content-Type": "application/json"}
+        headers = {
+            "Authorization": "Bearer test-token",
+            "Content-Type": "application/json",
+        }
 
         # Exhaust the rate limiter (default is 60/min, so we need to send more than 1 per second)
         # For testing, let's assume a lower rate limit is set in the middleware for a test env.
@@ -82,6 +110,10 @@ class TestGuardrailIntegration:
         # Let's simulate a burst of 3 requests. With a bucket of 60, this won't fail.
         # A more realistic test would configure the middleware with a lower limit for the test environment.
         # For now, we will just test that a valid request passes.
-        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
+        response = requests.post(
+            f"{base_url}/input", data=json.dumps(payload), headers=headers
+        )
         assert response.status_code == 200
-        print("\nNOTE: Rate limit test is illustrative. A real test would require a configurable rate limit.")
+        print(
+            "\nNOTE: Rate limit test is illustrative. A real test would require a configurable rate limit."
+        )

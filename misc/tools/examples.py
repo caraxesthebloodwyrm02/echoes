@@ -17,9 +17,7 @@ class CalculatorTool(BaseTool):
     def __init__(self) -> None:
         super().__init__("calculator", "Perform basic arithmetic operations")
 
-    def __call__(
-        self, operation: str, a: float, b: float, **kwargs: Any
-    ) -> ToolResult:
+    def __call__(self, operation: str, a: float, b: float, **kwargs: Any) -> ToolResult:
         """Execute calculator operation."""
         try:
             if operation == "add":
@@ -127,11 +125,11 @@ def get_example_tools() -> List[BaseTool]:
         TextAnalyzerTool(),
         ROIAnalysisTool(),  # Add ROI analysis tool
     ]
-    
+
     # Add filesystem tools
     tools.extend(create_filesystem_tools())
-    
+
     # Add enhanced web search tools
     tools.extend(create_enhanced_web_search_tools())
-    
+
     return tools

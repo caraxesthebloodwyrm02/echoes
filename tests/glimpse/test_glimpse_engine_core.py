@@ -57,7 +57,9 @@ def test_cancel_on_edit_does_not_consume_try_and_debounces():
         engine = GlimpseEngine(sampler=medium_sampler)
 
         # Start glimpse as a task
-        task = asyncio.create_task(engine.glimpse(Draft(input_text="x", goal="", constraints="")))
+        task = asyncio.create_task(
+            engine.glimpse(Draft(input_text="x", goal="", constraints=""))
+        )
         # Cancel quickly (simulate user editing)
         await asyncio.sleep(0.05)
         Glimpse.cancel()
@@ -90,12 +92,20 @@ def test_essence_only_mode_hides_sample():
     async def run():
         engine = GlimpseEngine()
         Glimpse.set_essence_only(True)
-        r = await engine.glimpse(Draft(input_text="some long message that would normally produce a sample", goal="g", constraints=""))
+        r = await engine.glimpse(
+            Draft(
+                input_text="some long message that would normally produce a sample",
+                goal="g",
+                constraints="",
+            )
+        )
         assert r.essence
         assert r.sample == ""
 
         Glimpse.set_essence_only(False)
-        r2 = await engine.glimpse(Draft(input_text="some long message again", goal="g", constraints=""))
+        r2 = await engine.glimpse(
+            Draft(input_text="some long message again", goal="g", constraints="")
+        )
         assert r2.sample != ""
 
     asyncio.run(run())

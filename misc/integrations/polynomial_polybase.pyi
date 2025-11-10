@@ -55,7 +55,14 @@ PS_herm: npp.Hermite
 PS_herme: npp.HermiteE
 PS_lag: npp.Laguerre
 PS_leg: npp.Legendre
-PS_all: npp.Polynomial | npp.Chebyshev | npp.Hermite | npp.HermiteE | npp.Laguerre | npp.Legendre
+PS_all: (
+    npp.Polynomial
+    | npp.Chebyshev
+    | npp.Hermite
+    | npp.HermiteE
+    | npp.Laguerre
+    | npp.Legendre
+)
 
 # static- and classmethods
 
@@ -172,10 +179,16 @@ assert_type(PS_all(SC_f_co), np.float64 | np.complex128)
 assert_type(PS_all(SC_c_co), np.complex128)
 assert_type(PS_all(Decimal()), np.float64 | np.complex128)
 assert_type(PS_all(Fraction()), np.float64 | np.complex128)
-assert_type(PS_poly(SQ_f), npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_])
+assert_type(
+    PS_poly(SQ_f),
+    npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_],
+)
 assert_type(PS_poly(SQ_c), npt.NDArray[np.complex128] | npt.NDArray[np.object_])
 assert_type(PS_poly(SQ_O), npt.NDArray[np.object_])
-assert_type(PS_poly(AR_f), npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_])
+assert_type(
+    PS_poly(AR_f),
+    npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_],
+)
 assert_type(PS_poly(AR_c), npt.NDArray[np.complex128] | npt.NDArray[np.object_])
 assert_type(PS_poly(AR_O), npt.NDArray[np.object_])
 assert_type(PS_all(PS_poly), npp.Polynomial)

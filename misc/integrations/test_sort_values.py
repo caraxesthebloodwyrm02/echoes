@@ -71,7 +71,9 @@ class TestSeriesSortValues:
         return_value = ts.sort_values(ascending=False, inplace=True)
         assert return_value is None
         tm.assert_series_equal(ts, datetime_series.sort_values(ascending=False))
-        tm.assert_index_equal(ts.index, datetime_series.sort_values(ascending=False).index)
+        tm.assert_index_equal(
+            ts.index, datetime_series.sort_values(ascending=False).index
+        )
 
         # GH#5856/5853
         # Series.sort_values operating on a view
@@ -91,7 +93,9 @@ class TestSeriesSortValues:
         cat = Series(c.copy())
 
         # sort in the categories order
-        expected = Series(Categorical(["a", "a", "b", "b"], ordered=False), index=[0, 3, 1, 2])
+        expected = Series(
+            Categorical(["a", "a", "b", "b"], ordered=False), index=[0, 3, 1, 2]
+        )
         result = cat.sort_values()
         tm.assert_series_equal(result, expected)
 
@@ -100,7 +104,11 @@ class TestSeriesSortValues:
         exp = np.array(["a", "b", "c", "d"], dtype=np.object_)
         tm.assert_numpy_array_equal(res.__array__(), exp)
 
-        cat = Series(Categorical(["a", "c", "b", "d"], categories=["a", "b", "c", "d"], ordered=True))
+        cat = Series(
+            Categorical(
+                ["a", "c", "b", "d"], categories=["a", "b", "c", "d"], ordered=True
+            )
+        )
         res = cat.sort_values()
         exp = np.array(["a", "b", "c", "d"], dtype=np.object_)
         tm.assert_numpy_array_equal(res.__array__(), exp)
@@ -109,10 +117,16 @@ class TestSeriesSortValues:
         exp = np.array(["d", "c", "b", "a"], dtype=np.object_)
         tm.assert_numpy_array_equal(res.__array__(), exp)
 
-        raw_cat1 = Categorical(["a", "b", "c", "d"], categories=["a", "b", "c", "d"], ordered=False)
-        raw_cat2 = Categorical(["a", "b", "c", "d"], categories=["d", "c", "b", "a"], ordered=True)
+        raw_cat1 = Categorical(
+            ["a", "b", "c", "d"], categories=["a", "b", "c", "d"], ordered=False
+        )
+        raw_cat2 = Categorical(
+            ["a", "b", "c", "d"], categories=["d", "c", "b", "a"], ordered=True
+        )
         s = ["a", "b", "c", "d"]
-        df = DataFrame({"unsort": raw_cat1, "sort": raw_cat2, "string": s, "values": [1, 2, 3, 4]})
+        df = DataFrame(
+            {"unsort": raw_cat1, "sort": raw_cat2, "string": s, "values": [1, 2, 3, 4]}
+        )
 
         # Cats must be sorted in a dataframe
         res = df.sort_values(by=["string"], ascending=False)
@@ -131,7 +145,9 @@ class TestSeriesSortValues:
 
         # multi-columns sort
         # GH#7848
-        df = DataFrame({"id": [6, 5, 4, 3, 2, 1], "raw_grade": ["a", "b", "b", "a", "a", "e"]})
+        df = DataFrame(
+            {"id": [6, 5, 4, 3, 2, 1], "raw_grade": ["a", "b", "b", "a", "a", "e"]}
+        )
         df["grade"] = Categorical(df["raw_grade"], ordered=True)
         df["grade"] = df["grade"].cat.set_categories(["b", "e", "a"])
 
@@ -153,7 +169,9 @@ class TestSeriesSortValues:
             ([2, 3, 6, 1], [6, 3, 2, 1], False, [2, 1, 0, 3]),
         ],
     )
-    def test_sort_values_ignore_index(self, inplace, original_list, sorted_list, ignore_index, output_index):
+    def test_sort_values_ignore_index(
+        self, inplace, original_list, sorted_list, ignore_index, output_index
+    ):
         # GH 30114
         ser = Series(original_list)
         expected = Series(sorted_list, index=output_index)

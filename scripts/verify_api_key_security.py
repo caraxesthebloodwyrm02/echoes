@@ -8,6 +8,7 @@ import os
 import sys
 from pathlib import Path
 
+
 def main():
     print("🔐 SECURE API KEY VERIFICATION")
     print("=" * 50)
@@ -39,8 +40,8 @@ def main():
 
     # Check environment variables
     print("\n3️⃣  Checking environment variables:")
-    required_keys = ['OPENAI_API_KEY', 'CASCAD_API_KEY']
-    optional_keys = ['ANTHROPIC_API_KEY', 'GROQ_API_KEY']
+    required_keys = ["OPENAI_API_KEY", "CASCAD_API_KEY"]
+    optional_keys = ["ANTHROPIC_API_KEY", "GROQ_API_KEY"]
 
     all_good = True
 
@@ -64,9 +65,10 @@ def main():
     # Test OpenAI API connectivity
     print("\n4️⃣  Testing API connectivity:")
     try:
-        if os.getenv('OPENAI_API_KEY'):
+        if os.getenv("OPENAI_API_KEY"):
             from openai import OpenAI
-            client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+
+            client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
             # Simple test - list models (doesn't count against rate limit)
             models = client.models.list()
@@ -100,6 +102,7 @@ def main():
     print("   4. Regularly rotate API keys for security")
 
     return 0 if all_good else 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

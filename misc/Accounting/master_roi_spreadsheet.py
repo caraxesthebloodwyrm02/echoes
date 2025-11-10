@@ -21,6 +21,7 @@ try:
 except Exception:  # pragma: no cover
     yaml = None
 
+
 def load_config_from_yaml(yaml_path: str) -> Dict[str, Any]:
     """Parse a tiny YAML config."""
     raw = Path(yaml_path).read_text(encoding="utf-8")
@@ -86,7 +87,12 @@ DEFAULTS: Dict[str, Any] = {
     "sensitivity": [
         ("Hours saved = 30/week (instead of 40)", "-20%", 6, "Still excellent ROI"),
         ("Hours saved = 50/week", "+25%", 4, "Enhanced efficiency gains"),
-        ("Error reduction = 50% (instead of 75%)", "-15%", 6, "Baseline compliance improvement"),
+        (
+            "Error reduction = 50% (instead of 75%)",
+            "-15%",
+            6,
+            "Baseline compliance improvement",
+        ),
         ("Error reduction = 90%", "+10%", 5, "Industry‑leading performance"),
         ("Team size = 4 FTEs (instead of 5)", "-20%", 6, "Smaller organization"),
         ("Team size = 6 FTEs", "+20%", 4, "Larger implementation"),
@@ -126,12 +132,17 @@ DEFAULTS: Dict[str, Any] = {
     ],
     # --- Competitive Advantages ---
     "advantages": [
-        ("First‑Mover Benefit", "Early adoption advantage", "Market leadership position"),
+        (
+            "First‑Mover Benefit",
+            "Early adoption advantage",
+            "Market leadership position",
+        ),
         ("Proven Technology", "8‑week pilot success", "Reduced implementation risk"),
         ("Immediate ROI", "5‑day payback period", "Fast value realization"),
         ("Compliance Leadership", "75% error reduction", "Industry best practices"),
     ],
 }
+
 
 # ──────────────────────────────────────────────────────
 # 2️⃣  HELPERS
@@ -153,7 +164,7 @@ def to_rows(
     `header` may be any iterable of values – we convert each to string.
     """
     out: List[List[str]] = [[f"{title}"], []]
-    out.append([str(x) for x in header])   # <-- fix: normalise header
+    out.append([str(x) for x in header])  # <-- fix: normalise header
     for r in rows:
         out.append([str(x) for x in r])
     out.append([])
@@ -165,7 +176,9 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
     Returns: (csv_rows, text_rows)
     """
     # Derived values
-    config["net_monthly_benefit"] = config["monthly_savings"] - config["monthly_investment"]
+    config["net_monthly_benefit"] = (
+        config["monthly_savings"] - config["monthly_investment"]
+    )
     config["annual_net_benefit"] = config["net_monthly_benefit"] * 12
     config["three_year_value"] = config["annual_net_benefit"] * 3
 
@@ -188,21 +201,43 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
     exec_summ = [
         ("Metric", "Value", "Interpretation"),
         ("Monthly Investment", fmt(config["monthly_investment"]), "Fixed monthly cost"),
-        ("Monthly Savings", fmt(config["monthly_savings"]), "Total operational savings"),
-        ("Net Monthly Benefit", fmt(config["net_monthly_benefit"]), "Benefit after investment"),
-        ("Payback Period", f"{config['payback_days']} days", "Investment recovery time"),
+        (
+            "Monthly Savings",
+            fmt(config["monthly_savings"]),
+            "Total operational savings",
+        ),
+        (
+            "Net Monthly Benefit",
+            fmt(config["net_monthly_benefit"]),
+            "Benefit after investment",
+        ),
+        (
+            "Payback Period",
+            f"{config['payback_days']} days",
+            "Investment recovery time",
+        ),
         ("Return on Investment", f"{config['roi_percent']}%", "Annual ROI percentage"),
-        ("Annual Net Benefit", fmt(config["annual_net_benefit"]), "Year 1 value creation"),
-        ("3-Year Cumulative Value", fmt(config["three_year_value"]), "3‑year total benefit"),
+        (
+            "Annual Net Benefit",
+            fmt(config["annual_net_benefit"]),
+            "Year 1 value creation",
+        ),
+        (
+            "3-Year Cumulative Value",
+            fmt(config["three_year_value"]),
+            "3‑year total benefit",
+        ),
     ]
-    csv_rows.extend(to_rows("EXECUTIVE SUMMARY - KEY METRICS", exec_summ[0], exec_summ[1:]))
-    text_rows.extend(to_rows("EXECUTIVE SUMMARY - KEY METRICS", exec_summ[0], exec_summ[1:]))
+    csv_rows.extend(
+        to_rows("EXECUTIVE SUMMARY - KEY METRICS", exec_summ[0], exec_summ[1:])
+    )
+    text_rows.extend(
+        to_rows("EXECUTIVE SUMMARY - KEY METRICS", exec_summ[0], exec_summ[1:])
+    )
 
     # ── BREAKDOWN ─────────────────────────────────────
     total_breakdown = (
-        config["labor_efficiency"]
-        + config["error_reduction"]
-        + config["audit_prep"]
+        config["labor_efficiency"] + config["error_reduction"] + config["audit_prep"]
     )
     breaks = [
         (
@@ -244,8 +279,16 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
             breaks[1:],
         )
     )
-    csv_rows.append(["Note: Error reduction represents largest value driver (78.3% of total savings)"])
-    text_rows.append(["Note: Error reduction represents largest value driver (78.3% of total savings)"])
+    csv_rows.append(
+        [
+            "Note: Error reduction represents largest value driver (78.3% of total savings)"
+        ]
+    )
+    text_rows.append(
+        [
+            "Note: Error reduction represents largest value driver (78.3% of total savings)"
+        ]
+    )
     csv_rows.append([""])
     text_rows.append([""])
 
@@ -264,12 +307,23 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
                 fmt(cumulative),
             )
         )
-    csv_rows.extend(to_rows("12-MONTH CASH FLOW PROJECTIONS", cash_rows[0], cash_rows[1:]))
-    text_rows.extend(to_rows("12-MONTH CASH FLOW PROJECTIONS", cash_rows[0], cash_rows[1:]))
+    csv_rows.extend(
+        to_rows("12-MONTH CASH FLOW PROJECTIONS", cash_rows[0], cash_rows[1:])
+    )
+    text_rows.extend(
+        to_rows("12-MONTH CASH FLOW PROJECTIONS", cash_rows[0], cash_rows[1:])
+    )
 
     # ── SCENARIO ANALYSIS ──────────────────────────────
     scen_rows = [
-        ("Scenario", "Payback Period", "ROI %", "Monthly Net", "Annual Benefit", "Risk Level"),
+        (
+            "Scenario",
+            "Payback Period",
+            "ROI %",
+            "Monthly Net",
+            "Annual Benefit",
+            "Risk Level",
+        ),
         (
             "Conservative Estimate",
             f"{config['scenario_conservative']['payback']} days",
@@ -295,15 +349,31 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
             "Low",
         ),
     ]
-    csv_rows.extend(to_rows("SCENARIO ANALYSIS - RISK ASSESSMENT", scen_rows[0], scen_rows[1:]))
-    text_rows.extend(to_rows("SCENARIO ANALYSIS - RISK ASSESSMENT", scen_rows[0], scen_rows[1:]))
+    csv_rows.extend(
+        to_rows("SCENARIO ANALYSIS - RISK ASSESSMENT", scen_rows[0], scen_rows[1:])
+    )
+    text_rows.extend(
+        to_rows("SCENARIO ANALYSIS - RISK ASSESSMENT", scen_rows[0], scen_rows[1:])
+    )
 
     # ── SENSITIVITY ───────────────────────────────────
     sens_rows = [("Variable Change", "Impact on ROI", "New Payback", "Notes")]
     for a, imp, pb, note in config["sensitivity"]:
         sens_rows.append((a, imp, f"{pb} days", note))
-    csv_rows.extend(to_rows("SENSITIVITY ANALYSIS - IMPACT OF KEY VARIABLES", sens_rows[0], sens_rows[1:]))
-    text_rows.extend(to_rows("SENSITIVITY ANALYSIS - IMPACT OF KEY VARIABLES", sens_rows[0], sens_rows[1:]))
+    csv_rows.extend(
+        to_rows(
+            "SENSITIVITY ANALYSIS - IMPACT OF KEY VARIABLES",
+            sens_rows[0],
+            sens_rows[1:],
+        )
+    )
+    text_rows.extend(
+        to_rows(
+            "SENSITIVITY ANALYSIS - IMPACT OF KEY VARIABLES",
+            sens_rows[0],
+            sens_rows[1:],
+        )
+    )
 
     # ── IMPLEMENTATION ROADMAP ───────────────────────
     imp_rows = [("Phase", "Timeline", "Milestone", "Deliverable")]
@@ -325,20 +395,40 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
     fin_rows = [("Cost Category", "Annual Amount", "Justification")]
     for cat, amt, jus in config["costs"]:
         fin_rows.append((cat, fmt(amt), jus))
-    fin_rows.append(("TOTAL ANNUAL COST", fmt(config["costs"][0][1]), "Predictable monthly expense"))
+    fin_rows.append(
+        ("TOTAL ANNUAL COST", fmt(config["costs"][0][1]), "Predictable monthly expense")
+    )
     csv_rows.append([""])
-    csv_rows.extend(to_rows("FINANCIAL JUSTIFICATION & BUSINESS CASE", fin_rows[0], fin_rows[1:]))
+    csv_rows.extend(
+        to_rows("FINANCIAL JUSTIFICATION & BUSINESS CASE", fin_rows[0], fin_rows[1:])
+    )
     text_rows.append([""])
-    text_rows.extend(to_rows("FINANCIAL JUSTIFICATION & BUSINESS CASE", fin_rows[0], fin_rows[1:]))
+    text_rows.extend(
+        to_rows("FINANCIAL JUSTIFICATION & BUSINESS CASE", fin_rows[0], fin_rows[1:])
+    )
 
     # ── BENEFITS ─────────────────────────────────────
     benef_rows = [("Benefit Category", "Annual Amount", "Source")]
     for cat, amt, src in config["benefits"]:
         benef_rows.append((cat, fmt(amt), src))
-    benef_rows.append(("TOTAL ANNUAL BENEFIT", fmt(config["benefits"][0][1] + config["benefits"][1][1] + config["benefits"][2][1]), "Conservative estimate"))
-    benef_rows.append(("NET ANNUAL VALUE", fmt(config["annual_net_benefit"]), "Benefit minus cost"))
+    benef_rows.append(
+        (
+            "TOTAL ANNUAL BENEFIT",
+            fmt(
+                config["benefits"][0][1]
+                + config["benefits"][1][1]
+                + config["benefits"][2][1]
+            ),
+            "Conservative estimate",
+        )
+    )
+    benef_rows.append(
+        ("NET ANNUAL VALUE", fmt(config["annual_net_benefit"]), "Benefit minus cost")
+    )
     roi_multi = config["annual_net_benefit"] / config["costs"][0][1]
-    benef_rows.append(("ROI MULTIPLE", f"{roi_multi:.1f}x", "Every $1 invested returns $7.10"))
+    benef_rows.append(
+        ("ROI MULTIPLE", f"{roi_multi:.1f}x", "Every $1 invested returns $7.10")
+    )
     csv_rows.extend(to_rows("", [], benef_rows[1:]))
     text_rows.extend(to_rows("", [], benef_rows[1:]))
     csv_rows.append([""])
@@ -385,9 +475,13 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
         ["• Continuous compliance vs periodic reviews"],
         # Recommendation
         ["", "FINAL RECOMMENDATION"],
-        [f"APPROVE immediate investment of {fmt(config['monthly_investment'])} per month for Echoes AI"],
+        [
+            f"APPROVE immediate investment of {fmt(config['monthly_investment'])} per month for Echoes AI"
+        ],
         [f"• Payback in {config['payback_days']} days = instant ROI"],
-        [f"• {fmt(config['annual_net_benefit'])} annual net benefit vs {fmt(config['costs'][0][1])} investment"],
+        [
+            f"• {fmt(config['annual_net_benefit'])} annual net benefit vs {fmt(config['costs'][0][1])} investment"
+        ],
         ["• Proven results from 8‑week pilot"],
         ["• Minimal risk with maximum reward"],
         # Steps

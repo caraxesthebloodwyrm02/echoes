@@ -25,14 +25,20 @@ from pathlib import Path
 from decimal import Decimal
 import hashlib
 
+
 class PaymentMethod:
     """Represents a user's preferred payment method."""
 
-    def __init__(self, method_type: str, details: Dict[str, Any], is_default: bool = False):
+    def __init__(
+        self, method_type: str, details: Dict[str, Any], is_default: bool = False
+    ):
         self.method_type = method_type  # bank_transfer, paypal, crypto, etc.
         self.details = details
         self.is_default = is_default
-        self.method_id = hashlib.md5(f"{method_type}_{json.dumps(details, sort_keys=True)}".encode()).hexdigest()[:16]
+        self.method_id = hashlib.md5(
+            f"{method_type}_{json.dumps(details, sort_keys=True)}".encode()
+        ).hexdigest()[:16]
+
 
 class PaymentGateway:
     """
@@ -52,52 +58,57 @@ class PaymentGateway:
         self.supported_methods = {
             "bank_transfer": {
                 "name": "Bank Transfer",
-                "fee": Decimal('25.00'),  # Wire fee
+                "fee": Decimal("25.00"),  # Wire fee
                 "processing_time": "1-3 business days",
                 "supported_currencies": ["USD", "EUR", "GBP"],
-                "requirements": ["account_number", "routing_number", "bank_name"]
+                "requirements": ["account_number", "routing_number", "bank_name"],
             },
             "paypal": {
                 "name": "PayPal",
-                "fee": Decimal('0.00'),  # No additional fee
+                "fee": Decimal("0.00"),  # No additional fee
                 "processing_time": "1-2 business days",
                 "supported_currencies": ["USD", "EUR", "GBP", "CAD"],
-                "requirements": ["email"]
+                "requirements": ["email"],
             },
             "venmo": {
                 "name": "Venmo",
-                "fee": Decimal('0.00'),
+                "fee": Decimal("0.00"),
                 "processing_time": "Instant",
                 "supported_currencies": ["USD"],
-                "requirements": ["phone_or_email"]
+                "requirements": ["phone_or_email"],
             },
             "cash_app": {
                 "name": "Cash App",
-                "fee": Decimal('0.00'),
+                "fee": Decimal("0.00"),
                 "processing_time": "Instant",
                 "supported_currencies": ["USD"],
-                "requirements": ["cashtag"]
+                "requirements": ["cashtag"],
             },
             "crypto": {
                 "name": "Cryptocurrency",
-                "fee": Decimal('10.00'),  # Network fees
+                "fee": Decimal("10.00"),  # Network fees
                 "processing_time": "10-60 minutes",
                 "supported_currencies": ["BTC", "ETH", "USDC", "USDT"],
-                "requirements": ["wallet_address", "network"]
+                "requirements": ["wallet_address", "network"],
             },
             "check": {
                 "name": "Physical Check",
-                "fee": Decimal('5.00'),  # Mailing fee
+                "fee": Decimal("5.00"),  # Mailing fee
                 "processing_time": "7-10 business days",
                 "supported_currencies": ["USD"],
-                "requirements": ["mailing_address"]
-            }
+                "requirements": ["mailing_address"],
+            },
         }
 
         print("✅ Payment Gateway initialized - secure payment delivery")
 
-    def add_payment_method(self, user_id: str, method_type: str,
-                          method_details: Dict[str, Any], set_as_default: bool = False) -> str:
+    def add_payment_method(
+        self,
+        user_id: str,
+        method_type: str,
+        method_details: Dict[str, Any],
+        set_as_default: bool = False,
+    ) -> str:
         """
         Add a payment method for a user.
 
@@ -118,7 +129,9 @@ class PaymentGateway:
         missing_fields = [req for req in requirements if req not in method_details]
 
         if missing_fields:
-            raise ValueError(f"Missing required fields for {method_type}: {missing_fields}")
+            raise ValueError(
+                f"Missing required fields for {method_type}: {missing_fields}"
+            )
 
         # Create payment method
         payment_method = PaymentMethod(method_type, method_details, set_as_default)
@@ -140,13 +153,13 @@ class PaymentGateway:
             return []
 
         try:
-            with open(methods_file, 'r') as f:
+            with open(methods_file, "r") as f:
                 data = json.load(f)
 
             methods = []
-            for method_data in data.get('payment_methods', []):
-                method_info = self.supported_methods.get(method_data['method_type'], {})
-                method_data['method_info'] = method_info
+            for method_data in data.get("payment_methods", []):
+                method_info = self.supported_methods.get(method_data["method_type"], {})
+                method_data["method_info"] = method_info
                 methods.append(method_data)
 
             return methods
@@ -155,8 +168,13 @@ class PaymentGateway:
             print(f"Error loading payment methods for user {user_id}: {e}")
             return []
 
-    def process_payment(self, user_id: str, amount: Decimal, currency: str = "USD",
-                       payment_method_id: Optional[str] = None) -> Dict[str, Any]:
+    def process_payment(
+        self,
+        user_id: str,
+        amount: Decimal,
+        currency: str = "USD",
+        payment_method_id: Optional[str] = None,
+    ) -> Dict[str, Any]:
         """
         Process payment to user.
 
@@ -176,21 +194,25 @@ class PaymentGateway:
             return {
                 "success": False,
                 "error": "No payment methods configured",
-                "message": "Please add a payment method first"
+                "message": "Please add a payment method first",
             }
 
         # Select payment method
         if payment_method_id:
-            method = next((m for m in user_methods if m['method_id'] == payment_method_id), None)
+            method = next(
+                (m for m in user_methods if m["method_id"] == payment_method_id), None
+            )
             if not method:
                 return {
                     "success": False,
                     "error": "Payment method not found",
-                    "available_methods": [m['method_id'] for m in user_methods]
+                    "available_methods": [m["method_id"] for m in user_methods],
                 }
         else:
             # Use default method
-            method = next((m for m in user_methods if m.get('is_default', False)), user_methods[0])
+            method = next(
+                (m for m in user_methods if m.get("is_default", False)), user_methods[0]
+            )
 
         # Process the payment
         result = self._execute_payment(user_id, amount, currency, method)
@@ -200,11 +222,12 @@ class PaymentGateway:
 
         return result
 
-    def _execute_payment(self, user_id: str, amount: Decimal, currency: str,
-                        method: Dict[str, Any]) -> Dict[str, Any]:
+    def _execute_payment(
+        self, user_id: str, amount: Decimal, currency: str, method: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Execute the actual payment through the payment provider."""
-        method_type = method['method_type']
-        method_info = method['method_info']
+        method_type = method["method_type"]
+        method_info = method["method_info"]
 
         # Generate payment reference
         payment_id = f"PMT_{uuid.uuid4().hex[:12].upper()}"
@@ -220,7 +243,7 @@ class PaymentGateway:
             "fee": float(method_info["fee"]),
             "net_amount": float(amount - method_info["fee"]),
             "status": "completed",
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         # Simulate different processing times and potential issues
@@ -234,7 +257,9 @@ class PaymentGateway:
             processing_result["estimated_completion"] = "Instant to 2 days"
         elif method_type == "check":
             processing_result["estimated_completion"] = "7-10 business days"
-            processing_result["tracking_number"] = f"CHK_{uuid.uuid4().hex[:10].upper()}"
+            processing_result["tracking_number"] = (
+                f"CHK_{uuid.uuid4().hex[:10].upper()}"
+            )
 
         return processing_result
 
@@ -245,7 +270,7 @@ class PaymentGateway:
         # Load existing methods
         if methods_file.exists():
             try:
-                with open(methods_file, 'r') as f:
+                with open(methods_file, "r") as f:
                     data = json.load(f)
             except:
                 data = {"user_id": user_id, "payment_methods": []}
@@ -259,13 +284,13 @@ class PaymentGateway:
             "details": method.details,
             "is_default": method.is_default,
             "added_at": datetime.now(timezone.utc).isoformat(),
-            "status": "active"
+            "status": "active",
         }
 
         data["payment_methods"].append(method_data)
 
         # Save updated data
-        with open(methods_file, 'w') as f:
+        with open(methods_file, "w") as f:
             json.dump(data, f, indent=2)
 
     def _set_default_payment_method(self, user_id: str, method_id: str):
@@ -274,45 +299,51 @@ class PaymentGateway:
 
         if methods_file.exists():
             try:
-                with open(methods_file, 'r') as f:
+                with open(methods_file, "r") as f:
                     data = json.load(f)
 
                 # Reset all defaults
-                for method in data.get('payment_methods', []):
-                    method['is_default'] = False
+                for method in data.get("payment_methods", []):
+                    method["is_default"] = False
 
                 # Set new default
-                for method in data.get('payment_methods', []):
-                    if method['method_id'] == method_id:
-                        method['is_default'] = True
+                for method in data.get("payment_methods", []):
+                    if method["method_id"] == method_id:
+                        method["is_default"] = True
                         break
 
                 # Save updated data
-                with open(methods_file, 'w') as f:
+                with open(methods_file, "w") as f:
                     json.dump(data, f, indent=2)
 
             except Exception as e:
                 print(f"Error setting default payment method: {e}")
 
-    def _log_payment_transaction(self, user_id: str, amount: Decimal, currency: str,
-                               method: Dict[str, Any], result: Dict[str, Any]):
+    def _log_payment_transaction(
+        self,
+        user_id: str,
+        amount: Decimal,
+        currency: str,
+        method: Dict[str, Any],
+        result: Dict[str, Any],
+    ):
         """Log payment transaction for audit trail."""
         transaction = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "user_id": user_id,
             "amount": float(amount),
             "currency": currency,
-            "payment_method": method['method_type'],
-            "method_id": method['method_id'],
+            "payment_method": method["method_type"],
+            "method_id": method["method_id"],
             "result": result,
-            "transaction_id": result.get('payment_id', 'unknown')
+            "transaction_id": result.get("payment_id", "unknown"),
         }
 
         # Save to transactions log
         transactions_file = self.data_dir / "payment_transactions.jsonl"
 
-        with open(transactions_file, 'a') as f:
-            f.write(json.dumps(transaction) + '\n')
+        with open(transactions_file, "a") as f:
+            f.write(json.dumps(transaction) + "\n")
 
     def get_payment_transparency_report(self, user_id: str) -> Dict[str, Any]:
         """Generate transparency report for user's payments."""
@@ -324,42 +355,57 @@ class PaymentGateway:
 
         if transactions_file.exists():
             try:
-                with open(transactions_file, 'r') as f:
+                with open(transactions_file, "r") as f:
                     for line in f:
                         if line.strip():
                             transaction = json.loads(line)
-                            if transaction['user_id'] == user_id:
+                            if transaction["user_id"] == user_id:
                                 user_transactions.append(transaction)
             except Exception as e:
                 print(f"Error reading transactions: {e}")
 
-        total_paid = sum(t['amount'] for t in user_transactions if t['result'].get('success', False))
-        total_fees = sum(t['result'].get('fee', 0) for t in user_transactions if t['result'].get('success', False))
+        total_paid = sum(
+            t["amount"] for t in user_transactions if t["result"].get("success", False)
+        )
+        total_fees = sum(
+            t["result"].get("fee", 0)
+            for t in user_transactions
+            if t["result"].get("success", False)
+        )
 
         return {
             "user_id": user_id,
             "payment_methods": len(methods),
             "total_payments": len(user_transactions),
-            "successful_payments": len([t for t in user_transactions if t['result'].get('success', False)]),
+            "successful_payments": len(
+                [t for t in user_transactions if t["result"].get("success", False)]
+            ),
             "total_amount_paid": total_paid,
             "total_fees_paid": total_fees,
             "net_amount_received": total_paid - total_fees,
-            "available_methods": [m['method_type'] for m in methods],
-            "recent_transactions": user_transactions[-5:] if user_transactions else []
+            "available_methods": [m["method_type"] for m in methods],
+            "recent_transactions": user_transactions[-5:] if user_transactions else [],
         }
 
+
 # Integration functions for other Tab components
-def setup_user_payment_method(user_id: str, method_type: str,
-                            method_details: Dict[str, Any]) -> str:
+def setup_user_payment_method(
+    user_id: str, method_type: str, method_details: Dict[str, Any]
+) -> str:
     """
     Easy setup function for adding payment methods.
 
     Called by user portal or sync Glimpse when user configures payments.
     """
     gateway = PaymentGateway()
-    return gateway.add_payment_method(user_id, method_type, method_details, set_as_default=True)
+    return gateway.add_payment_method(
+        user_id, method_type, method_details, set_as_default=True
+    )
 
-def deliver_user_payment(user_id: str, amount: float, currency: str = "USD") -> Dict[str, Any]:
+
+def deliver_user_payment(
+    user_id: str, amount: float, currency: str = "USD"
+) -> Dict[str, Any]:
     """
     Deliver payment to user automatically.
 
@@ -373,25 +419,29 @@ def deliver_user_payment(user_id: str, amount: float, currency: str = "USD") -> 
     result = gateway.process_payment(user_id, payment_amount, currency)
 
     # Add user-friendly messaging
-    if result.get('success', False):
-        result['user_message'] = (
+    if result.get("success", False):
+        result["user_message"] = (
             f"🎉 Payment Sent! You received ${result['net_amount']:.2f} "
             f"via {result['method']}. Reference: {result['payment_id']}"
         )
-        if 'estimated_completion' in result:
-            result['user_message'] += f" Expected completion: {result['estimated_completion']}"
+        if "estimated_completion" in result:
+            result[
+                "user_message"
+            ] += f" Expected completion: {result['estimated_completion']}"
     else:
-        result['user_message'] = (
+        result["user_message"] = (
             f"⚠️ Payment Issue: {result.get('error', 'Unknown error')}. "
             "Please check your payment methods or contact support."
         )
 
     return result
 
+
 def get_user_payment_status(user_id: str) -> Dict[str, Any]:
     """Get user's payment setup and history status."""
     gateway = PaymentGateway()
     return gateway.get_payment_transparency_report(user_id)
+
 
 if __name__ == "__main__":
     # Demo the payment gateway
@@ -407,12 +457,12 @@ if __name__ == "__main__":
             user_id="demo_user",
             method_type="paypal",
             method_details={"email": "user@example.com"},
-            set_as_default=True
+            set_as_default=True,
         )
         print(f"\\n✅ Payment method added: {method_id}")
 
         # Demo payment processing
-        result = gateway.process_payment("demo_user", Decimal('150.00'), "USD")
+        result = gateway.process_payment("demo_user", Decimal("150.00"), "USD")
         print(f"\\n💰 Payment Result: {result['status']}")
         print(f"Payment ID: {result['payment_id']}")
         print(f"Net Amount: ${result['net_amount']:.2f}")

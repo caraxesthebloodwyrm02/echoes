@@ -12,12 +12,15 @@ from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class MetricSnapshot:
     """Snapshot of metrics at a point in time"""
+
     timestamp: datetime
     metrics: Dict[str, Any]
     tags: Dict[str, str] = field(default_factory=dict)
+
 
 class ModelMetrics:
     """
@@ -30,7 +33,9 @@ class ModelMetrics:
         self.snapshots: List[MetricSnapshot] = []
         self.logger = logging.getLogger(__name__)
 
-    def increment(self, metric_name: str, value: int = 1, tags: Optional[Dict[str, str]] = None):
+    def increment(
+        self, metric_name: str, value: int = 1, tags: Optional[Dict[str, str]] = None
+    ):
         """
         Increment a counter metric
 
@@ -42,7 +47,9 @@ class ModelMetrics:
         self.metrics[metric_name] += value
         self.logger.debug(f"Incremented {metric_name} by {value}")
 
-    def gauge(self, metric_name: str, value: float, tags: Optional[Dict[str, str]] = None):
+    def gauge(
+        self, metric_name: str, value: float, tags: Optional[Dict[str, str]] = None
+    ):
         """
         Set a gauge metric (current value)
 
@@ -54,7 +61,9 @@ class ModelMetrics:
         self.metrics[metric_name] = value
         self.logger.debug(f"Set gauge {metric_name} to {value}")
 
-    def timing(self, metric_name: str, duration: float, tags: Optional[Dict[str, str]] = None):
+    def timing(
+        self, metric_name: str, duration: float, tags: Optional[Dict[str, str]] = None
+    ):
         """
         Record a timing metric
 
@@ -84,9 +93,7 @@ class ModelMetrics:
             MetricSnapshot object
         """
         snapshot = MetricSnapshot(
-            timestamp=datetime.now(),
-            metrics=dict(self.metrics),
-            tags=tags or {}
+            timestamp=datetime.now(), metrics=dict(self.metrics), tags=tags or {}
         )
         self.snapshots.append(snapshot)
         self.logger.debug("Created metrics snapshot")
@@ -153,7 +160,7 @@ class ModelMetrics:
             "error_rate": 0.0,
             "avg_response_time": self.get_metric("response_time_avg"),
             "cache_hit_rate": 0.0,
-            "uptime_seconds": self.get_metric("uptime_seconds")
+            "uptime_seconds": self.get_metric("uptime_seconds"),
         }
 
         # Calculate error rate
@@ -171,13 +178,16 @@ class ModelMetrics:
 
         return summary
 
+
 # Global instance for easy access
 model_metrics = ModelMetrics()
+
 
 # Convenience functions for timing
 def start_timer():
     """Start a timer for performance measurement"""
     return time.time()
+
 
 def end_timer(start_time: float, metric_name: str = "operation"):
     """End a timer and record the duration"""

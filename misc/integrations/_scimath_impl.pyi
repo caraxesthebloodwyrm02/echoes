@@ -9,7 +9,17 @@ from numpy._typing import (
     _FloatLike_co,
 )
 
-__all__ = ["sqrt", "log", "log2", "logn", "log10", "power", "arccos", "arcsin", "arctanh"]
+__all__ = [
+    "sqrt",
+    "log",
+    "log2",
+    "logn",
+    "log10",
+    "power",
+    "arccos",
+    "arcsin",
+    "arctanh",
+]
 
 @overload
 def sqrt(x: _FloatLike_co) -> Any: ...
@@ -50,7 +60,9 @@ def logn(n: _ComplexLike_co, x: _ComplexLike_co) -> complexfloating: ...
 @overload
 def logn(n: _ArrayLikeFloat_co, x: _ArrayLikeFloat_co) -> NDArray[Any]: ...
 @overload
-def logn(n: _ArrayLikeComplex_co, x: _ArrayLikeComplex_co) -> NDArray[complexfloating]: ...
+def logn(
+    n: _ArrayLikeComplex_co, x: _ArrayLikeComplex_co
+) -> NDArray[complexfloating]: ...
 @overload
 def power(x: _FloatLike_co, p: _FloatLike_co) -> Any: ...
 @overload
@@ -58,7 +70,9 @@ def power(x: _ComplexLike_co, p: _ComplexLike_co) -> complexfloating: ...
 @overload
 def power(x: _ArrayLikeFloat_co, p: _ArrayLikeFloat_co) -> NDArray[Any]: ...
 @overload
-def power(x: _ArrayLikeComplex_co, p: _ArrayLikeComplex_co) -> NDArray[complexfloating]: ...
+def power(
+    x: _ArrayLikeComplex_co, p: _ArrayLikeComplex_co
+) -> NDArray[complexfloating]: ...
 @overload
 def arccos(x: _FloatLike_co) -> Any: ...
 @overload

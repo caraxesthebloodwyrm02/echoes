@@ -9,14 +9,18 @@ def parse_security_protocols(doc_path):
     protocols = {}
 
     # Extract the entire "Security Measures" section
-    security_section_match = re.search(r"## 2. Security Measures(.*?)---", content, re.DOTALL)
+    security_section_match = re.search(
+        r"## 2. Security Measures(.*?)---", content, re.DOTALL
+    )
     if not security_section_match:
         return protocols
 
     security_content = security_section_match.group(1)
 
     # Find all protocol sections and their rules
-    protocol_sections = re.findall(r"- \*\*(.*?)\*\*\n(.*?)(?=\n- \*\*|\Z)", security_content, re.DOTALL)
+    protocol_sections = re.findall(
+        r"- \*\*(.*?)\*\*\n(.*?)(?=\n- \*\*|\Z)", security_content, re.DOTALL
+    )
 
     for title, section_content in protocol_sections:
         title_key = title.lower().replace(" ", "_").replace("_and_", "_")

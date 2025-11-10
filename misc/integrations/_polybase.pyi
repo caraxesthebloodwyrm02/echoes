@@ -40,7 +40,9 @@ from ._polytypes import (
 
 __all__ = ["ABCPolyBase"]
 
-_NameCo = TypeVar("_NameCo", bound=LiteralString | None, covariant=True, default=LiteralString | None)
+_NameCo = TypeVar(
+    "_NameCo", bound=LiteralString | None, covariant=True, default=LiteralString | None
+)
 _Other = TypeVar("_Other", bound=ABCPolyBase)
 
 _AnyOther: TypeAlias = ABCPolyBase | _CoefLike_co | _SeriesLikeCoef_co
@@ -90,7 +92,9 @@ class ABCPolyBase(Generic[_NameCo], abc.ABC):
     @overload
     def __call__(
         self, /, arg: _ArrayLikeFloat_co
-    ) -> npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_]: ...
+    ) -> (
+        npt.NDArray[np.float64] | npt.NDArray[np.complex128] | npt.NDArray[np.object_]
+    ): ...
     @overload
     def __call__(
         self,

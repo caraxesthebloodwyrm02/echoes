@@ -9,7 +9,7 @@ import sys
 import importlib
 
 # Add project root to path for consistent imports
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
     _m = importlib.import_module("core.ethos")
@@ -35,11 +35,12 @@ except (ImportError, ModuleNotFoundError):
     def get_business_tools():
         return []
 
+
 # Make these available when importing from tools
 __all__ = [
-    'BaseTool',
-    'ToolResult',
-    'ToolError',
-    'get_example_tools',
-    'get_business_tools'
+    "BaseTool",
+    "ToolResult",
+    "ToolError",
+    "get_example_tools",
+    "get_business_tools",
 ]

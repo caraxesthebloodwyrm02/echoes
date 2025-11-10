@@ -37,11 +37,11 @@ Usage:
 Author: Echoes AI Assistant
 """
 
-from .classifier import ImageClassifier, CustomCNN, plot_training_history, get_class_names
+from .classifier import (
+    ImageClassifier,
+    CustomCNN,
+    plot_training_history,
+    get_class_names,
+)
 
-__all__ = [
-    'ImageClassifier',
-    'CustomCNN',
-    'plot_training_history',
-    'get_class_names'
-]
+__all__ = ["ImageClassifier", "CustomCNN", "plot_training_history", "get_class_names"]

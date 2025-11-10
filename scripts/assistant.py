@@ -1,10 +1,11 @@
 python
 import numpy as np
 
+
 class IntelligentAssistant:
     def __init__(self):
         # Initialize values and behaviors
-        self.values = {'respect', 'accuracy', 'helpfulness'}
+        self.values = {"respect", "accuracy", "helpfulness"}
         self.behaviors = []
 
     def update_values(self, new_values):
@@ -20,10 +21,11 @@ class IntelligentAssistant:
         score = np.random.rand()
         return score
 
+
 def train_assistant(data):
     # Split data into training and testing sets
-    X_train, y_train = data['X'].split(test_size=0.2, random_state=42)
-    X_test, y_test = data['X'].split(test_size=0.8, random_state=43)
+    X_train, y_train = data["X"].split(test_size=0.2, random_state=42)
+    X_test, y_test = data["X"].split(test_size=0.8, random_state=43)
 
     # Create a reinforcement learning model
     model = ReinforcementLearningModel()
@@ -33,14 +35,16 @@ def train_assistant(data):
     score = model.evaluate(X_test, y_test)
     return score
 
+
 def main():
-    data = {'X': ..., 'y': ...}  # Load your dataset here
+    data = {"X": ..., "y": ...}  # Load your dataset here
     assistant = IntelligentAssistant()
 
     # Refactor and train the assistant
-    assistant.update_values({'new_value': 'other_value'})
+    assistant.update_values({"new_value": "other_value"})
     score = train_assistant(data)
-    print(f'Assistant trained with {score:.2f} accuracy')
+    print(f"Assistant trained with {score:.2f} accuracy")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

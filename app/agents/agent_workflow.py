@@ -72,7 +72,11 @@ class AgentWorkflow:
         self.workflow_counter = 0
 
     def _create_step(
-        self, agent_name: str, role: AgentRole, instructions: str, input_data: Dict[str, Any]
+        self,
+        agent_name: str,
+        role: AgentRole,
+        instructions: str,
+        input_data: Dict[str, Any],
     ) -> AgentStep:
         """Create a workflow step."""
         return AgentStep(
@@ -91,11 +95,15 @@ class AgentWorkflow:
 
         try:
             # Add instructions to conversation
-            self.conversation_history.append({"role": "system", "content": step.instructions})
+            self.conversation_history.append(
+                {"role": "system", "content": step.instructions}
+            )
 
             # Add input data
             if "query" in step.input_data:
-                self.conversation_history.append({"role": "user", "content": step.input_data["query"]})
+                self.conversation_history.append(
+                    {"role": "user", "content": step.input_data["query"]}
+                )
 
             # Execute via assistant
             response = self.assistant.chat(
@@ -116,7 +124,9 @@ class AgentWorkflow:
         step.duration_ms = (time.time() - start_time) * 1000
         return step
 
-    def run_triage_workflow(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
+    def run_triage_workflow(
+        self, user_input: str, context: Optional[Dict[str, Any]] = None
+    ) -> WorkflowResult:
         """
         Run a triage workflow to classify and route requests.
 
@@ -345,7 +355,9 @@ class AgentWorkflow:
                 error=str(e),
             )
 
-    def run_data_enrichment_workflow(self, topic: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
+    def run_data_enrichment_workflow(
+        self, topic: str, context: Optional[Dict[str, Any]] = None
+    ) -> WorkflowResult:
         """
         Run data enrichment workflow.
 

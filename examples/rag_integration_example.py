@@ -16,7 +16,9 @@ sys.path.append(str(Path(__file__).parent.parent))
 from core.rag_integration import EchoesRAG
 
 # Configure logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 
@@ -62,7 +64,9 @@ def main():
 
     # Generate a response with context
     logger.info(f"Generating response for query: {query}")
-    response = rag.generate_with_context(user_prompt=query, generation_func=mock_generation)
+    response = rag.generate_with_context(
+        user_prompt=query, generation_func=mock_generation
+    )
 
     print("\n" + "=" * 80)
     print("FINAL RESPONSE:")

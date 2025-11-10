@@ -17,6 +17,7 @@ def test_enforce_sets_defaults(monkeypatch):
     monkeypatch.delenv("OPENAI_API_KEY", raising=False)
 
     import core.ethos as ethos
+
     ethos.enforce()
 
     assert os.environ.get("ECHOES_RESEARCH_ONLY") == "1"
@@ -29,6 +30,7 @@ def test_enforce_respects_existing_provider(monkeypatch, caplog):
     monkeypatch.setenv("ECHOES_EMBEDDINGS_PROVIDER", "custom")
 
     import core.ethos as ethos
+
     caplog.set_level(logging.WARNING, logger=ethos.__name__)
 
     ethos.enforce()
@@ -36,7 +38,9 @@ def test_enforce_respects_existing_provider(monkeypatch, caplog):
     # Should not override an explicitly-set provider
     assert os.environ.get("ECHOES_EMBEDDINGS_PROVIDER") == "custom"
     # Should warn about non-canonical provider
-    assert any("Non-canonical embeddings provider" in r.getMessage() for r in caplog.records)
+    assert any(
+        "Non-canonical embeddings provider" in r.getMessage() for r in caplog.records
+    )
 
 
 def test_enforce_does_not_log_secrets(monkeypatch, caplog):
@@ -45,6 +49,7 @@ def test_enforce_does_not_log_secrets(monkeypatch, caplog):
     monkeypatch.setenv("OPENAI_API_KEY", secret)
 
     import core.ethos as ethos
+
     caplog.set_level(logging.INFO, logger=ethos.__name__)
 
     caplog.clear()

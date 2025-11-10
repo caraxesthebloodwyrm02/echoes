@@ -24,14 +24,17 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class StateMetrics:
     """Performance metrics for state operations"""
+
     total_updates: int = 0
     total_measurements: int = 0
     average_transition_time: float = 0.0
     entangled_states_count: int = 0
     last_updated: Optional[datetime] = None
+
 
 class QuantumStateManager:
     """
@@ -53,30 +56,33 @@ class QuantumStateManager:
     def initialize_quantum_states(self):
         """Initialize the quantum state management system with default configurations"""
         # Initialize core states
-        self.quantum_state.update('system_status', 'initializing')
-        self.quantum_state.update('authentication', 'superposition',
-                                entangle_with=['user_session', 'permissions'])
-        self.quantum_state.update('processing', 'idle')
-        self.quantum_state.update('error_state', None)
+        self.quantum_state.update("system_status", "initializing")
+        self.quantum_state.update(
+            "authentication",
+            "superposition",
+            entangle_with=["user_session", "permissions"],
+        )
+        self.quantum_state.update("processing", "idle")
+        self.quantum_state.update("error_state", None)
 
         # Initialize state machine
-        self.state_machine.add_state('idle')
-        self.state_machine.add_state('processing')
-        self.state_machine.add_state('success')
-        self.state_machine.add_state('error')
-        self.state_machine.add_state('recovery')
+        self.state_machine.add_state("idle")
+        self.state_machine.add_state("processing")
+        self.state_machine.add_state("success")
+        self.state_machine.add_state("error")
+        self.state_machine.add_state("recovery")
 
         # Define probabilistic transitions
-        self.state_machine.add_transition('idle', 'processing', 0.8)
-        self.state_machine.add_transition('processing', 'success', 0.7)
-        self.state_machine.add_transition('processing', 'error', 0.3)
-        self.state_machine.add_transition('error', 'recovery', 0.6)
-        self.state_machine.add_transition('error', 'idle', 0.4)
-        self.state_machine.add_transition('recovery', 'idle', 1.0)
-        self.state_machine.add_transition('success', 'idle', 0.9)
-        self.state_machine.add_transition('success', 'processing', 0.1)
+        self.state_machine.add_transition("idle", "processing", 0.8)
+        self.state_machine.add_transition("processing", "success", 0.7)
+        self.state_machine.add_transition("processing", "error", 0.3)
+        self.state_machine.add_transition("error", "recovery", 0.6)
+        self.state_machine.add_transition("error", "idle", 0.4)
+        self.state_machine.add_transition("recovery", "idle", 1.0)
+        self.state_machine.add_transition("success", "idle", 0.9)
+        self.state_machine.add_transition("success", "processing", 0.1)
 
-        self.state_machine.set_initial_state('idle')
+        self.state_machine.set_initial_state("idle")
 
         logger.info("Quantum state management system initialized")
 
@@ -101,8 +107,8 @@ class QuantumStateManager:
         # Calculate transition time
         transition_time = (datetime.now(timezone.utc) - start_time).total_seconds()
         self.metrics.average_transition_time = (
-            (self.metrics.average_transition_time * (self.metrics.total_updates - 1)) +
-            transition_time
+            (self.metrics.average_transition_time * (self.metrics.total_updates - 1))
+            + transition_time
         ) / self.metrics.total_updates
 
     def measure_state(self, key: str) -> Any:
@@ -137,7 +143,9 @@ class QuantumStateManager:
         """Add a callback for state machine transitions"""
         self.state_machine.add_transition_callback(from_state, callback)
 
-    def simulate_interference(self, state1: str, state2: str, interference_factor: float):
+    def simulate_interference(
+        self, state1: str, state2: str, interference_factor: float
+    ):
         """
         Simulate quantum interference between two states
 
@@ -152,7 +160,9 @@ class QuantumStateManager:
         # Apply interference to transition probabilities
         self._apply_interference()
 
-        logger.info(f"Applied interference between {state1} and {state2}: {interference_factor}")
+        logger.info(
+            f"Applied interference between {state1} and {state2}: {interference_factor}"
+        )
 
     def _apply_interference(self):
         """Apply interference patterns to state transitions"""
@@ -177,20 +187,24 @@ class QuantumStateManager:
             raise QuantumStateError("No persistence file configured")
 
         state_data = {
-            'quantum_state': self.quantum_state.to_dict(),
-            'current_machine_state': self.state_machine.current_state,
-            'state_history': self.state_machine.state_history,
-            'metrics': {
-                'total_updates': self.metrics.total_updates,
-                'total_measurements': self.metrics.total_measurements,
-                'average_transition_time': self.metrics.average_transition_time,
-                'entangled_states_count': self.metrics.entangled_states_count,
-                'last_updated': self.metrics.last_updated.isoformat() if self.metrics.last_updated else None
+            "quantum_state": self.quantum_state.to_dict(),
+            "current_machine_state": self.state_machine.current_state,
+            "state_history": self.state_machine.state_history,
+            "metrics": {
+                "total_updates": self.metrics.total_updates,
+                "total_measurements": self.metrics.total_measurements,
+                "average_transition_time": self.metrics.average_transition_time,
+                "entangled_states_count": self.metrics.entangled_states_count,
+                "last_updated": (
+                    self.metrics.last_updated.isoformat()
+                    if self.metrics.last_updated
+                    else None
+                ),
             },
-            'interference_patterns': self.interference_patterns
+            "interference_patterns": self.interference_patterns,
         }
 
-        with open(self.persistence_file, 'w') as f:
+        with open(self.persistence_file, "w") as f:
             json.dump(state_data, f, indent=2, default=str)
 
         logger.info(f"State saved to {self.persistence_file}")
@@ -200,27 +214,29 @@ class QuantumStateManager:
         if not self.persistence_file or not os.path.exists(self.persistence_file):
             raise QuantumStateError("No persistence file available")
 
-        with open(self.persistence_file, 'r') as f:
+        with open(self.persistence_file, "r") as f:
             state_data = json.load(f)
 
         # Restore quantum state
-        self.quantum_state.from_dict(state_data['quantum_state'])
+        self.quantum_state.from_dict(state_data["quantum_state"])
 
         # Restore state machine
-        self.state_machine.current_state = state_data['current_machine_state']
-        self.state_machine.state_history = state_data['state_history']
+        self.state_machine.current_state = state_data["current_machine_state"]
+        self.state_machine.state_history = state_data["state_history"]
 
         # Restore metrics
-        metrics_data = state_data['metrics']
-        self.metrics.total_updates = metrics_data['total_updates']
-        self.metrics.total_measurements = metrics_data['total_measurements']
-        self.metrics.average_transition_time = metrics_data['average_transition_time']
-        self.metrics.entangled_states_count = metrics_data['entangled_states_count']
-        if metrics_data['last_updated']:
-            self.metrics.last_updated = datetime.fromisoformat(metrics_data['last_updated'])
+        metrics_data = state_data["metrics"]
+        self.metrics.total_updates = metrics_data["total_updates"]
+        self.metrics.total_measurements = metrics_data["total_measurements"]
+        self.metrics.average_transition_time = metrics_data["average_transition_time"]
+        self.metrics.entangled_states_count = metrics_data["entangled_states_count"]
+        if metrics_data["last_updated"]:
+            self.metrics.last_updated = datetime.fromisoformat(
+                metrics_data["last_updated"]
+            )
 
         # Restore interference patterns
-        self.interference_patterns = state_data.get('interference_patterns', {})
+        self.interference_patterns = state_data.get("interference_patterns", {})
 
         logger.info(f"State loaded from {self.persistence_file}")
 
@@ -234,7 +250,9 @@ class QuantumStateManager:
         logger.info("Quantum state management system reset")
 
     def __repr__(self) -> str:
-        return (f"QuantumStateManager("
-                f"current_state={self.state_machine.current_state}, "
-                f"total_states={len(self.quantum_state._state)}, "
-                f"entangled_groups={len(self.quantum_state._entangled)})")
+        return (
+            f"QuantumStateManager("
+            f"current_state={self.state_machine.current_state}, "
+            f"total_states={len(self.quantum_state._state)}, "
+            f"entangled_groups={len(self.quantum_state._entangled)})"
+        )

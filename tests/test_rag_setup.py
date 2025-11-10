@@ -39,7 +39,9 @@ def test_rag_initialization():
         # Test with custom config
         print("\nTesting with custom config...")
         config = RAGConfig(
-            embedding_model_name="sentence-transformers/all-MiniLM-L6-v2", chunk_size=500, chunk_overlap=50
+            embedding_model_name="sentence-transformers/all-MiniLM-L6-v2",
+            chunk_size=500,
+            chunk_overlap=50,
         )
         rag = RAGOrbit(config)
         print("✅ Successfully created RAGOrbit with custom config")
@@ -61,7 +63,9 @@ def main():
 
     # Run RAG initialization test
     if not test_rag_initialization():
-        print("\n❌ RAG initialization tests failed. Please check the error messages above.")
+        print(
+            "\n❌ RAG initialization tests failed. Please check the error messages above."
+        )
         return
 
     print("\n✅ All tests passed! Your RAG system is set up correctly.")

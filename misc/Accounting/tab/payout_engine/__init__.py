@@ -22,24 +22,28 @@ from dataclasses import dataclass, field, asdict
 from decimal import Decimal, ROUND_HALF_UP
 from pathlib import Path
 
+
 @dataclass
 class PayoutCalculation:
     """Complete payout calculation with all components."""
+
     payout_id: str
     user_id: str
     base_amount: Decimal
     tax_calculations: Dict[str, Decimal] = field(default_factory=dict)
     platform_fees: Dict[str, Decimal] = field(default_factory=dict)
     processing_fees: Dict[str, Decimal] = field(default_factory=dict)
-    total_deductions: Decimal = Decimal('0.00')
-    net_amount: Decimal = Decimal('0.00')
+    total_deductions: Decimal = Decimal("0.00")
+    net_amount: Decimal = Decimal("0.00")
     currency: str = "USD"
     jurisdiction: str = "US"
     timestamp: str = ""
 
+
 @dataclass
 class PayoutRecord:
     """Complete payout transaction record."""
+
     payout_id: str
     user_id: str
     calculation: PayoutCalculation
@@ -50,6 +54,7 @@ class PayoutRecord:
     completed_at: Optional[str] = None
     failure_reason: Optional[str] = None
     audit_trail: List[Dict[str, Any]] = field(default_factory=list)
+
 
 class TaxEngine:
     """
@@ -63,32 +68,37 @@ class TaxEngine:
         # Tax rates by jurisdiction (simplified - in production, use tax service APIs)
         self.tax_rates = {
             "US": {
-                "federal_income": Decimal('0.22'),  # 22% federal
-                "self_employment": Decimal('0.153'), # 15.3% self-employment
+                "federal_income": Decimal("0.22"),  # 22% federal
+                "self_employment": Decimal("0.153"),  # 15.3% self-employment
                 "state_income": {
-                    "CA": Decimal('0.133'),  # 13.3% CA
-                    "NY": Decimal('0.109'),  # 10.9% NY
-                    "TX": Decimal('0.00'),   # No state income tax
-                    "FL": Decimal('0.00'),   # No state income tax
-                }
+                    "CA": Decimal("0.133"),  # 13.3% CA
+                    "NY": Decimal("0.109"),  # 10.9% NY
+                    "TX": Decimal("0.00"),  # No state income tax
+                    "FL": Decimal("0.00"),  # No state income tax
+                },
             },
             "CA": {
-                "federal_income": Decimal('0.25'),  # 25% federal
+                "federal_income": Decimal("0.25"),  # 25% federal
                 "provincial_income": {
-                    "ON": Decimal('0.0505'), # 5.05% Ontario
-                    "BC": Decimal('0.168'),  # 16.8% BC
-                    "QC": Decimal('0.15'),   # 15% Quebec
-                }
+                    "ON": Decimal("0.0505"),  # 5.05% Ontario
+                    "BC": Decimal("0.168"),  # 16.8% BC
+                    "QC": Decimal("0.15"),  # 15% Quebec
+                },
             },
             "UK": {
-                "income_tax": Decimal('0.20'),      # 20% basic rate
-                "national_insurance": Decimal('0.08'), # 8% NI
-                "corporation_tax": Decimal('0.19')     # 19% corporation
-            }
+                "income_tax": Decimal("0.20"),  # 20% basic rate
+                "national_insurance": Decimal("0.08"),  # 8% NI
+                "corporation_tax": Decimal("0.19"),  # 19% corporation
+            },
         }
 
-    def calculate_taxes(self, amount: Decimal, jurisdiction: str = "US",
-                       state_province: str = "", user_type: str = "individual") -> Dict[str, Decimal]:
+    def calculate_taxes(
+        self,
+        amount: Decimal,
+        jurisdiction: str = "US",
+        state_province: str = "",
+        user_type: str = "individual",
+    ) -> Dict[str, Decimal]:
         """
         Calculate applicable taxes automatically.
 
@@ -112,34 +122,53 @@ class TaxEngine:
         if user_type == "individual":
             # Self-employment taxes for freelancers/consultants
             if jurisdiction == "US":
-                taxes["federal_income"] = (amount * rates["federal_income"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-                taxes["self_employment"] = (amount * rates["self_employment"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                taxes["federal_income"] = (amount * rates["federal_income"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
+                taxes["self_employment"] = (amount * rates["self_employment"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
 
                 # State income tax
                 if state_province and state_province in rates["state_income"]:
                     state_rate = rates["state_income"][state_province]
                     if state_rate > 0:
-                        taxes[f"state_income_{state_province}"] = (amount * state_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                        taxes[f"state_income_{state_province}"] = (
+                            amount * state_rate
+                        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
             elif jurisdiction == "CA":
-                taxes["federal_income"] = (amount * rates["federal_income"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                taxes["federal_income"] = (amount * rates["federal_income"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
 
                 if state_province and state_province in rates["provincial_income"]:
                     provincial_rate = rates["provincial_income"][state_province]
-                    taxes[f"provincial_income_{state_province}"] = (amount * provincial_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                    taxes[f"provincial_income_{state_province}"] = (
+                        amount * provincial_rate
+                    ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
             elif jurisdiction == "UK":
-                taxes["income_tax"] = (amount * rates["income_tax"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
-                taxes["national_insurance"] = (amount * rates["national_insurance"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                taxes["income_tax"] = (amount * rates["income_tax"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
+                taxes["national_insurance"] = (
+                    amount * rates["national_insurance"]
+                ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
         elif user_type == "corporation":
             # Corporate tax rates
             if jurisdiction == "US":
-                taxes["corporate_tax"] = (amount * Decimal('0.21')).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)  # 21% federal
+                taxes["corporate_tax"] = (amount * Decimal("0.21")).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )  # 21% federal
             elif jurisdiction == "UK":
-                taxes["corporation_tax"] = (amount * rates["corporation_tax"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+                taxes["corporation_tax"] = (amount * rates["corporation_tax"]).quantize(
+                    Decimal("0.01"), rounding=ROUND_HALF_UP
+                )
 
         return taxes
+
 
 class FeeEngine:
     """
@@ -153,30 +182,34 @@ class FeeEngine:
         # Transparent fee structure
         self.fee_structure = {
             "platform_fee": {
-                "rate": Decimal('0.05'),  # 5% platform fee
+                "rate": Decimal("0.05"),  # 5% platform fee
                 "description": "Platform maintenance and development",
-                "transparent": True
+                "transparent": True,
             },
             "payment_processing": {
-                "rate": Decimal('0.029'),  # 2.9% payment processing
+                "rate": Decimal("0.029"),  # 2.9% payment processing
                 "description": "Third-party payment processor fees",
-                "transparent": True
+                "transparent": True,
             },
             "transaction_fee": {
-                "fixed_amount": Decimal('0.30'),  # $0.30 per transaction
+                "fixed_amount": Decimal("0.30"),  # $0.30 per transaction
                 "description": "Per-transaction processing fee",
-                "transparent": True
+                "transparent": True,
             },
             "currency_conversion": {
-                "rate": Decimal('0.01'),  # 1% for non-USD
+                "rate": Decimal("0.01"),  # 1% for non-USD
                 "description": "Currency conversion fee",
                 "transparent": True,
-                "conditional": True  # Only applies for non-USD
-            }
+                "conditional": True,  # Only applies for non-USD
+            },
         }
 
-    def calculate_fees(self, amount: Decimal, currency: str = "USD",
-                      payment_method: str = "bank_transfer") -> Dict[str, Decimal]:
+    def calculate_fees(
+        self,
+        amount: Decimal,
+        currency: str = "USD",
+        payment_method: str = "bank_transfer",
+    ) -> Dict[str, Decimal]:
         """
         Calculate all applicable fees transparently.
 
@@ -191,27 +224,34 @@ class FeeEngine:
         fees = {}
 
         # Platform fee
-        fees["platform_fee"] = (amount * self.fee_structure["platform_fee"]["rate"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        fees["platform_fee"] = (
+            amount * self.fee_structure["platform_fee"]["rate"]
+        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
         # Payment processing fee (varies by method)
         processing_rates = {
-            "bank_transfer": Decimal('0.01'),  # 1% for bank transfers
-            "credit_card": Decimal('0.029'),   # 2.9% for credit cards
-            "paypal": Decimal('0.024'),        # 2.4% for PayPal
-            "crypto": Decimal('0.015')         # 1.5% for crypto
+            "bank_transfer": Decimal("0.01"),  # 1% for bank transfers
+            "credit_card": Decimal("0.029"),  # 2.9% for credit cards
+            "paypal": Decimal("0.024"),  # 2.4% for PayPal
+            "crypto": Decimal("0.015"),  # 1.5% for crypto
         }
 
-        processing_rate = processing_rates.get(payment_method, Decimal('0.02'))
-        fees["payment_processing"] = (amount * processing_rate).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+        processing_rate = processing_rates.get(payment_method, Decimal("0.02"))
+        fees["payment_processing"] = (amount * processing_rate).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
 
         # Transaction fee
         fees["transaction_fee"] = self.fee_structure["transaction_fee"]["fixed_amount"]
 
         # Currency conversion (if applicable)
         if currency != "USD":
-            fees["currency_conversion"] = (amount * self.fee_structure["currency_conversion"]["rate"]).quantize(Decimal('0.01'), rounding=ROUND_HALF_UP)
+            fees["currency_conversion"] = (
+                amount * self.fee_structure["currency_conversion"]["rate"]
+            ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
         return fees
+
 
 class PayoutEngine:
     """
@@ -232,9 +272,15 @@ class PayoutEngine:
 
         print("✅ Payout Glimpse initialized - automatic tax & fee handling")
 
-    def calculate_payout(self, user_id: str, work_amount: Decimal,
-                        jurisdiction: str = "US", state_province: str = "",
-                        currency: str = "USD", user_type: str = "individual") -> PayoutCalculation:
+    def calculate_payout(
+        self,
+        user_id: str,
+        work_amount: Decimal,
+        jurisdiction: str = "US",
+        state_province: str = "",
+        currency: str = "USD",
+        user_type: str = "individual",
+    ) -> PayoutCalculation:
         """
         Calculate complete payout with all taxes and fees.
 
@@ -259,7 +305,7 @@ class PayoutEngine:
             base_amount=work_amount,
             currency=currency,
             jurisdiction=jurisdiction,
-            timestamp=datetime.now(timezone.utc).isoformat()
+            timestamp=datetime.now(timezone.utc).isoformat(),
         )
 
         # Calculate taxes automatically
@@ -268,12 +314,14 @@ class PayoutEngine:
         )
 
         # Calculate fees transparently
-        calculation.platform_fees = self.fee_engine.calculate_fees(work_amount, currency)
+        calculation.platform_fees = self.fee_engine.calculate_fees(
+            work_amount, currency
+        )
 
         # Assume standard payment processing fees
         calculation.processing_fees = {
-            "wire_fee": Decimal('25.00'),  # International wire fee
-            "compliance_fee": Decimal('5.00')  # Regulatory compliance
+            "wire_fee": Decimal("25.00"),  # International wire fee
+            "compliance_fee": Decimal("5.00"),  # Regulatory compliance
         }
 
         # Calculate totals
@@ -281,18 +329,23 @@ class PayoutEngine:
         total_platform_fees = sum(calculation.platform_fees.values())
         total_processing_fees = sum(calculation.processing_fees.values())
 
-        calculation.total_deductions = total_taxes + total_platform_fees + total_processing_fees
+        calculation.total_deductions = (
+            total_taxes + total_platform_fees + total_processing_fees
+        )
         calculation.net_amount = calculation.base_amount - calculation.total_deductions
 
         # Ensure net amount is never negative (platform absorbs losses if any)
         if calculation.net_amount < 0:
-            calculation.net_amount = Decimal('0.00')
-            calculation.adjustment_note = "Platform absorbed loss to ensure user receives payment"
+            calculation.net_amount = Decimal("0.00")
+            calculation.adjustment_note = (
+                "Platform absorbed loss to ensure user receives payment"
+            )
 
         return calculation
 
-    def process_payout(self, calculation: PayoutCalculation,
-                      payment_method: str = "bank_transfer") -> PayoutRecord:
+    def process_payout(
+        self, calculation: PayoutCalculation, payment_method: str = "bank_transfer"
+    ) -> PayoutRecord:
         """
         Process the actual payout through payment gateway.
 
@@ -311,15 +364,17 @@ class PayoutEngine:
             payment_reference="",
             status="pending",
             initiated_at=datetime.now(timezone.utc).isoformat(),
-            audit_trail=[]
+            audit_trail=[],
         )
 
         # Add audit entry
-        record.audit_trail.append({
-            "timestamp": record.initiated_at,
-            "action": "payout_initiated",
-            "details": f"Payout initiated for ${calculation.net_amount} via {payment_method}"
-        })
+        record.audit_trail.append(
+            {
+                "timestamp": record.initiated_at,
+                "action": "payout_initiated",
+                "details": f"Payout initiated for ${calculation.net_amount} via {payment_method}",
+            }
+        )
 
         try:
             # Simulate payment processing (in production, integrate with real payment gateway)
@@ -327,27 +382,31 @@ class PayoutEngine:
                 calculation.user_id,
                 calculation.net_amount,
                 payment_method,
-                calculation.currency
+                calculation.currency,
             )
 
             record.payment_reference = payment_reference
             record.status = "completed"
             record.completed_at = datetime.now(timezone.utc).isoformat()
 
-            record.audit_trail.append({
-                "timestamp": record.completed_at,
-                "action": "payout_completed",
-                "details": f"Payment processed successfully. Reference: {payment_reference}"
-            })
+            record.audit_trail.append(
+                {
+                    "timestamp": record.completed_at,
+                    "action": "payout_completed",
+                    "details": f"Payment processed successfully. Reference: {payment_reference}",
+                }
+            )
 
         except Exception as e:
             record.status = "failed"
             record.failure_reason = str(e)
-            record.audit_trail.append({
-                "timestamp": datetime.now(timezone.utc).isoformat(),
-                "action": "payout_failed",
-                "details": f"Payment failed: {str(e)}"
-            })
+            record.audit_trail.append(
+                {
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "action": "payout_failed",
+                    "details": f"Payment failed: {str(e)}",
+                }
+            )
 
         # Save payout record
         self._save_payout_record(record)
@@ -362,15 +421,15 @@ class PayoutEngine:
             return []
 
         try:
-            with open(user_payouts_file, 'r') as f:
+            with open(user_payouts_file, "r") as f:
                 payouts_data = json.load(f)
 
             records = []
-            for record_data in payouts_data.get('payouts', []):
+            for record_data in payouts_data.get("payouts", []):
                 # Convert nested objects back to proper types
-                calc_data = record_data['calculation']
+                calc_data = record_data["calculation"]
                 calculation = PayoutCalculation(**calc_data)
-                record_data['calculation'] = calculation
+                record_data["calculation"] = calculation
                 records.append(PayoutRecord(**record_data))
 
             return records
@@ -394,49 +453,51 @@ class PayoutEngine:
             "user_id": record.user_id,
             "timestamp": record.initiated_at,
             "status": record.status,
-
             "amount_breakdown": {
                 "base_work_amount": float(calculation.base_amount),
-                "taxes_deducted": {k: float(v) for k, v in calculation.tax_calculations.items()},
-                "platform_fees": {k: float(v) for k, v in calculation.platform_fees.items()},
-                "processing_fees": {k: float(v) for k, v in calculation.processing_fees.items()},
+                "taxes_deducted": {
+                    k: float(v) for k, v in calculation.tax_calculations.items()
+                },
+                "platform_fees": {
+                    k: float(v) for k, v in calculation.platform_fees.items()
+                },
+                "processing_fees": {
+                    k: float(v) for k, v in calculation.processing_fees.items()
+                },
                 "total_deductions": float(calculation.total_deductions),
-                "net_payment_to_user": float(calculation.net_amount)
+                "net_payment_to_user": float(calculation.net_amount),
             },
-
             "transparency_notes": [
                 "All taxes calculated automatically based on jurisdiction",
                 "Platform fees support system maintenance and development",
                 "Processing fees cover third-party payment services",
-                "Users receive 100% of entitled earnings after transparent deductions"
+                "Users receive 100% of entitled earnings after transparent deductions",
             ],
-
             "tax_information": {
                 "jurisdiction": calculation.jurisdiction,
                 "tax_methodology": "Progressive tax brackets with standard deductions",
                 "tax_withholding": "Handled automatically - no user action required",
-                "tax_documents": "Automatically generated and sent to user"
+                "tax_documents": "Automatically generated and sent to user",
             },
-
             "fee_transparency": {
                 "platform_fee": "5% - Covers AI infrastructure, development, and support",
                 "payment_processing": "2.9% - Third-party payment processor fees",
                 "transaction_fee": "$0.30 - Per-transaction processing",
-                "currency_conversion": "1% - Applied only for non-USD payments"
+                "currency_conversion": "1% - Applied only for non-USD payments",
             },
-
             "user_guarantee": {
                 "payment_guarantee": "User receives payment for all legitimate work completed",
                 "transparency_guarantee": "All fees and calculations clearly disclosed",
                 "timeliness_guarantee": "Payments processed within 24 hours of approval",
-                "support_guarantee": "Full support for any payment questions or issues"
-            }
+                "support_guarantee": "Full support for any payment questions or issues",
+            },
         }
 
         return report
 
-    def _process_payment_gateway(self, user_id: str, amount: Decimal,
-                               payment_method: str, currency: str) -> str:
+    def _process_payment_gateway(
+        self, user_id: str, amount: Decimal, payment_method: str, currency: str
+    ) -> str:
         """
         Process payment through payment gateway.
 
@@ -449,6 +510,7 @@ class PayoutEngine:
         """
         # Simulate payment processing
         import uuid
+
         reference = f"PYT_{uuid.uuid4().hex[:12].upper()}"
 
         # Simulate processing delay
@@ -463,7 +525,7 @@ class PayoutEngine:
         # Load existing payouts or create new structure
         if user_payouts_file.exists():
             try:
-                with open(user_payouts_file, 'r') as f:
+                with open(user_payouts_file, "r") as f:
                     payouts_data = json.load(f)
             except:
                 payouts_data = {"user_id": record.user_id, "payouts": []}
@@ -473,19 +535,19 @@ class PayoutEngine:
         # Convert to JSON-serializable format
         record_dict = asdict(record)
         # Convert Decimal objects to floats for JSON
-        calc = record_dict['calculation']
-        calc['base_amount'] = float(calc['base_amount'])
-        calc['total_deductions'] = float(calc['total_deductions'])
-        calc['net_amount'] = float(calc['net_amount'])
+        calc = record_dict["calculation"]
+        calc["base_amount"] = float(calc["base_amount"])
+        calc["total_deductions"] = float(calc["total_deductions"])
+        calc["net_amount"] = float(calc["net_amount"])
 
-        for key in ['tax_calculations', 'platform_fees', 'processing_fees']:
+        for key in ["tax_calculations", "platform_fees", "processing_fees"]:
             if key in calc:
                 calc[key] = {k: float(v) for k, v in calc[key].items()}
 
-        payouts_data['payouts'].append(record_dict)
+        payouts_data["payouts"].append(record_dict)
 
         # Save updated data
-        with open(user_payouts_file, 'w') as f:
+        with open(user_payouts_file, "w") as f:
             json.dump(payouts_data, f, indent=2)
 
     def _load_payout_record(self, payout_id: str) -> Optional[PayoutRecord]:
@@ -496,8 +558,12 @@ class PayoutEngine:
 
 
 # Integration functions for assistant_v2_core.py
-def process_user_payout(user_id: str, work_amount: float,
-                       jurisdiction: str = "US", payment_method: str = "bank_transfer") -> Dict[str, Any]:
+def process_user_payout(
+    user_id: str,
+    work_amount: float,
+    jurisdiction: str = "US",
+    payment_method: str = "bank_transfer",
+) -> Dict[str, Any]:
     """
     Process a complete payout for a user.
 
@@ -534,7 +600,7 @@ def process_user_payout(user_id: str, work_amount: float,
         "payment_reference": record.payment_reference,
         "processing_time": "24 hours" if record.status == "completed" else "N/A",
         "transparency_report": transparency_report,
-        "user_message": f"✅ Payment processed successfully! You received ${float(calculation.net_amount):.2f} for your work. All taxes and fees handled automatically - no action required from you."
+        "user_message": f"✅ Payment processed successfully! You received ${float(calculation.net_amount):.2f} for your work. All taxes and fees handled automatically - no action required from you.",
     }
 
     return result
@@ -546,7 +612,9 @@ def get_user_payment_history(user_id: str) -> Dict[str, Any]:
 
     payouts = Glimpse.get_user_payout_history(user_id)
 
-    total_earned = sum(float(p.calculation.net_amount) for p in payouts if p.status == "completed")
+    total_earned = sum(
+        float(p.calculation.net_amount) for p in payouts if p.status == "completed"
+    )
     total_payouts = len([p for p in payouts if p.status == "completed"])
 
     return {
@@ -559,9 +627,10 @@ def get_user_payment_history(user_id: str) -> Dict[str, Any]:
                 "payout_id": p.payout_id,
                 "amount": float(p.calculation.net_amount),
                 "date": p.completed_at or p.initiated_at,
-                "status": p.status
-            } for p in payouts[-5:]  # Last 5 payouts
-        ]
+                "status": p.status,
+            }
+            for p in payouts[-5:]  # Last 5 payouts
+        ],
     }
 
 
@@ -572,10 +641,10 @@ if __name__ == "__main__":
     # Example payout calculation
     calculation = Glimpse.calculate_payout(
         user_id="user_123",
-        work_amount=Decimal('2500.00'),
+        work_amount=Decimal("2500.00"),
         jurisdiction="US",
         state_province="CA",
-        user_type="individual"
+        user_type="individual",
     )
 
     print("Payout Calculation Breakdown:")
@@ -596,4 +665,6 @@ if __name__ == "__main__":
     report = Glimpse.get_payout_transparency_report(record.payout_id)
     print(f"\\nTransparency Report Generated: {len(report)} sections")
 
-    print("\\n✅ Payout Glimpse operational - users receive clean, transparent payments!")
+    print(
+        "\\n✅ Payout Glimpse operational - users receive clean, transparent payments!"
+    )

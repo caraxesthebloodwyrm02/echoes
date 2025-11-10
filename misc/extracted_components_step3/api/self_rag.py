@@ -17,6 +17,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class VerificationResult:
     """Result of truth verification"""
@@ -30,6 +31,7 @@ class VerificationResult:
     processing_time: float
     timestamp: datetime
 
+
 @dataclass
 class EvidenceChunk:
     """A piece of evidence with relevance score"""
@@ -38,6 +40,7 @@ class EvidenceChunk:
     relevance_score: float
     source: str
     metadata: Dict[str, Any]
+
 
 class SelfRAGVerifier:
     """
@@ -61,7 +64,7 @@ class SelfRAGVerifier:
         self,
         claim: str,
         evidence: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ) -> VerificationResult:
         """
         Verify the truth of a claim using SELF-RAG methodology.
@@ -81,7 +84,9 @@ class SelfRAGVerifier:
             relevant_evidence = await self._gather_evidence(claim, evidence, context)
 
             # Step 2: Analyze claim against evidence
-            analysis = await self._analyze_claim_against_evidence(claim, relevant_evidence)
+            analysis = await self._analyze_claim_against_evidence(
+                claim, relevant_evidence
+            )
 
             # Step 3: Generate verdict with confidence
             verdict, confidence, explanation = await self._generate_verdict(
@@ -98,7 +103,7 @@ class SelfRAGVerifier:
                 contradictions=analysis.get("contradictions", []),
                 supporting_evidence=analysis.get("supporting", []),
                 processing_time=processing_time,
-                timestamp=datetime.utcnow()
+                timestamp=datetime.utcnow(),
             )
 
         except Exception as e:
@@ -113,14 +118,14 @@ class SelfRAGVerifier:
                 contradictions=[],
                 supporting_evidence=[],
                 processing_time=processing_time,
-                timestamp=datetime.utcnow()
+                timestamp=datetime.utcnow(),
             )
 
     async def _gather_evidence(
         self,
         claim: str,
         provided_evidence: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None
+        context: Optional[Dict[str, Any]] = None,
     ) -> List[EvidenceChunk]:
         """
         Gather relevant evidence for claim verification.
@@ -136,7 +141,7 @@ class SelfRAGVerifier:
                     text=text,
                     relevance_score=0.8,  # High confidence for provided evidence
                     source="provided",
-                    metadata={"index": i}
+                    metadata={"index": i},
                 )
                 evidence_chunks.append(chunk)
 
@@ -173,16 +178,14 @@ class SelfRAGVerifier:
                     text=context_text,
                     relevance_score=0.5,  # Medium confidence for context
                     source="context",
-                    metadata={"type": "context"}
+                    metadata={"type": "context"},
                 )
                 evidence_chunks.append(chunk)
 
         return evidence_chunks
 
     async def _analyze_claim_against_evidence(
-        self,
-        claim: str,
-        evidence: List[EvidenceChunk]
+        self, claim: str, evidence: List[EvidenceChunk]
     ) -> Dict[str, Any]:
         """
         Analyze claim against gathered evidence to identify support and contradictions.
@@ -199,16 +202,28 @@ class SelfRAGVerifier:
 
             # Check for direct support
             support_keywords = ["true", "correct", "verified", "confirmed", "supports"]
-            contradiction_keywords = ["false", "incorrect", "contradicts", "denies", "refutes"]
+            contradiction_keywords = [
+                "false",
+                "incorrect",
+                "contradicts",
+                "denies",
+                "refutes",
+            ]
 
             support_score = sum(1 for word in support_keywords if word in text_lower)
-            contradiction_score = sum(1 for word in contradiction_keywords if word in text_lower)
+            contradiction_score = sum(
+                1 for word in contradiction_keywords if word in text_lower
+            )
 
             # Calculate semantic similarity (simple approach)
             claim_words = set(claim_lower.split())
             text_words = set(text_lower.split())
             overlap = len(claim_words.intersection(text_words))
-            similarity = overlap / max(len(claim_words), len(text_words)) if max(len(claim_words), len(text_words)) > 0 else 0
+            similarity = (
+                overlap / max(len(claim_words), len(text_words))
+                if max(len(claim_words), len(text_words)) > 0
+                else 0
+            )
 
             if contradiction_score > support_score and similarity > 0.3:
                 contradictions.append(chunk.text)
@@ -221,14 +236,11 @@ class SelfRAGVerifier:
             "supporting": supporting_evidence,
             "contradictions": contradictions,
             "neutral": neutral_evidence,
-            "evidence_count": len(evidence)
+            "evidence_count": len(evidence),
         }
 
     async def _generate_verdict(
-        self,
-        claim: str,
-        analysis: Dict[str, Any],
-        evidence: List[EvidenceChunk]
+        self, claim: str, analysis: Dict[str, Any], evidence: List[EvidenceChunk]
     ) -> Tuple[str, float, str]:
         """
         Generate final verdict based on evidence analysis.
@@ -248,7 +260,9 @@ class SelfRAGVerifier:
             # Contradictions outweigh support
             confidence = min(0.9, contradiction_ratio)
             verdict = "FALSE"
-            explanation = f"Claim contradicted by {contradiction_count} evidence sources"
+            explanation = (
+                f"Claim contradicted by {contradiction_count} evidence sources"
+            )
         elif support_ratio > contradiction_ratio and supporting_count > 0:
             # Support outweighs contradictions
             confidence = min(0.9, support_ratio)
@@ -261,18 +275,24 @@ class SelfRAGVerifier:
             explanation = f"Insufficient evidence: {supporting_count} supporting, {contradiction_count} contradicting"
 
         # Adjust confidence based on evidence quality - simplified without numpy
-        avg_relevance = sum([e.relevance_score for e in evidence]) / len(evidence) if evidence else 0
+        avg_relevance = (
+            sum([e.relevance_score for e in evidence]) / len(evidence)
+            if evidence
+            else 0
+        )
         confidence *= avg_relevance
 
         return verdict, confidence, explanation
 
+
 # Global verifier instance
 verifier = None
+
 
 async def verify_truth(
     claim: str,
     evidence: Optional[List[str]] = None,
-    context: Optional[Dict[str, Any]] = None
+    context: Optional[Dict[str, Any]] = None,
 ) -> Dict[str, Any]:
     """
     Main entry point for truth verification.
@@ -297,5 +317,5 @@ async def verify_truth(
         "contradictions": result.contradictions,
         "supporting_evidence": result.supporting_evidence,
         "processing_time": result.processing_time,
-        "timestamp": result.timestamp.isoformat()
+        "timestamp": result.timestamp.isoformat(),
     }

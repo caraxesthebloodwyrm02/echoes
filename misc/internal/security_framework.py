@@ -18,8 +18,9 @@ from functools import wraps
 import os
 
 # Configure security logger
-security_logger = logging.getLogger('echoes.security')
+security_logger = logging.getLogger("echoes.security")
 security_logger.setLevel(logging.INFO)
+
 
 class SecurityEvent(Enum):
     AUTHENTICATION = "authentication"
@@ -33,9 +34,11 @@ class SecurityEvent(Enum):
     def __str__(self) -> str:
         return self.value
 
+
 @dataclass
 class SecurityIncident:
     """Represents a security incident for logging and analysis."""
+
     timestamp: str
     event_type: SecurityEvent
     severity: str  # "low", "medium", "high", "critical"
@@ -51,16 +54,20 @@ class SecurityIncident:
         result["event_type"] = str(self.event_type)
         return result
 
+
 class EncryptionLayer:
     """Handles encryption/decryption operations with multiple algorithms."""
 
     def __init__(self, key: Optional[bytes] = None):
         try:
             from cryptography.fernet import Fernet
+
             self.fernet = Fernet
             self.key = key or Fernet.generate_key()
         except ImportError:
-            security_logger.warning("cryptography not available, using basic encryption")
+            security_logger.warning(
+                "cryptography not available, using basic encryption"
+            )
             self.fernet = None
             self.key = key or os.urandom(32)
 
@@ -99,15 +106,16 @@ class EncryptionLayer:
             decrypted.append(byte ^ key_bytes[i % len(key_bytes)])
         return decrypted.decode()
 
+
 class AccessControl:
     """Manages user permissions and access control."""
 
     def __init__(self):
         self.roles: Dict[str, List[str]] = {
-            'admin': ['*'],  # All permissions
-            'user': ['read', 'write', 'execute'],
-            'viewer': ['read'],
-            'auditor': ['read', 'audit']
+            "admin": ["*"],  # All permissions
+            "user": ["read", "write", "execute"],
+            "viewer": ["read"],
+            "auditor": ["read", "audit"],
         }
 
         self.user_roles: Dict[str, str] = {}
@@ -121,10 +129,10 @@ class AccessControl:
 
     def has_permission(self, user_id: str, permission: str) -> bool:
         """Check if user has specific permission."""
-        role = self.user_roles.get(user_id, 'viewer')
+        role = self.user_roles.get(user_id, "viewer")
         role_permissions = self.roles.get(role, [])
 
-        return '*' in role_permissions or permission in role_permissions
+        return "*" in role_permissions or permission in role_permissions
 
     def add_permission_check(self, resource: str, check_func: Callable):
         """Add custom permission check for a resource."""
@@ -142,6 +150,7 @@ class AccessControl:
 
         return True
 
+
 class AuditLogger:
     """Handles security event logging and audit trails."""
 
@@ -154,6 +163,7 @@ class AuditLogger:
         """Log a security event."""
         with self._lock:
             try:
+
                 def _json_default(value: Any):
                     if isinstance(value, Enum):
                         return value.value
@@ -174,23 +184,28 @@ class AuditLogger:
                     ensure_ascii=False,
                 )
 
-                with open(self.log_path, 'a', encoding='utf-8') as f:
+                with open(self.log_path, "a", encoding="utf-8") as f:
                     f.write(serialized)
-                    f.write('\n')
+                    f.write("\n")
 
                 # Also log to Python logger
-                security_logger.info(f"Security event: {incident.event_type.value} - {incident.severity}")
+                security_logger.info(
+                    f"Security event: {incident.event_type.value} - {incident.severity}"
+                )
 
             except Exception as e:
                 security_logger.error(f"Failed to log security event: {e}")
 
-    def get_events(self, user_id: Optional[str] = None,
-                  event_type: Optional[SecurityEvent] = None,
-                  since: Optional[float] = None) -> List[SecurityIncident]:
+    def get_events(
+        self,
+        user_id: Optional[str] = None,
+        event_type: Optional[SecurityEvent] = None,
+        since: Optional[float] = None,
+    ) -> List[SecurityIncident]:
         """Retrieve audit events with optional filtering."""
         events = []
         try:
-            with open(self.log_path, 'r', encoding='utf-8') as f:
+            with open(self.log_path, "r", encoding="utf-8") as f:
                 for line in f:
                     try:
                         data = json.loads(line.strip())
@@ -201,7 +216,11 @@ class AuditLogger:
                             continue
                         if event_type and event.event_type != event_type:
                             continue
-                        if since and datetime.fromisoformat(event.timestamp).timestamp() < since:
+                        if (
+                            since
+                            and datetime.fromisoformat(event.timestamp).timestamp()
+                            < since
+                        ):
                             continue
 
                         events.append(event)
@@ -212,30 +231,26 @@ class AuditLogger:
 
         return events
 
+
 class ThreatDetection:
     """Detects potential security threats and anomalies."""
 
     def __init__(self):
         self.suspicious_patterns = {
-            'sql_injection': [
-                r';\s*DROP\s+TABLE',
-                r';\s*DELETE\s+FROM',
-                r'UNION\s+SELECT',
-                r'--',
-                r'/\*.*\*/'
+            "sql_injection": [
+                r";\s*DROP\s+TABLE",
+                r";\s*DELETE\s+FROM",
+                r"UNION\s+SELECT",
+                r"--",
+                r"/\*.*\*/",
             ],
-            'path_traversal': [
-                r'\.\./',
-                r'\.\.\\',
-                r'%2e%2e%2f',
-                r'%2e%2e%5c'
+            "path_traversal": [r"\.\./", r"\.\.\\", r"%2e%2e%2f", r"%2e%2e%5c"],
+            "script_injection": [
+                r"<script[^>]*>.*?</script>",
+                r"javascript:",
+                r"on\w+\s*=",
+                r"eval\s*\(",
             ],
-            'script_injection': [
-                r'<script[^>]*>.*?</script>',
-                r'javascript:',
-                r'on\w+\s*=',
-                r'eval\s*\('
-            ]
         }
 
     def is_safe(self, data: Any) -> bool:
@@ -254,6 +269,7 @@ class ThreatDetection:
         for category, patterns in self.suspicious_patterns.items():
             for pattern in patterns:
                 import re
+
                 if re.search(pattern, text_lower, re.IGNORECASE):
                     security_logger.warning(f"Suspicious pattern detected: {category}")
                     return False
@@ -265,12 +281,12 @@ class ThreatDetection:
             return None
 
         # Check for rapid-fire requests
-        timestamps = [item.get('timestamp') for item in user_activity[-10:]]
+        timestamps = [item.get("timestamp") for item in user_activity[-10:]]
         if len(timestamps) >= 2:
             time_diffs = []
             for i in range(1, len(timestamps)):
                 try:
-                    t1 = datetime.fromisoformat(timestamps[i-1])
+                    t1 = datetime.fromisoformat(timestamps[i - 1])
                     t2 = datetime.fromisoformat(timestamps[i])
                     time_diffs.append((t2 - t1).total_seconds())
                 except:
@@ -282,38 +298,39 @@ class ThreatDetection:
 
         return None
 
+
 class RateLimiter:
     """Implements rate limiting for API endpoints."""
 
     def __init__(self):
         self.requests: Dict[str, List[float]] = {}
         self.limits = {
-            'default': {'requests': 100, 'window': 60},  # 100 req/minute
-            'strict': {'requests': 10, 'window': 60},    # 10 req/minute
-            'lenient': {'requests': 1000, 'window': 60}  # 1000 req/minute
+            "default": {"requests": 100, "window": 60},  # 100 req/minute
+            "strict": {"requests": 10, "window": 60},  # 10 req/minute
+            "lenient": {"requests": 1000, "window": 60},  # 1000 req/minute
         }
 
-    def exceeded(self, user_id: str, limit_type: str = 'default') -> bool:
+    def exceeded(self, user_id: str, limit_type: str = "default") -> bool:
         """Check if rate limit exceeded."""
         now = time.time()
-        limit = self.limits.get(limit_type, self.limits['default'])
+        limit = self.limits.get(limit_type, self.limits["default"])
 
         if user_id not in self.requests:
             self.requests[user_id] = []
 
         # Clean old requests
         self.requests[user_id] = [
-            ts for ts in self.requests[user_id]
-            if now - ts < limit['window']
+            ts for ts in self.requests[user_id] if now - ts < limit["window"]
         ]
 
         # Check limit
-        if len(self.requests[user_id]) >= limit['requests']:
+        if len(self.requests[user_id]) >= limit["requests"]:
             return True
 
         # Add current request
         self.requests[user_id].append(now)
         return False
+
 
 class SecurityManager:
     """Central security management system."""
@@ -326,43 +343,77 @@ class SecurityManager:
         self.rate_limiter = RateLimiter()
 
         # Set up default roles
-        self.access_control.assign_role('system', 'admin')
+        self.access_control.assign_role("system", "admin")
 
-    def validate_operation(self, user_id: str, operation: str,
-                          data: Any = None, source_ip: str = None) -> bool:
+    def validate_operation(
+        self, user_id: str, operation: str, data: Any = None, source_ip: str = None
+    ) -> bool:
         """Zero-trust validation for operations."""
 
         # Rate limiting check
         if self.rate_limiter.exceeded(user_id):
-            self._log_incident(SecurityEvent.AUTHENTICATION, 'medium',
-                             user_id, 'rate_limit', operation,
-                             {'reason': 'rate_limit_exceeded'}, source_ip)
+            self._log_incident(
+                SecurityEvent.AUTHENTICATION,
+                "medium",
+                user_id,
+                "rate_limit",
+                operation,
+                {"reason": "rate_limit_exceeded"},
+                source_ip,
+            )
             return False
 
         # Threat detection
         if data and not self.threat_detection.is_safe(data):
-            self._log_incident(SecurityEvent.THREAT_DETECTED, 'high',
-                             user_id, 'threat_detection', operation,
-                             {'reason': 'suspicious_input'}, source_ip)
+            self._log_incident(
+                SecurityEvent.THREAT_DETECTED,
+                "high",
+                user_id,
+                "threat_detection",
+                operation,
+                {"reason": "suspicious_input"},
+                source_ip,
+            )
             return False
 
         # Access control
-        if not self.access_control.check_access(user_id, operation.split('.')[0], operation.split('.')[-1]):
-            self._log_incident(SecurityEvent.AUTHORIZATION, 'medium',
-                             user_id, 'access_denied', operation,
-                             {'reason': 'insufficient_permissions'}, source_ip)
+        if not self.access_control.check_access(
+            user_id, operation.split(".")[0], operation.split(".")[-1]
+        ):
+            self._log_incident(
+                SecurityEvent.AUTHORIZATION,
+                "medium",
+                user_id,
+                "access_denied",
+                operation,
+                {"reason": "insufficient_permissions"},
+                source_ip,
+            )
             return False
 
         # Log successful validation
-        self._log_incident(SecurityEvent.AUTHENTICATION, 'low',
-                         user_id, 'validation_passed', operation,
-                         {'status': 'approved'}, source_ip)
+        self._log_incident(
+            SecurityEvent.AUTHENTICATION,
+            "low",
+            user_id,
+            "validation_passed",
+            operation,
+            {"status": "approved"},
+            source_ip,
+        )
 
         return True
 
-    def _log_incident(self, event_type: SecurityEvent, severity: str,
-                     user_id: str, resource: str, action: str,
-                     details: Dict[str, Any], source_ip: str = None):
+    def _log_incident(
+        self,
+        event_type: SecurityEvent,
+        severity: str,
+        user_id: str,
+        resource: str,
+        action: str,
+        details: Dict[str, Any],
+        source_ip: str = None,
+    ):
         """Log a security incident."""
         incident = SecurityIncident(
             timestamp=datetime.now(timezone.utc).isoformat(),
@@ -372,7 +423,7 @@ class SecurityManager:
             resource=resource,
             action=action,
             details=details,
-            source_ip=source_ip
+            source_ip=source_ip,
         )
         self.audit_logger.log_event(incident)
 
@@ -384,9 +435,12 @@ class SecurityManager:
         """Decrypt sensitive data."""
         return self.encryption.decrypt(encrypted_data)
 
-    def get_audit_trail(self, user_id: Optional[str] = None,
-                       event_type: Optional[SecurityEvent] = None,
-                       hours: int = 24) -> List[SecurityIncident]:
+    def get_audit_trail(
+        self,
+        user_id: Optional[str] = None,
+        event_type: Optional[SecurityEvent] = None,
+        hours: int = 24,
+    ) -> List[SecurityIncident]:
         """Get audit trail for specified criteria."""
         since = time.time() - (hours * 3600)
         return self.audit_logger.get_events(user_id, event_type, since)
@@ -394,28 +448,37 @@ class SecurityManager:
     def security_health_check(self) -> Dict[str, Any]:
         """Perform security health check."""
         return {
-            'encryption_status': 'operational' if self.encryption else 'degraded',
-            'audit_logging': 'operational' if self.audit_logger else 'failed',
-            'threat_detection': 'operational' if self.threat_detection else 'failed',
-            'access_control': 'operational' if self.access_control else 'failed',
-            'rate_limiting': 'operational' if self.rate_limiter else 'failed',
-            'recent_incidents': len(self.get_audit_trail(hours=1))
+            "encryption_status": "operational" if self.encryption else "degraded",
+            "audit_logging": "operational" if self.audit_logger else "failed",
+            "threat_detection": "operational" if self.threat_detection else "failed",
+            "access_control": "operational" if self.access_control else "failed",
+            "rate_limiting": "operational" if self.rate_limiter else "failed",
+            "recent_incidents": len(self.get_audit_trail(hours=1)),
         }
+
 
 # Global security manager instance
 security_manager = SecurityManager()
 
+
 def secure_operation(operation_name: str):
     """Decorator for securing operations."""
+
     def decorator(func: Callable):
         @wraps(func)
         def wrapper(*args, **kwargs):
             # Extract user_id from kwargs or args (assuming it's passed)
-            user_id = kwargs.get('user_id', getattr(args[0] if args else None, 'user_id', 'anonymous'))
+            user_id = kwargs.get(
+                "user_id", getattr(args[0] if args else None, "user_id", "anonymous")
+            )
 
             if not security_manager.validate_operation(user_id, operation_name, kwargs):
-                raise PermissionError(f"Security validation failed for operation: {operation_name}")
+                raise PermissionError(
+                    f"Security validation failed for operation: {operation_name}"
+                )
 
             return func(*args, **kwargs)
+
         return wrapper
+
     return decorator

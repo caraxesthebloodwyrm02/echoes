@@ -178,4 +178,6 @@ assert_type(divmod(f4, f4), tuple[np.float32, np.float32])
 # workarounds for https://github.com/microsoft/pyright/issues/9663
 assert_type(f8.__rdivmod__(f), tuple[np.float64, np.float64])
 assert_type(f8.__rdivmod__(f4), tuple[np.float64, np.float64])
-assert_type(AR_b.__divmod__(f8), tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]])
+assert_type(
+    AR_b.__divmod__(f8), tuple[npt.NDArray[np.float64], npt.NDArray[np.float64]]
+)

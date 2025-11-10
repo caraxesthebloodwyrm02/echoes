@@ -21,9 +21,11 @@ from typing import Dict, Any, List, Optional
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
+
 @dataclass
 class WorkEntry:
     """Represents a single work entry with all contribution details."""
+
     work_id: str
     user_id: str
     timestamp: str
@@ -31,15 +33,17 @@ class WorkEntry:
     description: str
     time_invested_minutes: float
     intellectual_effort: float  # 0-10 scale
-    motivation_level: float     # 0-10 scale
-    quality_rating: float       # 0-10 scale
+    motivation_level: float  # 0-10 scale
+    quality_rating: float  # 0-10 scale
     assistant_interaction: Dict[str, Any] = field(default_factory=dict)
     tags: List[str] = field(default_factory=list)
     status: str = "completed"
 
+
 @dataclass
 class UserWorkProfile:
     """Tracks a user's complete work history and contribution patterns."""
+
     user_id: str
     total_work_entries: int = 0
     total_time_invested: float = 0.0
@@ -49,6 +53,7 @@ class UserWorkProfile:
     skill_tags: List[str] = field(default_factory=list)
     work_categories: Dict[str, int] = field(default_factory=dict)
     last_updated: str = ""
+
 
 class WorkTracker:
     """
@@ -69,10 +74,17 @@ class WorkTracker:
 
         print("✅ Work Tracker initialized - tracking user contributions")
 
-    def log_work_entry(self, user_id: str, task_type: str, description: str,
-                      time_invested_minutes: float, intellectual_effort: float,
-                      motivation_level: float, quality_rating: float,
-                      assistant_data: Optional[Dict[str, Any]] = None) -> str:
+    def log_work_entry(
+        self,
+        user_id: str,
+        task_type: str,
+        description: str,
+        time_invested_minutes: float,
+        intellectual_effort: float,
+        motivation_level: float,
+        quality_rating: float,
+        assistant_data: Optional[Dict[str, Any]] = None,
+    ) -> str:
         """
         Log a work entry with all contribution details.
 
@@ -90,7 +102,9 @@ class WorkTracker:
             Work entry ID
         """
         # Generate unique work ID
-        work_id = hashlib.md5(f"{user_id}_{task_type}_{time.time()}".encode()).hexdigest()[:16]
+        work_id = hashlib.md5(
+            f"{user_id}_{task_type}_{time.time()}".encode()
+        ).hexdigest()[:16]
 
         # Create work entry
         entry = WorkEntry(
@@ -104,7 +118,7 @@ class WorkTracker:
             motivation_level=clamp(motivation_level, 0, 10),
             quality_rating=clamp(quality_rating, 0, 10),
             assistant_interaction=assistant_data or {},
-            tags=self._generate_tags(task_type, description)
+            tags=self._generate_tags(task_type, description),
         )
 
         # Save entry
@@ -127,11 +141,11 @@ class WorkTracker:
             return []
 
         try:
-            with open(profile_file, 'r') as f:
+            with open(profile_file, "r") as f:
                 profile_data = json.load(f)
 
             work_entries = []
-            for entry_data in profile_data.get('work_entries', []):
+            for entry_data in profile_data.get("work_entries", []):
                 work_entries.append(WorkEntry(**entry_data))
 
             return work_entries[-limit:]  # Return most recent entries
@@ -148,26 +162,31 @@ class WorkTracker:
             return self._create_empty_summary(user_id)
 
         try:
-            with open(profile_file, 'r') as f:
+            with open(profile_file, "r") as f:
                 profile_data = json.load(f)
 
             # Calculate contribution metrics
-            work_entries = profile_data.get('work_entries', [])
+            work_entries = profile_data.get("work_entries", [])
             total_entries = len(work_entries)
 
             if total_entries == 0:
                 return self._create_empty_summary(user_id)
 
-            total_time = sum(entry['time_invested_minutes'] for entry in work_entries)
-            avg_intellectual = sum(entry['intellectual_effort'] for entry in work_entries) / total_entries
-            avg_motivation = sum(entry['motivation_level'] for entry in work_entries) / total_entries
-            avg_quality = sum(entry['quality_rating'] for entry in work_entries) / total_entries
+            total_time = sum(entry["time_invested_minutes"] for entry in work_entries)
+            avg_intellectual = (
+                sum(entry["intellectual_effort"] for entry in work_entries)
+                / total_entries
+            )
+            avg_motivation = (
+                sum(entry["motivation_level"] for entry in work_entries) / total_entries
+            )
+            avg_quality = (
+                sum(entry["quality_rating"] for entry in work_entries) / total_entries
+            )
 
             # Calculate contribution score (weighted average)
             contribution_score = (
-                avg_intellectual * 0.4 +
-                avg_motivation * 0.3 +
-                avg_quality * 0.3
+                avg_intellectual * 0.4 + avg_motivation * 0.3 + avg_quality * 0.3
             )
 
             return {
@@ -178,10 +197,12 @@ class WorkTracker:
                 "average_intellectual_effort": round(avg_intellectual, 2),
                 "average_motivation_level": round(avg_motivation, 2),
                 "average_quality_rating": round(avg_quality, 2),
-                "skill_tags": profile_data.get('skill_tags', []),
-                "work_categories": profile_data.get('work_categories', {}),
-                "last_updated": profile_data.get('last_updated', ''),
-                "compensation_eligibility": self._calculate_compensation_eligibility(contribution_score, total_time)
+                "skill_tags": profile_data.get("skill_tags", []),
+                "work_categories": profile_data.get("work_categories", {}),
+                "last_updated": profile_data.get("last_updated", ""),
+                "compensation_eligibility": self._calculate_compensation_eligibility(
+                    contribution_score, total_time
+                ),
             }
 
         except Exception as e:
@@ -192,7 +213,7 @@ class WorkTracker:
         """Save work entry to file."""
         entry_file = self.data_dir / f"work_{entry.work_id}.json"
 
-        with open(entry_file, 'w') as f:
+        with open(entry_file, "w") as f:
             json.dump(asdict(entry), f, indent=2)
 
     def _update_user_profile(self, user_id: str, entry: WorkEntry):
@@ -202,7 +223,7 @@ class WorkTracker:
         # Load existing profile or create new one
         if profile_file.exists():
             try:
-                with open(profile_file, 'r') as f:
+                with open(profile_file, "r") as f:
                     profile_data = json.load(f)
             except:
                 profile_data = self._create_empty_profile(user_id)
@@ -210,29 +231,39 @@ class WorkTracker:
             profile_data = self._create_empty_profile(user_id)
 
         # Add new entry
-        profile_data['work_entries'].append(asdict(entry))
+        profile_data["work_entries"].append(asdict(entry))
 
         # Update statistics
-        entries = profile_data['work_entries']
+        entries = profile_data["work_entries"]
         total_entries = len(entries)
 
-        profile_data['total_work_entries'] = total_entries
-        profile_data['total_time_invested'] = sum(e['time_invested_minutes'] for e in entries)
-        profile_data['average_intellectual_effort'] = sum(e['intellectual_effort'] for e in entries) / total_entries
-        profile_data['average_motivation_level'] = sum(e['motivation_level'] for e in entries) / total_entries
-        profile_data['average_quality_rating'] = sum(e['quality_rating'] for e in entries) / total_entries
-        profile_data['last_updated'] = entry.timestamp
+        profile_data["total_work_entries"] = total_entries
+        profile_data["total_time_invested"] = sum(
+            e["time_invested_minutes"] for e in entries
+        )
+        profile_data["average_intellectual_effort"] = (
+            sum(e["intellectual_effort"] for e in entries) / total_entries
+        )
+        profile_data["average_motivation_level"] = (
+            sum(e["motivation_level"] for e in entries) / total_entries
+        )
+        profile_data["average_quality_rating"] = (
+            sum(e["quality_rating"] for e in entries) / total_entries
+        )
+        profile_data["last_updated"] = entry.timestamp
 
         # Update categories and tags
         category = entry.task_type
-        profile_data['work_categories'][category] = profile_data['work_categories'].get(category, 0) + 1
+        profile_data["work_categories"][category] = (
+            profile_data["work_categories"].get(category, 0) + 1
+        )
 
         for tag in entry.tags:
-            if tag not in profile_data['skill_tags']:
-                profile_data['skill_tags'].append(tag)
+            if tag not in profile_data["skill_tags"]:
+                profile_data["skill_tags"].append(tag)
 
         # Save updated profile
-        with open(profile_file, 'w') as f:
+        with open(profile_file, "w") as f:
             json.dump(profile_data, f, indent=2)
 
     def _generate_tags(self, task_type: str, description: str) -> List[str]:
@@ -241,12 +272,12 @@ class WorkTracker:
 
         # Task-based tags
         task_mappings = {
-            'analysis': ['analytical', 'research', 'problem-solving'],
-            'development': ['programming', 'technical', 'implementation'],
-            'consultation': ['advisory', 'expertise', 'guidance'],
-            'design': ['creative', 'planning', 'architecture'],
-            'testing': ['quality-assurance', 'validation', 'verification'],
-            'documentation': ['writing', 'communication', 'knowledge-sharing']
+            "analysis": ["analytical", "research", "problem-solving"],
+            "development": ["programming", "technical", "implementation"],
+            "consultation": ["advisory", "expertise", "guidance"],
+            "design": ["creative", "planning", "architecture"],
+            "testing": ["quality-assurance", "validation", "verification"],
+            "documentation": ["writing", "communication", "knowledge-sharing"],
         }
 
         if task_type in task_mappings:
@@ -254,29 +285,42 @@ class WorkTracker:
 
         # Content-based tags
         description_lower = description.lower()
-        if any(word in description_lower for word in ['ai', 'machine learning', 'neural', 'algorithm']):
-            tags.append('ai/ml')
-        if any(word in description_lower for word in ['business', 'strategy', 'planning']):
-            tags.append('business')
-        if any(word in description_lower for word in ['legal', 'contract', 'compliance']):
-            tags.append('legal')
-        if any(word in description_lower for word in ['financial', 'budget', 'cost']):
-            tags.append('financial')
+        if any(
+            word in description_lower
+            for word in ["ai", "machine learning", "neural", "algorithm"]
+        ):
+            tags.append("ai/ml")
+        if any(
+            word in description_lower for word in ["business", "strategy", "planning"]
+        ):
+            tags.append("business")
+        if any(
+            word in description_lower for word in ["legal", "contract", "compliance"]
+        ):
+            tags.append("legal")
+        if any(word in description_lower for word in ["financial", "budget", "cost"]):
+            tags.append("financial")
 
         return list(set(tags))  # Remove duplicates
 
-    def _calculate_compensation_eligibility(self, contribution_score: float, total_time: float) -> Dict[str, Any]:
+    def _calculate_compensation_eligibility(
+        self, contribution_score: float, total_time: float
+    ) -> Dict[str, Any]:
         """Calculate compensation eligibility based on contributions."""
         # Compensation tiers based on contribution score and time invested
         if contribution_score >= 8.5 and total_time >= 480:  # High performer, 8+ hours
             tier = "premium"
             hourly_rate_range = [150, 250]
             bonus_eligible = True
-        elif contribution_score >= 7.0 and total_time >= 240:  # Good performer, 4+ hours
+        elif (
+            contribution_score >= 7.0 and total_time >= 240
+        ):  # Good performer, 4+ hours
             tier = "standard_plus"
             hourly_rate_range = [100, 180]
             bonus_eligible = True
-        elif contribution_score >= 6.0 and total_time >= 120:  # Solid performer, 2+ hours
+        elif (
+            contribution_score >= 6.0 and total_time >= 120
+        ):  # Solid performer, 2+ hours
             tier = "standard"
             hourly_rate_range = [75, 125]
             bonus_eligible = False
@@ -293,7 +337,10 @@ class WorkTracker:
             "tier": tier,
             "hourly_rate_range_usd": hourly_rate_range,
             "bonus_eligible": bonus_eligible,
-            "estimated_monthly_value": round((total_time / 60) * ((hourly_rate_range[0] + hourly_rate_range[1]) / 2), 2)
+            "estimated_monthly_value": round(
+                (total_time / 60) * ((hourly_rate_range[0] + hourly_rate_range[1]) / 2),
+                2,
+            ),
         }
 
     def _create_empty_profile(self, user_id: str) -> Dict[str, Any]:
@@ -308,7 +355,7 @@ class WorkTracker:
             "average_quality_rating": 0.0,
             "skill_tags": [],
             "work_categories": {},
-            "last_updated": ""
+            "last_updated": "",
         }
 
     def _create_empty_summary(self, user_id: str) -> Dict[str, Any]:
@@ -328,8 +375,8 @@ class WorkTracker:
                 "tier": "none",
                 "hourly_rate_range_usd": [0, 0],
                 "bonus_eligible": False,
-                "estimated_monthly_value": 0.0
-            }
+                "estimated_monthly_value": 0.0,
+            },
         }
 
 
@@ -388,15 +435,10 @@ def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
         "beginner": 1.0,
         "intermediate": 1.3,
         "advanced": 1.6,
-        "expert": 2.0
+        "expert": 2.0,
     }
 
-    impact_multipliers = {
-        "low": 1.0,
-        "medium": 1.2,
-        "high": 1.5,
-        "transformative": 1.8
-    }
+    impact_multipliers = {"low": 1.0, "medium": 1.2, "high": 1.5, "transformative": 1.8}
 
     # Base rate for technical work
     base_hourly_rate = 75.0
@@ -423,7 +465,7 @@ def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
         time_invested_minutes=total_hours * 60,  # Convert to minutes
         intellectual_effort=9.0 if technical_level in ["advanced", "expert"] else 7.0,
         motivation_level=8.5,  # High motivation for long-term projects
-        quality_rating=9.0,    # High quality for established work
+        quality_rating=9.0,  # High quality for established work
         assistant_data={
             "import_type": "existing_work",
             "original_hours": total_hours,
@@ -431,8 +473,8 @@ def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
             "impact_level": impact_level,
             "effective_rate": effective_hourly_rate,
             "total_value": total_value,
-            "import_reason": "Recognizing substantial pre-existing contributions"
-        }
+            "import_reason": "Recognizing substantial pre-existing contributions",
+        },
     )
 
     return {
@@ -441,10 +483,13 @@ def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
         "effective_hourly_rate": round(effective_hourly_rate, 2),
         "total_value": round(total_value, 2),
         "compensation_tier": "premium" if total_value > 10000 else "standard_plus",
-        "message": f"✅ Imported {total_hours} hours of existing work. Total value: ${round(total_value, 2)} at ${round(effective_hourly_rate, 2)}/hour. Ready for payout processing."
+        "message": f"✅ Imported {total_hours} hours of existing work. Total value: ${round(total_value, 2)} at ${round(effective_hourly_rate, 2)}/hour. Ready for payout processing.",
     }
 
-def log_assistant_interaction(user_id: str, interaction_type: str, details: Dict[str, Any]):
+
+def log_assistant_interaction(
+    user_id: str, interaction_type: str, details: Dict[str, Any]
+):
     """
     Hook function that assistant_v2_core.py can call to log work automatically.
 
@@ -457,9 +502,9 @@ def log_assistant_interaction(user_id: str, interaction_type: str, details: Dict
     time_estimates = {
         "query_processing": 15,  # 15 minutes
         "complex_analysis": 45,  # 45 minutes
-        "code_generation": 60,   # 1 hour
-        "research_task": 90,     # 1.5 hours
-        "consultation": 30       # 30 minutes
+        "code_generation": 60,  # 1 hour
+        "research_task": 90,  # 1.5 hours
+        "consultation": 30,  # 30 minutes
     }
 
     time_invested = time_estimates.get(interaction_type, 20)  # Default 20 minutes
@@ -487,14 +532,19 @@ def log_assistant_interaction(user_id: str, interaction_type: str, details: Dict
         intellectual_effort=intellectual_effort,
         motivation_level=motivation_level,
         quality_rating=quality_rating,
-        assistant_data=details
+        assistant_data=details,
     )
 
     return work_id
 
 
-def import_existing_work(user_id: str, total_hours: float, work_description: str,
-                        technical_level: str = "advanced", impact_level: str = "high") -> Dict[str, Any]:
+def import_existing_work(
+    user_id: str,
+    total_hours: float,
+    work_description: str,
+    technical_level: str = "advanced",
+    impact_level: str = "high",
+) -> Dict[str, Any]:
     """
     Import existing work hours for users who have contributed before system implementation.
 
@@ -518,15 +568,10 @@ def import_existing_work(user_id: str, total_hours: float, work_description: str
         "beginner": 1.0,
         "intermediate": 1.3,
         "advanced": 1.6,
-        "expert": 2.0
+        "expert": 2.0,
     }
 
-    impact_multipliers = {
-        "low": 1.0,
-        "medium": 1.2,
-        "high": 1.5,
-        "transformative": 1.8
-    }
+    impact_multipliers = {"low": 1.0, "medium": 1.2, "high": 1.5, "transformative": 1.8}
 
     # Base rate for technical work
     base_hourly_rate = 75.0
@@ -553,7 +598,7 @@ def import_existing_work(user_id: str, total_hours: float, work_description: str
         time_invested_minutes=total_hours * 60,  # Convert to minutes
         intellectual_effort=9.0 if technical_level in ["advanced", "expert"] else 7.0,
         motivation_level=8.5,  # High motivation for long-term projects
-        quality_rating=9.0,    # High quality for established work
+        quality_rating=9.0,  # High quality for established work
         assistant_data={
             "import_type": "existing_work",
             "original_hours": total_hours,
@@ -561,8 +606,8 @@ def import_existing_work(user_id: str, total_hours: float, work_description: str
             "impact_level": impact_level,
             "effective_rate": effective_hourly_rate,
             "total_value": total_value,
-            "import_reason": "Recognizing substantial pre-existing contributions"
-        }
+            "import_reason": "Recognizing substantial pre-existing contributions",
+        },
     )
 
     return {
@@ -571,7 +616,7 @@ def import_existing_work(user_id: str, total_hours: float, work_description: str
         "effective_hourly_rate": round(effective_hourly_rate, 2),
         "total_value": round(total_value, 2),
         "compensation_tier": "premium" if total_value > 10000 else "standard_plus",
-        "message": f"✅ Imported {total_hours} hours of existing work. Total value: ${round(total_value, 2)} at ${round(effective_hourly_rate, 2)}/hour. Ready for payout processing."
+        "message": f"✅ Imported {total_hours} hours of existing work. Total value: ${round(total_value, 2)} at ${round(effective_hourly_rate, 2)}/hour. Ready for payout processing.",
     }
 
 
@@ -588,7 +633,7 @@ if __name__ == "__main__":
         intellectual_effort=8.5,
         motivation_level=9.0,
         quality_rating=9.0,
-        assistant_data={"queries_processed": 15, "recommendations_made": 8}
+        assistant_data={"queries_processed": 15, "recommendations_made": 8},
     )
 
     work_id2 = tracker.log_work_entry(
@@ -599,7 +644,7 @@ if __name__ == "__main__":
         intellectual_effort=9.0,
         motivation_level=8.5,
         quality_rating=9.5,
-        assistant_data={"lines_of_code": 850, "algorithms_implemented": 3}
+        assistant_data={"lines_of_code": 850, "algorithms_implemented": 3},
     )
 
     # Get user summary

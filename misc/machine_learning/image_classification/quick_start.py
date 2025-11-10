@@ -20,17 +20,21 @@ import sys
 import subprocess
 from pathlib import Path
 
+
 def run_command(cmd, description):
     """Run a command and check for success."""
     print(f"\nRunning {description}...")
     try:
-        result = subprocess.run(cmd, shell=True, check=True, capture_output=True, text=True)
+        result = subprocess.run(
+            cmd, shell=True, check=True, capture_output=True, text=True
+        )
         print(f"✓ {description} completed successfully")
         return True
     except subprocess.CalledProcessError as e:
         print(f"✗ {description} failed:")
         print(e.stderr)
         return False
+
 
 def main():
     print("Starting Image Classification Training")
@@ -97,7 +101,10 @@ def main():
     print("  - Train for more epochs: --epochs 20")
     print("  - Try different models: --model resnet18")
     print("  - Use different datasets: --dataset fashionmnist")
-    print("  - Run full evaluation: python -m machine_learning.image_classification.evaluate --generate_plots")
+    print(
+        "  - Run full evaluation: python -m machine_learning.image_classification.evaluate --generate_plots"
+    )
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

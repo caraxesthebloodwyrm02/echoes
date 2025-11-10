@@ -21,7 +21,9 @@ def test_all_workflows():
 
     # Initialize assistant
     print("\n[Setup] Initializing assistant with all capabilities...")
-    assistant = EchoesAssistantV2(enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False)
+    assistant = EchoesAssistantV2(
+        enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False
+    )
     print("✓ Assistant initialized with:")
     print("  - Knowledge management")
     print("  - Filesystem tools")
@@ -48,7 +50,9 @@ def test_all_workflows():
     if result["success"]:
         print("✓ Final output available")
         for i, step in enumerate(result["steps"], 1):
-            print(f"  Step {i}: {step['agent_name']} ({step['role']}) - {step['duration_ms']:.1f}ms")
+            print(
+                f"  Step {i}: {step['agent_name']} ({step['role']}) - {step['duration_ms']:.1f}ms"
+            )
     else:
         print(f"✗ Error: {result.get('error')}")
 
@@ -72,7 +76,9 @@ def test_all_workflows():
     if result["success"]:
         print("✓ Plan generated successfully")
         for i, step in enumerate(result["steps"], 1):
-            print(f"  Step {i}: {step['agent_name']} - classified as {step.get('role')}")
+            print(
+                f"  Step {i}: {step['agent_name']} - classified as {step.get('role')}"
+            )
     else:
         print(f"✗ Error: {result.get('error')}")
 
@@ -82,7 +88,9 @@ def test_all_workflows():
     print("Purpose: Analyze and highlight differences across documents")
     print("=" * 80)
 
-    result = assistant.run_workflow(workflow_type="comparison", file1="ATLAS/__init__.py", file2="ATLAS/models.py")
+    result = assistant.run_workflow(
+        workflow_type="comparison", file1="ATLAS/__init__.py", file2="ATLAS/models.py"
+    )
 
     print(f"✓ Workflow completed: {result['workflow_id']}")
     print(f"✓ Success: {result['success']}")
@@ -104,11 +112,15 @@ def test_all_workflows():
 
     # Add some knowledge first
     assistant.gather_knowledge(
-        content="ATLAS is an inventory management system with CRUD operations", source="documentation", category="atlas"
+        content="ATLAS is an inventory management system with CRUD operations",
+        source="documentation",
+        category="atlas",
     )
 
     result = assistant.run_workflow(
-        workflow_type="triage", user_input="What is ATLAS?", context={"department": "engineering"}
+        workflow_type="triage",
+        user_input="What is ATLAS?",
+        context={"department": "engineering"},
     )
 
     print(f"✓ Workflow completed: {result['workflow_id']}")
@@ -169,7 +181,9 @@ def test_all_workflows():
     )
 
     print("✓ Integration workflow completed")
-    print(f"✓ Knowledge entries: {assistant.knowledge_manager.get_stats()['total_entries']}")
+    print(
+        f"✓ Knowledge entries: {assistant.knowledge_manager.get_stats()['total_entries']}"
+    )
     print(f"✓ Workflow success: {result['success']}")
     print(f"✓ Total steps: {len(result['steps'])}")
 

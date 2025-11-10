@@ -18,7 +18,7 @@ from youtube_transcriber import (
     _download_audio,
     _transcribe,
     _build_youtube_report,
-    _slugify
+    _slugify,
 )
 
 # Configuration
@@ -47,46 +47,48 @@ def main():
     print(f"URL: {JUNG_INTERVIEW_URL}")
     print(f"Model: whisper-{DEFAULT_MODEL}")
     print()
-    
+
     try:
         with tempfile.TemporaryDirectory() as tmpdir:
             temp_dir = Path(tmpdir)
-            
+
             print("Step 1/3: Downloading audio...")
             audio_path, info = _download_audio(JUNG_INTERVIEW_URL, temp_dir)
             print(f"✓ Downloaded: {info.get('title', 'Unknown')}")
             print(f"  Duration: {info.get('duration', 0) / 60:.1f} minutes")
             print()
-            
+
             print("Step 2/3: Transcribing audio with Whisper...")
             print("  (This may take several minutes depending on video length)")
             transcript = _transcribe(audio_path, DEFAULT_MODEL)
             print("✓ Transcription complete")
             print()
-            
+
             print("Step 3/3: Building report...")
-            report = _build_youtube_report(info, transcript, JUNG_INTERVIEW_URL, DEFAULT_MODEL)
+            report = _build_youtube_report(
+                info, transcript, JUNG_INTERVIEW_URL, DEFAULT_MODEL
+            )
             report_path = save_transcript(report, info.get("title"))
             print(f"✓ Report saved to: {report_path}")
             print()
-            
+
             # Display preview
             print("=" * 80)
             print("TRANSCRIPT PREVIEW (first 500 characters):")
             print("=" * 80)
-            text = transcript.get('text', '')
+            text = transcript.get("text", "")
             print(text[:500] + "..." if len(text) > 500 else text)
             print()
-            
+
             print("=" * 80)
             print("ANALYSIS READY")
             print("=" * 80)
             print(f"Full transcript available at: {report_path}")
             print(f"Total words: {len(text.split())}")
             print()
-            
+
             return report_path, transcript
-            
+
     except Exception as err:
         print(f"✗ Error: {err}")
         sys.exit(1)

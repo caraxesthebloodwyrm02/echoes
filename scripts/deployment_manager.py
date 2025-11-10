@@ -43,7 +43,7 @@ class ProductionDeploymentManager:
         config_file = self.config_dir / "deployment_config.json"
         if config_file.exists():
             try:
-                with open(config_file, 'r') as f:
+                with open(config_file, "r") as f:
                     self.deployment_config.update(json.load(f))
                 print("✓ Loaded existing deployment configuration")
             except Exception as e:
@@ -53,7 +53,7 @@ class ProductionDeploymentManager:
         """Save deployment configuration"""
         config_file = self.config_dir / "deployment_config.json"
         try:
-            with open(config_file, 'w') as f:
+            with open(config_file, "w") as f:
                 json.dump(self.deployment_config, f, indent=2)
             print("✓ Saved deployment configuration")
         except Exception as e:
@@ -64,11 +64,13 @@ class ProductionDeploymentManager:
         if rollout_percentage < 0 or rollout_percentage > 100:
             raise ValueError("Rollout percentage must be between 0 and 100")
 
-        self.deployment_config.update({
-            "api_migration_enabled": True,
-            "rollout_percentage": rollout_percentage,
-            "deployment_timestamp": time.time(),
-        })
+        self.deployment_config.update(
+            {
+                "api_migration_enabled": True,
+                "rollout_percentage": rollout_percentage,
+                "deployment_timestamp": time.time(),
+            }
+        )
 
         # Set environment variable for this deployment
         os.environ["USE_RESPONSES_API_ROLLOUT"] = str(rollout_percentage)
@@ -78,11 +80,13 @@ class ProductionDeploymentManager:
 
     def disable_api_migration(self):
         """Disable the API migration (rollback)"""
-        self.deployment_config.update({
-            "api_migration_enabled": False,
-            "rollout_percentage": 0,
-            "deployment_timestamp": time.time(),
-        })
+        self.deployment_config.update(
+            {
+                "api_migration_enabled": False,
+                "rollout_percentage": 0,
+                "deployment_timestamp": time.time(),
+            }
+        )
 
         # Remove rollout environment variable
         if "USE_RESPONSES_API_ROLLOUT" in os.environ:
@@ -116,11 +120,14 @@ class ProductionDeploymentManager:
             "error_rate": 0.02,  # Simulated 2% error rate
             "avg_response_time": 1.2,  # Simulated 1.2s average response time
             "success_rate": 0.98,  # Simulated 98% success rate
-            "status": "healthy"
+            "status": "healthy",
         }
 
         # Check for rollback conditions
-        if health_status["error_rate"] > self.deployment_config["rollback_trigger_threshold"]:
+        if (
+            health_status["error_rate"]
+            > self.deployment_config["rollback_trigger_threshold"]
+        ):
             health_status["status"] = "critical"
             health_status["recommendation"] = "rollback"
             print("⚠️ CRITICAL: Error rate above threshold, rollback recommended")
@@ -139,8 +146,10 @@ class ProductionDeploymentManager:
             "health_status": health,
             "environment_variables": {
                 "USE_RESPONSES_API": os.getenv("USE_RESPONSES_API", "false"),
-                "USE_RESPONSES_API_ROLLOUT": os.getenv("USE_RESPONSES_API_ROLLOUT", "0"),
-            }
+                "USE_RESPONSES_API_ROLLOUT": os.getenv(
+                    "USE_RESPONSES_API_ROLLOUT", "0"
+                ),
+            },
         }
 
     def create_production_config(self) -> Dict[str, Any]:
@@ -154,7 +163,9 @@ class ProductionDeploymentManager:
             },
             "deployment": {
                 "feature_flags": {
-                    "use_responses_api": self.deployment_config["api_migration_enabled"],
+                    "use_responses_api": self.deployment_config[
+                        "api_migration_enabled"
+                    ],
                     "rollout_percentage": self.deployment_config["rollout_percentage"],
                     "fallback_enabled": self.deployment_config["fallback_enabled"],
                 },
@@ -164,30 +175,32 @@ class ProductionDeploymentManager:
                     "alert_thresholds": {
                         "error_rate": 0.05,
                         "response_time_p95": 5.0,
-                    }
+                    },
                 },
                 "rollback": {
                     "auto_rollback_enabled": True,
-                    "rollback_on_error_rate": self.deployment_config["rollback_trigger_threshold"],
+                    "rollback_on_error_rate": self.deployment_config[
+                        "rollback_trigger_threshold"
+                    ],
                     "rollback_on_response_time": 10.0,  # seconds
-                }
+                },
             },
             "logging": {
                 "level": "INFO",
                 "format": "json",
                 "handlers": ["console", "file"],
-                "file_path": "/var/log/echoes_assistant.log"
+                "file_path": "/var/log/echoes_assistant.log",
             },
             "security": {
                 "api_key_rotation": True,
                 "rate_limiting_enabled": True,
                 "request_validation": True,
-            }
+            },
         }
 
         # Save production config
         prod_config_file = self.config_dir / "production_config.json"
-        with open(prod_config_file, 'w') as f:
+        with open(prod_config_file, "w") as f:
             json.dump(prod_config, f, indent=2)
 
         print(f"✓ Created production configuration: {prod_config_file}")
@@ -214,9 +227,13 @@ def validate_no_unicode(content: str, filename: str = "file") -> bool:
             print(f"  Position {pos}: '{char}' ({code})")
 
         if problematic_chars:
-            print(f"[ERROR] Found {len(problematic_chars)} potentially problematic Unicode characters:")
+            print(
+                f"[ERROR] Found {len(problematic_chars)} potentially problematic Unicode characters:"
+            )
             for pos, char, code in problematic_chars:
-                print(f"  Position {pos}: '{char}' ({code}) - May cause encoding issues")
+                print(
+                    f"  Position {pos}: '{char}' ({code}) - May cause encoding issues"
+                )
 
         print("\n[INFO] Unicode Handling Rules:")
         print("  1. Replace emojis with ASCII equivalents:")
@@ -237,47 +254,45 @@ def sanitize_unicode_content(content: str) -> str:
     """Sanitize content by replacing common Unicode characters with ASCII equivalents"""
     replacements = {
         # Emojis and symbols
-        '🚀': '[DEPLOY]',
-        '✅': '[PASS]',
-        '❌': '[FAIL]',
-        '⚠️': '[WARN]',
-        '⚠': '[WARN]',
-        '🔄': '[SYNC]',
-        '📊': '[STATS]',
-        '🔧': '[TOOL]',
-        '📝': '[NOTE]',
-        '🔍': '[SEARCH]',
-        '🎯': '[TARGET]',
-        '🎉': '[SUCCESS]',
-        '🏆': '[WIN]',
-        '💡': '[IDEA]',
-        '📁': '[DIR]',
-        '📄': '[FILE]',
-        '🔨': '[BUILD]',
-        '🧪': '[TEST]',
-        '📋': '[CLIP]',
-        '⚙️': '[CONFIG]',
-        '⚙': '[CONFIG]',
-
+        "🚀": "[DEPLOY]",
+        "✅": "[PASS]",
+        "❌": "[FAIL]",
+        "⚠️": "[WARN]",
+        "⚠": "[WARN]",
+        "🔄": "[SYNC]",
+        "📊": "[STATS]",
+        "🔧": "[TOOL]",
+        "📝": "[NOTE]",
+        "🔍": "[SEARCH]",
+        "🎯": "[TARGET]",
+        "🎉": "[SUCCESS]",
+        "🏆": "[WIN]",
+        "💡": "[IDEA]",
+        "📁": "[DIR]",
+        "📄": "[FILE]",
+        "🔨": "[BUILD]",
+        "🧪": "[TEST]",
+        "📋": "[CLIP]",
+        "⚙️": "[CONFIG]",
+        "⚙": "[CONFIG]",
         # Check marks and symbols
-        '✓': '[OK]',
-        '✗': '[ERROR]',
-        '⠋': '[1]',
-        '⠙': '[2]',
-        '⠹': '[3]',
-        '⠸': '[4]',
-        '⠼': '[5]',
-        '⠴': '[6]',
-        '⠦': '[7]',
-        '⠧': '[8]',
-        '⠇': '[9]',
-        '⠏': '[0]',
-
+        "✓": "[OK]",
+        "✗": "[ERROR]",
+        "⠋": "[1]",
+        "⠙": "[2]",
+        "⠹": "[3]",
+        "⠸": "[4]",
+        "⠼": "[5]",
+        "⠴": "[6]",
+        "⠦": "[7]",
+        "⠧": "[8]",
+        "⠇": "[9]",
+        "⠏": "[0]",
         # Quotes and dashes (keep basic ones)
         '"': '"',
         "'": "'",
-        '–': '-',
-        '—': '-',
+        "–": "-",
+        "—": "-",
     }
 
     for unicode_char, ascii_equiv in replacements.items():
@@ -288,7 +303,7 @@ def sanitize_unicode_content(content: str) -> str:
 
 def create_deployment_script():
     """Create deployment script for production rollout"""
-    script_content = '''#!/bin/bash
+    script_content = """#!/bin/bash
 # Echoes Assistant V2 Production Deployment Script
 # OpenAI Responses API Migration Rollout
 
@@ -471,7 +486,7 @@ case "${1:-deploy}" in
         exit 1
         ;;
 esac
-'''
+"""
 
     # Validate content for Unicode issues
     if not validate_no_unicode(script_content, "deploy_production.sh"):
@@ -479,7 +494,7 @@ esac
         script_content = sanitize_unicode_content(script_content)
         print("Sanitized Unicode characters in deployment script")
 
-    with open("deploy_production.sh", 'w') as f:
+    with open("deploy_production.sh", "w") as f:
         f.write(script_content)
 
     # Make executable
@@ -668,7 +683,7 @@ if __name__ == "__main__":
         monitoring_script = sanitize_unicode_content(monitoring_script)
         print("Sanitized Unicode characters in monitoring script")
 
-    with open("production_monitor.py", 'w') as f:
+    with open("production_monitor.py", "w") as f:
         f.write(monitoring_script)
 
     print("✓ Created production monitoring script: production_monitor.py")
@@ -676,7 +691,7 @@ if __name__ == "__main__":
 
 def create_docker_compose_production():
     """Create production Docker Compose configuration"""
-    docker_compose = '''version: '3.8'
+    docker_compose = """version: '3.8'
 
 services:
   echoes-assistant:
@@ -750,9 +765,9 @@ volumes:
     driver: local
   monitoring_data:
     driver: local
-'''
+"""
 
-    with open("docker-compose.prod.yml", 'w') as f:
+    with open("docker-compose.prod.yml", "w") as f:
         f.write(docker_compose)
 
     print("✓ Created production Docker Compose: docker-compose.prod.yml")
@@ -760,7 +775,7 @@ volumes:
 
 def create_production_documentation():
     """Create comprehensive production deployment documentation"""
-    docs = '''# Echoes Assistant V2 Production Deployment Guide
+    docs = """# Echoes Assistant V2 Production Deployment Guide
 ## OpenAI Responses API Migration Rollout
 
 ### Overview
@@ -1070,12 +1085,14 @@ docker system prune -a                 # Clean old images
 ---
 
 *This deployment guide is for Echoes Assistant V2.0.0 with OpenAI Responses API migration.*
-'''
+"""
 
-    with open("PRODUCTION_DEPLOYMENT_GUIDE.md", 'w') as f:
+    with open("PRODUCTION_DEPLOYMENT_GUIDE.md", "w") as f:
         f.write(docs)
 
-    print("✓ Created comprehensive production documentation: PRODUCTION_DEPLOYMENT_GUIDE.md")
+    print(
+        "✓ Created comprehensive production documentation: PRODUCTION_DEPLOYMENT_GUIDE.md"
+    )
 
 
 def main():
@@ -1108,11 +1125,18 @@ def main():
     # Show initial status
     print("\n📊 Initial Deployment Status:")
     status = dm.get_rollout_status()
-    print(json.dumps({
-        "api_migration_enabled": status["deployment_config"]["api_migration_enabled"],
-        "rollout_percentage": status["deployment_config"]["rollout_percentage"],
-        "health_status": status["health_status"]["status"]
-    }, indent=2))
+    print(
+        json.dumps(
+            {
+                "api_migration_enabled": status["deployment_config"][
+                    "api_migration_enabled"
+                ],
+                "rollout_percentage": status["deployment_config"]["rollout_percentage"],
+                "health_status": status["health_status"]["status"],
+            },
+            indent=2,
+        )
+    )
 
     print("\n✅ Phase 4 Production Setup Complete!")
     print("\n🎯 Next Steps:")

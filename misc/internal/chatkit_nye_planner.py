@@ -14,12 +14,10 @@ from core.display_utils import PALETTE, safe_symbol
 from core.exporter import export_text, export_json
 
 
- 
-
-
 @dataclass
 class Destination:
     """Destination with Art Nouveau styling"""
+
     name: str
     country: str
     description: str
@@ -29,23 +27,29 @@ class Destination:
     highlights: List[str]
 
 
- 
-
-
 class NYEJourneyPlanner:
     """
     Art Nouveau-inspired NYE 2025 journey planner
     Flowing, organic interface with decorative elegance
     """
 
-    def __init__(self, departure_city: str = DEFAULTS["origin"], travel_style: TravelStyle = DEFAULTS["travel_style"],
-                 departure_date: Optional[datetime] = None, return_date: Optional[datetime] = None,
-                 use_unicode: bool = True):
+    def __init__(
+        self,
+        departure_city: str = DEFAULTS["origin"],
+        travel_style: TravelStyle = DEFAULTS["travel_style"],
+        departure_date: Optional[datetime] = None,
+        return_date: Optional[datetime] = None,
+        use_unicode: bool = True,
+    ):
         self.departure_city = departure_city
         self.travel_style = travel_style
         self.use_unicode = use_unicode
-        self.departure_date = departure_date or datetime.fromisoformat(DEFAULTS["date_start"])  # NYE
-        self.return_date = return_date or datetime.fromisoformat(DEFAULTS["date_end"])  # Jan 2
+        self.departure_date = departure_date or datetime.fromisoformat(
+            DEFAULTS["date_start"]
+        )  # NYE
+        self.return_date = return_date or datetime.fromisoformat(
+            DEFAULTS["date_end"]
+        )  # Jan 2
         self.trip_duration = (self.return_date - self.departure_date).days
         self.destinations = self._initialize_destinations()
 
@@ -67,8 +71,8 @@ class NYEJourneyPlanner:
                     "Grand Palace (Art Nouveau-inspired Thai architecture)",
                     "Wat Arun (flowing riverside temple)",
                     "Floating markets (organic, natural beauty)",
-                    "NYE celebrations at Silom district"
-                ]
+                    "NYE celebrations at Silom district",
+                ],
             ),
             Destination(
                 name="Bali, Indonesia",
@@ -81,8 +85,8 @@ class NYEJourneyPlanner:
                     "Tegallalang Rice Terraces (organic curves)",
                     "Ubud Palace & Arts District",
                     "Tanah Lot Temple (flowing ocean backdrop)",
-                    "NYE beach celebrations"
-                ]
+                    "NYE beach celebrations",
+                ],
             ),
             Destination(
                 name="Hanoi, Vietnam",
@@ -95,15 +99,17 @@ class NYEJourneyPlanner:
                     "Old Quarter (winding, organic streets)",
                     "Hoan Kiem Lake (serene reflections)",
                     "Temple of Literature (classical elegance)",
-                    "NYE street celebrations & water puppetry"
-                ]
-            )
+                    "NYE street celebrations & water puppetry",
+                ],
+            ),
         ]
-        
+
         # Filter by travel style
         return self._filter_by_travel_style(destinations)
-    
-    def _filter_by_travel_style(self, destinations: List[Destination]) -> List[Destination]:
+
+    def _filter_by_travel_style(
+        self, destinations: List[Destination]
+    ) -> List[Destination]:
         """Filter destinations based on travel style"""
         if self.travel_style == TravelStyle.BUDGET:
             # Sort by cost, prioritize cheaper options
@@ -112,7 +118,9 @@ class NYEJourneyPlanner:
             # Adjust costs upward for luxury experiences
             for dest in destinations:
                 dest.estimated_cost_usd *= 1.5
-            return sorted(destinations, key=lambda d: d.estimated_cost_usd, reverse=True)
+            return sorted(
+                destinations, key=lambda d: d.estimated_cost_usd, reverse=True
+            )
         else:  # COMFORT
             return destinations
 
@@ -168,7 +176,7 @@ class NYEJourneyPlanner:
         """
         for highlight in dest.highlights:
             card += f"        • {highlight}\n"
-        
+
         card += f"{palette['accent']}    ╰────────────────────────────────────────────────╯{palette['reset']}\n"
         return card
 
@@ -178,10 +186,10 @@ class NYEJourneyPlanner:
         output = self.render_header()
         output += self.render_trip_details()
         output += f"\n{palette['accent']}{self._sym('✿')} ─ CURATED DESTINATIONS FOR YOUR NYE ESCAPE ─ {self._sym('✿')}{palette['reset']}\n"
-        
+
         for i, dest in enumerate(self.destinations[:3]):
             output += self.render_destination_card(dest, i)
-        
+
         return output
 
     def calculate_daily_itinerary(self, destination: Destination) -> Dict:
@@ -197,9 +205,9 @@ class NYEJourneyPlanner:
                         "Check into accommodation",
                         "Explore local evening markets/streets",
                         "NYE celebration (fireworks, street parties, cultural events)",
-                        "Late night dining & celebration"
+                        "Late night dining & celebration",
                     ],
-                    "estimated_cost": "$150-200"
+                    "estimated_cost": "$150-200",
                 },
                 {
                     "date": "Jan 1, 2026 (Day 1)",
@@ -209,9 +217,9 @@ class NYEJourneyPlanner:
                         "Midday: Visit primary cultural landmark",
                         "Afternoon: Local market exploration",
                         "Evening: Traditional cuisine dining",
-                        "Night: Relaxation & reflection"
+                        "Night: Relaxation & reflection",
                     ],
-                    "estimated_cost": "$100-150"
+                    "estimated_cost": "$100-150",
                 },
                 {
                     "date": "Jan 2, 2026 (Return)",
@@ -220,11 +228,11 @@ class NYEJourneyPlanner:
                         "Morning: Sunrise at scenic location",
                         "Late morning: Last-minute shopping/souvenirs",
                         "Afternoon: Depart for airport",
-                        "Evening: Arrive home with memories"
+                        "Evening: Arrive home with memories",
                     ],
-                    "estimated_cost": "$50-100"
-                }
-            ]
+                    "estimated_cost": "$50-100",
+                },
+            ],
         }
         return itinerary
 
@@ -232,24 +240,24 @@ class NYEJourneyPlanner:
         """Render the 3-day itinerary with Art Nouveau styling"""
         palette = PALETTE
         itinerary = self.calculate_daily_itinerary(destination)
-        
+
         output = f"\n{palette['accent']}{self._sym('✿')} ─ {destination.name.upper()} ITINERARY ─ {self._sym('✿')}{palette['reset']}\n"
-        
+
         for day in itinerary["days"]:
             output += f"\n{palette['title']}⟡ {day['date']} | {day['theme']}{palette['reset']}\n"
             for activity in day["activities"]:
                 output += f"   {self._sym('✿')} {activity}\n"
             output += f"   {palette['text']}Estimated: {day['estimated_cost']}{palette['reset']}\n"
-        
+
         return output
 
     def generate_full_plan(self) -> str:
         """Generate complete travel plan"""
         output = self.render_top_3_options()
-        
+
         # Add sample itinerary for first destination
         output += self.render_itinerary(self.destinations[0])
-        
+
         palette = PALETTE
         output += f"\n{palette['accent']}{self._sym('✿')} ─ QUICK SELECTION GUIDE ─ {self._sym('✿')}{palette['reset']}\n"
         output += """
@@ -268,9 +276,8 @@ class NYEJourneyPlanner:
        → Budget: ~$950 USD
        → Vibe: Historic & Refined
         """
-        
-        return output
 
+        return output
 
     def export_to_json(self, filename: str = "nye_journey_plan.json") -> str:
         """Export plan to JSON format for integration with other tools"""
@@ -280,7 +287,7 @@ class NYEJourneyPlanner:
                 "return_date": self.return_date.isoformat(),
                 "duration_days": self.trip_duration,
                 "departure_city": self.departure_city,
-                "travel_style": self.travel_style.value
+                "travel_style": self.travel_style.value,
             },
             "destinations": [
                 {
@@ -290,19 +297,20 @@ class NYEJourneyPlanner:
                     "vibe": dest.vibe,
                     "estimated_cost_usd": dest.estimated_cost_usd,
                     "flight_hours": dest.flight_hours,
-                    "highlights": dest.highlights
+                    "highlights": dest.highlights,
                 }
                 for dest in self.destinations
-            ]
+            ],
         }
-        
+
         export_json(plan_data, filename)
-        
+
         return filename
 
     def export_to_html(self, filename: str = "nye_journey_plan.html") -> str:
         """Export plan to HTML with Art Nouveau styling"""
-        html_content = """
+        html_content = (
+            """
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -432,15 +440,24 @@ class NYEJourneyPlanner:
         </header>
         
         <div class="trip-info">
-            <p><strong>Departure:</strong> """ + self.departure_date.strftime('%A, %B %d, %Y') + """</p>
-            <p><strong>Return:</strong> """ + self.return_date.strftime('%A, %B %d, %Y') + """</p>
-            <p><strong>Duration:</strong> """ + str(self.trip_duration) + """ days</p>
-            <p><strong>Travel Style:</strong> """ + self.travel_style.value.capitalize() + """</p>
+            <p><strong>Departure:</strong> """
+            + self.departure_date.strftime("%A, %B %d, %Y")
+            + """</p>
+            <p><strong>Return:</strong> """
+            + self.return_date.strftime("%A, %B %d, %Y")
+            + """</p>
+            <p><strong>Duration:</strong> """
+            + str(self.trip_duration)
+            + """ days</p>
+            <p><strong>Travel Style:</strong> """
+            + self.travel_style.value.capitalize()
+            + """</p>
         </div>
         
         <div class="destinations">
 """
-        
+        )
+
         for dest in self.destinations:
             html_content += f"""
             <div class="destination-card">
@@ -453,26 +470,30 @@ class NYEJourneyPlanner:
 """
             for highlight in dest.highlights:
                 html_content += f"                    <li>{highlight}</li>\n"
-            
+
             html_content += """
                 </ul>
             </div>
 """
-        
-        html_content += """
+
+        html_content += (
+            """
         </div>
         
         <footer>
-            <p>Plan generated on """ + datetime.now().strftime('%B %d, %Y at %I:%M %p') + """</p>
+            <p>Plan generated on """
+            + datetime.now().strftime("%B %d, %Y at %I:%M %p")
+            + """</p>
             <p>"Travel is the only thing you buy that makes you richer"</p>
         </footer>
     </div>
 </body>
 </html>
 """
-        
+        )
+
         export_text(html_content, filename)
-        
+
         return filename
 
 
@@ -481,44 +502,48 @@ def interactive_main():
     print("\n" + "=" * 65)
     print("Welcome to ChatKit.World - NYE 2025 Journey Planner")
     print("=" * 65 + "\n")
-    
+
     # Get user preferences
     print("Let's customize your journey!\n")
-    
-    departure_city = input("Where are you departing from? (default: Dhaka): ").strip() or "Dhaka"
-    
+
+    departure_city = (
+        input("Where are you departing from? (default: Dhaka): ").strip() or "Dhaka"
+    )
+
     print("\nTravel Style:")
     print("  1. Budget (most affordable)")
     print("  2. Comfort (balanced)")
     print("  3. Luxury (premium experience)")
     style_choice = input("Choose your travel style (1-3, default: 2): ").strip() or "2"
-    
+
     travel_styles = {
         "1": TravelStyle.BUDGET,
         "2": TravelStyle.COMFORT,
-        "3": TravelStyle.LUXURY
+        "3": TravelStyle.LUXURY,
     }
     travel_style = travel_styles.get(style_choice, TravelStyle.COMFORT)
-    
-    use_unicode = input("\nUse decorative symbols? (y/n, default: y): ").strip().lower() != "n"
-    
+
+    use_unicode = (
+        input("\nUse decorative symbols? (y/n, default: y): ").strip().lower() != "n"
+    )
+
     # Create planner
     planner = NYEJourneyPlanner(
         departure_city=departure_city,
         travel_style=travel_style,
-        use_unicode=use_unicode
+        use_unicode=use_unicode,
     )
-    
+
     # Display options
     print("\n" + planner.render_top_3_options())
-    
+
     # Destination selection
     print("\nWhich destination interests you?")
     for i, dest in enumerate(planner.destinations, 1):
         print(f"  {i}. {dest.name} (${dest.estimated_cost_usd:,.0f})")
-    
+
     choice = input("\nEnter the number of your choice (1-3): ").strip()
-    
+
     try:
         idx = int(choice) - 1
         if 0 <= idx < len(planner.destinations):
@@ -530,25 +555,25 @@ def interactive_main():
     except ValueError:
         print("Invalid input. Showing first destination.")
         print("\n" + planner.render_itinerary(planner.destinations[0]))
-    
+
     # Export options
     print("\n" + "=" * 65)
     print("Export your plan:")
     print("=" * 65)
-    
+
     txt_file = "nye_journey_plan.txt"
     json_file = "nye_journey_plan.json"
     html_file = "nye_journey_plan.html"
-    
+
     export_text(planner.generate_full_plan(), txt_file)
     print(f"✓ Text plan saved to: {txt_file}")
-    
+
     planner.export_to_json(json_file)
     print(f"✓ JSON plan saved to: {json_file}")
-    
+
     planner.export_to_html(html_file)
     print(f"✓ HTML plan saved to: {html_file}")
-    
+
     print("\n" + "=" * 65)
     print("Your journey awaits! Safe travels!")
     print("=" * 65 + "\n")
@@ -559,19 +584,19 @@ def main():
     planner = NYEJourneyPlanner()
     plan = planner.generate_full_plan()
     print(plan)
-    
+
     # Save to multiple formats
     export_text(plan, "E:/Projects/Echoes/nye_journey_plan.txt")
-    
+
     planner.export_to_json("E:/Projects/Echoes/nye_journey_plan.json")
     planner.export_to_html("E:/Projects/Echoes/nye_journey_plan.html")
-    
+
     print("\n✿ Plans saved to: nye_journey_plan.txt, .json, and .html ✿\n")
 
 
 if __name__ == "__main__":
     import sys
-    
+
     # Run interactive mode if --interactive flag is provided
     if "--interactive" in sys.argv:
         interactive_main()

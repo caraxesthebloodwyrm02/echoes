@@ -163,7 +163,17 @@ assert_type(MAR_f4.any(out=MAR_subclass), MaskedArraySubclass)
 assert_type(MAR_f4.any(None, out=MAR_subclass), MaskedArraySubclass)
 
 assert_type(MAR_f4.sort(), None)
-assert_type(MAR_f4.sort(axis=0, kind="quicksort", order="K", endwith=False, fill_value=42.0, stable=False), None)
+assert_type(
+    MAR_f4.sort(
+        axis=0,
+        kind="quicksort",
+        order="K",
+        endwith=False,
+        fill_value=42.0,
+        stable=False,
+    ),
+    None,
+)
 
 assert_type(np.ma.sort(MAR_f4), MaskedArray[np.float32])
 assert_type(np.ma.sort(MAR_subclass), MaskedArraySubclass)
@@ -192,7 +202,9 @@ assert_type(MAR_f4.partition(1), None)
 assert_type(MAR_V.partition(1, axis=0, kind="introselect", order="K"), None)
 
 assert_type(MAR_f4.argpartition(1), MaskedArray[np.intp])
-assert_type(MAR_1d.argpartition(1, axis=0, kind="introselect", order="K"), MaskedArray[np.intp])
+assert_type(
+    MAR_1d.argpartition(1, axis=0, kind="introselect", order="K"), MaskedArray[np.intp]
+)
 
 assert_type(np.ma.ndim(f4), int)
 assert_type(np.ma.ndim(MAR_b), int)
@@ -301,8 +313,13 @@ assert_type(np.ma.filled([[1, 2, 3]]), NDArray[Any])
 assert_type(np.ma.filled(MAR_1d), np.ndarray[tuple[int], np.dtype])  # type: ignore[assert-type]
 
 assert_type(MAR_b.repeat(3), np.ma.MaskedArray[tuple[int], np.dtype[np.bool]])
-assert_type(MAR_2d_f4.repeat(MAR_i8), np.ma.MaskedArray[tuple[int], np.dtype[np.float32]])
-assert_type(MAR_2d_f4.repeat(MAR_i8, axis=None), np.ma.MaskedArray[tuple[int], np.dtype[np.float32]])
+assert_type(
+    MAR_2d_f4.repeat(MAR_i8), np.ma.MaskedArray[tuple[int], np.dtype[np.float32]]
+)
+assert_type(
+    MAR_2d_f4.repeat(MAR_i8, axis=None),
+    np.ma.MaskedArray[tuple[int], np.dtype[np.float32]],
+)
 assert_type(MAR_2d_f4.repeat(MAR_i8, axis=0), MaskedArray[np.float32])
 
 assert_type(np.ma.allequal(AR_f4, MAR_f4), bool)
@@ -319,7 +336,9 @@ assert_type(np.ma.getmask(MAR_f4), NDArray[np.bool] | np.bool)
 # PyRight detects this one correctly, but mypy doesn't:
 # `Revealed type is "Union[numpy.ndarray[Any, Any], numpy.bool[Any]]"`
 assert_type(np.ma.getmask(MAR_1d), np.ndarray[tuple[int], np.dtype[np.bool]] | np.bool)  # type: ignore[assert-type]
-assert_type(np.ma.getmask(MAR_2d_f4), np.ndarray[tuple[int, int], np.dtype[np.bool]] | np.bool)
+assert_type(
+    np.ma.getmask(MAR_2d_f4), np.ndarray[tuple[int, int], np.dtype[np.bool]] | np.bool
+)
 assert_type(np.ma.getmask([1, 2]), NDArray[np.bool] | np.bool)
 assert_type(np.ma.getmask(np.int64(1)), np.bool)
 
@@ -344,9 +363,13 @@ assert_type(np.ma.MaskType, type[np.bool])
 assert_type(MAR_1d.__setmask__([True, False]), None)
 assert_type(MAR_1d.__setmask__(np.False_), None)
 
-assert_type(MAR_2d_f4.harden_mask(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
+assert_type(
+    MAR_2d_f4.harden_mask(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]]
+)
 assert_type(MAR_i8.harden_mask(), MaskedArray[np.int64])
-assert_type(MAR_2d_f4.soften_mask(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
+assert_type(
+    MAR_2d_f4.soften_mask(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]]
+)
 assert_type(MAR_i8.soften_mask(), MaskedArray[np.int64])
 assert_type(MAR_f4.unshare_mask(), MaskedArray[np.float32])
 assert_type(MAR_b.shrink_mask(), MaskedArray[np.bool_])
@@ -355,11 +378,20 @@ assert_type(MAR_i8.hardmask, bool)
 assert_type(MAR_i8.sharedmask, bool)
 
 assert_type(MAR_b.transpose(), MaskedArray[np.bool])
-assert_type(MAR_2d_f4.transpose(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
-assert_type(MAR_2d_f4.transpose(1, 0), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
-assert_type(MAR_2d_f4.transpose((1, 0)), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
+assert_type(
+    MAR_2d_f4.transpose(), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]]
+)
+assert_type(
+    MAR_2d_f4.transpose(1, 0), np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]]
+)
+assert_type(
+    MAR_2d_f4.transpose((1, 0)),
+    np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]],
+)
 assert_type(MAR_b.T, MaskedArray[np.bool])
 assert_type(MAR_2d_f4.T, np.ma.MaskedArray[tuple[int, int], np.dtype[np.float32]])
 
-assert_type(MAR_2d_f4.nonzero(), tuple[_Array1D[np.intp], *tuple[_Array1D[np.intp], ...]])
+assert_type(
+    MAR_2d_f4.nonzero(), tuple[_Array1D[np.intp], *tuple[_Array1D[np.intp], ...]]
+)
 assert_type(MAR_2d_f4.nonzero()[0], _Array1D[np.intp])

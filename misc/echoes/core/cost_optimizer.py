@@ -61,7 +61,13 @@ class CostOptimizer:
         )
 
         # Usage tracking
-        self.usage_stats = {"total_tokens": 0, "total_cost": 0.0, "requests": 0, "model_usage": {}, "daily_stats": {}}
+        self.usage_stats = {
+            "total_tokens": 0,
+            "total_cost": 0.0,
+            "requests": 0,
+            "model_usage": {},
+            "daily_stats": {},
+        }
 
         # Cost alerts
         self.cost_alerts = {
@@ -125,7 +131,15 @@ class CostOptimizer:
         task_lower = task_description.lower()
 
         # Simple tasks
-        simple_keywords = ["hello", "hi", "thanks", "goodbye", "simple", "basic", "quick"]
+        simple_keywords = [
+            "hello",
+            "hi",
+            "thanks",
+            "goodbye",
+            "simple",
+            "basic",
+            "quick",
+        ]
         if any(keyword in task_lower for keyword in simple_keywords):
             return "simple"
 
@@ -148,7 +162,9 @@ class CostOptimizer:
         # Default to medium
         return "medium"
 
-    def estimate_cost(self, model: str, input_tokens: int, output_tokens: int = 0) -> float:
+    def estimate_cost(
+        self, model: str, input_tokens: int, output_tokens: int = 0
+    ) -> float:
         """Estimate cost for a given model and token usage."""
         if model not in self.model_pricing:
             return 0.0
@@ -159,7 +175,13 @@ class CostOptimizer:
 
         return input_cost + output_cost
 
-    def track_usage(self, model: str, input_tokens: int, output_tokens: int, cost: Optional[float] = None) -> None:
+    def track_usage(
+        self,
+        model: str,
+        input_tokens: int,
+        output_tokens: int,
+        cost: Optional[float] = None,
+    ) -> None:
         """Track API usage and costs."""
         if cost is None:
             cost = self.estimate_cost(model, input_tokens, output_tokens)
@@ -171,7 +193,11 @@ class CostOptimizer:
 
         # Update model-specific stats
         if model not in self.usage_stats["model_usage"]:
-            self.usage_stats["model_usage"][model] = {"requests": 0, "tokens": 0, "cost": 0.0}
+            self.usage_stats["model_usage"][model] = {
+                "requests": 0,
+                "tokens": 0,
+                "cost": 0.0,
+            }
 
         self.usage_stats["model_usage"][model]["requests"] += 1
         self.usage_stats["model_usage"][model]["tokens"] += input_tokens + output_tokens
@@ -180,7 +206,11 @@ class CostOptimizer:
         # Daily stats
         today = datetime.now(timezone.utc).date().isoformat()
         if today not in self.usage_stats["daily_stats"]:
-            self.usage_stats["daily_stats"][today] = {"cost": 0.0, "tokens": 0, "requests": 0}
+            self.usage_stats["daily_stats"][today] = {
+                "cost": 0.0,
+                "tokens": 0,
+                "requests": 0,
+            }
 
         self.usage_stats["daily_stats"][today]["cost"] += cost
         self.usage_stats["daily_stats"][today]["tokens"] += input_tokens + output_tokens
@@ -193,8 +223,13 @@ class CostOptimizer:
 
         # Daily cost alert
         daily_cost = self.usage_stats["daily_stats"].get(today, {}).get("cost", 0.0)
-        if daily_cost >= self.cost_alerts["daily_limit"] * self.cost_alerts["alert_threshold"]:
-            alerts.append(f"⚠️ Daily cost alert: ${daily_cost:.2f} of ${self.cost_alerts['daily_limit']:.2f} limit")
+        if (
+            daily_cost
+            >= self.cost_alerts["daily_limit"] * self.cost_alerts["alert_threshold"]
+        ):
+            alerts.append(
+                f"⚠️ Daily cost alert: ${daily_cost:.2f} of ${self.cost_alerts['daily_limit']:.2f} limit"
+            )
 
         # Monthly cost projection
         current_month = datetime.now(timezone.utc).strftime("%Y-%m")
@@ -207,10 +242,22 @@ class CostOptimizer:
         days_in_month = 30  # Approximate
         projected_monthly = (
             monthly_cost
-            / max(1, len([k for k in self.usage_stats["daily_stats"].keys() if k.startswith(current_month)]))
+            / max(
+                1,
+                len(
+                    [
+                        k
+                        for k in self.usage_stats["daily_stats"].keys()
+                        if k.startswith(current_month)
+                    ]
+                ),
+            )
         ) * days_in_month
 
-        if projected_monthly >= self.cost_alerts["monthly_limit"] * self.cost_alerts["alert_threshold"]:
+        if (
+            projected_monthly
+            >= self.cost_alerts["monthly_limit"] * self.cost_alerts["alert_threshold"]
+        ):
             alerts.append(
                 f"⚠️ Monthly cost projection: ~${projected_monthly:.2f} of ${self.cost_alerts['monthly_limit']:.2f} limit"
             )
@@ -275,7 +322,9 @@ class CostOptimizer:
             if model in self.usage_stats["model_usage"]:
                 usage = self.usage_stats["model_usage"][model]
                 if usage["requests"] > 10:  # Used more than 10 times
-                    recommendations.append(f"Consider switching from {model} to GPT-4o for better cost-efficiency")
+                    recommendations.append(
+                        f"Consider switching from {model} to GPT-4o for better cost-efficiency"
+                    )
 
         # Check for high daily costs
         today = datetime.now(timezone.utc).date().isoformat()
@@ -321,7 +370,9 @@ class CostOptimizer:
         if modality == "audio":
             # Whisper pricing: $0.006 per minute
             duration_minutes = duration_seconds / 60
-            total_cost = duration_minutes * self.model_pricing["whisper-1"]["cost_per_minute"]
+            total_cost = (
+                duration_minutes * self.model_pricing["whisper-1"]["cost_per_minute"]
+            )
             self.track_usage("whisper-1", 0, 0, total_cost)
 
         elif modality == "image":
@@ -330,7 +381,9 @@ class CostOptimizer:
             text_cost = self.estimate_cost("gpt-4o", 0, tokens_used)
 
             # Image processing cost
-            image_cost_per_unit = self.model_pricing["gpt-4o-vision"][f"image_cost_{detail_level}"]
+            image_cost_per_unit = self.model_pricing["gpt-4o-vision"][
+                f"image_cost_{detail_level}"
+            ]
             image_cost = image_count * image_cost_per_unit
 
             total_cost = text_cost + image_cost
@@ -365,7 +418,9 @@ class CostOptimizer:
 
         elif modality == "image":
             text_cost = self.estimate_cost("gpt-4o", 0, estimated_tokens)
-            image_cost_per_unit = self.model_pricing["gpt-4o-vision"][f"image_cost_{detail_level}"]
+            image_cost_per_unit = self.model_pricing["gpt-4o-vision"][
+                f"image_cost_{detail_level}"
+            ]
             image_cost = image_count * image_cost_per_unit
             return text_cost + image_cost
 

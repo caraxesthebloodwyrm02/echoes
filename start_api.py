@@ -11,9 +11,10 @@ import sys
 import subprocess
 from pathlib import Path
 
+
 def check_environment():
     """Check if required environment variables are set"""
-    required_vars = ['OPENAI_API_KEY']
+    required_vars = ["OPENAI_API_KEY"]
     missing = []
 
     for var in required_vars:
@@ -28,6 +29,7 @@ def check_environment():
         return False
 
     return True
+
 
 def create_env_template():
     """Create .env template if it doesn't exist"""
@@ -69,6 +71,7 @@ CORS_ORIGINS=["*"]
         print("✅ Created .env template file")
         print("   Please edit .env and add your OPENAI_API_KEY")
 
+
 def start_api():
     """Start the FastAPI server"""
     print("🚀 Starting Echoes Research API...")
@@ -80,12 +83,18 @@ def start_api():
     try:
         # Use uvicorn to start the server
         cmd = [
-            sys.executable, "-m", "uvicorn",
+            sys.executable,
+            "-m",
+            "uvicorn",
             "api.main:app",
-            "--host", os.getenv("API_HOST", "0.0.0.0"),
-            "--port", os.getenv("API_PORT", "8000"),
-            "--workers", os.getenv("API_WORKERS", "1"),
-            "--log-level", os.getenv("LOG_LEVEL", "info").lower()
+            "--host",
+            os.getenv("API_HOST", "0.0.0.0"),
+            "--port",
+            os.getenv("API_PORT", "8000"),
+            "--workers",
+            os.getenv("API_WORKERS", "1"),
+            "--log-level",
+            os.getenv("LOG_LEVEL", "info").lower(),
         ]
 
         if os.getenv("API_RELOAD", "true").lower() == "true":
@@ -100,6 +109,7 @@ def start_api():
         return False
 
     return True
+
 
 def main():
     """Main startup function"""
@@ -129,6 +139,7 @@ def main():
     else:
         print("\n❌ API startup failed")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()

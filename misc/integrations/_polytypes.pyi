@@ -74,21 +74,39 @@ _CoefObjectLike_co: TypeAlias = np.object_ | _SupportsCoefOps[Any]
 _CoefLike_co: TypeAlias = _NumberLike_co | _CoefObjectLike_co
 
 # The term "series" is used here to refer to 1-d arrays of numeric scalars.
-_SeriesLikeBool_co: TypeAlias = _SupportsArray[np.dtype[np.bool]] | Sequence[bool | np.bool]
-_SeriesLikeInt_co: TypeAlias = _SupportsArray[np.dtype[np.integer | np.bool]] | Sequence[_IntLike_co]
-_SeriesLikeFloat_co: TypeAlias = _SupportsArray[np.dtype[np.floating | np.integer | np.bool]] | Sequence[_FloatLike_co]
+_SeriesLikeBool_co: TypeAlias = (
+    _SupportsArray[np.dtype[np.bool]] | Sequence[bool | np.bool]
+)
+_SeriesLikeInt_co: TypeAlias = (
+    _SupportsArray[np.dtype[np.integer | np.bool]] | Sequence[_IntLike_co]
+)
+_SeriesLikeFloat_co: TypeAlias = (
+    _SupportsArray[np.dtype[np.floating | np.integer | np.bool]]
+    | Sequence[_FloatLike_co]
+)
 _SeriesLikeComplex_co: TypeAlias = (
-    _SupportsArray[np.dtype[np.inexact | np.integer | np.bool]] | Sequence[_ComplexLike_co]
+    _SupportsArray[np.dtype[np.inexact | np.integer | np.bool]]
+    | Sequence[_ComplexLike_co]
 )
-_SeriesLikeObject_co: TypeAlias = _SupportsArray[np.dtype[np.object_]] | Sequence[_CoefObjectLike_co]
-_SeriesLikeCoef_co: TypeAlias = _SupportsArray[np.dtype[np.number | np.bool | np.object_]] | Sequence[_CoefLike_co]
+_SeriesLikeObject_co: TypeAlias = (
+    _SupportsArray[np.dtype[np.object_]] | Sequence[_CoefObjectLike_co]
+)
+_SeriesLikeCoef_co: TypeAlias = (
+    _SupportsArray[np.dtype[np.number | np.bool | np.object_]] | Sequence[_CoefLike_co]
+)
 
-_ArrayLikeCoefObject_co: TypeAlias = _CoefObjectLike_co | _SeriesLikeObject_co | _NestedSequence[_SeriesLikeObject_co]
+_ArrayLikeCoefObject_co: TypeAlias = (
+    _CoefObjectLike_co | _SeriesLikeObject_co | _NestedSequence[_SeriesLikeObject_co]
+)
 _ArrayLikeCoef_co: TypeAlias = (
-    npt.NDArray[np.number | np.bool | np.object_] | _ArrayLikeNumber_co | _ArrayLikeCoefObject_co
+    npt.NDArray[np.number | np.bool | np.object_]
+    | _ArrayLikeNumber_co
+    | _ArrayLikeCoefObject_co
 )
 
-_Name_co = TypeVar("_Name_co", bound=LiteralString, covariant=True, default=LiteralString)
+_Name_co = TypeVar(
+    "_Name_co", bound=LiteralString, covariant=True, default=LiteralString
+)
 
 @type_check_only
 class _Named(Protocol[_Name_co]):
@@ -428,7 +446,12 @@ class _FuncVal2D(_Named[_Name_co], Protocol[_Name_co]):
 class _FuncVal3D(_Named[_Name_co], Protocol[_Name_co]):
     @overload
     def __call__(
-        self, /, x: _FloatLike_co, y: _FloatLike_co, z: _FloatLike_co, c: _SeriesLikeFloat_co
+        self,
+        /,
+        x: _FloatLike_co,
+        y: _FloatLike_co,
+        z: _FloatLike_co,
+        c: _SeriesLikeFloat_co,
     ) -> np.floating: ...
     @overload
     def __call__(

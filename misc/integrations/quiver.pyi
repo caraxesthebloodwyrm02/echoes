@@ -45,7 +45,7 @@ class QuiverKey(martist.Artist):
         labelcolor: ColorType | None = ...,
         fontproperties: dict[str, Any] | None = ...,
         zorder: float | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     @property
     def labelsep(self) -> float: ...
@@ -88,12 +88,14 @@ class Quiver(mcollections.PolyCollection):
         minshaft: float = ...,
         minlength: float = ...,
         units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] = ...,
-        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None = ...,
+        scale_units: (
+            Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None
+        ) = ...,
         angles: Literal["uv", "xy"] | ArrayLike = ...,
         width: float | None = ...,
         color: ColorType | Sequence[ColorType] = ...,
         pivot: Literal["tail", "mid", "middle", "tip"] = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     @overload
     def __init__(
@@ -112,15 +114,19 @@ class Quiver(mcollections.PolyCollection):
         minshaft: float = ...,
         minlength: float = ...,
         units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] = ...,
-        scale_units: Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None = ...,
+        scale_units: (
+            Literal["width", "height", "dots", "inches", "x", "y", "xy"] | None
+        ) = ...,
         angles: Literal["uv", "xy"] | ArrayLike = ...,
         width: float | None = ...,
         color: ColorType | Sequence[ColorType] = ...,
         pivot: Literal["tail", "mid", "middle", "tip"] = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_datalim(self, transData: Transform) -> Bbox: ...
-    def set_UVC(self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...) -> None: ...
+    def set_UVC(
+        self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...
+    ) -> None: ...
 
 class Barbs(mcollections.PolyCollection):
     sizes: dict[str, float]
@@ -150,7 +156,7 @@ class Barbs(mcollections.PolyCollection):
         barb_increments: dict[str, float] | None = ...,
         rounding: bool = ...,
         flip_barb: bool | ArrayLike = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     @overload
     def __init__(
@@ -171,7 +177,9 @@ class Barbs(mcollections.PolyCollection):
         barb_increments: dict[str, float] | None = ...,
         rounding: bool = ...,
         flip_barb: bool | ArrayLike = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
-    def set_UVC(self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...) -> None: ...
+    def set_UVC(
+        self, U: ArrayLike, V: ArrayLike, C: ArrayLike | None = ...
+    ) -> None: ...
     def set_offsets(self, xy: ArrayLike) -> None: ...

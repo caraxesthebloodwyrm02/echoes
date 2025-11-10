@@ -147,7 +147,9 @@ def fromarrays(
 ) -> _RecArray[record]: ...
 @overload
 def fromrecords(
-    recList: _ArrayLikeVoid_co | tuple[object, ...] | _NestedSequence[tuple[object, ...]],
+    recList: (
+        _ArrayLikeVoid_co | tuple[object, ...] | _NestedSequence[tuple[object, ...]]
+    ),
     dtype: DTypeLike | None = None,
     shape: _ShapeLike | None = None,
     formats: None = None,
@@ -158,7 +160,9 @@ def fromrecords(
 ) -> _RecArray[record]: ...
 @overload
 def fromrecords(
-    recList: _ArrayLikeVoid_co | tuple[object, ...] | _NestedSequence[tuple[object, ...]],
+    recList: (
+        _ArrayLikeVoid_co | tuple[object, ...] | _NestedSequence[tuple[object, ...]]
+    ),
     dtype: None = None,
     shape: _ShapeLike | None = None,
     *,

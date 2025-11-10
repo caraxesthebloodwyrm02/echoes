@@ -22,14 +22,25 @@ def main():
     # Add document command
     add_parser = subparsers.add_parser("add", help="Add documents to the RAG system")
     add_parser.add_argument("paths", nargs="+", help="File or directory paths to add")
-    add_parser.add_argument("--extensions", nargs="*", help="File extensions to include (with leading .)")
-    add_parser.add_argument("--batch-size", type=int, default=10, help="Number of files to process in each batch")
+    add_parser.add_argument(
+        "--extensions", nargs="*", help="File extensions to include (with leading .)"
+    )
+    add_parser.add_argument(
+        "--batch-size",
+        type=int,
+        default=10,
+        help="Number of files to process in each batch",
+    )
 
     # Search command
     search_parser = subparsers.add_parser("search", help="Search the RAG system")
     search_parser.add_argument("query", help="Search query")
-    search_parser.add_argument("--top-k", type=int, default=5, help="Number of results to return")
-    search_parser.add_argument("--filter", help="Filter by content type (text, image, document, etc.)")
+    search_parser.add_argument(
+        "--top-k", type=int, default=5, help="Number of results to return"
+    )
+    search_parser.add_argument(
+        "--filter", help="Filter by content type (text, image, document, etc.)"
+    )
 
     # Clear command
     clear_parser = subparsers.add_parser("clear", help="Clear the RAG index")
@@ -58,7 +69,9 @@ def main():
                     logger.error(f"Error adding {path}: {e}")
             else:
                 logger.info(f"Processing directory: {path}")
-                result = rag.add_directory(path, extensions=args.extensions, batch_size=args.batch_size)
+                result = rag.add_directory(
+                    path, extensions=args.extensions, batch_size=args.batch_size
+                )
                 logger.info(
                     f"Processed {result['total']} files: {result['success']} succeeded, {result['failed']} failed"
                 )
@@ -75,7 +88,11 @@ def main():
             print(f"Source: {result['metadata'].get('source', 'N/A')}")
             if "chunk" in result["metadata"]:
                 print(f"Chunk: {result['metadata']['chunk']}")
-            print("\n" + result["content"][:500] + ("..." if len(result["content"]) > 500 else ""))
+            print(
+                "\n"
+                + result["content"][:500]
+                + ("..." if len(result["content"]) > 500 else "")
+            )
             print("-" * 50)
 
     elif args.command == "clear":

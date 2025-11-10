@@ -37,7 +37,6 @@ def setup_knowledge_base(rag_system) -> None:
 
         The transition from 5 to 6 with the sun suggests moving from personal exploration and sensory experience toward a balanced, illuminated state of being - achieving harmony while maintaining consciousness and vitality.
         """,
-
         """
         Numbers 8-11 and Lunar Symbolism:
 
@@ -53,7 +52,6 @@ def setup_knowledge_base(rag_system) -> None:
 
         The progression from 8 to 11 with the moon suggests a journey from material mastery and abundance toward spiritual enlightenment and intuitive wisdom, guided by lunar feminine energy and emotional intelligence.
         """,
-
         """
         Signal vs Noise Concepts:
 
@@ -64,7 +62,7 @@ def setup_knowledge_base(rag_system) -> None:
         Signal-to-Noise Ratio (SNR): The ratio of desired signal power to background noise power. A high SNR means the signal is much stronger than the noise, making it easier to detect and understand. A low SNR means noise dominates, making it difficult to extract meaningful information.
 
         In human cognition and decision-making, signal represents truth, wisdom, and valuable insight, while noise represents confusion, misinformation, and distractions.
-        """
+        """,
     ]
 
     # Knowledge about distinguishing signal from noise
@@ -86,7 +84,6 @@ def setup_knowledge_base(rag_system) -> None:
 
         7. Practical Application: Signal leads to positive, tangible results; noise remains theoretical and unproductive.
         """,
-
         """
         Organic Methods Throughout History:
 
@@ -105,7 +102,6 @@ def setup_knowledge_base(rag_system) -> None:
         - Aristotelian Logic: Valid reasoning vs fallacious arguments
         - Kantian Critique: Examining the limits and validity of knowledge claims
         """,
-
         """
         Raw Essence Identification:
 
@@ -127,7 +123,7 @@ def setup_knowledge_base(rag_system) -> None:
 
         Directional Guidance:
         When encountering information, ask: "Does this bring more light or more darkness? Does this connect or separate? Does this serve truth or fear?" The answer will guide you to the signal.
-        """
+        """,
     ]
 
     # Add all knowledge to the RAG system
@@ -141,8 +137,12 @@ def setup_knowledge_base(rag_system) -> None:
             metadata={
                 "source": "symbolic_knowledge_base",
                 "chunk_id": f"knowledge_{i+1}",
-                "topic": "symbolism_numerology" if i < len(numerology_knowledge) else "signal_noise_discernment"
-            }
+                "topic": (
+                    "symbolism_numerology"
+                    if i < len(numerology_knowledge)
+                    else "signal_noise_discernment"
+                ),
+            },
         )
 
     logger.info("Knowledge base setup complete")
@@ -164,11 +164,19 @@ def run_queries(rag_system, queries: List[str]) -> List[Dict[str, Any]]:
 
             # Extract answer from results - handle empty results gracefully
             answer = ""
-            if search_result and isinstance(search_result, dict) and search_result.get("results"):
+            if (
+                search_result
+                and isinstance(search_result, dict)
+                and search_result.get("results")
+            ):
                 # Combine relevant chunks into a coherent answer
                 relevant_chunks = []
                 for result in search_result["results"]:
-                    if result and isinstance(result, dict) and result.get("score", 0) > 0.7:  # Only high-confidence results
+                    if (
+                        result
+                        and isinstance(result, dict)
+                        and result.get("score", 0) > 0.7
+                    ):  # Only high-confidence results
                         content = result.get("content", "")
                         if content:
                             relevant_chunks.append(content)
@@ -181,18 +189,40 @@ def run_queries(rag_system, queries: List[str]) -> List[Dict[str, Any]]:
                         answer = answer[:1000] + "..."
 
             # Safely extract metadata
-            metadata = search_result.get("metadata", {}) if search_result and isinstance(search_result, dict) else {}
-            fact_check = metadata.get("fact_check", {}) if isinstance(metadata, dict) else {}
+            metadata = (
+                search_result.get("metadata", {})
+                if search_result and isinstance(search_result, dict)
+                else {}
+            )
+            fact_check = (
+                metadata.get("fact_check", {}) if isinstance(metadata, dict) else {}
+            )
 
             query_result = {
                 "query_number": i,
                 "query": query,
-                "answer": answer if answer else "No relevant information found in knowledge base.",
+                "answer": (
+                    answer
+                    if answer
+                    else "No relevant information found in knowledge base."
+                ),
                 "response_time_ms": response_time * 1000,
-                "results_count": len(search_result.get("results", [])) if search_result and isinstance(search_result, dict) else 0,
-                "cached": metadata.get("cached", False) if isinstance(metadata, dict) else False,
-                "confidence_score": fact_check.get("confidence_score", 0.8) if isinstance(fact_check, dict) else 0.8,
-                "search_metadata": metadata
+                "results_count": (
+                    len(search_result.get("results", []))
+                    if search_result and isinstance(search_result, dict)
+                    else 0
+                ),
+                "cached": (
+                    metadata.get("cached", False)
+                    if isinstance(metadata, dict)
+                    else False
+                ),
+                "confidence_score": (
+                    fact_check.get("confidence_score", 0.8)
+                    if isinstance(fact_check, dict)
+                    else 0.8
+                ),
+                "search_metadata": metadata,
             }
 
             results.append(query_result)
@@ -205,23 +235,25 @@ def run_queries(rag_system, queries: List[str]) -> List[Dict[str, Any]]:
                 bias_analysis={
                     "query_complexity": len(query.split()),
                     "response_time_ms": response_time * 1000,
-                    "results_found": len(search_result.get("results", []))
+                    "results_found": len(search_result.get("results", [])),
                 },
                 metadata={
                     "query_category": "symbolic_philosophical",
                     "rag_system": "enhanced_openai",
-                    "test_run": True
-                }
+                    "test_run": True,
+                },
             )
 
         except Exception as e:
             logger.error(f"Error running query {i}: {e}")
-            results.append({
-                "query_number": i,
-                "query": query,
-                "answer": f"Error processing query: {str(e)}",
-                "error": str(e)
-            })
+            results.append(
+                {
+                    "query_number": i,
+                    "query": query,
+                    "answer": f"Error processing query: {str(e)}",
+                    "error": str(e),
+                }
+            )
 
     return results
 
@@ -264,9 +296,11 @@ This document contains the results of testing the enhanced RAG (Retrieval-Augmen
 
     # Add summary section
     total_queries = len(results)
-    successful_queries = len([r for r in results if not r.get('error')])
-    avg_response_time = sum(r.get('response_time_ms', 0) for r in results) / total_queries
-    cached_queries = len([r for r in results if r.get('cached', False)])
+    successful_queries = len([r for r in results if not r.get("error")])
+    avg_response_time = (
+        sum(r.get("response_time_ms", 0) for r in results) / total_queries
+    )
+    cached_queries = len([r for r in results if r.get("cached", False)])
 
     doc_content += f"""
 ## Summary Statistics
@@ -301,21 +335,34 @@ def save_results(results: List[Dict[str, Any]], doc_content: str) -> None:
 
     # Save detailed JSON results
     json_path = Path("rag_query_test_results.json")
-    with open(json_path, 'w') as f:
-        json.dump({
-            "timestamp": datetime.now().isoformat(),
-            "results": results,
-            "summary": {
-                "total_queries": len(results),
-                "successful_queries": len([r for r in results if not r.get('error')]),
-                "average_response_time_ms": sum(r.get('response_time_ms', 0) for r in results) / len(results),
-                "cache_hit_rate": len([r for r in results if r.get('cached', False)]) / len(results)
-            }
-        }, f, indent=2, default=str)
+    with open(json_path, "w") as f:
+        json.dump(
+            {
+                "timestamp": datetime.now().isoformat(),
+                "results": results,
+                "summary": {
+                    "total_queries": len(results),
+                    "successful_queries": len(
+                        [r for r in results if not r.get("error")]
+                    ),
+                    "average_response_time_ms": sum(
+                        r.get("response_time_ms", 0) for r in results
+                    )
+                    / len(results),
+                    "cache_hit_rate": len(
+                        [r for r in results if r.get("cached", False)]
+                    )
+                    / len(results),
+                },
+            },
+            f,
+            indent=2,
+            default=str,
+        )
 
     # Save documentation
     doc_path = Path("RAG_Query_Test_Documentation.md")
-    with open(doc_path, 'w') as f:
+    with open(doc_path, "w") as f:
         f.write(doc_content)
 
     logger.info(f"Results saved to {json_path}")
@@ -329,8 +376,8 @@ def save_results(results: List[Dict[str, Any]], doc_content: str) -> None:
         metadata={
             "queries_tested": len(results),
             "documentation_created": str(doc_path),
-            "results_file": str(json_path)
-        }
+            "results_file": str(json_path),
+        },
     )
 
 
@@ -342,7 +389,7 @@ def main():
         "What is the symbolic meaning and significance of the transition from number 5 to 6 and sun?",
         "What is the symbolic meaning and significance of the number 8 to 11 and moon?",
         "What is signal? What is noise? What is the signal to noise ratio?",
-        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone."
+        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone.",
     ]
 
     logger.info("Starting RAG Query Testing...")
@@ -367,9 +414,9 @@ def main():
         save_results(results, doc_content)
 
         # Print summary
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("RAG QUERY TESTING COMPLETE")
-        print("="*60)
+        print("=" * 60)
         print(f"Queries tested: {len(results)}")
         print(f"Successful: {len([r for r in results if not r.get('error')])}")
         print(".2f")
@@ -384,4 +431,5 @@ def main():
 
 if __name__ == "__main__":
     import time
+
     main()

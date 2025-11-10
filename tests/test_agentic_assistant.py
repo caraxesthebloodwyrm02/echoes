@@ -7,6 +7,7 @@ Tests knowledge management, filesystem interaction, and context building.
 
 import sys
 import os
+
 # Add parent directory to path to access assistant_v2_core
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
@@ -22,7 +23,9 @@ def test_agentic_capabilities():
 
     # Initialize assistant
     print("\n[Test 1] Initializing agentic assistant...")
-    assistant = EchoesAssistantV2(enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False)
+    assistant = EchoesAssistantV2(
+        enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False
+    )
     print("✓ Assistant initialized with knowledge, filesystem, and action capabilities")
 
     # Test knowledge gathering

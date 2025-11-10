@@ -20,6 +20,7 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class DetectedPattern:
     """A detected pattern with metadata"""
@@ -46,8 +47,9 @@ class DetectedPattern:
             "span": self.span,
             "evidence": self.evidence,
             "related_patterns": self.related_patterns,
-            "metadata": self.metadata
+            "metadata": self.metadata,
         }
+
 
 @dataclass
 class PatternDetectionResult:
@@ -63,6 +65,7 @@ class PatternDetectionResult:
     def __post_init__(self):
         if self.metadata is None:
             self.metadata = {}
+
 
 class PatternDetector:
     """
@@ -82,35 +85,35 @@ class PatternDetector:
             "temporal": [
                 r"\b(before|after|during|when|then|now|future|past|present)\b",
                 r"\b(\d{1,2}[:/]\d{2}|\d{4}[-/]\d{1,2}[-/]\d{1,2})\b",
-                r"\b(week|month|year|day|hour|minute)s?\b"
+                r"\b(week|month|year|day|hour|minute)s?\b",
             ],
             "causal": [
                 r"\b(because|therefore|thus|hence|consequently|resulting)\b",
                 r"\b(causes?|effects?|leads? to|results? in)\b",
-                r"\b(if|then|when|whenever)\b.*?\b(then|follows?|occurs?)\b"
+                r"\b(if|then|when|whenever)\b.*?\b(then|follows?|occurs?)\b",
             ],
             "comparative": [
                 r"\b(more|less|better|worse|greater|smaller|faster|slower)\b",
                 r"\b(compared? to|versus|vs\.?|than)\b",
-                r"\b(similar|different|alike|distinct)\b"
+                r"\b(similar|different|alike|distinct)\b",
             ],
             "quantitative": [
                 r"\b(\d+(?:\.\d+)?%|\d+(?:\.\d+)?(?:k|m|b|trillion))\b",
                 r"\b(increase|decrease|grow|decline|rise|fall)\b.*?\b(\d+(?:\.\d+)?%?)\b",
-                r"\b(approximately|about|around|roughly)\b.*?\b\d+\b"
+                r"\b(approximately|about|around|roughly)\b.*?\b\d+\b",
             ],
             "relational": [
                 r"\b(associated|correlated|linked|connected|related)\b",
                 r"\b(depends? on|relies? on|influenced? by)\b",
-                r"\b(interacts?|interactions?|relationships?)\b"
-            ]
+                r"\b(interacts?|interactions?|relationships?)\b",
+            ],
         }
 
     async def detect_patterns(
         self,
         text: str,
         context: Optional[Dict[str, Any]] = None,
-        options: Optional[Dict[str, Any]] = None
+        options: Optional[Dict[str, Any]] = None,
     ) -> PatternDetectionResult:
         """
         Detect patterns in text using multiple analysis techniques.
@@ -146,10 +149,7 @@ class PatternDetector:
         patterns.extend(statistical_patterns)
 
         # Filter and rank patterns
-        filtered_patterns = [
-            p for p in patterns
-            if p.confidence >= min_confidence
-        ]
+        filtered_patterns = [p for p in patterns if p.confidence >= min_confidence]
 
         # Sort by confidence and limit results
         filtered_patterns.sort(key=lambda x: x.confidence, reverse=True)
@@ -158,7 +158,8 @@ class PatternDetector:
         # Calculate overall confidence - simplified without numpy
         overall_confidence = (
             sum([p.confidence for p in filtered_patterns]) / len(filtered_patterns)
-            if filtered_patterns else 0.0
+            if filtered_patterns
+            else 0.0
         )
 
         processing_time = (datetime.utcnow() - start_time).total_seconds()
@@ -172,8 +173,8 @@ class PatternDetector:
             metadata={
                 "detection_method": "simplified_rule_based",
                 "stages_used": ["rule_based", "statistical"],
-                "rag_middleware": False  # No RAG middleware for authentic responses
-            }
+                "rag_middleware": False,  # No RAG middleware for authentic responses
+            },
         )
 
     async def _detect_rule_based_patterns(self, text: str) -> List[DetectedPattern]:
@@ -186,7 +187,9 @@ class PatternDetector:
                 matches = list(re.finditer(regex, text_lower, re.IGNORECASE))
                 for match in matches:
                     # Calculate confidence based on match quality
-                    confidence = min(0.9, len(match.group()) / 20)  # Longer matches = higher confidence
+                    confidence = min(
+                        0.9, len(match.group()) / 20
+                    )  # Longer matches = higher confidence
 
                     pattern = DetectedPattern(
                         pattern_type=pattern_type,
@@ -197,8 +200,8 @@ class PatternDetector:
                         metadata={
                             "regex": regex,
                             "match_text": match.group(),
-                            "method": "rule_based"
-                        }
+                            "method": "rule_based",
+                        },
                     )
                     patterns.append(pattern)
 
@@ -209,7 +212,7 @@ class PatternDetector:
         patterns = []
 
         # Word frequency analysis
-        words = re.findall(r'\b\w+\b', text.lower())
+        words = re.findall(r"\b\w+\b", text.lower())
         word_freq = {}
         for word in words:
             word_freq[word] = word_freq.get(word, 0) + 1
@@ -229,21 +232,23 @@ class PatternDetector:
                         "method": "statistical",
                         "word": word,
                         "frequency": freq,
-                        "total_words": total_words
-                    }
+                        "total_words": total_words,
+                    },
                 )
                 patterns.append(pattern)
 
         # Sentence length analysis - simplified without numpy
-        sentences = re.split(r'[.!?]+', text)
+        sentences = re.split(r"[.!?]+", text)
         sentence_lengths = [len(s.strip().split()) for s in sentences if s.strip()]
 
         if sentence_lengths:
             avg_length = sum(sentence_lengths) / len(sentence_lengths)
 
             # Simple variance calculation
-            variance = sum((x - avg_length) ** 2 for x in sentence_lengths) / len(sentence_lengths)
-            std_length = variance ** 0.5
+            variance = sum((x - avg_length) ** 2 for x in sentence_lengths) / len(
+                sentence_lengths
+            )
+            std_length = variance**0.5
 
             if std_length > avg_length * 0.5:  # High variation in sentence length
                 confidence = min(0.75, std_length / avg_length)
@@ -256,16 +261,15 @@ class PatternDetector:
                     metadata={
                         "method": "statistical",
                         "avg_sentence_length": avg_length,
-                        "std_sentence_length": std_length
-                    }
+                        "std_sentence_length": std_length,
+                    },
                 )
                 patterns.append(pattern)
 
         return patterns
 
     async def analyze_relationships(
-        self,
-        patterns: List[DetectedPattern]
+        self, patterns: List[DetectedPattern]
     ) -> List[DetectedPattern]:
         """Analyze relationships between detected patterns"""
         # Group patterns by type and proximity
@@ -282,21 +286,25 @@ class PatternDetector:
                         related.append(f"{other.pattern_type}_{j}")
 
                 # Check semantic relationships
-                if (pattern.pattern_type == "causal" and
-                    other.pattern_type in ["temporal", "comparative"]):
+                if pattern.pattern_type == "causal" and other.pattern_type in [
+                    "temporal",
+                    "comparative",
+                ]:
                     related.append(f"causal_link_{j}")
 
             pattern.related_patterns = related
 
         return patterns
 
+
 # Global pattern detector instance
 pattern_detector = None
+
 
 async def detect_patterns(
     text: str,
     context: Optional[Dict[str, Any]] = None,
-    options: Optional[Dict[str, Any]] = None
+    options: Optional[Dict[str, Any]] = None,
 ) -> List[Dict[str, Any]]:
     """
     Main entry point for pattern detection.

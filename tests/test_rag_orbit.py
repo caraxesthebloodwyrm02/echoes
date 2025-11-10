@@ -56,7 +56,9 @@ class TestDocumentChunker:
     def test_basic_chunking(self):
         """Test basic chunking with default parameters."""
         chunker = DocumentChunker(chunk_size=50, overlap=10)
-        chunks = chunker.chunk_document(SAMPLE_TEXT_EMPIRICAL, "test_doc.txt", "empirical")
+        chunks = chunker.chunk_document(
+            SAMPLE_TEXT_EMPIRICAL, "test_doc.txt", "empirical"
+        )
 
         assert len(chunks) > 0
         assert all(isinstance(c, Chunk) for c in chunks)
@@ -106,7 +108,9 @@ class TestDocumentChunker:
 
         assert len(chunks) > 0
         empirical_chunks = [c for c in chunks if c.metadata.category == "empirical"]
-        experiential_chunks = [c for c in chunks if c.metadata.category == "experiential"]
+        experiential_chunks = [
+            c for c in chunks if c.metadata.category == "experiential"
+        ]
 
         assert len(empirical_chunks) > 0
         assert len(experiential_chunks) > 0
@@ -241,7 +245,10 @@ class TestFAISSRetriever:
         assert all(isinstance(r, RetrievalResult) for r in results)
 
         # First result should be neuroscience-related
-        assert "neuroscience" in results[0].text.lower() or "processing" in results[0].text.lower()
+        assert (
+            "neuroscience" in results[0].text.lower()
+            or "processing" in results[0].text.lower()
+        )
 
     def test_category_filtering(self):
         """Test filtering by category."""
@@ -264,7 +271,9 @@ class TestFAISSRetriever:
 
         # Search with filter
         query_emb, _ = generator.embed_text("Test query")
-        results, metrics = retriever.search(query_emb, top_k=10, category_filter="empirical")
+        results, metrics = retriever.search(
+            query_emb, top_k=10, category_filter="empirical"
+        )
 
         assert all(r.metadata["category"] == "empirical" for r in results)
 

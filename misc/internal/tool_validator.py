@@ -27,7 +27,9 @@ def validate_edit_payload(edits: List[Dict[str, Any]]) -> bool:
     required_keys = {"pattern", "multiple", "replacement"}
     for idx, edit in enumerate(edits):
         if not isinstance(edit, dict):
-            raise ToolValidationError(f"Edit #{idx} must be a dictionary, got {type(edit).__name__}")
+            raise ToolValidationError(
+                f"Edit #{idx} must be a dictionary, got {type(edit).__name__}"
+            )
 
         missing = required_keys - set(edit.keys())
         if missing:
@@ -35,11 +37,17 @@ def validate_edit_payload(edits: List[Dict[str, Any]]) -> bool:
 
         # Optional but recommended
         if "old_string" in edit and not isinstance(edit["old_string"], str):
-            raise ToolValidationError(f"Edit #{idx} field 'old_string' must be a string")
+            raise ToolValidationError(
+                f"Edit #{idx} field 'old_string' must be a string"
+            )
 
         # Type checks
-        if not isinstance(edit["pattern"], str) or not isinstance(edit["replacement"], str):
-            raise ToolValidationError(f"Edit #{idx} pattern and replacement must be strings")
+        if not isinstance(edit["pattern"], str) or not isinstance(
+            edit["replacement"], str
+        ):
+            raise ToolValidationError(
+                f"Edit #{idx} pattern and replacement must be strings"
+            )
 
         if not isinstance(edit["multiple"], bool):
             raise ToolValidationError(f"Edit #{idx} multiple must be a boolean")
@@ -47,7 +55,9 @@ def validate_edit_payload(edits: List[Dict[str, Any]]) -> bool:
     return True
 
 
-def generate_synced_edits(context: Dict[str, str], updates: Dict[str, str]) -> List[Dict[str, Any]]:
+def generate_synced_edits(
+    context: Dict[str, str], updates: Dict[str, str]
+) -> List[Dict[str, Any]]:
     """
     Creates a set of synchronized edit objects based on context mappings.
     context: {identifier: existing_code_snippet}
@@ -57,13 +67,17 @@ def generate_synced_edits(context: Dict[str, str], updates: Dict[str, str]) -> L
     for name, new_code in updates.items():
         old_snippet = context.get(name)
         if not old_snippet:
-            raise ToolValidationError(f"Context missing expected key '{name}' for update generation.")
-        edits.append({
-            "pattern": re.escape(old_snippet),
-            "multiple": False,
-            "replacement": new_code,
-            "old_string": old_snippet
-        })
+            raise ToolValidationError(
+                f"Context missing expected key '{name}' for update generation."
+            )
+        edits.append(
+            {
+                "pattern": re.escape(old_snippet),
+                "multiple": False,
+                "replacement": new_code,
+                "old_string": old_snippet,
+            }
+        )
     return edits
 
 
@@ -104,9 +118,7 @@ def lint_feedback(error_message: str) -> str:
 
 
 def safe_apply_edits(
-    current_code: str,
-    edits: List[Dict[str, Any]],
-    validate_syntax_after: bool = True
+    current_code: str, edits: List[Dict[str, Any]], validate_syntax_after: bool = True
 ) -> str:
     """
     Applies validated edits safely to code and optionally checks syntax.
@@ -118,8 +130,12 @@ def safe_apply_edits(
     for edit in edits:
         pattern = re.compile(edit["pattern"], re.DOTALL)
         if not pattern.search(updated_code):
-            raise ToolValidationError(f"Pattern not found in current code: {edit['pattern']}")
-        updated_code = pattern.sub(edit["replacement"], updated_code, count=0 if edit["multiple"] else 1)
+            raise ToolValidationError(
+                f"Pattern not found in current code: {edit['pattern']}"
+            )
+        updated_code = pattern.sub(
+            edit["replacement"], updated_code, count=0 if edit["multiple"] else 1
+        )
 
     if validate_syntax_after:
         validate_syntax(updated_code)

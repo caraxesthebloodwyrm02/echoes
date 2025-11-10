@@ -7,8 +7,9 @@ Verifies that ATLAS can be accessed and used directly without CLI.
 
 import sys
 import os
+
 # Add parent directory to path to access misc/ATLAS
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'misc'))
+sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "misc"))
 
 from ATLAS import ATLASDirectAPI
 import time
@@ -22,7 +23,7 @@ def test_direct_atlas_interaction():
 
     # Generate unique test ID to avoid conflicts
     test_id = str(int(time.time()))
-    
+
     # Initialize API
     api = ATLASDirectAPI()
     print("\n✓ ATLAS API initialized")
@@ -57,7 +58,9 @@ def test_direct_atlas_interaction():
     assert result["success"], f"Failed to list items: {result['error']}"
     print(f"  ✓ Found {result['count']} items")
     for item in result["items"]:
-        print(f"    • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})")
+        print(
+            f"    • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})"
+        )
 
     # Test 3: Filter by category
     print("\n[Test 3] Filtering by category...")

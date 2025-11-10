@@ -31,7 +31,6 @@ def create_complete_knowledge_base():
 
         Keywords: five, six, transition, sun, freedom, harmony, consciousness, enlightenment
         """,
-
         """
         NUMBERS 8-11 AND LUNAR SYMBOLISM
 
@@ -49,7 +48,6 @@ def create_complete_knowledge_base():
 
         Keywords: eight, nine, ten, eleven, moon, infinity, completion, intuition, subconscious, lunar
         """,
-
         """
         SIGNAL VS NOISE CONCEPTS - COMPLETE DEFINITIONS
 
@@ -63,7 +61,6 @@ def create_complete_knowledge_base():
 
         Keywords: signal, noise, ratio, SNR, information theory, communication, interference, distortion, cognition
         """,
-
         """
         DISTINGUISHING SIGNAL FROM NOISE - COMPLETE METHODS
 
@@ -85,7 +82,6 @@ def create_complete_knowledge_base():
 
         Keywords: distinguish, methods, stable, essence, appearance, coherence, predictive, emotional, historical, simplicity, practical
         """,
-
         """
         HISTORICAL AND ORGANIC APPROACHES TO DISCERNMENT
 
@@ -106,7 +102,6 @@ def create_complete_knowledge_base():
 
         Keywords: historical, organic, hermetic, socratic, scientific, indigenous, philosophical, discernment
         """,
-
         """
         RAW ESSENCE IDENTIFICATION - DIRECTIONAL GUIDANCE
 
@@ -136,7 +131,7 @@ def create_complete_knowledge_base():
         The answer will guide you to the signal. Trust your intuitive response - signal feels like expansion and peace, noise feels like contraction and fear.
 
         Keywords: essence, nature, raw, guidance, directional, clarity, confusion, truth, fear, light, darkness, identify
-        """
+        """,
     ]
 
     return knowledge
@@ -147,7 +142,7 @@ def get_complete_answer(rag_system, query, query_num):
 
     print(f"\n{'='*60}")
     print(f"FINAL ANSWER FOR QUERY {query_num}")
-    print('='*60)
+    print("=" * 60)
     print(f"Q: {query}")
 
     start_time = time.time()
@@ -159,21 +154,21 @@ def get_complete_answer(rag_system, query, query_num):
 
     # Compile complete answer from all relevant chunks
     answer_parts = []
-    for result in results.get('results', []):
-        content = result.get('content', '').strip()
-        score = result.get('score', 0)
+    for result in results.get("results", []):
+        content = result.get("content", "").strip()
+        score = result.get("score", 0)
         if content and score > 0.7:  # High confidence threshold
             # Clean up the content
-            content = content.replace('\n\n', '\n').strip()
+            content = content.replace("\n\n", "\n").strip()
             answer_parts.append(content)
 
     if answer_parts:
         # Combine and format the answer
-        full_answer = '\n\n'.join(answer_parts)
+        full_answer = "\n\n".join(answer_parts)
 
         # Remove excessive keywords section if present
-        if 'Keywords:' in full_answer:
-            full_answer = full_answer.split('Keywords:')[0].strip()
+        if "Keywords:" in full_answer:
+            full_answer = full_answer.split("Keywords:")[0].strip()
 
         print(f"\nA: {full_answer}")
         return full_answer
@@ -196,10 +191,14 @@ def main():
     print("Loading comprehensive knowledge base...")
 
     for i, text in enumerate(knowledge):
-        result = rag_system.add_documents([{
-            "text": text.strip(),
-            "metadata": {"source": "complete_knowledge", "chunk_id": i+1}
-        }])
+        result = rag_system.add_documents(
+            [
+                {
+                    "text": text.strip(),
+                    "metadata": {"source": "complete_knowledge", "chunk_id": i + 1},
+                }
+            ]
+        )
         print(f"  Loaded chunk {i+1}")
 
     print("\n" + "=" * 60)
@@ -209,22 +208,18 @@ def main():
         "What is the symbolic meaning and significance of the transition from number 5 to 6 and sun?",
         "What is the symbolic meaning and significance of the number 8 to 11 and moon?",
         "What is signal? What is noise? What is the signal to noise ratio?",
-        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone."
+        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone.",
     ]
 
     # Get answers for all queries
     answers = []
     for i, query in enumerate(queries, 1):
         answer = get_complete_answer(rag_system, query, i)
-        answers.append({
-            "query_number": i,
-            "query": query,
-            "answer": answer
-        })
+        answers.append({"query_number": i, "query": query, "answer": answer})
 
     print(f"\n{'='*60}")
     print("🎉 ALL QUERIES COMPLETED")
-    print('='*60)
+    print("=" * 60)
 
     # Create final documentation
     doc_content = f"""# ✅ COMPLETE RAG Query Answers - All Issues Resolved
@@ -293,7 +288,7 @@ All 4 queries have been successfully processed and answered using the enhanced R
 
     # Save final documentation
     output_file = "COMPLETE_RAG_Query_Answers.md"
-    with open(output_file, 'w') as f:
+    with open(output_file, "w") as f:
         f.write(doc_content)
 
     print(f"📄 Complete answers saved to: {output_file}")
@@ -301,16 +296,21 @@ All 4 queries have been successfully processed and answered using the enhanced R
     # Test IMPACT_ANALYTICS integration
     try:
         from integrations import record_research_progress
+
         record_research_progress(
-            milestone_name='all_rag_issues_resolved_complete_answers',
+            milestone_name="all_rag_issues_resolved_complete_answers",
             completion_percentage=100.0,
-            category='rag_completion',
+            category="rag_completion",
             metadata={
-                'total_queries': 4,
-                'all_answered': True,
-                'issues_resolved': ['pandas_dependency', 'retrieval_accuracy', 'knowledge_base'],
-                'system_status': 'fully_functional_production_ready'
-            }
+                "total_queries": 4,
+                "all_answered": True,
+                "issues_resolved": [
+                    "pandas_dependency",
+                    "retrieval_accuracy",
+                    "knowledge_base",
+                ],
+                "system_status": "fully_functional_production_ready",
+            },
         )
         print("✅ IMPACT_ANALYTICS milestone recorded")
     except Exception as e:

@@ -27,10 +27,15 @@ print("-" * 80)
 
 try:
     from assistant_v2_core import EchoesAssistantV2
-    assistant = EchoesAssistantV2(enable_rag=True, rag_preset="openai-balanced", enable_streaming=enable_streaming)
+
+    assistant = EchoesAssistantV2(
+        enable_rag=True, rag_preset="openai-balanced", enable_streaming=enable_streaming
+    )
     print("[OK] Echoes Assistant initialized successfully")
     print(f"      RAG enabled: {assistant.rag is not None}")
-    print(f"      Tools loaded: {len(assistant.tool_registry.list_tools()) if assistant.tool_registry else 0}")
+    print(
+        f"      Tools loaded: {len(assistant.tool_registry.list_tools()) if assistant.tool_registry else 0}"
+    )
 except Exception as e:
     print(f"[FAIL] Initialization failed: {e}")
     traceback.print_exc()
@@ -42,11 +47,26 @@ print("PHASE 2: Knowledge Base Setup")
 print("-" * 80)
 
 test_docs = [
-    {"text": "Echoes uses OpenAI embeddings with in-memory cosine similarity.", "metadata": {"source": "overview"}},
-    {"text": "Revenue: Consulting $150-250/hr, AI Development $100-200/hr.", "metadata": {"source": "business"}},
-    {"text": "Supported models: text-embedding-3-large, text-embedding-3-small.", "metadata": {"source": "technical"}},
-    {"text": "RAG presets: openai-fast, openai-balanced, openai-accurate.", "metadata": {"source": "presets"}},
-    {"text": "LangChain loader supports PDF, Word, Markdown, HTML, CSV, JSON, Excel.", "metadata": {"source": "loader"}}
+    {
+        "text": "Echoes uses OpenAI embeddings with in-memory cosine similarity.",
+        "metadata": {"source": "overview"},
+    },
+    {
+        "text": "Revenue: Consulting $150-250/hr, AI Development $100-200/hr.",
+        "metadata": {"source": "business"},
+    },
+    {
+        "text": "Supported models: text-embedding-3-large, text-embedding-3-small.",
+        "metadata": {"source": "technical"},
+    },
+    {
+        "text": "RAG presets: openai-fast, openai-balanced, openai-accurate.",
+        "metadata": {"source": "presets"},
+    },
+    {
+        "text": "LangChain loader supports PDF, Word, Markdown, HTML, CSV, JSON, Excel.",
+        "metadata": {"source": "loader"},
+    },
 ]
 
 try:
@@ -70,9 +90,15 @@ print("-" * 80)
 rag_queries = [
     ("What is Echoes?", "Echoes is a RAG system using OpenAI embeddings"),
     ("What revenue opportunities exist?", "Consulting and AI development rates"),
-    ("What embedding models are supported?", "text-embedding-3-large and text-embedding-3-small"),
+    (
+        "What embedding models are supported?",
+        "text-embedding-3-large and text-embedding-3-small",
+    ),
     ("What are the RAG presets?", "openai-fast, openai-balanced, openai-accurate"),
-    ("What document formats does LangChain support?", "PDF, Word, Markdown, HTML, CSV, JSON, Excel")
+    (
+        "What document formats does LangChain support?",
+        "PDF, Word, Markdown, HTML, CSV, JSON, Excel",
+    ),
 ]
 
 rag_passed = 0
@@ -91,7 +117,9 @@ for query, expected in rag_queries:
     except Exception as e:
         print(f"[FAIL] '{query[:40]}...' -> Error: {e}")
 
-print(f"\n[RESULT] RAG Retrieval: {rag_passed}/{len(rag_queries)} passed ({100 * rag_passed // len(rag_queries)}%)")
+print(
+    f"\n[RESULT] RAG Retrieval: {rag_passed}/{len(rag_queries)} passed ({100 * rag_passed // len(rag_queries)}%)"
+)
 if rag_passed != len(rag_queries):
     sys.exit(1)
 
@@ -101,25 +129,43 @@ print("PHASE 4: Tool Calling")
 print("-" * 80)
 
 tool_tests = [
-    ("What is 150 multiplied by 20?", "calculator", 25),  # Expect calculator result, shorter is OK
-    ("Search for Python programming tutorials", "web_search", 100)  # Expect search results
+    (
+        "What is 150 multiplied by 20?",
+        "calculator",
+        25,
+    ),  # Expect calculator result, shorter is OK
+    (
+        "Search for Python programming tutorials",
+        "web_search",
+        100,
+    ),  # Expect search results
 ]
 
 tool_passed = 0
 for query, tool_type, min_length in tool_tests:
     try:
         response = assistant.chat(query)
-        if len(response) >= min_length and ("150" in response or "python" in response.lower() or "tutorial" in response.lower()):
-            print(f"[OK] '{query[:40]}...' -> Tool executed successfully ({len(response)} chars)")
+        if len(response) >= min_length and (
+            "150" in response
+            or "python" in response.lower()
+            or "tutorial" in response.lower()
+        ):
+            print(
+                f"[OK] '{query[:40]}...' -> Tool executed successfully ({len(response)} chars)"
+            )
             tool_passed += 1
         else:
-            print(f"[FAIL] '{query[:40]}...' -> Response too short or missing expected content ({len(response)} chars)")
+            print(
+                f"[FAIL] '{query[:40]}...' -> Response too short or missing expected content ({len(response)} chars)"
+            )
             print(f"       Response preview: {response[:100]}...")
     except Exception as e:
         print(f"[FAIL] '{query[:40]}...' -> Error: {e}")
         traceback.print_exc()
 
-print(f"\n[RESULT] Tool Calling: {tool_passed}/{len(tool_tests)} passed ({100 * tool_passed // len(tool_tests)}%)")
+print(
+    f"\n[RESULT] Tool Calling: {tool_passed}/{len(tool_tests)} passed ({100 * tool_passed // len(tool_tests)}%)"
+)
 if tool_passed != len(tool_tests):
     sys.exit(1)
 
@@ -131,22 +177,32 @@ print("-" * 80)
 business_queries = [
     "Analyze market opportunity for AI consulting services",
     "Identify potential revenue streams for a tech startup",
-    "Project revenue for a freelance developer charging $200/hour for 20 hours/week"
+    "Project revenue for a freelance developer charging $200/hour for 20 hours/week",
 ]
 
 business_passed = 0
 for query in business_queries:
     try:
         response = assistant.chat(query)
-        if len(response) > 200 and ("revenue" in response.lower() or "market" in response.lower() or "analysis" in response.lower()):
-            print(f"[OK] '{query[:40]}...' -> Comprehensive response ({len(response)} chars)")
+        if len(response) > 200 and (
+            "revenue" in response.lower()
+            or "market" in response.lower()
+            or "analysis" in response.lower()
+        ):
+            print(
+                f"[OK] '{query[:40]}...' -> Comprehensive response ({len(response)} chars)"
+            )
             business_passed += 1
         else:
-            print(f"[FAIL] '{query[:40]}...' -> Insufficient analysis ({len(response)} chars)")
+            print(
+                f"[FAIL] '{query[:40]}...' -> Insufficient analysis ({len(response)} chars)"
+            )
     except Exception as e:
         print(f"[FAIL] '{query[:40]}...' -> Error: {e}")
 
-print(f"\n[RESULT] Business Analysis: {business_passed}/{len(business_queries)} passed ({100 * business_passed // len(business_queries)}%)")
+print(
+    f"\n[RESULT] Business Analysis: {business_passed}/{len(business_queries)} passed ({100 * business_passed // len(business_queries)}%)"
+)
 if business_passed != len(business_queries):
     sys.exit(1)
 
@@ -158,22 +214,32 @@ print("-" * 80)
 complex_queries = [
     "Design a RAG system architecture for processing legal documents and explain the key components",
     "Calculate revenue projections: $200/hour rate, 40 hours/week, 48 weeks/year, with 20% growth annually",
-    "Create a comprehensive workflow for enterprise client onboarding including documentation and follow-up"
+    "Create a comprehensive workflow for enterprise client onboarding including documentation and follow-up",
 ]
 
 complex_passed = 0
 for query in complex_queries:
     try:
         response = assistant.chat(query)
-        if len(response) > 300 and ("rag" in response.lower() or "revenue" in response.lower() or "workflow" in response.lower()):
-            print(f"[OK] '{query[:40]}...' -> Detailed response ({len(response)} chars)")
+        if len(response) > 300 and (
+            "rag" in response.lower()
+            or "revenue" in response.lower()
+            or "workflow" in response.lower()
+        ):
+            print(
+                f"[OK] '{query[:40]}...' -> Detailed response ({len(response)} chars)"
+            )
             complex_passed += 1
         else:
-            print(f"[FAIL] '{query[:40]}...' -> Insufficient detail ({len(response)} chars)")
+            print(
+                f"[FAIL] '{query[:40]}...' -> Insufficient detail ({len(response)} chars)"
+            )
     except Exception as e:
         print(f"[FAIL] '{query[:40]}...' -> Error: {e}")
 
-print(f"\n[RESULT] Complex Queries: {complex_passed}/{len(complex_queries)} passed ({100 * complex_passed // len(complex_queries)}%)")
+print(
+    f"\n[RESULT] Complex Queries: {complex_passed}/{len(complex_queries)} passed ({100 * complex_passed // len(complex_queries)}%)"
+)
 if complex_passed != len(complex_queries):
     sys.exit(1)
 
@@ -190,7 +256,9 @@ try:
     results = assistant._retrieve_context("Echoes platform", top_k=3)
     retrieval_time = time.time() - start
     if retrieval_time < 1.0 and len(results) > 0:  # Sub-second retrieval
-        print(f"[OK] Knowledge retrieval: {retrieval_time:.3f}s for {len(results)} results")
+        print(
+            f"[OK] Knowledge retrieval: {retrieval_time:.3f}s for {len(results)} results"
+        )
         performance_passed += 1
     else:
         print(f"[FAIL] Knowledge retrieval too slow: {retrieval_time:.3f}s")
@@ -206,11 +274,15 @@ try:
         print(f"[OK] Chat response: {chat_time:.3f}s ({len(response)} chars)")
         performance_passed += 1
     else:
-        print(f"[FAIL] Chat response too slow or short: {chat_time:.3f}s, {len(response)} chars")
+        print(
+            f"[FAIL] Chat response too slow or short: {chat_time:.3f}s, {len(response)} chars"
+        )
 except Exception as e:
     print(f"[FAIL] Chat performance error: {e}")
 
-print(f"\n[RESULT] Performance Metrics: {performance_passed}/2 passed ({100 * performance_passed // 2}%)")
+print(
+    f"\n[RESULT] Performance Metrics: {performance_passed}/2 passed ({100 * performance_passed // 2}%)"
+)
 if performance_passed != 2:
     sys.exit(1)
 
@@ -220,13 +292,15 @@ print("FINAL TEST SUMMARY - 100% SUCCESS ACHIEVED")
 print("=" * 80)
 
 total_tests = 6  # RAG + Tools + Business + Complex + Performance (2 metrics)
-passed_tests = sum([
-    rag_passed == len(rag_queries),
-    tool_passed == len(tool_tests),
-    business_passed == len(business_queries),
-    complex_passed == len(complex_queries),
-    performance_passed == 2
-])
+passed_tests = sum(
+    [
+        rag_passed == len(rag_queries),
+        tool_passed == len(tool_tests),
+        business_passed == len(business_queries),
+        complex_passed == len(complex_queries),
+        performance_passed == 2,
+    ]
+)
 
 success_rate = 100 * passed_tests // total_tests
 

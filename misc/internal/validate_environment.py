@@ -9,6 +9,7 @@ import os
 import subprocess
 import importlib.util
 
+
 def check_python_version():
     """Check Python version compatibility"""
     version = sys.version_info
@@ -16,12 +17,17 @@ def check_python_version():
         print(f"✅ Python {version.major}.{version.minor}.{version.micro} - Compatible")
         return True
     else:
-        print(f"❌ Python {version.major}.{version.minor}.{version.micro} - Requires Python 3.12+")
+        print(
+            f"❌ Python {version.major}.{version.minor}.{version.micro} - Requires Python 3.12+"
+        )
         return False
+
 
 def check_virtual_env():
     """Check if running in virtual environment"""
-    in_venv = hasattr(sys, 'real_prefix') or (hasattr(sys, 'base_prefix') and sys.base_prefix != sys.prefix)
+    in_venv = hasattr(sys, "real_prefix") or (
+        hasattr(sys, "base_prefix") and sys.base_prefix != sys.prefix
+    )
     if in_venv:
         print(f"✅ Virtual environment active: {sys.prefix}")
         return True
@@ -29,11 +35,19 @@ def check_virtual_env():
         print("❌ Not running in virtual environment")
         return False
 
+
 def check_dependencies():
     """Check critical dependencies"""
     critical_deps = [
-        'openai', 'fastapi', 'uvicorn', 'python-dotenv',
-        'pytest', 'httpx', 'requests', 'numpy', 'pandas'
+        "openai",
+        "fastapi",
+        "uvicorn",
+        "python-dotenv",
+        "pytest",
+        "httpx",
+        "requests",
+        "numpy",
+        "pandas",
     ]
 
     missing = []
@@ -53,22 +67,20 @@ def check_dependencies():
         print("\n✅ All critical dependencies installed")
         return True
 
+
 def check_env_file():
     """Check .env file exists"""
-    if os.path.exists('.env'):
+    if os.path.exists(".env"):
         print("✅ .env file found")
         return True
     else:
         print("⚠️  .env file not found - create from .env.example")
         return False
 
+
 def check_imports():
     """Test project imports"""
-    test_imports = [
-        'app.main',
-        'core.config',
-        'ai_agents.orchestrator'
-    ]
+    test_imports = ["app.main", "core.config", "ai_agents.orchestrator"]
 
     failed = []
     for module in test_imports:
@@ -88,6 +100,7 @@ def check_imports():
         print("\n✅ All project imports working")
         return True
 
+
 def main():
     """Main validation function"""
     print("🔍 Echoes Environment Validation")
@@ -98,7 +111,7 @@ def main():
         check_virtual_env,
         check_dependencies,
         check_env_file,
-        check_imports
+        check_imports,
     ]
 
     results = []
@@ -118,6 +131,7 @@ def main():
         print(f"⚠️  {passed}/{total} checks passed")
         print("Please resolve the issues above")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

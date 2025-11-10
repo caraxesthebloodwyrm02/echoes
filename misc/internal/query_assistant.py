@@ -3,11 +3,12 @@ import os
 
 # Exclude the core directory to avoid conflicts with standard library
 project_root = os.path.dirname(os.path.abspath(__file__))
-core_dir = os.path.join(project_root, 'core')
+core_dir = os.path.join(project_root, "core")
 if core_dir in sys.path:
     sys.path.remove(core_dir)
 
 from assistant_v2_core import EchoesAssistantV2
+
 
 def main():
     assistant = EchoesAssistantV2()
@@ -24,6 +25,7 @@ And recommend a strategy to approach OpenAI through medium, with a note about my
     print("EchoesAssistantV2 Response:")
     print("=" * 50)
     print(response)
+
 
 if __name__ == "__main__":
     main()

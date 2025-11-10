@@ -50,7 +50,9 @@ class ToolRegistry:
             ToolError: If tool name already exists
         """
         if tool.name in self._tools:
-            raise ToolError(f"Tool '{tool.name}' already registered", tool_name=tool.name)
+            raise ToolError(
+                f"Tool '{tool.name}' already registered", tool_name=tool.name
+            )
 
         self._tools[tool.name] = tool
 
@@ -128,7 +130,9 @@ class ToolRegistry:
         """Get list of all categories."""
         return list(self._tool_categories.keys())
 
-    def execute(self, tool_name: str, user_role: Optional[str] = None, **kwargs) -> ToolResult:
+    def execute(
+        self, tool_name: str, user_role: Optional[str] = None, **kwargs
+    ) -> ToolResult:
         """
         Execute a tool with access control.
 
@@ -142,7 +146,9 @@ class ToolRegistry:
         """
         tool = self.get(tool_name)
         if not tool:
-            return ToolResult(success=False, data=None, error=f"Tool '{tool_name}' not found")
+            return ToolResult(
+                success=False, data=None, error=f"Tool '{tool_name}' not found"
+            )
 
         # Check access control
         if tool_name in self._access_control:
@@ -166,11 +172,17 @@ class ToolRegistry:
         """
         return {
             "total_tools": len(self._tools),
-            "categories": {cat: len(tools) for cat, tools in self._tool_categories.items()},
-            "tool_stats": {name: tool.get_stats() for name, tool in self._tools.items()},
+            "categories": {
+                cat: len(tools) for cat, tools in self._tool_categories.items()
+            },
+            "tool_stats": {
+                name: tool.get_stats() for name, tool in self._tools.items()
+            },
         }
 
-    def get_openai_schemas(self, category: Optional[str] = None) -> List[Dict[str, Any]]:
+    def get_openai_schemas(
+        self, category: Optional[str] = None
+    ) -> List[Dict[str, Any]]:
         """
         Get OpenAI function calling schemas for registered tools.
 

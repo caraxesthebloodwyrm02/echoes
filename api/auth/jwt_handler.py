@@ -15,12 +15,20 @@ class JWTHandler:
     """Handle JWT token operations"""
 
     def __init__(self, secret_key: Optional[str] = None, algorithm: str = "HS256"):
-        self.secret_key = secret_key or os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+        self.secret_key = secret_key or os.getenv(
+            "JWT_SECRET_KEY", "your-secret-key-change-in-production"
+        )
         self.algorithm = algorithm
-        self.access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
-        self.refresh_token_expire_days = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
+        self.access_token_expire_minutes = int(
+            os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+        )
+        self.refresh_token_expire_days = int(
+            os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+        )
 
-    def create_access_token(self, data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    def create_access_token(
+        self, data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+    ) -> str:
         """
         Create a JWT access token
 
@@ -99,7 +107,11 @@ class JWTHandler:
             raise InvalidTokenError("Invalid token type")
 
         # Create new access token with user data
-        user_data = {"sub": payload.get("sub"), "role": payload.get("role"), "platforms": payload.get("platforms", [])}
+        user_data = {
+            "sub": payload.get("sub"),
+            "role": payload.get("role"),
+            "platforms": payload.get("platforms", []),
+        }
 
         return self.create_access_token(user_data)
 
@@ -108,7 +120,9 @@ class JWTHandler:
 _jwt_handler = JWTHandler()
 
 
-def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(
+    data: Dict[str, Any], expires_delta: Optional[timedelta] = None
+) -> str:
     """Create an access token (convenience function)"""
     return _jwt_handler.create_access_token(data, expires_delta)
 

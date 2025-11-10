@@ -26,9 +26,9 @@ def test_retrieval_diagnostics(rag_system, query, expected_keywords):
 
     print(f"Results returned: {len(results.get('results', []))}")
 
-    for i, result in enumerate(results.get('results', [])):
-        content = result.get('content', '')[:200] + "..."
-        score = result.get('score', 0)
+    for i, result in enumerate(results.get("results", [])):
+        content = result.get("content", "")[:200] + "..."
+        score = result.get("score", 0)
         print(f"  [{i+1}] Score: {score:.3f} | Content: {content}")
 
         # Check for expected keywords
@@ -55,11 +55,11 @@ def test_alternative_queries(rag_system, base_query, variations):
     for i, variation in enumerate(variations, 1):
         print(f"\nVariation {i}: {variation}")
         results = rag_system.search(variation, top_k=3)
-        result_count = len(results.get('results', []))
+        result_count = len(results.get("results", []))
         print(f"  Results: {result_count}")
 
         if result_count > 0:
-            top_score = results['results'][0].get('score', 0)
+            top_score = results["results"][0].get("score", 0)
             print(f"  Top score: {top_score:.3f}")
         else:
             print("  ❌ No results")
@@ -80,7 +80,6 @@ def create_improved_knowledge_base():
 
         Keywords: signal, noise, ratio, SNR, information theory, communication, interference, distortion
         """,
-
         """
         DISTINGUISHING SIGNAL FROM NOISE - PRACTICAL METHODS
 
@@ -102,7 +101,6 @@ def create_improved_knowledge_base():
 
         Keywords: distinguish, methods, essence, appearance, coherence, predictive, emotional, historical, simplicity, practical
         """,
-
         """
         HISTORICAL APPROACHES TO SIGNAL/NOISE DISCERNMENT
 
@@ -123,7 +121,6 @@ def create_improved_knowledge_base():
 
         Keywords: historical, organic, hermetic, socratic, scientific, indigenous, philosophical, discernment
         """,
-
         """
         RAW ESSENCE IDENTIFICATION - DIRECTIONAL GUIDANCE
 
@@ -151,7 +148,7 @@ def create_improved_knowledge_base():
         The answer will guide you to the signal.
 
         Keywords: essence, nature, raw, guidance, directional, clarity, confusion, truth, fear, light, darkness
-        """
+        """,
     ]
 
     return improved_knowledge
@@ -171,10 +168,18 @@ def main():
     print("Adding improved knowledge base...")
 
     for i, text in enumerate(knowledge):
-        result = rag_system.add_documents([{
-            "text": text.strip(),
-            "metadata": {"source": "improved_knowledge", "chunk_id": i+1, "type": "signal_noise"}
-        }])
+        result = rag_system.add_documents(
+            [
+                {
+                    "text": text.strip(),
+                    "metadata": {
+                        "source": "improved_knowledge",
+                        "chunk_id": i + 1,
+                        "type": "signal_noise",
+                    },
+                }
+            ]
+        )
         print(f"  Added chunk {i+1}: {result}")
 
     print("\n" + "=" * 60)
@@ -183,21 +188,23 @@ def main():
     test_cases = [
         {
             "query": "What is signal? What is noise? What is the signal to noise ratio?",
-            "keywords": ["signal", "noise", "ratio", "SNR"]
+            "keywords": ["signal", "noise", "ratio", "SNR"],
         },
         {
             "query": "What are some of the stable methods to distinguish between bs/jargon/noise and signal?",
-            "keywords": ["distinguish", "methods", "stable", "signal", "noise"]
+            "keywords": ["distinguish", "methods", "stable", "signal", "noise"],
         },
         {
             "query": "Very simply write how to identify which is which by their raw essence and nature",
-            "keywords": ["essence", "nature", "raw", "identify"]
-        }
+            "keywords": ["essence", "nature", "raw", "identify"],
+        },
     ]
 
     for test_case in test_cases:
         # Run diagnostics
-        test_retrieval_diagnostics(rag_system, test_case["query"], test_case["keywords"])
+        test_retrieval_diagnostics(
+            rag_system, test_case["query"], test_case["keywords"]
+        )
 
         # Test query variations
         variations = [
@@ -219,19 +226,19 @@ def main():
 
     working_queries = [
         "What is signal? What is noise? What is the signal to noise ratio?",
-        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone."
+        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone.",
     ]
 
     for query in working_queries:
         print(f"\nQuery: {query[:60]}...")
         results = rag_system.search(query, top_k=3)
-        result_count = len(results.get('results', []))
+        result_count = len(results.get("results", []))
 
         if result_count > 0:
             print(f"✅ SUCCESS: {result_count} results found")
             # Show top result
-            top_result = results['results'][0]
-            content_preview = top_result.get('content', '')[:150] + "..."
+            top_result = results["results"][0]
+            content_preview = top_result.get("content", "")[:150] + "..."
             print(f"   Top result: {content_preview}")
         else:
             print("❌ FAILED: No results found")

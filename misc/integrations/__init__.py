@@ -12,7 +12,7 @@ from .impact_analytics_connector import (
     record_ai_evaluation,
     record_research_progress,
     get_impact_status,
-    generate_impact_report
+    generate_impact_report,
 )
 
 # Turbo Bridge - Unified Cross-Platform Integration
@@ -21,23 +21,22 @@ from .turbo_bridge import (
     turbo_bridge,
     create_bridge,
     unified_analysis,
-    get_bridge_health
+    get_bridge_health,
 )
 
 __all__ = [
     # IMPACT Analytics
-    'ImpactAnalyticsConnector',
-    'ImpactMetrics',
-    'impact_connector',
-    'record_ai_evaluation',
-    'record_research_progress',
-    'get_impact_status',
-    'generate_impact_report',
-
+    "ImpactAnalyticsConnector",
+    "ImpactMetrics",
+    "impact_connector",
+    "record_ai_evaluation",
+    "record_research_progress",
+    "get_impact_status",
+    "generate_impact_report",
     # Turbo Bridge
-    'TurboBridge',
-    'turbo_bridge',
-    'create_bridge',
-    'unified_analysis',
-    'get_bridge_health',
+    "TurboBridge",
+    "turbo_bridge",
+    "create_bridge",
+    "unified_analysis",
+    "get_bridge_health",
 ]

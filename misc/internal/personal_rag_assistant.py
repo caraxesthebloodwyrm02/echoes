@@ -22,7 +22,9 @@ from datetime import datetime
 import logging
 
 # Set up logging
-logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
 
 # Add project paths
@@ -81,27 +83,58 @@ class PersonalRAGAssistant:
         self.data_patterns = {
             "meta_data": {
                 "timeframe": "15+ years",
-                "content_types": ["social_interactions", "content_history", "network_data"],
-                "insights": ["behavior_patterns", "relationship_networks", "content_preferences"],
+                "content_types": [
+                    "social_interactions",
+                    "content_history",
+                    "network_data",
+                ],
+                "insights": [
+                    "behavior_patterns",
+                    "relationship_networks",
+                    "content_preferences",
+                ],
             },
             "google_data": {
                 "timeframe": "7+ years",
-                "content_types": ["search_history", "gmail_patterns", "drive_documents", "photos"],
-                "insights": ["information_seeking", "communication_patterns", "document_organization"],
+                "content_types": [
+                    "search_history",
+                    "gmail_patterns",
+                    "drive_documents",
+                    "photos",
+                ],
+                "insights": [
+                    "information_seeking",
+                    "communication_patterns",
+                    "document_organization",
+                ],
             },
             "openai_data": {
                 "timeframe": "1+ year",
-                "content_types": ["conversation_history", "prompt_patterns", "usage_analytics"],
-                "insights": ["ai_interaction_styles", "problem_solving_approaches", "learning_patterns"],
+                "content_types": [
+                    "conversation_history",
+                    "prompt_patterns",
+                    "usage_analytics",
+                ],
+                "insights": [
+                    "ai_interaction_styles",
+                    "problem_solving_approaches",
+                    "learning_patterns",
+                ],
             },
             "social_media": {
                 "platforms": ["snapchat", "soundcloud", "others"],
                 "content_types": ["images", "audio", "social_interactions"],
-                "insights": ["creative_expression", "social_patterns", "content_creation"],
+                "insights": [
+                    "creative_expression",
+                    "social_patterns",
+                    "content_creation",
+                ],
             },
         }
 
-    def add_personal_data(self, data_source: str, content: str, metadata: Dict[str, Any] = None):
+    def add_personal_data(
+        self, data_source: str, content: str, metadata: Dict[str, Any] = None
+    ):
         """Add user's personal data to the knowledge base"""
         if metadata is None:
             metadata = {}
@@ -130,7 +163,9 @@ class PersonalRAGAssistant:
 
         logger.info(f"Added {len(content)} chars from {data_source} to knowledge base")
 
-    def _generate_memory_from_content(self, content: str, source: str, metadata: Dict[str, Any]):
+    def _generate_memory_from_content(
+        self, content: str, source: str, metadata: Dict[str, Any]
+    ):
         """Generate contextual memories from content"""
         # Extract key patterns and insights
         memory_key = f"{source}_{datetime.now().strftime('%Y%m%d_%H%M%S')}"
@@ -164,7 +199,10 @@ class PersonalRAGAssistant:
             insights.append("AI model interaction pattern")
 
         # Personal growth insights
-        if any(word in content_lower for word in ["learn", "practice", "improve", "efficient"]):
+        if any(
+            word in content_lower
+            for word in ["learn", "practice", "improve", "efficient"]
+        ):
             insights.append("Personal development focus")
 
         if len(insights) == 0:
@@ -212,7 +250,9 @@ class PersonalRAGAssistant:
 
         return tags
 
-    def query_with_context(self, query: str, context_level: str = "balanced") -> Dict[str, Any]:
+    def query_with_context(
+        self, query: str, context_level: str = "balanced"
+    ) -> Dict[str, Any]:
         """
         Query the system with full personal context awareness
 
@@ -226,7 +266,9 @@ class PersonalRAGAssistant:
         relevant_memories = self._find_relevant_memories(query)
 
         # Generate context-aware response
-        response = self._generate_contextual_response(query, relevant_memories, context_level)
+        response = self._generate_contextual_response(
+            query, relevant_memories, context_level
+        )
 
         # Store conversation
         conversation_entry = {
@@ -255,13 +297,19 @@ class PersonalRAGAssistant:
             # Simple relevance check
             if any(tag in query_lower for tag in memory.get("tags", [])):
                 relevant.append(memory)
-            elif any(insight.lower() in query_lower for insight in memory.get("insights", [])):
+            elif any(
+                insight.lower() in query_lower for insight in memory.get("insights", [])
+            ):
                 relevant.append(memory)
 
         # Return top 5 most relevant
-        return sorted(relevant, key=lambda x: x.get("relevance_score", 0), reverse=True)[:5]
+        return sorted(
+            relevant, key=lambda x: x.get("relevance_score", 0), reverse=True
+        )[:5]
 
-    def _generate_contextual_response(self, query: str, memories: List[Dict[str, Any]], context_level: str) -> str:
+    def _generate_contextual_response(
+        self, query: str, memories: List[Dict[str, Any]], context_level: str
+    ) -> str:
         """Generate a response that considers user's full context"""
 
         # Base response structure
@@ -269,14 +317,20 @@ class PersonalRAGAssistant:
 
         # Personal context acknowledgment
         if "debug" in query.lower():
-            response_parts.append(f"I understand you're working on debugging efficiency, {self.user_name}. ")
+            response_parts.append(
+                f"I understand you're working on debugging efficiency, {self.user_name}. "
+            )
             response_parts.append(
                 "Based on your recent success reducing debugging time from 12+ hours to under 3 hours, "
             )
-            response_parts.append("you're clearly making excellent progress with dynamic model handling.\n")
+            response_parts.append(
+                "you're clearly making excellent progress with dynamic model handling.\n"
+            )
 
         elif "ci" in query.lower() or "workflow" in query.lower():
-            response_parts.append(f"For your CI/CD streamlining goals, {self.user_name}. ")
+            response_parts.append(
+                f"For your CI/CD streamlining goals, {self.user_name}. "
+            )
             response_parts.append(
                 "You want to eliminate pre-commit failures and reduce back-and-forth between IDE and web interfaces.\n"
             )
@@ -285,16 +339,26 @@ class PersonalRAGAssistant:
         if memories and context_level in ["balanced", "comprehensive"]:
             response_parts.append("\nRelevant context from your history:")
             for i, memory in enumerate(memories[:3], 1):
-                response_parts.append(f"{i}. {memory.get('content_summary', 'Context available')}")
-                response_parts.append(f"   Insights: {', '.join(memory.get('insights', []))}")
+                response_parts.append(
+                    f"{i}. {memory.get('content_summary', 'Context available')}"
+                )
+                response_parts.append(
+                    f"   Insights: {', '.join(memory.get('insights', []))}"
+                )
             response_parts.append("")
 
         # Provide specific guidance
         if "debug" in query.lower():
             response_parts.append("**Debugging Strategy Recommendation:**")
-            response_parts.append("1. Start with the model that best matches your current problem type")
-            response_parts.append("2. Use dynamic model switching when initial approach stalls")
-            response_parts.append("3. Document successful patterns for future reference")
+            response_parts.append(
+                "1. Start with the model that best matches your current problem type"
+            )
+            response_parts.append(
+                "2. Use dynamic model switching when initial approach stalls"
+            )
+            response_parts.append(
+                "3. Document successful patterns for future reference"
+            )
             response_parts.append(
                 "4. Take offline walks for mental reset - your insight about 'Mystique-like' model flexibility is spot-on"
             )
@@ -303,14 +367,22 @@ class PersonalRAGAssistant:
             response_parts.append("**CI/CD Optimization Strategy:**")
             response_parts.append("1. Implement pre-commit hooks that mirror CI checks")
             response_parts.append("2. Set up local testing that matches CI environment")
-            response_parts.append("3. Use IDE extensions for seamless GitHub integration")
+            response_parts.append(
+                "3. Use IDE extensions for seamless GitHub integration"
+            )
             response_parts.append("4. Automate the repetitive back-and-forth tasks")
 
         # Add proactive suggestions
         response_parts.append("\n**Proactive Recommendations:**")
-        response_parts.append("• Consider creating model 'personas' based on task types (like your Mystique insight)")
-        response_parts.append("• Implement memory generation for every successful debugging session")
-        response_parts.append("• Set up automated context extraction from your rich data sources")
+        response_parts.append(
+            "• Consider creating model 'personas' based on task types (like your Mystique insight)"
+        )
+        response_parts.append(
+            "• Implement memory generation for every successful debugging session"
+        )
+        response_parts.append(
+            "• Set up automated context extraction from your rich data sources"
+        )
 
         return "\n".join(response_parts)
 
@@ -410,7 +482,10 @@ def demo_personal_rag():
     assistant.add_personal_data(
         "ci_cd_challenge",
         "Current CI/CD workflow requires exhausting back-and-forth between IDE and GitHub web interface. Pre-commit hooks frequently fail, requiring manual fixes and re-runs.",
-        {"problem_area": "workflow_efficiency", "pain_points": ["pre_commit_failures", "context_switching"]},
+        {
+            "problem_area": "workflow_efficiency",
+            "pain_points": ["pre_commit_failures", "context_switching"],
+        },
     )
 
     print(f"✅ Added {len(assistant.knowledge_base)} data sources")

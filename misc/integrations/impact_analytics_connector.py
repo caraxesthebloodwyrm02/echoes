@@ -18,14 +18,17 @@ if str(IMPACT_ANALYTICS_PATH) not in sys.path:
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ImpactMetrics:
     """Container for impact metrics data."""
+
     safety_score: Optional[float] = None
     bias_reduction_index: Optional[float] = None
     total_evaluations: Optional[int] = None
     recent_milestones: Optional[List[Dict[str, Any]]] = None
     error: Optional[str] = None
+
 
 class ImpactAnalyticsConnector:
     """Connector for IMPACT_ANALYTICS system integration."""
@@ -38,6 +41,7 @@ class ImpactAnalyticsConnector:
         try:
             # Try to import and initialize the workflow tracker
             from analytics.workflow_integration import WorkflowTracker
+
             self.workflow_tracker = WorkflowTracker()
             self.connected = self.workflow_tracker.enabled
             if self.connected:
@@ -53,12 +57,14 @@ class ImpactAnalyticsConnector:
         """Check if connector is successfully connected to IMPACT_ANALYTICS."""
         return self.connected and self.workflow_tracker is not None
 
-    def record_evaluation(self,
-                         prompt: str,
-                         response: str,
-                         safety_score: float,
-                         bias_analysis: Dict[str, Any],
-                         metadata: Optional[Dict[str, Any]] = None) -> bool:
+    def record_evaluation(
+        self,
+        prompt: str,
+        response: str,
+        safety_score: float,
+        bias_analysis: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> bool:
         """Record an AI safety evaluation.
 
         Args:
@@ -72,7 +78,9 @@ class ImpactAnalyticsConnector:
             True if recorded successfully, False otherwise
         """
         if not self.is_connected():
-            logger.warning("IMPACT_ANALYTICS not connected, skipping evaluation recording")
+            logger.warning(
+                "IMPACT_ANALYTICS not connected, skipping evaluation recording"
+            )
             return False
 
         try:
@@ -81,7 +89,7 @@ class ImpactAnalyticsConnector:
                 response=response,
                 safety_score=safety_score,
                 bias_analysis=bias_analysis,
-                metadata=metadata
+                metadata=metadata,
             )
             logger.debug("Successfully recorded evaluation in IMPACT_ANALYTICS")
             return True
@@ -89,11 +97,13 @@ class ImpactAnalyticsConnector:
             logger.error(f"Error recording evaluation: {e}")
             return False
 
-    def record_milestone(self,
-                        milestone_name: str,
-                        completion_percentage: float,
-                        category: str = "research",
-                        metadata: Optional[Dict[str, Any]] = None) -> bool:
+    def record_milestone(
+        self,
+        milestone_name: str,
+        completion_percentage: float,
+        category: str = "research",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> bool:
         """Record a research milestone achievement.
 
         Args:
@@ -106,7 +116,9 @@ class ImpactAnalyticsConnector:
             True if recorded successfully, False otherwise
         """
         if not self.is_connected():
-            logger.warning("IMPACT_ANALYTICS not connected, skipping milestone recording")
+            logger.warning(
+                "IMPACT_ANALYTICS not connected, skipping milestone recording"
+            )
             return False
 
         try:
@@ -114,9 +126,11 @@ class ImpactAnalyticsConnector:
                 milestone_name=milestone_name,
                 completion_percentage=completion_percentage,
                 category=category,
-                metadata=metadata
+                metadata=metadata,
             )
-            logger.debug(f"Successfully recorded milestone '{milestone_name}' in IMPACT_ANALYTICS")
+            logger.debug(
+                f"Successfully recorded milestone '{milestone_name}' in IMPACT_ANALYTICS"
+            )
             return True
         except Exception as e:
             logger.error(f"Error recording milestone: {e}")
@@ -136,8 +150,12 @@ class ImpactAnalyticsConnector:
             return ImpactMetrics(
                 safety_score=metrics.get("latest_safety_score"),
                 bias_reduction_index=metrics.get("bias_reduction_index"),
-                total_evaluations=int(metrics.get("total_evaluations", 0)) if metrics.get("total_evaluations") else None,
-                recent_milestones=metrics.get("recent_milestones", [])
+                total_evaluations=(
+                    int(metrics.get("total_evaluations", 0))
+                    if metrics.get("total_evaluations")
+                    else None
+                ),
+                recent_milestones=metrics.get("recent_milestones", []),
             )
         except Exception as e:
             logger.error(f"Error getting metrics: {e}")
@@ -155,16 +173,20 @@ class ImpactAnalyticsConnector:
 
         try:
             report_path = self.workflow_tracker.generate_workflow_report()
-            logger.info(f"Successfully generated IMPACT_ANALYTICS report: {report_path}")
+            logger.info(
+                f"Successfully generated IMPACT_ANALYTICS report: {report_path}"
+            )
             return report_path
         except Exception as e:
             logger.error(f"Error generating report: {e}")
             return None
 
-    def get_metric_history(self,
-                          metric_name: Optional[str] = None,
-                          category: Optional[str] = None,
-                          limit: int = 100) -> List[Dict[str, Any]]:
+    def get_metric_history(
+        self,
+        metric_name: Optional[str] = None,
+        category: Optional[str] = None,
+        limit: int = 100,
+    ) -> List[Dict[str, Any]]:
         """Get historical metric data.
 
         Args:
@@ -182,41 +204,49 @@ class ImpactAnalyticsConnector:
         try:
             # Access the underlying tracker directly for history
             from analytics import ImpactTracker
+
             tracker = ImpactTracker()
             return tracker.get_metric_history(
-                metric_name=metric_name,
-                category=category,
-                limit=limit
+                metric_name=metric_name, category=category, limit=limit
             )
         except Exception as e:
             logger.error(f"Error getting metric history: {e}")
             return []
 
+
 # Global instance
 impact_connector = ImpactAnalyticsConnector()
 
-def record_ai_evaluation(prompt: str,
-                        response: str,
-                        safety_score: float,
-                        bias_analysis: Dict[str, Any],
-                        metadata: Optional[Dict[str, Any]] = None) -> bool:
+
+def record_ai_evaluation(
+    prompt: str,
+    response: str,
+    safety_score: float,
+    bias_analysis: Dict[str, Any],
+    metadata: Optional[Dict[str, Any]] = None,
+) -> bool:
     """Convenience function to record AI evaluation in IMPACT_ANALYTICS."""
     return impact_connector.record_evaluation(
         prompt, response, safety_score, bias_analysis, metadata
     )
 
-def record_research_progress(milestone_name: str,
-                           completion_percentage: float,
-                           category: str = "research",
-                           metadata: Optional[Dict[str, Any]] = None) -> bool:
+
+def record_research_progress(
+    milestone_name: str,
+    completion_percentage: float,
+    category: str = "research",
+    metadata: Optional[Dict[str, Any]] = None,
+) -> bool:
     """Convenience function to record research milestone in IMPACT_ANALYTICS."""
     return impact_connector.record_milestone(
         milestone_name, completion_percentage, category, metadata
     )
 
+
 def get_impact_status() -> ImpactMetrics:
     """Convenience function to get current IMPACT_ANALYTICS metrics."""
     return impact_connector.get_metrics()
+
 
 def generate_impact_report() -> Optional[str]:
     """Convenience function to generate IMPACT_ANALYTICS workflow report."""

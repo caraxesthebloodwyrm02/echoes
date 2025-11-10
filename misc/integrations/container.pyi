@@ -30,7 +30,7 @@ class BarContainer(Container):
         *,
         datavalues: ArrayLike | None = ...,
         orientation: Literal["vertical", "horizontal"] | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
 
 class ErrorbarContainer(Container):
@@ -42,11 +42,15 @@ class ErrorbarContainer(Container):
         lines: tuple[Line2D, tuple[Line2D, ...], tuple[LineCollection, ...]],
         has_xerr: bool = ...,
         has_yerr: bool = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
 
 class StemContainer(Container):
     markerline: Line2D
     stemlines: LineCollection
     baseline: Line2D
-    def __init__(self, markerline_stemlines_baseline: tuple[Line2D, LineCollection, Line2D], **kwargs) -> None: ...
+    def __init__(
+        self,
+        markerline_stemlines_baseline: tuple[Line2D, LineCollection, Line2D],
+        **kwargs,
+    ) -> None: ...

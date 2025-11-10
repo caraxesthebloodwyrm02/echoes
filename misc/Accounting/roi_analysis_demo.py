@@ -26,9 +26,7 @@ def demo_roi_analysis():
     # Initialize assistant
     print("\n1. Initializing EchoesAssistantV2...")
     assistant = EchoesAssistantV2(
-        enable_tools=True,
-        enable_rag=True,
-        enable_status=True
+        enable_tools=True, enable_rag=True, enable_status=True
     )
     print("✓ Assistant initialized with tools and RAG enabled")
 
@@ -38,27 +36,27 @@ def demo_roi_analysis():
         "analysis_data": {
             "monthly_investment": 12000,
             "monthly_savings": 71822,
-            "team_size": 5
+            "team_size": 5,
         },
         "stakeholder_info": {
             "institution_name": "Demo Bank Corp",
-            "email_to": ["cfo@demobank.com", "cto@demobank.com", "cco@demobank.com"]
+            "email_to": ["cfo@demobank.com", "cto@demobank.com", "cco@demobank.com"],
         },
         "output_formats": ["yaml", "csv", "spreadsheet", "report"],
-        "customization_level": "comprehensive"
+        "customization_level": "comprehensive",
     }
 
     print("\n2. Executing ROI analysis via action executor...")
     print(f"   Business Type: {roi_params['business_type']}")
     print(f"   Institution: {roi_params['stakeholder_info']['institution_name']}")
-    print(f"   Monthly Investment: ${roi_params['analysis_data']['monthly_investment']:,}")
+    print(
+        f"   Monthly Investment: ${roi_params['analysis_data']['monthly_investment']:,}"
+    )
     print(f"   Monthly Savings: ${roi_params['analysis_data']['monthly_savings']:,}")
 
     # Execute ROI analysis action
     result = assistant.execute_action(
-        action_type="roi",
-        action_name="generate_roi_package",
-        **roi_params
+        action_type="roi", action_name="generate_roi_package", **roi_params
     )
 
     if result["success"]:
@@ -85,13 +83,14 @@ def demo_roi_analysis():
         print("\n📊 ROI Metrics:")
         print(f"   Payback Period: {roi_metrics.get('payback_days', 0):.0f} days")
         print(f"   ROI: {roi_metrics.get('roi_percentage', 0):.0f}%")
-        print(f"   Annual Net Benefit: ${roi_metrics.get('annual_net_benefit', 0):,.0f}")
+        print(
+            f"   Annual Net Benefit: ${roi_metrics.get('annual_net_benefit', 0):,.0f}"
+        )
 
         print("\n3. Testing knowledge base integration...")
         # Test knowledge search
         roi_analyses = assistant.search_roi_analyses(
-            institution="Demo Bank Corp",  # Use exact name from stored content
-            limit=5
+            institution="Demo Bank Corp", limit=5  # Use exact name from stored content
         )
         print(f"✓ Found {len(roi_analyses)} ROI analyses in knowledge base")
 
@@ -99,25 +98,26 @@ def demo_roi_analysis():
         roi_summary = assistant.get_roi_summary()
         print("\n📈 ROI Knowledge Summary:")
         print(f"   Total analyses: {roi_summary.get('total_analyses', 0)}")
-        print(f"   Institutions analyzed: {len(roi_summary.get('institutions_analyzed', []))}")
+        print(
+            f"   Institutions analyzed: {len(roi_summary.get('institutions_analyzed', []))}"
+        )
         print(f"   Success rate: {roi_summary.get('success_rate', 0):.1f}%")
         print("\n4. Testing filesystem integration...")
         # List organized directory
         list_result = assistant.list_directory("roi_analysis", recursive=True)
         if list_result["success"]:
-            print(f"✓ ROI directory contains {list_result['total_files']} files in {list_result['total_dirs']} directories")
+            print(
+                f"✓ ROI directory contains {list_result['total_files']} files in {list_result['total_dirs']} directories"
+            )
         else:
             print(f"⚠ Could not list directory: {list_result.get('error')}")
 
         print("\n5. Testing tool execution via chat interface...")
         # Test direct tool call via chat
-        chat_message = 'Please generate an ROI analysis for a healthcare provider with $15,000 monthly investment, $85,000 monthly savings, and send results to admin@healthcare.com'
+        chat_message = "Please generate an ROI analysis for a healthcare provider with $15,000 monthly investment, $85,000 monthly savings, and send results to admin@healthcare.com"
         print(f"   Chat input: {chat_message[:80]}...")
 
-        chat_response = assistant.chat(
-            message=chat_message,
-            show_status=False
-        )
+        chat_response = assistant.chat(message=chat_message, show_status=False)
 
         if "Error" not in chat_response:
             print("✓ Chat-based ROI generation successful")
@@ -137,10 +137,10 @@ def demo_roi_analysis():
     stats = assistant.get_stats()
     print("\n7. Final assistant statistics:")
     print(f"   Session: {stats.get('session_id', 'N/A')[:8]}...")
-    
+
     # Fix stats display to use correct keys
-    tool_stats = stats.get('tool_stats', {})
-    knowledge_stats = stats.get('knowledge', {})
+    tool_stats = stats.get("tool_stats", {})
+    knowledge_stats = stats.get("knowledge", {})
     print(f"   Tools available: {tool_stats.get('total_tools', 0)}")
     print(f"   Knowledge entries: {knowledge_stats.get('total_entries', 0)}")
 

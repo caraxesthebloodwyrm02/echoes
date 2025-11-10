@@ -20,12 +20,30 @@ class SavingsRoutineCalculator:
         self.today = datetime.now()
         self.trip_start = datetime(2025, 12, 31)
         self.days_until_trip = (self.trip_start - self.today).days
-        
+
         # Trip cost estimates (USD)
         self.trip_costs = {
-            "Bangkok": {"flights": 400, "accommodation": 400, "meals": 200, "activities": 200, "misc": 200},
-            "Bali": {"flights": 450, "accommodation": 450, "meals": 250, "activities": 250, "misc": 200},
-            "Hanoi": {"flights": 300, "accommodation": 300, "meals": 150, "activities": 150, "misc": 150}
+            "Bangkok": {
+                "flights": 400,
+                "accommodation": 400,
+                "meals": 200,
+                "activities": 200,
+                "misc": 200,
+            },
+            "Bali": {
+                "flights": 450,
+                "accommodation": 450,
+                "meals": 250,
+                "activities": 250,
+                "misc": 200,
+            },
+            "Hanoi": {
+                "flights": 300,
+                "accommodation": 300,
+                "meals": 150,
+                "activities": 150,
+                "misc": 150,
+            },
         }
 
     def calculate_total_cost(self, destination: str) -> float:
@@ -64,7 +82,7 @@ class SavingsRoutineCalculator:
         for destination in self.trip_costs.keys():
             total = self.calculate_total_cost(destination)
             daily_usd, daily_bdt = self.calculate_daily_savings_needed(destination)
-            
+
             output += f"📍 {destination.upper()}\n"
             output += f"   Total Trip Cost:     ${total:,.2f} USD\n"
             output += f"   Daily Savings (USD): ${daily_usd:.2f}\n"
@@ -302,11 +320,11 @@ You've got this! 🌍✈️🎉
     def generate_complete_savings_plan(self) -> str:
         """Generate complete savings plan for all destinations"""
         output = self.render_savings_summary()
-        
+
         # Generate detailed routine for Bangkok (most popular)
         daily_usd, daily_bdt = self.calculate_daily_savings_needed("Bangkok")
         output += self.generate_daily_routine("Bangkok", daily_bdt)
-        
+
         return output
 
 
@@ -315,11 +333,13 @@ def main():
     calculator = SavingsRoutineCalculator()
     plan = calculator.generate_complete_savings_plan()
     print(plan)
-    
+
     # Save to file
-    with open("E:/Projects/Echoes/savings_routine_plan.txt", "w", encoding="utf-8") as f:
+    with open(
+        "E:/Projects/Echoes/savings_routine_plan.txt", "w", encoding="utf-8"
+    ) as f:
         f.write(plan)
-    
+
     print("\n✓ Savings plan saved to: savings_routine_plan.txt\n")
 
 

@@ -25,25 +25,31 @@ from enum import Enum
 from openai import OpenAI
 from direct_rag_system import DirectRAGSystem
 
+
 class DecisionDomain(Enum):
     """Specialized decision domains."""
+
     LEGAL = "legal"
     FINANCIAL = "financial"
     BUSINESS = "business"
     TECHNICAL = "technical"
     GENERAL = "general"
 
+
 class ToolCategory(Enum):
     """Tool categorization for decision support."""
+
     ANALYSIS = "analysis"
     CALCULATION = "calculation"
     EVALUATION = "evaluation"
     RESEARCH = "research"
     VALIDATION = "validation"
 
+
 @dataclass
 class ToolDefinition:
     """Structured tool definition for function calling."""
+
     name: str
     description: str
     category: ToolCategory
@@ -53,9 +59,11 @@ class ToolDefinition:
     requires_context: bool = False
     confidence_threshold: float = 0.8
 
+
 @dataclass
 class DecisionContext:
     """Context for decision-making scenarios."""
+
     domain: DecisionDomain
     complexity: str  # simple, moderate, complex
     urgency: str  # low, medium, high
@@ -65,9 +73,11 @@ class DecisionContext:
     available_tools: List[str] = field(default_factory=list)
     retrieved_knowledge: List[Dict[str, Any]] = field(default_factory=list)
 
+
 @dataclass
 class ProfessionalResponse:
     """Structured professional response format."""
+
     domain: DecisionDomain
     confidence_score: float
     recommendations: List[str]
@@ -77,6 +87,7 @@ class ProfessionalResponse:
     financial_projections: Dict[str, Any] = field(default_factory=dict)
     sources_cited: List[str] = field(default_factory=list)
     formatted_response: str = ""
+
 
 class AdvancedEchoesAssistant:
     """
@@ -110,7 +121,9 @@ class AdvancedEchoesAssistant:
         # Response formatter
         self.response_formatter = ProfessionalResponseFormatter()
 
-        print("🚀 Advanced Echoes Assistant V3 initialized with legal & financial capabilities")
+        print(
+            "🚀 Advanced Echoes Assistant V3 initialized with legal & financial capabilities"
+        )
 
     def _initialize_knowledge_bases(self) -> Dict[DecisionDomain, DirectRAGSystem]:
         """Initialize domain-specific knowledge bases."""
@@ -150,12 +163,19 @@ class AdvancedEchoesAssistant:
             parameters={
                 "type": "object",
                 "properties": {
-                    "contract_text": {"type": "string", "description": "Contract content to analyze"},
-                    "risk_categories": {"type": "array", "items": {"type": "string"}, "description": "Specific risk categories to focus on"}
+                    "contract_text": {
+                        "type": "string",
+                        "description": "Contract content to analyze",
+                    },
+                    "risk_categories": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Specific risk categories to focus on",
+                    },
                 },
-                "required": ["contract_text"]
+                "required": ["contract_text"],
             },
-            handler=self._analyze_contract_risks
+            handler=self._analyze_contract_risks,
         )
 
         tools["evaluate_legal_precedence"] = ToolDefinition(
@@ -166,12 +186,18 @@ class AdvancedEchoesAssistant:
             parameters={
                 "type": "object",
                 "properties": {
-                    "legal_issue": {"type": "string", "description": "Legal issue to evaluate"},
-                    "jurisdiction": {"type": "string", "description": "Legal jurisdiction"}
+                    "legal_issue": {
+                        "type": "string",
+                        "description": "Legal issue to evaluate",
+                    },
+                    "jurisdiction": {
+                        "type": "string",
+                        "description": "Legal jurisdiction",
+                    },
                 },
-                "required": ["legal_issue"]
+                "required": ["legal_issue"],
             },
-            handler=self._evaluate_legal_precedence
+            handler=self._evaluate_legal_precedence,
         )
 
         # Financial Tools
@@ -183,14 +209,30 @@ class AdvancedEchoesAssistant:
             parameters={
                 "type": "object",
                 "properties": {
-                    "initial_investment": {"type": "number", "description": "Initial investment amount"},
-                    "expected_returns": {"type": "number", "description": "Expected return amount"},
-                    "time_period_years": {"type": "number", "description": "Investment time period in years"},
-                    "risk_adjustment": {"type": "number", "description": "Risk adjustment factor (0-1)"}
+                    "initial_investment": {
+                        "type": "number",
+                        "description": "Initial investment amount",
+                    },
+                    "expected_returns": {
+                        "type": "number",
+                        "description": "Expected return amount",
+                    },
+                    "time_period_years": {
+                        "type": "number",
+                        "description": "Investment time period in years",
+                    },
+                    "risk_adjustment": {
+                        "type": "number",
+                        "description": "Risk adjustment factor (0-1)",
+                    },
                 },
-                "required": ["initial_investment", "expected_returns", "time_period_years"]
+                "required": [
+                    "initial_investment",
+                    "expected_returns",
+                    "time_period_years",
+                ],
             },
-            handler=self._calculate_roi
+            handler=self._calculate_roi,
         )
 
         tools["evaluate_fair_price"] = ToolDefinition(
@@ -201,13 +243,23 @@ class AdvancedEchoesAssistant:
             parameters={
                 "type": "object",
                 "properties": {
-                    "item_description": {"type": "string", "description": "Description of item/service/work"},
-                    "market_rates": {"type": "object", "description": "Market rate data"},
-                    "complexity_factors": {"type": "array", "items": {"type": "string"}, "description": "Complexity adjustment factors"}
+                    "item_description": {
+                        "type": "string",
+                        "description": "Description of item/service/work",
+                    },
+                    "market_rates": {
+                        "type": "object",
+                        "description": "Market rate data",
+                    },
+                    "complexity_factors": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Complexity adjustment factors",
+                    },
                 },
-                "required": ["item_description"]
+                "required": ["item_description"],
             },
-            handler=self._evaluate_fair_price
+            handler=self._evaluate_fair_price,
         )
 
         tools["calculate_work_value"] = ToolDefinition(
@@ -218,14 +270,26 @@ class AdvancedEchoesAssistant:
             parameters={
                 "type": "object",
                 "properties": {
-                    "hours_required": {"type": "number", "description": "Hours of work required"},
-                    "skill_level": {"type": "string", "description": "Required skill level"},
-                    "market_rate_per_hour": {"type": "number", "description": "Market rate per hour"},
-                    "complexity_multiplier": {"type": "number", "description": "Complexity adjustment multiplier"}
+                    "hours_required": {
+                        "type": "number",
+                        "description": "Hours of work required",
+                    },
+                    "skill_level": {
+                        "type": "string",
+                        "description": "Required skill level",
+                    },
+                    "market_rate_per_hour": {
+                        "type": "number",
+                        "description": "Market rate per hour",
+                    },
+                    "complexity_multiplier": {
+                        "type": "number",
+                        "description": "Complexity adjustment multiplier",
+                    },
                 },
-                "required": ["hours_required", "skill_level"]
+                "required": ["hours_required", "skill_level"],
             },
-            handler=self._calculate_work_value
+            handler=self._calculate_work_value,
         )
 
         return tools
@@ -234,29 +298,48 @@ class AdvancedEchoesAssistant:
         """Initialize pattern recognition for user challenges."""
         return {
             "contract_review": {
-                "patterns": [r"review.*contract", r"analyze.*agreement", r"legal.*document"],
+                "patterns": [
+                    r"review.*contract",
+                    r"analyze.*agreement",
+                    r"legal.*document",
+                ],
                 "domain": DecisionDomain.LEGAL,
                 "tools": ["analyze_contract_risks"],
-                "response_template": "contract_analysis"
+                "response_template": "contract_analysis",
             },
             "pricing_negotiation": {
-                "patterns": [r"fair.*price", r"market.*rate", r"worth.*pay", r"charge.*for"],
+                "patterns": [
+                    r"fair.*price",
+                    r"market.*rate",
+                    r"worth.*pay",
+                    r"charge.*for",
+                ],
                 "domain": DecisionDomain.FINANCIAL,
                 "tools": ["evaluate_fair_price", "calculate_work_value"],
-                "response_template": "pricing_analysis"
+                "response_template": "pricing_analysis",
             },
             "investment_decision": {
-                "patterns": [r"invest.*in", r"roi", r"return.*investment", r"financial.*decision"],
+                "patterns": [
+                    r"invest.*in",
+                    r"roi",
+                    r"return.*investment",
+                    r"financial.*decision",
+                ],
                 "domain": DecisionDomain.FINANCIAL,
                 "tools": ["calculate_roi", "evaluate_fair_price"],
-                "response_template": "investment_analysis"
+                "response_template": "investment_analysis",
             },
             "legal_advice": {
-                "patterns": [r"legal.*advice", r"law.*says", r"legally.*allowed", r"court.*case"],
+                "patterns": [
+                    r"legal.*advice",
+                    r"law.*says",
+                    r"legally.*allowed",
+                    r"court.*case",
+                ],
                 "domain": DecisionDomain.LEGAL,
                 "tools": ["evaluate_legal_precedence"],
-                "response_template": "legal_analysis"
-            }
+                "response_template": "legal_analysis",
+            },
         }
 
     def analyze_user_query(self, query: str) -> DecisionContext:
@@ -267,25 +350,39 @@ class AdvancedEchoesAssistant:
             urgency="medium",
             stakeholders=["user"],
             constraints=[],
-            objectives=[]
+            objectives=[],
         )
 
         # Detect domain and complexity
-        if any(word in query.lower() for word in ["contract", "legal", "law", "agreement", "court"]):
+        if any(
+            word in query.lower()
+            for word in ["contract", "legal", "law", "agreement", "court"]
+        ):
             context.domain = DecisionDomain.LEGAL
-        elif any(word in query.lower() for word in ["price", "cost", "value", "investment", "roi", "financial"]):
+        elif any(
+            word in query.lower()
+            for word in ["price", "cost", "value", "investment", "roi", "financial"]
+        ):
             context.domain = DecisionDomain.FINANCIAL
-        elif any(word in query.lower() for word in ["business", "company", "market", "strategy"]):
+        elif any(
+            word in query.lower()
+            for word in ["business", "company", "market", "strategy"]
+        ):
             context.domain = DecisionDomain.BUSINESS
 
         # Detect complexity
-        if len(query.split()) > 50 or any(word in query.lower() for word in ["complex", "detailed", "comprehensive"]):
+        if len(query.split()) > 50 or any(
+            word in query.lower() for word in ["complex", "detailed", "comprehensive"]
+        ):
             context.complexity = "complex"
         elif len(query.split()) > 20:
             context.complexity = "moderate"
 
         # Detect urgency
-        if any(word in query.lower() for word in ["urgent", "asap", "deadline", "immediately"]):
+        if any(
+            word in query.lower()
+            for word in ["urgent", "asap", "deadline", "immediately"]
+        ):
             context.urgency = "high"
         elif any(word in query.lower() for word in ["soon", "week", "month"]):
             context.urgency = "medium"
@@ -300,7 +397,9 @@ class AdvancedEchoesAssistant:
 
         return context
 
-    async def process_query(self, query: str, user_context: Optional[Dict[str, Any]] = None) -> ProfessionalResponse:
+    async def process_query(
+        self, query: str, user_context: Optional[Dict[str, Any]] = None
+    ) -> ProfessionalResponse:
         """Process user query with full decision support pipeline."""
         print(f"🎯 Processing query: {query[:100]}...")
 
@@ -339,18 +438,22 @@ class AdvancedEchoesAssistant:
 
         return response
 
-    def _extract_tool_parameters(self, query: str, tool: ToolDefinition) -> Optional[Dict[str, Any]]:
+    def _extract_tool_parameters(
+        self, query: str, tool: ToolDefinition
+    ) -> Optional[Dict[str, Any]]:
         """Extract parameters for tool execution from query."""
         # Simplified parameter extraction - in production, use more sophisticated NLP
         params = {}
 
         if tool.name == "calculate_work_value":
             # Extract hours, skill level, etc. from query
-            hours_match = re.search(r'(\d+)\s*hours?', query, re.IGNORECASE)
+            hours_match = re.search(r"(\d+)\s*hours?", query, re.IGNORECASE)
             if hours_match:
                 params["hours_required"] = int(hours_match.group(1))
 
-            skill_match = re.search(r'(senior|junior|expert|intermediate)', query, re.IGNORECASE)
+            skill_match = re.search(
+                r"(senior|junior|expert|intermediate)", query, re.IGNORECASE
+            )
             if skill_match:
                 params["skill_level"] = skill_match.group(1).lower()
 
@@ -360,9 +463,11 @@ class AdvancedEchoesAssistant:
 
         elif tool.name == "calculate_roi":
             # Extract financial numbers
-            investment_match = re.search(r'\$?(\d+(?:,\d{3})*(?:\.\d{2})?)', query)
+            investment_match = re.search(r"\$?(\d+(?:,\d{3})*(?:\.\d{2})?)", query)
             if investment_match:
-                params["initial_investment"] = float(investment_match.group(1).replace(',', ''))
+                params["initial_investment"] = float(
+                    investment_match.group(1).replace(",", "")
+                )
 
         return params if params else None
 
@@ -371,23 +476,25 @@ class AdvancedEchoesAssistant:
         query: str,
         context: DecisionContext,
         tool_results: Dict[str, Any],
-        user_context: Optional[Dict[str, Any]]
+        user_context: Optional[Dict[str, Any]],
     ) -> ProfessionalResponse:
         """Generate professional response with all analysis components."""
 
         # Build comprehensive prompt
         system_prompt = self._build_system_prompt(context, tool_results)
-        user_prompt = f"Query: {query}\n\nTool Results: {json.dumps(tool_results, indent=2)}"
+        user_prompt = (
+            f"Query: {query}\n\nTool Results: {json.dumps(tool_results, indent=2)}"
+        )
 
         # Generate response using OpenAI
         response = self.client.chat.completions.create(
             model="gpt-4o",  # Use most capable model for professional responses
             messages=[
                 {"role": "system", "content": system_prompt},
-                {"role": "user", "content": user_prompt}
+                {"role": "user", "content": user_prompt},
             ],
             max_tokens=2000,
-            temperature=0.3  # Lower temperature for professional responses
+            temperature=0.3,  # Lower temperature for professional responses
         )
 
         raw_response = response.choices[0].message.content
@@ -399,11 +506,15 @@ class AdvancedEchoesAssistant:
 
         return structured_response
 
-    def _build_system_prompt(self, context: DecisionContext, tool_results: Dict[str, Any]) -> str:
+    def _build_system_prompt(
+        self, context: DecisionContext, tool_results: Dict[str, Any]
+    ) -> str:
         """Build comprehensive system prompt for professional responses."""
         domain_knowledge = ""
         if context.retrieved_knowledge:
-            knowledge_texts = [doc.get('content', '') for doc in context.retrieved_knowledge[:2]]
+            knowledge_texts = [
+                doc.get("content", "") for doc in context.retrieved_knowledge[:2]
+            ]
             domain_knowledge = "\n".join(knowledge_texts)
 
         prompt = f"""You are an advanced AI assistant specializing in {context.domain.value} decision support.
@@ -432,30 +543,41 @@ Format your response as a structured professional analysis."""
         return prompt
 
     # Tool Handlers
-    async def _analyze_contract_risks(self, contract_text: str, risk_categories: List[str] = None) -> Dict[str, Any]:
+    async def _analyze_contract_risks(
+        self, contract_text: str, risk_categories: List[str] = None
+    ) -> Dict[str, Any]:
         """Analyze contract risks."""
         # Simplified implementation - in production, use specialized legal AI
         risks = {
             "identified_risks": ["Standard contract clauses identified"],
             "severity": "low",
             "recommendations": ["Review with legal counsel"],
-            "confidence": 0.7
+            "confidence": 0.7,
         }
         return risks
 
-    async def _evaluate_legal_precedence(self, legal_issue: str, jurisdiction: str = "general") -> Dict[str, Any]:
+    async def _evaluate_legal_precedence(
+        self, legal_issue: str, jurisdiction: str = "general"
+    ) -> Dict[str, Any]:
         """Evaluate legal precedence."""
         # Simplified implementation
         evaluation = {
             "relevant_precedents": ["General legal principles apply"],
             "strength_of_case": "moderate",
-            "recommendations": ["Consult legal expert for jurisdiction-specific advice"],
-            "confidence": 0.6
+            "recommendations": [
+                "Consult legal expert for jurisdiction-specific advice"
+            ],
+            "confidence": 0.6,
         }
         return evaluation
 
-    async def _calculate_roi(self, initial_investment: float, expected_returns: float,
-                           time_period_years: float, risk_adjustment: float = 1.0) -> Dict[str, Any]:
+    async def _calculate_roi(
+        self,
+        initial_investment: float,
+        expected_returns: float,
+        time_period_years: float,
+        risk_adjustment: float = 1.0,
+    ) -> Dict[str, Any]:
         """Calculate ROI with projections."""
         total_return = expected_returns - initial_investment
         roi_percentage = (total_return / initial_investment) * 100
@@ -469,12 +591,18 @@ Format your response as a structured professional analysis."""
             "roi_percentage": round(roi_percentage, 2),
             "annualized_roi": round(annualized_roi, 2),
             "risk_adjusted_roi": round(risk_adjusted_roi, 2),
-            "payback_period_years": round(initial_investment / (total_return / time_period_years), 2),
-            "confidence": 0.9
+            "payback_period_years": round(
+                initial_investment / (total_return / time_period_years), 2
+            ),
+            "confidence": 0.9,
         }
 
-    async def _evaluate_fair_price(self, item_description: str, market_rates: Dict[str, Any] = None,
-                                 complexity_factors: List[str] = None) -> Dict[str, Any]:
+    async def _evaluate_fair_price(
+        self,
+        item_description: str,
+        market_rates: Dict[str, Any] = None,
+        complexity_factors: List[str] = None,
+    ) -> Dict[str, Any]:
         """Evaluate fair market price."""
         # Simplified market analysis
         base_price = 100.0  # Placeholder
@@ -487,25 +615,32 @@ Format your response as a structured professional analysis."""
             "estimated_fair_price": round(fair_price, 2),
             "price_range": {
                 "low": round(fair_price * 0.8, 2),
-                "high": round(fair_price * 1.2, 2)
+                "high": round(fair_price * 1.2, 2),
             },
             "market_factors_considered": complexity_factors or ["standard"],
             "confidence": 0.75,
-            "recommendations": ["Consider market research for precise pricing"]
+            "recommendations": ["Consider market research for precise pricing"],
         }
 
-    async def _calculate_work_value(self, hours_required: float, skill_level: str,
-                                  market_rate_per_hour: float = None, complexity_multiplier: float = 1.0) -> Dict[str, Any]:
+    async def _calculate_work_value(
+        self,
+        hours_required: float,
+        skill_level: str,
+        market_rate_per_hour: float = None,
+        complexity_multiplier: float = 1.0,
+    ) -> Dict[str, Any]:
         """Calculate fair value for work."""
         # Default market rates by skill level
         default_rates = {
             "junior": 25.0,
             "intermediate": 50.0,
             "senior": 100.0,
-            "expert": 150.0
+            "expert": 150.0,
         }
 
-        hourly_rate = market_rate_per_hour or default_rates.get(skill_level.lower(), 50.0)
+        hourly_rate = market_rate_per_hour or default_rates.get(
+            skill_level.lower(), 50.0
+        )
         adjusted_rate = hourly_rate * complexity_multiplier
         total_value = hours_required * adjusted_rate
 
@@ -519,17 +654,19 @@ Format your response as a structured professional analysis."""
             "value_breakdown": {
                 "labor_cost": round(total_value * 0.7, 2),
                 "overhead": round(total_value * 0.2, 2),
-                "profit_margin": round(total_value * 0.1, 2)
+                "profit_margin": round(total_value * 0.1, 2),
             },
             "confidence": 0.8,
-            "market_comparison": f"Competitive with {skill_level} rates in industry"
+            "market_comparison": f"Competitive with {skill_level} rates in industry",
         }
+
 
 class ProfessionalResponseFormatter:
     """Format responses in professional structure."""
 
-    def parse_and_structure(self, raw_response: str, context: DecisionContext,
-                          tool_results: Dict[str, Any]) -> ProfessionalResponse:
+    def parse_and_structure(
+        self, raw_response: str, context: DecisionContext, tool_results: Dict[str, Any]
+    ) -> ProfessionalResponse:
         """Parse AI response and structure it professionally."""
 
         response = ProfessionalResponse(
@@ -537,11 +674,11 @@ class ProfessionalResponseFormatter:
             confidence_score=0.8,
             recommendations=[],
             risks_assessed=[],
-            next_steps=[]
+            next_steps=[],
         )
 
         # Extract sections from response (simplified parsing)
-        lines = raw_response.split('\n')
+        lines = raw_response.split("\n")
 
         current_section = None
         for line in lines:
@@ -550,38 +687,44 @@ class ProfessionalResponseFormatter:
                 continue
 
             # Detect sections
-            if line.upper().startswith('RECOMMENDATION'):
-                current_section = 'recommendations'
-            elif line.upper().startswith('RISK'):
-                current_section = 'risks'
-            elif line.upper().startswith('NEXT STEP'):
-                current_section = 'next_steps'
-            elif current_section and line.startswith('-'):
+            if line.upper().startswith("RECOMMENDATION"):
+                current_section = "recommendations"
+            elif line.upper().startswith("RISK"):
+                current_section = "risks"
+            elif line.upper().startswith("NEXT STEP"):
+                current_section = "next_steps"
+            elif current_section and line.startswith("-"):
                 content = line[1:].strip()
-                if current_section == 'recommendations':
+                if current_section == "recommendations":
                     response.recommendations.append(content)
-                elif current_section == 'risks':
+                elif current_section == "risks":
                     response.risks_assessed.append(content)
-                elif current_section == 'next_steps':
+                elif current_section == "next_steps":
                     response.next_steps.append(content)
 
         # Add domain-specific disclaimers
         if context.domain == DecisionDomain.LEGAL:
             response.legal_disclaimers = [
                 "This is not legal advice. Consult with a qualified attorney.",
-                "Laws vary by jurisdiction and change over time."
+                "Laws vary by jurisdiction and change over time.",
             ]
         elif context.domain == DecisionDomain.FINANCIAL:
             response.legal_disclaimers = [
                 "This is not financial advice. Past performance does not guarantee future results.",
-                "Consider consulting a licensed financial advisor."
+                "Consider consulting a licensed financial advisor.",
             ]
 
-        response.formatted_response = self._format_final_response(response, context, tool_results)
+        response.formatted_response = self._format_final_response(
+            response, context, tool_results
+        )
         return response
 
-    def _format_final_response(self, response: ProfessionalResponse, context: DecisionContext,
-                             tool_results: Dict[str, Any]) -> str:
+    def _format_final_response(
+        self,
+        response: ProfessionalResponse,
+        context: DecisionContext,
+        tool_results: Dict[str, Any],
+    ) -> str:
         """Format the final professional response."""
         formatted = f"""# {context.domain.value.title()} Analysis Report
 
@@ -606,10 +749,12 @@ Confidence Score: {response.confidence_score * 100:.1f}%
 
         return formatted
 
+
 # Factory function
 def create_advanced_assistant(api_key: Optional[str] = None) -> AdvancedEchoesAssistant:
     """Create an advanced Echoes assistant instance."""
     return AdvancedEchoesAssistant(api_key=api_key)
+
 
 # Demo and testing
 async def demo_advanced_assistant():
@@ -622,24 +767,28 @@ async def demo_advanced_assistant():
 
     # Add some domain knowledge
     legal_kb = assistant.knowledge_bases[DecisionDomain.LEGAL]
-    legal_kb.add_documents([
-        "Contract law requires clear terms and mutual agreement between parties.",
-        "Due diligence is essential before signing any legal agreement.",
-        "Intellectual property rights must be clearly defined in contracts."
-    ])
+    legal_kb.add_documents(
+        [
+            "Contract law requires clear terms and mutual agreement between parties.",
+            "Due diligence is essential before signing any legal agreement.",
+            "Intellectual property rights must be clearly defined in contracts.",
+        ]
+    )
 
     financial_kb = assistant.knowledge_bases[DecisionDomain.FINANCIAL]
-    financial_kb.add_documents([
-        "Return on investment (ROI) measures the efficiency of an investment.",
-        "Fair market value considers comparable transactions in the marketplace.",
-        "Risk-adjusted returns account for the volatility of investments."
-    ])
+    financial_kb.add_documents(
+        [
+            "Return on investment (ROI) measures the efficiency of an investment.",
+            "Fair market value considers comparable transactions in the marketplace.",
+            "Risk-adjusted returns account for the volatility of investments.",
+        ]
+    )
 
     # Test queries
     test_queries = [
         "What's a fair price to charge for 20 hours of senior Python development work?",
         "Should I invest $50,000 in this startup with expected $200,000 return in 3 years?",
-        "What are the main risks in this software development contract?"
+        "What are the main risks in this software development contract?",
     ]
 
     for query in test_queries:
@@ -648,6 +797,7 @@ async def demo_advanced_assistant():
         print(f"📋 Response Preview: {response.formatted_response[:300]}...")
 
     print("\\n✅ Advanced Assistant Demo Complete!")
+
 
 if __name__ == "__main__":
     asyncio.run(demo_advanced_assistant())

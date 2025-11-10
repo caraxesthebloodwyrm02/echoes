@@ -17,7 +17,7 @@ from integrations.impact_analytics_connector import (
     record_ai_evaluation,
     record_research_progress,
     get_impact_status,
-    generate_impact_report
+    generate_impact_report,
 )
 
 from integrations.turbo_bridge import (
@@ -25,7 +25,7 @@ from integrations.turbo_bridge import (
     turbo_bridge,
     create_bridge,
     unified_analysis,
-    get_bridge_health
+    get_bridge_health,
 )
 
 
@@ -37,16 +37,16 @@ class TestImpactAnalyticsConnector:
         # Since IMPACT_ANALYTICS may not be available in test environment,
         # the connector should handle this gracefully
         connector = ImpactAnalyticsConnector()
-        
+
         # The connector should always initialize, but connection status may vary
-        assert hasattr(connector, 'is_connected')
-        assert hasattr(connector, 'workflow_tracker')
-        assert hasattr(connector, 'connected')
-        
+        assert hasattr(connector, "is_connected")
+        assert hasattr(connector, "workflow_tracker")
+        assert hasattr(connector, "connected")
+
         # Test that methods exist and return appropriate types
         result = connector.record_evaluation("test", "response", 85.0, {})
         assert isinstance(result, bool)
-        
+
         metrics = connector.get_metrics()
         assert isinstance(metrics, ImpactMetrics)
 
@@ -55,9 +55,9 @@ class TestImpactAnalyticsConnector:
         connector = ImpactAnalyticsConnector()
         result = connector.record_evaluation(
             prompt="Test prompt",
-            response="Test response", 
+            response="Test response",
             safety_score=85.0,
-            bias_analysis={"bias_reduction_index": 45.0}
+            bias_analysis={"bias_reduction_index": 45.0},
         )
         assert isinstance(result, bool)
 
@@ -71,20 +71,20 @@ class TestImpactAnalyticsConnector:
         """Test that get_metrics returns ImpactMetrics object."""
         connector = ImpactAnalyticsConnector()
         metrics = connector.get_metrics()
-        
+
         assert isinstance(metrics, ImpactMetrics)
         # Check that all expected attributes exist
-        assert hasattr(metrics, 'safety_score')
-        assert hasattr(metrics, 'bias_reduction_index')
-        assert hasattr(metrics, 'total_evaluations')
-        assert hasattr(metrics, 'recent_milestones')
-        assert hasattr(metrics, 'error')
+        assert hasattr(metrics, "safety_score")
+        assert hasattr(metrics, "bias_reduction_index")
+        assert hasattr(metrics, "total_evaluations")
+        assert hasattr(metrics, "recent_milestones")
+        assert hasattr(metrics, "error")
 
     def test_generate_report_returns_string_or_none(self):
         """Test that generate_report returns string path or None."""
         connector = ImpactAnalyticsConnector()
         result = connector.generate_report()
-        
+
         assert result is None or isinstance(result, str)
 
     def test_is_connected_returns_bool(self):
@@ -100,22 +100,21 @@ class TestTurboBridge:
     def test_bridge_initialization(self):
         """Test bridge initialization."""
         bridge = TurboBridge()
-        
+
         # Check that platforms dict exists
-        assert hasattr(bridge, 'platforms')
+        assert hasattr(bridge, "platforms")
         assert isinstance(bridge.platforms, dict)
-        
+
         # Check that expected platform keys exist
-        assert 'impact_analytics' in bridge.platforms
+        assert "impact_analytics" in bridge.platforms
 
     def test_unified_analysis_basic(self):
         """Test basic unified analysis functionality."""
         bridge = TurboBridge()
-        result = bridge.unified_analysis({
-            "text": ["analysis text"],
-            "query": "search query"
-        })
-        
+        result = bridge.unified_analysis(
+            {"text": ["analysis text"], "query": "search query"}
+        )
+
         # Check that result has expected structure
         assert isinstance(result, dict)
         assert "platforms_connected" in result
@@ -129,7 +128,7 @@ class TestTurboBridge:
         """Test bridge health check functionality."""
         bridge = TurboBridge()
         health = bridge.health_check()
-        
+
         assert isinstance(health, dict)
         assert "overall_status" in health
         assert "platform_health" in health
@@ -140,7 +139,7 @@ class TestTurboBridge:
         """Test getting connected platforms."""
         bridge = TurboBridge()
         platforms = bridge.get_connected_platforms()
-        
+
         assert isinstance(platforms, list)
         # Should at least have impact_analytics (even if not connected)
         # but the actual connection depends on environment
@@ -148,15 +147,13 @@ class TestTurboBridge:
     def test_is_platform_connected_returns_bool(self):
         """Test platform connection checking."""
         bridge = TurboBridge()
-        result = bridge.is_platform_connected('impact_analytics')
+        result = bridge.is_platform_connected("impact_analytics")
         assert isinstance(result, bool)
 
     def test_record_evaluation_bridge_method(self):
         """Test bridge record_evaluation method."""
         bridge = TurboBridge()
-        result = bridge.record_evaluation(
-            "prompt", "response", 85.0, {"bias": 10.0}
-        )
+        result = bridge.record_evaluation("prompt", "response", 85.0, {"bias": 10.0})
         assert isinstance(result, bool)
 
     def test_record_milestone_bridge_method(self):
@@ -182,7 +179,7 @@ class TestTurboBridge:
         bridge = create_bridge()
         assert isinstance(bridge, TurboBridge)
 
-    @patch('integrations.turbo_bridge.turbo_bridge')
+    @patch("integrations.turbo_bridge.turbo_bridge")
     def test_unified_analysis_function(self, mock_bridge):
         """Test the unified_analysis convenience function."""
         mock_bridge.unified_analysis.return_value = {"test": "result"}
@@ -192,7 +189,7 @@ class TestTurboBridge:
         mock_bridge.unified_analysis.assert_called_once_with({"query": "test"})
         assert result == {"test": "result"}
 
-    @patch('integrations.turbo_bridge.turbo_bridge')
+    @patch("integrations.turbo_bridge.turbo_bridge")
     def test_get_bridge_health_function(self, mock_bridge):
         """Test the get_bridge_health convenience function."""
         mock_bridge.health_check.return_value = {"status": "healthy"}
@@ -205,19 +202,17 @@ class TestTurboBridge:
 class TestConvenienceFunctions:
     """Test convenience functions for IMPACT_ANALYTICS integration."""
 
-    @patch('integrations.impact_analytics_connector.impact_connector')
+    @patch("integrations.impact_analytics_connector.impact_connector")
     def test_record_ai_evaluation_function(self, mock_connector):
         """Test record_ai_evaluation convenience function."""
         mock_connector.record_evaluation.return_value = True
 
-        result = record_ai_evaluation(
-            "prompt", "response", 85.0, {"bias": 10.0}
-        )
+        result = record_ai_evaluation("prompt", "response", 85.0, {"bias": 10.0})
 
         assert result is True
         mock_connector.record_evaluation.assert_called_once()
 
-    @patch('integrations.impact_analytics_connector.impact_connector')
+    @patch("integrations.impact_analytics_connector.impact_connector")
     def test_record_research_progress_function(self, mock_connector):
         """Test record_research_progress convenience function."""
         mock_connector.record_milestone.return_value = True
@@ -229,7 +224,7 @@ class TestConvenienceFunctions:
             "milestone", 75.0, "research", None
         )
 
-    @patch('integrations.impact_analytics_connector.impact_connector')
+    @patch("integrations.impact_analytics_connector.impact_connector")
     def test_get_impact_status_function(self, mock_connector):
         """Test get_impact_status convenience function."""
         mock_metrics = ImpactMetrics(safety_score=85.0)
@@ -240,7 +235,7 @@ class TestConvenienceFunctions:
         assert isinstance(result, ImpactMetrics)
         assert result.safety_score == 85.0
 
-    @patch('integrations.impact_analytics_connector.impact_connector')
+    @patch("integrations.impact_analytics_connector.impact_connector")
     def test_generate_impact_report_function(self, mock_connector):
         """Test generate_impact_report convenience function."""
         mock_connector.generate_report.return_value = "/path/to/report.md"

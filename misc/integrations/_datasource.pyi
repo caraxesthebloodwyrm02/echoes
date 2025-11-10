@@ -17,7 +17,12 @@ class DataSource:
     # Whether the file-object is opened in string or bytes mode (by default)
     # depends on the file-extension of `path`
     def open(
-        self, /, path: str, mode: _Mode = "r", encoding: str | None = None, newline: str | None = None
+        self,
+        /,
+        path: str,
+        mode: _Mode = "r",
+        encoding: str | None = None,
+        newline: str | None = None,
     ) -> IO[Any]: ...
 
 class Repository(DataSource):

@@ -31,7 +31,6 @@ def setup_knowledge_base(rag_system):
 
         Sun Symbolism: Consciousness, enlightenment, vitality, life force, masculine energy. Represents higher self, spiritual awakening, divine masculine. Symbolizes clarity, illumination, power of creation.
         """,
-
         """
         NUMBERS 8-11 AND LUNAR SYMBOLISM:
 
@@ -45,7 +44,6 @@ def setup_knowledge_base(rag_system):
 
         Moon Symbolism: Subconscious, intuition, emotions, feminine energy, cycles, divine feminine. Mystery, dreams, psychic abilities, inner world. Lunar cycles = change, renewal, natural rhythms.
         """,
-
         """
         SIGNAL VS NOISE CONCEPTS:
 
@@ -57,7 +55,6 @@ def setup_knowledge_base(rag_system):
 
         Human cognition: Signal = truth, wisdom, valuable insight. Noise = confusion, misinformation, distractions.
         """,
-
         """
         DISTINGUISHING SIGNAL FROM NOISE:
 
@@ -81,15 +78,19 @@ def setup_knowledge_base(rag_system):
         Noise feels like: confusion, contraction, isolation, fear, fragility, self-service
 
         Directional Guidance: When encountering information, ask: "Does this bring more light or darkness? Connect or separate? Serve truth or fear?" The answer guides to signal.
-        """
+        """,
     ]
 
     print("Adding knowledge base to RAG system...")
     for i, text in enumerate(knowledge):
-        result = rag_system.add_documents([{
-            "text": text.strip(),
-            "metadata": {"source": "symbolic_knowledge", "chunk_id": i+1}
-        }])
+        result = rag_system.add_documents(
+            [
+                {
+                    "text": text.strip(),
+                    "metadata": {"source": "symbolic_knowledge", "chunk_id": i + 1},
+                }
+            ]
+        )
         print(f"  Added chunk {i+1}: {result}")
 
     print("Knowledge base setup complete")
@@ -99,7 +100,7 @@ def run_query(rag_system, query, query_num):
     """Run a single query and return formatted results."""
     print(f"\n{'='*60}")
     print(f"QUERY {query_num}: {query}")
-    print('='*60)
+    print("=" * 60)
 
     start_time = time.time()
     try:
@@ -111,18 +112,18 @@ def run_query(rag_system, query, query_num):
 
         # Extract and format answer
         answer_parts = []
-        for i, result in enumerate(results.get('results', [])):
-            content = result.get('content', '').strip()
-            score = result.get('score', 0)
+        for i, result in enumerate(results.get("results", [])):
+            content = result.get("content", "").strip()
+            score = result.get("score", 0)
             if content and score > 0.5:  # Only high-confidence results
                 answer_parts.append(f"[{i+1}] {content}")
 
         if answer_parts:
-            answer = ' '.join(answer_parts)
+            answer = " ".join(answer_parts)
             # Clean up formatting
-            answer = answer.replace('  ', ' ').replace('\n\n', '\n').strip()
+            answer = answer.replace("  ", " ").replace("\n\n", "\n").strip()
             if len(answer) > 1500:
-                answer = answer[:1500] + '...'
+                answer = answer[:1500] + "..."
         else:
             answer = "No relevant information found in knowledge base."
 
@@ -133,8 +134,8 @@ def run_query(rag_system, query, query_num):
             "query_num": query_num,
             "answer": answer,
             "response_time": response_time,
-            "results_count": len(results.get('results', [])),
-            "success": True
+            "results_count": len(results.get("results", [])),
+            "success": True,
         }
 
     except Exception as e:
@@ -146,7 +147,7 @@ def run_query(rag_system, query, query_num):
             "answer": f"Error processing query: {e}",
             "response_time": response_time,
             "results_count": 0,
-            "success": False
+            "success": False,
         }
 
 
@@ -160,7 +161,7 @@ def main():
         "What is the symbolic meaning and significance of the transition from number 5 to 6 and sun?",
         "What is the symbolic meaning and significance of the number 8 to 11 and moon?",
         "What is signal? What is noise? What is the signal to noise ratio?",
-        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone."
+        "What are some of the stable methods to distinguish between bs/jargon/noise and signal? What is the way people throughout time differentiated between them that is organic, simple and accurate? Very simply write how to identify which is which by their raw essence and nature. Write as if you are giving directional guidance to someone.",
     ]
 
     # Create RAG system
@@ -183,10 +184,10 @@ def main():
     # Summary
     print(f"\n{'='*60}")
     print("SUMMARY")
-    print('='*60)
+    print("=" * 60)
 
-    successful = sum(1 for r in results if r['success'])
-    total_time = sum(r['response_time'] for r in results)
+    successful = sum(1 for r in results if r["success"])
+    total_time = sum(r["response_time"] for r in results)
 
     print(f"Total Queries: {len(results)}")
     print(f"Successful: {successful}")
@@ -195,18 +196,24 @@ def main():
 
     # Save results
     import json
+
     output_file = "fixed_rag_query_results.json"
-    with open(output_file, 'w') as f:
-        json.dump({
-            "timestamp": time.time(),
-            "results": results,
-            "summary": {
-                "total_queries": len(results),
-                "successful_queries": successful,
-                "total_response_time": total_time,
-                "average_response_time": total_time / len(results)
-            }
-        }, f, indent=2, default=str)
+    with open(output_file, "w") as f:
+        json.dump(
+            {
+                "timestamp": time.time(),
+                "results": results,
+                "summary": {
+                    "total_queries": len(results),
+                    "successful_queries": successful,
+                    "total_response_time": total_time,
+                    "average_response_time": total_time / len(results),
+                },
+            },
+            f,
+            indent=2,
+            default=str,
+        )
 
     print(f"\n📄 Results saved to: {output_file}")
     print("✅ Query testing complete!")

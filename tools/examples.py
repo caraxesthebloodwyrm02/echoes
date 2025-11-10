@@ -31,6 +31,7 @@ def _register_examples():
     """Register example tools with the global registry."""
     try:
         from . import register_tool
+
         for name, desc, func in get_example_tools():
             register_tool(name, desc, func)
     except ImportError as e:
@@ -40,4 +41,4 @@ def _register_examples():
 # Register examples on import
 _register_examples()
 
-__all__ = ['get_example_tools', 'reverse_text_tool', 'echo_tool']
+__all__ = ["get_example_tools", "reverse_text_tool", "echo_tool"]

@@ -34,7 +34,16 @@ import base64
 import httpx
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, HTTPException, Depends, Request, BackgroundTasks, UploadFile, File, Form
+from fastapi import (
+    FastAPI,
+    HTTPException,
+    Depends,
+    Request,
+    BackgroundTasks,
+    UploadFile,
+    File,
+    Form,
+)
 from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
@@ -74,7 +83,9 @@ class APIConfig:
         self.debug = os.getenv("ECHOES_API_DEBUG", "false").lower() == "true"
         self.max_file_size = int(os.getenv("ECHOES_MAX_FILE_SIZE", "26214400"))  # 25MB
         self.rate_limit_requests = int(os.getenv("ECHOES_RATE_LIMIT_REQUESTS", "100"))
-        self.rate_limit_window = int(os.getenv("ECHOES_RATE_LIMIT_WINDOW", "3600"))  # 1 hour
+        self.rate_limit_window = int(
+            os.getenv("ECHOES_RATE_LIMIT_WINDOW", "3600")
+        )  # 1 hour
         self.enable_cors = os.getenv("ECHOES_ENABLE_CORS", "true").lower() == "true"
         self.trusted_hosts = os.getenv("ECHOES_TRUSTED_HOSTS", "*").split(",")
 
@@ -122,9 +133,12 @@ class WebhookRegistration(BaseModel):
 
     url: str = Field(..., description="Webhook URL to receive notifications")
     events: List[str] = Field(
-        ..., description="Events to trigger webhook: ['image_processed', 'audio_transcribed', 'media_processed']"
+        ...,
+        description="Events to trigger webhook: ['image_processed', 'audio_transcribed', 'media_processed']",
     )
-    secret: Optional[str] = Field(None, description="Webhook secret for signature verification")
+    secret: Optional[str] = Field(
+        None, description="Webhook secret for signature verification"
+    )
     active: bool = Field(True, description="Whether webhook is active")
 
 
@@ -192,11 +206,19 @@ def load_api_keys():
         for key_value in api_key_env.split(","):
             if ":" in key_value:
                 key, limits = key_value.split(":", 1)
-                api_keys[key.strip()] = {"limits": limits.strip(), "created_at": datetime.now(), "active": True}
+                api_keys[key.strip()] = {
+                    "limits": limits.strip(),
+                    "created_at": datetime.now(),
+                    "active": True,
+                }
 
     # Default API key for development
     if not api_keys and config.debug:
-        api_keys["dev-key-qwerty123456"] = {"limits": "1000/hour", "created_at": datetime.now(), "active": True}
+        api_keys["dev-key-qwerty123456"] = {
+            "limits": "1000/hour",
+            "created_at": datetime.now(),
+            "active": True,
+        }
         logger.warning("⚠️ Using default development API key: dev-key-qwerty123456")
 
 
@@ -251,7 +273,9 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=config.trusted_hosts)
 
 
 # Webhook management functions
-async def trigger_webhook(webhook_url: str, payload: WebhookPayload, secret: Optional[str] = None):
+async def trigger_webhook(
+    webhook_url: str, payload: WebhookPayload, secret: Optional[str] = None
+):
     """Trigger a webhook with the given payload."""
     try:
         headers = {"Content-Type": "application/json"}
@@ -260,7 +284,9 @@ async def trigger_webhook(webhook_url: str, payload: WebhookPayload, secret: Opt
             headers["X-Webhook-Signature"] = f"sha256={secret}"
 
         async with httpx.AsyncClient(timeout=10.0) as client:
-            response = await client.post(webhook_url, json=payload.dict(), headers=headers)
+            response = await client.post(
+                webhook_url, json=payload.dict(), headers=headers
+            )
             response.raise_for_status()
             logger.info(f"✅ Webhook triggered successfully: {webhook_url}")
 
@@ -268,7 +294,9 @@ async def trigger_webhook(webhook_url: str, payload: WebhookPayload, secret: Opt
         logger.error(f"❌ Webhook failed: {webhook_url} - {e}")
 
 
-async def process_with_webhook(request_func, webhook_url: Optional[str], event_type: str, request_id: str):
+async def process_with_webhook(
+    request_func, webhook_url: Optional[str], event_type: str, request_id: str
+):
     """Process a request and trigger webhook if provided."""
     try:
         # Process the request
@@ -276,7 +304,12 @@ async def process_with_webhook(request_func, webhook_url: Optional[str], event_t
 
         # Trigger webhook if provided
         if webhook_url:
-            payload = WebhookPayload(event=event_type, request_id=request_id, timestamp=datetime.now(), data=result)
+            payload = WebhookPayload(
+                event=event_type,
+                request_id=request_id,
+                timestamp=datetime.now(),
+                data=result,
+            )
             # Run webhook in background
             asyncio.create_task(trigger_webhook(webhook_url, payload))
 
@@ -286,7 +319,10 @@ async def process_with_webhook(request_func, webhook_url: Optional[str], event_t
         # Trigger error webhook if provided
         if webhook_url:
             error_payload = WebhookPayload(
-                event=f"{event_type}_error", request_id=request_id, timestamp=datetime.now(), data={"error": str(e)}
+                event=f"{event_type}_error",
+                request_id=request_id,
+                timestamp=datetime.now(),
+                data={"error": str(e)},
             )
             asyncio.create_task(trigger_webhook(webhook_url, error_payload))
         raise
@@ -330,7 +366,9 @@ async def analyze_image(
                 response.raise_for_status()
 
                 # Save to temporary file
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
+                with tempfile.NamedTemporaryFile(
+                    delete=False, suffix=".jpg"
+                ) as temp_file:
                     temp_file.write(response.content)
                     image_path = temp_file.name
 
@@ -349,14 +387,19 @@ async def analyze_image(
                 image_path = temp_file.name
 
         else:
-            raise HTTPException(status_code=400, detail="Either image_url or image_base64 must be provided")
+            raise HTTPException(
+                status_code=400,
+                detail="Either image_url or image_base64 must be provided",
+            )
 
         # Analyze image
         import asyncio
 
         async def process_image():
             loop = asyncio.get_event_loop()
-            result = await loop.run_in_executor(None, lambda: assistant.analyze_image(image_path, req.custom_prompt))
+            result = await loop.run_in_executor(
+                None, lambda: assistant.analyze_image(image_path, req.custom_prompt)
+            )
             # Clean up temp file
             try:
                 os.unlink(image_path)
@@ -367,11 +410,17 @@ async def analyze_image(
         # Process with webhook support
         if req.webhook_url:
             background_tasks.add_task(
-                process_with_webhook, process_image, req.webhook_url, "image_processed", request_id
+                process_with_webhook,
+                process_image,
+                req.webhook_url,
+                "image_processed",
+                request_id,
             )
             return APIResponse(
                 success=True,
-                data={"message": "Image analysis started, results will be sent to webhook"},
+                data={
+                    "message": "Image analysis started, results will be sent to webhook"
+                },
                 request_id=request_id,
                 processing_time=time.time() - start_time,
             )
@@ -387,7 +436,12 @@ async def analyze_image(
 
     except Exception as e:
         logger.error(f"Image analysis error: {e}")
-        return APIResponse(success=False, error=str(e), request_id=request_id, processing_time=time.time() - start_time)
+        return APIResponse(
+            success=False,
+            error=str(e),
+            request_id=request_id,
+            processing_time=time.time() - start_time,
+        )
 
 
 # Audio Transcription Endpoints
@@ -418,7 +472,9 @@ async def transcribe_audio(
                 response.raise_for_status()
 
                 # Save to temporary file
-                with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
+                with tempfile.NamedTemporaryFile(
+                    delete=False, suffix=".mp3"
+                ) as temp_file:
                     temp_file.write(response.content)
                     audio_path = temp_file.name
 
@@ -432,12 +488,17 @@ async def transcribe_audio(
                 audio_path = temp_file.name
 
         else:
-            raise HTTPException(status_code=400, detail="Either audio_url or audio_base64 must be provided")
+            raise HTTPException(
+                status_code=400,
+                detail="Either audio_url or audio_base64 must be provided",
+            )
 
         # Transcribe audio
         async def process_audio():
             loop = asyncio.get_event_loop()
-            result = await loop.run_in_executor(None, lambda: assistant.transcribe_audio(audio_path))
+            result = await loop.run_in_executor(
+                None, lambda: assistant.transcribe_audio(audio_path)
+            )
             # Clean up temp file
             try:
                 os.unlink(audio_path)
@@ -448,11 +509,17 @@ async def transcribe_audio(
         # Process with webhook support
         if req.webhook_url:
             background_tasks.add_task(
-                process_with_webhook, process_audio, req.webhook_url, "audio_transcribed", request_id
+                process_with_webhook,
+                process_audio,
+                req.webhook_url,
+                "audio_transcribed",
+                request_id,
             )
             return APIResponse(
                 success=True,
-                data={"message": "Audio transcription started, results will be sent to webhook"},
+                data={
+                    "message": "Audio transcription started, results will be sent to webhook"
+                },
                 request_id=request_id,
                 processing_time=time.time() - start_time,
             )
@@ -468,7 +535,12 @@ async def transcribe_audio(
 
     except Exception as e:
         logger.error(f"Audio transcription error: {e}")
-        return APIResponse(success=False, error=str(e), request_id=request_id, processing_time=time.time() - start_time)
+        return APIResponse(
+            success=False,
+            error=str(e),
+            request_id=request_id,
+            processing_time=time.time() - start_time,
+        )
 
 
 # General Media Processing Endpoint
@@ -528,13 +600,19 @@ async def process_media(
                 media_path = temp_file.name
 
         else:
-            raise HTTPException(status_code=400, detail="Either media_url or media_base64 must be provided")
+            raise HTTPException(
+                status_code=400,
+                detail="Either media_url or media_base64 must be provided",
+            )
 
         # Process media
         async def process_media_file():
             loop = asyncio.get_event_loop()
             result = await loop.run_in_executor(
-                None, lambda: assistant.analyze_media_file(media_path, req.analysis_type, req.custom_prompt)
+                None,
+                lambda: assistant.analyze_media_file(
+                    media_path, req.analysis_type, req.custom_prompt
+                ),
             )
             # Clean up temp file
             try:
@@ -546,11 +624,17 @@ async def process_media(
         # Process with webhook support
         if req.webhook_url:
             background_tasks.add_task(
-                process_with_webhook, process_media_file, req.webhook_url, "media_processed", request_id
+                process_with_webhook,
+                process_media_file,
+                req.webhook_url,
+                "media_processed",
+                request_id,
             )
             return APIResponse(
                 success=True,
-                data={"message": "Media processing started, results will be sent to webhook"},
+                data={
+                    "message": "Media processing started, results will be sent to webhook"
+                },
                 request_id=request_id,
                 processing_time=time.time() - start_time,
             )
@@ -566,12 +650,19 @@ async def process_media(
 
     except Exception as e:
         logger.error(f"Media processing error: {e}")
-        return APIResponse(success=False, error=str(e), request_id=request_id, processing_time=time.time() - start_time)
+        return APIResponse(
+            success=False,
+            error=str(e),
+            request_id=request_id,
+            processing_time=time.time() - start_time,
+        )
 
 
 # Webhook Management Endpoints
 @app.post("/api/v1/webhooks/register", response_model=APIResponse)
-async def register_webhook(webhook: WebhookRegistration, api_key_info: dict = Depends(verify_api_key)):
+async def register_webhook(
+    webhook: WebhookRegistration, api_key_info: dict = Depends(verify_api_key)
+):
     """Register a webhook for event notifications."""
     import uuid
 
@@ -587,7 +678,10 @@ async def register_webhook(webhook: WebhookRegistration, api_key_info: dict = De
         "api_key": api_key_info["key"],
     }
 
-    return APIResponse(success=True, data={"webhook_id": webhook_id, "message": "Webhook registered successfully"})
+    return APIResponse(
+        success=True,
+        data={"webhook_id": webhook_id, "message": "Webhook registered successfully"},
+    )
 
 
 @app.get("/api/v1/webhooks/list", response_model=APIResponse)
@@ -650,7 +744,10 @@ async def analyze_image_upload(
         # Validate file size
         file_content = await file.read()
         if len(file_content) > config.max_file_size:
-            raise HTTPException(status_code=413, detail=f"File too large. Maximum size: {config.max_file_size} bytes")
+            raise HTTPException(
+                status_code=413,
+                detail=f"File too large. Maximum size: {config.max_file_size} bytes",
+            )
 
         # Save to temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".jpg") as temp_file:
@@ -669,7 +766,10 @@ async def analyze_image_upload(
         # Trigger webhook if provided
         if webhook_url and result.get("success"):
             payload = WebhookPayload(
-                event="image_processed", request_id=request_id, timestamp=datetime.now(), data=result
+                event="image_processed",
+                request_id=request_id,
+                timestamp=datetime.now(),
+                data=result,
             )
             asyncio.create_task(trigger_webhook(webhook_url, payload))
 
@@ -683,12 +783,19 @@ async def analyze_image_upload(
 
     except Exception as e:
         logger.error(f"Image upload analysis error: {e}")
-        return APIResponse(success=False, error=str(e), request_id=request_id, processing_time=time.time() - start_time)
+        return APIResponse(
+            success=False,
+            error=str(e),
+            request_id=request_id,
+            processing_time=time.time() - start_time,
+        )
 
 
 @app.post("/api/v1/transcribe/audio/upload", response_model=APIResponse)
 async def transcribe_audio_upload(
-    file: UploadFile = File(...), webhook_url: Optional[str] = Form(None), api_key_info: dict = Depends(verify_api_key)
+    file: UploadFile = File(...),
+    webhook_url: Optional[str] = Form(None),
+    api_key_info: dict = Depends(verify_api_key),
 ):
     """Transcribe an uploaded audio file."""
     import time
@@ -703,7 +810,10 @@ async def transcribe_audio_upload(
         # Validate file size
         file_content = await file.read()
         if len(file_content) > config.max_file_size:
-            raise HTTPException(status_code=413, detail=f"File too large. Maximum size: {config.max_file_size} bytes")
+            raise HTTPException(
+                status_code=413,
+                detail=f"File too large. Maximum size: {config.max_file_size} bytes",
+            )
 
         # Save to temporary file
         with tempfile.NamedTemporaryFile(delete=False, suffix=".mp3") as temp_file:
@@ -722,7 +832,10 @@ async def transcribe_audio_upload(
         # Trigger webhook if provided
         if webhook_url and result.get("success"):
             payload = WebhookPayload(
-                event="audio_transcribed", request_id=request_id, timestamp=datetime.now(), data=result
+                event="audio_transcribed",
+                request_id=request_id,
+                timestamp=datetime.now(),
+                data=result,
             )
             asyncio.create_task(trigger_webhook(webhook_url, payload))
 
@@ -736,8 +849,19 @@ async def transcribe_audio_upload(
 
     except Exception as e:
         logger.error(f"Audio upload transcription error: {e}")
-        return APIResponse(success=False, error=str(e), request_id=request_id, processing_time=time.time() - start_time)
+        return APIResponse(
+            success=False,
+            error=str(e),
+            request_id=request_id,
+            processing_time=time.time() - start_time,
+        )
 
 
 if __name__ == "__main__":
-    uvicorn.run("server:app", host=config.host, port=config.port, reload=config.debug, log_level="info")
+    uvicorn.run(
+        "server:app",
+        host=config.host,
+        port=config.port,
+        reload=config.debug,
+        log_level="info",
+    )

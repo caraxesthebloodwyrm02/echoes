@@ -40,7 +40,15 @@ _KindInteger: TypeAlias = Literal["integral"]
 _KindFloat: TypeAlias = Literal["real floating"]
 _KindComplex: TypeAlias = Literal["complex floating"]
 _KindNumber: TypeAlias = Literal["numeric"]
-_Kind: TypeAlias = _KindBool | _KindInt | _KindUInt | _KindInteger | _KindFloat | _KindComplex | _KindNumber
+_Kind: TypeAlias = (
+    _KindBool
+    | _KindInt
+    | _KindUInt
+    | _KindInteger
+    | _KindFloat
+    | _KindComplex
+    | _KindNumber
+)
 
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
@@ -177,7 +185,9 @@ class __array_namespace_info__:
         self,
         *,
         device: _DeviceLike = ...,
-        kind: _Permute1[_KindNumber] | _Permute3[_KindInteger, _KindFloat, _KindComplex],
+        kind: (
+            _Permute1[_KindNumber] | _Permute3[_KindInteger, _KindFloat, _KindComplex]
+        ),
     ) -> _DTypesNumber: ...
     @overload
     def dtypes(

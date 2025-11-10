@@ -10,22 +10,27 @@ from enum import Enum
 
 logger = logging.getLogger(__name__)
 
+
 class ModelType(Enum):
     """Available model types"""
+
     GPT_4 = "gpt-4"
     GPT_3_5_TURBO = "gpt-3.5-turbo"
     CLAUDE = "claude"
     LOCAL = "local"
 
+
 @dataclass
 class ModelConfig:
     """Configuration for a model"""
+
     name: str
     type: ModelType
     max_tokens: int = 4096
     temperature: float = 0.7
     supports_streaming: bool = True
     cost_per_token: float = 0.0
+
 
 class ModelRouter:
     """
@@ -41,9 +46,27 @@ class ModelRouter:
     def _initialize_default_models(self):
         """Initialize default model configurations"""
         default_models = [
-            ModelConfig("gpt-4", ModelType.GPT_4, max_tokens=8192, temperature=0.7, cost_per_token=0.03),
-            ModelConfig("gpt-3.5-turbo", ModelType.GPT_3_5_TURBO, max_tokens=4096, temperature=0.7, cost_per_token=0.002),
-            ModelConfig("claude-3-opus", ModelType.CLAUDE, max_tokens=4096, temperature=0.7, cost_per_token=0.015),
+            ModelConfig(
+                "gpt-4",
+                ModelType.GPT_4,
+                max_tokens=8192,
+                temperature=0.7,
+                cost_per_token=0.03,
+            ),
+            ModelConfig(
+                "gpt-3.5-turbo",
+                ModelType.GPT_3_5_TURBO,
+                max_tokens=4096,
+                temperature=0.7,
+                cost_per_token=0.002,
+            ),
+            ModelConfig(
+                "claude-3-opus",
+                ModelType.CLAUDE,
+                max_tokens=4096,
+                temperature=0.7,
+                cost_per_token=0.015,
+            ),
         ]
 
         for model in default_models:
@@ -120,6 +143,7 @@ class ModelRouter:
             self.logger.info(f"Removed model: {model_name}")
             return True
         return False
+
 
 # Global instance for easy access
 model_router = ModelRouter()

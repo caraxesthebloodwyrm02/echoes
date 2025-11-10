@@ -24,7 +24,9 @@ class RateLimiter:
         return False
 
 
-def validate_post_input(request_body, protocols, max_prompt_length=4096, rate_limiter=None, headers=None):
+def validate_post_input(
+    request_body, protocols, max_prompt_length=4096, rate_limiter=None, headers=None
+):
     """Validates the request body for a POST to /input based on parsed protocols."""
     headers = headers or {}
     validation_rules = protocols.get("input_validation_sanitization", [])
@@ -40,14 +42,19 @@ def validate_post_input(request_body, protocols, max_prompt_length=4096, rate_li
 
     # Rule: "Sanitize and bound user-provided text length; throttle oversized inputs."
     if len(request_body["prompt"]) > max_prompt_length:
-        return False, f"Validation failed: 'prompt' exceeds maximum length of {max_prompt_length} characters."
+        return (
+            False,
+            f"Validation failed: 'prompt' exceeds maximum length of {max_prompt_length} characters.",
+        )
 
     # Rule: "Apply per-IP and per-user limits on `POST /input`."
     if rate_limiter and not rate_limiter.is_allowed():
         return False, "Validation failed: Rate limit exceeded."
 
     # Rule: "For internal deployments, support bearer/API key auth on `POST /input` and `GET /events`."
-    if "Authorization" not in headers or not headers["Authorization"].startswith("Bearer "):
+    if "Authorization" not in headers or not headers["Authorization"].startswith(
+        "Bearer "
+    ):
         return False, "Validation failed: Missing or invalid Authorization header."
 
     return True, "Validation successful."
@@ -93,12 +100,16 @@ if __name__ == "__main__":
         )
         # The first 2 should pass, the 3rd should fail
         expected_pass = i < 2
-        print(f"Request {i+1}: [{'PASS' if is_valid == expected_pass else 'FAIL'}] {message}")
+        print(
+            f"Request {i+1}: [{'PASS' if is_valid == expected_pass else 'FAIL'}] {message}"
+        )
 
     # Wait for tokens to replenish
     print("\nWaiting for tokens to replenish...")
     time.sleep(30)
-    is_valid, message = validate_post_input(valid_request, all_protocols, rate_limiter=limiter, headers=valid_headers)
+    is_valid, message = validate_post_input(
+        valid_request, all_protocols, rate_limiter=limiter, headers=valid_headers
+    )
     print(f"Request after delay: [{'PASS' if is_valid else 'FAIL'}] {message}")
 
     print("\n--- Validation checks complete ---")

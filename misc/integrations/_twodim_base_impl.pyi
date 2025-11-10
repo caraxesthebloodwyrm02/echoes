@@ -65,17 +65,27 @@ _InexactT = TypeVar("_InexactT", bound=np.inexact)
 _NumberCoT = TypeVar("_NumberCoT", bound=_Number_co)
 
 # The returned arrays dtype must be compatible with `np.equal`
-_MaskFunc: TypeAlias = Callable[[NDArray[int_], _T], NDArray[_Number_co | timedelta64 | datetime64 | object_]]
+_MaskFunc: TypeAlias = Callable[
+    [NDArray[int_], _T], NDArray[_Number_co | timedelta64 | datetime64 | object_]
+]
 
 _Int_co: TypeAlias = np.integer | np.bool
 _Float_co: TypeAlias = np.floating | _Int_co
 _Number_co: TypeAlias = np.number | np.bool
 
 _ArrayLike1D: TypeAlias = _SupportsArray[np.dtype[_ScalarT]] | Sequence[_ScalarT]
-_ArrayLike1DInt_co: TypeAlias = _SupportsArray[np.dtype[_Int_co]] | Sequence[int | _Int_co]
-_ArrayLike1DFloat_co: TypeAlias = _SupportsArray[np.dtype[_Float_co]] | Sequence[float | _Float_co]
-_ArrayLike2DFloat_co: TypeAlias = _SupportsArray[np.dtype[_Float_co]] | Sequence[_ArrayLike1DFloat_co]
-_ArrayLike1DNumber_co: TypeAlias = _SupportsArray[np.dtype[_Number_co]] | Sequence[complex | _Number_co]
+_ArrayLike1DInt_co: TypeAlias = (
+    _SupportsArray[np.dtype[_Int_co]] | Sequence[int | _Int_co]
+)
+_ArrayLike1DFloat_co: TypeAlias = (
+    _SupportsArray[np.dtype[_Float_co]] | Sequence[float | _Float_co]
+)
+_ArrayLike2DFloat_co: TypeAlias = (
+    _SupportsArray[np.dtype[_Float_co]] | Sequence[_ArrayLike1DFloat_co]
+)
+_ArrayLike1DNumber_co: TypeAlias = (
+    _SupportsArray[np.dtype[_Number_co]] | Sequence[complex | _Number_co]
+)
 
 ###
 
@@ -141,19 +151,39 @@ def diagflat(v: _ArrayLike[_ScalarT], k: int = ...) -> NDArray[_ScalarT]: ...
 def diagflat(v: ArrayLike, k: int = ...) -> NDArray[Any]: ...
 @overload
 def tri(
-    N: int, M: int | None = ..., k: int = ..., dtype: None = ..., *, like: _SupportsArrayFunc | None = ...
+    N: int,
+    M: int | None = ...,
+    k: int = ...,
+    dtype: None = ...,
+    *,
+    like: _SupportsArrayFunc | None = ...,
 ) -> NDArray[float64]: ...
 @overload
 def tri(
-    N: int, M: int | None, k: int, dtype: _DTypeLike[_ScalarT], *, like: _SupportsArrayFunc | None = ...
+    N: int,
+    M: int | None,
+    k: int,
+    dtype: _DTypeLike[_ScalarT],
+    *,
+    like: _SupportsArrayFunc | None = ...,
 ) -> NDArray[_ScalarT]: ...
 @overload
 def tri(
-    N: int, M: int | None = ..., k: int = ..., *, dtype: _DTypeLike[_ScalarT], like: _SupportsArrayFunc | None = ...
+    N: int,
+    M: int | None = ...,
+    k: int = ...,
+    *,
+    dtype: _DTypeLike[_ScalarT],
+    like: _SupportsArrayFunc | None = ...,
 ) -> NDArray[_ScalarT]: ...
 @overload
 def tri(
-    N: int, M: int | None = ..., k: int = ..., dtype: DTypeLike = ..., *, like: _SupportsArrayFunc | None = ...
+    N: int,
+    M: int | None = ...,
+    k: int = ...,
+    dtype: DTypeLike = ...,
+    *,
+    like: _SupportsArrayFunc | None = ...,
 ) -> NDArray[Any]: ...
 @overload
 def tril(m: _ArrayLike[_ScalarT], k: int = 0) -> NDArray[_ScalarT]: ...

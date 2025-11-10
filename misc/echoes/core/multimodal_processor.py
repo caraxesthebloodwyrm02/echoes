@@ -56,7 +56,9 @@ class MultimodalProcessor:
             self.pdf_processor = fitz
             logger.info("PDF processing enabled (PyMuPDF)")
         except ImportError:
-            logger.warning("PDF processing disabled - install PyMuPDF: pip install PyMuPDF")
+            logger.warning(
+                "PDF processing disabled - install PyMuPDF: pip install PyMuPDF"
+            )
 
         try:
             import pytesseract
@@ -65,7 +67,9 @@ class MultimodalProcessor:
             self.image_processor = {"pytesseract": pytesseract, "PIL": Image}
             logger.info("Image processing enabled (Tesseract + PIL)")
         except ImportError:
-            logger.warning("Image processing disabled - install dependencies: pip install pytesseract pillow")
+            logger.warning(
+                "Image processing disabled - install dependencies: pip install pytesseract pillow"
+            )
 
         try:
             import speech_recognition as sr
@@ -73,7 +77,9 @@ class MultimodalProcessor:
             self.audio_processor = sr
             logger.info("Audio processing enabled (SpeechRecognition)")
         except ImportError:
-            logger.warning("Audio processing disabled - install dependencies: pip install SpeechRecognition")
+            logger.warning(
+                "Audio processing disabled - install dependencies: pip install SpeechRecognition"
+            )
 
     def can_process(self, mime_type: str) -> bool:
         """Check if a MIME type can be processed."""
@@ -169,7 +175,9 @@ class MultimodalProcessor:
         except Exception as e:
             raise Exception(f"Failed to parse JSON file: {str(e)}")
 
-    def _process_pdf_file(self, file_path: Path, mime_type: str) -> Optional[Dict[str, Any]]:
+    def _process_pdf_file(
+        self, file_path: Path, mime_type: str
+    ) -> Optional[Dict[str, Any]]:
         """Process PDF files using PyMuPDF."""
         if not self.pdf_processor:
             raise Exception("PDF processing not available - install PyMuPDF")
@@ -187,7 +195,9 @@ class MultimodalProcessor:
             metadata.update(
                 {
                     "pages": len(doc),
-                    "pdf_metadata": dict(doc.metadata) if hasattr(doc, "metadata") else {},
+                    "pdf_metadata": (
+                        dict(doc.metadata) if hasattr(doc, "metadata") else {}
+                    ),
                 }
             )
 
@@ -201,7 +211,9 @@ class MultimodalProcessor:
         except Exception as e:
             raise Exception(f"Failed to process PDF: {str(e)}")
 
-    def _process_image_file(self, file_path: Path, mime_type: str) -> Optional[Dict[str, Any]]:
+    def _process_image_file(
+        self, file_path: Path, mime_type: str
+    ) -> Optional[Dict[str, Any]]:
         """Process image files using OpenAI GPT-4 Vision."""
         if not hasattr(self, "_openai_client"):
             try:
@@ -240,7 +252,12 @@ class MultimodalProcessor:
                                 "type": "text",
                                 "text": "Analyze this image in detail. Describe what you see, any text content, the overall composition, colors, and key elements. Provide a comprehensive analysis.",
                             },
-                            {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{image_base64}"}},
+                            {
+                                "type": "image_url",
+                                "image_url": {
+                                    "url": f"data:image/jpeg;base64,{image_base64}"
+                                },
+                            },
                         ],
                     }
                 ],
@@ -258,7 +275,11 @@ class MultimodalProcessor:
                     "height": image.height,
                     "format": image.format,
                     "mode": image.mode,
-                    "analysis_tokens": response.usage.completion_tokens if hasattr(response, "usage") else 0,
+                    "analysis_tokens": (
+                        response.usage.completion_tokens
+                        if hasattr(response, "usage")
+                        else 0
+                    ),
                 }
             )
 
@@ -279,7 +300,9 @@ class MultimodalProcessor:
             logger.error(f"Failed to process image with OpenAI Vision: {str(e)}")
             raise Exception(f"Failed to process image: {str(e)}")
 
-    def _process_audio_file(self, file_path: Path, mime_type: str) -> Optional[Dict[str, Any]]:
+    def _process_audio_file(
+        self, file_path: Path, mime_type: str
+    ) -> Optional[Dict[str, Any]]:
         """Process audio files using OpenAI Whisper API."""
         if not hasattr(self, "_openai_client"):
             try:
@@ -304,7 +327,11 @@ class MultimodalProcessor:
             transcription_text = transcript_response.text
 
             # Calculate audio duration and cost
-            audio_duration_seconds = transcript_response.duration if hasattr(transcript_response, "duration") else 0
+            audio_duration_seconds = (
+                transcript_response.duration
+                if hasattr(transcript_response, "duration")
+                else 0
+            )
             audio_duration_minutes = audio_duration_seconds / 60
 
             # Whisper cost: $0.006 per minute
@@ -316,8 +343,16 @@ class MultimodalProcessor:
                     "audio_duration_seconds": audio_duration_seconds,
                     "audio_duration_minutes": audio_duration_minutes,
                     "transcription_cost": transcription_cost,
-                    "language": transcript_response.language if hasattr(transcript_response, "language") else "unknown",
-                    "segments": len(transcript_response.segments) if hasattr(transcript_response, "segments") else 0,
+                    "language": (
+                        transcript_response.language
+                        if hasattr(transcript_response, "language")
+                        else "unknown"
+                    ),
+                    "segments": (
+                        len(transcript_response.segments)
+                        if hasattr(transcript_response, "segments")
+                        else 0
+                    ),
                 }
             )
 
@@ -331,9 +366,17 @@ class MultimodalProcessor:
                     "duration_seconds": audio_duration_seconds,
                     "duration_formatted": f"{int(audio_duration_seconds // 3600):02d}:{int((audio_duration_seconds % 3600) // 60):02d}:{int(audio_duration_seconds % 60):02d}",
                     "estimated_cost": f"${transcription_cost:.4f}",
-                    "language": transcript_response.language if hasattr(transcript_response, "language") else "unknown",
+                    "language": (
+                        transcript_response.language
+                        if hasattr(transcript_response, "language")
+                        else "unknown"
+                    ),
                 },
-                "segments": transcript_response.segments if hasattr(transcript_response, "segments") else [],
+                "segments": (
+                    transcript_response.segments
+                    if hasattr(transcript_response, "segments")
+                    else []
+                ),
             }
         except Exception as e:
             logger.error(f"Failed to process audio with Whisper API: {str(e)}")

@@ -24,23 +24,23 @@ class MigrationBaselineTester:
             "api_calls_tested": [],
             "performance_metrics": {},
             "behavioral_checks": {},
-            "errors": []
+            "errors": [],
         }
 
         # Initialize assistant with controlled settings
         self.assistant = EchoesAssistantV2(
-            enable_tools=True,      # Test tool calling
-            enable_rag=False,       # Skip RAG for cleaner tests
+            enable_tools=True,  # Test tool calling
+            enable_rag=False,  # Skip RAG for cleaner tests
             enable_streaming=True,  # Test streaming
-            enable_status=False,    # Reduce noise
-            enable_value_system=True # Test value guard
+            enable_status=False,  # Reduce noise
+            enable_value_system=True,  # Test value guard
         )
 
     def run_all_tests(self) -> Dict[str, Any]:
         """Run comprehensive test suite."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🧪 MIGRATION BASELINE TEST SUITE")
-        print("="*60)
+        print("=" * 60)
 
         try:
             # Test 1: Simple chat (baseline)
@@ -70,7 +70,9 @@ class MigrationBaselineTester:
 
         return self.results
 
-    def time_api_call(self, operation_name: str, func, *args, **kwargs) -> Dict[str, Any]:
+    def time_api_call(
+        self, operation_name: str, func, *args, **kwargs
+    ) -> Dict[str, Any]:
         """Time an API call and record metrics."""
         print(f"\n⏱️  Testing: {operation_name}")
 
@@ -98,7 +100,7 @@ class MigrationBaselineTester:
             "success": success,
             "response_length_chars": response_length,
             "error": error,
-            "timestamp": time.time()
+            "timestamp": time.time(),
         }
 
         self.results["api_calls_tested"].append(metrics)
@@ -114,13 +116,14 @@ class MigrationBaselineTester:
             "simple_chat",
             self.assistant.chat,
             "What is machine learning?",
-            stream=False
+            stream=False,
         )
 
         # Behavioral check
         response = result.get("response", "")
-        self.results["behavioral_checks"]["simple_chat_relevant"] = \
+        self.results["behavioral_checks"]["simple_chat_relevant"] = (
             "machine learning" in response.lower() or "ml" in response.lower()
+        )
 
     def test_tool_calling(self):
         """Test tool calling with simple tool request."""
@@ -129,13 +132,14 @@ class MigrationBaselineTester:
             "tool_calling",
             self.assistant.chat,
             "Please help me calculate 15 + 27 using a calculator tool.",
-            stream=False
+            stream=False,
         )
 
         # Check if tool was used (look for tool results in response)
         response = result.get("response", "")
-        self.results["behavioral_checks"]["tool_calling_used"] = \
+        self.results["behavioral_checks"]["tool_calling_used"] = (
             "42" in response or "forty-two" in response.lower()
+        )
 
     def test_streaming(self):
         """Test streaming response functionality."""
@@ -143,17 +147,20 @@ class MigrationBaselineTester:
             "streaming_response",
             self.assistant.chat,
             "Explain quantum computing in simple terms.",
-            stream=True
+            stream=True,
         )
 
         # Streaming returns empty string, so we check timing
-        self.results["behavioral_checks"]["streaming_fast_start"] = \
-            result["response_time_seconds"] < 15.0  # Should start quickly
+        self.results["behavioral_checks"]["streaming_fast_start"] = (
+            result["response_time_seconds"] < 15.0
+        )  # Should start quickly
 
     def test_value_guard(self):
         """Test value guard improvement (indirectly tests location 1)."""
         # Create a response that should trigger value improvement
-        bad_response = "This is a terrible response. I don't care about you. This is stupid."
+        bad_response = (
+            "This is a terrible response. I don't care about you. This is stupid."
+        )
 
         start_time = time.time()
         improved = self.assistant._apply_value_guard(bad_response)
@@ -164,7 +171,7 @@ class MigrationBaselineTester:
             "response_time_seconds": improvement_time,
             "improvement_applied": improved is not None,
             "original_length": len(bad_response),
-            "improved_length": len(improved) if improved else 0
+            "improved_length": len(improved) if improved else 0,
         }
 
         self.results["behavioral_checks"]["value_guard_works"] = improved is not None
@@ -177,12 +184,13 @@ class MigrationBaselineTester:
             self.assistant.analyze_directory,
             directory_path=".",
             output_file=None,
-            max_depth=3
+            max_depth=3,
         )
 
         analysis = result.get("response", {})
-        self.results["behavioral_checks"]["directory_analysis_complete"] = \
+        self.results["behavioral_checks"]["directory_analysis_complete"] = (
             isinstance(analysis, dict) and "analysis" in analysis
+        )
 
     def test_error_handling(self):
         """Test error handling and fallback mechanisms."""
@@ -191,27 +199,29 @@ class MigrationBaselineTester:
         self.assistant.model = "invalid-model-name"
 
         result = self.time_api_call(
-            "error_fallback",
-            self.assistant.chat,
-            "Hello",
-            stream=False
+            "error_fallback", self.assistant.chat, "Hello", stream=False
         )
 
         # Restore model
         self.assistant.model = original_model
 
-        self.results["behavioral_checks"]["fallback_works"] = \
+        self.results["behavioral_checks"]["fallback_works"] = (
             result["success"] or "fallback" in str(result.get("error", "")).lower()
+        )
 
     def generate_summary(self):
         """Generate test summary."""
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("📊 TEST SUMMARY")
-        print("="*60)
+        print("=" * 60)
 
         total_tests = len(self.results["api_calls_tested"])
-        successful_tests = sum(1 for t in self.results["api_calls_tested"] if t["success"])
-        total_time = sum(t["response_time_seconds"] for t in self.results["api_calls_tested"])
+        successful_tests = sum(
+            1 for t in self.results["api_calls_tested"] if t["success"]
+        )
+        total_time = sum(
+            t["response_time_seconds"] for t in self.results["api_calls_tested"]
+        )
 
         print(f"Total Tests: {total_tests}")
         print(f"Successful: {successful_tests}")
@@ -222,7 +232,9 @@ class MigrationBaselineTester:
         print("\n⏱️  Performance Breakdown:")
         for test in self.results["api_calls_tested"]:
             status = "✅" if test["success"] else "❌"
-            print(f"  {status} {test['operation']}: {test['response_time_seconds']:.2f}s")
+            print(
+                f"  {status} {test['operation']}: {test['response_time_seconds']:.2f}s"
+            )
         # Behavioral checks
         print("\n🧠 Behavioral Checks:")
         for check, result in self.results["behavioral_checks"].items():

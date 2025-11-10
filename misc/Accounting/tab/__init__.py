@@ -30,6 +30,7 @@ from payment_gateway import deliver_user_payment
 from audit_trail import audit_sync_operation
 from user_portal import get_user_portal_dashboard
 
+
 class TabIntegration:
     """
     Main integration point for Tab repository with assistant_v2_core.py
@@ -44,8 +45,9 @@ class TabIntegration:
 
         print("🔗 Tab Integration initialized - seamless work-to-payment pipeline")
 
-    async def process_assistant_interaction(self, user_id: str,
-                                          interaction_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def process_assistant_interaction(
+        self, user_id: str, interaction_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Process an assistant interaction through the complete Tab pipeline.
 
@@ -59,14 +61,16 @@ class TabIntegration:
             Processing result with any payout notifications
         """
         # Step 1: Sync with work tracking and check for payouts
-        sync_result = await self.sync_engine.sync_assistant_interaction(user_id, interaction_data)
+        sync_result = await self.sync_engine.sync_assistant_interaction(
+            user_id, interaction_data
+        )
 
         result = {
             "interaction_logged": sync_result.get("work_logged", False),
             "work_id": sync_result.get("work_id"),
             "payout_triggered": False,
             "contribution_update": sync_result.get("contribution_status", {}),
-            "system_status": "active"
+            "system_status": "active",
         }
 
         # Step 2: Process any triggered payouts
@@ -75,11 +79,14 @@ class TabIntegration:
 
             if payout_data.get("success"):
                 # Log successful payout
-                audit_sync_operation(user_id, {
-                    "action": "automatic_payout_processed",
-                    "payout_id": payout_data["payout_id"],
-                    "amount": payout_data["amount"]
-                })
+                audit_sync_operation(
+                    user_id,
+                    {
+                        "action": "automatic_payout_processed",
+                        "payout_id": payout_data["payout_id"],
+                        "amount": payout_data["amount"],
+                    },
+                )
 
                 result["payout_triggered"] = True
                 result["payout_notification"] = payout_data.get("user_message", "")
@@ -97,13 +104,21 @@ class TabIntegration:
             return {
                 "user_id": user_id,
                 "compensation_status": {
-                    "total_earned": dashboard["financial_summary"]["total_earned_all_time"],
-                    "pending_payout": dashboard["contribution_overview"]["pending_payout"],
-                    "compensation_tier": dashboard["contribution_overview"]["compensation_tier"],
-                    "next_payout": dashboard["contribution_overview"]["next_payout_estimate"]
+                    "total_earned": dashboard["financial_summary"][
+                        "total_earned_all_time"
+                    ],
+                    "pending_payout": dashboard["contribution_overview"][
+                        "pending_payout"
+                    ],
+                    "compensation_tier": dashboard["contribution_overview"][
+                        "compensation_tier"
+                    ],
+                    "next_payout": dashboard["contribution_overview"][
+                        "next_payout_estimate"
+                    ],
                 },
                 "activity_summary": dashboard["recent_activity"],
-                "system_integrity": "verified"
+                "system_integrity": "verified",
             }
 
         except Exception as e:
@@ -114,15 +129,15 @@ class TabIntegration:
                     "total_earned": 0.0,
                     "pending_payout": 0.0,
                     "compensation_tier": "entry",
-                    "next_payout": "Begin working to start earning"
+                    "next_payout": "Begin working to start earning",
                 },
                 "activity_summary": {
                     "total_recent_hours": 0,
                     "recent_tasks": [],
-                    "activity_level": "new_user"
+                    "activity_level": "new_user",
                 },
                 "system_integrity": "verified",
-                "message": "New user - start interacting to begin earning compensation"
+                "message": "New user - start interacting to begin earning compensation",
             }
 
     def _generate_user_message(self, result: Dict[str, Any]) -> str:
@@ -143,19 +158,25 @@ class TabIntegration:
             pending = contribution.get("pending_payout", 0)
             tier = contribution.get("compensation_tier", "unknown")
 
-            messages.append(f"📊 Status: {hours:.1f}hrs worked, ${pending:.2f} pending, {tier} tier")
+            messages.append(
+                f"📊 Status: {hours:.1f}hrs worked, ${pending:.2f} pending, {tier} tier"
+            )
 
         if not messages:
             messages.append("✅ Interaction processed successfully.")
 
         return " ".join(messages)
 
+
 # =============================================================================
 # ASSISTANT_V2_CORE.PY INTEGRATION FUNCTIONS
 # =============================================================================
 # These functions are called directly by assistant_v2_core.py
 
-async def tab_log_interaction(user_id: str, interaction_data: Dict[str, Any]) -> Dict[str, Any]:
+
+async def tab_log_interaction(
+    user_id: str, interaction_data: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     MAIN INTEGRATION POINT - Called by assistant_v2_core.py
 
@@ -182,8 +203,14 @@ async def tab_log_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
     integration = TabIntegration()
     return await integration.process_assistant_interaction(user_id, interaction_data)
 
-def tab_import_existing_work(user_id: str, total_hours: float, work_description: str,
-                           technical_level: str = "advanced", impact_level: str = "high") -> Dict[str, Any]:
+
+def tab_import_existing_work(
+    user_id: str,
+    total_hours: float,
+    work_description: str,
+    technical_level: str = "advanced",
+    impact_level: str = "high",
+) -> Dict[str, Any]:
     """
     Import existing work hours for fair compensation recognition.
 
@@ -200,17 +227,23 @@ def tab_import_existing_work(user_id: str, total_hours: float, work_description:
     Returns:
         Import result with valuation details
     """
-    result = import_existing_work(user_id, total_hours, work_description, technical_level, impact_level)
+    result = import_existing_work(
+        user_id, total_hours, work_description, technical_level, impact_level
+    )
 
     # Audit the import
-    audit_sync_operation(user_id, {
-        "action": "work_import",
-        "hours_imported": total_hours,
-        "work_description": work_description,
-        "valuation": result
-    })
+    audit_sync_operation(
+        user_id,
+        {
+            "action": "work_import",
+            "hours_imported": total_hours,
+            "work_description": work_description,
+            "valuation": result,
+        },
+    )
 
     return result
+
 
 def tab_get_user_status(user_id: str) -> Dict[str, Any]:
     """
@@ -224,7 +257,10 @@ def tab_get_user_status(user_id: str) -> Dict[str, Any]:
     integration = TabIntegration()
     return integration.get_user_compensation_status(user_id)
 
-def tab_process_manual_payout(user_id: str, amount: Optional[float] = None) -> Dict[str, Any]:
+
+def tab_process_manual_payout(
+    user_id: str, amount: Optional[float] = None
+) -> Dict[str, Any]:
     """
     Process manual payout request.
 
@@ -243,34 +279,45 @@ def tab_process_manual_payout(user_id: str, amount: Optional[float] = None) -> D
 
     return request_payout_portal(user_id, "Manual payout request via assistant")
 
+
 # =============================================================================
 # USER PORTAL ACCESS FUNCTIONS
 # =============================================================================
 # Functions for users to access their Tab data directly
 
+
 def get_my_compensation_dashboard(user_id: str) -> Dict[str, Any]:
     """Get user's complete compensation dashboard."""
     return get_user_portal_dashboard(user_id)
 
-def setup_my_payment_method(user_id: str, method_type: str,
-                          method_details: Dict[str, Any]) -> Dict[str, Any]:
+
+def setup_my_payment_method(
+    user_id: str, method_type: str, method_details: Dict[str, Any]
+) -> Dict[str, Any]:
     """Setup payment method for receiving payouts."""
     from user_portal import setup_user_payment_portal
+
     return setup_user_payment_portal(user_id, method_type, method_details)
+
 
 def request_my_payout(user_id: str) -> Dict[str, Any]:
     """Request payout of pending earnings."""
     from user_portal import request_payout_portal
+
     return request_payout_portal(user_id)
+
 
 def get_my_transparency_report(user_id: str) -> Dict[str, Any]:
     """Get complete transparency report."""
     from user_portal import get_transparency_report_portal
+
     return get_transparency_report_portal(user_id)
+
 
 # =============================================================================
 # SYSTEM HEALTH AND MAINTENANCE
 # =============================================================================
+
 
 def check_tab_system_health() -> Dict[str, Any]:
     """Check overall health of Tab system."""
@@ -280,7 +327,7 @@ def check_tab_system_health() -> Dict[str, Any]:
         "system": "Tab Repository",
         "components": {},
         "overall_status": "unknown",
-        "last_check": str(datetime.now())
+        "last_check": str(datetime.now()),
     }
 
     # Check sync Glimpse
@@ -288,7 +335,9 @@ def check_tab_system_health() -> Dict[str, Any]:
     health_status["components"]["sync_engine"] = sync_health
 
     # Determine overall status
-    component_statuses = [comp["status"] for comp in health_status["components"].values()]
+    component_statuses = [
+        comp["status"] for comp in health_status["components"].values()
+    ]
     if all(status == "healthy" for status in component_statuses):
         health_status["overall_status"] = "healthy"
     elif any(status == "unhealthy" for status in component_statuses):
@@ -298,6 +347,7 @@ def check_tab_system_health() -> Dict[str, Any]:
 
     return health_status
 
+
 def get_system_statistics() -> Dict[str, Any]:
     """Get system-wide statistics."""
     # This would aggregate stats from all components
@@ -306,12 +356,14 @@ def get_system_statistics() -> Dict[str, Any]:
         "total_work_logged": "tracked_via_work_tracking",
         "total_payouts_processed": "tracked_via_payout_engine",
         "system_uptime": "tracked_via_audit_trail",
-        "last_updated": str(datetime.now())
+        "last_updated": str(datetime.now()),
     }
+
 
 # =============================================================================
 # DEMO AND TESTING
 # =============================================================================
+
 
 async def demo_tab_integration():
     """Demonstrate the complete Tab integration system."""
@@ -327,8 +379,8 @@ async def demo_tab_integration():
                 "response": "I'll help you analyze the financial data...",
                 "tokens_used": 150,
                 "processing_time": 2.3,
-                "interaction_type": "complex_analysis"
-            }
+                "interaction_type": "complex_analysis",
+            },
         },
         {
             "user_id": "demo_user_1",
@@ -337,9 +389,9 @@ async def demo_tab_integration():
                 "response": "Based on market rates...",
                 "tokens_used": 80,
                 "processing_time": 1.1,
-                "interaction_type": "consultation"
-            }
-        }
+                "interaction_type": "consultation",
+            },
+        },
     ]
 
     for interaction in test_interactions:
@@ -350,8 +402,8 @@ async def demo_tab_integration():
     # Check user status
     print(f"\\n📊 User Status:")
     status = tab_get_user_status("demo_user_1")
-    if 'compensation_status' in status:
-        comp_status = status['compensation_status']
+    if "compensation_status" in status:
+        comp_status = status["compensation_status"]
         print(f"Total Earned: ${comp_status['total_earned']}")
         print(f"Pending Payout: ${comp_status['pending_payout']}")
     else:
@@ -362,7 +414,10 @@ async def demo_tab_integration():
     health = check_tab_system_health()
     print(f"Overall Status: {health['overall_status']}")
 
-    print("\\n✅ Tab Integration operational - users receive fair compensation for all contributions!")
+    print(
+        "\\n✅ Tab Integration operational - users receive fair compensation for all contributions!"
+    )
+
 
 # =============================================================================
 # ASSISTANT_V2_CORE.PY INTEGRATION INSTRUCTIONS

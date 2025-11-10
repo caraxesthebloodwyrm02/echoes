@@ -10,22 +10,31 @@ import time
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
+
 def test_system_integration_no_api():
     """Test system integration without making API calls"""
     print("🚀 ECHOES INTEGRATION TEST (No API Required)")
-    print("="*60)
+    print("=" * 60)
 
     try:
         # Test 1: Import all systems
         print("\n🔍 Testing system imports...")
         from assistant_v2_core import EchoesAssistantV2
-        from core_modules.parallel_simulation_engine import parallel_simulation, SimulationType
-        from core_modules.catch_release_system import catch_release, CacheLevel, ContentType
+        from core_modules.parallel_simulation_engine import (
+            parallel_simulation,
+            SimulationType,
+        )
+        from core_modules.catch_release_system import (
+            catch_release,
+            CacheLevel,
+            ContentType,
+        )
         from core_modules.intent_awareness_engine import intent_engine, IntentType
         from core_modules.train_of_thought_tracker import thought_tracker, ThoughtType
         from core_modules.personality_engine import personality_engine
         from core_modules.humor_engine import humor_engine
         from core_modules.cross_reference_system import cross_reference_system
+
         print("✅ All systems imported successfully")
 
         # Test 2: Initialize assistant with mock mode
@@ -34,7 +43,7 @@ def test_system_integration_no_api():
             enable_rag=False,  # Disable RAG to avoid API calls
             enable_tools=False,  # Disable tools
             enable_streaming=False,
-            enable_status=False
+            enable_status=False,
         )
         print("✅ Assistant initialized successfully")
         print(f"   Session ID: {assistant.session_id}")
@@ -52,7 +61,7 @@ def test_system_integration_no_api():
         sim_id = parallel_simulation.create_simulation(
             simulation_type=SimulationType.SCENARIO_EXPLORATION,
             input_data={"scenario": "test scenario"},
-            parameters={"timeout": 1}  # Short timeout
+            parameters={"timeout": 1},  # Short timeout
         )
         print(f"✅ Simulation created: {sim_id}")
 
@@ -91,9 +100,9 @@ def test_system_integration_no_api():
         print(f"✅ Cache statistics: {len(cache_stats)} levels")
         print(f"✅ Simulation statistics: {sim_stats['total_simulations']} simulations")
 
-        print("\n" + "="*60)
+        print("\n" + "=" * 60)
         print("🎉 ALL SYSTEMS INTEGRATED SUCCESSFULLY!")
-        print("="*60)
+        print("=" * 60)
         print("✅ System imports: PASSED")
         print("✅ Assistant initialization: PASSED")
         print("✅ Cache system: PASSED")
@@ -117,8 +126,10 @@ def test_system_integration_no_api():
     except Exception as e:
         print(f"\n❌ Integration test failed: {e}")
         import traceback
+
         traceback.print_exc()
         return False
+
 
 if __name__ == "__main__":
     success = test_system_integration_no_api()

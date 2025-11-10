@@ -27,6 +27,7 @@ from decimal import Decimal
 from work_tracking import WorkTracker, log_assistant_interaction
 from payout_engine import PayoutEngine, process_user_payout, get_user_payment_history
 
+
 class SyncEngine:
     """
     Synchronization Glimpse connecting all Tab components.
@@ -50,14 +51,16 @@ class SyncEngine:
 
         # Sync configuration
         self.payout_thresholds = {
-            "minimum_payout": Decimal('50.00'),  # Minimum before processing
+            "minimum_payout": Decimal("50.00"),  # Minimum before processing
             "auto_payout_hours": 40,  # Auto payout after this many hours
-            "max_accumulation_days": 30  # Max days to accumulate before forced payout
+            "max_accumulation_days": 30,  # Max days to accumulate before forced payout
         }
 
         print("✅ Sync Glimpse initialized - seamless work-to-payment pipeline")
 
-    async def sync_assistant_interaction(self, user_id: str, interaction_data: Dict[str, Any]) -> Dict[str, Any]:
+    async def sync_assistant_interaction(
+        self, user_id: str, interaction_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """
         Sync assistant interaction with work tracking system.
 
@@ -76,7 +79,7 @@ class SyncEngine:
             "work_logged": False,
             "payout_triggered": False,
             "contribution_status": {},
-            "next_payout_estimate": None
+            "next_payout_estimate": None,
         }
 
         # Determine interaction type and effort level
@@ -85,9 +88,7 @@ class SyncEngine:
 
         # Log work automatically
         work_id = log_assistant_interaction(
-            user_id=user_id,
-            interaction_type=interaction_type,
-            details=interaction_data
+            user_id=user_id, interaction_type=interaction_type, details=interaction_data
         )
 
         result["work_logged"] = True
@@ -106,8 +107,10 @@ class SyncEngine:
         result["contribution_status"] = {
             "total_hours": contribution_summary["total_time_invested_hours"],
             "contribution_score": contribution_summary["contribution_score"],
-            "compensation_tier": contribution_summary["compensation_eligibility"]["tier"],
-            "pending_payout": self._calculate_pending_payout(user_id)
+            "compensation_tier": contribution_summary["compensation_eligibility"][
+                "tier"
+            ],
+            "pending_payout": self._calculate_pending_payout(user_id),
         }
 
         # Estimate next payout
@@ -125,7 +128,9 @@ class SyncEngine:
             return "complex_analysis"
         elif any(word in query for word in ["create", "build", "develop", "implement"]):
             return "code_generation"
-        elif any(word in query for word in ["research", "find", "search", "investigate"]):
+        elif any(
+            word in query for word in ["research", "find", "search", "investigate"]
+        ):
             return "research_task"
         elif any(word in query for word in ["help", "explain", "guide", "advice"]):
             return "consultation"
@@ -134,7 +139,9 @@ class SyncEngine:
         else:
             return "query_processing"
 
-    def _calculate_effort_metrics(self, interaction_data: Dict[str, Any]) -> Dict[str, float]:
+    def _calculate_effort_metrics(
+        self, interaction_data: Dict[str, Any]
+    ) -> Dict[str, float]:
         """Calculate effort metrics from interaction data."""
         response_length = len(interaction_data.get("response", ""))
         query_complexity = len(interaction_data.get("query", "").split())
@@ -158,7 +165,7 @@ class SyncEngine:
         return {
             "intellectual_effort": min(intellectual_effort, 10.0),
             "motivation_level": 7.5,  # Assume good motivation for assistant usage
-            "quality_rating": 8.0     # Assistant responses are generally high quality
+            "quality_rating": 8.0,  # Assistant responses are generally high quality
         }
 
     async def _check_payout_trigger(self, user_id: str) -> tuple[bool, str]:
@@ -184,7 +191,9 @@ class SyncEngine:
             for payout in payout_history["recent_payouts"]:
                 if payout["status"] == "completed":
                     try:
-                        last_payout_date = datetime.fromisoformat(payout["date"].replace('Z', '+00:00'))
+                        last_payout_date = datetime.fromisoformat(
+                            payout["date"].replace("Z", "+00:00")
+                        )
                         break
                     except:
                         pass
@@ -195,7 +204,9 @@ class SyncEngine:
 
         if last_payout_date:
             days_since_last = (datetime.now(timezone.utc) - last_payout_date).days
-            time_threshold = days_since_last >= self.payout_thresholds["max_accumulation_days"]
+            time_threshold = (
+                days_since_last >= self.payout_thresholds["max_accumulation_days"]
+            )
 
         quality_threshold = contribution_score >= 7.0  # Good quality work
 
@@ -203,13 +214,20 @@ class SyncEngine:
         if hours_threshold:
             return True, f"Accumulated {total_hours:.1f} hours of work"
         elif time_threshold:
-            return True, f"{self.payout_thresholds['max_accumulation_days']} days since last payout"
-        elif quality_threshold and total_hours >= 10:  # At least 10 hours of quality work
+            return (
+                True,
+                f"{self.payout_thresholds['max_accumulation_days']} days since last payout",
+            )
+        elif (
+            quality_threshold and total_hours >= 10
+        ):  # At least 10 hours of quality work
             return True, f"High-quality contributions (score: {contribution_score:.1f})"
 
         return False, ""
 
-    async def _trigger_automatic_payout(self, user_id: str, reason: str) -> Dict[str, Any]:
+    async def _trigger_automatic_payout(
+        self, user_id: str, reason: str
+    ) -> Dict[str, Any]:
         """Trigger automatic payout processing."""
         pending_amount = self._calculate_pending_payout(user_id)
 
@@ -217,7 +235,7 @@ class SyncEngine:
             return {
                 "triggered": False,
                 "reason": f"Amount ${pending_amount:.2f} below minimum payout threshold",
-                "next_trigger": f"When amount reaches ${float(self.payout_thresholds['minimum_payout'])}"
+                "next_trigger": f"When amount reaches ${float(self.payout_thresholds['minimum_payout'])}",
             }
 
         # Process the payout automatically
@@ -225,15 +243,19 @@ class SyncEngine:
             user_id=user_id,
             work_amount=pending_amount,
             jurisdiction="US",  # Default - could be user-configurable
-            payment_method="bank_transfer"  # Default - could be user-configurable
+            payment_method="bank_transfer",  # Default - could be user-configurable
         )
 
         # Log the automatic payout trigger
-        self._log_sync_event(user_id, "automatic_payout_triggered", {
-            "reason": reason,
-            "amount": pending_amount,
-            "payout_result": payout_result
-        })
+        self._log_sync_event(
+            user_id,
+            "automatic_payout_triggered",
+            {
+                "reason": reason,
+                "amount": pending_amount,
+                "payout_result": payout_result,
+            },
+        )
 
         return {
             "triggered": True,
@@ -241,7 +263,7 @@ class SyncEngine:
             "amount": pending_amount,
             "payout_id": payout_result.get("payout_id"),
             "status": payout_result.get("success", False),
-            "user_notification": payout_result.get("user_message", "")
+            "user_notification": payout_result.get("user_message", ""),
         }
 
     def _calculate_pending_payout(self, user_id: str) -> float:
@@ -290,23 +312,29 @@ class SyncEngine:
             "hours_needed": hours_needed,
             "amount_needed": amount_needed,
             "estimated_weeks": weeks_to_hours,
-            "estimated_date": (datetime.now(timezone.utc) + timedelta(weeks=weeks_to_hours)).date().isoformat()
+            "estimated_date": (
+                datetime.now(timezone.utc) + timedelta(weeks=weeks_to_hours)
+            )
+            .date()
+            .isoformat(),
         }
 
-    def _log_sync_event(self, user_id: str, event_type: str, event_data: Dict[str, Any]):
+    def _log_sync_event(
+        self, user_id: str, event_type: str, event_data: Dict[str, Any]
+    ):
         """Log synchronization events for audit trail."""
         event = {
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "user_id": user_id,
             "event_type": event_type,
-            "event_data": event_data
+            "event_data": event_data,
         }
 
         # Save to sync log
         sync_log_file = self.data_dir / "sync_events.jsonl"
 
-        with open(sync_log_file, 'a') as f:
-            f.write(json.dumps(event) + '\n')
+        with open(sync_log_file, "a") as f:
+            f.write(json.dumps(event) + "\n")
 
     async def get_user_sync_status(self, user_id: str) -> Dict[str, Any]:
         """Get complete synchronization status for a user."""
@@ -321,24 +349,30 @@ class SyncEngine:
             "work_tracking": {
                 "total_hours": contribution_summary["total_time_invested_hours"],
                 "contribution_score": contribution_summary["contribution_score"],
-                "compensation_tier": contribution_summary["compensation_eligibility"]["tier"],
-                "hourly_rate_range": contribution_summary["compensation_eligibility"]["hourly_rate_range_usd"]
+                "compensation_tier": contribution_summary["compensation_eligibility"][
+                    "tier"
+                ],
+                "hourly_rate_range": contribution_summary["compensation_eligibility"][
+                    "hourly_rate_range_usd"
+                ],
             },
             "payout_status": {
                 "total_earned": payout_history["total_earned"],
                 "total_payouts": payout_history["total_payouts"],
                 "pending_amount": pending_amount,
-                "next_payout": next_payout
+                "next_payout": next_payout,
             },
             "sync_health": {
                 "last_sync": datetime.now(timezone.utc).isoformat(),
                 "auto_payout_enabled": True,
-                "transparency_enabled": True
-            }
+                "transparency_enabled": True,
+            },
         }
+
 
 # Global sync Glimpse instance
 _sync_glimpse_instance = None
+
 
 def get_sync_engine() -> SyncEngine:
     """Get the global sync Glimpse instance."""
@@ -347,10 +381,14 @@ def get_sync_engine() -> SyncEngine:
         _sync_glimpse_instance = SyncEngine()
     return _sync_glimpse_instance
 
+
 # Assistant Integration Functions
 # These functions are called by assistant_v2_core.py
 
-async def sync_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) -> Dict[str, Any]:
+
+async def sync_assistant_interaction(
+    user_id: str, interaction_data: Dict[str, Any]
+) -> Dict[str, Any]:
     """
     Main integration point for assistant_v2_core.py
 
@@ -370,12 +408,15 @@ async def sync_assistant_interaction(user_id: str, interaction_data: Dict[str, A
     engine = get_sync_engine()
     return await Glimpse.sync_assistant_interaction(user_id, interaction_data)
 
+
 def get_user_sync_status(user_id: str) -> Dict[str, Any]:
     """Get user's complete sync status (work + payouts)."""
     engine = get_sync_engine()
     # Run in new event loop since this is a sync function
     import asyncio
+
     return asyncio.run(Glimpse.get_user_sync_status(user_id))
+
 
 # Legacy compatibility functions
 def log_work_for_assistant(user_id: str, interaction_data: Dict[str, Any]) -> str:
@@ -385,6 +426,7 @@ def log_work_for_assistant(user_id: str, interaction_data: Dict[str, Any]) -> st
     print(f"📝 Work logging initiated for user {user_id}")
     return f"work_log_initiated_{user_id}_{int(time.time())}"
 
+
 # Health check function
 def check_sync_glimpse_health() -> Dict[str, Any]:
     """Check if sync Glimpse is operational."""
@@ -392,24 +434,27 @@ def check_sync_glimpse_health() -> Dict[str, Any]:
         engine = get_sync_engine()
 
         # Check if directories exist
-        dirs_exist = all([
-            Glimpse.base_dir.exists(),
-            Glimpse.work_tracker.work_dir.exists(),
-            Glimpse.payout_engine.payout_dir.exists()
-        ])
+        dirs_exist = all(
+            [
+                Glimpse.base_dir.exists(),
+                Glimpse.work_tracker.work_dir.exists(),
+                Glimpse.payout_engine.payout_dir.exists(),
+            ]
+        )
 
         return {
             "status": "healthy" if dirs_exist else "degraded",
             "directories_exist": dirs_exist,
             "components_initialized": True,
-            "last_check": datetime.now(timezone.utc).isoformat()
+            "last_check": datetime.now(timezone.utc).isoformat(),
         }
     except Exception as e:
         return {
             "status": "unhealthy",
             "error": str(e),
-            "last_check": datetime.now(timezone.utc).isoformat()
+            "last_check": datetime.now(timezone.utc).isoformat(),
         }
+
 
 if __name__ == "__main__":
     # Test the sync Glimpse

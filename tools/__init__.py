@@ -8,44 +8,45 @@ This module provides backward compatibility for tools.
 import threading
 from typing import Any, Callable, Dict, List
 
+
 class ToolRegistry:
     """Thread-safe tool registry with required methods."""
-    
+
     def __init__(self):
         self._registry = {}
         self._lock = threading.Lock()
-    
+
     def register_tool(self, name, desc, func):
         """Register a tool with the registry."""
         with self._lock:
             self._registry[name] = {"description": desc, "func": func}
-    
+
     def get_tool(self, name):
         """Get a tool by name."""
         with self._lock:
             return self._registry.get(name)
-    
+
     def get(self, name):
         """Get a tool by name (alias for get_tool)."""
         return self.get_tool(name)
-    
+
     def has_tool(self, name):
         """Check if a tool is registered."""
         with self._lock:
             return name in self._registry
-    
+
     def list_tools(self):
         """List all registered tool names."""
         with self._lock:
             return list(self._registry.keys())
-    
+
     def execute_tool(self, name, payload):
         """Execute a registered tool."""
         tool = self.get_tool(name)
         if not tool:
             raise KeyError(f"Tool '{name}' not found")
         return tool["func"](payload)
-    
+
     def get_openai_schemas(self):
         """Get OpenAI function schemas for all registered tools."""
         schemas = []
@@ -60,30 +61,36 @@ class ToolRegistry:
                         "parameters": {
                             "type": "object",
                             "properties": {},
-                            "required": []
-                        }
-                    }
+                            "required": [],
+                        },
+                    },
                 }
                 schemas.append(schema)
         return schemas
 
+
 # Global registry instance
 _global_registry = ToolRegistry()
+
 
 def get_registry():
     """Get the global tool registry instance."""
     return _global_registry
 
+
 def register_tool(name, desc, func):
     """Register a tool with the global registry."""
     _global_registry.register_tool(name, desc, func)
+
 
 def get_tool(name):
     """Get a tool from the global registry."""
     return _global_registry.get_tool(name)
 
+
 def execute_tool(name, payload):
     """Execute a tool from the global registry."""
     return _global_registry.execute_tool(name, payload)
 
-__all__ = ['get_registry', 'ToolRegistry', 'register_tool', 'get_tool', 'execute_tool']
+
+__all__ = ["get_registry", "ToolRegistry", "register_tool", "get_tool", "execute_tool"]

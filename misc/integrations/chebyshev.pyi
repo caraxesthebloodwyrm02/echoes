@@ -76,8 +76,12 @@ __all__ = [
 
 _NumberOrObjectT = TypeVar("_NumberOrObjectT", bound=np.number | np.object_)
 
-def _cseries_to_zseries(c: npt.NDArray[_NumberOrObjectT]) -> _Series[_NumberOrObjectT]: ...
-def _zseries_to_cseries(zs: npt.NDArray[_NumberOrObjectT]) -> _Series[_NumberOrObjectT]: ...
+def _cseries_to_zseries(
+    c: npt.NDArray[_NumberOrObjectT],
+) -> _Series[_NumberOrObjectT]: ...
+def _zseries_to_cseries(
+    zs: npt.NDArray[_NumberOrObjectT],
+) -> _Series[_NumberOrObjectT]: ...
 def _zseries_mul(
     z1: npt.NDArray[_NumberOrObjectT],
     z2: npt.NDArray[_NumberOrObjectT],

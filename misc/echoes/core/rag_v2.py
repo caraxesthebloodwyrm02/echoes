@@ -15,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 try:
     from openai_rag.openai_embeddings import OpenAIEmbeddings
     from openai_rag.rag_openai import create_rag_system_openai
+
     OPENAI_RAG_AVAILABLE = True
 except ImportError:
     OPENAI_RAG_AVAILABLE = False
@@ -22,6 +23,7 @@ except ImportError:
 
 try:
     from core.rag_integration import EchoesRAG
+
     LEGACY_RAG_AVAILABLE = True
 except ImportError:
     LEGACY_RAG_AVAILABLE = False
@@ -52,7 +54,7 @@ class RAGSystem:
     def search(self, query: str, top_k: int = 5, **kwargs) -> Dict[str, Any]:
         """Search for relevant documents."""
         results = self.rag.search(query, top_k=top_k, **kwargs)
-        
+
         # Handle different result formats
         if isinstance(results, list):
             # Already in the right format
@@ -63,22 +65,24 @@ class RAGSystem:
         else:
             # Unexpected format
             formatted_results = []
-        
+
         # Ensure each result has the expected fields
         final_results = []
         for result in formatted_results:
-            final_results.append({
-                "content": result.get("content", result.get("text", "")),
-                "score": result.get("score", 0.0),
-                "metadata": result.get("metadata", {}),
-            })
-        
+            final_results.append(
+                {
+                    "content": result.get("content", result.get("text", "")),
+                    "score": result.get("score", 0.0),
+                    "metadata": result.get("metadata", {}),
+                }
+            )
+
         # Return object with results attribute
         return {"results": final_results}
 
     def get_stats(self) -> Dict[str, Any]:
         """Get RAG system statistics."""
-        if hasattr(self.rag, 'get_stats'):
+        if hasattr(self.rag, "get_stats"):
             return self.rag.get_stats()
         else:
             return {"status": "stats_not_available"}
@@ -88,11 +92,11 @@ def create_rag_system(preset: str = "balanced", **kwargs) -> RAGSystem:
     """
     Create a RAG system instance.
     Tries OpenAI RAG first, falls back to legacy if needed.
-    
+
     Args:
         preset: Configuration preset
         **kwargs: Additional configuration
-        
+
     Returns:
         RAGSystem wrapper instance
     """
@@ -104,19 +108,18 @@ def create_rag_system(preset: str = "balanced", **kwargs) -> RAGSystem:
             return RAGSystem(rag_instance)
         except Exception as e:
             print(f"⚠️ OpenAI RAG initialization failed: {e}")
-    
+
     # Fall back to legacy RAG
     if LEGACY_RAG_AVAILABLE:
         try:
             from core.rag_integration import EchoesRAG
+
             rag_instance = EchoesRAG(kwargs)
             print(f"✓ Using legacy RAG system with preset: {preset}")
             return RAGSystem(rag_instance)
         except Exception as e:
             print(f"⚠️ Legacy RAG initialization failed: {e}")
-    
+
     # No RAG available
     print("❌ No RAG system available")
     return None
-
-

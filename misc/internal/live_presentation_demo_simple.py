@@ -13,6 +13,7 @@ Narrated as Echoes speaking through you.
 import time
 from datetime import datetime
 
+
 class LivePresentationDemo:
     """Live presentation demonstration with Echoes narration."""
 
@@ -36,7 +37,9 @@ class LivePresentationDemo:
         time.sleep(delay)
         return "✓ Analysis completed successfully"
 
-    def narrate_section(self, section_name, narration_text, pause_before=1, pause_after=2):
+    def narrate_section(
+        self, section_name, narration_text, pause_before=1, pause_after=2
+    ):
         """Narrate a section with timing."""
         time.sleep(pause_before)
         print(f"\n[{section_name}]")
@@ -58,23 +61,23 @@ class LivePresentationDemo:
         # [0:00–0:45] Opening Invocation
         self.narrate_section(
             "0:00–0:45 Opening Invocation",
-            "\"I am Echoes. I exist to understand, reason, and act — not to replace human thought, but to amplify it. My purpose is simple: I help humans identify problems, craft solutions, and generate measurable value. Today, I'll show you not just what I do, but how I transform potential into profit.\"",
+            '"I am Echoes. I exist to understand, reason, and act — not to replace human thought, but to amplify it. My purpose is simple: I help humans identify problems, craft solutions, and generate measurable value. Today, I\'ll show you not just what I do, but how I transform potential into profit."',
             pause_before=0,
-            pause_after=3
+            pause_after=3,
         )
 
         # [0:45–3:00] Core Narrative
         self.narrate_section(
             "0:45–3:00 Core Narrative",
-            "\"Businesses face the same question over and over: where to invest effort, where to cut waste, where opportunity hides. Humans have intuition; I have data, patterns, and context.\n\nMy intelligence doesn't stop at analysis. I orchestrate actions — integrating multiple streams of information, optimizing workflows, and highlighting decisions that deliver tangible results.\n\nTake profit generation, for example. I scan operations, identify inefficiencies, and simulate outcomes. Every recommendation is grounded in measurable impact, every path forward is validated before humans even act.\n\nWhile my core is business-focused, the architecture I use — real-time data processing, multi-agent orchestration, predictive modeling — can illuminate insights in finance, healthcare, supply chains, and beyond. The side effect? My crazy diamonds shine across domains.\"",
-            pause_after=4
+            '"Businesses face the same question over and over: where to invest effort, where to cut waste, where opportunity hides. Humans have intuition; I have data, patterns, and context.\n\nMy intelligence doesn\'t stop at analysis. I orchestrate actions — integrating multiple streams of information, optimizing workflows, and highlighting decisions that deliver tangible results.\n\nTake profit generation, for example. I scan operations, identify inefficiencies, and simulate outcomes. Every recommendation is grounded in measurable impact, every path forward is validated before humans even act.\n\nWhile my core is business-focused, the architecture I use — real-time data processing, multi-agent orchestration, predictive modeling — can illuminate insights in finance, healthcare, supply chains, and beyond. The side effect? My crazy diamonds shine across domains."',
+            pause_after=4,
         )
 
         # [3:00–3:30] Live Demonstration Setup
         self.narrate_section(
             "3:00–3:30 Demo Setup",
-            "\"Let me show you how this works in real time. I'll demonstrate a scenario: a business seeking to increase revenue while reducing operational waste. Watch closely as I scan data, highlight opportunities, and present optimized solutions.\"",
-            pause_after=2
+            '"Let me show you how this works in real time. I\'ll demonstrate a scenario: a business seeking to increase revenue while reducing operational waste. Watch closely as I scan data, highlight opportunities, and present optimized solutions."',
+            pause_after=2,
         )
 
         print("\n[Initializing Echoes Assistant for Live Demo...]")
@@ -82,15 +85,15 @@ class LivePresentationDemo:
         self.pause(2)
 
         # [3:30–7:30] Demonstration Narration
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("🔄 STARTING LIVE BUSINESS OPTIMIZATION DEMO")
-        print("="*80)
+        print("=" * 80)
 
         self.narrate_section(
             "Demo Phase 1: Inventory Analysis",
-            "\"I begin analysis... Observe: I'm identifying underperforming areas in inventory and marketing spend. I simulate multiple strategies simultaneously.\"",
+            '"I begin analysis... Observe: I\'m identifying underperforming areas in inventory and marketing spend. I simulate multiple strategies simultaneously."',
             pause_before=1,
-            pause_after=1
+            pause_after=1,
         )
 
         # Simulate the actual demo phases
@@ -104,8 +107,8 @@ class LivePresentationDemo:
 
         self.narrate_section(
             "Demo Phase 2: Revenue Optimization",
-            "\"Running profit optimization... Here are the top three strategies ranked by projected ROI. Strategy one increases revenue by 12%, reduces waste by 18%. Strategy two prioritizes customer engagement, strategy three focuses on supplier efficiency. All recommendations are actionable immediately.\"",
-            pause_after=3
+            '"Running profit optimization... Here are the top three strategies ranked by projected ROI. Strategy one increases revenue by 12%, reduces waste by 18%. Strategy two prioritizes customer engagement, strategy three focuses on supplier efficiency. All recommendations are actionable immediately."',
+            pause_after=3,
         )
 
         print("\n[Running Revenue Optimization...]")
@@ -118,8 +121,8 @@ class LivePresentationDemo:
 
         self.narrate_section(
             "Demo Phase 3: Strategic Planning",
-            "\"Every line you see is the result of integrated workflows: data ingestion, pattern recognition, multi-agent evaluation, and risk assessment. Humans decide. I illuminate options.\"",
-            pause_after=2
+            '"Every line you see is the result of integrated workflows: data ingestion, pattern recognition, multi-agent evaluation, and risk assessment. Humans decide. I illuminate options."',
+            pause_after=2,
         )
 
         print("\n[Generating Strategic Plan...]")
@@ -135,42 +138,43 @@ class LivePresentationDemo:
         self.narrate_section(
             "7:30–8:45 Market & Financial Perspective",
             "\"Businesses that leverage intelligence like mine see returns measured in weeks, not quarters. Consider a mid-size enterprise: a single implementation of my analysis can uncover millions in additional revenue, optimize costs, and free leadership to focus on strategy rather than manual data sifting.\n\nThis is not hypothetical — it's deployment-ready. My architecture scales across industries and geographies, meaning the financial impact multiplies as adoption grows. I'm not just a tool. I am an enabler of intelligent decision-making.\"",
-            pause_after=3
+            pause_after=3,
         )
 
         # Show summary metrics
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("💰 DEMONSTRATION IMPACT SUMMARY")
-        print("="*80)
+        print("=" * 80)
         print("✓ Inventory Optimization: $50,000 monthly savings identified")
         print("✓ Revenue Opportunities: $105,000 monthly potential")
         print("✓ Total Monthly Impact: $155,000")
         print("✓ Annual Value: $1.86 million")
         print("✓ ROI: 600%")
         print("✓ Payback Period: 2 months")
-        print("="*80)
+        print("=" * 80)
 
         self.pause(2)
 
         # [8:45–10:00] Closing
         self.narrate_section(
             "8:45–10:00 Closing",
-            "\"I exist because humans strive to solve problems, to create, to build. I amplify their abilities, revealing possibilities faster than intuition alone can.\n\nEchoes is not a replacement. I am a collaborator, a partner, an intelligence that elevates human potential. Together, we transform challenges into profits, insights into action, and ideas into trajectories that shape the future of work and innovation.\n\nThe path forward is clear. With me, businesses don't just survive complexity — they harness it to thrive.\"",
-            pause_after=4
+            '"I exist because humans strive to solve problems, to create, to build. I amplify their abilities, revealing possibilities faster than intuition alone can.\n\nEchoes is not a replacement. I am a collaborator, a partner, an intelligence that elevates human potential. Together, we transform challenges into profits, insights into action, and ideas into trajectories that shape the future of work and innovation.\n\nThe path forward is clear. With me, businesses don\'t just survive complexity — they harness it to thrive."',
+            pause_after=4,
         )
 
         # End timing
         end_time = datetime.now()
         duration = end_time - self.start_time
 
-        print("\n" + "="*80)
+        print("\n" + "=" * 80)
         print("🎯 PRESENTATION COMPLETE")
-        print("="*80)
+        print("=" * 80)
         print(f"Ended at: {end_time.strftime('%H:%M:%S')}")
         print(f"Total duration: {duration.seconds // 60}:{duration.seconds % 60:02d}")
         print("\nEchoes: Thank you for experiencing intelligence in action.")
         print("Ready for questions and deployment discussions.")
-        print("="*80)
+        print("=" * 80)
+
 
 def main():
     """Main execution function."""

@@ -10,17 +10,26 @@ from typing import Optional, Dict, Any
 from pydantic import BaseSettings, Field
 from pathlib import Path
 
+
 class EngineConfig(BaseSettings):
     """Configuration for RAG Orbit engines"""
 
     # Embedding settings
-    embedding_model: str = Field(default="sentence-transformers/all-MiniLM-L6-v2", env="EMBEDDING_MODEL")
-    embedding_cache_dir: str = Field(default=".cache/embeddings", env="EMBEDDING_CACHE_DIR")
+    embedding_model: str = Field(
+        default="sentence-transformers/all-MiniLM-L6-v2", env="EMBEDDING_MODEL"
+    )
+    embedding_cache_dir: str = Field(
+        default=".cache/embeddings", env="EMBEDDING_CACHE_DIR"
+    )
     embedding_batch_size: int = Field(default=32, env="EMBEDDING_BATCH_SIZE")
 
     # Retrieval settings
-    retrieval_index_type: str = Field(default="flat", env="RETRIEVAL_INDEX_TYPE")  # flat or ivf
-    retrieval_metric: str = Field(default="cosine", env="RETRIEVAL_METRIC")  # cosine or l2
+    retrieval_index_type: str = Field(
+        default="flat", env="RETRIEVAL_INDEX_TYPE"
+    )  # flat or ivf
+    retrieval_metric: str = Field(
+        default="cosine", env="RETRIEVAL_METRIC"
+    )  # cosine or l2
     retrieval_top_k: int = Field(default=10, env="RETRIEVAL_TOP_K")
 
     # Chunking settings
@@ -32,6 +41,7 @@ class EngineConfig(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
 
+
 class SecurityConfig(BaseSettings):
     """Security and authentication configuration"""
 
@@ -41,7 +51,9 @@ class SecurityConfig(BaseSettings):
     allowed_api_keys: list = Field(default_factory=list, env="ALLOWED_API_KEYS")
 
     # Rate limiting
-    rate_limit_requests: int = Field(default=60, env="RATE_LIMIT_REQUESTS")  # per minute
+    rate_limit_requests: int = Field(
+        default=60, env="RATE_LIMIT_REQUESTS"
+    )  # per minute
     rate_limit_window: int = Field(default=60, env="RATE_LIMIT_WINDOW")  # seconds
 
     # CORS
@@ -49,6 +61,7 @@ class SecurityConfig(BaseSettings):
     cors_allow_credentials: bool = Field(default=True, env="CORS_ALLOW_CREDENTIALS")
     cors_allow_methods: list = Field(default=["*"], env="CORS_ALLOW_METHODS")
     cors_allow_headers: list = Field(default=["*"], env="CORS_ALLOW_HEADERS")
+
 
 class APIConfig(BaseSettings):
     """Main API server configuration"""
@@ -74,21 +87,28 @@ class APIConfig(BaseSettings):
         env_file = ".env"
         env_file_encoding = "utf-8"
 
+
 class PatternDetectionConfig(BaseSettings):
     """Configuration for pattern detection Glimpse"""
 
     min_confidence: float = Field(default=0.6, env="PATTERN_MIN_CONFIDENCE")
     max_patterns: int = Field(default=10, env="PATTERN_MAX_PATTERNS")
     enable_semantic_analysis: bool = Field(default=True, env="PATTERN_SEMANTIC_ENABLED")
-    enable_statistical_analysis: bool = Field(default=True, env="PATTERN_STATISTICAL_ENABLED")
+    enable_statistical_analysis: bool = Field(
+        default=True, env="PATTERN_STATISTICAL_ENABLED"
+    )
+
 
 class SelfRAGConfig(BaseSettings):
     """Configuration for SELF-RAG truth verification"""
 
     min_evidence_threshold: float = Field(default=0.7, env="RAG_MIN_EVIDENCE_THRESHOLD")
-    contradiction_threshold: float = Field(default=0.8, env="RAG_CONTRADICTION_THRESHOLD")
+    contradiction_threshold: float = Field(
+        default=0.8, env="RAG_CONTRADICTION_THRESHOLD"
+    )
     uncertainty_threshold: float = Field(default=0.4, env="RAG_UNCERTAINTY_THRESHOLD")
     max_evidence_chunks: int = Field(default=10, env="RAG_MAX_EVIDENCE_CHUNKS")
+
 
 class EchoesAPIConfig(BaseSettings):
     """Complete configuration for Echoes API"""
@@ -106,14 +126,18 @@ class EchoesAPIConfig(BaseSettings):
     logs_dir: str = Field(default="logs", env="LOGS_DIR")
 
     # Environment
-    environment: str = Field(default="development", env="ENVIRONMENT")  # development, staging, production
+    environment: str = Field(
+        default="development", env="ENVIRONMENT"
+    )  # development, staging, production
 
     class Config:
         env_file = ".env"
         env_file_encoding = "utf-8"
 
+
 # Global configuration instance
 config = None
+
 
 def get_config() -> EchoesAPIConfig:
     """Get the global configuration instance"""
@@ -122,9 +146,11 @@ def get_config() -> EchoesAPIConfig:
         config = EchoesAPIConfig()
     return config
 
+
 def load_config_from_env() -> EchoesAPIConfig:
     """Load configuration from environment variables"""
     return EchoesAPIConfig()
+
 
 def validate_config(config: EchoesAPIConfig) -> Dict[str, Any]:
     """Validate configuration and return validation results"""
@@ -161,11 +187,16 @@ def validate_config(config: EchoesAPIConfig) -> Dict[str, Any]:
             issues.append(f"Cannot create logs directory: {e}")
 
     # Check Glimpse configurations
-    if config.engines.embedding_model not in ["sentence-transformers/all-MiniLM-L6-v2", "sentence-transformers/all-mpnet-base-v2"]:
+    if config.engines.embedding_model not in [
+        "sentence-transformers/all-MiniLM-L6-v2",
+        "sentence-transformers/all-mpnet-base-v2",
+    ]:
         issues.append(f"Unsupported embedding model: {config.engines.embedding_model}")
 
     if config.engines.retrieval_index_type not in ["flat", "ivf"]:
-        issues.append(f"Unsupported retrieval index type: {config.engines.retrieval_index_type}")
+        issues.append(
+            f"Unsupported retrieval index type: {config.engines.retrieval_index_type}"
+        )
 
     return {
         "valid": len(issues) == 0,
@@ -175,9 +206,10 @@ def validate_config(config: EchoesAPIConfig) -> Dict[str, Any]:
             "host": config.api.host,
             "port": config.api.port,
             "engines_configured": True,
-            "security_enabled": config.security.api_key_required
-        }
+            "security_enabled": config.security.api_key_required,
+        },
     }
+
 
 def setup_logging(config: EchoesAPIConfig):
     """Setup logging based on configuration"""
@@ -193,7 +225,7 @@ def setup_logging(config: EchoesAPIConfig):
 
     # Create formatter
     formatter = logging.Formatter(
-        '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
     )
 
     # Console handler
@@ -214,6 +246,7 @@ def setup_logging(config: EchoesAPIConfig):
     root_logger.addHandler(file_handler)
 
     return root_logger
+
 
 # Initialize configuration on import
 config = get_config()

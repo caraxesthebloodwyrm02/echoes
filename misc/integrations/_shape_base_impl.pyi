@@ -203,7 +203,9 @@ def kron(a: _ArrayLikeInt_co, b: _ArrayLikeInt_co) -> NDArray[signedinteger]: ..
 @overload
 def kron(a: _ArrayLikeFloat_co, b: _ArrayLikeFloat_co) -> NDArray[floating]: ...  # type: ignore[misc]
 @overload
-def kron(a: _ArrayLikeComplex_co, b: _ArrayLikeComplex_co) -> NDArray[complexfloating]: ...
+def kron(
+    a: _ArrayLikeComplex_co, b: _ArrayLikeComplex_co
+) -> NDArray[complexfloating]: ...
 @overload
 def kron(a: _ArrayLikeObject_co, b: Any) -> NDArray[object_]: ...
 @overload

@@ -19,6 +19,7 @@ from .base import BaseTool, ToolResult
 @dataclass
 class ROIMetrics:
     """Core ROI calculation results."""
+
     monthly_investment: float
     monthly_savings: float
     net_monthly_benefit: float
@@ -32,6 +33,7 @@ class ROIMetrics:
 @dataclass
 class StakeholderConfig:
     """Stakeholder-specific configuration."""
+
     institution_name: str
     email_subject: str
     email_to: List[str]
@@ -57,7 +59,7 @@ class ROIAnalysisTool(BaseTool):
     def __init__(self) -> None:
         super().__init__(
             "generate_roi_analysis",
-            "Generate comprehensive ROI analysis with email configs, spreadsheets, and reports"
+            "Generate comprehensive ROI analysis with email configs, spreadsheets, and reports",
         )
 
         # Template storage
@@ -72,12 +74,12 @@ class ROIAnalysisTool(BaseTool):
                 "decision_deadline": "November 1, 2025",
                 "contract_duration": "12-month minimum",
                 "rollout_timeline": "4-6 weeks",
-                "meeting_request": "30-minute decision meeting - This week preferred"
+                "meeting_request": "30-minute decision meeting - This week preferred",
             },
             "stakeholder_priorities": {
                 "CFO": "Investment pays for itself in {payback_days} days - ${annual_net:,.0f} annual net benefit",
                 "CTO": "{error_reduction:.0f}% reduction in compliance errors with AI automation",
-                "CCO": "Automated audit trails eliminate manual review cycles"
+                "CCO": "Automated audit trails eliminate manual review cycles",
             },
             "executive_summary": """# Echoes AI ROI Analysis - Executive Summary
 
@@ -106,7 +108,7 @@ class ROIAnalysisTool(BaseTool):
 4. Begin rollout within {rollout_timeline}
 
 **Contact**: Sarah Chen, Echoes AI - sarah.chen@echoes.ai
-"""
+""",
         }
 
     def __call__(
@@ -115,7 +117,7 @@ class ROIAnalysisTool(BaseTool):
         analysis_data: Dict[str, Any],
         stakeholder_info: Dict[str, Any],
         output_formats: List[str] = None,
-        customization_level: str = "comprehensive"
+        customization_level: str = "comprehensive",
     ) -> ToolResult:
         """
         Generate comprehensive ROI analysis package.
@@ -135,7 +137,9 @@ class ROIAnalysisTool(BaseTool):
                 output_formats = ["yaml", "csv", "spreadsheet", "report"]
 
             # Phase 1: Data Validation & Preparation
-            validated_data = self._validate_and_process_data(analysis_data, stakeholder_info)
+            validated_data = self._validate_and_process_data(
+                analysis_data, stakeholder_info
+            )
 
             # Phase 2: Calculate Financial Metrics
             roi_metrics = self._calculate_financial_metrics(validated_data)
@@ -161,15 +165,19 @@ class ROIAnalysisTool(BaseTool):
                 "roi_metrics": asdict(roi_metrics),
                 "stakeholder_config": asdict(stakeholder_config),
                 "timestamp": datetime.now().isoformat(),
-                "file_count": len(generated_files)
+                "file_count": len(generated_files),
             }
 
             return ToolResult(success=True, data=result)
 
         except Exception as e:
-            return ToolResult(success=False, error=f"ROI analysis generation failed: {str(e)}")
+            return ToolResult(
+                success=False, error=f"ROI analysis generation failed: {str(e)}"
+            )
 
-    def _validate_and_process_data(self, analysis_data: Dict[str, Any], stakeholder_info: Dict[str, Any]) -> Dict[str, Any]:
+    def _validate_and_process_data(
+        self, analysis_data: Dict[str, Any], stakeholder_info: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Validate input data and apply business-specific adjustments."""
         # Extract core metrics with defaults
         validated = {
@@ -178,21 +186,27 @@ class ROIAnalysisTool(BaseTool):
             "team_size": int(analysis_data.get("team_size", 5)),
             "institution_name": stakeholder_info.get("institution_name", "Institution"),
             "email_to": stakeholder_info.get("email_to", []),
-            "business_type": analysis_data.get("business_type", "financial")
+            "business_type": analysis_data.get("business_type", "financial"),
         }
 
         # Calculate derived metrics
-        validated["net_monthly_benefit"] = validated["monthly_savings"] - validated["monthly_investment"]
+        validated["net_monthly_benefit"] = (
+            validated["monthly_savings"] - validated["monthly_investment"]
+        )
 
         # Calculate payback period (days)
         if validated["monthly_investment"] > 0:
-            validated["payback_days"] = (validated["monthly_investment"] / validated["monthly_savings"]) * 30
+            validated["payback_days"] = (
+                validated["monthly_investment"] / validated["monthly_savings"]
+            ) * 30
         else:
             validated["payback_days"] = 0
 
         # Calculate ROI percentage
         if validated["monthly_investment"] > 0:
-            validated["roi_percentage"] = (validated["net_monthly_benefit"] / validated["monthly_investment"]) * 100
+            validated["roi_percentage"] = (
+                validated["net_monthly_benefit"] / validated["monthly_investment"]
+            ) * 100
         else:
             validated["roi_percentage"] = 0
 
@@ -201,19 +215,21 @@ class ROIAnalysisTool(BaseTool):
             validated["savings_breakdown"] = {
                 "labor_efficiency": validated["monthly_savings"] * 0.205,  # 20.5%
                 "error_reduction": validated["monthly_savings"] * 0.783,  # 78.3%
-                "audit_preparation": validated["monthly_savings"] * 0.012   # 1.2%
+                "audit_preparation": validated["monthly_savings"] * 0.012,  # 1.2%
             }
         else:
             # Generic breakdown
             validated["savings_breakdown"] = {
                 "efficiency_gains": validated["monthly_savings"] * 0.6,
                 "error_reduction": validated["monthly_savings"] * 0.3,
-                "other_savings": validated["monthly_savings"] * 0.1
+                "other_savings": validated["monthly_savings"] * 0.1,
             }
 
         return validated
 
-    def _calculate_financial_metrics(self, validated_data: Dict[str, Any]) -> ROIMetrics:
+    def _calculate_financial_metrics(
+        self, validated_data: Dict[str, Any]
+    ) -> ROIMetrics:
         """Calculate comprehensive financial metrics."""
         monthly_investment = validated_data["monthly_investment"]
         monthly_savings = validated_data["monthly_savings"]
@@ -228,7 +244,7 @@ class ROIAnalysisTool(BaseTool):
             roi_percentage=validated_data["roi_percentage"],
             annual_net_benefit=net_monthly * 12,
             three_year_value=net_monthly * 12 * 3,
-            savings_breakdown=validated_data["savings_breakdown"]
+            savings_breakdown=validated_data["savings_breakdown"],
         )
 
     def _generate_stakeholder_config(
@@ -236,32 +252,44 @@ class ROIAnalysisTool(BaseTool):
         business_type: str,
         validated_data: Dict[str, Any],
         stakeholder_info: Dict[str, Any],
-        customization_level: str
+        customization_level: str,
     ) -> StakeholderConfig:
         """Generate stakeholder-specific configuration."""
         template = self.templates["email_config"]
 
         # Customize based on business type and level
         if business_type == "financial":
-            subject_template = "Echoes AI ROI Analysis - {payback_days}-Day Payback Opportunity"
+            subject_template = (
+                "Echoes AI ROI Analysis - {payback_days}-Day Payback Opportunity"
+            )
         else:
             subject_template = "Echoes AI ROI Analysis - Business Process Optimization"
 
-        email_subject = subject_template.format(payback_days=int(validated_data["payback_days"]))
+        email_subject = subject_template.format(
+            payback_days=int(validated_data["payback_days"])
+        )
 
         return StakeholderConfig(
             institution_name=validated_data["institution_name"],
             email_subject=email_subject,
-            email_to=validated_data["email_to"] if isinstance(validated_data["email_to"], list) else [validated_data["email_to"]],
+            email_to=(
+                validated_data["email_to"]
+                if isinstance(validated_data["email_to"], list)
+                else [validated_data["email_to"]]
+            ),
             email_from=template["email_from"],
             team_size=validated_data["team_size"],
             decision_deadline=template["decision_deadline"],
             contract_duration=template["contract_duration"],
             rollout_timeline=template["rollout_timeline"],
-            stakeholder_priorities=self._generate_stakeholder_priorities(validated_data)
+            stakeholder_priorities=self._generate_stakeholder_priorities(
+                validated_data
+            ),
         )
 
-    def _generate_stakeholder_priorities(self, validated_data: Dict[str, Any]) -> Dict[str, str]:
+    def _generate_stakeholder_priorities(
+        self, validated_data: Dict[str, Any]
+    ) -> Dict[str, str]:
         """Generate stakeholder-specific messaging."""
         priorities = {}
         templates = self.templates["stakeholder_priorities"]
@@ -270,8 +298,7 @@ class ROIAnalysisTool(BaseTool):
         error_reduction = 75  # Default, could be parameterized
 
         priorities["CFO"] = templates["CFO"].format(
-            payback_days=int(validated_data["payback_days"]),
-            annual_net=annual_net
+            payback_days=int(validated_data["payback_days"]), annual_net=annual_net
         )
         priorities["CTO"] = templates["CTO"].format(error_reduction=error_reduction)
         priorities["CCO"] = templates["CCO"]
@@ -283,17 +310,23 @@ class ROIAnalysisTool(BaseTool):
         format_type: str,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any]
+        validated_data: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Generate specific output format."""
         if format_type == "yaml":
-            return self._generate_yaml_config(stakeholder_config, roi_metrics, validated_data)
+            return self._generate_yaml_config(
+                stakeholder_config, roi_metrics, validated_data
+            )
         elif format_type == "csv":
             return self._generate_csv_data(roi_metrics, validated_data)
         elif format_type == "spreadsheet":
-            return self._generate_spreadsheet_data(roi_metrics, stakeholder_config, validated_data)
+            return self._generate_spreadsheet_data(
+                roi_metrics, stakeholder_config, validated_data
+            )
         elif format_type == "report":
-            return self._generate_executive_report(roi_metrics, stakeholder_config, validated_data)
+            return self._generate_executive_report(
+                roi_metrics, stakeholder_config, validated_data
+            )
         else:
             raise ValueError(f"Unsupported format: {format_type}")
 
@@ -301,7 +334,7 @@ class ROIAnalysisTool(BaseTool):
         self,
         stakeholder_config: StakeholderConfig,
         roi_metrics: ROIMetrics,
-        validated_data: Dict[str, Any]
+        validated_data: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Generate YAML configuration for stakeholder emails."""
         config = {
@@ -320,7 +353,7 @@ class ROIAnalysisTool(BaseTool):
             "rollout_timeline": stakeholder_config.rollout_timeline,
             "stakeholder_priorities": stakeholder_config.stakeholder_priorities,
             "savings_breakdown": roi_metrics.savings_breakdown,
-            "generated_at": datetime.now().isoformat()
+            "generated_at": datetime.now().isoformat(),
         }
 
         yaml_content = yaml.dump(config, default_flow_style=False, sort_keys=False)
@@ -328,39 +361,89 @@ class ROIAnalysisTool(BaseTool):
             "format": "yaml",
             "filename": f"roi_config_{stakeholder_config.institution_name.lower().replace(' ', '_')}.yaml",
             "content": yaml_content,
-            "size": len(yaml_content)
+            "size": len(yaml_content),
         }
 
-    def _generate_csv_data(self, roi_metrics: ROIMetrics, validated_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _generate_csv_data(
+        self, roi_metrics: ROIMetrics, validated_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Generate CSV data for analysis."""
         rows = []
 
         # Executive Summary
-        rows.extend([
-            ["Section", "Metric", "Value", "Glimpse", "Notes"],
-            ["Executive Summary", "Monthly Investment", roi_metrics.monthly_investment, "USD", "Fixed monthly cost"],
-            ["Executive Summary", "Monthly Savings", roi_metrics.monthly_savings, "USD", "Total operational savings"],
-            ["Executive Summary", "Net Monthly Benefit", roi_metrics.net_monthly_benefit, "USD", "After investment"],
-            ["Executive Summary", "Payback Period", roi_metrics.payback_days, "Days", "Time to break even"],
-            ["Executive Summary", "ROI Percentage", roi_metrics.roi_percentage, "%", "Return on investment"],
-            ["Executive Summary", "Annual Net Benefit", roi_metrics.annual_net_benefit, "USD", "Year 1 benefit"],
-            ["Executive Summary", "3-Year Value", roi_metrics.three_year_value, "USD", "Cumulative benefit"]
-        ])
+        rows.extend(
+            [
+                ["Section", "Metric", "Value", "Glimpse", "Notes"],
+                [
+                    "Executive Summary",
+                    "Monthly Investment",
+                    roi_metrics.monthly_investment,
+                    "USD",
+                    "Fixed monthly cost",
+                ],
+                [
+                    "Executive Summary",
+                    "Monthly Savings",
+                    roi_metrics.monthly_savings,
+                    "USD",
+                    "Total operational savings",
+                ],
+                [
+                    "Executive Summary",
+                    "Net Monthly Benefit",
+                    roi_metrics.net_monthly_benefit,
+                    "USD",
+                    "After investment",
+                ],
+                [
+                    "Executive Summary",
+                    "Payback Period",
+                    roi_metrics.payback_days,
+                    "Days",
+                    "Time to break even",
+                ],
+                [
+                    "Executive Summary",
+                    "ROI Percentage",
+                    roi_metrics.roi_percentage,
+                    "%",
+                    "Return on investment",
+                ],
+                [
+                    "Executive Summary",
+                    "Annual Net Benefit",
+                    roi_metrics.annual_net_benefit,
+                    "USD",
+                    "Year 1 benefit",
+                ],
+                [
+                    "Executive Summary",
+                    "3-Year Value",
+                    roi_metrics.three_year_value,
+                    "USD",
+                    "Cumulative benefit",
+                ],
+            ]
+        )
 
         # Savings Breakdown
         rows.append([])
-        rows.append(["Section", "Component", "Monthly Amount", "Annual Amount", "Percentage"])
+        rows.append(
+            ["Section", "Component", "Monthly Amount", "Annual Amount", "Percentage"]
+        )
         total_savings = roi_metrics.monthly_savings
         for component, amount in roi_metrics.savings_breakdown.items():
             annual_amount = amount * 12
             percentage = (amount / total_savings) * 100 if total_savings > 0 else 0
-            rows.append([
-                "Savings Breakdown",
-                component.replace("_", " ").title(),
-                amount,
-                annual_amount,
-                ".1f"
-            ])
+            rows.append(
+                [
+                    "Savings Breakdown",
+                    component.replace("_", " ").title(),
+                    amount,
+                    annual_amount,
+                    ".1f",
+                ]
+            )
 
         # Convert to CSV string
         output = []
@@ -373,14 +456,14 @@ class ROIAnalysisTool(BaseTool):
             "filename": f"roi_analysis_data_{validated_data['institution_name'].lower().replace(' ', '_')}.csv",
             "content": csv_content,
             "size": len(csv_content),
-            "rows": len(rows)
+            "rows": len(rows),
         }
 
     def _generate_spreadsheet_data(
         self,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any]
+        validated_data: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Generate spreadsheet-style CSV data."""
         sheets = {}
@@ -399,7 +482,7 @@ class ROIAnalysisTool(BaseTool):
             ["Payback Period", ".0f", "Time to break even"],
             ["ROI", ".0f", "Return on investment"],
             ["Annual Net Benefit", ".0f", "Year 1 benefit"],
-            ["3-Year Value", ".0f", "Cumulative benefit"]
+            ["3-Year Value", ".0f", "Cumulative benefit"],
         ]
 
         # Cash Flow Projections (12 months)
@@ -409,13 +492,15 @@ class ROIAnalysisTool(BaseTool):
         cumulative = 0
         for month in range(1, 13):
             cumulative += roi_metrics.net_monthly_benefit
-            cash_flow.append([
-                month,
-                roi_metrics.monthly_investment,
-                roi_metrics.monthly_savings,
-                roi_metrics.net_monthly_benefit,
-                cumulative
-            ])
+            cash_flow.append(
+                [
+                    month,
+                    roi_metrics.monthly_investment,
+                    roi_metrics.monthly_savings,
+                    roi_metrics.net_monthly_benefit,
+                    cumulative,
+                ]
+            )
 
         sheets["executive_dashboard"] = dashboard_data
         sheets["cash_flow_projections"] = cash_flow
@@ -432,14 +517,14 @@ class ROIAnalysisTool(BaseTool):
             "filename": f"roi_master_spreadsheet_{stakeholder_config.institution_name.lower().replace(' ', '_')}.csv",
             "content": csv_content,
             "size": len(csv_content),
-            "sheets": list(sheets.keys())
+            "sheets": list(sheets.keys()),
         }
 
     def _generate_executive_report(
         self,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any]
+        validated_data: Dict[str, Any],
     ) -> Dict[str, Any]:
         """Generate executive summary report."""
         # Format savings breakdown
@@ -448,7 +533,9 @@ class ROIAnalysisTool(BaseTool):
         for component, amount in roi_metrics.savings_breakdown.items():
             annual = amount * 12
             percentage = (amount / total_savings) * 100 if total_savings > 0 else 0
-            breakdown_lines.append(f"- {component.replace('_', ' ').title()}: ${amount:,.0f}/month (${annual:,.0f}/year, {percentage:.1f}%)")
+            breakdown_lines.append(
+                f"- {component.replace('_', ' ').title()}: ${amount:,.0f}/month (${annual:,.0f}/year, {percentage:.1f}%)"
+            )
         breakdown_text = "\n".join(breakdown_lines)
 
         # Fill template
@@ -464,14 +551,14 @@ class ROIAnalysisTool(BaseTool):
             three_year_value=roi_metrics.three_year_value,
             breakdown_text=breakdown_text,
             decision_deadline=stakeholder_config.decision_deadline,
-            rollout_timeline=stakeholder_config.rollout_timeline
+            rollout_timeline=stakeholder_config.rollout_timeline,
         )
 
         return {
             "format": "report",
             "filename": f"roi_executive_summary_{stakeholder_config.institution_name.lower().replace(' ', '_')}.md",
             "content": report_content,
-            "size": len(report_content)
+            "size": len(report_content),
         }
 
     def to_openai_schema(self) -> Dict[str, Any]:
@@ -486,46 +573,67 @@ class ROIAnalysisTool(BaseTool):
                     "properties": {
                         "business_type": {
                             "type": "string",
-                            "enum": ["financial", "healthcare", "manufacturing", "retail", "other"],
+                            "enum": [
+                                "financial",
+                                "healthcare",
+                                "manufacturing",
+                                "retail",
+                                "other",
+                            ],
                             "description": "Type of business or industry",
                         },
                         "analysis_data": {
                             "type": "object",
                             "description": "Core business metrics and parameters",
                             "properties": {
-                                "monthly_investment": {"type": "number", "description": "Monthly investment amount"},
-                                "monthly_savings": {"type": "number", "description": "Expected monthly savings"},
-                                "team_size": {"type": "integer", "description": "Number of team members affected"}
+                                "monthly_investment": {
+                                    "type": "number",
+                                    "description": "Monthly investment amount",
+                                },
+                                "monthly_savings": {
+                                    "type": "number",
+                                    "description": "Expected monthly savings",
+                                },
+                                "team_size": {
+                                    "type": "integer",
+                                    "description": "Number of team members affected",
+                                },
                             },
-                            "required": ["monthly_investment", "monthly_savings"]
+                            "required": ["monthly_investment", "monthly_savings"],
                         },
                         "stakeholder_info": {
                             "type": "object",
                             "description": "Information about stakeholders and institution",
                             "properties": {
-                                "institution_name": {"type": "string", "description": "Name of the institution"},
+                                "institution_name": {
+                                    "type": "string",
+                                    "description": "Name of the institution",
+                                },
                                 "email_to": {
                                     "type": "array",
                                     "items": {"type": "string"},
-                                    "description": "List of stakeholder email addresses"
-                                }
+                                    "description": "List of stakeholder email addresses",
+                                },
                             },
-                            "required": ["institution_name"]
+                            "required": ["institution_name"],
                         },
                         "output_formats": {
                             "type": "array",
-                            "items": {"type": "string", "enum": ["yaml", "csv", "spreadsheet", "report"]},
+                            "items": {
+                                "type": "string",
+                                "enum": ["yaml", "csv", "spreadsheet", "report"],
+                            },
                             "description": "Desired output formats",
-                            "default": ["yaml", "csv", "spreadsheet", "report"]
+                            "default": ["yaml", "csv", "spreadsheet", "report"],
                         },
                         "customization_level": {
                             "type": "string",
                             "enum": ["basic", "standard", "comprehensive"],
                             "description": "Level of customization",
-                            "default": "comprehensive"
-                        }
+                            "default": "comprehensive",
+                        },
                     },
-                    "required": ["business_type", "analysis_data", "stakeholder_info"]
-                }
-            }
+                    "required": ["business_type", "analysis_data", "stakeholder_info"],
+                },
+            },
         }

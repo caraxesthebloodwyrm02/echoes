@@ -18,6 +18,7 @@ from .impact_analytics_connector import ImpactAnalyticsConnector, ImpactMetrics
 
 logger = logging.getLogger(__name__)
 
+
 class TurboBridge:
     """Unified bridge for cross-platform research integration."""
 
@@ -26,13 +27,15 @@ class TurboBridge:
         self.platforms = {}
 
         # Initialize IMPACT_ANALYTICS connection
-        self.platforms['impact_analytics'] = ImpactAnalyticsConnector()
+        self.platforms["impact_analytics"] = ImpactAnalyticsConnector()
 
         # Initialize other platforms with graceful fallback
         self._init_glimpse_preview()
         self._init_turbo_bookshelf()
 
-        logger.info(f"TurboBridge initialized with platforms: {list(self.platforms.keys())}")
+        logger.info(
+            f"TurboBridge initialized with platforms: {list(self.platforms.keys())}"
+        )
 
     def _init_glimpse_preview(self):
         """Initialize GlimpsePreview connection."""
@@ -42,7 +45,9 @@ class TurboBridge:
                 if str(glimpse_path) not in sys.path:
                     sys.path.insert(0, str(glimpse_path))
                 # Import would go here if available
-                self.platforms['glimpse_preview'] = "GlimpsePreview connection placeholder"
+                self.platforms["glimpse_preview"] = (
+                    "GlimpsePreview connection placeholder"
+                )
                 logger.info("GlimpsePreview platform detected")
             else:
                 logger.debug("GlimpsePreview platform not found")
@@ -57,7 +62,9 @@ class TurboBridge:
                 if str(bookshelf_path) not in sys.path:
                     sys.path.insert(0, str(bookshelf_path))
                 # Import would go here if available
-                self.platforms['turbo_bookshelf'] = "TurboBookshelf connection placeholder"
+                self.platforms["turbo_bookshelf"] = (
+                    "TurboBookshelf connection placeholder"
+                )
                 logger.info("TurboBookshelf platform detected")
             else:
                 logger.debug("TurboBookshelf platform not found")
@@ -97,13 +104,13 @@ class TurboBridge:
         results = {
             "platforms_connected": self.get_connected_platforms(),
             "analysis_results": {},
-            "errors": []
+            "errors": [],
         }
 
         # IMPACT_ANALYTICS analysis
-        if self.is_platform_connected('impact_analytics'):
+        if self.is_platform_connected("impact_analytics"):
             try:
-                impact_connector = self.platforms['impact_analytics']
+                impact_connector = self.platforms["impact_analytics"]
 
                 # Get current metrics
                 metrics = impact_connector.get_metrics()
@@ -113,109 +120,124 @@ class TurboBridge:
                         "safety_score": metrics.safety_score,
                         "bias_reduction_index": metrics.bias_reduction_index,
                         "total_evaluations": metrics.total_evaluations,
-                        "recent_milestones": metrics.recent_milestones
-                    }
+                        "recent_milestones": metrics.recent_milestones,
+                    },
                 }
 
                 # If text provided, record as evaluation (if it looks like an evaluation)
                 if "text" in request and len(request["text"]) > 0:
                     # This is a simplified example - in practice, you'd need actual safety scoring
-                    logger.debug("IMPACT_ANALYTICS: Text analysis requested but safety scoring not implemented")
+                    logger.debug(
+                        "IMPACT_ANALYTICS: Text analysis requested but safety scoring not implemented"
+                    )
 
             except Exception as e:
                 results["errors"].append(f"IMPACT_ANALYTICS error: {e}")
-                results["analysis_results"]["impact_analytics"] = {"connected": False, "error": str(e)}
+                results["analysis_results"]["impact_analytics"] = {
+                    "connected": False,
+                    "error": str(e),
+                }
 
         # Placeholder for other platforms
-        for platform in ['glimpse_preview', 'turbo_bookshelf']:
+        for platform in ["glimpse_preview", "turbo_bookshelf"]:
             if platform in self.platforms and self.platforms[platform] is not None:
                 results["analysis_results"][platform] = {
                     "connected": True,
-                    "status": "Platform detected but integration not fully implemented"
+                    "status": "Platform detected but integration not fully implemented",
                 }
 
         return results
 
-    def record_evaluation(self,
-                         prompt: str,
-                         response: str,
-                         safety_score: float,
-                         bias_analysis: Dict[str, Any],
-                         metadata: Optional[Dict[str, Any]] = None) -> bool:
+    def record_evaluation(
+        self,
+        prompt: str,
+        response: str,
+        safety_score: float,
+        bias_analysis: Dict[str, Any],
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> bool:
         """Record an AI safety evaluation in IMPACT_ANALYTICS."""
-        if not self.is_platform_connected('impact_analytics'):
+        if not self.is_platform_connected("impact_analytics"):
             return False
 
-        return self.platforms['impact_analytics'].record_evaluation(
+        return self.platforms["impact_analytics"].record_evaluation(
             prompt, response, safety_score, bias_analysis, metadata
         )
 
-    def record_milestone(self,
-                        milestone_name: str,
-                        completion_percentage: float,
-                        category: str = "research",
-                        metadata: Optional[Dict[str, Any]] = None) -> bool:
+    def record_milestone(
+        self,
+        milestone_name: str,
+        completion_percentage: float,
+        category: str = "research",
+        metadata: Optional[Dict[str, Any]] = None,
+    ) -> bool:
         """Record a research milestone in IMPACT_ANALYTICS."""
-        if not self.is_platform_connected('impact_analytics'):
+        if not self.is_platform_connected("impact_analytics"):
             return False
 
-        return self.platforms['impact_analytics'].record_milestone(
+        return self.platforms["impact_analytics"].record_milestone(
             milestone_name, completion_percentage, category, metadata
         )
 
     def get_impact_metrics(self) -> ImpactMetrics:
         """Get current IMPACT_ANALYTICS metrics."""
-        if not self.is_platform_connected('impact_analytics'):
+        if not self.is_platform_connected("impact_analytics"):
             return ImpactMetrics(error="IMPACT_ANALYTICS not connected")
 
-        return self.platforms['impact_analytics'].get_metrics()
+        return self.platforms["impact_analytics"].get_metrics()
 
     def generate_impact_report(self) -> Optional[str]:
         """Generate IMPACT_ANALYTICS workflow report."""
-        if not self.is_platform_connected('impact_analytics'):
+        if not self.is_platform_connected("impact_analytics"):
             return None
 
-        return self.platforms['impact_analytics'].generate_report()
+        return self.platforms["impact_analytics"].generate_report()
 
     def health_check(self) -> Dict[str, Any]:
         """Perform health check on all platforms."""
         health = {
             "overall_status": "healthy",
             "platform_health": {},
-            "timestamp": "auto"
+            "timestamp": "auto",
         }
 
         for platform, connector in self.platforms.items():
             try:
                 if isinstance(connector, ImpactAnalyticsConnector):
                     health["platform_health"][platform] = {
-                        "status": "connected" if connector.is_connected() else "disconnected",
-                        "type": "impact_analytics"
+                        "status": (
+                            "connected" if connector.is_connected() else "disconnected"
+                        ),
+                        "type": "impact_analytics",
                     }
                 else:
                     health["platform_health"][platform] = {
                         "status": "detected" if connector is not None else "not_found",
-                        "type": "placeholder"
+                        "type": "placeholder",
                     }
             except Exception as e:
                 health["platform_health"][platform] = {
                     "status": "error",
-                    "error": str(e)
+                    "error": str(e),
                 }
                 health["overall_status"] = "degraded"
 
         return health
 
+
 # Global instance
 turbo_bridge = TurboBridge()
+
 
 def create_bridge() -> TurboBridge:
     """Create and return a new TurboBridge instance."""
     return TurboBridge()
 
+
 def unified_analysis(request: Dict[str, Any]) -> Dict[str, Any]:
     """Convenience function for unified analysis."""
     return turbo_bridge.unified_analysis(request)
+
 
 def get_bridge_health() -> Dict[str, Any]:
     """Convenience function to check bridge health."""

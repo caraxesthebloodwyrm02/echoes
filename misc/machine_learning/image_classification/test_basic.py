@@ -18,32 +18,38 @@ from pathlib import Path
 # Add the parent directory to Python path so we can import machine_learning
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
 
+
 def test_import():
     """Test that the module can be imported."""
     try:
         from machine_learning.image_classification import ImageClassifier
+
         print("✓ Module import successful")
         return True
     except ImportError as e:
         print(f"✗ Import failed: {e}")
         return False
 
+
 def test_classifier_initialization():
     """Test that classifier can be initialized."""
     try:
         from machine_learning.image_classification import ImageClassifier
-        classifier = ImageClassifier(model_type='custom_cnn', num_classes=10)
+
+        classifier = ImageClassifier(model_type="custom_cnn", num_classes=10)
         print("✓ Classifier initialization successful")
         return True
     except Exception as e:
         print(f"✗ Classifier initialization failed: {e}")
         return False
 
+
 def test_model_building():
     """Test that model can be built."""
     try:
         from machine_learning.image_classification import ImageClassifier
-        classifier = ImageClassifier(model_type='custom_cnn', num_classes=10)
+
+        classifier = ImageClassifier(model_type="custom_cnn", num_classes=10)
         model = classifier.build_model()
         print("✓ Model building successful")
         return True
@@ -51,10 +57,12 @@ def test_model_building():
         print(f"✗ Model building failed: {e}")
         return False
 
+
 def test_dataset_loading():
     """Test that dataset loading works (without actually downloading)."""
     try:
         from machine_learning.image_classification import ImageClassifier
+
         classifier = ImageClassifier()
         # Just test that the method exists and doesn't crash immediately
         print("✓ Dataset loading method available")
@@ -62,6 +70,7 @@ def test_dataset_loading():
     except Exception as e:
         print(f"✗ Dataset loading test failed: {e}")
         return False
+
 
 def main():
     print("Testing Image Classification System")
@@ -88,11 +97,18 @@ def main():
     if passed == total:
         print("✓ All tests passed! Image classification system is ready.")
         print("\nNext steps:")
-        print("  - Run full training: python machine_learning/image_classification/quick_start.py")
-        print("  - Train custom model: python -m machine_learning.image_classification.train --help")
-        print("  - Evaluate model: python -m machine_learning.image_classification.evaluate --help")
+        print(
+            "  - Run full training: python machine_learning/image_classification/quick_start.py"
+        )
+        print(
+            "  - Train custom model: python -m machine_learning.image_classification.train --help"
+        )
+        print(
+            "  - Evaluate model: python -m machine_learning.image_classification.evaluate --help"
+        )
     else:
         print("✗ Some tests failed. Check the output above.")
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

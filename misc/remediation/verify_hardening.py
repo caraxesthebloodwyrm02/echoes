@@ -80,7 +80,9 @@ def test_audit_results():
 
     deps = len(data.get("dependencies", []))
     vulns = [d for d in data.get("dependencies", []) if d.get("vulns", [])]
-    print(f"✓ pip-audit scanned {deps} packages, found {len(vulns)} with vulnerabilities")
+    print(
+        f"✓ pip-audit scanned {deps} packages, found {len(vulns)} with vulnerabilities"
+    )
     return True
 
 

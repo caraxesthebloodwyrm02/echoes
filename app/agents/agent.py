@@ -20,7 +20,10 @@ class Agent:
             self.history.add_message("user", user_input)
 
             # Prepare messages for API
-            messages = [{"role": "system", "content": self.config.instructions}, *self.history.get_messages_for_api()]
+            messages = [
+                {"role": "system", "content": self.config.instructions},
+                *self.history.get_messages_for_api(),
+            ]
 
             # Get response from OpenAI directly (no wrapper)
             client = openai.AsyncOpenAI()

@@ -19,6 +19,7 @@ logger = logging.getLogger(__name__)
 @dataclass
 class SignalParameters:
     """Parameters for signal processing across channels."""
+
     amplitude: float = 1.0
     frequency: float = 1.0
     phase: float = 0.0
@@ -31,6 +32,7 @@ class SignalParameters:
 @dataclass
 class ChannelFlow:
     """Represents a signal flow in a processing channel."""
+
     channel_id: str
     modality: str
     signal_data: np.ndarray
@@ -48,8 +50,9 @@ class BalancedSineProcessor:
         self.base_frequency = base_frequency
         self.balance_factor = balance_factor  # 0-1, controls sine wave balance
 
-    def generate_balanced_sine(self, time_points: np.ndarray,
-                             params: SignalParameters) -> np.ndarray:
+    def generate_balanced_sine(
+        self, time_points: np.ndarray, params: SignalParameters
+    ) -> np.ndarray:
         """
         Generate a balanced sine wave with controlled harmonics.
 
@@ -70,10 +73,9 @@ class BalancedSineProcessor:
         )
 
         # Balanced combination
-        balanced_signal = (
-            self.balance_factor * fundamental +
-            (1 - self.balance_factor) * (harmonic1 + harmonic2)
-        )
+        balanced_signal = self.balance_factor * fundamental + (
+            1 - self.balance_factor
+        ) * (harmonic1 + harmonic2)
 
         # Apply damping
         damping_envelope = np.exp(-params.damping * time_points)
@@ -86,8 +88,9 @@ class BalancedSineProcessor:
 
         return balanced_signal
 
-    def smooth_flow_transition(self, signal1: np.ndarray, signal2: np.ndarray,
-                             transition_points: int = 100) -> np.ndarray:
+    def smooth_flow_transition(
+        self, signal1: np.ndarray, signal2: np.ndarray, transition_points: int = 100
+    ) -> np.ndarray:
         """
         Create smooth transition between two signals using balanced sine modulation.
         """
@@ -99,17 +102,26 @@ class BalancedSineProcessor:
         sine_weights = (np.sin(transition_window) + 1) / 2  # 0 to 1
 
         # Apply smooth transition
-        transition_region = (
-            (1 - sine_weights) * signal1[-transition_points:] +
-            sine_weights * signal2[:transition_points]
-        )
+        transition_region = (1 - sine_weights) * signal1[
+            -transition_points:
+        ] + sine_weights * signal2[:transition_points]
 
         # Combine signals with smooth flow
-        result = np.concatenate([
-            signal1[:-transition_points] if len(signal1) > transition_points else signal1,
-            transition_region,
-            signal2[transition_points:] if len(signal2) > transition_points else signal2
-        ])
+        result = np.concatenate(
+            [
+                (
+                    signal1[:-transition_points]
+                    if len(signal1) > transition_points
+                    else signal1
+                ),
+                transition_region,
+                (
+                    signal2[transition_points:]
+                    if len(signal2) > transition_points
+                    else signal2
+                ),
+            ]
+        )
 
         return result
 
@@ -125,8 +137,9 @@ class CrossChannelParser:
         self.sine_processor = BalancedSineProcessor()
         self.flow_history: List[Dict[str, Any]] = []
 
-    def add_channel(self, channel_id: str, modality: str,
-                   initial_data: np.ndarray = None) -> ChannelFlow:
+    def add_channel(
+        self, channel_id: str, modality: str, initial_data: np.ndarray = None
+    ) -> ChannelFlow:
         """
         Add a new processing channel for a specific modality.
         """
@@ -138,7 +151,7 @@ class CrossChannelParser:
             modality=modality,
             signal_data=initial_data,
             parameters=SignalParameters(),
-            flow_state={'active': True, 'phase': 0.0, 'energy': 0.0}
+            flow_state={"active": True, "phase": 0.0, "energy": 0.0},
         )
 
         self.channels[channel_id] = channel
@@ -146,8 +159,7 @@ class CrossChannelParser:
 
         return channel
 
-    def update_channel_parameters(self, channel_id: str,
-                                **param_updates) -> bool:
+    def update_channel_parameters(self, channel_id: str, **param_updates) -> bool:
         """
         Update signal processing parameters for a channel.
         """
@@ -166,9 +178,9 @@ class CrossChannelParser:
 
         return True
 
-    def process_channel_signal(self, channel_id: str,
-                             new_data: np.ndarray,
-                             smooth_transition: bool = True) -> np.ndarray:
+    def process_channel_signal(
+        self, channel_id: str, new_data: np.ndarray, smooth_transition: bool = True
+    ) -> np.ndarray:
         """
         Process new signal data for a channel with smooth flow integration.
         """
@@ -179,8 +191,9 @@ class CrossChannelParser:
         channel = self.channels[channel_id]
 
         # Generate time points for balanced sine processing
-        time_points = np.linspace(0, len(new_data) / channel.parameters.sampling_rate,
-                                len(new_data))
+        time_points = np.linspace(
+            0, len(new_data) / channel.parameters.sampling_rate, len(new_data)
+        )
 
         # Apply balanced sine transformation
         processed_signal = self.sine_processor.generate_balanced_sine(
@@ -196,14 +209,16 @@ class CrossChannelParser:
                 new_data_norm = new_data
 
             if np.max(np.abs(processed_signal)) > 0:
-                processed_signal_norm = processed_signal / np.max(np.abs(processed_signal))
+                processed_signal_norm = processed_signal / np.max(
+                    np.abs(processed_signal)
+                )
             else:
                 processed_signal_norm = processed_signal
 
             # Balanced combination
             processed_signal = (
-                self.sine_processor.balance_factor * new_data_norm +
-                (1 - self.sine_processor.balance_factor) * processed_signal_norm
+                self.sine_processor.balance_factor * new_data_norm
+                + (1 - self.sine_processor.balance_factor) * processed_signal_norm
             )
 
         # Apply smooth flow transition if requested
@@ -216,20 +231,25 @@ class CrossChannelParser:
 
         # Update channel state
         channel.signal_data = combined_signal
-        channel.flow_state['energy'] = np.mean(np.abs(combined_signal))
-        channel.flow_state['phase'] += 0.1  # Incremental phase advance
+        channel.flow_state["energy"] = np.mean(np.abs(combined_signal))
+        channel.flow_state["phase"] += 0.1  # Incremental phase advance
 
         # Record flow event
-        self._record_flow_event(channel_id, 'signal_processed', {
-            'data_points': len(new_data),
-            'energy_level': channel.flow_state['energy'],
-            'smooth_transition': smooth_transition
-        })
+        self._record_flow_event(
+            channel_id,
+            "signal_processed",
+            {
+                "data_points": len(new_data),
+                "energy_level": channel.flow_state["energy"],
+                "smooth_transition": smooth_transition,
+            },
+        )
 
         return combined_signal
 
-    def cross_channel_fusion(self, channel_ids: List[str],
-                           fusion_method: str = 'balanced_sine') -> np.ndarray:
+    def cross_channel_fusion(
+        self, channel_ids: List[str], fusion_method: str = "balanced_sine"
+    ) -> np.ndarray:
         """
         Fuse signals from multiple channels using parameterized processing.
         """
@@ -245,11 +265,11 @@ class CrossChannelParser:
         if not signals:
             return np.array([])
 
-        if fusion_method == 'balanced_sine':
+        if fusion_method == "balanced_sine":
             return self._balanced_sine_fusion(signals)
-        elif fusion_method == 'phase_aligned':
+        elif fusion_method == "phase_aligned":
             return self._phase_aligned_fusion(signals)
-        elif fusion_method == 'energy_weighted':
+        elif fusion_method == "energy_weighted":
             return self._energy_weighted_fusion(signals)
         else:
             # Default to simple averaging
@@ -281,7 +301,7 @@ class CrossChannelParser:
             phase_offset = (2 * np.pi * i) / len(signals)
             modulation = self.sine_processor.generate_balanced_sine(
                 time_points,
-                SignalParameters(frequency=1.0, phase=phase_offset, amplitude=0.5)
+                SignalParameters(frequency=1.0, phase=phase_offset, amplitude=0.5),
             )
             modulations.append(modulation)
 
@@ -310,7 +330,7 @@ class CrossChannelParser:
 
         for signal in signals[1:]:
             # Compute cross-correlation for alignment
-            correlation = signal.correlate(reference, signal, mode='full')
+            correlation = signal.correlate(reference, signal, mode="full")
             max_corr_idx = np.argmax(np.abs(correlation))
 
             # Calculate lag
@@ -335,7 +355,7 @@ class CrossChannelParser:
             return signals[0]
 
         # Calculate energy weights
-        energies = [np.sum(signal ** 2) for signal in signals]
+        energies = [np.sum(signal**2) for signal in signals]
         total_energy = sum(energies)
 
         if total_energy == 0:
@@ -364,32 +384,33 @@ class CrossChannelParser:
 
         channel = self.channels[channel_id]
         return {
-            'channel_id': channel_id,
-            'modality': channel.modality,
-            'signal_length': len(channel.signal_data),
-            'energy_level': channel.flow_state.get('energy', 0.0),
-            'phase': channel.flow_state.get('phase', 0.0),
-            'parameters': {
-                'amplitude': channel.parameters.amplitude,
-                'frequency': channel.parameters.frequency,
-                'phase': channel.parameters.phase,
-                'damping': channel.parameters.damping,
-                'noise_level': channel.parameters.noise_level
-            }
+            "channel_id": channel_id,
+            "modality": channel.modality,
+            "signal_length": len(channel.signal_data),
+            "energy_level": channel.flow_state.get("energy", 0.0),
+            "phase": channel.flow_state.get("phase", 0.0),
+            "parameters": {
+                "amplitude": channel.parameters.amplitude,
+                "frequency": channel.parameters.frequency,
+                "phase": channel.parameters.phase,
+                "damping": channel.parameters.damping,
+                "noise_level": channel.parameters.noise_level,
+            },
         }
 
     def get_flow_history(self, limit: int = 10) -> List[Dict[str, Any]]:
         """Get recent flow processing history."""
         return self.flow_history[-limit:] if self.flow_history else []
 
-    def _record_flow_event(self, channel_id: str, event_type: str,
-                          details: Dict[str, Any]):
+    def _record_flow_event(
+        self, channel_id: str, event_type: str, details: Dict[str, Any]
+    ):
         """Record a flow processing event."""
         event = {
-            'timestamp': np.datetime64('now'),
-            'channel_id': channel_id,
-            'event_type': event_type,
-            'details': details
+            "timestamp": np.datetime64("now"),
+            "channel_id": channel_id,
+            "event_type": event_type,
+            "details": details,
         }
         self.flow_history.append(event)
 

@@ -633,7 +633,9 @@ class _PyFunc_Nin2_Nout1(ufunc, Generic[_ReturnType_co, _IDType]):  # type: igno
         out: NDArray[Any] | tuple[NDArray[Any]] | None = ...,
         **kwargs: Unpack[_PyFunc_Kwargs_Nargs3],
     ) -> Any: ...
-    def at(self, a: _SupportsArrayUFunc, ixs: _ArrayLikeInt_co, b: ArrayLike, /) -> None: ...
+    def at(
+        self, a: _SupportsArrayUFunc, ixs: _ArrayLikeInt_co, b: ArrayLike, /
+    ) -> None: ...
     @overload
     def reduce(
         self,

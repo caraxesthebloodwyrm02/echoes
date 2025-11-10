@@ -19,6 +19,7 @@ from openai import OpenAI
 import asyncio
 from datetime import datetime
 
+
 class DirectRAGSystem:
     """
     Pure RAG system using only OpenAI API calls.
@@ -80,7 +81,9 @@ class DirectRAGSystem:
         print(f"✅ Document added: {doc_id} ({len(text)} chars)")
         return doc_id
 
-    def add_documents(self, texts: List[str], metadatas: Optional[List[Dict[str, Any]]] = None) -> List[str]:
+    def add_documents(
+        self, texts: List[str], metadatas: Optional[List[Dict[str, Any]]] = None
+    ) -> List[str]:
         """Add multiple documents."""
         doc_ids = []
         metadatas = metadatas or [{}] * len(texts)
@@ -122,17 +125,21 @@ class DirectRAGSystem:
         results = []
         for idx in top_indices:
             if similarities[idx] > 0.1:  # Minimum similarity threshold
-                results.append({
-                    "content": self.documents[idx],
-                    "metadata": self.metadata[idx],
-                    "score": float(similarities[idx]),
-                    "rank": len(results) + 1
-                })
+                results.append(
+                    {
+                        "content": self.documents[idx],
+                        "metadata": self.metadata[idx],
+                        "score": float(similarities[idx]),
+                        "rank": len(results) + 1,
+                    }
+                )
 
         print(f"🔍 Search completed: {len(results)} results for query")
         return results
 
-    def generate_response(self, query: str, context_docs: Optional[List[Dict[str, Any]]] = None) -> str:
+    def generate_response(
+        self, query: str, context_docs: Optional[List[Dict[str, Any]]] = None
+    ) -> str:
         """
         Generate response using retrieved context via direct OpenAI API calls.
 
@@ -165,11 +172,14 @@ Based on the context provided above, please provide a comprehensive and accurate
             response = self.client.chat.completions.create(
                 model=self.completion_model,
                 messages=[
-                    {"role": "system", "content": "You are a helpful AI assistant with access to retrieved context."},
-                    {"role": "user", "content": prompt}
+                    {
+                        "role": "system",
+                        "content": "You are a helpful AI assistant with access to retrieved context.",
+                    },
+                    {"role": "user", "content": prompt},
                 ],
                 max_tokens=self.max_tokens,
-                temperature=self.temperature
+                temperature=self.temperature,
             )
 
             generated_response = response.choices[0].message.content
@@ -187,8 +197,7 @@ Based on the context provided above, please provide a comprehensive and accurate
 
         try:
             response = self.client.embeddings.create(
-                model=self.embedding_model,
-                input=truncated_text
+                model=self.embedding_model, input=truncated_text
             )
             return response.data[0].embedding
         except Exception as e:
@@ -196,7 +205,9 @@ Based on the context provided above, please provide a comprehensive and accurate
             # Return zero vector as fallback
             return [0.0] * 1536  # text-embedding-3-small dimension
 
-    def _calculate_similarities(self, query_embedding: List[float], doc_embeddings: List[List[float]]) -> np.ndarray:
+    def _calculate_similarities(
+        self, query_embedding: List[float], doc_embeddings: List[List[float]]
+    ) -> np.ndarray:
         """Calculate cosine similarities between query and documents."""
         query_vec = np.array(query_embedding)
         doc_matrix = np.array(doc_embeddings)
@@ -219,9 +230,11 @@ Based on the context provided above, please provide a comprehensive and accurate
 
         formatted_docs = []
         for i, doc in enumerate(context_docs, 1):
-            content = doc.get('content', '')[:1000]  # Limit context length
-            score = doc.get('score', 0)
-            formatted_docs.append(f"Document {i} (relevance: {score:.3f}):\n{content}\n")
+            content = doc.get("content", "")[:1000]  # Limit context length
+            score = doc.get("score", 0)
+            formatted_docs.append(
+                f"Document {i} (relevance: {score:.3f}):\n{content}\n"
+            )
 
         return "\n".join(formatted_docs)
 
@@ -231,7 +244,7 @@ Based on the context provided above, please provide a comprehensive and accurate
             "total_documents": len(self.documents),
             "embedding_model": self.embedding_model,
             "completion_model": self.completion_model,
-            "timestamp": datetime.utcnow().isoformat()
+            "timestamp": datetime.utcnow().isoformat(),
         }
 
     def clear_documents(self):
@@ -269,7 +282,7 @@ def demo_direct_rag():
         "Python is a high-level programming language known for its simplicity and readability. It was created by Guido van Rossum and first released in 1991.",
         "Machine learning is a subset of artificial intelligence that enables systems to automatically learn and improve from experience without being explicitly programmed.",
         "OpenAI is an AI research company that develops artificial general intelligence (AGI) with the goal of benefiting humanity.",
-        "Retrieval-Augmented Generation (RAG) combines the strengths of retrieval-based methods and generative models to provide more accurate and context-aware responses."
+        "Retrieval-Augmented Generation (RAG) combines the strengths of retrieval-based methods and generative models to provide more accurate and context-aware responses.",
     ]
 
     print("\\n📄 Adding documents...")

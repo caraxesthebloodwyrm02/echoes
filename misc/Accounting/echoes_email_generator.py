@@ -8,6 +8,7 @@ from typing import Optional, Dict, Any
 import datetime
 import math
 
+
 @dataclass
 class EmailConfig:
     email_subject: str = "Echoes AI ROI Analysis - Immediate 5-Day Payback Opportunity"
@@ -31,69 +32,90 @@ class EmailConfig:
     contract_duration: str = "12-month minimum"
     rollout_timeline: str = "4-6 weeks"
 
+
 def load_email_config(yaml_path: str) -> EmailConfig:
     """Load configuration from email YAML file"""
     config = EmailConfig()
     try:
-        with open(yaml_path, 'r', encoding='utf-8') as f:
+        with open(yaml_path, "r", encoding="utf-8") as f:
             content = f.read()
-        
+
         # Simple YAML parsing for email config
         data = {}
-        for line in content.split('\n'):
+        for line in content.split("\n"):
             line = line.strip()
-            if ':' in line and not line.startswith('#'):
-                key, val = line.split(':', 1)
+            if ":" in line and not line.startswith("#"):
+                key, val = line.split(":", 1)
                 key = key.strip()
                 val = val.strip().strip('"').strip("'")
                 try:
-                    if '.' in val:
+                    if "." in val:
                         data[key] = float(val)
                     elif val.isdigit():
                         data[key] = int(val)
-                    elif val.lower() in ('true', 'false'):
-                        data[key] = val.lower() == 'true'
+                    elif val.lower() in ("true", "false"):
+                        data[key] = val.lower() == "true"
                     else:
                         data[key] = val
                 except:
                     data[key] = val
-        
+
         # Apply loaded values
-        config.email_subject = data.get('email_subject', config.email_subject)
-        config.email_to = data.get('email_to', config.email_to)
-        config.email_from = data.get('email_from', config.email_from)
-        config.email_date = data.get('email_date', config.email_date)
-        config.meeting_request = data.get('meeting_request', config.meeting_request)
-        config.institution_name = data.get('institution_name', config.institution_name)
-        config.pilot_completed = data.get('pilot_completed', config.pilot_completed)
-        config.pilot_duration = data.get('pilot_duration', config.pilot_duration)
-        config.team_size = data.get('team_size', config.team_size)
-        config.monthly_savings = data.get('monthly_savings', config.monthly_savings)
-        config.monthly_investment = data.get('monthly_investment', config.monthly_investment)
-        config.net_monthly_benefit = data.get('net_monthly_benefit', config.net_monthly_benefit)
-        config.roi_percentage = data.get('roi_percentage', config.roi_percentage)
-        config.payback_days = data.get('payback_days', config.payback_days)
-        config.labor_efficiency_savings = data.get('labor_efficiency_savings', config.labor_efficiency_savings)
-        config.error_reduction_savings = data.get('error_reduction_savings', config.error_reduction_savings)
-        config.audit_preparation_savings = data.get('audit_preparation_savings', config.audit_preparation_savings)
-        config.decision_deadline = data.get('decision_deadline', config.decision_deadline)
-        config.contract_duration = data.get('contract_duration', config.contract_duration)
-        config.rollout_timeline = data.get('rollout_timeline', config.rollout_timeline)
-        
+        config.email_subject = data.get("email_subject", config.email_subject)
+        config.email_to = data.get("email_to", config.email_to)
+        config.email_from = data.get("email_from", config.email_from)
+        config.email_date = data.get("email_date", config.email_date)
+        config.meeting_request = data.get("meeting_request", config.meeting_request)
+        config.institution_name = data.get("institution_name", config.institution_name)
+        config.pilot_completed = data.get("pilot_completed", config.pilot_completed)
+        config.pilot_duration = data.get("pilot_duration", config.pilot_duration)
+        config.team_size = data.get("team_size", config.team_size)
+        config.monthly_savings = data.get("monthly_savings", config.monthly_savings)
+        config.monthly_investment = data.get(
+            "monthly_investment", config.monthly_investment
+        )
+        config.net_monthly_benefit = data.get(
+            "net_monthly_benefit", config.net_monthly_benefit
+        )
+        config.roi_percentage = data.get("roi_percentage", config.roi_percentage)
+        config.payback_days = data.get("payback_days", config.payback_days)
+        config.labor_efficiency_savings = data.get(
+            "labor_efficiency_savings", config.labor_efficiency_savings
+        )
+        config.error_reduction_savings = data.get(
+            "error_reduction_savings", config.error_reduction_savings
+        )
+        config.audit_preparation_savings = data.get(
+            "audit_preparation_savings", config.audit_preparation_savings
+        )
+        config.decision_deadline = data.get(
+            "decision_deadline", config.decision_deadline
+        )
+        config.contract_duration = data.get(
+            "contract_duration", config.contract_duration
+        )
+        config.rollout_timeline = data.get("rollout_timeline", config.rollout_timeline)
+
     except Exception as e:
         print(f"Warning: Could not parse YAML file: {e}")
         print("Using default configuration")
-    
+
     return config
+
 
 def format_currency(amount: float, currency: str = "USD") -> str:
     return f"${amount:,.0f}"
 
+
 def generate_executive_email(config: EmailConfig) -> str:
     annual_net_benefit = config.net_monthly_benefit * 12
     three_year_value = annual_net_benefit * 3
-    total_monthly_savings = config.labor_efficiency_savings + config.error_reduction_savings + config.audit_preparation_savings
-    
+    total_monthly_savings = (
+        config.labor_efficiency_savings
+        + config.error_reduction_savings
+        + config.audit_preparation_savings
+    )
+
     email_content = f"""
 SUBJECT: {config.email_subject}
 
@@ -160,17 +182,20 @@ Echoes AI - Compliance Automation
 
 P.S. Pilot results and technical documentation available upon request.
     """
-    
+
     return email_content.strip()
 
-def export_email_files(config: EmailConfig, base_filename: str = "stakeholder_email") -> None:
+
+def export_email_files(
+    config: EmailConfig, base_filename: str = "stakeholder_email"
+) -> None:
     email_content = generate_executive_email(config)
-    
+
     # Save as text file
     with open(f"{base_filename}.txt", "w", encoding="utf-8") as f:
         f.write(email_content)
     print(f"✅ Email exported: {base_filename}.txt")
-    
+
     # Save JSON
     email_data = {
         "subject": config.email_subject,
@@ -183,43 +208,50 @@ def export_email_files(config: EmailConfig, base_filename: str = "stakeholder_em
             "monthly_investment": config.monthly_investment,
             "net_monthly_benefit": config.net_monthly_benefit,
             "roi_percentage": config.roi_percentage,
-            "payback_days": config.payback_days
-        }
+            "payback_days": config.payback_days,
+        },
     }
-    
+
     with open(f"{base_filename}_data.json", "w", encoding="utf-8") as f:
         json.dump(email_data, f, indent=2, ensure_ascii=False)
     print(f"✅ Email data exported: {base_filename}_data.json")
 
+
 def main():
     import argparse
-    parser = argparse.ArgumentParser(description="Echoes AI - Email ROI Stakeholder Generator")
+
+    parser = argparse.ArgumentParser(
+        description="Echoes AI - Email ROI Stakeholder Generator"
+    )
     parser.add_argument("--config", help="YAML configuration file")
-    parser.add_argument("--output", default="stakeholder_email", help="Output filename base")
+    parser.add_argument(
+        "--output", default="stakeholder_email", help="Output filename base"
+    )
     args = parser.parse_args()
-    
+
     if not args.config:
         print("Please specify --config <yaml_file>")
         return 1
-    
+
     config = load_email_config(args.config)
     print(f"✅ Loaded configuration from: {args.config}")
-    
+
     print("\n📧 GENERATING STAKEHOLDER EMAIL...")
     email_content = generate_executive_email(config)
-    
+
     # Display email
-    print("\n" + "="*60)
+    print("\n" + "=" * 60)
     print("📧 EMAIL PREVIEW")
-    print("="*60)
+    print("=" * 60)
     print(email_content)
-    print("="*60)
-    
+    print("=" * 60)
+
     # Export files
     export_email_files(config, args.output)
-    
+
     print(f"\n🎯 Ready to send stakeholder email!")
     print(f"Files created: {args.output}.txt, {args.output}_data.json")
+
 
 if __name__ == "__main__":
     main()

@@ -39,14 +39,15 @@ class ActionExecutor:
 
     def execute_inventory_action(self, action_type: str, **kwargs) -> ActionResult:
         """Execute an inventory action via ATLAS."""
+
         # Like good code structure:
         def handle_user_request(request):
             # Phase 1: Analysis
             understand_request(request)
-            
-            # Phase 2: Planning  
+
+            # Phase 2: Planning
             plan_approach(request)
-            
+
             # Phase 3: Execution
             execute_plan()
 
@@ -96,7 +97,9 @@ class ActionExecutor:
                 ).to_dict()
 
             elif action_type == "report":
-                result_data = svc.report(report_type=kwargs.get("report_type", "summary"))
+                result_data = svc.report(
+                    report_type=kwargs.get("report_type", "summary")
+                )
 
             else:
                 raise ValueError(f"Unknown inventory action: {action_type}")
@@ -225,16 +228,20 @@ class ActionExecutor:
         if result.success:
             # Automatically organize the generated files
             from app.filesystem import FilesystemTools
+
             fs_tools = FilesystemTools()
             organization_result = fs_tools.organize_roi_files(result.data)
 
             if organization_result["success"]:
                 result.data["file_organization"] = organization_result
             else:
-                result.data["file_organization_error"] = organization_result.get("error")
+                result.data["file_organization_error"] = organization_result.get(
+                    "error"
+                )
 
             # Automatically store in knowledge base
             from app.knowledge import KnowledgeManager
+
             km = KnowledgeManager()
             analysis_id = km.store_roi_analysis(result.data)
             result.data["analysis_id"] = analysis_id
@@ -243,7 +250,9 @@ class ActionExecutor:
         else:
             raise Exception(f"ROI generation failed: {result.error}")
 
-    def _save_roi_template(self, template_name: str, template_data: Dict[str, Any]) -> Dict[str, Any]:
+    def _save_roi_template(
+        self, template_name: str, template_data: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Save an ROI analysis template."""
         # Implementation for saving templates
         return {"template_name": template_name, "saved": True}
@@ -270,7 +279,9 @@ class ActionExecutor:
         total = len(self.action_history)
         successful = sum(1 for a in self.action_history if a.status == "success")
         failed = sum(1 for a in self.action_history if a.status == "failed")
-        avg_duration = sum(a.duration_ms for a in self.action_history) / total if total > 0 else 0
+        avg_duration = (
+            sum(a.duration_ms for a in self.action_history) / total if total > 0 else 0
+        )
 
         return {
             "total_actions": total,

@@ -27,13 +27,17 @@ import logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class QuantumStateError(Exception):
     """Custom exception for quantum state management errors"""
+
     pass
+
 
 @dataclass
 class StateTransition:
     """Represents a probabilistic transition between states"""
+
     from_state: str
     to_state: str
     probability: float
@@ -42,6 +46,7 @@ class StateTransition:
     def __post_init__(self):
         if not 0 <= self.probability <= 1:
             raise ValueError("Probability must be between 0 and 1")
+
 
 class QuantumState:
     """
@@ -75,7 +80,9 @@ class QuantumState:
             # Ensure bidirectional entanglement
             for other_key in entangle_with:
                 if key not in self._entangled.get(other_key, []):
-                    self._entangled[other_key] = self._entangled.get(other_key, []) + [key]
+                    self._entangled[other_key] = self._entangled.get(other_key, []) + [
+                        key
+                    ]
 
         # Notify observers
         self._notify_observers(key, previous, value)
@@ -150,12 +157,12 @@ class QuantumState:
     def to_dict(self) -> Dict[str, Any]:
         """Serialize state to dictionary"""
         return {
-            'state': self._state,
-            'entangled': self._entangled,
-            'history_length': len(self._history)
+            "state": self._state,
+            "entangled": self._entangled,
+            "history_length": len(self._history),
         }
 
     def from_dict(self, data: Dict[str, Any]):
         """Deserialize state from dictionary"""
-        self._state = data.get('state', {})
-        self._entangled = data.get('entangled', {})
+        self._state = data.get("state", {})
+        self._entangled = data.get("entangled", {})

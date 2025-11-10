@@ -19,6 +19,7 @@ import logging
 
 logger = logging.getLogger(__name__)
 
+
 class QuantumStateMachine:
     """
     Probabilistic state machine with quantum-inspired transitions
@@ -37,8 +38,13 @@ class QuantumStateMachine:
         if self.current_state is None:
             self.current_state = state
 
-    def add_transition(self, from_state: str, to_state: str,
-                      probability: float, conditions: Optional[Dict[str, Any]] = None):
+    def add_transition(
+        self,
+        from_state: str,
+        to_state: str,
+        probability: float,
+        conditions: Optional[Dict[str, Any]] = None,
+    ):
         """
         Add a probabilistic transition between states
 
@@ -77,8 +83,10 @@ class QuantumStateMachine:
 
         # Get possible transitions
         possible_transitions = [
-            t for t in self.transitions
-            if t.from_state == self.current_state and self._check_conditions(t, quantum_state)
+            t
+            for t in self.transitions
+            if t.from_state == self.current_state
+            and self._check_conditions(t, quantum_state)
         ]
 
         if not possible_transitions:
@@ -100,8 +108,9 @@ class QuantumStateMachine:
         logger.info(f"State transition: {old_state} -> {self.current_state}")
         return self.current_state
 
-    def _check_conditions(self, transition: StateTransition,
-                         quantum_state: Optional[QuantumState]) -> bool:
+    def _check_conditions(
+        self, transition: StateTransition, quantum_state: Optional[QuantumState]
+    ) -> bool:
         """Check if transition conditions are met"""
         if transition.conditions is None:
             return True
@@ -134,8 +143,11 @@ class QuantumStateMachine:
 
     def get_transition_probability(self, from_state: str, to_state: str) -> float:
         """Get the transition probability between two states"""
-        transitions = [t for t in self.transitions
-                      if t.from_state == from_state and t.to_state == to_state]
+        transitions = [
+            t
+            for t in self.transitions
+            if t.from_state == from_state and t.to_state == to_state
+        ]
         return sum(t.probability for t in transitions)
 
     def rollback(self, steps: int = 1):
@@ -159,6 +171,9 @@ class QuantumStateMachine:
         """Get the state transition graph"""
         graph = {}
         for state in self.states:
-            graph[state] = [(t.to_state, t.probability)
-                          for t in self.transitions if t.from_state == state]
+            graph[state] = [
+                (t.to_state, t.probability)
+                for t in self.transitions
+                if t.from_state == state
+            ]
         return graph

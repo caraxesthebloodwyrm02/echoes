@@ -38,7 +38,9 @@ class InventoryService:
         self.storage.save(data)
         return item
 
-    def list_items(self, category: Optional[str] = None, location: Optional[str] = None) -> List[InventoryItem]:
+    def list_items(
+        self, category: Optional[str] = None, location: Optional[str] = None
+    ) -> List[InventoryItem]:
         data = self.storage.load()
         items = [InventoryItem.from_dict(d) for d in data.values()]
         if category:

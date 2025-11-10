@@ -17,17 +17,19 @@ from pathlib import Path
 # Add the project root to Python path
 sys.path.insert(0, str(Path(__file__).parent))
 
+
 class EchoesAPITester:
     """Test runner for Echoes API endpoints"""
 
-    def __init__(self, base_url: str = "http://localhost:8000", api_key: str = "test_key"):
-        self.base_url = base_url.rstrip('/')
+    def __init__(
+        self, base_url: str = "http://localhost:8000", api_key: str = "test_key"
+    ):
+        self.base_url = base_url.rstrip("/")
         self.api_key = api_key
         self.session = requests.Session()
-        self.session.headers.update({
-            'Authorization': f'Bearer {api_key}',
-            'Content-Type': 'application/json'
-        })
+        self.session.headers.update(
+            {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
+        )
 
     def test_chat_completion(self, config: Dict[str, Any]) -> Dict[str, Any]:
         """Test chat completion endpoint"""
@@ -42,14 +44,12 @@ class EchoesAPITester:
             "enable_actions": config["metadata"].get("enable_actions", False),
             "enable_workflows": config["metadata"].get("enable_workflows", False),
             "enable_rag": config["metadata"].get("enable_rag", False),
-            "enable_roi": config["metadata"].get("enable_roi", False)
+            "enable_roi": config["metadata"].get("enable_roi", False),
         }
 
         try:
             response = self.session.post(
-                f"{self.base_url}/api/ai/chat",
-                json=payload,
-                timeout=config["timeout"]
+                f"{self.base_url}/api/ai/chat", json=payload, timeout=config["timeout"]
             )
 
             response_time = time.time() - start_time
@@ -63,7 +63,11 @@ class EchoesAPITester:
                     "response": result,
                     "tokens_used": result.get("usage", {}).get("total_tokens", 0),
                     "accuracy_score": 0.95,  # Simulated accuracy
-                    "api_used": "responses" if payload["use_responses_api"] else "chat_completions"
+                    "api_used": (
+                        "responses"
+                        if payload["use_responses_api"]
+                        else "chat_completions"
+                    ),
                 }
             else:
                 return {
@@ -72,7 +76,7 @@ class EchoesAPITester:
                     "response_time": response_time,
                     "error": f"HTTP {response.status_code}: {response.text}",
                     "tokens_used": 0,
-                    "accuracy_score": 0.0
+                    "accuracy_score": 0.0,
                 }
 
         except Exception as e:
@@ -82,7 +86,7 @@ class EchoesAPITester:
                 "response_time": time.time() - start_time,
                 "error": str(e),
                 "tokens_used": 0,
-                "accuracy_score": 0.0
+                "accuracy_score": 0.0,
             }
 
     def test_agent_workflow(self, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -92,14 +96,14 @@ class EchoesAPITester:
         payload = {
             "user_input": config["prompt"],
             "workflow_type": "triage",
-            "use_responses_api": config["metadata"].get("use_responses_api", True)
+            "use_responses_api": config["metadata"].get("use_responses_api", True),
         }
 
         try:
             response = self.session.post(
                 f"{self.base_url}/api/workflows/business-initiative",
                 json=payload,
-                timeout=config["timeout"]
+                timeout=config["timeout"],
             )
 
             response_time = time.time() - start_time
@@ -113,7 +117,7 @@ class EchoesAPITester:
                     "response": result,
                     "tokens_used": result.get("usage", {}).get("total_tokens", 0),
                     "accuracy_score": 0.90,
-                    "api_used": "responses"
+                    "api_used": "responses",
                 }
             else:
                 return {
@@ -122,7 +126,7 @@ class EchoesAPITester:
                     "response_time": response_time,
                     "error": f"HTTP {response.status_code}: {response.text}",
                     "tokens_used": 0,
-                    "accuracy_score": 0.0
+                    "accuracy_score": 0.0,
                 }
 
         except Exception as e:
@@ -132,7 +136,7 @@ class EchoesAPITester:
                 "response_time": time.time() - start_time,
                 "error": str(e),
                 "tokens_used": 0,
-                "accuracy_score": 0.0
+                "accuracy_score": 0.0,
             }
 
     def test_validation_error(self, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -142,14 +146,12 @@ class EchoesAPITester:
         # Send empty prompt to trigger validation error
         payload = {
             "messages": [{"role": "user", "content": ""}],
-            "use_responses_api": config["metadata"].get("use_responses_api", True)
+            "use_responses_api": config["metadata"].get("use_responses_api", True),
         }
 
         try:
             response = self.session.post(
-                f"{self.base_url}/api/ai/chat",
-                json=payload,
-                timeout=config["timeout"]
+                f"{self.base_url}/api/ai/chat", json=payload, timeout=config["timeout"]
             )
 
             response_time = time.time() - start_time
@@ -162,7 +164,7 @@ class EchoesAPITester:
                     "response_time": response_time,
                     "response": {"validation_error": True},
                     "tokens_used": 0,
-                    "accuracy_score": 1.0  # Perfect validation
+                    "accuracy_score": 1.0,  # Perfect validation
                 }
             else:
                 return {
@@ -171,7 +173,7 @@ class EchoesAPITester:
                     "response_time": response_time,
                     "error": f"Expected validation error but got HTTP {response.status_code}",
                     "tokens_used": 0,
-                    "accuracy_score": 0.0
+                    "accuracy_score": 0.0,
                 }
 
         except Exception as e:
@@ -181,7 +183,7 @@ class EchoesAPITester:
                 "response_time": time.time() - start_time,
                 "error": str(e),
                 "tokens_used": 0,
-                "accuracy_score": 0.0
+                "accuracy_score": 0.0,
             }
 
     def run_test_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
@@ -195,13 +197,15 @@ class EchoesAPITester:
         else:
             return self.test_chat_completion(config)
 
-    def run_full_test_suite(self, config_file: str, max_workers: int = 6) -> Dict[str, Any]:
+    def run_full_test_suite(
+        self, config_file: str, max_workers: int = 6
+    ) -> Dict[str, Any]:
         """Run the complete test suite"""
         print("🚀 Starting Echoes Assistant V2 Core - Full Coverage Test Suite")
         print("=" * 70)
 
         # Load test configuration
-        with open(config_file, 'r') as f:
+        with open(config_file, "r") as f:
             test_config = json.load(f)
 
         configs = test_config["tests"]
@@ -221,7 +225,9 @@ class EchoesAPITester:
                 result = future.result()
                 results.append(result)
                 status_icon = "✅" if result["status"] == "passed" else "❌"
-                print(f"{status_icon} {result['test_name']} - {result['status']} ({result['response_time']:.2f}s)")
+                print(
+                    f"{status_icon} {result['test_name']} - {result['status']} ({result['response_time']:.2f}s)"
+                )
 
         total_time = time.time() - start_time
 
@@ -230,7 +236,9 @@ class EchoesAPITester:
         failed = len(results) - passed
         success_rate = passed / len(results) if results else 0
 
-        avg_response_time = sum(r["response_time"] for r in results) / len(results) if results else 0
+        avg_response_time = (
+            sum(r["response_time"] for r in results) / len(results) if results else 0
+        )
         total_tokens = sum(r["tokens_used"] for r in results)
 
         # API usage breakdown
@@ -249,12 +257,12 @@ class EchoesAPITester:
             "total_time": total_time,
             "api_usage": api_usage,
             "test_results": results,
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
         # Save results
         output_file = f"test_results_{datetime.now().strftime('%Y%m%d_%H%M%S')}.json"
-        with open(output_file, 'w') as f:
+        with open(output_file, "w") as f:
             json.dump(summary, f, indent=2, default=str)
 
         print("\n" + "=" * 70)
@@ -281,29 +289,47 @@ class EchoesAPITester:
             for category, test_names in categories.items():
                 category_results = [r for r in results if r["test_name"] in test_names]
                 if category_results:
-                    cat_passed = len([r for r in category_results if r["status"] == "passed"])
+                    cat_passed = len(
+                        [r for r in category_results if r["status"] == "passed"]
+                    )
                     cat_total = len(category_results)
                     cat_rate = cat_passed / cat_total if cat_total > 0 else 0
-                    status_icon = "✅" if cat_rate == 1.0 else "⚠️" if cat_rate > 0.5 else "❌"
-                    print(f"   {status_icon} {category}: {cat_passed}/{cat_total} ({cat_rate*100:.1f}%)")
+                    status_icon = (
+                        "✅" if cat_rate == 1.0 else "⚠️" if cat_rate > 0.5 else "❌"
+                    )
+                    print(
+                        f"   {status_icon} {category}: {cat_passed}/{cat_total} ({cat_rate*100:.1f}%)"
+                    )
 
         return summary
+
 
 def main():
     """Main entry point"""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Echoes Assistant V2 Core - Full Coverage Test Runner")
-    parser.add_argument("--config", default="full_coverage_test_config.json",
-                       help="Test configuration file")
-    parser.add_argument("--api-url", default="http://localhost:8000",
-                       help="Echoes API base URL")
-    parser.add_argument("--api-key", default="test_key",
-                       help="API key for authentication")
-    parser.add_argument("--workers", type=int, default=6,
-                       help="Number of parallel workers")
-    parser.add_argument("--check-api", action="store_true",
-                       help="Check if API is running before starting tests")
+    parser = argparse.ArgumentParser(
+        description="Echoes Assistant V2 Core - Full Coverage Test Runner"
+    )
+    parser.add_argument(
+        "--config",
+        default="full_coverage_test_config.json",
+        help="Test configuration file",
+    )
+    parser.add_argument(
+        "--api-url", default="http://localhost:8000", help="Echoes API base URL"
+    )
+    parser.add_argument(
+        "--api-key", default="test_key", help="API key for authentication"
+    )
+    parser.add_argument(
+        "--workers", type=int, default=6, help="Number of parallel workers"
+    )
+    parser.add_argument(
+        "--check-api",
+        action="store_true",
+        help="Check if API is running before starting tests",
+    )
 
     args = parser.parse_args()
 
@@ -335,7 +361,9 @@ def main():
             print("\n🎉 ALL TESTS PASSED! assistant_v2_core.py is working correctly.")
             return 0
         else:
-            print(f"\n⚠️  {results['failed_tests']} test(s) failed. Check the results for details.")
+            print(
+                f"\n⚠️  {results['failed_tests']} test(s) failed. Check the results for details."
+            )
             return 1
 
     except KeyboardInterrupt:
@@ -344,6 +372,7 @@ def main():
     except Exception as e:
         print(f"\n❌ Test suite failed: {e}")
         return 1
+
 
 if __name__ == "__main__":
     sys.exit(main())

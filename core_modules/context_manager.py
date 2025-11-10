@@ -10,9 +10,11 @@ from datetime import datetime
 
 logger = logging.getLogger(__name__)
 
+
 @dataclass
 class ConversationContext:
     """Represents the current conversation context"""
+
     session_id: str
     current_topic: str = ""
     context_depth: int = 0
@@ -20,6 +22,7 @@ class ConversationContext:
     metadata: Dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
+
 
 class ContextManager:
     """
@@ -43,7 +46,9 @@ class ContextManager:
         """
         return self.contexts.get(session_id)
 
-    def create_context(self, session_id: str, initial_topic: str = "") -> ConversationContext:
+    def create_context(
+        self, session_id: str, initial_topic: str = ""
+    ) -> ConversationContext:
         """
         Create a new conversation context
 
@@ -55,14 +60,15 @@ class ContextManager:
             The created ConversationContext
         """
         context = ConversationContext(
-            session_id=session_id,
-            current_topic=initial_topic
+            session_id=session_id, current_topic=initial_topic
         )
         self.contexts[session_id] = context
         self.logger.debug(f"Created context for session {session_id}")
         return context
 
-    def update_context(self, session_id: str, **updates) -> Optional[ConversationContext]:
+    def update_context(
+        self, session_id: str, **updates
+    ) -> Optional[ConversationContext]:
         """
         Update conversation context
 
@@ -148,7 +154,7 @@ class ContextManager:
                 "context_depth": context.context_depth,
                 "entity_count": len(context.entities),
                 "created_at": context.created_at.isoformat(),
-                "updated_at": context.updated_at.isoformat()
+                "updated_at": context.updated_at.isoformat(),
             }
         return {}
 
@@ -168,9 +174,12 @@ class ContextManager:
             context.current_topic = new_topic
             context.context_depth += 1
             context.updated_at = datetime.now()
-            self.logger.debug(f"Transitioned session {session_id} to topic: {new_topic}")
+            self.logger.debug(
+                f"Transitioned session {session_id} to topic: {new_topic}"
+            )
             return True
         return False
+
 
 # Global instance for easy access
 context_manager = ContextManager()

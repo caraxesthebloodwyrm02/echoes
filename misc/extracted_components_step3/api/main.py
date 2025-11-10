@@ -50,6 +50,7 @@ logger = logging.getLogger(__name__)
 # embedding_engine = None
 # chunking_engine = None
 
+
 class ConnectionManager:
     """WebSocket connection manager for real-time streaming"""
 
@@ -65,7 +66,9 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket):
         """Remove a WebSocket connection"""
         self.active_connections.remove(websocket)
-        logger.info(f"WebSocket disconnected. Remaining: {len(self.active_connections)}")
+        logger.info(
+            f"WebSocket disconnected. Remaining: {len(self.active_connections)}"
+        )
 
     async def broadcast(self, message: dict):
         """Broadcast a message to all connected clients"""
@@ -83,8 +86,10 @@ class ConnectionManager:
         except Exception as e:
             logger.error(f"Failed to send personal message: {e}")
 
+
 # Global connection manager
 manager = ConnectionManager()
+
 
 # Pydantic models for API requests/responses
 class PatternDetectionRequest(BaseModel):
@@ -92,10 +97,12 @@ class PatternDetectionRequest(BaseModel):
     context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
     options: Optional[Dict[str, Any]] = Field(None, description="Detection options")
 
+
 class PatternDetectionResponse(BaseModel):
     patterns: List[Dict[str, Any]] = Field(..., description="Detected patterns")
     confidence: float = Field(..., description="Overall confidence score")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
 
 # REMOVED: Search models - RAG middleware eliminated for authentic responses
 # class SearchRequest(BaseModel):
@@ -108,10 +115,12 @@ class PatternDetectionResponse(BaseModel):
 #     total_found: int = Field(..., description="Total results found")
 #     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
+
 class TruthVerificationRequest(BaseModel):
     claim: str = Field(..., description="Claim to verify")
     evidence: Optional[List[str]] = Field(None, description="Supporting evidence")
     context: Optional[Dict[str, Any]] = Field(None, description="Verification context")
+
 
 class TruthVerificationResponse(BaseModel):
     verdict: str = Field(..., description="TRUE/FALSE/UNCERTAIN")
@@ -119,6 +128,7 @@ class TruthVerificationResponse(BaseModel):
     explanation: str = Field(..., description="Explanation of the verdict")
     evidence_used: List[str] = Field(..., description="Evidence used in verification")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -133,12 +143,13 @@ async def lifespan(app: FastAPI):
     # Shutdown
     logger.info("Shutting down Echoes API...")
 
+
 # Create FastAPI application
 app = FastAPI(
     title="Echoes Research API",
     description="Real-time streaming API for research insights and pattern detection",
     version="2.0.0",
-    lifespan=lifespan
+    lifespan=lifespan,
 )
 
 # Add CORS middleware
@@ -154,6 +165,7 @@ app.add_middleware(
 # Setup additional middleware
 setup_middleware(app, config)
 
+
 @app.get("/health")
 async def health_check():
     """Health check endpoint - Simplified: No RAG middleware"""
@@ -161,8 +173,9 @@ async def health_check():
         "status": "healthy",
         "timestamp": datetime.utcnow().isoformat(),
         "middleware": "none",  # Direct AI responses only
-        "connections": len(manager.active_connections)
+        "connections": len(manager.active_connections),
     }
+
 
 @app.websocket("/ws/stream")
 async def websocket_endpoint(websocket: WebSocket):
@@ -186,10 +199,13 @@ async def websocket_endpoint(websocket: WebSocket):
             elif message_type == "truth_verification":
                 await handle_truth_verification_websocket(message, websocket)
             else:
-                await manager.send_personal_message({
-                    "type": "error",
-                    "message": f"Unknown message type: {message_type}"
-                }, websocket)
+                await manager.send_personal_message(
+                    {
+                        "type": "error",
+                        "message": f"Unknown message type: {message_type}",
+                    },
+                    websocket,
+                )
 
     except WebSocketDisconnect:
         manager.disconnect(websocket)
@@ -197,38 +213,40 @@ async def websocket_endpoint(websocket: WebSocket):
         logger.error(f"WebSocket error: {e}")
         manager.disconnect(websocket)
 
+
 async def handle_pattern_detection_websocket(message: dict, websocket: WebSocket):
     """Handle pattern detection via WebSocket"""
     try:
         request = PatternDetectionRequest(**message.get("data", {}))
 
         # Send processing start notification
-        await manager.send_personal_message({
-            "type": "processing_start",
-            "operation": "pattern_detection",
-            "text_length": len(request.text)
-        }, websocket)
+        await manager.send_personal_message(
+            {
+                "type": "processing_start",
+                "operation": "pattern_detection",
+                "text_length": len(request.text),
+            },
+            websocket,
+        )
 
         # Perform pattern detection (placeholder - integrate with actual Glimpse)
         patterns = await detect_patterns(request.text, request.context, request.options)
 
         # Send results
         response = PatternDetectionResponse(
-            patterns=patterns,
-            confidence=0.85  # Placeholder confidence
+            patterns=patterns, confidence=0.85  # Placeholder confidence
         )
 
-        await manager.send_personal_message({
-            "type": "pattern_detection_result",
-            "data": response.dict()
-        }, websocket)
+        await manager.send_personal_message(
+            {"type": "pattern_detection_result", "data": response.dict()}, websocket
+        )
 
     except Exception as e:
-        await manager.send_personal_message({
-            "type": "error",
-            "operation": "pattern_detection",
-            "message": str(e)
-        }, websocket)
+        await manager.send_personal_message(
+            {"type": "error", "operation": "pattern_detection", "message": str(e)},
+            websocket,
+        )
+
 
 async def handle_truth_verification_websocket(message: dict, websocket: WebSocket):
     """Handle truth verification via WebSocket"""
@@ -236,11 +254,18 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
         request = TruthVerificationRequest(**message.get("data", {}))
 
         # Send processing start notification
-        await manager.send_personal_message({
-            "type": "processing_start",
-            "operation": "truth_verification",
-            "claim": request.claim[:100] + "..." if len(request.claim) > 100 else request.claim
-        }, websocket)
+        await manager.send_personal_message(
+            {
+                "type": "processing_start",
+                "operation": "truth_verification",
+                "claim": (
+                    request.claim[:100] + "..."
+                    if len(request.claim) > 100
+                    else request.claim
+                ),
+            },
+            websocket,
+        )
 
         # Perform truth verification (placeholder - integrate with SELF-RAG)
         verdict = await verify_truth(request.claim, request.evidence, request.context)
@@ -250,30 +275,27 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
             verdict=verdict.get("verdict", "UNCERTAIN"),
             confidence=verdict.get("confidence", 0.5),
             explanation=verdict.get("explanation", "Analysis incomplete"),
-            evidence_used=request.evidence or []
+            evidence_used=request.evidence or [],
         )
 
-        await manager.send_personal_message({
-            "type": "truth_verification_result",
-            "data": response.dict()
-        }, websocket)
+        await manager.send_personal_message(
+            {"type": "truth_verification_result", "data": response.dict()}, websocket
+        )
 
     except Exception as e:
-        await manager.send_personal_message({
-            "type": "error",
-            "operation": "truth_verification",
-            "message": str(e)
-        }, websocket)
+        await manager.send_personal_message(
+            {"type": "error", "operation": "truth_verification", "message": str(e)},
+            websocket,
+        )
+
 
 # REST API endpoints for backward compatibility
 @app.post("/api/patterns/detect", response_model=PatternDetectionResponse)
 async def detect_patterns_rest(request: PatternDetectionRequest):
     """REST endpoint for pattern detection"""
     patterns = await detect_patterns(request.text, request.context, request.options)
-    return PatternDetectionResponse(
-        patterns=patterns,
-        confidence=0.85
-    )
+    return PatternDetectionResponse(patterns=patterns, confidence=0.85)
+
 
 # REMOVED: Search REST endpoint - RAG middleware eliminated for authentic responses
 # @app.post("/api/search", response_model=SearchResponse)
@@ -293,6 +315,7 @@ async def detect_patterns_rest(request: PatternDetectionRequest):
 #         total_found=len(results)
 #     )
 
+
 @app.post("/api/truth/verify", response_model=TruthVerificationResponse)
 async def verify_truth_rest(request: TruthVerificationRequest):
     """REST endpoint for truth verification"""
@@ -301,8 +324,9 @@ async def verify_truth_rest(request: TruthVerificationRequest):
         verdict=verdict.get("verdict", "UNCERTAIN"),
         confidence=verdict.get("confidence", 0.5),
         explanation=verdict.get("explanation", "Analysis incomplete"),
-        evidence_used=request.evidence or []
+        evidence_used=request.evidence or [],
     )
+
 
 if __name__ == "__main__":
     # Get configuration
@@ -315,5 +339,5 @@ if __name__ == "__main__":
         port=config.api.port,
         workers=config.api.workers,
         reload=config.api.reload,
-        log_level=config.api.log_level.lower()
+        log_level=config.api.log_level.lower(),
     )

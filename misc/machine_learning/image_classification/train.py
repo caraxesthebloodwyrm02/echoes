@@ -21,26 +21,43 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from image_classification.classifier import ImageClassifier, plot_training_history
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Train Image Classification Model')
-    parser.add_argument('--dataset', type=str, default='cifar10',
-                       choices=['cifar10', 'cifar100', 'mnist', 'fashionmnist'],
-                       help='Dataset to use')
-    parser.add_argument('--model', type=str, default='custom_cnn',
-                       choices=['custom_cnn', 'resnet18', 'resnet50', 'vgg16'],
-                       help='Model architecture')
-    parser.add_argument('--epochs', type=int, default=10,
-                       help='Number of training epochs')
-    parser.add_argument('--batch_size', type=int, default=32,
-                       help='Batch size')
-    parser.add_argument('--learning_rate', type=float, default=0.001,
-                       help='Learning rate')
-    parser.add_argument('--data_dir', type=str, default='./data',
-                       help='Data directory')
-    parser.add_argument('--output_dir', type=str, default='./models',
-                       help='Output directory for saving models')
-    parser.add_argument('--experiment_name', type=str, default='experiment_1',
-                       help='Experiment name for saving results')
+    parser = argparse.ArgumentParser(description="Train Image Classification Model")
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default="cifar10",
+        choices=["cifar10", "cifar100", "mnist", "fashionmnist"],
+        help="Dataset to use",
+    )
+    parser.add_argument(
+        "--model",
+        type=str,
+        default="custom_cnn",
+        choices=["custom_cnn", "resnet18", "resnet50", "vgg16"],
+        help="Model architecture",
+    )
+    parser.add_argument(
+        "--epochs", type=int, default=10, help="Number of training epochs"
+    )
+    parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
+    parser.add_argument(
+        "--learning_rate", type=float, default=0.001, help="Learning rate"
+    )
+    parser.add_argument("--data_dir", type=str, default="./data", help="Data directory")
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./models",
+        help="Output directory for saving models",
+    )
+    parser.add_argument(
+        "--experiment_name",
+        type=str,
+        default="experiment_1",
+        help="Experiment name for saving results",
+    )
 
     args = parser.parse_args()
 
@@ -50,7 +67,7 @@ def main():
 
     # Save training configuration
     config = vars(args)
-    with open(output_dir / 'config.json', 'w') as f:
+    with open(output_dir / "config.json", "w") as f:
         json.dump(config, f, indent=2)
 
     print("Starting Image Classification Training")
@@ -81,28 +98,28 @@ def main():
         train_loader, val_loader, test_loader = classifier.load_dataset(
             dataset_name=args.dataset,
             batch_size=args.batch_size,
-            data_dir=args.data_dir
+            data_dir=args.data_dir,
         )
         print("Dataset loaded")
 
         # Train model
         print(f"Training for {args.epochs} epochs...")
-        model_path = output_dir / 'best_model.pth'
+        model_path = output_dir / "best_model.pth"
         history = classifier.train(
             train_loader=train_loader,
             val_loader=val_loader,
             num_epochs=args.epochs,
-            save_path=str(model_path)
+            save_path=str(model_path),
         )
         print("Training complete")
 
         # Save training history
-        history_path = output_dir / 'training_history.json'
-        with open(history_path, 'w') as f:
+        history_path = output_dir / "training_history.json"
+        with open(history_path, "w") as f:
             json.dump(history, f, indent=2)
 
         # Plot training history
-        plot_path = output_dir / 'training_history.png'
+        plot_path = output_dir / "training_history.png"
         plot_training_history(history, save_path=str(plot_path))
         print("Training history saved")
 
@@ -111,8 +128,8 @@ def main():
         test_results = classifier.evaluate(test_loader)
 
         # Save test results
-        results_path = output_dir / 'test_results.json'
-        with open(results_path, 'w') as f:
+        results_path = output_dir / "test_results.json"
+        with open(results_path, "w") as f:
             json.dump(test_results, f, indent=2)
 
         print("Evaluation complete")
@@ -134,8 +151,10 @@ def main():
     except Exception as e:
         print(f"Error during training: {str(e)}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

@@ -45,18 +45,24 @@ _OneOrMany: TypeAlias = _T | Iterable[_T]
 _BuiltinSequence: TypeAlias = tuple[_T, ...] | list[_T]
 
 _NestedNames: TypeAlias = tuple[str | _NestedNames, ...]
-_NonVoid: TypeAlias = np.bool | np.number | np.character | np.datetime64 | np.timedelta64 | np.object_
+_NonVoid: TypeAlias = (
+    np.bool | np.number | np.character | np.datetime64 | np.timedelta64 | np.object_
+)
 _NonVoidDType: TypeAlias = np.dtype[_NonVoid] | np.dtypes.StringDType
 
 _JoinType: TypeAlias = Literal["inner", "outer", "leftouter"]
 
 ###
 
-def recursive_fill_fields(input: npt.NDArray[np.void], output: _VoidArrayT) -> _VoidArrayT: ...
+def recursive_fill_fields(
+    input: npt.NDArray[np.void], output: _VoidArrayT
+) -> _VoidArrayT: ...
 def get_names(adtype: np.dtype[np.void]) -> _NestedNames: ...
 def get_names_flat(adtype: np.dtype[np.void]) -> tuple[str, ...]: ...
 @overload
-def flatten_descr(ndtype: _NonVoidDTypeT) -> tuple[tuple[Literal[""], _NonVoidDTypeT]]: ...
+def flatten_descr(
+    ndtype: _NonVoidDTypeT,
+) -> tuple[tuple[Literal[""], _NonVoidDTypeT]]: ...
 @overload
 def flatten_descr(ndtype: np.dtype[np.void]) -> tuple[tuple[str, np.dtype]]: ...
 def get_fieldstructure(
@@ -210,11 +216,17 @@ def rec_append_fields(
 # e.g. using a `TypeVar` with constraints.
 # https://github.com/numpy/numtype/issues/92
 @overload
-def repack_fields(a: _DTypeT, align: bool = False, recurse: bool = False) -> _DTypeT: ...
+def repack_fields(
+    a: _DTypeT, align: bool = False, recurse: bool = False
+) -> _DTypeT: ...
 @overload
-def repack_fields(a: _ScalarT, align: bool = False, recurse: bool = False) -> _ScalarT: ...
+def repack_fields(
+    a: _ScalarT, align: bool = False, recurse: bool = False
+) -> _ScalarT: ...
 @overload
-def repack_fields(a: _ArrayT, align: bool = False, recurse: bool = False) -> _ArrayT: ...
+def repack_fields(
+    a: _ArrayT, align: bool = False, recurse: bool = False
+) -> _ArrayT: ...
 
 # TODO(jorenham): Attempt shape-typing (return type has ndim == arr.ndim + 1)
 @overload
@@ -334,7 +346,10 @@ def find_duplicates(
     key: str | None,
     ignoremask: bool,
     return_index: Literal[True],
-) -> tuple[np.ma.MaskedArray[_ShapeT, np.dtype[np.void]], np.ndarray[_ShapeT, np.dtype[np.int_]]]: ...
+) -> tuple[
+    np.ma.MaskedArray[_ShapeT, np.dtype[np.void]],
+    np.ndarray[_ShapeT, np.dtype[np.int_]],
+]: ...
 @overload
 def find_duplicates(
     a: np.ma.MaskedArray[_ShapeT, np.dtype[np.void]],
@@ -342,7 +357,10 @@ def find_duplicates(
     ignoremask: bool = True,
     *,
     return_index: Literal[True],
-) -> tuple[np.ma.MaskedArray[_ShapeT, np.dtype[np.void]], np.ndarray[_ShapeT, np.dtype[np.int_]]]: ...
+) -> tuple[
+    np.ma.MaskedArray[_ShapeT, np.dtype[np.void]],
+    np.ndarray[_ShapeT, np.dtype[np.int_]],
+]: ...
 @overload
 def join_by(
     key: str | Sequence[str],

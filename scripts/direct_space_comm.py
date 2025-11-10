@@ -1,4 +1,3 @@
-
 # DIRECT SPACE COMMUNICATION TEST
 import time
 import numpy as np
@@ -15,7 +14,7 @@ t = np.linspace(0, duration, int(fs * duration), endpoint=False)
 
 # Space communication frequency (432Hz - universal resonance)
 freq = 432  # Hz
-signal = np.sin(2 * np.pi * freq * t) * np.exp(-t/3)
+signal = np.sin(2 * np.pi * freq * t) * np.exp(-t / 3)
 
 print("Generated space resonance frequency: 432Hz")
 print("Communication signal ready for transmission")

@@ -17,20 +17,25 @@ if project_root not in sys.path:
 # Try to import registry with better error handling
 try:
     from tools.registry import get_registry
+
     REGISTRY_AVAILABLE = True
-    
+
     # Import examples to register some tools
     try:
         import tools.examples
+
         print("✓ Example tools imported and registered")
     except ImportError as e:
         print(f"⚠️ Could not import example tools: {e}")
-        
+
 except ImportError as e:
     print(f"❌ Error importing registry: {e}")
-    print("Make sure you're running from the project root and dependencies are installed")
+    print(
+        "Make sure you're running from the project root and dependencies are installed"
+    )
     REGISTRY_AVAILABLE = False
-    
+
+
 # Test decorator for better output
 def _test_decorator(name):
     def decorator(test_func):
@@ -45,8 +50,11 @@ def _test_decorator(name):
             except Exception as e:
                 print(f"❌ {name} FAILED: {e}")
                 raise
+
         return wrapper
+
     return decorator
+
 
 @_test_decorator("Basic Registry Functionality")
 def test_case():
@@ -67,19 +75,19 @@ def test_case():
     try:
         tools = registry.list_tools()
         print(f"✓ Registry has {len(tools)} tools")
-        
+
         # Test has_tool method
         if tools:
             first_tool = tools[0]
             has_tool = registry.has_tool(first_tool)
             assert has_tool is True, f"has_tool should return True for {first_tool}"
             print(f"✓ has_tool('{first_tool}') = {has_tool}")
-        
+
         # Test non-existent tool
         has_fake = registry.has_tool("nonexistent_tool_xyz123")
         assert has_fake is False, "has_tool should return False for non-existent tool"
         print(f"✓ has_tool('nonexistent_tool_xyz123') = {has_fake}")
-        
+
     except Exception as e:
         print(f"❌ Test failed: {e}")
         raise
@@ -106,15 +114,15 @@ def test_has_tool_method():
         if not tools:
             print("⚠️ No tools found in registry")
             return
-            
+
         print(f"\n✓ Found {len(tools)} available tools")
-        print("\nFirst 5 tools:" + "-"*45)
+        print("\nFirst 5 tools:" + "-" * 45)
         for i, tool in enumerate(tools[:5], 1):
             print(f"  {i}. {tool}")
-        
+
         if len(tools) > 5:
             print(f"\n... and {len(tools) - 5} more tools not shown")
-            
+
     except AttributeError:
         print("❌ Registry is missing list_tools() method")
         raise
@@ -127,14 +135,14 @@ def test_has_tool_method():
     try:
         first_tool = tools[0] if tools else "example_tool"
         result = registry.has_tool(first_tool)
-        
-        if not hasattr(registry, 'has_tool'):
+
+        if not hasattr(registry, "has_tool"):
             print("❌ has_tool() method is missing from registry")
             return
-            
+
         assert result is True, f"has_tool() should return True for {first_tool}"
         print(f"✓ has_tool('{first_tool}') = {result}")
-        
+
     except Exception as e:
         print(f"❌ Test 1 failed: {e}")
         raise
@@ -156,18 +164,18 @@ def test_has_tool_method():
         if not tools:
             print("⚠️ No tools available to test get()")
             return
-            
+
         first_tool = tools[0]
         tool = registry.get(first_tool)
-        
-        if not hasattr(registry, 'get'):
+
+        if not hasattr(registry, "get"):
             print("❌ get() method is missing from registry")
             return
-            
+
         assert tool is not None, f"get() should return tool for {first_tool}"
         print(f"✓ get('{first_tool}') returned tool object")
         print(f"   Tool type: {type(tool).__name__}")
-        
+
     except Exception as e:
         print(f"❌ Test 3 failed: {e}")
         raise
@@ -178,11 +186,15 @@ def test_has_tool_method():
         non_existent = "nonexistent_tool_xyz123"
         tool = registry.get(non_existent)
         if tool is not None:
-            print(f"⚠️ get('{non_existent}') returned {tool} (expected None or exception)")
+            print(
+                f"⚠️ get('{non_existent}') returned {tool} (expected None or exception)"
+            )
         else:
             print(f"✓ get('{non_existent}') returned None as expected")
     except Exception as e:
-        print(f"✓ get() raised {e.__class__.__name__} for non-existent tool (expected behavior)")
+        print(
+            f"✓ get() raised {e.__class__.__name__} for non-existent tool (expected behavior)"
+        )
 
     print("\n✅ All tests completed successfully!")
 
@@ -190,13 +202,14 @@ def test_has_tool_method():
     print("\n[Test 5] Testing integration with ActionExecutor...")
     try:
         from app.actions import ActionExecutor
+
         executor = ActionExecutor()
         print("✓ ActionExecutor initialized successfully")
-        
+
         # Test that execute_tool_action can use has_tool()
-        if hasattr(executor, 'execute_tool_action'):
+        if hasattr(executor, "execute_tool_action"):
             print("✓ ActionExecutor.execute_tool_action() is available")
-            
+
             # Test with a known tool if we have one
             if tools:
                 test_tool = tools[0]
@@ -207,7 +220,7 @@ def test_has_tool_method():
                     print(f"⚠️ Tool execution failed (this might be expected): {e}")
         else:
             print("⚠️ execute_tool_action() not found in ActionExecutor")
-            
+
     except ImportError:
         print("⚠️ ActionExecutor not available for testing")
     except Exception as e:

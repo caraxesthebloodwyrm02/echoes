@@ -18,14 +18,16 @@ logger = logging.getLogger(__name__)
 
 class FidelityLevel(Enum):
     """Processing fidelity levels from coarse to fine-grained."""
-    SURFACE = "surface"      # Basic recognition, minimal detail
-    STANDARD = "standard"    # Balanced detail level
-    DETAILED = "detailed"    # High detail, comprehensive analysis
-    EXHAUSTIVE = "exhaustive" # Maximum detail, full analysis
+
+    SURFACE = "surface"  # Basic recognition, minimal detail
+    STANDARD = "standard"  # Balanced detail level
+    DETAILED = "detailed"  # High detail, comprehensive analysis
+    EXHAUSTIVE = "exhaustive"  # Maximum detail, full analysis
 
 
 class ProcessingContext(Enum):
     """Context types that influence fidelity decisions."""
+
     CONVERSATION = "conversation"
     ANALYSIS = "analysis"
     CREATION = "creation"
@@ -37,11 +39,12 @@ class ProcessingContext(Enum):
 @dataclass
 class FidelityMetrics:
     """Metrics used to determine optimal fidelity level."""
+
     complexity_score: float = 0.0  # 0-1 scale
-    time_pressure: float = 0.0     # 0-1 scale (higher = more urgent)
+    time_pressure: float = 0.0  # 0-1 scale (higher = more urgent)
     resource_availability: float = 1.0  # 0-1 scale (higher = more resources)
-    accuracy_requirement: float = 0.5   # 0-1 scale (higher = more accuracy needed)
-    user_preference: float = 0.5        # 0-1 scale (user's detail preference)
+    accuracy_requirement: float = 0.5  # 0-1 scale (higher = more accuracy needed)
+    user_preference: float = 0.5  # 0-1 scale (user's detail preference)
 
 
 class AdaptiveFidelityController:
@@ -52,45 +55,45 @@ class AdaptiveFidelityController:
 
     def __init__(self):
         self.fidelity_weights = {
-            'complexity': 0.3,
-            'time_pressure': 0.2,
-            'resource_availability': 0.15,
-            'accuracy_requirement': 0.25,
-            'user_preference': 0.1
+            "complexity": 0.3,
+            "time_pressure": 0.2,
+            "resource_availability": 0.15,
+            "accuracy_requirement": 0.25,
+            "user_preference": 0.1,
         }
 
         # Context-specific fidelity mappings
         self.context_mappings = {
             ProcessingContext.CONVERSATION: {
-                'default_level': FidelityLevel.STANDARD,
-                'complexity_threshold': 0.6,
-                'time_factor': 1.2  # Conversational responses need to be quick
+                "default_level": FidelityLevel.STANDARD,
+                "complexity_threshold": 0.6,
+                "time_factor": 1.2,  # Conversational responses need to be quick
             },
             ProcessingContext.ANALYSIS: {
-                'default_level': FidelityLevel.DETAILED,
-                'complexity_threshold': 0.4,
-                'time_factor': 0.8  # Analysis can take longer
+                "default_level": FidelityLevel.DETAILED,
+                "complexity_threshold": 0.4,
+                "time_factor": 0.8,  # Analysis can take longer
             },
             ProcessingContext.CREATION: {
-                'default_level': FidelityLevel.DETAILED,
-                'complexity_threshold': 0.5,
-                'time_factor': 0.9
+                "default_level": FidelityLevel.DETAILED,
+                "complexity_threshold": 0.5,
+                "time_factor": 0.9,
             },
             ProcessingContext.VERIFICATION: {
-                'default_level': FidelityLevel.EXHAUSTIVE,
-                'complexity_threshold': 0.3,
-                'time_factor': 0.7  # Verification needs accuracy over speed
+                "default_level": FidelityLevel.EXHAUSTIVE,
+                "complexity_threshold": 0.3,
+                "time_factor": 0.7,  # Verification needs accuracy over speed
             },
             ProcessingContext.SEARCH: {
-                'default_level': FidelityLevel.STANDARD,
-                'complexity_threshold': 0.7,
-                'time_factor': 1.1  # Search needs to be responsive
+                "default_level": FidelityLevel.STANDARD,
+                "complexity_threshold": 0.7,
+                "time_factor": 1.1,  # Search needs to be responsive
             },
             ProcessingContext.EXECUTION: {
-                'default_level': FidelityLevel.STANDARD,
-                'complexity_threshold': 0.5,
-                'time_factor': 1.0
-            }
+                "default_level": FidelityLevel.STANDARD,
+                "complexity_threshold": 0.5,
+                "time_factor": 1.0,
+            },
         }
 
     def assess_complexity(self, input_data: Dict[str, Any]) -> float:
@@ -106,25 +109,29 @@ class AdaptiveFidelityController:
         complexity = 0.0
 
         # Length/size factor
-        if 'text' in input_data:
-            text_length = len(input_data['text'])
+        if "text" in input_data:
+            text_length = len(input_data["text"])
             # Normalize text length (0-1000 chars = 0-0.5 complexity)
             length_score = min(text_length / 2000, 0.5)
             complexity += length_score * 0.4
 
         # Modality diversity factor
         modalities = []
-        if 'text' in input_data: modalities.append('text')
-        if 'image' in input_data: modalities.append('image')
-        if 'audio' in input_data: modalities.append('audio')
-        if 'video' in input_data: modalities.append('video')
+        if "text" in input_data:
+            modalities.append("text")
+        if "image" in input_data:
+            modalities.append("image")
+        if "audio" in input_data:
+            modalities.append("audio")
+        if "video" in input_data:
+            modalities.append("video")
 
         modality_score = min(len(modalities) / 4, 1.0) * 0.3
         complexity += modality_score
 
         # Semantic complexity (estimated by word diversity)
-        if 'text' in input_data:
-            words = input_data['text'].lower().split()
+        if "text" in input_data:
+            words = input_data["text"].lower().split()
             unique_words = len(set(words))
             diversity_ratio = unique_words / len(words) if words else 0
             semantic_score = min(diversity_ratio * 2, 1.0) * 0.3
@@ -132,18 +139,19 @@ class AdaptiveFidelityController:
 
         return min(complexity, 1.0)
 
-    def assess_time_pressure(self, context: ProcessingContext,
-                           historical_response_times: List[float] = None) -> float:
+    def assess_time_pressure(
+        self, context: ProcessingContext, historical_response_times: List[float] = None
+    ) -> float:
         """
         Assess time pressure based on context and historical patterns.
         """
         base_pressure = {
             ProcessingContext.CONVERSATION: 0.8,  # High pressure for real-time chat
-            ProcessingContext.ANALYSIS: 0.3,      # Lower pressure for analysis
+            ProcessingContext.ANALYSIS: 0.3,  # Lower pressure for analysis
             ProcessingContext.CREATION: 0.4,
             ProcessingContext.VERIFICATION: 0.2,  # Verification can take time
-            ProcessingContext.SEARCH: 0.7,        # Search should be quick
-            ProcessingContext.EXECUTION: 0.6
+            ProcessingContext.SEARCH: 0.7,  # Search should be quick
+            ProcessingContext.EXECUTION: 0.6,
         }.get(context, 0.5)
 
         # Adjust based on recent response times if available
@@ -154,30 +162,33 @@ class AdaptiveFidelityController:
 
         return base_pressure
 
-    def calculate_optimal_fidelity(self,
-                                 metrics: FidelityMetrics,
-                                 context: ProcessingContext) -> FidelityLevel:
+    def calculate_optimal_fidelity(
+        self, metrics: FidelityMetrics, context: ProcessingContext
+    ) -> FidelityLevel:
         """
         Calculate the optimal fidelity level based on all factors.
         """
         # Get context-specific settings
-        ctx_settings = self.context_mappings.get(context,
-            self.context_mappings[ProcessingContext.CONVERSATION])
+        ctx_settings = self.context_mappings.get(
+            context, self.context_mappings[ProcessingContext.CONVERSATION]
+        )
 
         # Calculate weighted fidelity score
         fidelity_score = (
-            metrics.complexity_score * self.fidelity_weights['complexity'] +
-            metrics.time_pressure * self.fidelity_weights['time_pressure'] +
-            (1 - metrics.resource_availability) * self.fidelity_weights['resource_availability'] +
-            metrics.accuracy_requirement * self.fidelity_weights['accuracy_requirement'] +
-            metrics.user_preference * self.fidelity_weights['user_preference']
+            metrics.complexity_score * self.fidelity_weights["complexity"]
+            + metrics.time_pressure * self.fidelity_weights["time_pressure"]
+            + (1 - metrics.resource_availability)
+            * self.fidelity_weights["resource_availability"]
+            + metrics.accuracy_requirement
+            * self.fidelity_weights["accuracy_requirement"]
+            + metrics.user_preference * self.fidelity_weights["user_preference"]
         )
 
         # Apply context-specific adjustments
-        fidelity_score *= ctx_settings['time_factor']
+        fidelity_score *= ctx_settings["time_factor"]
 
         # Adjust based on complexity threshold
-        if metrics.complexity_score > ctx_settings['complexity_threshold']:
+        if metrics.complexity_score > ctx_settings["complexity_threshold"]:
             fidelity_score += 0.2  # Boost fidelity for complex inputs
 
         # Clamp to valid range
@@ -193,82 +204,85 @@ class AdaptiveFidelityController:
         else:
             return FidelityLevel.EXHAUSTIVE
 
-    def get_processing_parameters(self, fidelity_level: FidelityLevel,
-                                modality: str) -> Dict[str, Any]:
+    def get_processing_parameters(
+        self, fidelity_level: FidelityLevel, modality: str
+    ) -> Dict[str, Any]:
         """
         Get processing parameters based on fidelity level and modality.
         """
         base_params = {
             FidelityLevel.SURFACE: {
-                'max_tokens': 100,
-                'detail_level': 'minimal',
-                'analysis_depth': 'basic',
-                'confidence_threshold': 0.6
+                "max_tokens": 100,
+                "detail_level": "minimal",
+                "analysis_depth": "basic",
+                "confidence_threshold": 0.6,
             },
             FidelityLevel.STANDARD: {
-                'max_tokens': 300,
-                'detail_level': 'moderate',
-                'analysis_depth': 'standard',
-                'confidence_threshold': 0.75
+                "max_tokens": 300,
+                "detail_level": "moderate",
+                "analysis_depth": "standard",
+                "confidence_threshold": 0.75,
             },
             FidelityLevel.DETAILED: {
-                'max_tokens': 600,
-                'detail_level': 'comprehensive',
-                'analysis_depth': 'detailed',
-                'confidence_threshold': 0.85
+                "max_tokens": 600,
+                "detail_level": "comprehensive",
+                "analysis_depth": "detailed",
+                "confidence_threshold": 0.85,
             },
             FidelityLevel.EXHAUSTIVE: {
-                'max_tokens': 1200,
-                'detail_level': 'exhaustive',
-                'analysis_depth': 'maximum',
-                'confidence_threshold': 0.95
-            }
+                "max_tokens": 1200,
+                "detail_level": "exhaustive",
+                "analysis_depth": "maximum",
+                "confidence_threshold": 0.95,
+            },
         }
 
         params = base_params[fidelity_level].copy()
 
         # Modality-specific adjustments
-        if modality == 'image':
+        if modality == "image":
             if fidelity_level == FidelityLevel.SURFACE:
-                params['resolution'] = 'low'
-                params['analysis_type'] = 'basic_caption'
+                params["resolution"] = "low"
+                params["analysis_type"] = "basic_caption"
             elif fidelity_level == FidelityLevel.STANDARD:
-                params['resolution'] = 'medium'
-                params['analysis_type'] = 'detailed_description'
+                params["resolution"] = "medium"
+                params["analysis_type"] = "detailed_description"
             elif fidelity_level == FidelityLevel.DETAILED:
-                params['resolution'] = 'high'
-                params['analysis_type'] = 'comprehensive_analysis'
+                params["resolution"] = "high"
+                params["analysis_type"] = "comprehensive_analysis"
             else:  # EXHAUSTIVE
-                params['resolution'] = 'maximum'
-                params['analysis_type'] = 'forensic_analysis'
+                params["resolution"] = "maximum"
+                params["analysis_type"] = "forensic_analysis"
 
-        elif modality == 'audio':
+        elif modality == "audio":
             if fidelity_level == FidelityLevel.SURFACE:
-                params['transcription_detail'] = 'basic'
+                params["transcription_detail"] = "basic"
             elif fidelity_level == FidelityLevel.STANDARD:
-                params['transcription_detail'] = 'standard'
+                params["transcription_detail"] = "standard"
             elif fidelity_level == FidelityLevel.DETAILED:
-                params['transcription_detail'] = 'detailed'
+                params["transcription_detail"] = "detailed"
             else:  # EXHAUSTIVE
-                params['transcription_detail'] = 'verbatim'
+                params["transcription_detail"] = "verbatim"
 
-        elif modality == 'text':
+        elif modality == "text":
             if fidelity_level == FidelityLevel.SURFACE:
-                params['processing_mode'] = 'summarize'
+                params["processing_mode"] = "summarize"
             elif fidelity_level == FidelityLevel.STANDARD:
-                params['processing_mode'] = 'analyze'
+                params["processing_mode"] = "analyze"
             elif fidelity_level == FidelityLevel.DETAILED:
-                params['processing_mode'] = 'comprehensive'
+                params["processing_mode"] = "comprehensive"
             else:  # EXHAUSTIVE
-                params['processing_mode'] = 'exhaustive'
+                params["processing_mode"] = "exhaustive"
 
         return params
 
-    def adapt_processing_plan(self,
-                            input_data: Dict[str, Any],
-                            context: ProcessingContext,
-                            user_preferences: Dict[str, Any] = None,
-                            historical_performance: List[Dict] = None) -> Dict[str, Any]:
+    def adapt_processing_plan(
+        self,
+        input_data: Dict[str, Any],
+        context: ProcessingContext,
+        user_preferences: Dict[str, Any] = None,
+        historical_performance: List[Dict] = None,
+    ) -> Dict[str, Any]:
         """
         Create an adaptive processing plan based on all contextual factors.
         """
@@ -288,11 +302,13 @@ class AdaptiveFidelityController:
             ProcessingContext.CREATION: 0.7,
             ProcessingContext.CONVERSATION: 0.6,
             ProcessingContext.SEARCH: 0.6,
-            ProcessingContext.EXECUTION: 0.7
+            ProcessingContext.EXECUTION: 0.7,
         }.get(context, 0.7)
 
         # User preference (default to balanced)
-        user_pref = user_preferences.get('detail_level', 0.5) if user_preferences else 0.5
+        user_pref = (
+            user_preferences.get("detail_level", 0.5) if user_preferences else 0.5
+        )
 
         # Create metrics object
         metrics = FidelityMetrics(
@@ -300,7 +316,7 @@ class AdaptiveFidelityController:
             time_pressure=time_pressure,
             resource_availability=resource_availability,
             accuracy_requirement=accuracy_req,
-            user_preference=user_pref
+            user_preference=user_pref,
         )
 
         # Calculate optimal fidelity
@@ -311,27 +327,27 @@ class AdaptiveFidelityController:
         processing_params = self.get_processing_parameters(optimal_fidelity, modality)
 
         return {
-            'fidelity_level': optimal_fidelity.value,
-            'complexity_score': complexity,
-            'processing_parameters': processing_params,
-            'modality': modality,
-            'context': context.value,
-            'metrics': {
-                'complexity': complexity,
-                'time_pressure': time_pressure,
-                'resource_availability': resource_availability,
-                'accuracy_requirement': accuracy_req,
-                'user_preference': user_pref
-            }
+            "fidelity_level": optimal_fidelity.value,
+            "complexity_score": complexity,
+            "processing_parameters": processing_params,
+            "modality": modality,
+            "context": context.value,
+            "metrics": {
+                "complexity": complexity,
+                "time_pressure": time_pressure,
+                "resource_availability": resource_availability,
+                "accuracy_requirement": accuracy_req,
+                "user_preference": user_pref,
+            },
         }
 
     def _detect_primary_modality(self, input_data: Dict[str, Any]) -> str:
         """Detect the primary modality of the input data."""
-        if 'image' in input_data or 'image_path' in input_data:
-            return 'image'
-        elif 'audio' in input_data or 'audio_path' in input_data:
-            return 'audio'
-        elif 'video' in input_data or 'video_path' in input_data:
-            return 'video'
+        if "image" in input_data or "image_path" in input_data:
+            return "image"
+        elif "audio" in input_data or "audio_path" in input_data:
+            return "audio"
+        elif "video" in input_data or "video_path" in input_data:
+            return "video"
         else:
-            return 'text'
+            return "text"

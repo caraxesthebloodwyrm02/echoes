@@ -17,7 +17,9 @@ __all__ = ["geomspace", "linspace", "logspace"]
 
 _ScalarT = TypeVar("_ScalarT", bound=np.generic)
 
-_ToArrayFloat64: TypeAlias = _DualArrayLike[np.dtype[np.float64 | np.integer | np.bool], float]
+_ToArrayFloat64: TypeAlias = _DualArrayLike[
+    np.dtype[np.float64 | np.integer | np.bool], float
+]
 
 @overload
 def linspace(

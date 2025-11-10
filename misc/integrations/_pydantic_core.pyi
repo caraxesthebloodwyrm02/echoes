@@ -275,7 +275,9 @@ class SchemaValidator:
             Either the model dict or a tuple of `(model_data, model_extra, fields_set)`
         """
 
-    def get_default_value(self, *, strict: bool | None = None, context: Any = None) -> Some | None:
+    def get_default_value(
+        self, *, strict: bool | None = None, context: Any = None
+    ) -> Some | None:
         """
         Get the default value for the schema, including running default value validation.
 
@@ -295,7 +297,9 @@ class SchemaValidator:
 
 # In reality, `bool` should be replaced by `Literal[True]` but mypy fails to correctly apply bidirectional type inference
 # (e.g. when using `{'a': {'b': True}}`).
-_IncEx: TypeAlias = set[int] | set[str] | Mapping[int, _IncEx | bool] | Mapping[str, _IncEx | bool]
+_IncEx: TypeAlias = (
+    set[int] | set[str] | Mapping[int, _IncEx | bool] | Mapping[str, _IncEx | bool]
+)
 
 @final
 class SchemaSerializer:
@@ -690,7 +694,11 @@ class ValidationError(ValueError):
         """
 
     def errors(
-        self, *, include_url: bool = True, include_context: bool = True, include_input: bool = True
+        self,
+        *,
+        include_url: bool = True,
+        include_context: bool = True,
+        include_input: bool = True,
     ) -> list[ErrorDetails]:
         """
         Details about each error in the validation error.
@@ -747,7 +755,11 @@ class PydanticCustomError(ValueError):
     """
 
     def __init__(
-        self, error_type: LiteralString, message_template: LiteralString, context: dict[str, Any] | None = None, /
+        self,
+        error_type: LiteralString,
+        message_template: LiteralString,
+        context: dict[str, Any] | None = None,
+        /,
     ) -> None: ...
     @property
     def context(self) -> dict[str, Any] | None:
@@ -785,7 +797,9 @@ class PydanticKnownError(ValueError):
         context: The data to inject into the message template.
     """
 
-    def __init__(self, error_type: ErrorType, context: dict[str, Any] | None = None, /) -> None: ...
+    def __init__(
+        self, error_type: ErrorType, context: dict[str, Any] | None = None, /
+    ) -> None: ...
     @property
     def context(self) -> dict[str, Any] | None:
         """Values which are required to render the error message, and could hence be useful in passing error data forward."""
@@ -971,7 +985,9 @@ class ArgsKwargs:
         ```
     """
 
-    def __init__(self, args: tuple[Any, ...], kwargs: dict[str, Any] | None = None) -> None:
+    def __init__(
+        self, args: tuple[Any, ...], kwargs: dict[str, Any] | None = None
+    ) -> None:
         """Initializes the `ArgsKwargs`.
 
         Arguments:
@@ -979,7 +995,9 @@ class ArgsKwargs:
             kwargs: The keyword arguments for a function call
         """
 
-    def __new__(cls, args: tuple[Any, ...], kwargs: dict[str, Any] | None = None) -> Self: ...
+    def __new__(
+        cls, args: tuple[Any, ...], kwargs: dict[str, Any] | None = None
+    ) -> Self: ...
     @property
     def args(self) -> tuple[Any, ...]:
         """The arguments (inherently ordered) for a function call."""

@@ -26,14 +26,21 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from image_classification.classifier import ImageClassifier, get_class_names
 
+
 def plot_confusion_matrix(cm, class_names, save_path=None):
     """Plot confusion matrix."""
     plt.figure(figsize=(10, 8))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
-                xticklabels=class_names, yticklabels=class_names)
-    plt.title('Confusion Matrix')
-    plt.xlabel('Predicted')
-    plt.ylabel('True')
+    sns.heatmap(
+        cm,
+        annot=True,
+        fmt="d",
+        cmap="Blues",
+        xticklabels=class_names,
+        yticklabels=class_names,
+    )
+    plt.title("Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("True")
     plt.xticks(rotation=45)
     plt.yticks(rotation=45)
     plt.tight_layout()
@@ -44,7 +51,10 @@ def plot_confusion_matrix(cm, class_names, save_path=None):
     else:
         plt.show()
 
-def evaluate_model_detailed(model_path, dataset_name='cifar10', batch_size=32, data_dir='./data'):
+
+def evaluate_model_detailed(
+    model_path, dataset_name="cifar10", batch_size=32, data_dir="./data"
+):
     """Evaluate model with detailed metrics."""
     print("🔧 Loading model...")
     classifier = ImageClassifier()
@@ -52,9 +62,7 @@ def evaluate_model_detailed(model_path, dataset_name='cifar10', batch_size=32, d
 
     print(f"📥 Loading {dataset_name} test dataset...")
     _, _, test_loader = classifier.load_dataset(
-        dataset_name=dataset_name,
-        batch_size=batch_size,
-        data_dir=data_dir
+        dataset_name=dataset_name, batch_size=batch_size, data_dir=data_dir
     )
 
     print("🧪 Running detailed evaluation...")
@@ -81,36 +89,45 @@ def evaluate_model_detailed(model_path, dataset_name='cifar10', batch_size=32, d
     class_names = get_class_names(dataset_name)
 
     # Classification report
-    report = classification_report(all_labels, all_preds,
-                                 target_names=class_names,
-                                 output_dict=True)
+    report = classification_report(
+        all_labels, all_preds, target_names=class_names, output_dict=True
+    )
 
     # Confusion matrix
     cm = confusion_matrix(all_labels, all_preds)
 
     return {
-        'classification_report': report,
-        'confusion_matrix': cm.tolist(),
-        'class_names': class_names,
-        'predictions': all_preds.tolist(),
-        'true_labels': all_labels.tolist()
+        "classification_report": report,
+        "confusion_matrix": cm.tolist(),
+        "class_names": class_names,
+        "predictions": all_preds.tolist(),
+        "true_labels": all_labels.tolist(),
     }
 
+
 def main():
-    parser = argparse.ArgumentParser(description='Evaluate Image Classification Model')
-    parser.add_argument('--model_path', type=str, required=True,
-                       help='Path to trained model')
-    parser.add_argument('--dataset', type=str, default='cifar10',
-                       choices=['cifar10', 'cifar100', 'mnist', 'fashionmnist'],
-                       help='Dataset to evaluate on')
-    parser.add_argument('--batch_size', type=int, default=32,
-                       help='Batch size')
-    parser.add_argument('--data_dir', type=str, default='./data',
-                       help='Data directory')
-    parser.add_argument('--output_dir', type=str, default='./evaluation_results',
-                       help='Output directory for results')
-    parser.add_argument('--generate_plots', action='store_true',
-                       help='Generate confusion matrix plot')
+    parser = argparse.ArgumentParser(description="Evaluate Image Classification Model")
+    parser.add_argument(
+        "--model_path", type=str, required=True, help="Path to trained model"
+    )
+    parser.add_argument(
+        "--dataset",
+        type=str,
+        default="cifar10",
+        choices=["cifar10", "cifar100", "mnist", "fashionmnist"],
+        help="Dataset to evaluate on",
+    )
+    parser.add_argument("--batch_size", type=int, default=32, help="Batch size")
+    parser.add_argument("--data_dir", type=str, default="./data", help="Data directory")
+    parser.add_argument(
+        "--output_dir",
+        type=str,
+        default="./evaluation_results",
+        help="Output directory for results",
+    )
+    parser.add_argument(
+        "--generate_plots", action="store_true", help="Generate confusion matrix plot"
+    )
 
     args = parser.parse_args()
 
@@ -136,16 +153,16 @@ def main():
             model_path=args.model_path,
             dataset_name=args.dataset,
             batch_size=args.batch_size,
-            data_dir=args.data_dir
+            data_dir=args.data_dir,
         )
 
         # Save results
-        results_path = output_dir / 'evaluation_results.json'
-        with open(results_path, 'w') as f:
+        results_path = output_dir / "evaluation_results.json"
+        with open(results_path, "w") as f:
             json.dump(results, f, indent=2)
 
         # Print summary
-        report = results['classification_report']
+        report = results["classification_report"]
         print("[RESULTS] Evaluation Results:")
         print("-" * 30)
         print(f"Overall Accuracy: {report['accuracy']:.2f}")
@@ -157,21 +174,23 @@ def main():
         print("-" * 40)
 
         # Print per-class metrics
-        class_names = results['class_names']
+        class_names = results["class_names"]
         for i, class_name in enumerate(class_names):
             if class_name in report:  # Handle case where class might not be in report
                 metrics = report[class_name]
-                print(f"{class_name:<30} "
-                       f"{metrics['precision']:6.2f} "
-                       f"{metrics['recall']:6.2f} "
-                       f"{metrics['f1-score']:6.2f} "
-                       f"{int(metrics['support']):<6d}")
+                print(
+                    f"{class_name:<30} "
+                    f"{metrics['precision']:6.2f} "
+                    f"{metrics['recall']:6.2f} "
+                    f"{metrics['f1-score']:6.2f} "
+                    f"{int(metrics['support']):<6d}"
+                )
 
         # Generate confusion matrix plot if requested
         if args.generate_plots:
             print("\n[RESULTS] Generating confusion matrix plot...")
-            cm = np.array(results['confusion_matrix'])
-            plot_path = output_dir / 'confusion_matrix.png'
+            cm = np.array(results["confusion_matrix"])
+            plot_path = output_dir / "confusion_matrix.png"
             plot_confusion_matrix(cm, class_names, save_path=str(plot_path))
 
         print("\n[SUCCESS] Evaluation complete!")
@@ -183,8 +202,10 @@ def main():
     except Exception as e:
         print(f"[ERROR] Error during evaluation: {str(e)}")
         import traceback
+
         traceback.print_exc()
         sys.exit(1)
 
-if __name__ == '__main__':
+
+if __name__ == "__main__":
     main()

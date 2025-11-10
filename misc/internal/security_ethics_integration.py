@@ -18,8 +18,9 @@ except ImportError:
     from ethics_framework import ethics_assessor, EthicalDecision
 
 # Configure integration logger
-integration_logger = logging.getLogger('echoes.security_ethics')
+integration_logger = logging.getLogger("echoes.security_ethics")
 integration_logger.setLevel(logging.INFO)
+
 
 class SecureEthicalAI:
     """Integration layer for secure and ethical AI operations."""
@@ -29,7 +30,9 @@ class SecureEthicalAI:
         self.enable_ethics = enable_ethics
         self.operation_hooks: Dict[str, List[Callable]] = {}
 
-    def secure_ethical_operation(self, operation_name: str, requires_ethics_review: bool = False):
+    def secure_ethical_operation(
+        self, operation_name: str, requires_ethics_review: bool = False
+    ):
         """
         Decorator that combines security and ethics checks.
 
@@ -37,26 +40,38 @@ class SecureEthicalAI:
             operation_name: Name of the operation for logging
             requires_ethics_review: Whether to require explicit ethics review
         """
+
         def decorator(func: Callable):
             @wraps(func)
             def wrapper(*args, **kwargs):
                 # Extract context information
-                user_id = kwargs.get('user_id', getattr(args[0] if args else None, 'user_id', 'anonymous'))
+                user_id = kwargs.get(
+                    "user_id",
+                    getattr(args[0] if args else None, "user_id", "anonymous"),
+                )
                 context = self._extract_context(args, kwargs)
 
                 # Security validation
                 if self.enable_security:
-                    if not security_manager.validate_operation(user_id, operation_name, kwargs):
-                        raise PermissionError(f"Security validation failed for: {operation_name}")
+                    if not security_manager.validate_operation(
+                        user_id, operation_name, kwargs
+                    ):
+                        raise PermissionError(
+                            f"Security validation failed for: {operation_name}"
+                        )
 
                 # Ethics assessment
                 if self.enable_ethics:
-                    assessment = ethics_assessor.assess_operation(operation_name, user_id, context)
+                    assessment = ethics_assessor.assess_operation(
+                        operation_name, user_id, context
+                    )
 
                     # Check if human review is required
                     if ethics_assessor.requires_human_review(assessment):
                         if not self._perform_human_review(assessment, user_id):
-                            raise PermissionError(f"Ethical review failed for: {operation_name}")
+                            raise PermissionError(
+                                f"Ethical review failed for: {operation_name}"
+                            )
 
                     # Log ethical decision
                     decision = EthicalDecision(
@@ -68,7 +83,8 @@ class SecureEthicalAI:
                         decision_made="approved",
                         rationale="Passed automated ethical review",
                         alternatives_considered=[],
-                        monitoring_required=assessment.get("overall_risk_score", 0) > 0.5
+                        monitoring_required=assessment.get("overall_risk_score", 0)
+                        > 0.5,
                     )
                     ethics_assessor.framework.log_ethical_decision(decision)
 
@@ -77,11 +93,11 @@ class SecureEthicalAI:
                     result = func(*args, **kwargs)
 
                     # Run post-operation hooks
-                    self._run_hooks(operation_name, "post", {
-                        "user_id": user_id,
-                        "result": result,
-                        "context": context
-                    })
+                    self._run_hooks(
+                        operation_name,
+                        "post",
+                        {"user_id": user_id, "result": result, "context": context},
+                    )
 
                     return result
 
@@ -89,39 +105,55 @@ class SecureEthicalAI:
                     # Log security incident for operation failure
                     if self.enable_security:
                         security_manager._log_incident(
-                            SecurityEvent.AUDIT_FAILURE, "medium",
-                            user_id, operation_name, "operation_failed",
-                            {"error": str(e), "operation": operation_name}
+                            SecurityEvent.AUDIT_FAILURE,
+                            "medium",
+                            user_id,
+                            operation_name,
+                            "operation_failed",
+                            {"error": str(e), "operation": operation_name},
                         )
                     raise
 
             return wrapper
+
         return decorator
 
     def kardashev_secure_operation(self, operation_name: str):
         """
         Special decorator for Kardashev-scale operations with enhanced security and ethics.
         """
+
         def decorator(func: Callable):
             @wraps(func)
             def wrapper(*args, **kwargs):
-                user_id = kwargs.get('user_id', getattr(args[0] if args else None, 'user_id', 'anonymous'))
+                user_id = kwargs.get(
+                    "user_id",
+                    getattr(args[0] if args else None, "user_id", "anonymous"),
+                )
                 context = self._extract_context(args, kwargs)
 
                 # Enhanced security for Kardashev operations
                 if self.enable_security:
                     # Multiple validation layers
                     for i in range(3):  # Triple validation
-                        if not security_manager.validate_operation(user_id, f"{operation_name}_layer_{i}", kwargs):
-                            raise PermissionError(f"Kardashev security validation failed at layer {i}")
+                        if not security_manager.validate_operation(
+                            user_id, f"{operation_name}_layer_{i}", kwargs
+                        ):
+                            raise PermissionError(
+                                f"Kardashev security validation failed at layer {i}"
+                            )
 
                 # Kardashev-specific ethics assessment
                 if self.enable_ethics:
-                    assessment = ethics_assessor.kardashev_assessment(operation_name, user_id, context)
+                    assessment = ethics_assessor.kardashev_assessment(
+                        operation_name, user_id, context
+                    )
 
                     # Always require human review for Kardashev operations
                     if not self._perform_kardashev_review(assessment, user_id):
-                        raise PermissionError(f"Kardashev ethical review failed for: {operation_name}")
+                        raise PermissionError(
+                            f"Kardashev ethical review failed for: {operation_name}"
+                        )
 
                     # Enhanced logging
                     decision = EthicalDecision(
@@ -132,14 +164,19 @@ class SecureEthicalAI:
                         ethical_analysis=assessment,
                         decision_made="approved_with_kardashev_review",
                         rationale="Passed Kardashev-scale ethical review",
-                        alternatives_considered=["cancel_operation", "modify_scope", "add_safeguards"],
-                        monitoring_required=True
+                        alternatives_considered=[
+                            "cancel_operation",
+                            "modify_scope",
+                            "add_safeguards",
+                        ],
+                        monitoring_required=True,
                     )
                     ethics_assessor.framework.log_ethical_decision(decision)
 
                 return func(*args, **kwargs)
 
             return wrapper
+
         return decorator
 
     def _extract_context(self, args, kwargs) -> Dict[str, Any]:
@@ -147,7 +184,13 @@ class SecureEthicalAI:
         context = {}
 
         # Extract common context fields
-        context_fields = ['user_id', 'session_id', 'operation_type', 'target_resource', 'parameters']
+        context_fields = [
+            "user_id",
+            "session_id",
+            "operation_type",
+            "target_resource",
+            "parameters",
+        ]
         for field in context_fields:
             if field in kwargs:
                 context[field] = kwargs[field]
@@ -155,9 +198,9 @@ class SecureEthicalAI:
                 context[field] = getattr(args[0], field)
 
         # Add metadata
-        context['timestamp'] = datetime.now(timezone.utc).isoformat()
-        context['arg_count'] = len(args)
-        context['kwarg_keys'] = list(kwargs.keys())
+        context["timestamp"] = datetime.now(timezone.utc).isoformat()
+        context["arg_count"] = len(args)
+        context["kwarg_keys"] = list(kwargs.keys())
 
         return context
 
@@ -176,7 +219,9 @@ class SecureEthicalAI:
 
         return True  # Auto-approve for development
 
-    def _perform_kardashev_review(self, assessment: Dict[str, Any], user_id: str) -> bool:
+    def _perform_kardashev_review(
+        self, assessment: Dict[str, Any], user_id: str
+    ) -> bool:
         """Perform enhanced review for Kardashev-scale operations."""
         report = ethics_assessor.generate_ethical_report(assessment)
 
@@ -213,12 +258,14 @@ class SecureEthicalAI:
         status = {
             "security_enabled": self.enable_security,
             "ethics_enabled": self.enable_ethics,
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         if self.enable_security:
             status["security_health"] = security_manager.security_health_check()
-            status["recent_security_events"] = len(security_manager.get_audit_trail(hours=1))
+            status["recent_security_events"] = len(
+                security_manager.get_audit_trail(hours=1)
+            )
 
         if self.enable_ethics:
             status["ethical_decisions_today"] = len(
@@ -228,17 +275,29 @@ class SecureEthicalAI:
 
         return status
 
-    def audit_operation(self, operation_name: str, user_id: str,
-                       success: bool, details: Dict[str, Any] = None):
+    def audit_operation(
+        self,
+        operation_name: str,
+        user_id: str,
+        success: bool,
+        details: Dict[str, Any] = None,
+    ):
         """Manually audit an operation."""
         if self.enable_security:
-            event_type = SecurityEvent.AUTHENTICATION if success else SecurityEvent.AUDIT_FAILURE
+            event_type = (
+                SecurityEvent.AUTHENTICATION if success else SecurityEvent.AUDIT_FAILURE
+            )
             severity = "low" if success else "medium"
 
             security_manager._log_incident(
-                event_type, severity, user_id, operation_name,
-                "manual_audit", details or {}
+                event_type,
+                severity,
+                user_id,
+                operation_name,
+                "manual_audit",
+                details or {},
             )
+
 
 class KardashevEthicsMonitor:
     """Specialized monitoring for Kardashev-scale operations."""
@@ -248,69 +307,82 @@ class KardashevEthicsMonitor:
         self.global_impact_tracking = {}
         self.coordination_log = []
 
-    def track_kardashev_operation(self, operation: str, user_id: str,
-                                impact_assessment: Dict[str, Any]):
+    def track_kardashev_operation(
+        self, operation: str, user_id: str, impact_assessment: Dict[str, Any]
+    ):
         """Track a Kardashev-scale operation."""
         entry = {
             "operation": operation,
             "user_id": user_id,
             "timestamp": datetime.now(timezone.utc).isoformat(),
             "impact_assessment": impact_assessment,
-            "monitoring_active": True
+            "monitoring_active": True,
         }
 
         self.kardashev_operations.append(entry)
-        integration_logger.critical(f"Kardashev operation tracked: {operation} by {user_id}")
+        integration_logger.critical(
+            f"Kardashev operation tracked: {operation} by {user_id}"
+        )
 
     def assess_global_impact(self, operation_type: str) -> Dict[str, Any]:
         """Assess global impact of operation types."""
         # Analyze patterns across Kardashev operations
-        similar_ops = [op for op in self.kardashev_operations
-                      if op["operation"] == operation_type]
+        similar_ops = [
+            op for op in self.kardashev_operations if op["operation"] == operation_type
+        ]
 
         if not similar_ops:
             return {"global_impact": "unknown", "coordination_needed": True}
 
         # Calculate aggregate impact
-        total_risk = sum(op["impact_assessment"].get("kardashev_adjusted_risk", 0)
-                        for op in similar_ops)
+        total_risk = sum(
+            op["impact_assessment"].get("kardashev_adjusted_risk", 0)
+            for op in similar_ops
+        )
 
         avg_risk = total_risk / len(similar_ops)
 
         return {
             "operation_count": len(similar_ops),
             "average_kardashev_risk": avg_risk,
-            "global_impact": "high" if avg_risk > 0.8 else "moderate" if avg_risk > 0.6 else "low",
+            "global_impact": (
+                "high" if avg_risk > 0.8 else "moderate" if avg_risk > 0.6 else "low"
+            ),
             "coordination_needed": avg_risk > 0.7,
-            "international_review_required": avg_risk > 0.8
+            "international_review_required": avg_risk > 0.8,
         }
 
-    def log_coordination_event(self, event: str, stakeholders: List[str],
-                             impact: str):
+    def log_coordination_event(self, event: str, stakeholders: List[str], impact: str):
         """Log global coordination events."""
         entry = {
             "event": event,
             "stakeholders": stakeholders,
             "impact": impact,
-            "timestamp": datetime.now(timezone.utc).isoformat()
+            "timestamp": datetime.now(timezone.utc).isoformat(),
         }
 
         self.coordination_log.append(entry)
         integration_logger.info(f"Global coordination logged: {event}")
 
+
 # Global instances
 secure_ai = SecureEthicalAI()
 kardashev_monitor = KardashevEthicsMonitor()
+
 
 # Convenience decorators for common use cases
 def secure_ai_operation(operation_name: str):
     """Decorator for general AI operations with security and ethics."""
     return secure_ai.secure_ethical_operation(operation_name)
 
+
 def kardashev_operation(operation_name: str):
     """Decorator for Kardashev-scale operations."""
     return secure_ai.kardashev_secure_operation(operation_name)
 
+
 def high_risk_operation(operation_name: str):
     """Decorator for high-risk operations requiring ethics review."""
-    return secure_ai.secure_ethical_operation(operation_name, requires_ethics_review=True)
+    return secure_ai.secure_ethical_operation(
+        operation_name, requires_ethics_review=True
+    )

@@ -30,7 +30,9 @@ class TestTimedeltaIndex:
         assert idx.tolist() == expected_list
 
     def test_astype_object_with_nat(self):
-        idx = TimedeltaIndex([timedelta(days=1), timedelta(days=2), NaT, timedelta(days=4)], name="idx")
+        idx = TimedeltaIndex(
+            [timedelta(days=1), timedelta(days=2), NaT, timedelta(days=4)], name="idx"
+        )
         expected_list = [
             Timedelta("1 days"),
             Timedelta("2 days"),
@@ -47,16 +49,22 @@ class TestTimedeltaIndex:
         idx = TimedeltaIndex([1e14, "NaT", NaT, np.nan], name="idx")
 
         result = idx.astype(object)
-        expected = Index([Timedelta("1 days 03:46:40")] + [NaT] * 3, dtype=object, name="idx")
+        expected = Index(
+            [Timedelta("1 days 03:46:40")] + [NaT] * 3, dtype=object, name="idx"
+        )
         tm.assert_index_equal(result, expected)
 
         result = idx.astype(np.int64)
-        expected = Index([100000000000000] + [-9223372036854775808] * 3, dtype=np.int64, name="idx")
+        expected = Index(
+            [100000000000000] + [-9223372036854775808] * 3, dtype=np.int64, name="idx"
+        )
         tm.assert_index_equal(result, expected)
 
         result = idx.astype(str)
         if using_infer_string:
-            expected = Index([str(x) if x is not NaT else None for x in idx], name="idx", dtype="str")
+            expected = Index(
+                [str(x) if x is not NaT else None for x in idx], name="idx", dtype="str"
+            )
         else:
             expected = Index([str(x) for x in idx], name="idx", dtype=object)
         tm.assert_index_equal(result, expected)
@@ -79,7 +87,8 @@ class TestTimedeltaIndex:
         idx = TimedeltaIndex([1e14, "NaT", NaT, np.nan])
 
         msg = (
-            r"Cannot convert from timedelta64\[ns\] to timedelta64. " "Supported resolutions are 's', 'ms', 'us', 'ns'"
+            r"Cannot convert from timedelta64\[ns\] to timedelta64. "
+            "Supported resolutions are 's', 'ms', 'us', 'ns'"
         )
         with pytest.raises(ValueError, match=msg):
             idx.astype("timedelta64")
@@ -128,7 +137,9 @@ class TestTimedeltaIndex:
 
         res = tdi.astype("m8[s]")
         exp_values = np.asarray(tdi).astype("m8[s]")
-        exp_tda = TimedeltaArray._simple_new(exp_values, dtype=exp_values.dtype, freq=tdi.freq)
+        exp_tda = TimedeltaArray._simple_new(
+            exp_values, dtype=exp_values.dtype, freq=tdi.freq
+        )
         expected = Index(exp_tda)
         assert expected.dtype == "m8[s]"
         tm.assert_index_equal(res, expected)

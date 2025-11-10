@@ -10,7 +10,9 @@ def window_none(x: ArrayLike) -> ArrayLike: ...
 def detrend(
     x: ArrayLike,
     key: (
-        Literal["default", "constant", "mean", "linear", "none"] | Callable[[ArrayLike, int | None], ArrayLike] | None
+        Literal["default", "constant", "mean", "linear", "none"]
+        | Callable[[ArrayLike, int | None], ArrayLike]
+        | None
     ) = ...,
     axis: int | None = ...,
 ) -> ArrayLike: ...
@@ -21,7 +23,11 @@ def psd(
     x: ArrayLike,
     NFFT: int | None = ...,
     Fs: float | None = ...,
-    detrend: Literal["none", "mean", "linear"] | Callable[[ArrayLike, int | None], ArrayLike] | None = ...,
+    detrend: (
+        Literal["none", "mean", "linear"]
+        | Callable[[ArrayLike, int | None], ArrayLike]
+        | None
+    ) = ...,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = ...,
     noverlap: int | None = ...,
     pad_to: int | None = ...,
@@ -33,7 +39,11 @@ def csd(
     y: ArrayLike | None,
     NFFT: int | None = ...,
     Fs: float | None = ...,
-    detrend: Literal["none", "mean", "linear"] | Callable[[ArrayLike, int | None], ArrayLike] | None = ...,
+    detrend: (
+        Literal["none", "mean", "linear"]
+        | Callable[[ArrayLike, int | None], ArrayLike]
+        | None
+    ) = ...,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = ...,
     noverlap: int | None = ...,
     pad_to: int | None = ...,
@@ -50,7 +60,11 @@ def specgram(
     x: ArrayLike,
     NFFT: int | None = ...,
     Fs: float | None = ...,
-    detrend: Literal["none", "mean", "linear"] | Callable[[ArrayLike, int | None], ArrayLike] | None = ...,
+    detrend: (
+        Literal["none", "mean", "linear"]
+        | Callable[[ArrayLike, int | None], ArrayLike]
+        | None
+    ) = ...,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike | None = ...,
     noverlap: int | None = ...,
     pad_to: int | None = ...,
@@ -63,7 +77,9 @@ def cohere(
     y: ArrayLike,
     NFFT: int = ...,
     Fs: float = ...,
-    detrend: Literal["none", "mean", "linear"] | Callable[[ArrayLike, int | None], ArrayLike] = ...,
+    detrend: (
+        Literal["none", "mean", "linear"] | Callable[[ArrayLike, int | None], ArrayLike]
+    ) = ...,
     window: Callable[[ArrayLike], ArrayLike] | ArrayLike = ...,
     noverlap: int = ...,
     pad_to: int | None = ...,
@@ -84,7 +100,12 @@ class GaussianKDE:
     def __init__(
         self,
         dataset: ArrayLike,
-        bw_method: Literal["scott", "silverman"] | float | Callable[[GaussianKDE], float] | None = ...,
+        bw_method: (
+            Literal["scott", "silverman"]
+            | float
+            | Callable[[GaussianKDE], float]
+            | None
+        ) = ...,
     ) -> None: ...
     def scotts_factor(self) -> float: ...
     def silverman_factor(self) -> float: ...

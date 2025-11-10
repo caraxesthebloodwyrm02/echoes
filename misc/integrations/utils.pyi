@@ -143,27 +143,49 @@ class clear_and_catch_warnings(warnings.catch_warnings[_W_co], Generic[_W_co]): 
     class_modules: ClassVar[tuple[types.ModuleType, ...]] = ()
     modules: Final[set[types.ModuleType]]
     @overload  # record: True
-    def __init__(self: clear_and_catch_warnings[_WarnLog], /, record: L[True], modules: _ToModules = ()) -> None: ...
+    def __init__(
+        self: clear_and_catch_warnings[_WarnLog],
+        /,
+        record: L[True],
+        modules: _ToModules = (),
+    ) -> None: ...
     @overload  # record: False (default)
     def __init__(
-        self: clear_and_catch_warnings[None], /, record: L[False] = False, modules: _ToModules = ()
+        self: clear_and_catch_warnings[None],
+        /,
+        record: L[False] = False,
+        modules: _ToModules = (),
     ) -> None: ...
     @overload  # record; bool
     def __init__(self, /, record: bool, modules: _ToModules = ()) -> None: ...
 
 class suppress_warnings:
     log: Final[_WarnLog]
-    def __init__(self, /, forwarding_rule: L["always", "module", "once", "location"] = "always") -> None: ...
+    def __init__(
+        self, /, forwarding_rule: L["always", "module", "once", "location"] = "always"
+    ) -> None: ...
     def __enter__(self) -> Self: ...
     def __exit__(
-        self, cls: type[BaseException] | None, exc: BaseException | None, tb: types.TracebackType | None, /
+        self,
+        cls: type[BaseException] | None,
+        exc: BaseException | None,
+        tb: types.TracebackType | None,
+        /,
     ) -> None: ...
     def __call__(self, /, func: _FT) -> _FT: ...
     def filter(
-        self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None
+        self,
+        /,
+        category: type[Warning] = ...,
+        message: str = "",
+        module: types.ModuleType | None = None,
     ) -> None: ...
     def record(
-        self, /, category: type[Warning] = ..., message: str = "", module: types.ModuleType | None = None
+        self,
+        /,
+        category: type[Warning] = ...,
+        message: str = "",
+        module: types.ModuleType | None = None,
     ) -> _WarnLog: ...
 
 # Contrary to runtime we can't do `os.name` checks while type checking,
@@ -178,7 +200,10 @@ else:
     def memusage() -> NoReturn: ...
 
 if sys.platform == "linux":
-    def jiffies(_proc_pid_stat: StrOrBytesPath | None = None, _load_time: list[float] | None = None) -> int: ...
+    def jiffies(
+        _proc_pid_stat: StrOrBytesPath | None = None,
+        _load_time: list[float] | None = None,
+    ) -> int: ...
 
 else:
     def jiffies(_load_time: list[float] = []) -> int: ...
@@ -341,16 +366,23 @@ def assert_array_max_ulp(
 def assert_warns(warning_class: _WarningSpec) -> _GeneratorContextManager[None]: ...
 @overload
 def assert_warns(
-    warning_class: _WarningSpec, func: Callable[_Tss, _T], *args: _Tss.args, **kwargs: _Tss.kwargs
+    warning_class: _WarningSpec,
+    func: Callable[_Tss, _T],
+    *args: _Tss.args,
+    **kwargs: _Tss.kwargs,
 ) -> _T: ...
 @overload
 def assert_no_warnings() -> _GeneratorContextManager[None]: ...
 @overload
-def assert_no_warnings(func: Callable[_Tss, _T], /, *args: _Tss.args, **kwargs: _Tss.kwargs) -> _T: ...
+def assert_no_warnings(
+    func: Callable[_Tss, _T], /, *args: _Tss.args, **kwargs: _Tss.kwargs
+) -> _T: ...
 @overload
 def assert_no_gc_cycles() -> _GeneratorContextManager[None]: ...
 @overload
-def assert_no_gc_cycles(func: Callable[_Tss, Any], /, *args: _Tss.args, **kwargs: _Tss.kwargs) -> None: ...
+def assert_no_gc_cycles(
+    func: Callable[_Tss, Any], /, *args: _Tss.args, **kwargs: _Tss.kwargs
+) -> None: ...
 
 ###
 
@@ -460,5 +492,7 @@ def run_threaded(
 ) -> None: ...
 def runstring(astr: _StrLike | types.CodeType, dict: dict[str, Any] | None) -> Any: ...
 def rundocs(filename: StrPath | None = None, raise_on_error: bool = True) -> None: ...
-def measure(code_str: _StrLike | ast.AST, times: int = 1, label: str | None = None) -> float: ...
+def measure(
+    code_str: _StrLike | ast.AST, times: int = 1, label: str | None = None
+) -> float: ...
 def break_cycles() -> None: ...

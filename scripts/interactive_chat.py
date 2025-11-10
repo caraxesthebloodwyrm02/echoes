@@ -13,6 +13,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 from assistant_v2_core import EchoesAssistantV2
 
+
 def interactive_chat():
     """Start an interactive chat session with the assistant."""
     print("🤖 Echoes Assistant V2 - Interactive Chat")
@@ -26,14 +27,18 @@ def interactive_chat():
     assistant = EchoesAssistantV2(
         enable_value_system=True,
         enable_tools=False,  # Disable for simpler demo
-        enable_rag=False,    # Disable for simpler demo
-        enable_streaming=False
+        enable_rag=False,  # Disable for simpler demo
+        enable_streaming=False,
     )
 
     print("✅ Assistant ready with ValueSystem integration!")
-    print("📊 Current values:", {
-        k: f"{v['score']:.2f}" for k, v in assistant.value_system.get_values_summary().items()
-    })
+    print(
+        "📊 Current values:",
+        {
+            k: f"{v['score']:.2f}"
+            for k, v in assistant.value_system.get_values_summary().items()
+        },
+    )
     print()
 
     while True:
@@ -45,23 +50,27 @@ def interactive_chat():
                 continue
 
             # Handle special commands
-            if user_input.lower() in ['quit', 'exit', 'q']:
+            if user_input.lower() in ["quit", "exit", "q"]:
                 print("👋 Goodbye!")
                 break
 
-            elif user_input.lower() == 'stats':
+            elif user_input.lower() == "stats":
                 stats = assistant.get_stats()
                 print("📊 Assistant Stats:")
                 print(f"   Session: {stats['session_id']}")
                 print(f"   Messages: {stats['messages']}")
-                print(f"   Value System: {'Enabled' if stats['value_system_enabled'] else 'Disabled'}")
-                if 'value_system' in stats:
+                print(
+                    f"   Value System: {'Enabled' if stats['value_system_enabled'] else 'Disabled'}"
+                )
+                if "value_system" in stats:
                     print("   Current Values:")
-                    for value_name, value_data in stats['value_system'].items():
-                        print(f"     {value_name.title()}: {value_data['score']:.2f} (weight: {value_data['weight']})")
+                    for value_name, value_data in stats["value_system"].items():
+                        print(
+                            f"     {value_name.title()}: {value_data['score']:.2f} (weight: {value_data['weight']})"
+                        )
                 print()
 
-            elif user_input.lower() == 'help':
+            elif user_input.lower() == "help":
                 print("📋 Available Commands:")
                 print("   'stats' - Show current value scores and stats")
                 print("   'help' - Show this help message")
@@ -82,10 +91,14 @@ def interactive_chat():
                     scores = assistant.value_system.evaluate_response(response)
                     overall = assistant.value_system.get_overall_score(scores)
                     print("📊 Response Values:")
-                    print(f"   Respect: {scores['respect']:.2f}, Accuracy: {scores['accuracy']:.2f}, Helpfulness: {scores['helpfulness']:.2f}")
+                    print(
+                        f"   Respect: {scores['respect']:.2f}, Accuracy: {scores['accuracy']:.2f}, Helpfulness: {scores['helpfulness']:.2f}"
+                    )
                     print(f"   Overall: {overall:.2f}")
                     if overall < 0.6:
-                        print("   ⚠️  Response was automatically improved by ValueSystem")
+                        print(
+                            "   ⚠️  Response was automatically improved by ValueSystem"
+                        )
                 print()
 
         except KeyboardInterrupt:
@@ -95,6 +108,7 @@ def interactive_chat():
             print(f"❌ Error: {e}")
             print("Try again or type 'quit' to exit.")
             print()
+
 
 if __name__ == "__main__":
     interactive_chat()

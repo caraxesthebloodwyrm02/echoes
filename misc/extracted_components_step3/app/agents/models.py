@@ -1,6 +1,7 @@
 """
 Models for the Echoes Agent System.
 """
+
 from dataclasses import dataclass, field
 from typing import List, Dict, Any
 from datetime import datetime
@@ -9,6 +10,7 @@ from datetime import datetime
 @dataclass
 class ModelSettings:
     """Settings for the language model."""
+
     temperature: float = 0.7
     max_tokens: int = 1000
 
@@ -16,6 +18,7 @@ class ModelSettings:
 @dataclass
 class AgentConfig:
     """Configuration for an agent."""
+
     name: str
     instructions: str
     model: str = "gpt-4"
@@ -25,6 +28,7 @@ class AgentConfig:
 @dataclass
 class Message:
     """A single message in a conversation."""
+
     role: str  # "user", "assistant", or "system"
     content: str
     timestamp: str = field(default_factory=lambda: datetime.utcnow().isoformat())
@@ -33,6 +37,7 @@ class Message:
 @dataclass
 class ConversationHistory:
     """History of a conversation with an agent."""
+
     agent_name: str
     messages: List[Message] = field(default_factory=list)
 
