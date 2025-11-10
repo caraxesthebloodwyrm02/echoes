@@ -23,11 +23,13 @@ logger = logging.getLogger(__name__)
 # Single source of truth for prompt_toolkit availability
 PROMPT_TOOLKIT_AVAILABLE = False
 
+
 def _check_prompt_toolkit():
     """Check if prompt_toolkit is available and not mocked."""
     try:
         try:
             from unittest.mock import MagicMock, Mock
+
             mock_types = (MagicMock, Mock)
         except Exception:  # pragma: no cover - safety for minimal envs
             mock_types = ()
@@ -39,7 +41,9 @@ def _check_prompt_toolkit():
                 getattr(existing, "__class__", None)
                 and existing.__class__.__name__ in {"MagicMock", "Mock"}
             ):
-                logger.debug("prompt_toolkit appears mocked; disabling rich terminal features")
+                logger.debug(
+                    "prompt_toolkit appears mocked; disabling rich terminal features"
+                )
                 return False
 
         # Attempt importing the real package and a couple of critical submodules
@@ -60,6 +64,7 @@ def _check_prompt_toolkit():
         logger.warning(f"Unexpected error checking prompt_toolkit: {exc}")
         return False
 
+
 # Set availability flag
 PROMPT_TOOLKIT_AVAILABLE = _check_prompt_toolkit()
 
@@ -70,17 +75,22 @@ class pt_dummy:
 
     class Filter:
         """Dummy implementation of prompt_toolkit.filters.Filter."""
+
         def __call__(self, *args, **kwargs):
             return False
+
         def __and__(self, other):
             return self
+
         def __or__(self, other):
             return self
+
         def __invert__(self):
             return self
 
     class PromptSession:
         """Dummy implementation of prompt_toolkit.PromptSession."""
+
         def __init__(self, *args, **kwargs):
             self.is_running = False
 
@@ -101,22 +111,27 @@ class pt_dummy:
 
     class Application:
         """Dummy implementation of prompt_toolkit.application.Application."""
+
         def __init__(self, *args, **kwargs):
             pass
+
         def run(self):
             pass
 
     class Container:
         """Base class for layout containers."""
+
         pass
 
     class Window(Container):
         """Dummy implementation of prompt_toolkit.layout.containers.Window."""
+
         def __init__(self, *args, **kwargs):
             pass
 
     class Layout:
         """Dummy implementation of prompt_toolkit.layout.Layout."""
+
         def __init__(self, *args, **kwargs):
             pass
 
@@ -127,6 +142,7 @@ class pt_dummy:
 
     # Common filters
     has_focus = Filter()
+
 
 # Import real or dummy components based on availability
 if PROMPT_TOOLKIT_AVAILABLE:
@@ -294,6 +310,7 @@ except ImportError:
     # Detect such case and disable focus-based filters so tests don't error.
     try:  # pragma: no cover - environment dependent
         from unittest.mock import MagicMock  # type: ignore
+
         if isinstance(has_focus, MagicMock):  # type: ignore[arg-type]
             has_focus = None  # type: ignore[assignment]
     except Exception:
@@ -425,8 +442,10 @@ except ImportError:
     SmartStatusBar = None
     has_focus = DummyFilter(False)  # Safe default for focus checks
 
+
 class DummySession:
     """Fallback session when prompt_toolkit is not available"""
+
     def __init__(self):
         self.is_running = False
 
@@ -470,9 +489,11 @@ if PROMPT_TOOLKIT_AVAILABLE:
                     suggestion,
                     start_position=0,
                     display=HTML(f"<b>{suggestion}</b>"),
-                    display_meta="Frequently used"
-                    if self.predictor.commands.get(suggestion, 0) > 1
-                    else "Suggestion",
+                    display_meta=(
+                        "Frequently used"
+                        if self.predictor.commands.get(suggestion, 0) > 1
+                        else "Suggestion"
+                    ),
                 )
 
 else:

@@ -5,18 +5,14 @@ Provides authentication, rate limiting, and request processing middleware.
 """
 
 import asyncio
-import hashlib
-import json
 import logging
 import time
 from collections import defaultdict
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Tuple
 
-from fastapi import Request, Response, status
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.types import ASGIApp, Message, Receive, Scope, Send
+from starlette.types import ASGIApp
 
 logger = logging.getLogger(__name__)
 
@@ -220,8 +216,6 @@ class RequestLoggingMiddleware(BaseHTTPMiddleware):
             raise
 
 
-
-
 class TimeoutMiddleware(BaseHTTPMiddleware):
     """Middleware for request timeout handling"""
 
@@ -231,7 +225,9 @@ class TimeoutMiddleware(BaseHTTPMiddleware):
 
     async def dispatch(self, request: Request, call_next):
         try:
-            return await asyncio.wait_for(call_next(request), timeout=self.timeout_seconds)
+            return await asyncio.wait_for(
+                call_next(request), timeout=self.timeout_seconds
+            )
         except asyncio.TimeoutError:
             return JSONResponse(
                 status_code=status.HTTP_504_GATEWAY_TIMEOUT,

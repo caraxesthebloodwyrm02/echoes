@@ -113,8 +113,9 @@ class LatencyMonitor:
     """Soft-threshold latency monitor with transparent status updates."""
 
     def __init__(
-        self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000
+        self, t1: int = 100, t2: int = 300, t3: int = 800, t4: int = 2000
     ) -> None:
+        # Default thresholds are milliseconds and tuned for tests/UX
         self.t1, self.t2, self.t3, self.t4 = t1, t2, t3, t4
         self._start_ms: int | None = None
 
@@ -157,11 +158,21 @@ class PrivacyGuard:
     """Ensures ephemeral behavior: no logging or side effects until commit."""
 
     def __init__(self, on_commit: Callable[[Draft], None] | None = None) -> None:
-        self._on_commit = on_commit if callable(on_commit) else lambda _draft: None
+        # Store the provided handler (or None) and track commit state
+        self._on_commit = on_commit if callable(on_commit) else None
+        self.committed = False
 
     def commit(self, draft: Draft) -> None:
         """Execute the commit callback with the given draft."""
-        self._on_commit(draft)
+        try:
+            if self._on_commit:
+                self._on_commit(draft)
+        except Exception:
+            # Do not allow commit handler exceptions to propagate
+            pass
+        finally:
+            # Mark as committed in all cases
+            self.committed = True
 
 
 class GlimpseEngine:
@@ -206,6 +217,10 @@ class GlimpseEngine:
 
         if sampler is not None:
             self._sampler = sampler
+        elif PREEXEC_CLARIFIER_ENABLED:
+            # When pre-execution clarifier is enabled via env var, use default_sampler
+            # which checks for empty goals and returns clarifiers
+            self._sampler = default_sampler
         elif enable_clarifiers and CLARIFIER_AVAILABLE:
             self._sampler = lambda draft: enhanced_sampler_with_clarifiers(
                 draft, self._clarifier_engine

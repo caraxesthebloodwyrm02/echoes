@@ -289,7 +289,9 @@ def example_5_performance_monitoring():
     framework.print_output(
         f"   📨 Total Messages Sent: {len(framework.message_history)}"
     )
-    framework.print_output(f"   🎯 Active Communicators: {len(framework.communicators)}")
+    framework.print_output(
+        f"   🎯 Active Communicators: {len(framework.communicators)}"
+    )
     framework.print_output(f"   📊 Metrics Tracked: {len(metrics)}")
 
     print()

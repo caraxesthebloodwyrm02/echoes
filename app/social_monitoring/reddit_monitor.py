@@ -333,9 +333,11 @@ class RedditMonitor(SocialMonitor):
                         platform="reddit",
                         post_id=item.id,
                         author=item.author.name if item.author else "[deleted]",
-                        content=f"{item.title}\n\n{item.selftext}"
-                        if hasattr(item, "selftext")
-                        else item.url,
+                        content=(
+                            f"{item.title}\n\n{item.selftext}"
+                            if hasattr(item, "selftext")
+                            else item.url
+                        ),
                         created_at=datetime.fromtimestamp(item.created_utc),
                         url=f"https://reddit.com{item.permalink}",
                         metrics={

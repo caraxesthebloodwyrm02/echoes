@@ -137,9 +137,7 @@ class ResilienceDashboard:
             self.health_metrics["cpu_usage"].status = (
                 HealthStatus.WARNING
                 if cpu_percent > 70
-                else HealthStatus.CRITICAL
-                if cpu_percent > 90
-                else HealthStatus.HEALTHY
+                else HealthStatus.CRITICAL if cpu_percent > 90 else HealthStatus.HEALTHY
             )
             self.health_metrics["cpu_usage"].last_updated = datetime.now()
 
@@ -150,9 +148,11 @@ class ResilienceDashboard:
             self.health_metrics["memory_usage"].status = (
                 HealthStatus.WARNING
                 if memory_percent > 75
-                else HealthStatus.CRITICAL
-                if memory_percent > 95
-                else HealthStatus.HEALTHY
+                else (
+                    HealthStatus.CRITICAL
+                    if memory_percent > 95
+                    else HealthStatus.HEALTHY
+                )
             )
             self.health_metrics["memory_usage"].last_updated = datetime.now()
 

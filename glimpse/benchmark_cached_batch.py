@@ -2,6 +2,7 @@
 Benchmark to demonstrate caching and batching improvements.
 Runs repeated and batched requests to measure latency reductions.
 """
+
 import asyncio
 import time
 from statistics import mean

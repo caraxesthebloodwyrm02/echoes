@@ -2,6 +2,7 @@
 Benchmark script for the OpenAI-backed sampler.
 Measures real API latency, retry behavior, and error handling.
 """
+
 import asyncio
 import time
 from statistics import mean

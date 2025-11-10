@@ -4,6 +4,7 @@ Optimized Cache Metrics Module
 This module provides a high-performance CacheMetrics class for tracking and reporting
 cache performance metrics with minimal overhead.
 """
+
 from collections import deque
 from dataclasses import dataclass
 from typing import Dict, List, Deque

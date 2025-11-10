@@ -1,6 +1,7 @@
 """
 Benchmark script for testing the adaptive rate limiter under load.
 """
+
 import asyncio
 import os
 import random
@@ -161,12 +162,12 @@ class RateLimiterBenchmark:
                 else 0
             ),
             "final_rpm": self.rate_limiter.current_rpm,
-            "max_rpm": max(self.metrics["rpm_history"])
-            if self.metrics["rpm_history"]
-            else 0,
-            "min_rpm": min(self.metrics["rpm_history"])
-            if self.metrics["rpm_history"]
-            else 0,
+            "max_rpm": (
+                max(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0
+            ),
+            "min_rpm": (
+                min(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0
+            ),
         }
 
         return stats, self.metrics

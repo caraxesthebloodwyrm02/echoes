@@ -532,9 +532,7 @@ def main():
             )
             print("Echoes systems are working cohesively and effectively!")
         else:
-            print(
-                f"\n⚠️ Demo completed with performance score: {performance_score:.1%}"
-            )
+            print(f"\n⚠️ Demo completed with performance score: {performance_score:.1%}")
             print("Some optimizations may be needed for peak performance.")
 
         print("\n💡 To explore individual systems, try:")

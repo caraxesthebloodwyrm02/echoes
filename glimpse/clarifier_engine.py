@@ -5,6 +5,7 @@ Provides various clarifier paths to resolve ambiguity and improve intent underst
 UPDATED: Now uses post-execution curiosity questions instead of pre-execution blocking questions
 to improve user engagement and continuous learning.
 """
+
 from dataclasses import dataclass
 from enum import Enum
 from typing import Any
@@ -225,7 +226,15 @@ class ClarifierEngine:
             clarifiers.append(self.clarifier_rules["list"])
 
         # Check for scope ambiguity
-        scope_keywords = ["scope", "range", "extent", "include", "exclude", "focus", "focus on"]
+        scope_keywords = [
+            "scope",
+            "range",
+            "extent",
+            "include",
+            "exclude",
+            "focus",
+            "focus on",
+        ]
         if (
             any(word in text_lower for word in scope_keywords)
             and "scope" not in constraints_lower
@@ -234,7 +243,15 @@ class ClarifierEngine:
             clarifiers.append(self.clarifier_rules["scope"])
 
         # Check for language ambiguity
-        language_keywords = ["language", "translate", "simplify", "simplified", "technical", "layman", "layman's"]
+        language_keywords = [
+            "language",
+            "translate",
+            "simplify",
+            "simplified",
+            "technical",
+            "layman",
+            "layman's",
+        ]
         if (
             any(word in text_lower for word in language_keywords)
             and "language" not in constraints_lower
@@ -252,7 +269,17 @@ class ClarifierEngine:
             clarifiers.append(self.clarifier_rules["urgency"])
 
         # Check for detail level ambiguity
-        detail_keywords = ["detailed", "depth", "deep-dive", "deep dive", "summary", "high-level", "high level", "comprehensive", "comprehensively"]
+        detail_keywords = [
+            "detailed",
+            "depth",
+            "deep-dive",
+            "deep dive",
+            "summary",
+            "high-level",
+            "high level",
+            "comprehensive",
+            "comprehensively",
+        ]
         if (
             any(word in text_lower for word in detail_keywords)
             and "detail_level" not in constraints_lower

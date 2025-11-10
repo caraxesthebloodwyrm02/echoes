@@ -1,4 +1,5 @@
 """Policy types and data structures."""
+
 from __future__ import annotations
 
 from dataclasses import dataclass

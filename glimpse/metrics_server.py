@@ -2,6 +2,7 @@
 Prometheus metrics server for Glimpse.
 Exposes a /metrics endpoint that can be scraped by Prometheus.
 """
+
 import asyncio
 import logging
 

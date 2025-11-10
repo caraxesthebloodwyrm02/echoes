@@ -1,6 +1,7 @@
 """
 Comprehensive tests for PerformanceOptimizer
 """
+
 import asyncio
 
 import pytest

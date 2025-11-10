@@ -496,9 +496,11 @@ class ModelMetrics:
                         "avg": sum(times) / len(times),
                         "min": min(times),
                         "max": max(times),
-                        "p95": sorted(times)[int(len(times) * 0.95)]
-                        if len(times) > 20
-                        else max(times),
+                        "p95": (
+                            sorted(times)[int(len(times) * 0.95)]
+                            if len(times) > 20
+                            else max(times)
+                        ),
                     }
 
             # Calculate cache hit rates

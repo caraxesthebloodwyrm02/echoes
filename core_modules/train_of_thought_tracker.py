@@ -768,9 +768,11 @@ class TrainOfThoughtTracker:
                 insights.append(
                     {
                         "thought_id": thought_id,
-                        "content": meta["content"][:200] + "..."
-                        if len(meta["content"]) > 200
-                        else meta["content"],
+                        "content": (
+                            meta["content"][:200] + "..."
+                            if len(meta["content"]) > 200
+                            else meta["content"]
+                        ),
                         "importance": importance,
                         "connections": connections,
                         "type": meta["type"],
@@ -785,9 +787,11 @@ class TrainOfThoughtTracker:
                 insights.append(
                     {
                         "thought_id": thought_id,
-                        "content": meta["content"][:200] + "..."
-                        if len(meta["content"]) > 200
-                        else meta["content"],
+                        "content": (
+                            meta["content"][:200] + "..."
+                            if len(meta["content"]) > 200
+                            else meta["content"]
+                        ),
                         "cross_links": meta["cross_links"],
                         "insight_type": "cross_chain_connector",
                     }

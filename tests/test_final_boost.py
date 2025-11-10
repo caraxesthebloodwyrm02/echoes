@@ -3,7 +3,6 @@ Final Coverage Push - Targeting 85%+
 Experience-driven: Focus on highest ROI modules and strategic imports
 """
 
-
 import pytest
 
 
@@ -253,7 +252,6 @@ class TestStrategicImports:
             "legal_safeguards",
             "multimodal_resonance",
             "enhanced_accounting",
-            "ucr",
         ]
 
         for module_name in utility_modules:

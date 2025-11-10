@@ -1,4 +1,5 @@
 """Unit tests for CommandPredictor class."""
+
 import json
 import tempfile
 import unittest

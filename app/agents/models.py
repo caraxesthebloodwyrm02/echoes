@@ -1,6 +1,7 @@
 """
 Models for the Echoes Agent System.
 """
+
 from dataclasses import dataclass, field
 from datetime import datetime
 

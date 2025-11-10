@@ -5,7 +5,6 @@ These tests validate the retry logic and fallback mechanisms that ensure
 safe execution even when perfect alignment cannot be achieved.
 """
 
-
 import pytest
 
 from glimpse.Glimpse import Draft, GlimpseEngine
@@ -217,9 +216,9 @@ class TestSafeExecution:
 
         # Edge cases that might break naive implementations
         edge_cases = [
-            Draft(None, None, None)
-            if False
-            else Draft("", "", ""),  # Avoid None for now
+            (
+                Draft(None, None, None) if False else Draft("", "", "")
+            ),  # Avoid None for now
             Draft("a" * 10000, "b" * 5000, "c" * 3000),  # Very long
             Draft("\n\n\n", "\t\t\t", "   "),  # Whitespace
             Draft("🚀" * 100, "💯" * 50, "✨" * 30),  # Emojis

@@ -2,6 +2,7 @@
 Adaptive rate limiter for managing OpenAI API request rates.
 Implements token bucket algorithm with dynamic rate adjustment.
 """
+
 import asyncio
 import logging
 import time

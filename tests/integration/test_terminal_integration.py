@@ -1,4 +1,5 @@
 """Integration tests for the smart terminal."""
+
 import tempfile
 import unittest
 from pathlib import Path

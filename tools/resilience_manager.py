@@ -276,9 +276,11 @@ class InterruptionPreventer:
         """Trigger fallback strategy for a service"""
         if name in self.fallback_strategies:
             try:
-                await self.fallback_strategies[name]() if asyncio.iscoroutinefunction(
-                    self.fallback_strategies[name]
-                ) else self.fallback_strategies[name]()
+                (
+                    await self.fallback_strategies[name]()
+                    if asyncio.iscoroutinefunction(self.fallback_strategies[name])
+                    else self.fallback_strategies[name]()
+                )
                 self.logger.info(f"Fallback strategy triggered for service: {name}")
             except Exception as e:
                 self.logger.error(f"Fallback strategy failed for {name}: {e}")

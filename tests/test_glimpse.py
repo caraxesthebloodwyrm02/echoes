@@ -2,7 +2,6 @@
 Tests for glimpse module components.
 """
 
-
 import pytest
 
 

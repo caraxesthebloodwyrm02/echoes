@@ -226,10 +226,12 @@ class OrchestralModelRouter:
         stats = {
             "total_routes": sum(self.routing_decisions.values()),
             "model_distribution": dict(self.routing_decisions),
-            "average_routing_time": sum(self.performance_metrics["routing_time"])
-            / len(self.performance_metrics["routing_time"])
-            if self.performance_metrics["routing_time"]
-            else 0,
+            "average_routing_time": (
+                sum(self.performance_metrics["routing_time"])
+                / len(self.performance_metrics["routing_time"])
+                if self.performance_metrics["routing_time"]
+                else 0
+            ),
             "orchestral_enabled": self.orchestral_enabled,
         }
 

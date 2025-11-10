@@ -1,0 +1,553 @@
+2025-11-10T15:06:07.8725862Z Current runner version: '2.329.0'
+2025-11-10T15:06:07.8761420Z ##[group]Runner Image Provisioner
+2025-11-10T15:06:07.8762623Z Hosted Compute Agent
+2025-11-10T15:06:07.8763513Z Version: 20251016.436
+2025-11-10T15:06:07.8764598Z Commit: 8ab8ac8bfd662a3739dab9fe09456aba92132568
+2025-11-10T15:06:07.8765723Z Build Date: 2025-10-15T20:44:12Z
+2025-11-10T15:06:07.8766681Z ##[endgroup]
+2025-11-10T15:06:07.8767662Z ##[group]Operating System
+2025-11-10T15:06:07.8768532Z Ubuntu
+2025-11-10T15:06:07.8769381Z 24.04.3
+2025-11-10T15:06:07.8770091Z LTS
+2025-11-10T15:06:07.8771184Z ##[endgroup]
+2025-11-10T15:06:07.8772031Z ##[group]Runner Image
+2025-11-10T15:06:07.8772980Z Image: ubuntu-24.04
+2025-11-10T15:06:07.8773827Z Version: 20251102.99.1
+2025-11-10T15:06:07.8775626Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20251102.99/images/ubuntu/Ubuntu2404-Readme.md
+2025-11-10T15:06:07.8778330Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20251102.99
+2025-11-10T15:06:07.8780069Z ##[endgroup]
+2025-11-10T15:06:07.8782150Z ##[group]GITHUB_TOKEN Permissions
+2025-11-10T15:06:07.8784742Z Contents: read
+2025-11-10T15:06:07.8785577Z Metadata: read
+2025-11-10T15:06:07.8786361Z Packages: read
+2025-11-10T15:06:07.8787187Z ##[endgroup]
+2025-11-10T15:06:07.8790219Z Secret source: Actions
+2025-11-10T15:06:07.8791611Z Prepare workflow directory
+2025-11-10T15:06:07.9347510Z Prepare all required actions
+2025-11-10T15:06:07.9403601Z Getting action download info
+2025-11-10T15:06:08.2595849Z Download action repository 'actions/checkout@v4' (SHA:08eba0b27e820071cde6df949e0beb9ba4906955)
+2025-11-10T15:06:08.3860116Z Download action repository 'actions/setup-python@v5' (SHA:a26af69be951a213d495a4c3e4e4022e16d87065)
+2025-11-10T15:06:08.4759006Z Download action repository 'codecov/codecov-action@v4' (SHA:b9fd7d16f6d7d1b5d2bec1a2887e65ceed900238)
+2025-11-10T15:06:08.7754288Z Complete job name: Unit Tests (3.11)
+2025-11-10T15:06:08.8418056Z ##[group]Run actions/checkout@v4
+2025-11-10T15:06:08.8419517Z with:
+2025-11-10T15:06:08.8420384Z   repository: caraxesthebloodwyrm02/echoes
+2025-11-10T15:06:08.8421994Z   token: ***
+2025-11-10T15:06:08.8422761Z   ssh-strict: true
+2025-11-10T15:06:08.8423533Z   ssh-user: git
+2025-11-10T15:06:08.8424329Z   persist-credentials: true
+2025-11-10T15:06:08.8425644Z   clean: true
+2025-11-10T15:06:08.8426471Z   sparse-checkout-cone-mode: true
+2025-11-10T15:06:08.8427480Z   fetch-depth: 1
+2025-11-10T15:06:08.8428304Z   fetch-tags: false
+2025-11-10T15:06:08.8429153Z   show-progress: true
+2025-11-10T15:06:08.8429977Z   lfs: false
+2025-11-10T15:06:08.8431004Z   submodules: false
+2025-11-10T15:06:08.8431991Z   set-safe-directory: true
+2025-11-10T15:06:08.8433291Z env:
+2025-11-10T15:06:08.8434105Z   PYTHON_VERSION: 3.12
+2025-11-10T15:06:08.8435020Z   PIP_CACHE_DIR: ~/.cache/pip
+2025-11-10T15:06:08.8435975Z ##[endgroup]
+2025-11-10T15:06:09.0571559Z Syncing repository: caraxesthebloodwyrm02/echoes
+2025-11-10T15:06:09.0574384Z ##[group]Getting Git version info
+2025-11-10T15:06:09.0575540Z Working directory is '/home/runner/work/echoes/echoes'
+2025-11-10T15:06:09.0577132Z [command]/usr/bin/git version
+2025-11-10T15:06:09.0578060Z git version 2.51.2
+2025-11-10T15:06:09.0581430Z ##[endgroup]
+2025-11-10T15:06:09.0587656Z Temporarily overriding HOME='/home/runner/work/_temp/9377a1c9-7b2f-4a6c-8362-865ba4606c36' before making global git config changes
+2025-11-10T15:06:09.0590133Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T15:06:09.0592746Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/echoes/echoes
+2025-11-10T15:06:09.0595658Z Deleting the contents of '/home/runner/work/echoes/echoes'
+2025-11-10T15:06:09.0597398Z ##[group]Initializing the repository
+2025-11-10T15:06:09.0598504Z [command]/usr/bin/git init /home/runner/work/echoes/echoes
+2025-11-10T15:06:09.0599966Z hint: Using 'master' as the name for the initial branch. This default branch name
+2025-11-10T15:06:09.0601973Z hint: is subject to change. To configure the initial branch name to use in all
+2025-11-10T15:06:09.0603959Z hint: of your new repositories, which will suppress this warning, call:
+2025-11-10T15:06:09.0605192Z hint:
+2025-11-10T15:06:09.0606046Z hint: 	git config --global init.defaultBranch <name>
+2025-11-10T15:06:09.0607073Z hint:
+2025-11-10T15:06:09.0608097Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+2025-11-10T15:06:09.0609905Z hint: 'development'. The just-created branch can be renamed via this command:
+2025-11-10T15:06:09.0611694Z hint:
+2025-11-10T15:06:09.0612425Z hint: 	git branch -m <name>
+2025-11-10T15:06:09.0613251Z hint:
+2025-11-10T15:06:09.0614350Z hint: Disable this message with "git config set advice.defaultBranchName false"
+2025-11-10T15:06:09.0616163Z Initialized empty Git repository in /home/runner/work/echoes/echoes/.git/
+2025-11-10T15:06:09.0619057Z [command]/usr/bin/git remote add origin https://github.com/caraxesthebloodwyrm02/echoes
+2025-11-10T15:06:09.0622188Z ##[endgroup]
+2025-11-10T15:06:09.0623614Z ##[group]Disabling automatic garbage collection
+2025-11-10T15:06:09.0624811Z [command]/usr/bin/git config --local gc.auto 0
+2025-11-10T15:06:09.0627390Z ##[endgroup]
+2025-11-10T15:06:09.0629635Z ##[group]Setting up auth
+2025-11-10T15:06:09.0631371Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T15:06:09.0635416Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T15:06:09.0700412Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T15:06:09.0705497Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T15:06:09.0937677Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2025-11-10T15:06:09.0993477Z ##[endgroup]
+2025-11-10T15:06:09.0995886Z ##[group]Fetching the repository
+2025-11-10T15:06:09.1174677Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +eae89d6f6f0829404d2f65c44a374f5bf0058f22:refs/remotes/pull/18/merge
+2025-11-10T15:06:10.3102047Z From https://github.com/caraxesthebloodwyrm02/echoes
+2025-11-10T15:06:10.3105011Z  * [new ref]         eae89d6f6f0829404d2f65c44a374f5bf0058f22 -> pull/18/merge
+2025-11-10T15:06:10.3131770Z ##[endgroup]
+2025-11-10T15:06:10.3134697Z ##[group]Determining the checkout info
+2025-11-10T15:06:10.3136496Z ##[endgroup]
+2025-11-10T15:06:10.3139628Z [command]/usr/bin/git sparse-checkout disable
+2025-11-10T15:06:10.3189039Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2025-11-10T15:06:10.3214386Z ##[group]Checking out the ref
+2025-11-10T15:06:10.3218752Z [command]/usr/bin/git checkout --progress --force refs/remotes/pull/18/merge
+2025-11-10T15:06:10.5560826Z Note: switching to 'refs/remotes/pull/18/merge'.
+2025-11-10T15:06:10.5562010Z 
+2025-11-10T15:06:10.5563134Z You are in 'detached HEAD' state. You can look around, make experimental
+2025-11-10T15:06:10.5565592Z changes and commit them, and you can discard any commits you make in this
+2025-11-10T15:06:10.5567930Z state without impacting any branches by switching back to a branch.
+2025-11-10T15:06:10.5570308Z 
+2025-11-10T15:06:10.5571508Z If you want to create a new branch to retain commits you create, you may
+2025-11-10T15:06:10.5573669Z do so (now or later) by using -c with the switch command. Example:
+2025-11-10T15:06:10.5574880Z 
+2025-11-10T15:06:10.5575356Z   git switch -c <new-branch-name>
+2025-11-10T15:06:10.5576222Z 
+2025-11-10T15:06:10.5576682Z Or undo this operation with:
+2025-11-10T15:06:10.5577462Z 
+2025-11-10T15:06:10.5577854Z   git switch -
+2025-11-10T15:06:10.5578452Z 
+2025-11-10T15:06:10.5579530Z Turn off this advice by setting config variable advice.detachedHead to false
+2025-11-10T15:06:10.5581973Z 
+2025-11-10T15:06:10.5583863Z HEAD is now at eae89d6 Merge 17c371f65c8447bad4b74db47ce9ff8040cd2bfb into 596a2dfe18a289cbaf34b210ba16dd55578d9702
+2025-11-10T15:06:10.5591142Z ##[endgroup]
+2025-11-10T15:06:10.5615943Z [command]/usr/bin/git log -1 --format=%H
+2025-11-10T15:06:10.5641646Z eae89d6f6f0829404d2f65c44a374f5bf0058f22
+2025-11-10T15:06:10.5944902Z ##[group]Run actions/setup-python@v5
+2025-11-10T15:06:10.5945996Z with:
+2025-11-10T15:06:10.5946688Z   python-version: 3.11
+2025-11-10T15:06:10.5947509Z   cache: pip
+2025-11-10T15:06:10.5948328Z   cache-dependency-path: **/pyproject.toml
+2025-11-10T15:06:10.5949443Z   check-latest: false
+2025-11-10T15:06:10.5950685Z   token: ***
+2025-11-10T15:06:10.5951461Z   update-environment: true
+2025-11-10T15:06:10.5952422Z   allow-prereleases: false
+2025-11-10T15:06:10.5953350Z   freethreaded: false
+2025-11-10T15:06:10.5954146Z env:
+2025-11-10T15:06:10.5954825Z   PYTHON_VERSION: 3.12
+2025-11-10T15:06:10.5955694Z   PIP_CACHE_DIR: ~/.cache/pip
+2025-11-10T15:06:10.5956646Z ##[endgroup]
+2025-11-10T15:06:10.7723803Z ##[group]Installed versions
+2025-11-10T15:06:10.7883481Z Successfully set up CPython (3.11.14)
+2025-11-10T15:06:10.7887746Z ##[endgroup]
+2025-11-10T15:06:11.0857935Z [command]/opt/hostedtoolcache/Python/3.11.14/x64/bin/pip cache dir
+2025-11-10T15:06:12.8443588Z /home/runner/.cache/pip
+2025-11-10T15:06:12.9403595Z pip cache is not found
+2025-11-10T15:06:12.9607181Z ##[group]Run python -m pip install --upgrade pip
+2025-11-10T15:06:12.9607621Z [36;1mpython -m pip install --upgrade pip[0m
+2025-11-10T15:06:12.9607936Z [36;1mpip install -r requirements.txt[0m
+2025-11-10T15:06:12.9608472Z [36;1mpip install pytest pytest-cov pytest-timeout pytest-xdist pytest-asyncio anyio aiohttp prompt_toolkit[0m
+2025-11-10T15:06:12.9649417Z shell: /usr/bin/bash -e {0}
+2025-11-10T15:06:12.9649674Z env:
+2025-11-10T15:06:12.9649857Z   PYTHON_VERSION: 3.12
+2025-11-10T15:06:12.9650103Z   PIP_CACHE_DIR: ~/.cache/pip
+2025-11-10T15:06:12.9650407Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:12.9651122Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.14/x64/lib/pkgconfig
+2025-11-10T15:06:12.9651532Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:12.9651905Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:12.9652313Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:12.9652668Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.14/x64/lib
+2025-11-10T15:06:12.9652975Z ##[endgroup]
+2025-11-10T15:06:14.3188638Z Requirement already satisfied: pip in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (25.3)
+2025-11-10T15:06:15.4951278Z Collecting openai>=1.0.0 (from -r requirements.txt (line 4))
+2025-11-10T15:06:15.5537977Z   Downloading openai-2.7.1-py3-none-any.whl.metadata (29 kB)
+2025-11-10T15:06:15.5830235Z Collecting python-dotenv>=0.19.0 (from -r requirements.txt (line 5))
+2025-11-10T15:06:15.5976867Z   Downloading python_dotenv-1.2.1-py3-none-any.whl.metadata (25 kB)
+2025-11-10T15:06:15.6381800Z Collecting requests>=2.26.0 (from -r requirements.txt (line 6))
+2025-11-10T15:06:15.6437000Z   Downloading requests-2.32.5-py3-none-any.whl.metadata (4.9 kB)
+2025-11-10T15:06:15.6938190Z Collecting fastapi>=0.68.0 (from -r requirements.txt (line 9))
+2025-11-10T15:06:15.6975850Z   Downloading fastapi-0.121.1-py3-none-any.whl.metadata (28 kB)
+2025-11-10T15:06:15.7324801Z Collecting uvicorn>=0.15.0 (from -r requirements.txt (line 10))
+2025-11-10T15:06:15.7416373Z   Downloading uvicorn-0.38.0-py3-none-any.whl.metadata (6.8 kB)
+2025-11-10T15:06:15.8580820Z Collecting pandas>=1.3.0 (from -r requirements.txt (line 13))
+2025-11-10T15:06:15.8618742Z   Downloading pandas-2.3.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl.metadata (91 kB)
+2025-11-10T15:06:16.0777350Z Collecting numpy>=1.21.0 (from -r requirements.txt (line 14))
+2025-11-10T15:06:16.0828904Z   Downloading numpy-2.3.4-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl.metadata (62 kB)
+2025-11-10T15:06:16.1079700Z Collecting python-dateutil>=2.8.2 (from -r requirements.txt (line 17))
+2025-11-10T15:06:16.1151433Z   Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl.metadata (8.4 kB)
+2025-11-10T15:06:16.2459633Z Collecting pydantic>=1.8.0 (from -r requirements.txt (line 18))
+2025-11-10T15:06:16.2508067Z   Downloading pydantic-2.12.4-py3-none-any.whl.metadata (89 kB)
+2025-11-10T15:06:16.3041004Z Collecting black>=21.7b0 (from -r requirements.txt (line 21))
+2025-11-10T15:06:16.3087707Z   Downloading black-25.11.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (85 kB)
+2025-11-10T15:06:16.3476320Z Collecting isort>=5.9.3 (from -r requirements.txt (line 22))
+2025-11-10T15:06:16.3588496Z   Downloading isort-7.0.0-py3-none-any.whl.metadata (11 kB)
+2025-11-10T15:06:16.4571355Z Collecting mypy>=0.910 (from -r requirements.txt (line 23))
+2025-11-10T15:06:16.4614143Z   Downloading mypy-1.18.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.2 kB)
+2025-11-10T15:06:16.8266902Z Collecting ruff>=0.1.6 (from -r requirements.txt (line 24))
+2025-11-10T15:06:16.8312381Z   Downloading ruff-0.14.4-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (25 kB)
+2025-11-10T15:06:16.8665558Z Collecting pre-commit>=3.7.0 (from -r requirements.txt (line 25))
+2025-11-10T15:06:16.8707591Z   Downloading pre_commit-4.4.0-py2.py3-none-any.whl.metadata (1.2 kB)
+2025-11-10T15:06:16.9049301Z Collecting pytest>=7.0.0 (from -r requirements.txt (line 26))
+2025-11-10T15:06:16.9093112Z   Downloading pytest-9.0.0-py3-none-any.whl.metadata (7.6 kB)
+2025-11-10T15:06:16.9272148Z Collecting pytest-cov>=2.12.1 (from -r requirements.txt (line 27))
+2025-11-10T15:06:16.9318340Z   Downloading pytest_cov-7.0.0-py3-none-any.whl.metadata (31 kB)
+2025-11-10T15:06:16.9458317Z Collecting pytest-socket>=0.6.0 (from -r requirements.txt (line 28))
+2025-11-10T15:06:16.9496008Z   Downloading pytest_socket-0.7.0-py3-none-any.whl.metadata (6.7 kB)
+2025-11-10T15:06:16.9706953Z Collecting anyio<5,>=3.5.0 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:16.9764812Z   Downloading anyio-4.11.0-py3-none-any.whl.metadata (4.1 kB)
+2025-11-10T15:06:16.9892215Z Collecting distro<2,>=1.7.0 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:16.9929593Z   Downloading distro-1.9.0-py3-none-any.whl.metadata (6.8 kB)
+2025-11-10T15:06:17.0126266Z Collecting httpx<1,>=0.23.0 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.0165480Z   Downloading httpx-0.28.1-py3-none-any.whl.metadata (7.1 kB)
+2025-11-10T15:06:17.0883909Z Collecting jiter<1,>=0.10.0 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.0938522Z   Downloading jiter-0.12.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (5.2 kB)
+2025-11-10T15:06:17.1244508Z Collecting sniffio (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.1283117Z   Downloading sniffio-1.3.1-py3-none-any.whl.metadata (3.9 kB)
+2025-11-10T15:06:17.1637757Z Collecting tqdm>4 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.1680049Z   Downloading tqdm-4.67.1-py3-none-any.whl.metadata (57 kB)
+2025-11-10T15:06:17.1906648Z Collecting typing-extensions<5,>=4.11 (from openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.1944475Z   Downloading typing_extensions-4.15.0-py3-none-any.whl.metadata (3.3 kB)
+2025-11-10T15:06:17.2067841Z Collecting annotated-types>=0.6.0 (from pydantic>=1.8.0->-r requirements.txt (line 18))
+2025-11-10T15:06:17.2107999Z   Downloading annotated_types-0.7.0-py3-none-any.whl.metadata (15 kB)
+2025-11-10T15:06:17.9323272Z Collecting pydantic-core==2.41.5 (from pydantic>=1.8.0->-r requirements.txt (line 18))
+2025-11-10T15:06:17.9366356Z   Downloading pydantic_core-2.41.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl.metadata (7.3 kB)
+2025-11-10T15:06:17.9509930Z Collecting typing-inspection>=0.4.2 (from pydantic>=1.8.0->-r requirements.txt (line 18))
+2025-11-10T15:06:17.9547516Z   Downloading typing_inspection-0.4.2-py3-none-any.whl.metadata (2.6 kB)
+2025-11-10T15:06:17.9708563Z Collecting idna>=2.8 (from anyio<5,>=3.5.0->openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:17.9754605Z   Downloading idna-3.11-py3-none-any.whl.metadata (8.4 kB)
+2025-11-10T15:06:18.0017099Z Collecting certifi (from httpx<1,>=0.23.0->openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:18.0058667Z   Downloading certifi-2025.10.5-py3-none-any.whl.metadata (2.5 kB)
+2025-11-10T15:06:18.0251506Z Collecting httpcore==1.* (from httpx<1,>=0.23.0->openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:18.0291207Z   Downloading httpcore-1.0.9-py3-none-any.whl.metadata (21 kB)
+2025-11-10T15:06:18.0436431Z Collecting h11>=0.16 (from httpcore==1.*->httpx<1,>=0.23.0->openai>=1.0.0->-r requirements.txt (line 4))
+2025-11-10T15:06:18.0478719Z   Downloading h11-0.16.0-py3-none-any.whl.metadata (8.3 kB)
+2025-11-10T15:06:18.1445263Z Collecting charset_normalizer<4,>=2 (from requests>=2.26.0->-r requirements.txt (line 6))
+2025-11-10T15:06:18.1488888Z   Downloading charset_normalizer-3.4.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (37 kB)
+2025-11-10T15:06:18.1821464Z Collecting urllib3<3,>=1.21.1 (from requests>=2.26.0->-r requirements.txt (line 6))
+2025-11-10T15:06:18.1861292Z   Downloading urllib3-2.5.0-py3-none-any.whl.metadata (6.5 kB)
+2025-11-10T15:06:18.2251813Z Collecting starlette<0.50.0,>=0.40.0 (from fastapi>=0.68.0->-r requirements.txt (line 9))
+2025-11-10T15:06:18.2294711Z   Downloading starlette-0.49.3-py3-none-any.whl.metadata (6.4 kB)
+2025-11-10T15:06:18.2909095Z Collecting annotated-doc>=0.0.2 (from fastapi>=0.68.0->-r requirements.txt (line 9))
+2025-11-10T15:06:18.2949468Z   Downloading annotated_doc-0.0.3-py3-none-any.whl.metadata (6.6 kB)
+2025-11-10T15:06:18.3250159Z Collecting click>=7.0 (from uvicorn>=0.15.0->-r requirements.txt (line 10))
+2025-11-10T15:06:18.3288046Z   Downloading click-8.3.0-py3-none-any.whl.metadata (2.6 kB)
+2025-11-10T15:06:18.3747828Z Collecting pytz>=2020.1 (from pandas>=1.3.0->-r requirements.txt (line 13))
+2025-11-10T15:06:18.3809437Z   Downloading pytz-2025.2-py2.py3-none-any.whl.metadata (22 kB)
+2025-11-10T15:06:18.3962518Z Collecting tzdata>=2022.7 (from pandas>=1.3.0->-r requirements.txt (line 13))
+2025-11-10T15:06:18.3998338Z   Downloading tzdata-2025.2-py2.py3-none-any.whl.metadata (1.4 kB)
+2025-11-10T15:06:18.4174637Z Collecting six>=1.5 (from python-dateutil>=2.8.2->-r requirements.txt (line 17))
+2025-11-10T15:06:18.4221608Z   Downloading six-1.17.0-py2.py3-none-any.whl.metadata (1.7 kB)
+2025-11-10T15:06:18.4386797Z Collecting mypy-extensions>=0.4.3 (from black>=21.7b0->-r requirements.txt (line 21))
+2025-11-10T15:06:18.4425361Z   Downloading mypy_extensions-1.1.0-py3-none-any.whl.metadata (1.1 kB)
+2025-11-10T15:06:18.4585482Z Collecting packaging>=22.0 (from black>=21.7b0->-r requirements.txt (line 21))
+2025-11-10T15:06:18.4637119Z   Downloading packaging-25.0-py3-none-any.whl.metadata (3.3 kB)
+2025-11-10T15:06:18.4769030Z Collecting pathspec>=0.9.0 (from black>=21.7b0->-r requirements.txt (line 21))
+2025-11-10T15:06:18.4813247Z   Downloading pathspec-0.12.1-py3-none-any.whl.metadata (21 kB)
+2025-11-10T15:06:18.5015236Z Collecting platformdirs>=2 (from black>=21.7b0->-r requirements.txt (line 21))
+2025-11-10T15:06:18.5061868Z   Downloading platformdirs-4.5.0-py3-none-any.whl.metadata (12 kB)
+2025-11-10T15:06:18.5207113Z Collecting pytokens>=0.3.0 (from black>=21.7b0->-r requirements.txt (line 21))
+2025-11-10T15:06:18.5245485Z   Downloading pytokens-0.3.0-py3-none-any.whl.metadata (2.0 kB)
+2025-11-10T15:06:18.5470786Z Collecting cfgv>=2.0.0 (from pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:18.5511121Z   Downloading cfgv-3.4.0-py2.py3-none-any.whl.metadata (8.5 kB)
+2025-11-10T15:06:18.5965999Z Collecting identify>=1.0.0 (from pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:18.6015558Z   Downloading identify-2.6.15-py2.py3-none-any.whl.metadata (4.4 kB)
+2025-11-10T15:06:18.6177616Z Collecting nodeenv>=0.11.1 (from pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:18.6223039Z   Downloading nodeenv-1.9.1-py2.py3-none-any.whl.metadata (21 kB)
+2025-11-10T15:06:18.6613077Z Collecting pyyaml>=5.1 (from pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:18.6664567Z   Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (2.4 kB)
+2025-11-10T15:06:18.7096369Z Collecting virtualenv>=20.10.0 (from pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:18.7149844Z   Downloading virtualenv-20.35.4-py3-none-any.whl.metadata (4.6 kB)
+2025-11-10T15:06:18.7314340Z Collecting iniconfig>=1.0.1 (from pytest>=7.0.0->-r requirements.txt (line 26))
+2025-11-10T15:06:18.7358412Z   Downloading iniconfig-2.3.0-py3-none-any.whl.metadata (2.5 kB)
+2025-11-10T15:06:18.7490642Z Collecting pluggy<2,>=1.5 (from pytest>=7.0.0->-r requirements.txt (line 26))
+2025-11-10T15:06:18.7528917Z   Downloading pluggy-1.6.0-py3-none-any.whl.metadata (4.8 kB)
+2025-11-10T15:06:18.7741971Z Collecting pygments>=2.7.2 (from pytest>=7.0.0->-r requirements.txt (line 26))
+2025-11-10T15:06:18.7786765Z   Downloading pygments-2.19.2-py3-none-any.whl.metadata (2.5 kB)
+2025-11-10T15:06:19.1651802Z Collecting coverage>=7.10.6 (from coverage[toml]>=7.10.6->pytest-cov>=2.12.1->-r requirements.txt (line 27))
+2025-11-10T15:06:19.1702087Z   Downloading coverage-7.11.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (9.1 kB)
+2025-11-10T15:06:19.2329276Z Collecting distlib<1,>=0.3.7 (from virtualenv>=20.10.0->pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:19.2367365Z   Downloading distlib-0.4.0-py2.py3-none-any.whl.metadata (5.2 kB)
+2025-11-10T15:06:19.2577716Z Collecting filelock<4,>=3.12.2 (from virtualenv>=20.10.0->pre-commit>=3.7.0->-r requirements.txt (line 25))
+2025-11-10T15:06:19.2614898Z   Downloading filelock-3.20.0-py3-none-any.whl.metadata (2.1 kB)
+2025-11-10T15:06:19.2803537Z Downloading openai-2.7.1-py3-none-any.whl (1.0 MB)
+2025-11-10T15:06:19.2912501Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.0/1.0 MB 116.3 MB/s  0:00:00
+2025-11-10T15:06:19.2951510Z Downloading pydantic-2.12.4-py3-none-any.whl (463 kB)
+2025-11-10T15:06:19.3033601Z Downloading pydantic_core-2.41.5-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (2.1 MB)
+2025-11-10T15:06:19.3161810Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 2.1/2.1 MB 186.0 MB/s  0:00:00
+2025-11-10T15:06:19.3208857Z Downloading anyio-4.11.0-py3-none-any.whl (109 kB)
+2025-11-10T15:06:19.3274084Z Downloading distro-1.9.0-py3-none-any.whl (20 kB)
+2025-11-10T15:06:19.3335025Z Downloading httpx-0.28.1-py3-none-any.whl (73 kB)
+2025-11-10T15:06:19.3395408Z Downloading httpcore-1.0.9-py3-none-any.whl (78 kB)
+2025-11-10T15:06:19.3493669Z Downloading jiter-0.12.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (364 kB)
+2025-11-10T15:06:19.3584846Z Downloading typing_extensions-4.15.0-py3-none-any.whl (44 kB)
+2025-11-10T15:06:19.3643969Z Downloading python_dotenv-1.2.1-py3-none-any.whl (21 kB)
+2025-11-10T15:06:19.3706274Z Downloading requests-2.32.5-py3-none-any.whl (64 kB)
+2025-11-10T15:06:19.3809137Z Downloading charset_normalizer-3.4.4-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (151 kB)
+2025-11-10T15:06:19.3873862Z Downloading idna-3.11-py3-none-any.whl (71 kB)
+2025-11-10T15:06:19.3944834Z Downloading urllib3-2.5.0-py3-none-any.whl (129 kB)
+2025-11-10T15:06:19.4037647Z Downloading fastapi-0.121.1-py3-none-any.whl (109 kB)
+2025-11-10T15:06:19.4124189Z Downloading starlette-0.49.3-py3-none-any.whl (74 kB)
+2025-11-10T15:06:19.4197672Z Downloading uvicorn-0.38.0-py3-none-any.whl (68 kB)
+2025-11-10T15:06:19.4271310Z Downloading pandas-2.3.3-cp311-cp311-manylinux_2_24_x86_64.manylinux_2_28_x86_64.whl (12.8 MB)
+2025-11-10T15:06:19.4865212Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 12.8/12.8 MB 221.2 MB/s  0:00:00
+2025-11-10T15:06:19.4914519Z Downloading numpy-2.3.4-cp311-cp311-manylinux_2_27_x86_64.manylinux_2_28_x86_64.whl (16.9 MB)
+2025-11-10T15:06:19.5618518Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 16.9/16.9 MB 248.0 MB/s  0:00:00
+2025-11-10T15:06:19.5661236Z Downloading python_dateutil-2.9.0.post0-py2.py3-none-any.whl (229 kB)
+2025-11-10T15:06:19.5809615Z Downloading black-25.11.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.6 MB)
+2025-11-10T15:06:19.5937214Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.6/1.6 MB 138.3 MB/s  0:00:00
+2025-11-10T15:06:19.5999840Z Downloading isort-7.0.0-py3-none-any.whl (94 kB)
+2025-11-10T15:06:19.6076141Z Downloading mypy-1.18.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (13.2 MB)
+2025-11-10T15:06:19.6681953Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.2/13.2 MB 223.8 MB/s  0:00:00
+2025-11-10T15:06:19.6742537Z Downloading ruff-0.14.4-py3-none-manylinux_2_17_x86_64.manylinux2014_x86_64.whl (13.4 MB)
+2025-11-10T15:06:19.7342382Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 13.4/13.4 MB 229.9 MB/s  0:00:00
+2025-11-10T15:06:19.7389535Z Downloading pre_commit-4.4.0-py2.py3-none-any.whl (226 kB)
+2025-11-10T15:06:19.7464336Z Downloading pytest-9.0.0-py3-none-any.whl (373 kB)
+2025-11-10T15:06:19.7554499Z Downloading pluggy-1.6.0-py3-none-any.whl (20 kB)
+2025-11-10T15:06:19.7623521Z Downloading pytest_cov-7.0.0-py3-none-any.whl (22 kB)
+2025-11-10T15:06:19.7685774Z Downloading pytest_socket-0.7.0-py3-none-any.whl (6.8 kB)
+2025-11-10T15:06:19.7768063Z Downloading annotated_doc-0.0.3-py3-none-any.whl (5.5 kB)
+2025-11-10T15:06:19.7829445Z Downloading annotated_types-0.7.0-py3-none-any.whl (13 kB)
+2025-11-10T15:06:19.7904282Z Downloading certifi-2025.10.5-py3-none-any.whl (163 kB)
+2025-11-10T15:06:19.7980243Z Downloading cfgv-3.4.0-py2.py3-none-any.whl (7.2 kB)
+2025-11-10T15:06:19.8053196Z Downloading click-8.3.0-py3-none-any.whl (107 kB)
+2025-11-10T15:06:19.8133880Z Downloading coverage-7.11.3-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (249 kB)
+2025-11-10T15:06:19.8212882Z Downloading h11-0.16.0-py3-none-any.whl (37 kB)
+2025-11-10T15:06:19.8279138Z Downloading identify-2.6.15-py2.py3-none-any.whl (99 kB)
+2025-11-10T15:06:19.8337870Z Downloading iniconfig-2.3.0-py3-none-any.whl (7.5 kB)
+2025-11-10T15:06:19.8399186Z Downloading mypy_extensions-1.1.0-py3-none-any.whl (5.0 kB)
+2025-11-10T15:06:19.8456603Z Downloading nodeenv-1.9.1-py2.py3-none-any.whl (22 kB)
+2025-11-10T15:06:19.8516566Z Downloading packaging-25.0-py3-none-any.whl (66 kB)
+2025-11-10T15:06:19.8580114Z Downloading pathspec-0.12.1-py3-none-any.whl (31 kB)
+2025-11-10T15:06:19.8651840Z Downloading platformdirs-4.5.0-py3-none-any.whl (18 kB)
+2025-11-10T15:06:19.8714485Z Downloading pygments-2.19.2-py3-none-any.whl (1.2 MB)
+2025-11-10T15:06:19.8801201Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.2/1.2 MB 163.0 MB/s  0:00:00
+2025-11-10T15:06:19.8840216Z Downloading pytokens-0.3.0-py3-none-any.whl (12 kB)
+2025-11-10T15:06:19.8902407Z Downloading pytz-2025.2-py2.py3-none-any.whl (509 kB)
+2025-11-10T15:06:19.8986538Z Downloading pyyaml-6.0.3-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (806 kB)
+2025-11-10T15:06:19.9058099Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 806.6/806.6 kB 117.2 MB/s  0:00:00
+2025-11-10T15:06:19.9096870Z Downloading six-1.17.0-py2.py3-none-any.whl (11 kB)
+2025-11-10T15:06:19.9155764Z Downloading sniffio-1.3.1-py3-none-any.whl (10 kB)
+2025-11-10T15:06:19.9221929Z Downloading tqdm-4.67.1-py3-none-any.whl (78 kB)
+2025-11-10T15:06:19.9300084Z Downloading typing_inspection-0.4.2-py3-none-any.whl (14 kB)
+2025-11-10T15:06:19.9378595Z Downloading tzdata-2025.2-py2.py3-none-any.whl (347 kB)
+2025-11-10T15:06:19.9457777Z Downloading virtualenv-20.35.4-py3-none-any.whl (6.0 MB)
+2025-11-10T15:06:19.9758396Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 6.0/6.0 MB 213.1 MB/s  0:00:00
+2025-11-10T15:06:19.9803242Z Downloading distlib-0.4.0-py2.py3-none-any.whl (469 kB)
+2025-11-10T15:06:19.9883865Z Downloading filelock-3.20.0-py3-none-any.whl (16 kB)
+2025-11-10T15:06:20.2287732Z Installing collected packages: pytz, distlib, urllib3, tzdata, typing-extensions, tqdm, sniffio, six, ruff, pyyaml, pytokens, python-dotenv, pygments, pluggy, platformdirs, pathspec, packaging, numpy, nodeenv, mypy-extensions, jiter, isort, iniconfig, idna, identify, h11, filelock, distro, coverage, click, charset_normalizer, cfgv, certifi, annotated-types, annotated-doc, virtualenv, uvicorn, typing-inspection, requests, python-dateutil, pytest, pydantic-core, mypy, httpcore, black, anyio, starlette, pytest-socket, pytest-cov, pydantic, pre-commit, pandas, httpx, openai, fastapi
+2025-11-10T15:06:31.4871631Z 
+2025-11-10T15:06:31.4904555Z Successfully installed annotated-doc-0.0.3 annotated-types-0.7.0 anyio-4.11.0 black-25.11.0 certifi-2025.10.5 cfgv-3.4.0 charset_normalizer-3.4.4 click-8.3.0 coverage-7.11.3 distlib-0.4.0 distro-1.9.0 fastapi-0.121.1 filelock-3.20.0 h11-0.16.0 httpcore-1.0.9 httpx-0.28.1 identify-2.6.15 idna-3.11 iniconfig-2.3.0 isort-7.0.0 jiter-0.12.0 mypy-1.18.2 mypy-extensions-1.1.0 nodeenv-1.9.1 numpy-2.3.4 openai-2.7.1 packaging-25.0 pandas-2.3.3 pathspec-0.12.1 platformdirs-4.5.0 pluggy-1.6.0 pre-commit-4.4.0 pydantic-2.12.4 pydantic-core-2.41.5 pygments-2.19.2 pytest-9.0.0 pytest-cov-7.0.0 pytest-socket-0.7.0 python-dateutil-2.9.0.post0 python-dotenv-1.2.1 pytokens-0.3.0 pytz-2025.2 pyyaml-6.0.3 requests-2.32.5 ruff-0.14.4 six-1.17.0 sniffio-1.3.1 starlette-0.49.3 tqdm-4.67.1 typing-extensions-4.15.0 typing-inspection-0.4.2 tzdata-2025.2 urllib3-2.5.0 uvicorn-0.38.0 virtualenv-20.35.4
+2025-11-10T15:06:32.3008926Z Requirement already satisfied: pytest in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (9.0.0)
+2025-11-10T15:06:32.3014483Z Requirement already satisfied: pytest-cov in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (7.0.0)
+2025-11-10T15:06:32.3739867Z Collecting pytest-timeout
+2025-11-10T15:06:32.4334188Z   Downloading pytest_timeout-2.4.0-py3-none-any.whl.metadata (20 kB)
+2025-11-10T15:06:32.4641226Z Collecting pytest-xdist
+2025-11-10T15:06:32.4682360Z   Downloading pytest_xdist-3.8.0-py3-none-any.whl.metadata (3.0 kB)
+2025-11-10T15:06:32.4920241Z Collecting pytest-asyncio
+2025-11-10T15:06:32.4964756Z   Downloading pytest_asyncio-1.2.0-py3-none-any.whl.metadata (4.1 kB)
+2025-11-10T15:06:32.5014202Z Requirement already satisfied: anyio in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (4.11.0)
+2025-11-10T15:06:33.0087051Z Collecting aiohttp
+2025-11-10T15:06:33.0134153Z   Downloading aiohttp-3.13.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (8.1 kB)
+2025-11-10T15:06:33.0486426Z Collecting prompt_toolkit
+2025-11-10T15:06:33.0534300Z   Downloading prompt_toolkit-3.0.52-py3-none-any.whl.metadata (6.4 kB)
+2025-11-10T15:06:33.0586689Z Requirement already satisfied: iniconfig>=1.0.1 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from pytest) (2.3.0)
+2025-11-10T15:06:33.0591797Z Requirement already satisfied: packaging>=22 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from pytest) (25.0)
+2025-11-10T15:06:33.0597596Z Requirement already satisfied: pluggy<2,>=1.5 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from pytest) (1.6.0)
+2025-11-10T15:06:33.0603274Z Requirement already satisfied: pygments>=2.7.2 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from pytest) (2.19.2)
+2025-11-10T15:06:33.0634053Z Requirement already satisfied: coverage>=7.10.6 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from coverage[toml]>=7.10.6->pytest-cov) (7.11.3)
+2025-11-10T15:06:33.0771866Z Collecting execnet>=2.1 (from pytest-xdist)
+2025-11-10T15:06:33.0815054Z   Downloading execnet-2.1.1-py3-none-any.whl.metadata (2.9 kB)
+2025-11-10T15:06:33.1170111Z Collecting pytest
+2025-11-10T15:06:33.1212053Z   Downloading pytest-8.4.2-py3-none-any.whl.metadata (7.7 kB)
+2025-11-10T15:06:33.1259753Z Requirement already satisfied: typing-extensions>=4.12 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from pytest-asyncio) (4.15.0)
+2025-11-10T15:06:33.1283387Z Requirement already satisfied: idna>=2.8 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from anyio) (3.11)
+2025-11-10T15:06:33.1288578Z Requirement already satisfied: sniffio>=1.1 in /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/site-packages (from anyio) (1.3.1)
+2025-11-10T15:06:33.1432727Z Collecting aiohappyeyeballs>=2.5.0 (from aiohttp)
+2025-11-10T15:06:33.1475789Z   Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl.metadata (5.9 kB)
+2025-11-10T15:06:33.1595295Z Collecting aiosignal>=1.4.0 (from aiohttp)
+2025-11-10T15:06:33.1639007Z   Downloading aiosignal-1.4.0-py3-none-any.whl.metadata (3.7 kB)
+2025-11-10T15:06:33.1802400Z Collecting attrs>=17.3.0 (from aiohttp)
+2025-11-10T15:06:33.1846856Z   Downloading attrs-25.4.0-py3-none-any.whl.metadata (10 kB)
+2025-11-10T15:06:33.2545888Z Collecting frozenlist>=1.1.1 (from aiohttp)
+2025-11-10T15:06:33.2606772Z   Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl.metadata (20 kB)
+2025-11-10T15:06:33.4885595Z Collecting multidict<7.0,>=4.5 (from aiohttp)
+2025-11-10T15:06:33.4931118Z   Downloading multidict-6.7.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (5.3 kB)
+2025-11-10T15:06:33.5737483Z Collecting propcache>=0.2.0 (from aiohttp)
+2025-11-10T15:06:33.5784024Z   Downloading propcache-0.4.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (13 kB)
+2025-11-10T15:06:33.8232658Z Collecting yarl<2.0,>=1.17.0 (from aiohttp)
+2025-11-10T15:06:33.8282901Z   Downloading yarl-1.22.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl.metadata (75 kB)
+2025-11-10T15:06:33.8611253Z Collecting wcwidth (from prompt_toolkit)
+2025-11-10T15:06:33.8663666Z   Downloading wcwidth-0.2.14-py2.py3-none-any.whl.metadata (15 kB)
+2025-11-10T15:06:33.8871398Z Downloading pytest_timeout-2.4.0-py3-none-any.whl (14 kB)
+2025-11-10T15:06:33.8933022Z Downloading pytest_xdist-3.8.0-py3-none-any.whl (46 kB)
+2025-11-10T15:06:33.8990421Z Downloading pytest_asyncio-1.2.0-py3-none-any.whl (15 kB)
+2025-11-10T15:06:33.9048388Z Downloading pytest-8.4.2-py3-none-any.whl (365 kB)
+2025-11-10T15:06:33.9140012Z Downloading aiohttp-3.13.2-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (1.7 MB)
+2025-11-10T15:06:33.9256929Z    ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ 1.7/1.7 MB 175.7 MB/s  0:00:00
+2025-11-10T15:06:33.9298828Z Downloading multidict-6.7.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (246 kB)
+2025-11-10T15:06:33.9425703Z Downloading yarl-1.22.0-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (365 kB)
+2025-11-10T15:06:33.9502382Z Downloading prompt_toolkit-3.0.52-py3-none-any.whl (391 kB)
+2025-11-10T15:06:33.9575217Z Downloading aiohappyeyeballs-2.6.1-py3-none-any.whl (15 kB)
+2025-11-10T15:06:33.9632579Z Downloading aiosignal-1.4.0-py3-none-any.whl (7.5 kB)
+2025-11-10T15:06:33.9694556Z Downloading attrs-25.4.0-py3-none-any.whl (67 kB)
+2025-11-10T15:06:33.9758032Z Downloading execnet-2.1.1-py3-none-any.whl (40 kB)
+2025-11-10T15:06:33.9821001Z Downloading frozenlist-1.8.0-cp311-cp311-manylinux1_x86_64.manylinux_2_28_x86_64.manylinux_2_5_x86_64.whl (231 kB)
+2025-11-10T15:06:33.9889561Z Downloading propcache-0.4.1-cp311-cp311-manylinux2014_x86_64.manylinux_2_17_x86_64.manylinux_2_28_x86_64.whl (210 kB)
+2025-11-10T15:06:33.9958133Z Downloading wcwidth-0.2.14-py2.py3-none-any.whl (37 kB)
+2025-11-10T15:06:34.0964853Z Installing collected packages: wcwidth, pytest, propcache, multidict, frozenlist, execnet, attrs, aiohappyeyeballs, yarl, pytest-xdist, pytest-timeout, pytest-asyncio, prompt_toolkit, aiosignal, aiohttp
+2025-11-10T15:06:34.1882380Z   Attempting uninstall: pytest
+2025-11-10T15:06:34.1908488Z     Found existing installation: pytest 9.0.0
+2025-11-10T15:06:34.1983113Z     Uninstalling pytest-9.0.0:
+2025-11-10T15:06:34.3285998Z       Successfully uninstalled pytest-9.0.0
+2025-11-10T15:06:35.1536883Z 
+2025-11-10T15:06:35.1570063Z Successfully installed aiohappyeyeballs-2.6.1 aiohttp-3.13.2 aiosignal-1.4.0 attrs-25.4.0 execnet-2.1.1 frozenlist-1.8.0 multidict-6.7.0 prompt_toolkit-3.0.52 propcache-0.4.1 pytest-8.4.2 pytest-asyncio-1.2.0 pytest-timeout-2.4.0 pytest-xdist-3.8.0 wcwidth-0.2.14 yarl-1.22.0
+2025-11-10T15:06:35.3803213Z ##[group]Run pytest tests/ -v \
+2025-11-10T15:06:35.3803517Z [36;1mpytest tests/ -v \[0m
+2025-11-10T15:06:35.3803739Z [36;1m  --tb=short \[0m
+2025-11-10T15:06:35.3803945Z [36;1m  --maxfail=5 \[0m
+2025-11-10T15:06:35.3804172Z [36;1m  --timeout=300 \[0m
+2025-11-10T15:06:35.3804388Z [36;1m  --cov=app \[0m
+2025-11-10T15:06:35.3804591Z [36;1m  --cov=core_modules \[0m
+2025-11-10T15:06:35.3804817Z [36;1m  --cov=api \[0m
+2025-11-10T15:06:35.3805028Z [36;1m  --cov-report=term-missing \[0m
+2025-11-10T15:06:35.3805311Z [36;1m  --cov-report=xml:coverage.xml \[0m
+2025-11-10T15:06:35.3805580Z [36;1m  --cov-fail-under=10 \[0m
+2025-11-10T15:06:35.3805809Z [36;1m  -n auto || exit 1[0m
+2025-11-10T15:06:35.3838171Z shell: /usr/bin/bash -e {0}
+2025-11-10T15:06:35.3838389Z env:
+2025-11-10T15:06:35.3838562Z   PYTHON_VERSION: 3.12
+2025-11-10T15:06:35.3838777Z   PIP_CACHE_DIR: ~/.cache/pip
+2025-11-10T15:06:35.3839062Z   pythonLocation: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:35.3839505Z   PKG_CONFIG_PATH: /opt/hostedtoolcache/Python/3.11.14/x64/lib/pkgconfig
+2025-11-10T15:06:35.3839900Z   Python_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:35.3840241Z   Python2_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:35.3840828Z   Python3_ROOT_DIR: /opt/hostedtoolcache/Python/3.11.14/x64
+2025-11-10T15:06:35.3841188Z   LD_LIBRARY_PATH: /opt/hostedtoolcache/Python/3.11.14/x64/lib
+2025-11-10T15:06:35.3841468Z ##[endgroup]
+2025-11-10T15:06:45.9577396Z ============================= test session starts ==============================
+2025-11-10T15:06:45.9579302Z platform linux -- Python 3.11.14, pytest-8.4.2, pluggy-1.6.0
+2025-11-10T15:06:45.9579903Z rootdir: /home/runner/work/echoes/echoes
+2025-11-10T15:06:45.9580344Z configfile: pytest.ini
+2025-11-10T15:06:45.9589257Z plugins: anyio-4.11.0, socket-0.7.0, timeout-2.4.0, asyncio-1.2.0, cov-7.0.0, xdist-3.8.0
+2025-11-10T15:06:45.9589922Z timeout: 300.0s
+2025-11-10T15:06:45.9590270Z timeout method: signal
+2025-11-10T15:06:45.9590830Z timeout func_only: False
+2025-11-10T15:06:45.9591623Z asyncio: mode=Mode.AUTO, debug=False, asyncio_default_fixture_loop_scope=None, asyncio_default_test_loop_scope=function
+2025-11-10T15:06:45.9592472Z created: 2/2 workers
+2025-11-10T15:06:45.9592804Z 2 workers [451 items]
+2025-11-10T15:06:45.9593018Z 
+2025-11-10T15:07:01.8309202Z ....s...s..........................FFF.FF..........F.................... [ 15%]
+2025-11-10T15:07:02.4672536Z ..........F.F
+2025-11-10T15:07:02.4675162Z =================================== FAILURES ===================================
+2025-11-10T15:07:02.4678076Z _______________ TestClarifierEngine.test_detect_scope_ambiguity ________________
+2025-11-10T15:07:02.4684719Z [gw0] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4685474Z tests/glimpse/test_clarifier_engine.py:111: in test_detect_scope_ambiguity
+2025-11-10T15:07:02.4686069Z     assert len(clarifiers) > 0
+2025-11-10T15:07:02.4686672Z E   assert 0 > 0
+2025-11-10T15:07:02.4687208Z E    +  where 0 = len([])
+2025-11-10T15:07:02.4687881Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4689006Z 📋 Using legacy clarifier engine
+2025-11-10T15:07:02.4689907Z ______________ TestClarifierEngine.test_detect_language_ambiguity ______________
+2025-11-10T15:07:02.4691055Z [gw0] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4691973Z tests/glimpse/test_clarifier_engine.py:122: in test_detect_language_ambiguity
+2025-11-10T15:07:02.4693212Z     assert any(c.type == ClarifierType.LANGUAGE for c in clarifiers)
+2025-11-10T15:07:02.4693889Z E   assert False
+2025-11-10T15:07:02.4694786Z E    +  where False = any(<generator object TestClarifierEngine.test_detect_language_ambiguity.<locals>.<genexpr> at 0x7f16697f7030>)
+2025-11-10T15:07:02.4695873Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4698941Z 📋 Using legacy clarifier engine
+2025-11-10T15:07:02.4707350Z ______________ TestClarifierEngine.test_detect_urgency_ambiguity _______________
+2025-11-10T15:07:02.4708110Z [gw0] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4708841Z tests/glimpse/test_clarifier_engine.py:131: in test_detect_urgency_ambiguity
+2025-11-10T15:07:02.4709393Z     assert len(clarifiers) > 0
+2025-11-10T15:07:02.4709722Z E   assert 0 > 0
+2025-11-10T15:07:02.4709996Z E    +  where 0 = len([])
+2025-11-10T15:07:02.4710416Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4711286Z 📋 Using legacy clarifier engine
+2025-11-10T15:07:02.4711809Z ____________ TestClarifierEngine.test_detect_detail_level_ambiguity ____________
+2025-11-10T15:07:02.4712496Z [gw0] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4713206Z tests/glimpse/test_clarifier_engine.py:142: in test_detect_detail_level_ambiguity
+2025-11-10T15:07:02.4713922Z     assert any(c.type == ClarifierType.DETAIL_LEVEL for c in clarifiers)
+2025-11-10T15:07:02.4714391Z E   assert False
+2025-11-10T15:07:02.4715116Z E    +  where False = any(<generator object TestClarifierEngine.test_detect_detail_level_ambiguity.<locals>.<genexpr> at 0x7f16697f5150>)
+2025-11-10T15:07:02.4716023Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4716574Z 📋 Using legacy clarifier engine
+2025-11-10T15:07:02.4717100Z _______ TestClarifierEngine.test_empty_goal_triggers_audience_clarifier ________
+2025-11-10T15:07:02.4717802Z [gw0] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4718536Z tests/glimpse/test_clarifier_engine.py:149: in test_empty_goal_triggers_audience_clarifier
+2025-11-10T15:07:02.4719152Z     assert len(clarifiers) > 0
+2025-11-10T15:07:02.4719475Z E   assert 0 > 0
+2025-11-10T15:07:02.4719744Z E    +  where 0 = len([])
+2025-11-10T15:07:02.4720162Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4725823Z 📋 Using legacy clarifier engine
+2025-11-10T15:07:02.4726325Z ____________________ test_clarifier_when_intent_unspecified ____________________
+2025-11-10T15:07:02.4727007Z [gw1] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4727752Z tests/glimpse/test_glimpse_engine_core.py:106: in test_clarifier_when_intent_unspecified
+2025-11-10T15:07:02.4728346Z     asyncio.run(run())
+2025-11-10T15:07:02.4728865Z /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:190: in run
+2025-11-10T15:07:02.4729526Z     return runner.run(main)
+2025-11-10T15:07:02.4729858Z            ^^^^^^^^^^^^^^^^
+2025-11-10T15:07:02.4730414Z /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/runners.py:118: in run
+2025-11-10T15:07:02.4731285Z     return self._loop.run_until_complete(task)
+2025-11-10T15:07:02.4731690Z            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2025-11-10T15:07:02.4732421Z /opt/hostedtoolcache/Python/3.11.14/x64/lib/python3.11/asyncio/base_events.py:654: in run_until_complete
+2025-11-10T15:07:02.4733144Z     return future.result()
+2025-11-10T15:07:02.4733468Z            ^^^^^^^^^^^^^^^
+2025-11-10T15:07:02.4733854Z tests/glimpse/test_glimpse_engine_core.py:96: in run
+2025-11-10T15:07:02.4734305Z     assert r.status == "not_aligned"
+2025-11-10T15:07:02.4734734Z E   AssertionError: assert 'aligned' == 'not_aligned'
+2025-11-10T15:07:02.4735152Z E     
+2025-11-10T15:07:02.4735402Z E     - not_aligned
+2025-11-10T15:07:02.4735697Z E     ? ----
+2025-11-10T15:07:02.4736435Z E     + aligned
+2025-11-10T15:07:02.4736830Z ----------------------------- Captured stdout call -----------------------------
+2025-11-10T15:07:02.4737576Z ✅ Using enhanced clarifier engine with post-execution curiosity
+2025-11-10T15:07:02.4738239Z _________________ TestGlimpseInit.test_create_latency_monitor __________________
+2025-11-10T15:07:02.4739295Z [gw1] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4740026Z tests/glimpse/test_init.py:78: in test_create_latency_monitor
+2025-11-10T15:07:02.4740700Z     assert monitor.t1 == 100
+2025-11-10T15:07:02.4741053Z E   assert 1500 == 100
+2025-11-10T15:07:02.4741526Z E    +  where 1500 = <glimpse.engine.LatencyMonitor object at 0x7fcc0031f410>.t1
+2025-11-10T15:07:02.4742201Z __________________ TestGlimpseInit.test_create_privacy_guard ___________________
+2025-11-10T15:07:02.4742891Z [gw1] linux -- Python 3.11.14 /opt/hostedtoolcache/Python/3.11.14/x64/bin/python
+2025-11-10T15:07:02.4743525Z tests/glimpse/test_init.py:97: in test_create_privacy_guard
+2025-11-10T15:07:02.4744004Z     assert not guard.committed
+2025-11-10T15:07:02.4744325Z                ^^^^^^^^^^^^^^^
+2025-11-10T15:07:02.4744793Z E   AttributeError: 'PrivacyGuard' object has no attribute 'committed'
+2025-11-10T15:07:02.4745362Z =============================== warnings summary ===============================
+2025-11-10T15:07:02.4745815Z smart_terminal/interface/terminal.py:123
+2025-11-10T15:07:02.4746225Z smart_terminal/interface/terminal.py:123
+2025-11-10T15:07:02.4746617Z smart_terminal/interface/terminal.py:123
+2025-11-10T15:07:02.4747913Z   /home/runner/work/echoes/echoes/smart_terminal/interface/terminal.py:123: DeprecationWarning: In 3.13 classes created inside an enum will not become a member.  Use the `member` decorator to keep the current behavior.
+2025-11-10T15:07:02.4749169Z     class SuggestionMode(Enum):
+2025-11-10T15:07:02.4749396Z 
+2025-11-10T15:07:02.4749701Z -- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+2025-11-10T15:07:02.4750314Z =========================== short test summary info ============================
+2025-11-10T15:07:02.4751409Z FAILED tests/glimpse/test_clarifier_engine.py::TestClarifierEngine::test_detect_scope_ambiguity - assert 0 > 0
+2025-11-10T15:07:02.4752135Z  +  where 0 = len([])
+2025-11-10T15:07:02.4752825Z FAILED tests/glimpse/test_clarifier_engine.py::TestClarifierEngine::test_detect_language_ambiguity - assert False
+2025-11-10T15:07:02.4754032Z  +  where False = any(<generator object TestClarifierEngine.test_detect_language_ambiguity.<locals>.<genexpr> at 0x7f16697f7030>)
+2025-11-10T15:07:02.4755181Z FAILED tests/glimpse/test_clarifier_engine.py::TestClarifierEngine::test_detect_urgency_ambiguity - assert 0 > 0
+2025-11-10T15:07:02.4755916Z  +  where 0 = len([])
+2025-11-10T15:07:02.4756602Z FAILED tests/glimpse/test_clarifier_engine.py::TestClarifierEngine::test_detect_detail_level_ambiguity - assert False
+2025-11-10T15:07:02.4757808Z  +  where False = any(<generator object TestClarifierEngine.test_detect_detail_level_ambiguity.<locals>.<genexpr> at 0x7f16697f5150>)
+2025-11-10T15:07:02.4759073Z FAILED tests/glimpse/test_clarifier_engine.py::TestClarifierEngine::test_empty_goal_triggers_audience_clarifier - assert 0 > 0
+2025-11-10T15:07:02.4759871Z  +  where 0 = len([])
+2025-11-10T15:07:02.4760808Z FAILED tests/glimpse/test_glimpse_engine_core.py::test_clarifier_when_intent_unspecified - AssertionError: assert 'aligned' == 'not_aligned'
+2025-11-10T15:07:02.4761647Z   
+2025-11-10T15:07:02.4761875Z   - not_aligned
+2025-11-10T15:07:02.4762144Z   ? ----
+2025-11-10T15:07:02.4762375Z   + aligned
+2025-11-10T15:07:02.4762937Z FAILED tests/glimpse/test_init.py::TestGlimpseInit::test_create_latency_monitor - assert 1500 == 100
+2025-11-10T15:07:02.4763787Z  +  where 1500 = <glimpse.engine.LatencyMonitor object at 0x7fcc0031f410>.t1
+2025-11-10T15:07:02.4764846Z FAILED tests/glimpse/test_init.py::TestGlimpseInit::test_create_privacy_guard - AttributeError: 'PrivacyGuard' object has no attribute 'committed'
+2025-11-10T15:07:02.4766024Z !!!!!!!!!!!!!!!!!!!!!!!!!! stopping after 8 failures !!!!!!!!!!!!!!!!!!!!!!!!!!!
+2025-11-10T15:07:02.4766620Z !!!!!!!!!!!! xdist.dsession.Interrupted: stopping after 5 failures !!!!!!!!!!!!!
+2025-11-10T15:07:02.4767235Z ============= 8 failed, 75 passed, 2 skipped, 3 warnings in 25.87s =============
+2025-11-10T15:07:02.5188912Z ##[error]Process completed with exit code 1.
+2025-11-10T15:07:02.5288311Z Post job cleanup.
+2025-11-10T15:07:02.6310711Z [command]/usr/bin/git version
+2025-11-10T15:07:02.6353289Z git version 2.51.2
+2025-11-10T15:07:02.6405510Z Temporarily overriding HOME='/home/runner/work/_temp/769c56ad-ea24-4f66-8a0b-4c06980af2ca' before making global git config changes
+2025-11-10T15:07:02.6408790Z Adding repository directory to the temporary git global config as a safe directory
+2025-11-10T15:07:02.6423298Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/echoes/echoes
+2025-11-10T15:07:02.6467941Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2025-11-10T15:07:02.6508108Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2025-11-10T15:07:02.6762607Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2025-11-10T15:07:02.6795388Z http.https://github.com/.extraheader
+2025-11-10T15:07:02.6827068Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2025-11-10T15:07:02.6894467Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2025-11-10T15:07:02.7415721Z Cleaning up orphan processes

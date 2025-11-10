@@ -1,4 +1,5 @@
 """End-to-end tests for the smart terminal."""
+
 import json
 import os
 import subprocess
@@ -16,8 +17,7 @@ from smart_terminal.core.feedback import FeedbackHandler
 from smart_terminal.core.predictor import CommandPredictor
 from smart_terminal.interface.terminal import TerminalInterface, TerminalPreset
 
-# Access SuggestionMode as nested class
-SuggestionMode = TerminalPreset.SuggestionMode
+from smart_terminal.interface.constants import SuggestionMode
 
 
 class TestSmartTerminalE2E:

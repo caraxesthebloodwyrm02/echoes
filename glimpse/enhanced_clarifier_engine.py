@@ -2,6 +2,7 @@
 Enhanced Clarifier Glimpse with Post-Execution Curiosity System
 Transforms clarifiers from interrogators to learning companions
 """
+
 import random
 import time
 from dataclasses import dataclass
@@ -69,9 +70,11 @@ class UserEngagementTracker:
         # Update engagement score
         self.engagement_score = min(
             1.0,
-            self.engagement_score + 0.05
-            if user_responded
-            else self.engagement_score - 0.02,
+            (
+                self.engagement_score + 0.05
+                if user_responded
+                else self.engagement_score - 0.02
+            ),
         )
 
     def should_ask_curiosity(self) -> bool:
@@ -359,9 +362,9 @@ async def enhanced_sampler_with_curiosity(
 
     # Generate preferred constraints from learned profile
     context = {
-        "task_type": "communication"
-        if "email" in draft.input_text.lower()
-        else "general"
+        "task_type": (
+            "communication" if "email" in draft.input_text.lower() else "general"
+        )
     }
     preferred_constraints = clarifier_engine.generate_preferred_constraints(context)
 

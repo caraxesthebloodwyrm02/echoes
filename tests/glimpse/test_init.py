@@ -1,6 +1,7 @@
 """
 Tests for glimpse.__init__ module
 """
+
 import pytest
 
 from glimpse import (
@@ -75,6 +76,7 @@ class TestGlimpseInit:
         """Test LatencyMonitor creation"""
         monitor = LatencyMonitor()
 
+        # Default thresholds are 100ms, 300ms, 800ms, 2000ms
         assert monitor.t1 == 100
         assert monitor.t2 == 300
         assert monitor.t3 == 800

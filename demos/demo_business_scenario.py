@@ -300,7 +300,9 @@ class BusinessScenarioDemo:
                 self.insights.append(f"{opp['name']}: ${gain:,.0f}/mo opportunity")
 
             self.revenue_opportunities = total_opportunity
-            print(f"\n💰 Phase 2 Revenue Opportunities: ${total_opportunity:,.0f}/month")
+            print(
+                f"\n💰 Phase 2 Revenue Opportunities: ${total_opportunity:,.0f}/month"
+            )
 
     def _phase_3_strategic_planning(self):
         """Phase 3: Generate strategic plan for Q4 growth."""

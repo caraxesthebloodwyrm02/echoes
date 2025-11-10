@@ -1,6 +1,7 @@
 """
 Comprehensive tests for ClarifierEngine
 """
+
 import pytest
 
 from glimpse.clarifier_engine import (

@@ -3,7 +3,6 @@ Lap 3 Strategic Triple Push - Experience-Driven Coverage Surge
 Building on muscle memory: Target highest ROI modules for 61%+ coverage
 """
 
-
 import pytest
 
 
@@ -48,7 +47,6 @@ class TestTripleCoverageStrategy:
             "legal_safeguards",
             "multimodal_resonance",
             "enhanced_accounting",
-            "ucr",
             # Demo modules (coverage boost)
             "demo_catch_release",
             "demo_enhanced_features",

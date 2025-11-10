@@ -1,6 +1,7 @@
 """
 Prometheus metrics for Glimpse performance monitoring.
 """
+
 import logging
 
 from prometheus_client import Counter, Gauge, Histogram, generate_latest

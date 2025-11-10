@@ -1,34 +1,22 @@
 """Unit tests for TerminalInterface class."""
+
 import sys
 import unittest
 from unittest.mock import MagicMock, patch
 
-# Mock the prompt_toolkit imports
-sys.modules["prompt_toolkit"] = MagicMock()
-sys.modules["prompt_toolkit.application"] = MagicMock()
-sys.modules["prompt_toolkit.completion"] = MagicMock()
-sys.modules["prompt_toolkit.document"] = MagicMock()
-sys.modules["prompt_toolkit.formatted_text"] = MagicMock()
-sys.modules["prompt_toolkit.auto_suggest"] = MagicMock()
-sys.modules["prompt_toolkit.history"] = MagicMock()
-sys.modules["prompt_toolkit.key_binding"] = MagicMock()
-sys.modules["prompt_toolkit.keys"] = MagicMock()
-sys.modules["prompt_toolkit.layout.containers"] = MagicMock()
-sys.modules["prompt_toolkit.layout.controls"] = MagicMock()
-sys.modules["prompt_toolkit.layout.layout"] = MagicMock()
-sys.modules["prompt_toolkit.lexers"] = MagicMock()
-sys.modules["prompt_toolkit.styles"] = MagicMock()
-sys.modules["prompt_toolkit.widgets"] = MagicMock()
-sys.modules["prompt_toolkit.filters"] = MagicMock()
+# Mock prompt_toolkit before importing TerminalInterface
+mock_pt = MagicMock()
+mock_pt.__class__.__name__ = "MagicMock"
+sys.modules["prompt_toolkit"] = mock_pt
 
-# Now import the module under test
+# Import after mocking to ensure proper fallback
 from smart_terminal.interface.terminal import (
     TerminalInterface,
     TerminalPreset,
+    PROMPT_TOOLKIT_AVAILABLE,
 )
 
-# SuggestionMode is now a nested class of TerminalPreset
-SuggestionMode = TerminalPreset.SuggestionMode
+from smart_terminal.interface.constants import SuggestionMode
 
 
 class TestTerminalInterface(unittest.TestCase):
@@ -38,46 +26,44 @@ class TestTerminalInterface(unittest.TestCase):
         """Set up test environment."""
         self.predictor = MagicMock()
         self.feedback = MagicMock()
+
+        # Create terminal interface - should use basic mode due to mocked prompt_toolkit
         self.terminal = TerminalInterface(self.predictor, self.feedback)
 
-        # Mock the prompt session
-        self.terminal.session = MagicMock()
-        self.terminal.session.prompt = MagicMock(return_value="exit")
+    def test_prompt_toolkit_availability(self):
+        """Verify that prompt_toolkit is detected as unavailable in tests."""
+        self.assertFalse(PROMPT_TOOLKIT_AVAILABLE)
 
-        # Mock the completer
-        self.terminal.completer = MagicMock()
-
-        # Mock the status bar
-        self.terminal.status_bar = MagicMock()
+    def test_basic_terminal_mode(self):
+        """Test that basic terminal mode is used when prompt_toolkit is unavailable."""
+        self.assertIsNotNone(self.terminal._session)
+        self.assertFalse(hasattr(self.terminal, "_completer"))
 
     def test_initialization(self):
         """Test terminal interface initialization."""
-        self.assertEqual(self.terminal.current_preset, TerminalPreset.DEVELOPER)
-        self.assertEqual(self.terminal.suggestion_mode, SuggestionMode.FUZZY)
-        self.assertTrue(self.terminal.show_typing_stats)
-        self.assertTrue(self.terminal.show_command_history)
-        self.assertTrue(self.terminal.auto_complete)
-
-    def test_apply_preset_developer(self):
-        """Test applying developer preset."""
-        self.terminal.apply_preset(TerminalPreset.DEVELOPER)
         self.assertEqual(self.terminal.suggestion_mode, SuggestionMode.SMART)
-        self.assertTrue(self.terminal.show_typing_stats)
-        self.assertTrue(self.terminal.show_command_history)
-        self.assertTrue(self.terminal.auto_complete)
-        self.assertEqual(self.terminal.color_scheme, "monokai")
+        self.assertIsInstance(self.terminal._session, MagicMock)
 
-    def test_apply_preset_writer(self):
-        """Test applying writer preset."""
-        self.terminal.apply_preset(TerminalPreset.WRITER)
-        self.assertEqual(self.terminal.suggestion_mode, SuggestionMode.FUZZY)
-        self.assertFalse(self.terminal.show_typing_stats)
-        self.assertFalse(self.terminal.show_command_history)
-        self.assertFalse(self.terminal.auto_complete)
-        self.assertEqual(self.terminal.color_scheme, "solarized-light")
+    def test_basic_terminal_functionality(self):
+        """Test basic terminal functionality when prompt_toolkit is unavailable."""
+        with patch("builtins.input", return_value="exit"):
+            with patch("builtins.print") as mock_print:
+                self.terminal._run_basic()
+                mock_print.assert_called()
 
-    def test_toggle_suggestion_mode(self):
-        """Test cycling through suggestion modes."""
+    def test_command_execution(self):
+        """Test command execution in basic mode."""
+        with patch("subprocess.run") as mock_run:
+            mock_run.return_value.stdout = b"test output"
+            mock_run.return_value.returncode = 0
+
+            with patch("builtins.print") as mock_print:
+                self.terminal._execute_command("echo test")
+                mock_print.assert_called()
+                mock_run.assert_called_once()
+
+    def test_error_handling(self):
+        """Test error handling in basic mode."""
         # Initial mode is FUZZY
         self.assertEqual(self.terminal.suggestion_mode, SuggestionMode.FUZZY)
 

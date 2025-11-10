@@ -2,7 +2,6 @@
 Tests for app module components.
 """
 
-
 import pytest
 
 from app.actions.action_executor import ActionExecutor

@@ -2,6 +2,7 @@
 Batching helpers for Glimpse to reduce OpenAI API calls.
 Groups similar drafts and issues combined requests when possible.
 """
+
 import asyncio
 import logging
 

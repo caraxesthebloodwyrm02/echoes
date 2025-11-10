@@ -50,7 +50,9 @@ async def main():
             if result.get("sync_status", {}).get("version_synced"):
                 print("🔄 Version Sync: Complete")
 
-            print("\n🎉 EchoesAI is now fully integrated into the Atmosphere ecosystem!")
+            print(
+                "\n🎉 EchoesAI is now fully integrated into the Atmosphere ecosystem!"
+            )
 
         else:
             print(f"❌ Onboarding failed: {result.get('error', 'Unknown error')}")

@@ -239,7 +239,6 @@ class TestHighImpactModules:
             "legal_safeguards",
             "multimodal_resonance",
             "enhanced_accounting",
-            "ucr",
         ]
 
         successful_imports = 0

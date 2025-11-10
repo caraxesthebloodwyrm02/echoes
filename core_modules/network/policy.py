@@ -26,6 +26,7 @@ Usage:
 
 This module avoids importing heavy deps and can be used very early in program startup.
 """
+
 from __future__ import annotations
 
 import os
@@ -356,12 +357,17 @@ def verify_policy() -> tuple[bool, list[str], set[str]]:
 
         # Check for wildcards
         wildcards = {"*", "all", "any"}
+        # Check for wildcards first as this is a drift in allowlist format
         for token in cfg.allowlist:
             if token in wildcards:
                 errors.append(f"CI: Wildcard '{token}' not allowed in allowlist")
-                categories.add("validation")
+                categories.add(
+                    "drift"
+                )  # This is a drift issue as it's an invalid allowlist format
+                if cfg.ci_fail_on_drift:
+                    errors.append("CI: Wildcard detected and EGRESS_CI_FAIL_ON_DRIFT=1")
 
-        # Check allowlist drift
+        # Check normal allowlist drift
         lock_tokens = _load_allowlist_lock()
         if lock_tokens:
             allowlist_set = set(cfg.allowlist)

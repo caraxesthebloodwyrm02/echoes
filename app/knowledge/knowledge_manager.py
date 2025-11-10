@@ -315,7 +315,7 @@ class KnowledgeManager:
             "institutions_analyzed": list(institutions),
             "total_monthly_investment": total_investment,
             "total_monthly_savings": total_savings,
-            "average_roi": (total_savings / total_investment * 100)
-            if total_investment > 0
-            else 0,
+            "average_roi": (
+                (total_savings / total_investment * 100) if total_investment > 0 else 0
+            ),
         }

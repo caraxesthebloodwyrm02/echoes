@@ -292,15 +292,21 @@ class TestingAuditor:
 
         # Check if tests match source structure
         source_modules = {
-            "echoes": list((self.project_root / "echoes").rglob("*.py"))
-            if (self.project_root / "echoes").exists()
-            else [],
-            "core_modules": list((self.project_root / "core_modules").rglob("*.py"))
-            if (self.project_root / "core_modules").exists()
-            else [],
-            "app": list((self.project_root / "app").rglob("*.py"))
-            if (self.project_root / "app").exists()
-            else [],
+            "echoes": (
+                list((self.project_root / "echoes").rglob("*.py"))
+                if (self.project_root / "echoes").exists()
+                else []
+            ),
+            "core_modules": (
+                list((self.project_root / "core_modules").rglob("*.py"))
+                if (self.project_root / "core_modules").exists()
+                else []
+            ),
+            "app": (
+                list((self.project_root / "app").rglob("*.py"))
+                if (self.project_root / "app").exists()
+                else []
+            ),
         }
 
         # Check for orphaned tests (tests without corresponding source)

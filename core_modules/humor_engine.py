@@ -533,9 +533,7 @@ class HumorEngine:
             trend = (
                 "increasing"
                 if recent_values[-1] > recent_values[0]
-                else "decreasing"
-                if recent_values[-1] < recent_values[0]
-                else "stable"
+                else "decreasing" if recent_values[-1] < recent_values[0] else "stable"
             )
         else:
             trend = "stable"
@@ -547,16 +545,18 @@ class HumorEngine:
             "average_rpm": round(avg_rpm, 1),
             "average_errors": round(avg_errors, 1),
             "trend": trend,
-            "last_humor": self.last_humor_time.isoformat()
-            if self.last_humor_time
-            else None,
-            "humor_cooldown_remaining": max(
-                0,
-                self.humor_cooldown
-                - (datetime.now() - self.last_humor_time).total_seconds(),
-            )
-            if self.last_humor_time
-            else 0,
+            "last_humor": (
+                self.last_humor_time.isoformat() if self.last_humor_time else None
+            ),
+            "humor_cooldown_remaining": (
+                max(
+                    0,
+                    self.humor_cooldown
+                    - (datetime.now() - self.last_humor_time).total_seconds(),
+                )
+                if self.last_humor_time
+                else 0
+            ),
         }
 
     def reset_metrics(self):

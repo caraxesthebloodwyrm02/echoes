@@ -45,9 +45,11 @@ except ImportError as e:
 
         async def glimpse(self, draft: Draft) -> GlimpseResult:
             return GlimpseResult(
-                sample=draft.input_text[:100] + "..."
-                if len(draft.input_text) > 100
-                else draft.input_text,
+                sample=(
+                    draft.input_text[:100] + "..."
+                    if len(draft.input_text) > 100
+                    else draft.input_text
+                ),
                 essence=f"Intent: {draft.goal}; constraints: {draft.constraints or 'none'}",
             )
 
@@ -70,9 +72,9 @@ class GlimpseTools:
         if not self.available:
             return {
                 "error": "Glimpse not available",
-                "sample": input_text[:100] + "..."
-                if len(input_text) > 100
-                else input_text,
+                "sample": (
+                    input_text[:100] + "..." if len(input_text) > 100 else input_text
+                ),
                 "essence": f"Intent: {goal}; constraints: {constraints or 'none'}",
                 "status": "fallback",
             }
@@ -93,9 +95,9 @@ class GlimpseTools:
             logger.error(f"Glimpse processing error: {e}")
             return {
                 "error": str(e),
-                "sample": input_text[:100] + "..."
-                if len(input_text) > 100
-                else input_text,
+                "sample": (
+                    input_text[:100] + "..." if len(input_text) > 100 else input_text
+                ),
                 "essence": f"Intent: {goal}; constraints: {constraints or 'none'}",
                 "status": "error",
             }

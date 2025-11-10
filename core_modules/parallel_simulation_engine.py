@@ -386,9 +386,9 @@ class ParallelSimulationEngine:
             "outcome": {
                 "predicted_outcomes": outcomes,
                 "most_likely": max(outcomes, key=lambda x: x["probability"]),
-                "risk_assessment": "medium"
-                if outcomes[0]["probability"] > 0.5
-                else "high",
+                "risk_assessment": (
+                    "medium" if outcomes[0]["probability"] > 0.5 else "high"
+                ),
             },
             "confidence": 0.75,
             "reasoning": f"Predicted outcomes for {action} based on context analysis",

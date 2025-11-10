@@ -702,9 +702,9 @@ class IntentAwarenessEngine:
             "recent_thoughts": [
                 {
                     "id": t.id,
-                    "content": t.content[:100] + "..."
-                    if len(t.content) > 100
-                    else t.content,
+                    "content": (
+                        t.content[:100] + "..." if len(t.content) > 100 else t.content
+                    ),
                     "intent": t.intent.type.value,
                     "importance": t.importance,
                     "entity_count": len(t.entities),

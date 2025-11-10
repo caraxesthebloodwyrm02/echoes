@@ -2,6 +2,7 @@
 OpenAI-backed sampler for Glimpse using direct OpenAI API calls.
 Bypasses the wrapper layer for direct access to OpenAI's API.
 """
+
 import logging
 
 import openai

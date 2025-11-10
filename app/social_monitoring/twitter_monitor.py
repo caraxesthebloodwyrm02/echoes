@@ -132,9 +132,11 @@ class TwitterMonitor(SocialMonitor):
                         author=author.username if author else "unknown",
                         content=tweet.text,
                         created_at=tweet.created_at,
-                        url=f"https://twitter.com/{author.username}/status/{tweet.id}"
-                        if author
-                        else "",
+                        url=(
+                            f"https://twitter.com/{author.username}/status/{tweet.id}"
+                            if author
+                            else ""
+                        ),
                         metrics={
                             "likes": tweet.public_metrics.get("like_count", 0),
                             "retweets": tweet.public_metrics.get("retweet_count", 0),

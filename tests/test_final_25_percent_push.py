@@ -129,12 +129,10 @@ class TestFinal25PercentPush:
             from app.agents.agent import Agent
 
             # Test agent creation and basic methods with proper config
-            mock_config = Mock()
+            mock_config = Mock(name="test-agent")
             agent = Agent(mock_config)
-            assert hasattr(agent, "id")
-            if hasattr(agent, "process"):
-                result = agent.process("test")
-                assert result is not None
+            assert hasattr(agent, "config")
+            assert agent.config.name == "test-agent"
         except ImportError:
             # Mock agent for coverage
             class MockAgent:

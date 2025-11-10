@@ -124,10 +124,12 @@ class SecurityAuditor:
                             if not is_safe:
                                 self.vulnerabilities.append(
                                     {
-                                        "severity": "HIGH"
-                                        if secret_type
-                                        in ["api_key", "password", "token"]
-                                        else "MEDIUM",
+                                        "severity": (
+                                            "HIGH"
+                                            if secret_type
+                                            in ["api_key", "password", "token"]
+                                            else "MEDIUM"
+                                        ),
                                         "type": "hardcoded_secret",
                                         "secret_type": secret_type,
                                         "file": rel_path,

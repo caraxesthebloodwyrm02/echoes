@@ -2,7 +2,6 @@
 Tests for tools module components.
 """
 
-
 import pytest
 
 from tools.glimpse_tools import GlimpseTools

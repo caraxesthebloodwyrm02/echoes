@@ -209,9 +209,9 @@ def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]
             "total_demos": len(results),
             "successful": len(successful_demos),
             "failed": len(failed_demos),
-            "success_rate": len(successful_demos) / len(results) * 100
-            if results
-            else 0,
+            "success_rate": (
+                len(successful_demos) / len(results) * 100 if results else 0
+            ),
             "total_execution_time": total_time,
             "average_execution_time": avg_time,
         },
@@ -225,16 +225,16 @@ def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]
             "System integration analysis",
         ],
         "performance_metrics": {
-            "fastest_query": min(results, key=lambda x: x["execution_time"])[
-                "execution_time"
-            ]
-            if results
-            else 0,
-            "slowest_query": max(results, key=lambda x: x["execution_time"])[
-                "execution_time"
-            ]
-            if results
-            else 0,
+            "fastest_query": (
+                min(results, key=lambda x: x["execution_time"])["execution_time"]
+                if results
+                else 0
+            ),
+            "slowest_query": (
+                max(results, key=lambda x: x["execution_time"])["execution_time"]
+                if results
+                else 0
+            ),
             "queries_per_minute": 60 / avg_time if avg_time > 0 else 0,
         },
         "detailed_results": results,
