@@ -95,10 +95,10 @@ def test_performance_limits():
     async def run():
         # Test with very large constraints
         large_constraints = " ".join(["constraint"] * 1000)
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         start_time = time.time()
-        r = await Glimpse.glimpse(
+        r = await engine.glimpse(
             Draft(
                 input_text="test input", goal="test goal", constraints=large_constraints
             )
@@ -119,7 +119,7 @@ def test_concurrent_access():
         # Create multiple engines for concurrent testing
         engines = [GlimpseEngine() for _ in range(10)]
 
-        async def make_glimpse(Glimpse, text):
+        async def make_glimpse(engine, text):
             return await engine.glimpse(
                 Draft(input_text=text, goal="test", constraints="")
             )
@@ -237,14 +237,14 @@ def test_cancel_behavior_edge_cases():
     """Test cancel behavior in various scenarios"""
 
     async def run():
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Test cancel without active glimpse
-        Glimpse.cancel()
+        engine.cancel()
 
         # Test cancel multiple times
-        Glimpse.cancel()
-        Glimpse.cancel()
+        engine.cancel()
+        engine.cancel()
 
         # Test cancel during slow operation
         async def slow_sampler(draft):
