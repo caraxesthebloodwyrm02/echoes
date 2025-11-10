@@ -313,7 +313,7 @@ class CognitiveAccountingSystem:
         if user_id not in self.user_accounts:
             return {"error": "User account not found"}
 
-        user_account = self.user_accounts[user_id]
+        self.user_accounts[user_id]
 
         # Filter transactions for period
         period_transactions = [

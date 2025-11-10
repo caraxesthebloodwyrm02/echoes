@@ -6,8 +6,7 @@ This module provides backward compatibility by importing from core_modules.
 
 # Import from the tools package to avoid circular imports
 try:
-    from . import (ToolRegistry, execute_tool, get_registry, get_tool,
-                   register_tool)
+    from . import ToolRegistry, execute_tool, get_registry, get_tool, register_tool
 except ImportError:
     # Fallback implementation
     import threading

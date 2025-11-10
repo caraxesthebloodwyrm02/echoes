@@ -26,6 +26,7 @@ def _parse_bool(value: Optional[str], default: bool) -> bool:
 @dataclass(frozen=True)
 class PolicyConfig:
     """Policy configuration loaded from environment."""
+
     enforce: bool
     allowlist: tuple[str, ...]
     log_level: int
@@ -42,6 +43,7 @@ class PolicyConfig:
 @dataclass(frozen=True)
 class PolicyEvent:
     """A policy decision event for metrics/logging."""
+
     ts: int
     action: str  # ALLOW or DENY
     host: str
@@ -62,7 +64,9 @@ def load_config() -> PolicyConfig:
     allowlist_str = _env("EGRESS_ALLOWLIST", "openai").strip()
     allowlist = tuple()
     if allowlist_str:
-        allowlist = tuple(token.strip().lower() for token in allowlist_str.split(",") if token.strip())
+        allowlist = tuple(
+            token.strip().lower() for token in allowlist_str.split(",") if token.strip()
+        )
 
     log_level_str = _env("EGRESS_LOG", "1").strip()
     try:

@@ -22,9 +22,11 @@ sys.modules["prompt_toolkit.widgets"] = MagicMock()
 sys.modules["prompt_toolkit.filters"] = MagicMock()
 
 # Now import the module under test
-from smart_terminal.interface.terminal import (SuggestionMode,
-                                               TerminalInterface,
-                                               TerminalPreset)
+from smart_terminal.interface.terminal import (
+    SuggestionMode,
+    TerminalInterface,
+    TerminalPreset,
+)
 
 
 class TestTerminalInterface(unittest.TestCase):

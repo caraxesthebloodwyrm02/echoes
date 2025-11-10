@@ -27,9 +27,21 @@ class TestRunner:
         test_suites = [
             ("Component Tests", "tests/test_self_aware_routing.py::TestComponent"),
             ("Smoke Tests", "tests/test_self_aware_routing.py::TestSmoke"),
-            ("Basic Routing Tests", "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_router_initialization", "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_register_component", "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_route_request_healthy", "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_route_request_unhealthy"),
-            ("Client Smoke Tests", "tests/test_intelligent_client_smoke.py::TestIntelligentClientSmoke"),
-            ("Integration Tests", "tests/test_intelligent_client_smoke.py::TestIntegrationSmoke")
+            (
+                "Basic Routing Tests",
+                "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_router_initialization",
+                "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_register_component",
+                "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_route_request_healthy",
+                "tests/test_self_aware_routing.py::TestSelfAwareRouter::test_route_request_unhealthy",
+            ),
+            (
+                "Client Smoke Tests",
+                "tests/test_intelligent_client_smoke.py::TestIntelligentClientSmoke",
+            ),
+            (
+                "Integration Tests",
+                "tests/test_intelligent_client_smoke.py::TestIntegrationSmoke",
+            ),
         ]
 
         for suite in test_suites:
@@ -47,7 +59,7 @@ class TestRunner:
                 "passed": passed,
                 "failed": failed,
                 "total": total,
-                "success_rate": (passed / total * 100) if total > 0 else 0
+                "success_rate": (passed / total * 100) if total > 0 else 0,
             }
 
             self.total_tests += total
@@ -72,34 +84,36 @@ class TestRunner:
                     [sys.executable, "-m", "pytest", test_path, "-q", "--tb=no"],
                     capture_output=True,
                     text=True,
-                    cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+                    cwd=os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
                 )
 
                 # Parse results from pytest output
                 if result.returncode == 0:
                     # Look for the summary line like "5 passed in 0.05s"
-                    output_lines = result.stdout.strip().split('\n')
+                    output_lines = result.stdout.strip().split("\n")
                     for line in output_lines:
-                        if ' passed' in line and (' failed' not in line or ' 0 failed' in line):
+                        if " passed" in line and (
+                            " failed" not in line or " 0 failed" in line
+                        ):
                             parts = line.split()
                             for i, part in enumerate(parts):
-                                if part == 'passed':
-                                    passed = int(parts[i-1])
+                                if part == "passed":
+                                    passed = int(parts[i - 1])
                                     all_passed += passed
                                     all_total += passed
                                     break
                 else:
                     # Parse failures
-                    output_lines = result.stdout.strip().split('\n')
+                    output_lines = result.stdout.strip().split("\n")
                     for line in output_lines:
-                        if ' failed' in line and ' passed' in line:
+                        if " failed" in line and " passed" in line:
                             parts = line.split()
                             for i, part in enumerate(parts):
-                                if part == 'failed':
-                                    failed = int(parts[i-1])
+                                if part == "failed":
+                                    failed = int(parts[i - 1])
                                     all_failed += failed
-                                elif part == 'passed':
-                                    passed = int(parts[i-1])
+                                elif part == "passed":
+                                    passed = int(parts[i - 1])
                                     all_passed += passed
                                     all_total += passed + failed
                                     break
@@ -117,7 +131,9 @@ class TestRunner:
         print("📊 TEST RESULTS SUMMARY")
         print("=" * 60)
 
-        overall_success_rate = (self.total_passed / self.total_tests * 100) if self.total_tests > 0 else 0
+        overall_success_rate = (
+            (self.total_passed / self.total_tests * 100) if self.total_tests > 0 else 0
+        )
 
         print("\n🎯 Overall Results:")
         print(f"   Total Tests: {self.total_tests}")
@@ -129,7 +145,9 @@ class TestRunner:
         for suite_name, results in self.results.items():
             status_icon = "✅" if results["failed"] == 0 else "❌"
             print(f"   {status_icon} {suite_name}:")
-            print(f"      Passed: {results['passed']}/{results['total']} ({results['success_rate']:.1f}%)")
+            print(
+                f"      Passed: {results['passed']}/{results['total']} ({results['success_rate']:.1f}%)"
+            )
             if results["failed"] > 0:
                 print(f"      Failed: {results['failed']}")
 
@@ -162,7 +180,7 @@ class TestRunner:
             "total_tests": self.total_tests,
             "total_passed": self.total_passed,
             "total_failed": self.total_failed,
-            "ready_for_production": overall_success_rate >= 85
+            "ready_for_production": overall_success_rate >= 85,
         }
 
 

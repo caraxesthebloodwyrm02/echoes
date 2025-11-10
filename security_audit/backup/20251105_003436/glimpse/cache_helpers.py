@@ -174,7 +174,7 @@ def cached_openai_call(cache: PromptCache | None = None, skip_cache: bool = Fals
                 return cached
 
             # Cache miss - call the function and cache the result
-            start_time = time.perf_counter()
+            time.perf_counter()
             try:
                 result = await func(messages, model, temperature, max_tokens, **kwargs)
 

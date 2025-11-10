@@ -64,8 +64,7 @@ try:
     from prompt_toolkit import ANSI, PromptSession
     from prompt_toolkit.application import run_in_terminal
     from prompt_toolkit.auto_suggest import AutoSuggestFromHistory
-    from prompt_toolkit.completion import (Completer, Completion,
-                                           ThreadedCompleter)
+    from prompt_toolkit.completion import Completer, Completion, ThreadedCompleter
     from prompt_toolkit.document import Document
     from prompt_toolkit.filters import has_focus
     from prompt_toolkit.formatted_text import HTML, FormattedText

@@ -23,13 +23,15 @@ import time
 
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
-from automation.ecosystem_resilience import (DecoySystem,
-                                             HerdImmunityRateLimiter,
-                                             HibernationManager,
-                                             SchoolingLoadBalancer,
-                                             SymbioticService,
-                                             create_resilient_system,
-                                             monitor_ecosystem_health)
+from automation.ecosystem_resilience import (
+    DecoySystem,
+    HerdImmunityRateLimiter,
+    HibernationManager,
+    SchoolingLoadBalancer,
+    SymbioticService,
+    create_resilient_system,
+    monitor_ecosystem_health,
+)
 
 
 class MockServiceNode:

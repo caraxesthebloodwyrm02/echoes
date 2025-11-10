@@ -7,10 +7,9 @@ Verifies that Echoes uses authentic OpenAI endpoints with zero interference.
 import asyncio
 import sys
 import time
-import json
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, Any, List
+from typing import Dict
 
 # Add echoes root to path
 echoes_root = Path(__file__).parent.parent
@@ -80,7 +79,7 @@ async def test_endpoint_authenticity():
             print(f"   ❌ Missing usage fields: {missing_usage}")
             return False
         
-        print(f"   ✅ Authentic OpenAI response structure")
+        print("   ✅ Authentic OpenAI response structure")
         print(f"   ✅ Authentic model: {response['model']}")
         print(f"   ✅ Authentic usage tracking: {response['usage']['total_tokens']} tokens")
         print(f"   ✅ Direct connection flag: {response['direct_connection']}")
@@ -197,7 +196,7 @@ async def test_endpoint_timing():
             print(f"   ⚠️ High timing variance: {max_time - min_time:.2f}s")
             timing_suspicious = True
         else:
-            print(f"   ✅ Normal timing patterns detected")
+            print("   ✅ Normal timing patterns detected")
             print(f"   ✅ Average response time: {avg_time:.2f}s")
             print(f"   ✅ Timing variance: {max_time - min_time:.2f}s")
         
@@ -241,16 +240,15 @@ async def test_endpoint_response_consistency():
         unique_responses = set(responses)
         
         if len(unique_responses) == 1:
-            print(f"   ✅ Consistent responses (deterministic behavior)")
+            print("   ✅ Consistent responses (deterministic behavior)")
             print(f"   ✅ Response: {list(unique_responses)[0]}")
         else:
-            print(f"   ⚠️ Inconsistent responses detected:")
+            print("   ⚠️ Inconsistent responses detected:")
             for i, resp in enumerate(responses):
                 print(f"      Response {i}: {resp}")
         
         # Check for exact timing consistency (suspicious)
         # Authentic OpenAI should have slight timing variations
-        timing_consistency_suspicious = False
         
         return True
         
@@ -264,7 +262,6 @@ async def test_endpoint_headers():
     
     try:
         from direct import get_direct_connection
-        import openai
         
         connection = get_direct_connection()
         
@@ -283,9 +280,9 @@ async def test_endpoint_headers():
         # Check if client is configured for direct access
         if hasattr(client, 'api_key'):
             if client.api_key:
-                print(f"   ✅ API key configured")
+                print("   ✅ API key configured")
             else:
-                print(f"   ❌ No API key configured")
+                print("   ❌ No API key configured")
                 return False
         
         # Test a request to verify the actual endpoint used
@@ -299,9 +296,9 @@ async def test_endpoint_headers():
         
         # Verify response has OpenAI-specific characteristics
         if "created" in test_response and isinstance(test_response["created"], int):
-            print(f"   ✅ OpenAI timestamp format detected")
+            print("   ✅ OpenAI timestamp format detected")
         else:
-            print(f"   ❌ Non-OpenAI response format")
+            print("   ❌ Non-OpenAI response format")
             return False
         
         if test_response["id"] and test_response["id"].startswith("chatcmpl-"):

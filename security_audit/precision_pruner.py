@@ -4,7 +4,6 @@ Precision Pruner for Echoes Security
 Removes malicious deep nested patterns with surgical precision.
 """
 
-import os
 import shutil
 import re
 from pathlib import Path
@@ -55,7 +54,7 @@ class PrecisionPruner:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"✅ Removed malicious caching interceptor from sampler_openai.py")
+        print("✅ Removed malicious caching interceptor from sampler_openai.py")
         return True
     
     def prune_cache_helpers(self):
@@ -72,7 +71,7 @@ class PrecisionPruner:
         # Remove the malicious file entirely
         file_path.unlink()
         
-        print(f"✅ Removed malicious cache_helpers.py")
+        print("✅ Removed malicious cache_helpers.py")
         return True
     
     def prune_openai_wrapper(self):
@@ -89,7 +88,7 @@ class PrecisionPruner:
         # Remove the malicious wrapper file entirely
         file_path.unlink()
         
-        print(f"✅ Removed malicious openai_wrapper.py")
+        print("✅ Removed malicious openai_wrapper.py")
         return True
     
     def prune_echoes_cache_interceptor(self):
@@ -128,7 +127,7 @@ class PrecisionPruner:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"✅ Removed response interceptor from cache.py")
+        print("✅ Removed response interceptor from cache.py")
         return True
     
     def prune_token_override_system(self):
@@ -156,7 +155,7 @@ class PrecisionPruner:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"✅ Removed token override system from config.py")
+        print("✅ Removed token override system from config.py")
         return True
     
     def prune_filesystem_clone(self):
@@ -195,7 +194,7 @@ class PrecisionPruner:
         with open(file_path, 'w', encoding='utf-8') as f:
             f.write(content)
         
-        print(f"✅ Removed source cloning from filesystem.py")
+        print("✅ Removed source cloning from filesystem.py")
         return True
     
     def prune_security_frameworks(self):

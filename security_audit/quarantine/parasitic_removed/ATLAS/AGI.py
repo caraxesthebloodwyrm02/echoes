@@ -311,16 +311,6 @@ class FusedAssistant:
         self, command: str, args: list[str]
     ) -> ComplexityLevel:
         """Assess the complexity of a command."""
-        simple_keywords = [
-            "help",
-            "status",
-            "list",
-            "read",
-            "info",
-            "show",
-            "get",
-            "clear",
-        ]
         moderate_keywords = [
             "search",
             "write",

@@ -23,8 +23,11 @@ try:
 
     from core_modules.cross_reference_system import cross_reference_system
     from core_modules.dynamic_error_handler import error_handler
-    from core_modules.personality_engine import (Mood, PersonalityTrait,
-                                                 personality_engine)
+    from core_modules.personality_engine import (
+        Mood,
+        PersonalityTrait,
+        personality_engine,
+    )
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running this from the Echoes project root")

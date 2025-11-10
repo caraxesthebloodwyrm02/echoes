@@ -673,7 +673,7 @@ class GenuineOptimizationSandstormDiagnostic:
                 "red" if v < 0.7 else "orange" if v < 0.8 else "green" for v in flow
             ]
 
-            bars = ax.bar(x_pos, flow, color=colors, alpha=0.8)
+            ax.bar(x_pos, flow, color=colors, alpha=0.8)
 
             for i, (s, v) in enumerate(zip(stages, flow)):
                 ax.text(
@@ -870,7 +870,7 @@ def main():
 
     # Generate genuine optimization visualizations and reports
     protocol.generate_genuine_optimization_visualization()
-    report = protocol.export_genuine_optimization_report()
+    protocol.export_genuine_optimization_report()
 
     print("\nGenuine optimization outputs saved to genuine_optimization_outputs/")
     print("\nGenuine Optimization Summary:")

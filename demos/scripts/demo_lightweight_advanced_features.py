@@ -179,9 +179,7 @@ class LightweightDemoManager:
             print(f"   '{input_text}' → Intent: {intent}")
 
         # Simulate dynamic suggestions
-        [
-            msg["content"] for msg in self.demo_data["conversation_history"][-3:]
-        ]
+        [msg["content"] for msg in self.demo_data["conversation_history"][-3:]]
         dynamic_suggestions = [
             "Tell me more about neural networks",
             "Explain supervised learning in detail",

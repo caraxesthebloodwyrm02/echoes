@@ -14,8 +14,7 @@ from datetime import datetime
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.catch_release_system import (CacheLevel, ContentType,
-                                                   catch_release)
+    from core_modules.catch_release_system import CacheLevel, ContentType, catch_release
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running from the Echoes project root")

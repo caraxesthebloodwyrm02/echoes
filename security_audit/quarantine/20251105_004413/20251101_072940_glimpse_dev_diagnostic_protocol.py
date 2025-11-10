@@ -868,7 +868,7 @@ def main():
 
     # Generate visualizations and reports
     protocol.generate_sandstorm_visualization()
-    report = protocol.export_sandstorm_report()
+    protocol.export_sandstorm_report()
 
     print("\n📁 glimpse outputs saved to sandstorm_dev_outputs/")
     print("\n🎭 Transformation Summary:")

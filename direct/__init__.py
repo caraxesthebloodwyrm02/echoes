@@ -16,8 +16,11 @@ from typing import Dict, Any, Optional, List
 from datetime import datetime
 
 # Configure logging for direct connection
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+logging.basicConfig(
+    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
+)
 logger = logging.getLogger(__name__)
+
 
 class EchoesDirectConnection:
     """Direct EchoesAI connection with zero middleware interference."""
@@ -35,6 +38,7 @@ class EchoesDirectConnection:
         # Pure OpenAI import - bypass all Echoes components
         try:
             import openai
+
             # Create client with no Echoes interference
             self.client = openai.OpenAI(api_key=self.api_key)
             self.connection_status = "direct"
@@ -49,7 +53,7 @@ class EchoesDirectConnection:
         model: str = "gpt-3.5-turbo",
         max_tokens: Optional[int] = None,
         temperature: float = 0.7,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """
         Direct chat completion with zero middleware interference.
@@ -73,7 +77,7 @@ class EchoesDirectConnection:
                 messages=messages,
                 max_tokens=max_tokens,  # No Echoes DEFAULT_MAX_TOKENS override
                 temperature=temperature,  # No Echoes DEFAULT_TEMPERATURE override
-                **kwargs  # Pass through raw parameters
+                **kwargs,  # Pass through raw parameters
             )
 
             # Raw response extraction - no Echoes wrapping
@@ -83,17 +87,19 @@ class EchoesDirectConnection:
                 "usage": {
                     "prompt_tokens": response.usage.prompt_tokens,
                     "completion_tokens": response.usage.completion_tokens,
-                    "total_tokens": response.usage.total_tokens
+                    "total_tokens": response.usage.total_tokens,
                 },
                 "finish_reason": response.choices[0].finish_reason,
                 "created": response.created,
                 "id": response.id,
                 "direct_connection": True,
                 "middleware_bypassed": True,
-                "echoes_defaults_bypassed": True
+                "echoes_defaults_bypassed": True,
             }
 
-            logger.info("✅ Direct response received: %d tokens", response.usage.total_tokens)
+            logger.info(
+                "✅ Direct response received: %d tokens", response.usage.total_tokens
+            )
             return result
 
         except Exception as e:
@@ -101,10 +107,7 @@ class EchoesDirectConnection:
             raise
 
     async def direct_stream(
-        self,
-        messages: List[Dict[str, str]],
-        model: str = "gpt-3.5-turbo",
-        **kwargs
+        self, messages: List[Dict[str, str]], model: str = "gpt-3.5-turbo", **kwargs
     ):
         """
         Direct streaming with zero middleware interference.
@@ -114,10 +117,7 @@ class EchoesDirectConnection:
 
             # Direct streaming - no middleware buffering
             stream = self.client.chat.completions.create(
-                model=model,
-                messages=messages,
-                stream=True,
-                **kwargs
+                model=model, messages=messages, stream=True, **kwargs
             )
 
             for chunk in stream:
@@ -125,7 +125,7 @@ class EchoesDirectConnection:
                     yield {
                         "content": chunk.choices[0].delta.content,
                         "direct_stream": True,
-                        "middleware_bypassed": True
+                        "middleware_bypassed": True,
                     }
 
         except Exception as e:
@@ -140,14 +140,16 @@ class EchoesDirectConnection:
             "api_key_configured": bool(self.api_key),
             "client_initialized": self.client is not None,
             "connection_type": "direct_openai",
-            "interference_level": "zero"
+            "interference_level": "zero",
         }
+
 
 def get_direct_connection() -> EchoesDirectConnection:
     """Get global direct connection instance."""
     if not hasattr(get_direct_connection, "_instance"):
         get_direct_connection._instance = EchoesDirectConnection()
     return get_direct_connection._instance
+
 
 async def test_direct_connection():
     """Test direct connection functionality."""
@@ -158,20 +160,26 @@ async def test_direct_connection():
 
         # Test direct chat
         test_response = await connection.direct_chat(
-            messages=[{"role": "user", "content": "EchoesAI direct connection test - respond with 'DIRECT'"}],
-            max_tokens=10
+            messages=[
+                {
+                    "role": "user",
+                    "content": "EchoesAI direct connection test - respond with 'DIRECT'",
+                }
+            ],
+            max_tokens=10,
         )
 
         if "DIRECT" in test_response["content"]:
             logger.info("✅ Direct connection test successful")
             return True
         else:
-            logger.warning("⚠️ Unexpected response: %s", test_response['content'])
+            logger.warning("⚠️ Unexpected response: %s", test_response["content"])
             return False
 
     except (ValueError, RuntimeError, ConnectionError) as e:
         logger.error("❌ Direct connection test failed: %s", e)
         return False
+
 
 def main():
     """Main entry point for EchoesAI Direct Connection."""
@@ -208,6 +216,7 @@ def main():
     print("  python -m Echoes.direct.test")
     print("  python -m Echoes.direct.demo")
     print("  python -m Echoes.direct.stream")
+
 
 if __name__ == "__main__":
     main()

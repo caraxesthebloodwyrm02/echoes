@@ -8,14 +8,11 @@ Similar to: Dependency Confusion Attacks, Supply Chain Contamination
 Pattern: Internal packages being hijacked by external parasitic versions
 """
 
-import os
 import sys
-import json
 import hashlib
-import subprocess
 from pathlib import Path
 from datetime import datetime
-from typing import Dict, List, Set, Tuple, Any
+from typing import Dict, Any
 import re
 
 class InventoryCrisisResponse:
@@ -435,19 +432,19 @@ def main():
     contamination_report = crisis_response.scan_inventory_contamination()
     
     # Display crisis assessment
-    print(f"\n🚨 CRISIS ASSESSMENT:")
+    print("\n🚨 CRISIS ASSESSMENT:")
     print(f"   • Total items scanned: {contamination_report['total_items_scanned']}")
     print(f"   • Contaminated items: {contamination_report['contaminated_items']}")
     print(f"   • Infection patterns detected: {len(contamination_report['parasitic_patterns'])}")
     
     if contamination_report['contaminated_items'] > 0:
-        print(f"\n🦠 PARASITIC INFECTION DETECTED:")
+        print("\n🦠 PARASITIC INFECTION DETECTED:")
         for pattern_type, matches in contamination_report['parasitic_patterns'].items():
             if matches:
                 print(f"   • {pattern_type}: {len(matches)} instances")
         
         # Execute emergency quarantine
-        quarantine_report = crisis_response.execute_emergency_quarantine(contamination_report)
+        crisis_response.execute_emergency_quarantine(contamination_report)
         
         # Generate concrete fix
         fix_script = crisis_response.generate_crisis_fix(contamination_report)

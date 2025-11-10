@@ -17,9 +17,12 @@ sys.path.insert(
 )
 
 try:
-    from tools.glimpse_tools import (GlimpseApiGetTool, GlimpseApiPostTool,
-                                     GlimpseConnectPlatformsTool,
-                                     get_glimpse_tools)
+    from tools.glimpse_tools import (
+        GlimpseApiGetTool,
+        GlimpseApiPostTool,
+        GlimpseConnectPlatformsTool,
+        get_glimpse_tools,
+    )
 except ImportError as e:
     print(f"❌ Failed to import Glimpse tools: {e}")
     print("Make sure you're running this from the project root directory.")

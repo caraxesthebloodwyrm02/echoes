@@ -109,8 +109,7 @@ class TestCoreModulesBoost:
     def test_cross_reference_system(self):
         """Test core_modules/cross_reference_system.py - target 60%+"""
         try:
-            from core_modules.cross_reference_system import \
-                CrossReferenceSystem
+            from core_modules.cross_reference_system import CrossReferenceSystem
 
             system = CrossReferenceSystem()
 

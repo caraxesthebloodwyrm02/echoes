@@ -784,7 +784,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         x = np.arange(len(metrics))
         width = 0.35
 
-        bars1 = ax1.bar(
+        ax1.bar(
             x - width / 2,
             before_values,
             width,
@@ -792,7 +792,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             alpha=0.8,
             color="orange",
         )
-        bars2 = ax1.bar(
+        ax1.bar(
             x + width / 2,
             after_values,
             width,
@@ -834,7 +834,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         colors_simplicity = ["green", "red", "red", "red", "orange"]
         colors_effectiveness = ["green", "red", "red", "red", "orange"]
 
-        bars3 = ax2.bar(
+        ax2.bar(
             [i - 0.2 for i in range(len(approaches))],
             simplicity_scores,
             0.4,
@@ -842,7 +842,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             alpha=0.8,
             color=colors_simplicity,
         )
-        bars4 = ax2.bar(
+        ax2.bar(
             [i + 0.2 for i in range(len(approaches))],
             effectiveness_scores,
             0.4,
@@ -1047,7 +1047,7 @@ def main():
 
     # Generate corrected final achievement visualizations and reports
     protocol.generate_corrected_final_visualization()
-    report = protocol.export_corrected_final_report()
+    protocol.export_corrected_final_report()
 
     print("\n📁 Corrected final achievement outputs saved to corrected_final_outputs/")
     print("\n🎯 Corrected Final Achievement Summary:")

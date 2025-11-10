@@ -34,7 +34,7 @@ def test_rag_initialization():
 
         # Test with default config
         print("Testing with default config...")
-        rag = RAGOrbit()
+        RAGOrbit()
         print("✅ Successfully created RAGOrbit with default config")
 
         # Test with custom config
@@ -44,7 +44,7 @@ def test_rag_initialization():
             chunk_size=500,
             chunk_overlap=50,
         )
-        rag = RAGOrbit(config)
+        RAGOrbit(config)
         print("✅ Successfully created RAGOrbit with custom config")
 
         return True

@@ -60,7 +60,7 @@ def check_dependencies():
 
     for package in required_packages:
         try:
-            result = run_command([sys.executable, "-c", f"import {package}"])
+            run_command([sys.executable, "-c", f"import {package}"])
             print(f"✅ {package} is installed")
         except:
             missing_packages.append(package)
@@ -127,7 +127,7 @@ def check_package(project_root: Path):
     """Check the built package."""
     print("🔍 Checking package...")
 
-    dist_dir = project_root / "dist"
+    project_root / "dist"
     run_command([sys.executable, "-m", "twine", "check", "dist/*"], cwd=project_root)
     print("✅ Package check passed")
 

@@ -805,7 +805,7 @@ class UltimateSuccessSandstormDiagnostic:
         x = np.arange(len(approaches))
         width = 0.35
 
-        bars1 = ax1.bar(
+        ax1.bar(
             x - width / 2,
             coherence_scores,
             width,
@@ -813,7 +813,7 @@ class UltimateSuccessSandstormDiagnostic:
             alpha=0.8,
             color=colors_coherence,
         )
-        bars2 = ax1.bar(
+        ax1.bar(
             x + width / 2,
             simplicity_scores,
             width,
@@ -863,7 +863,7 @@ class UltimateSuccessSandstormDiagnostic:
             "gold" if self.unified_alert_active else "orange",
         ]
 
-        bars3 = ax2.bar(
+        ax2.bar(
             learning_phases, learning_scores, alpha=0.8, color=learning_colors
         )
 
@@ -1072,7 +1072,7 @@ def main():
 
     # Generate ultimate success visualizations and reports
     protocol.generate_ultimate_success_visualization()
-    report = protocol.export_ultimate_success_report()
+    protocol.export_ultimate_success_report()
 
     print("\n📁 Ultimate success outputs saved to ultimate_success_outputs/")
     print("\n🏆 Ultimate Success Summary:")

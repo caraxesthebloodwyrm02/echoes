@@ -1105,7 +1105,7 @@ def main():
 
     # Create production configuration
     print("\n📋 Creating production configuration...")
-    prod_config = dm.create_production_config()
+    dm.create_production_config()
 
     # Create deployment script
     print("\n📦 Creating deployment scripts...")

@@ -130,7 +130,9 @@ class ParallelSimulationEngine:
 
     def set_speed_multiplier(self, multiplier: float):
         """Set speed multiplier for simulation processing (higher = faster)"""
-        self.speed_multiplier = max(0.1, multiplier)  # Prevent division by zero or too slow
+        self.speed_multiplier = max(
+            0.1, multiplier
+        )  # Prevent division by zero or too slow
 
     def create_simulation(
         self,

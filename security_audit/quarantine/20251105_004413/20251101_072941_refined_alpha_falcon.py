@@ -27,7 +27,7 @@ def soft_knee_compress(signal, threshold_db=-6, ratio=4, knee_width=3):
     """
     # Convert to dB
     signal_db = 20 * np.log10(np.abs(signal) + 1e-10)
-    threshold_linear = 10 ** (threshold_db / 20)
+    10 ** (threshold_db / 20)
 
     # Define knee points for cubic spline
     knee_points = np.array(

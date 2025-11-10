@@ -21,15 +21,15 @@ def test_system_integration_no_api():
         print("\n🔍 Testing system imports...")
         from assistant_v2_core import EchoesAssistantV2
 
-        from core_modules.catch_release_system import (ContentType,
-                                                       catch_release)
+        from core_modules.catch_release_system import ContentType, catch_release
         from core_modules.humor_engine import humor_engine
         from core_modules.intent_awareness_engine import intent_engine
         from core_modules.parallel_simulation_engine import (
-            SimulationType, parallel_simulation)
+            SimulationType,
+            parallel_simulation,
+        )
         from core_modules.personality_engine import personality_engine
-        from core_modules.train_of_thought_tracker import (ThoughtType,
-                                                           thought_tracker)
+        from core_modules.train_of_thought_tracker import ThoughtType, thought_tracker
 
         print("✅ All systems imported successfully")
 

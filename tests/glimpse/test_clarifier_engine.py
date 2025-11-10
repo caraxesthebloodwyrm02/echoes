@@ -3,9 +3,12 @@ Comprehensive tests for ClarifierEngine
 """
 import pytest
 
-from glimpse.clarifier_engine import (Clarifier, ClarifierEngine,
-                                      ClarifierType,
-                                      enhanced_sampler_with_clarifiers)
+from glimpse.clarifier_engine import (
+    Clarifier,
+    ClarifierEngine,
+    ClarifierType,
+    enhanced_sampler_with_clarifiers,
+)
 from glimpse.Glimpse import Draft
 
 

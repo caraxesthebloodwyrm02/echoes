@@ -13,6 +13,7 @@ import psutil
 import platform
 import random
 
+
 @dataclass
 class CacheMetrics:
     """
@@ -29,6 +30,7 @@ class CacheMetrics:
         max_samples: Maximum number of samples to keep in memory
         memory_sample_rate: Fraction of operations to sample memory (0.0 to 1.0)
     """
+
     max_samples: int = 1000
     memory_sample_rate: float = 0.1  # Sample 10% of operations
 
@@ -38,7 +40,9 @@ class CacheMetrics:
         self.misses: int = 0
         self.total_requests: int = 0
         self._response_times: Deque[float] = deque(maxlen=self.max_samples)
-        self._memory_samples: Deque[float] = deque(maxlen=100)  # Fixed size for memory stats
+        self._memory_samples: Deque[float] = deque(
+            maxlen=100
+        )  # Fixed size for memory stats
         self._lock = threading.RLock()
         self._last_memory_sample: float = 0.0
 
@@ -127,7 +131,7 @@ class CacheMetrics:
                 "p90_response_time": p90_time,
                 "current_memory_mb": current_mem,
                 "system": platform.node(),
-                "sample_count": len(response_times)
+                "sample_count": len(response_times),
             }
 
     def reset(self):

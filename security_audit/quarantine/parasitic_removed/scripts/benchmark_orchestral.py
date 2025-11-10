@@ -191,7 +191,6 @@ async def run_orchestral_ai(prompt: str, orchestrated: bool) -> str:
             ProcessingMode.FULL_ORCHESTRAL if orchestrated else ProcessingMode.STANDARD
         )
         req = OrchestralRequest(messages=msgs, mode=mode)
-        import asyncio
         res = await mgr.process_orchestral_request(req)
         # unify response extraction
         if isinstance(res, dict):
@@ -296,7 +295,7 @@ def run_condition(name: str, prompts: List[Prompt], orchestrated: bool) -> Dict[
 
 def generate_report(outdir: Path, base: Dict[str, Any], orch: Dict[str, Any], paired: Dict[str, Any], decision: Dict[str, Any]):
     md = []
-    md.append(f"# Orchestral Benchmark Report\n")
+    md.append("# Orchestral Benchmark Report\n")
     md.append(f"Timestamp: {datetime.utcnow().isoformat()}Z\n")
     md.append("\n## Summary\n")
     md.append("- **Baseline**:\n")

@@ -43,10 +43,10 @@ def main():
     )
 
     # Clear command
-    clear_parser = subparsers.add_parser("clear", help="Clear the RAG index")
+    subparsers.add_parser("clear", help="Clear the RAG index")
 
     # Stats command
-    stats_parser = subparsers.add_parser("stats", help="Get RAG system statistics")
+    subparsers.add_parser("stats", help="Get RAG system statistics")
 
     args = parser.parse_args()
 

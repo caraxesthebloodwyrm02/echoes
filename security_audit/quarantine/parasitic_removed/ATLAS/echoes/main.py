@@ -141,7 +141,7 @@ def run_server(
     log_level: str = "info",
 ):
     """Run the Echoes AI server."""
-    settings = get_settings()
+    get_settings()
 
     # Configure uvicorn
     config = uvicorn.Config(

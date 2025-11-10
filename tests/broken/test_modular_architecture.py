@@ -426,7 +426,7 @@ class TestIntegration:
         assistant.add_knowledge("project", "Echoes V2", {"type": "metadata"})
 
         # Use inventory
-        item = assistant.inventory_service.add_item(
+        assistant.inventory_service.add_item(
             "ECHOES-001", "Core Module", "Software", 1, "Main"
         )
 

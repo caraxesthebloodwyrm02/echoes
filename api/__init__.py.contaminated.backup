@@ -1,0 +1,81 @@
+"""
+Echoes API Package
+================
+
+RESTful API package for multimodal processing.
+ 
+ Compatibility notes:
+ - Config uses Pydantic BaseSettings (v1-style) with inner Config for env file semantics.
+ - Orchestral integration degrades gracefully if optional dependencies are missing.
+ - HTML dashboard view is gated by ECHOES_MONITOR_HTML for CI-friendly behavior.
+"""
+
+# Explicit public API: import only what we expose
+from .config import (
+    EchoesAPIConfig,
+    APIConfig,
+    EngineConfig,
+    SecurityConfig,
+    PatternDetectionConfig,
+    SelfRAGConfig,
+    SelectiveAttentionConfig,
+    get_config,
+    load_config_from_env,
+    validate_config,
+    setup_logging,
+)
+
+from .pattern_detection import (
+    PatternDetector,
+    DetectedPattern,
+    PatternDetectionResult,
+    detect_patterns,
+)
+
+from .self_rag import (
+    SelfRAGVerifier,
+    VerificationResult,
+    EvidenceChunk,
+    verify_truth,
+)
+
+from .monitoring import (
+    get_monitor_summary,
+    get_monitor_dashboard_html,  # gated at runtime via ECHOES_MONITOR_HTML
+)
+
+from .orchestral_integration import (
+    OrchestralStreamProcessor,
+    OrchestralAPIEndpoints,
+)
+
+__all__ = [
+    # Config
+    "EchoesAPIConfig",
+    "APIConfig",
+    "EngineConfig",
+    "SecurityConfig",
+    "PatternDetectionConfig",
+    "SelfRAGConfig",
+    "SelectiveAttentionConfig",
+    "get_config",
+    "load_config_from_env",
+    "validate_config",
+    "setup_logging",
+    # Pattern detection
+    "PatternDetector",
+    "DetectedPattern",
+    "PatternDetectionResult",
+    "detect_patterns",
+    # Truth verification
+    "SelfRAGVerifier",
+    "VerificationResult",
+    "EvidenceChunk",
+    "verify_truth",
+    # Monitoring
+    "get_monitor_summary",
+    "get_monitor_dashboard_html",
+    # Orchestral
+    "OrchestralStreamProcessor",
+    "OrchestralAPIEndpoints",
+]

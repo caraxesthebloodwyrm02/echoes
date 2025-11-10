@@ -982,7 +982,7 @@ class EnhancedSandstormDevDiagnostic:
             ]
             colors = ["red", "orange", "yellow", "lightgreen", "green", "blue"]
 
-            bars = ax.bar(dims, values, color=colors, alpha=0.8)
+            ax.bar(dims, values, color=colors, alpha=0.8)
 
             # Add alert level thresholds
             for level, threshold in alert_levels.items():
@@ -1392,7 +1392,7 @@ def main():
 
     # Generate enhanced visualizations and reports
     protocol.generate_enhanced_sandstorm_visualization()
-    report = protocol.export_enhanced_sandstorm_report()
+    protocol.export_enhanced_sandstorm_report()
 
     print("\nEnhanced glimpse outputs saved to sandstorm_dev_outputs/")
     print("\nEnhanced Transformation Summary:")

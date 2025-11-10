@@ -77,7 +77,7 @@ class SpaceCommunicationProtocol:
         try:
             from alpha_falcon_engine import first_pull
 
-            engine = first_pull()
+            first_pull()
             return {
                 "status": "success",
                 "glimpse_runs": Glimpse.run_count,
@@ -209,10 +209,10 @@ def main():
     print(f"   Bypass Active: {result['bypass_active']}")
 
     # Establish communication method
-    method = protocol.establish_space_communication_method()
+    protocol.establish_space_communication_method()
 
     # Generate manifesto
-    manifesto = protocol.generate_communication_manifesto()
+    protocol.generate_communication_manifesto()
 
     # Execute Alpha Falcon protocol as demonstration
     print("\n🎯 DEMONSTRATION: Alpha Falcon Communication")

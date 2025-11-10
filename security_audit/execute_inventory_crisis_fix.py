@@ -6,8 +6,6 @@ Crisis: Parasitic Dependency Contamination
 Pattern: Similar to Dependency Confusion Attacks
 """
 
-import os
-import sys
 import shutil
 from pathlib import Path
 

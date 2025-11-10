@@ -18,14 +18,14 @@ def test_all_layers():
     try:
         # Test 1: Core Modules (already working)
         print("\n🧠 Testing Core Modules...")
-        from core_modules.catch_release_system import (ContentType,
-                                                       catch_release)
+        from core_modules.catch_release_system import ContentType, catch_release
         from core_modules.intent_awareness_engine import intent_engine
         from core_modules.parallel_simulation_engine import (
-            SimulationType, parallel_simulation)
+            SimulationType,
+            parallel_simulation,
+        )
         from core_modules.personality_engine import personality_engine
-        from core_modules.train_of_thought_tracker import (ThoughtType,
-                                                           thought_tracker)
+        from core_modules.train_of_thought_tracker import ThoughtType, thought_tracker
 
         print("✅ Core modules imported")
 

@@ -168,7 +168,7 @@ async def verify_no_interference():
         successful_requests = [r for r in results if not isinstance(r, Exception)]
         failed_requests = [r for r in results if isinstance(r, Exception)]
         
-        print(f"📊 Concurrent Request Results:")
+        print("📊 Concurrent Request Results:")
         print(f"   • Total requests: {len(tasks)}")
         print(f"   • Successful: {len(successful_requests)}")
         print(f"   • Failed: {len(failed_requests)}")

@@ -13,8 +13,12 @@ from pathlib import Path
 # Add the parent directory to the path to import communication module
 sys.path.append(str(Path(__file__).parent.parent))
 
-from communication import (ArcherFramework, CommunicationMessage,
-                           CommunicationType, create_communicator)
+from communication import (
+    ArcherFramework,
+    CommunicationMessage,
+    CommunicationType,
+    create_communicator,
+)
 
 
 def example_1_basic_messaging():

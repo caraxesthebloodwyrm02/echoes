@@ -10,9 +10,12 @@ import json
 import time
 from unittest.mock import Mock
 
-from tools.glimpse_tools import (GlimpseApiGetTool, GlimpseApiPostTool,
-                                 GlimpseConnectPlatformsTool,
-                                 get_glimpse_tools)
+from tools.glimpse_tools import (
+    GlimpseApiGetTool,
+    GlimpseApiPostTool,
+    GlimpseConnectPlatformsTool,
+    get_glimpse_tools,
+)
 
 
 class TestGlimpseApiGetTool:

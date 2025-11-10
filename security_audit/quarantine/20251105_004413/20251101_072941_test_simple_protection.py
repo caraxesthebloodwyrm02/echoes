@@ -337,7 +337,7 @@ class SimpleEnhancedProtectionTest:
                     if account_result["success"]:
                         # Process transactions
                         for i in range(2):
-                            transaction_result = (
+                            (
                                 accounting_system.process_enhanced_transaction(
                                     user_id=user_config["user_id"],
                                     session_id=f"session_{user_config['user_id']}_{i}",
@@ -515,7 +515,7 @@ async def run_simple_enhanced_protection_test():
         await test_suite.test_enhanced_financial_protection()
 
         # Generate comprehensive protection report
-        report = await test_suite.generate_protection_report()
+        await test_suite.generate_protection_report()
 
         print("\n" + "=" * 80)
         print("🎉 ENHANCED END USER PROTECTION TEST SUITE COMPLETE")

@@ -191,7 +191,7 @@ def main():
     print("Loading comprehensive knowledge base...")
 
     for i, text in enumerate(knowledge):
-        result = rag_system.add_documents(
+        rag_system.add_documents(
             [
                 {
                     "text": text.strip(),

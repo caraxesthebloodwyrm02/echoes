@@ -238,7 +238,7 @@ def main():
     print_performance_summary(report)
 
     # Save detailed report
-    report_file = save_report_to_file(report)
+    save_report_to_file(report)
 
     # Record in IMPACT_ANALYTICS
     record_optimization_results(report)

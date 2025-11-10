@@ -285,7 +285,6 @@ class NexusProtocolDiagnostic:
 
     def _calculate_coherence_score(self, signature: DiagnosticSignature) -> float:
         """Calculate coherence score with extensibility for future features"""
-        scores = []
 
         # Core metrics
         core_metrics = [

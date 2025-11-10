@@ -303,7 +303,6 @@ class TestingAuditor:
             else [],
         }
 
-
         # Check for orphaned tests (tests without corresponding source)
         for test_file in self.test_files:
             test_name = test_file.stem.replace("test_", "").replace("_test", "")

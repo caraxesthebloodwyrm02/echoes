@@ -14,10 +14,16 @@ from datetime import datetime
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.intent_awareness_engine import (EntityType, IntentType,
-                                                      intent_engine)
-    from core_modules.train_of_thought_tracker import (LinkType, ThoughtType,
-                                                       thought_tracker)
+    from core_modules.intent_awareness_engine import (
+        EntityType,
+        IntentType,
+        intent_engine,
+    )
+    from core_modules.train_of_thought_tracker import (
+        LinkType,
+        ThoughtType,
+        thought_tracker,
+    )
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running from the Echoes project root")

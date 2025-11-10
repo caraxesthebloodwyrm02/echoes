@@ -1296,7 +1296,7 @@ def main():
 
     # Generate final gap closure visualizations and reports
     protocol.generate_final_gap_closure_visualization()
-    report = protocol.export_final_gap_closure_report()
+    protocol.export_final_gap_closure_report()
 
     print("\n📁 Final gap closure outputs saved to final_gap_closure_outputs/")
     print("\n🎯 Final Gap Closure Summary:")

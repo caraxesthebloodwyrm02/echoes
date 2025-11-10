@@ -7,8 +7,6 @@ import asyncio
 import pytest
 import pytest_asyncio
 import time
-from unittest.mock import Mock, AsyncMock, patch
-from typing import Any, Dict, List
 
 # Import the modules to test
 import sys
@@ -20,8 +18,7 @@ from core.routing.self_aware_routing import (
     Component,
     SystemStatus,
     IssueType,
-    RepairAction,
-    Route
+    RepairAction
 )
 
 
@@ -41,27 +38,27 @@ class TestComponent:
         assert comp.endpoint == "https://test.com"
         assert comp.priority == 5
         assert comp.max_concurrent == 20
-        assert comp.is_active == True
+        assert comp.is_active
         assert comp.health_score == 1.0
-        assert comp.is_healthy == True
+        assert comp.is_healthy
     
     def test_component_health_check(self):
         """Test component health evaluation."""
         # Healthy component
         comp1 = Component(id="healthy", endpoint="https://test.com")
-        assert comp1.is_healthy == True
+        assert comp1.is_healthy
         
         # Unhealthy due to low health score
         comp2 = Component(id="unhealthy", endpoint="https://test.com", health_score=0.3)
-        assert comp2.is_healthy == False
+        assert not comp2.is_healthy
         
         # Unhealthy due to failures
         comp3 = Component(id="failed", endpoint="https://test.com", failure_count=5)
-        assert comp3.is_healthy == False
+        assert not comp3.is_healthy
         
         # Inactive component
         comp4 = Component(id="inactive", endpoint="https://test.com", is_active=False)
-        assert comp4.is_healthy == False
+        assert not comp4.is_healthy
 
 
 class TestSelfAwareRouter:
@@ -115,7 +112,7 @@ class TestSelfAwareRouter:
         assert route.component_id in ["comp1", "comp2", "comp3"]
         assert route.confidence > 0
         assert route.reason is not None
-        assert route.fallback_used == False
+        assert not route.fallback_used
     
     @pytest.mark.asyncio
     async def test_route_request_preferred(self, router, sample_components):
@@ -136,7 +133,7 @@ class TestSelfAwareRouter:
         
         assert route.component_id == ""
         assert route.confidence == 0.0
-        assert route.fallback_used == True
+        assert route.fallback_used
     
     @pytest.mark.asyncio
     async def test_health_check(self, router, sample_components):
@@ -149,7 +146,7 @@ class TestSelfAwareRouter:
         
         # Components should still be healthy
         for comp in router.components.values():
-            assert comp.is_healthy == True
+            assert comp.is_healthy
             assert comp.last_check > 0
     
     @pytest.mark.asyncio
@@ -366,7 +363,7 @@ class TestIntegration:
                 comp.is_active = False
             
             # Route request should trigger emergency recovery
-            route = await router.route_request("emergency_test")
+            await router.route_request("emergency_test")
             
             # Components should be reactivated
             assert all(comp.is_active for comp in router.components.values())

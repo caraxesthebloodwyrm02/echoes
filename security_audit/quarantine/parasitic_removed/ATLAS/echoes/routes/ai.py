@@ -74,8 +74,6 @@ async def chat_completion(request: ChatRequest):
         # For now, we'll simulate a response
 
         model = request.model or settings.default_model
-        temperature = request.temperature or settings.temperature
-        max_tokens = request.max_tokens or settings.max_tokens
 
         # Simulate API call
         import asyncio
@@ -129,7 +127,7 @@ async def chat_completion_stream(request: ChatRequest):
 @router.get("/models", response_model=list[ModelInfo])
 async def list_models():
     """List available AI models."""
-    settings = get_settings()
+    get_settings()
 
     models = [
         ModelInfo(

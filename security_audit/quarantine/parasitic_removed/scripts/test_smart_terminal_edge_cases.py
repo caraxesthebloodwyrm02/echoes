@@ -360,7 +360,7 @@ class TestSmartTerminalEdgeCases(unittest.TestCase):
 
         for path in network_paths:
             try:
-                feedback = FeedbackHandler(path)
+                FeedbackHandler(path)
                 # Should handle gracefully even if path doesn't work
             except Exception:
                 # Expected for invalid paths

@@ -256,7 +256,7 @@ def recommend_targets(
     """Return ranked list of Echoes project targets."""
     entries: list[tuple[str, int, float | None]] = []
     for fp, size in size_map.items():
-        rel = os.path.normpath(fp)
+        os.path.normpath(fp)
         cov = None
         for cfp, data in coverage_files.items():
             if os.path.normpath(cfp).endswith(os.path.normpath(fp)) or os.path.normpath(

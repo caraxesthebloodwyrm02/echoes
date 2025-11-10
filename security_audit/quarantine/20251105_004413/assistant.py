@@ -1356,7 +1356,7 @@ class FusedAssistant:
         }
 
         # Apply core selective attention function to make the decision
-        decision_factors = selective_attention(
+        selective_attention(
             attention_data,
             criteria=lambda x: x[0] in ["importance_score", "urgency", "success_rate"]
             and x[1] is not None,
@@ -3323,10 +3323,10 @@ Examples:
                             routing_connector_path="../Routing",
                             arcade_platform_path="../Arcade"
                         )
-                        conductor = OrchestralConductor(config)
-                        print(f"  Orchestral: Ready for spatial/temporal optimization")
+                        OrchestralConductor(config)
+                        print("  Orchestral: Ready for spatial/temporal optimization")
                     except ImportError:
-                        print(f"  Orchestral: Modules not available")
+                        print("  Orchestral: Modules not available")
                 elif choice == "5":
                     attention_status = assistant.get_attention_status()
                     print("\n🧠 Selective Attention Status:")
@@ -3355,10 +3355,10 @@ Examples:
                             # Run template demo main() and strategy()
                             from template_process import main as tpl_main, strategy as tpl_strategy
                             print("\n=== Orchestral Demo: template_process.main() ===")
-                            tpl_results = tpl_main()
+                            tpl_main()
                             print("\n=== Orchestral Demo: orchestral_strategy.strategy() ===")
                             from orchestral_strategy import strategy as orch_strategy
-                            orch_plan = orch_strategy()
+                            orch_strategy()
                             # Simple echo to confirm
                             print("\n✅ Demo completed. Results and strategy printed above.")
                     except ImportError as e:

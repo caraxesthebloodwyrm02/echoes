@@ -31,9 +31,6 @@ TERMINOLOGY_MAP = {
     r"\bSmart Vision Glimpse\b": "Glimpse",
     # File patterns
     r"glimpse_([^\s.]+)": r"glimpse_\1",
-    r"glimpse_([^\s.]+)": r"glimpse_\1",
-    r"glimpse_([^\s.]+)": r"glimpse_\1",
-    r"glimpse_([^\s.]+)": r"glimpse_\1",
 }
 
 # Files to exclude from processing
@@ -136,9 +133,6 @@ def find_and_rename_files(root_dir: Path, patterns: dict[str, str]) -> None:
 
         # Apply file name patterns
         file_patterns = {
-            r"^glimpse_([^\s.]+)": r"glimpse_\1",
-            r"^glimpse_([^\s.]+)": r"glimpse_\1",
-            r"^glimpse_([^\s.]+)": r"glimpse_\1",
             r"^glimpse_([^\s.]+)": r"glimpse_\1",
         }
 

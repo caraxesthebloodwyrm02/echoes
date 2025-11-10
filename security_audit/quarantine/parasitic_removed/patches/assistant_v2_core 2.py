@@ -1452,7 +1452,7 @@ class EchoesAssistantV2:
             user_entities = intent_engine.extract_entities(message)
 
             # Create thought node for user message
-            user_thought = thought_tracker.add_thought(
+            thought_tracker.add_thought(
                 thought_id=f"user_{len(thought_tracker.thought_metadata) + 1}_{int(time.time())}",
                 content=message,
                 thought_type=ThoughtType.QUESTION
@@ -1474,7 +1474,7 @@ class EchoesAssistantV2:
             }
 
             # Cache the conversation context
-            conv_cache_key = catch_release.catch(
+            catch_release.catch(
                 content=conversation_context,
                 content_type=ContentType.CONVERSATION,
                 cache_level=CacheLevel.SESSION,

@@ -21,8 +21,7 @@ class TestAssistantV2CoreIntegration:
     def test_17_full_conversation_flow(self):
         """Test complete conversation flow from start to finish"""
         try:
-            from assistant_v2_core import (ConversationContext,
-                                           EchoesAssistantV2)
+            from assistant_v2_core import ConversationContext, EchoesAssistantV2
 
             # Mock complete conversation system
             mock_context = Mock()

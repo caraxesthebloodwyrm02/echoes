@@ -275,7 +275,7 @@ async def perform_detailed_contract_analysis(assistant, contract_text: str) -> s
     """Perform detailed contract analysis using assistant tools."""
 
     # Use direct tools for analysis
-    risk_analysis = await assistant._analyze_contract_risks(
+    await assistant._analyze_contract_risks(
         contract_text=contract_text,
         risk_categories=[
             "payment",
@@ -286,7 +286,7 @@ async def perform_detailed_contract_analysis(assistant, contract_text: str) -> s
         ],
     )
 
-    legal_precedence = await assistant._evaluate_legal_precedence(
+    await assistant._evaluate_legal_precedence(
         legal_issue="software development contract risks in California",
         jurisdiction="California",
     )

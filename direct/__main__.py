@@ -15,6 +15,7 @@ sys.path.insert(0, echoes_root)
 
 from . import get_direct_connection, test_direct_connection
 
+
 async def demo_direct_connection():
     """Demonstrate direct connection capabilities."""
     print("🚀 EchoesAI Direct Connection Demo")
@@ -42,13 +43,14 @@ async def demo_direct_connection():
 
             test_messages = [
                 {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": "Explain quantum computing in one sentence."}
+                {
+                    "role": "user",
+                    "content": "Explain quantum computing in one sentence.",
+                },
             ]
 
             response = await connection.direct_chat(
-                messages=test_messages,
-                max_tokens=50,
-                temperature=0.7
+                messages=test_messages, max_tokens=50, temperature=0.7
             )
 
             print(f"✅ Authentic Response: {response['content']}")
@@ -62,10 +64,9 @@ async def demo_direct_connection():
             print("Stream: ", end="", flush=True)
 
             async for chunk in connection.direct_stream(
-                messages=[{"role": "user", "content": "Count to 5"}],
-                max_tokens=20
+                messages=[{"role": "user", "content": "Count to 5"}], max_tokens=20
             ):
-                print(chunk['content'], end="", flush=True)
+                print(chunk["content"], end="", flush=True)
 
             print("\n✅ Direct streaming successful")
 
@@ -78,6 +79,7 @@ async def demo_direct_connection():
     except Exception as e:
         print(f"❌ Demo failed: {e}")
         return False
+
 
 async def main():
     """Main direct connection function."""
@@ -106,6 +108,7 @@ async def main():
 
     print(f"Completed: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("=" * 60)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

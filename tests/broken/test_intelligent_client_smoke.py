@@ -3,10 +3,9 @@ Smoke Tests for Intelligent OpenAI Client
 Quick validation tests to ensure integration works properly.
 """
 
-import asyncio
 import os
 import pytest
-from unittest.mock import Mock, patch, AsyncMock
+from unittest.mock import Mock, patch
 
 # Import the client
 import sys
@@ -14,8 +13,7 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(
 
 from core.ai.intelligent_openai_client import (
     IntelligentOpenAIClient,
-    ChatMessage,
-    APIProvider
+    ChatMessage
 )
 
 
@@ -28,8 +26,8 @@ class TestIntelligentClientSmoke:
         with patch.dict(os.environ, {}, clear=True):
             client = IntelligentOpenAIClient(enable_routing=False)
             
-            assert client.enable_routing == False
-            assert client._initialized == False
+            assert not client.enable_routing
+            assert not client._initialized
             assert len(client.providers) == 0
             assert len(client.active_clients) == 0
     
@@ -56,7 +54,7 @@ class TestIntelligentClientSmoke:
             
             # Should handle missing keys gracefully
             assert len(client.active_clients) == 0
-            assert client._initialized == True
+            assert client._initialized
     
     @pytest.mark.asyncio
     async def test_friendly_status_messages(self):
@@ -154,7 +152,7 @@ class TestIntelligentClientSmoke:
             
             # Status should reflect routing disabled
             status = client.get_status()
-            assert status["routing_enabled"] == False
+            assert not status["routing_enabled"]
 
 
 class TestIntegrationSmoke:

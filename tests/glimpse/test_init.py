@@ -3,8 +3,14 @@ Tests for glimpse.__init__ module
 """
 import pytest
 
-from glimpse import (Draft, GlimpseEngine, GlimpseResult, LatencyMonitor,
-                     PrivacyGuard, default_sampler)
+from glimpse import (
+    Draft,
+    GlimpseEngine,
+    GlimpseResult,
+    LatencyMonitor,
+    PrivacyGuard,
+    default_sampler,
+)
 
 
 class TestGlimpseInit:
@@ -12,8 +18,13 @@ class TestGlimpseInit:
 
     def test_import_main_classes(self):
         """Test that main classes can be imported"""
-        from glimpse import (Draft, GlimpseResult, LatencyMonitor,
-                             PrivacyGuard, default_sampler)
+        from glimpse import (
+            Draft,
+            GlimpseResult,
+            LatencyMonitor,
+            PrivacyGuard,
+            default_sampler,
+        )
 
         assert GlimpseEngine is not None
         assert Draft is not None

@@ -28,7 +28,7 @@ def main():
     print("=" * 50)
 
     # Ensure we're in the right directory
-    project_root = Path(__file__).parent
+    Path(__file__).parent
 
     # Clean previous builds
     print("\n🧹 Cleaning previous builds...")

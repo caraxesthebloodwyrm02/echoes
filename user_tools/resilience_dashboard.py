@@ -20,11 +20,13 @@ from enum import Enum
 from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.responses import HTMLResponse
 
+
 class HealthStatus(Enum):
     HEALTHY = "healthy"
     WARNING = "warning"
     CRITICAL = "critical"
     UNKNOWN = "unknown"
+
 
 @dataclass
 class HealthMetric:
@@ -35,6 +37,7 @@ class HealthMetric:
     last_updated: datetime
     description: str
 
+
 @dataclass
 class DependencyStatus:
     name: str
@@ -43,6 +46,7 @@ class DependencyStatus:
     error_rate: float
     last_check: datetime
     circuit_breaker_active: bool
+
 
 class ResilienceDashboard:
     """Comprehensive resilience monitoring dashboard"""
@@ -63,46 +67,62 @@ class ResilienceDashboard:
         """Initialize system health monitoring"""
         self.health_metrics = {
             "cpu_usage": HealthMetric(
-                "CPU Usage", HealthStatus.HEALTHY, 0.0, 80.0,
-                datetime.now(), "Percentage of CPU utilization"
+                "CPU Usage",
+                HealthStatus.HEALTHY,
+                0.0,
+                80.0,
+                datetime.now(),
+                "Percentage of CPU utilization",
             ),
             "memory_usage": HealthMetric(
-                "Memory Usage", HealthStatus.HEALTHY, 0.0, 85.0,
-                datetime.now(), "Percentage of memory utilization"
+                "Memory Usage",
+                HealthStatus.HEALTHY,
+                0.0,
+                85.0,
+                datetime.now(),
+                "Percentage of memory utilization",
             ),
             "response_time": HealthMetric(
-                "Response Time", HealthStatus.HEALTHY, 0.0, 1000.0,
-                datetime.now(), "Average API response time in ms"
+                "Response Time",
+                HealthStatus.HEALTHY,
+                0.0,
+                1000.0,
+                datetime.now(),
+                "Average API response time in ms",
             ),
             "error_rate": HealthMetric(
-                "Error Rate", HealthStatus.HEALTHY, 0.0, 5.0,
-                datetime.now(), "Percentage of failed requests"
+                "Error Rate",
+                HealthStatus.HEALTHY,
+                0.0,
+                5.0,
+                datetime.now(),
+                "Percentage of failed requests",
             ),
             "selective_attention_efficiency": HealthMetric(
-                "Selective Attention", HealthStatus.HEALTHY, 84.0, 70.0,
-                datetime.now(), "Cognitive load reduction percentage"
-            )
+                "Selective Attention",
+                HealthStatus.HEALTHY,
+                84.0,
+                70.0,
+                datetime.now(),
+                "Cognitive load reduction percentage",
+            ),
         }
 
     def _initialize_dependency_monitoring(self):
         """Initialize third-party dependency monitoring"""
         self.dependencies = {
             "openai_api": DependencyStatus(
-                "OpenAI API", HealthStatus.HEALTHY, 200.0, 0.0,
-                datetime.now(), False
+                "OpenAI API", HealthStatus.HEALTHY, 200.0, 0.0, datetime.now(), False
             ),
             "vector_index": DependencyStatus(
-                "Vector Index", HealthStatus.HEALTHY, 50.0, 0.0,
-                datetime.now(), False
+                "Vector Index", HealthStatus.HEALTHY, 50.0, 0.0, datetime.now(), False
             ),
             "cache_system": DependencyStatus(
-                "Cache System", HealthStatus.HEALTHY, 10.0, 0.0,
-                datetime.now(), False
+                "Cache System", HealthStatus.HEALTHY, 10.0, 0.0, datetime.now(), False
             ),
             "database": DependencyStatus(
-                "Database", HealthStatus.HEALTHY, 100.0, 0.0,
-                datetime.now(), False
-            )
+                "Database", HealthStatus.HEALTHY, 100.0, 0.0, datetime.now(), False
+            ),
         }
 
     async def update_health_metrics(self):
@@ -115,7 +135,11 @@ class ResilienceDashboard:
             cpu_percent = psutil.cpu_percent(interval=1)
             self.health_metrics["cpu_usage"].value = cpu_percent
             self.health_metrics["cpu_usage"].status = (
-                HealthStatus.WARNING if cpu_percent > 70 else HealthStatus.CRITICAL if cpu_percent > 90 else HealthStatus.HEALTHY
+                HealthStatus.WARNING
+                if cpu_percent > 70
+                else HealthStatus.CRITICAL
+                if cpu_percent > 90
+                else HealthStatus.HEALTHY
             )
             self.health_metrics["cpu_usage"].last_updated = datetime.now()
 
@@ -124,13 +148,21 @@ class ResilienceDashboard:
             memory_percent = memory.percent
             self.health_metrics["memory_usage"].value = memory_percent
             self.health_metrics["memory_usage"].status = (
-                HealthStatus.WARNING if memory_percent > 75 else HealthStatus.CRITICAL if memory_percent > 95 else HealthStatus.HEALTHY
+                HealthStatus.WARNING
+                if memory_percent > 75
+                else HealthStatus.CRITICAL
+                if memory_percent > 95
+                else HealthStatus.HEALTHY
             )
             self.health_metrics["memory_usage"].last_updated = datetime.now()
 
             # Simulate other metrics
-            self.health_metrics["response_time"].value = 250.0 + (hash(str(datetime.now())) % 200)
-            self.health_metrics["error_rate"].value = max(0, 2.0 + (hash(str(datetime.now())) % 5))
+            self.health_metrics["response_time"].value = 250.0 + (
+                hash(str(datetime.now())) % 200
+            )
+            self.health_metrics["error_rate"].value = max(
+                0, 2.0 + (hash(str(datetime.now())) % 5)
+            )
 
             # Check for alerts
             await self._check_for_alerts()
@@ -144,6 +176,7 @@ class ResilienceDashboard:
             try:
                 # Simulate dependency check (replace with actual health checks)
                 import random
+
                 response_time = 50 + random.random() * 300
                 error_rate = random.random() * 10
 
@@ -177,17 +210,14 @@ class ResilienceDashboard:
                     "source": name,
                     "message": f"Critical threshold exceeded for {name}: {metric.value:.2f} (threshold: {metric.threshold})",
                     "timestamp": current_time.isoformat(),
-                    "acknowledged": False
+                    "acknowledged": False,
                 }
                 self.alerts.append(alert)
                 await self._broadcast_alert(alert)
 
     async def _broadcast_alert(self, alert: Dict[str, Any]):
         """Broadcast alert to all connected clients"""
-        message = {
-            "type": "alert",
-            "data": alert
-        }
+        message = {"type": "alert", "data": alert}
         for client in self.connected_clients:
             try:
                 await client.send_json(message)
@@ -205,7 +235,7 @@ class ResilienceDashboard:
                     "value": metric.value,
                     "threshold": metric.threshold,
                     "last_updated": metric.last_updated.isoformat(),
-                    "description": metric.description
+                    "description": metric.description,
                 }
                 for name, metric in self.health_metrics.items()
             },
@@ -216,23 +246,31 @@ class ResilienceDashboard:
                     "response_time": dep.response_time,
                     "error_rate": dep.error_rate,
                     "last_check": dep.last_check.isoformat(),
-                    "circuit_breaker_active": dep.circuit_breaker_active
+                    "circuit_breaker_active": dep.circuit_breaker_active,
                 }
                 for name, dep in self.dependencies.items()
             },
             "alerts": self.alerts[-10:],  # Last 10 alerts
-            "performance_history": self.performance_history[-100:],  # Last 100 data points
+            "performance_history": self.performance_history[
+                -100:
+            ],  # Last 100 data points
             "system_health": self._calculate_overall_health(),
-            "timestamp": datetime.now().isoformat()
+            "timestamp": datetime.now().isoformat(),
         }
 
     def _calculate_overall_health(self) -> Dict[str, Any]:
         """Calculate overall system health score"""
         total_metrics = len(self.health_metrics)
-        healthy_metrics = sum(1 for m in self.health_metrics.values() if m.status == HealthStatus.HEALTHY)
-        critical_metrics = sum(1 for m in self.health_metrics.values() if m.status == HealthStatus.CRITICAL)
+        healthy_metrics = sum(
+            1 for m in self.health_metrics.values() if m.status == HealthStatus.HEALTHY
+        )
+        critical_metrics = sum(
+            1 for m in self.health_metrics.values() if m.status == HealthStatus.CRITICAL
+        )
 
-        health_score = (healthy_metrics / total_metrics) * 100 if total_metrics > 0 else 0
+        health_score = (
+            (healthy_metrics / total_metrics) * 100 if total_metrics > 0 else 0
+        )
 
         if critical_metrics > 0:
             overall_status = HealthStatus.CRITICAL
@@ -246,7 +284,7 @@ class ResilienceDashboard:
             "score": health_score,
             "healthy_metrics": healthy_metrics,
             "total_metrics": total_metrics,
-            "critical_metrics": critical_metrics
+            "critical_metrics": critical_metrics,
         }
 
     async def register_websocket_client(self, websocket: WebSocket):
@@ -256,10 +294,7 @@ class ResilienceDashboard:
 
         # Send initial data
         dashboard_data = await self.get_dashboard_data()
-        await websocket.send_json({
-            "type": "initial_data",
-            "data": dashboard_data
-        })
+        await websocket.send_json({"type": "initial_data", "data": dashboard_data})
 
     def unregister_websocket_client(self, websocket: WebSocket):
         """Unregister a WebSocket client"""
@@ -272,23 +307,24 @@ class ResilienceDashboard:
             return
 
         dashboard_data = await self.get_dashboard_data()
-        message = {
-            "type": "update",
-            "data": dashboard_data
-        }
+        message = {"type": "update", "data": dashboard_data}
 
-        for client in self.connected_clients[:]:  # Copy list to avoid modification during iteration
+        for client in self.connected_clients[
+            :
+        ]:  # Copy list to avoid modification during iteration
             try:
                 await client.send_json(message)
             except Exception as e:
                 self.logger.error(f"Failed to send update to client: {e}")
                 self.connected_clients.remove(client)
 
+
 # Initialize dashboard
 dashboard = ResilienceDashboard()
 
 # Create FastAPI app for dashboard
 app = FastAPI(title="EchoesAI Resilience Dashboard")
+
 
 @app.get("/", response_class=HTMLResponse)
 async def get_dashboard():
@@ -404,6 +440,7 @@ async def get_dashboard():
     </html>
     """
 
+
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
     """WebSocket endpoint for real-time updates"""
@@ -414,10 +451,12 @@ async def websocket_endpoint(websocket: WebSocket):
     except WebSocketDisconnect:
         dashboard.unregister_websocket_client(websocket)
 
+
 @app.get("/api/dashboard")
 async def get_dashboard_data():
     """Get dashboard data as JSON"""
     return await dashboard.get_dashboard_data()
+
 
 @app.post("/api/acknowledge-alert/{alert_id}")
 async def acknowledge_alert(alert_id: int):
@@ -427,6 +466,7 @@ async def acknowledge_alert(alert_id: int):
             alert["acknowledged"] = True
             return {"status": "acknowledged"}
     return {"status": "not_found"}
+
 
 if __name__ == "__main__":
     import uvicorn

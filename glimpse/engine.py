@@ -22,8 +22,7 @@ except ImportError:
     PERFORMANCE_AVAILABLE = False
 
 try:
-    from .clarifier_engine import (ClarifierEngine,
-                                   enhanced_sampler_with_clarifiers)
+    from .clarifier_engine import ClarifierEngine, enhanced_sampler_with_clarifiers
 
     CLARIFIER_AVAILABLE = True
 except ImportError:

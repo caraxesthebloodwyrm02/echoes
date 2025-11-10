@@ -6,12 +6,10 @@ that could compromise source authenticity before Arcade integration.
 """
 
 import ast
-import os
 import sys
 import re
-import json
 from pathlib import Path
-from typing import List, Dict, Any, Set, Tuple
+from typing import Dict, Any
 from datetime import datetime
 
 class DeepNestedDetector:
@@ -284,7 +282,7 @@ def main():
     results = detector.scan_directory()
     
     # Display results
-    print(f"📊 Scan Results:")
+    print("📊 Scan Results:")
     print(f"   • Total files scanned: {results['total_files']}")
     print(f"   • Infected files found: {results['infected_files']}")
     print("")

@@ -92,7 +92,9 @@ def _init_otel():
         from opentelemetry import metrics as otel_metrics
         from opentelemetry.sdk.metrics import MeterProvider
         from opentelemetry.sdk.resources import Resource
-        from opentelemetry.exporter.otlp.proto.http.metric_exporter import OTLPMetricExporter
+        from opentelemetry.exporter.otlp.proto.http.metric_exporter import (
+            OTLPMetricExporter,
+        )
         from opentelemetry.sdk.metrics.export import PeriodicExportingMetricReader
 
         cfg = get_config()
@@ -108,7 +110,10 @@ def _init_otel():
 
         _log(2, "OpenTelemetry initialized")
     except ImportError:
-        _log(2, "OpenTelemetry packages not available; install opentelemetry-api and opentelemetry-sdk")
+        _log(
+            2,
+            "OpenTelemetry packages not available; install opentelemetry-api and opentelemetry-sdk",
+        )
     except Exception as e:
         _log(1, f"Failed to initialize OpenTelemetry: {e}")
 
@@ -122,8 +127,12 @@ def _init_prometheus():
     try:
         from prometheus_client import Counter
 
-        _prom_counter_allowed = Counter("egress_allowed_total", "Total allowed egress requests")
-        _prom_counter_blocked = Counter("egress_blocked_total", "Total blocked egress requests")
+        _prom_counter_allowed = Counter(
+            "egress_allowed_total", "Total allowed egress requests"
+        )
+        _prom_counter_blocked = Counter(
+            "egress_blocked_total", "Total blocked egress requests"
+        )
 
         _log(2, "Prometheus metrics initialized")
     except ImportError:
@@ -175,12 +184,15 @@ def get_metrics() -> dict:
 def get_recent_events() -> list[dict]:
     """Get recent events from the ring buffer."""
     with _metrics_lock:
-        return [{
-            "ts": e.ts,
-            "action": e.action,
-            "host": e.host,
-            "reason": e.reason,
-        } for e in _recent_events]
+        return [
+            {
+                "ts": e.ts,
+                "action": e.action,
+                "host": e.host,
+                "reason": e.reason,
+            }
+            for e in _recent_events
+        ]
 
 
 def reset_metrics() -> None:
@@ -241,7 +253,11 @@ def require_allowed(host: str) -> None:
 def require_openai_allowed() -> None:
     # Convenience for common path
     # Try to resolve default OpenAI API base host if env sets custom base
-    api_base = os.environ.get("OPENAI_BASE_URL") or os.environ.get("OPENAI_API_BASE") or "api.openai.com"
+    api_base = (
+        os.environ.get("OPENAI_BASE_URL")
+        or os.environ.get("OPENAI_API_BASE")
+        or "api.openai.com"
+    )
     require_allowed(_host_only(api_base))
 
 
@@ -329,19 +345,21 @@ def verify_policy() -> tuple[bool, list[str], set[str]]:
     # Check CI enforcement requirements
     if os.getenv("CI"):
         if not cfg.enforce and not cfg.ci_allow_disable:
-            errors.append("CI: EGRESS_ENFORCE must be '1' unless EGRESS_CI_ALLOW_DISABLE=1")
-            categories.add('validation')
+            errors.append(
+                "CI: EGRESS_ENFORCE must be '1' unless EGRESS_CI_ALLOW_DISABLE=1"
+            )
+            categories.add("validation")
 
         if not cfg.allowlist:
             errors.append("CI: Allowlist cannot be empty")
-            categories.add('validation')
+            categories.add("validation")
 
         # Check for wildcards
         wildcards = {"*", "all", "any"}
         for token in cfg.allowlist:
             if token in wildcards:
                 errors.append(f"CI: Wildcard '{token}' not allowed in allowlist")
-                categories.add('validation')
+                categories.add("validation")
 
         # Check allowlist drift
         lock_tokens = _load_allowlist_lock()
@@ -351,19 +369,27 @@ def verify_policy() -> tuple[bool, list[str], set[str]]:
                 missing = lock_tokens - allowlist_set
                 extra = allowlist_set - lock_tokens
                 if missing:
-                    errors.append(f"CI: Allowlist missing tokens: {', '.join(sorted(missing))}")
+                    errors.append(
+                        f"CI: Allowlist missing tokens: {', '.join(sorted(missing))}"
+                    )
                 if extra:
-                    errors.append(f"CI: Allowlist has extra tokens: {', '.join(sorted(extra))}")
-                categories.add('drift')
+                    errors.append(
+                        f"CI: Allowlist has extra tokens: {', '.join(sorted(extra))}"
+                    )
+                categories.add("drift")
                 if cfg.ci_fail_on_drift:
-                    errors.append("CI: Allowlist drift detected and EGRESS_CI_FAIL_ON_DRIFT=1")
+                    errors.append(
+                        "CI: Allowlist drift detected and EGRESS_CI_FAIL_ON_DRIFT=1"
+                    )
 
     # Check for blocked events in CI
     if os.getenv("CI") and cfg.ci_fail_on_blocked:
         metrics = get_metrics()
         if metrics["blocked_total"] > 0:
-            errors.append(f"CI: {metrics['blocked_total']} blocked events detected and EGRESS_CI_FAIL_ON_BLOCKED=1")
-            categories.add('blocked')
+            errors.append(
+                f"CI: {metrics['blocked_total']} blocked events detected and EGRESS_CI_FAIL_ON_BLOCKED=1"
+            )
+            categories.add("blocked")
 
     return len(errors) == 0, errors, categories
 
@@ -412,7 +438,9 @@ def print_config(json_format: bool = False) -> None:
         if recent:
             print(f"\n=== Recent Events (last {len(recent)}) ===")
             for event in recent[-10:]:  # Show last 10
-                print(f"[{event['ts']}] {event['action']} {event['host']} - {event['reason']}")
+                print(
+                    f"[{event['ts']}] {event['action']} {event['host']} - {event['reason']}"
+                )
 
 
 def write_summary(output_path: str) -> None:
@@ -449,7 +477,8 @@ def write_summary(output_path: str) -> None:
         "unique_blocked_hosts": {
             "count": len(blocked_hosts),
             "hosts": [
-                {"host": h, "occurrences": c} for h, c in sorted(blocked_hosts.items(), key=lambda x: (-x[1], x[0]))
+                {"host": h, "occurrences": c}
+                for h, c in sorted(blocked_hosts.items(), key=lambda x: (-x[1], x[0]))
             ],
         },
     }
@@ -462,9 +491,13 @@ def _cli() -> None:
     """Command line interface."""
 
     parser = argparse.ArgumentParser(description="Egress Policy Management")
-    parser.add_argument("--print", action="store_true", help="Print current configuration")
+    parser.add_argument(
+        "--print", action="store_true", help="Print current configuration"
+    )
     parser.add_argument("--json", action="store_true", help="Output in JSON format")
-    parser.add_argument("--verify", action="store_true", help="Verify policy configuration")
+    parser.add_argument(
+        "--verify", action="store_true", help="Verify policy configuration"
+    )
     parser.add_argument("--summary-out", help="Write summary to file")
 
     args = parser.parse_args()
@@ -478,11 +511,11 @@ def _cli() -> None:
             for error in errors:
                 print(f"  - {error}")
             # Map categories to exit codes with priority: blocked(4) > drift(3) > validation(2)
-            if 'blocked' in categories:
+            if "blocked" in categories:
                 exit_code = max(exit_code, 4)
-            if 'drift' in categories:
+            if "drift" in categories:
                 exit_code = max(exit_code, 3)
-            if 'validation' in categories:
+            if "validation" in categories:
                 exit_code = max(exit_code, 2)
         else:
             print("Policy verification PASSED")

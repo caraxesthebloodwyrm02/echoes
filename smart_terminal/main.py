@@ -9,6 +9,7 @@ if project_root not in sys.path:
     sys.path.insert(0, project_root)
 
 from smart_terminal.core.feedback import FeedbackHandler
+
 # Now import local modules
 from smart_terminal.core.predictor import CommandPredictor
 from smart_terminal.interface.terminal import TerminalInterface

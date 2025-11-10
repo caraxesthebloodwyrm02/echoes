@@ -13,6 +13,7 @@ from pathlib import Path
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+
 class MiddlewareRemover:
     """Recursive middleware removal system for EchoesAI."""
 
@@ -38,11 +39,7 @@ class MiddlewareRemover:
         backup_dir.mkdir(exist_ok=True)
 
         # Files to backup
-        middleware_files = [
-            "api/middleware.py",
-            "api/main.py",
-            "api/config.py"
-        ]
+        middleware_files = ["api/middleware.py", "api/main.py", "api/config.py"]
 
         for file_path in middleware_files:
             source = self.echoes_root / file_path
@@ -65,7 +62,7 @@ class MiddlewareRemover:
             return False
 
         try:
-            with open(main_file, 'r') as f:
+            with open(main_file, "r") as f:
                 content = f.read()
 
             original_content = content
@@ -74,34 +71,41 @@ class MiddlewareRemover:
             middleware_imports = [
                 "from api.middleware import",
                 "from middleware import",
-                "import middleware"
+                "import middleware",
             ]
 
             for import_line in middleware_imports:
                 if import_line in content:
-                    lines = content.split('\n')
-                    lines = [line for line in lines if not line.strip().startswith(import_line)]
-                    content = '\n'.join(lines)
+                    lines = content.split("\n")
+                    lines = [
+                        line
+                        for line in lines
+                        if not line.strip().startswith(import_line)
+                    ]
+                    content = "\n".join(lines)
                     logger.info(f"🗑️ Removed import: {import_line}")
 
             # Remove setup_middleware call
             if "setup_middleware(app, config)" in content:
-                content = content.replace("setup_middleware(app, config)", "# setup_middleware REMOVED - Direct Connection")
+                content = content.replace(
+                    "setup_middleware(app, config)",
+                    "# setup_middleware REMOVED - Direct Connection",
+                )
                 logger.info("🗑️ Removed setup_middleware call")
 
             # Remove app.add_middleware calls
-            lines = content.split('\n')
+            lines = content.split("\n")
             filtered_lines = []
             for line in lines:
                 if "app.add_middleware" in line:
                     logger.info(f"🗑️ Removed middleware: {line.strip()}")
                 else:
                     filtered_lines.append(line)
-            content = '\n'.join(filtered_lines)
+            content = "\n".join(filtered_lines)
 
             # Save modified content
             if content != original_content:
-                with open(main_file, 'w') as f:
+                with open(main_file, "w") as f:
                     f.write(content)
                 self.removed_components.append("middleware_imports")
                 logger.info("✅ Middleware imports removed from main.py")
@@ -121,7 +125,7 @@ class MiddlewareRemover:
             return False
 
         try:
-            with open(config_file, 'r') as f:
+            with open(config_file, "r") as f:
                 content = f.read()
 
             original_content = content
@@ -129,24 +133,24 @@ class MiddlewareRemover:
             # Disable authentication
             content = content.replace(
                 "api_key_required: bool = False",
-                "api_key_required: bool = False  # DISABLED - Direct Connection"
+                "api_key_required: bool = False  # DISABLED - Direct Connection",
             )
 
             # Disable rate limiting
             content = content.replace(
                 "rate_limit_requests: int = 60",
-                "rate_limit_requests: int = 1000  # DISABLED - Direct Connection"
+                "rate_limit_requests: int = 1000  # DISABLED - Direct Connection",
             )
 
             # Disable timeout
             content = content.replace(
                 "timeout_seconds: int = 30",
-                "timeout_seconds: int = 300  # DISABLED - Direct Connection"
+                "timeout_seconds: int = 300  # DISABLED - Direct Connection",
             )
 
             # Save modified content
             if content != original_content:
-                with open(config_file, 'w') as f:
+                with open(config_file, "w") as f:
                     f.write(content)
                 self.removed_components.append("middleware_config")
                 logger.info("✅ Middleware configuration disabled")
@@ -260,7 +264,7 @@ if __name__ == "__main__":
 '''
 
         try:
-            with open(init_file, 'w') as f:
+            with open(init_file, "w") as f:
                 f.write(direct_init)
 
             self.removed_components.append("direct_init")
@@ -277,7 +281,7 @@ if __name__ == "__main__":
 
         if middleware_file.exists():
             # Rename to disable
-            disabled_file = middleware_file.with_suffix('.py.disabled')
+            disabled_file = middleware_file.with_suffix(".py.disabled")
             if not disabled_file.exists():
                 middleware_file.rename(disabled_file)
                 self.removed_components.append("middleware_file")
@@ -295,7 +299,7 @@ if __name__ == "__main__":
             ("Remove Middleware Imports", self.remove_middleware_imports),
             ("Disable Middleware Config", self.disable_middleware_config),
             ("Remove Middleware Files", self.remove_middleware_files),
-            ("Create Direct Init", self.create_direct_init)
+            ("Create Direct Init", self.create_direct_init),
         ]
 
         for step_name, step_func in steps:
@@ -322,16 +326,25 @@ if __name__ == "__main__":
             "removed_components": self.removed_components,
             "echoes_root": str(self.echoes_root),
             "middleware_bypassed": True,
-            "direct_connection_established": True
+            "direct_connection_established": True,
         }
+
 
 def main():
     """Main middleware removal function."""
     import argparse
 
-    parser = argparse.ArgumentParser(description="Recursive Middleware Removal for EchoesAI")
-    parser.add_argument("-f", "--force", action="store_true", help="Force removal (overwrite backups)")
-    parser.add_argument("--dry-run", action="store_true", help="Show what would be removed without doing it")
+    parser = argparse.ArgumentParser(
+        description="Recursive Middleware Removal for EchoesAI"
+    )
+    parser.add_argument(
+        "-f", "--force", action="store_true", help="Force removal (overwrite backups)"
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Show what would be removed without doing it",
+    )
 
     args = parser.parse_args()
 
@@ -369,7 +382,9 @@ def main():
             print("\n🎯 Next Steps:")
             print("   1. Test direct connection: python -m Echoes.direct")
             print("   2. Verify authentic I/O: python -m Echoes.direct.test")
-            print("   3. Use direct API: from Echoes.direct import get_direct_connection")
+            print(
+                "   3. Use direct API: from Echoes.direct import get_direct_connection"
+            )
 
         else:
             print("\n❌ MIDDLEWARE REMOVAL FAILED!")
@@ -379,6 +394,7 @@ def main():
     except Exception as e:
         print(f"\n💥 REMOVAL PROCESS CRASHED: {e}")
         print("🔧 Check logs for details")
+
 
 if __name__ == "__main__":
     main()

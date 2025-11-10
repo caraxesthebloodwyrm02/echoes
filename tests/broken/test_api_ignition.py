@@ -147,13 +147,13 @@ class TestAPIIgnitionPoint:
         client2 = "192.168.1.2"
 
         # First request should pass
-        assert limiter.is_allowed(client1) == True
+        assert limiter.is_allowed(client1)
 
         # Second request from same client should be limited
-        assert limiter.is_allowed(client1) == False
+        assert not limiter.is_allowed(client1)
 
         # Different client should pass
-        assert limiter.is_allowed(client2) == True
+        assert limiter.is_allowed(client2)
 
     def test_websocket_error_handling(self):
         """Test WebSocket error handling - targets lines 272-273, 299-300"""

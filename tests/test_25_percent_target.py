@@ -52,8 +52,7 @@ class TestMinimumRisk25Percent:
             pass
 
         # Test api/middleware.py missing branches
-        from api.middleware import (AuthenticationMiddleware,
-                                    RequestLoggingMiddleware)
+        from api.middleware import AuthenticationMiddleware, RequestLoggingMiddleware
 
         mock_app = Mock()
 

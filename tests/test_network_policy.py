@@ -54,6 +54,7 @@ def test_env_parsing_allowlist_and_disable_enforcement(monkeypatch):
     monkeypatch.setenv("EGRESS_ALLOWLIST", "example.com, internal.local")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     cfg = policy.get_config()
@@ -172,6 +173,7 @@ def test_structured_logging_json(monkeypatch, capsys):
     monkeypatch.setenv("EGRESS_LOG", "2")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Trigger an allow event
@@ -195,6 +197,7 @@ def test_structured_logging_text(monkeypatch, capsys):
     monkeypatch.setenv("EGRESS_LOG", "2")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Trigger an allow event
@@ -209,7 +212,7 @@ def test_cli_print_config(monkeypatch, capsys):
     import core_modules.network.policy as policy
 
     # Test text output
-    with patch.object(sys, 'argv', ['policy.py', '--print']):
+    with patch.object(sys, "argv", ["policy.py", "--print"]):
         policy._cli()
 
     captured = capsys.readouterr()
@@ -222,7 +225,7 @@ def test_cli_print_json(monkeypatch, capsys):
     import core_modules.network.policy as policy
 
     # Test JSON output
-    with patch.object(sys, 'argv', ['policy.py', '--print', '--json']):
+    with patch.object(sys, "argv", ["policy.py", "--print", "--json"]):
         policy._cli()
 
     captured = capsys.readouterr()
@@ -238,7 +241,7 @@ def test_cli_verify_success(monkeypatch, capsys):
     import core_modules.network.policy as policy
 
     # Test successful verification
-    with patch.object(sys, 'argv', ['policy.py', '--verify']):
+    with patch.object(sys, "argv", ["policy.py", "--verify"]):
         policy._cli()
 
     captured = capsys.readouterr()
@@ -250,10 +253,11 @@ def test_cli_verify_ci_enforcement_failure(monkeypatch, capsys):
     monkeypatch.setenv("EGRESS_ENFORCE", "0")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Test CI enforcement failure
-    with patch.object(sys, 'argv', ['policy.py', '--verify']):
+    with patch.object(sys, "argv", ["policy.py", "--verify"]):
         with pytest.raises(SystemExit) as exc_info:
             policy._cli()
 
@@ -268,10 +272,11 @@ def test_cli_verify_wildcard_failure(monkeypatch, capsys):
     monkeypatch.setenv("EGRESS_ALLOWLIST", "openai,*,example.com")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Test wildcard failure
-    with patch.object(sys, 'argv', ['policy.py', '--verify']):
+    with patch.object(sys, "argv", ["policy.py", "--verify"]):
         with pytest.raises(SystemExit) as exc_info:
             policy._cli()
 
@@ -287,15 +292,15 @@ def test_cli_summary_output(monkeypatch):
     policy.is_allowed("api.openai.com")
     policy.is_allowed("example.com")
 
-    with tempfile.NamedTemporaryFile(mode='w', delete=False, suffix='.json') as f:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".json") as f:
         summary_path = f.name
 
     try:
-        with patch.object(sys, 'argv', ['policy.py', '--summary-out', summary_path]):
+        with patch.object(sys, "argv", ["policy.py", "--summary-out", summary_path]):
             policy._cli()
 
         # Verify summary file
-        with open(summary_path, 'r') as f:
+        with open(summary_path, "r") as f:
             summary = json.load(f)
 
         assert "timestamp" in summary
@@ -315,7 +320,7 @@ def test_allowlist_lock_drift_detection(monkeypatch, capsys):
     # Create a temporary lock file
     lock_path = os.path.join(os.path.dirname(policy.__file__), "policy_allowlist.lock")
 
-    with tempfile.NamedTemporaryFile(mode='w', delete=False) as f:
+    with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
         f.write("# Test lock file\nopenai\nexample.com\n")
         temp_lock_path = f.name
 
@@ -332,7 +337,7 @@ def test_allowlist_lock_drift_detection(monkeypatch, capsys):
 
         policy.refresh_config()
 
-        with patch.object(sys, 'argv', ['policy.py', '--verify']):
+        with patch.object(sys, "argv", ["policy.py", "--verify"]):
             with pytest.raises(SystemExit) as exc_info:
                 policy._cli()
 
@@ -354,6 +359,7 @@ def test_opentelemetry_optional_exporter(monkeypatch):
     monkeypatch.setenv("EGRESS_OTEL_ENABLE", "1")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Should not fail even without OpenTelemetry packages
@@ -366,6 +372,7 @@ def test_prometheus_optional_exporter(monkeypatch):
     monkeypatch.setenv("EGRESS_PROM_ENABLE", "1")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Should not fail even without prometheus_client
@@ -379,12 +386,13 @@ def test_ci_fail_on_blocked(monkeypatch, capsys):
     monkeypatch.setenv("EGRESS_CI_FAIL_ON_BLOCKED", "1")
 
     import core_modules.network.policy as policy
+
     policy.refresh_config()
 
     # Generate a blocked event
     policy.is_allowed("example.com")
 
-    with patch.object(sys, 'argv', ['policy.py', '--verify']):
+    with patch.object(sys, "argv", ["policy.py", "--verify"]):
         with pytest.raises(SystemExit) as exc_info:
             policy._cli()
 

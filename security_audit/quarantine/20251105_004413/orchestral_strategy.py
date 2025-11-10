@@ -5,8 +5,7 @@ Optimized execution plan leveraging spatial and temporal processing
 """
 
 import asyncio
-import json
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List
 from pathlib import Path
 import sys
 import time

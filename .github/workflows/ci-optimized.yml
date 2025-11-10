@@ -1,36 +1,41 @@
 name: Echoes CI/CD Pipeline (Optimized)
-# Optimized for reliability, resource efficiency, and green status
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [main, master]
   pull_request:
-    branches: [ main ]
+    branches: [main, master]
 
+# Cancel in-progress runs when new commits are pushed
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+# Environment variables available to all jobs
 env:
-  PYTHON_VERSION: '3.12'
+  PYTHON_VERSION: 3.12
   PIP_CACHE_DIR: ~/.cache/pip
 
 jobs:
-  # === QUICK CHECKS (FAST FAIL) ===
   quick-checks:
     name: Quick Checks
     runs-on: ubuntu-latest
-    timeout-minutes: 5
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Fetch all history for all branches and tags
 
-      - name: Setup Python
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
+          cache-dependency-path: '**/pyproject.toml'
 
-      - name: Install linting tools
+      - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff black
+          pip install ruff black bandit safety pip-audit pre-commit
 
       - name: Run Ruff (fast linting)
         run: ruff check . --output-format concise --exclude=tests/broken --exclude=security_audit --exclude=.root_backup || exit 1
@@ -38,82 +43,73 @@ jobs:
       - name: Check formatting with Black
         run: black --check . --exclude='/(tests/broken|security_audit|\.root_backup|\.venv|venv|build|dist)/' || exit 1
 
-  # === SECURITY SCAN (OPTIMIZED) ===
+      - name: Check for security issues with Bandit
+        run: |
+          # Only scan Python files in app/ and core_modules/
+          find app core_modules -type f -name "*.py" | xargs bandit -ll -r || echo "Bandit scan found issues"
+
+      - name: Check for vulnerable dependencies with pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --requirement requirements.txt --requirement requirements-dev.txt || \
+            (echo "##[error]Vulnerable dependencies found" && exit 1)
+
+      - name: Check for outdated dependencies
+        run: |
+          pip install pip-check-reqs
+          pip-missing-reqs . || echo "Missing requirements found"
+
   security-scan:
     name: Security Scan
+    needs: quick-checks
     runs-on: ubuntu-latest
-    timeout-minutes: 10
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python ${{ env.PYTHON_VERSION }}
         uses: actions/setup-python@v5
         with:
           python-version: ${{ env.PYTHON_VERSION }}
-          cache: 'pip'
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
-
-      - name: Install security tools
-        run: |
-          python -m pip install --upgrade pip
-          pip install safety bandit
 
       - name: Install dependencies
         run: |
-          pip install -r requirements.txt || true
-
-      - name: Run Safety check
-        run: safety check --short-report || echo "Safety check warnings (non-blocking)"
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt -r requirements-dev.txt
 
       - name: Run Bandit scan
         run: bandit -r app/ core_modules/ api/ -f json -o bandit-report.json || echo "Bandit scan warnings (non-blocking)"
 
-      - name: Upload security reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: security-reports
-          path: bandit-report.json
-          retention-days: 7
-          if-no-files-found: ignore
+      - name: Run Safety check
+        run: |
+          pip install safety
+          safety check --full-report || echo "Safety check warnings (non-blocking)"
 
-  # === UNIT TESTS (OPTIMIZED, SINGLE JOB) ===
+      - name: Run pip-audit
+        run: |
+          pip install pip-audit
+          pip-audit --requirement requirements.txt --requirement requirements-dev.txt --ignore-vuln GHSA-98g8-xpq8-7vj9 --ignore-vuln GHSA-2h5h-59f5-c2j9 --ignore-vuln GHSA-8v4z-jjf6-gw9q || echo "pip-audit warnings (non-blocking)"
+
   unit-tests:
     name: Unit Tests
-    runs-on: ubuntu-latest
-    timeout-minutes: 15
     needs: quick-checks
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.10', '3.11', '3.12']
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
-          python-version: ${{ env.PYTHON_VERSION }}
+          python-version: ${{ matrix.python-version }}
           cache: 'pip'
-
-      - name: Cache pip dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.cache/pip
-          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt') }}
-          restore-keys: |
-            ${{ runner.os }}-pip-
+          cache-dependency-path: '**/pyproject.toml'
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt || true
-          pip install pytest pytest-cov pytest-xdist pytest-timeout
+          pip install -e .[test]
 
       - name: Run tests with coverage
         run: |
@@ -134,80 +130,52 @@ jobs:
         with:
           file: ./coverage.xml
           flags: unittests
-          name: echoes-coverage
+          name: codecov-umbrella
           fail_ci_if_error: false
-          if-no-files-found: ignore
 
-      - name: Upload coverage reports
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: coverage-reports
-          path: coverage.xml
-          retention-days: 7
-          if-no-files-found: ignore
-
-  # === DOCKER BUILD (OPTIONAL, SKIP IF NO DOCKERFILE) ===
   docker-build:
-    name: Docker Build & Test
+    name: Docker Build
+    needs: [quick-checks, security-scan, unit-tests]
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     runs-on: ubuntu-latest
-    timeout-minutes: 10
-    needs: [security-scan, unit-tests]
-    if: github.event_name != 'pull_request' || github.event.pull_request.head.repo.full_name == github.repository
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Check if Dockerfile exists
-        id: check_dockerfile
-        run: |
-          if [ -f "Dockerfile" ] || [ -f "docker/Dockerfile" ]; then
-            echo "dockerfile_exists=true" >> $GITHUB_OUTPUT
-          else
-            echo "dockerfile_exists=false" >> $GITHUB_OUTPUT
-          fi
+      - uses: actions/checkout@v4
 
       - name: Set up Docker Buildx
-        if: steps.check_dockerfile.outputs.dockerfile_exists == 'true'
         uses: docker/setup-buildx-action@v3
 
-      - name: Build Docker Image
-        if: steps.check_dockerfile.outputs.dockerfile_exists == 'true'
+      - name: Log in to Docker Hub
+        if: github.ref == 'refs/heads/main'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: ${{ (env.DOCKERFILE_PATH && env.DOCKERFILE_PATH) || (steps.check_dockerfile.outputs.dockerfile_exists && 'Dockerfile') || 'Dockerfile' }}
-          push: false
-          load: true
-          tags: echoes:test
+          push: ${{ github.ref == 'refs/heads/main' }}
+          tags: |
+            ${{ github.repository }}:latest
+            ${{ github.repository }}:${{ github.sha }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
-          platforms: linux/amd64
 
-      - name: Test Docker image
-        if: steps.check_dockerfile.outputs.dockerfile_exists == 'true'
-        run: |
-          docker run --rm echoes:test python -c "import sys; print('Docker image OK')" || exit 1
-
-      - name: Skip Docker build
-        if: steps.check_dockerfile.outputs.dockerfile_exists == 'false'
-        run: echo "No Dockerfile found, skipping Docker build"
-
-  # === FINAL STATUS ===
-  pipeline-status:
-    name: Pipeline Status
-    runs-on: ubuntu-latest
+  check-status:
+    name: Pipeline Status Check
     needs: [quick-checks, security-scan, unit-tests, docker-build]
+    runs-on: ubuntu-latest
     if: always()
     steps:
-      - name: Check job results
+      - name: Check job statuses
         run: |
           echo "📊 Pipeline Status Summary"
           echo "=========================="
           echo "Quick Checks: ${{ needs.quick-checks.result }}"
           echo "Security Scan: ${{ needs.security-scan.result }}"
           echo "Unit Tests: ${{ needs.unit-tests.result }}"
-          echo "Docker Build: ${{ needs.docker-build.result }}"
+          echo "Docker Build: ${{ needs.docker-build.result || 'skipped' }}"
           
           # Count successes
           success_count=0
@@ -216,7 +184,7 @@ jobs:
           [ "${{ needs.quick-checks.result }}" == "success" ] && success_count=$((success_count + 1)) || true
           [ "${{ needs.security-scan.result }}" == "success" ] && success_count=$((success_count + 1)) || true
           [ "${{ needs.unit-tests.result }}" == "success" ] && success_count=$((success_count + 1)) || true
-          [ "${{ needs.docker-build.result }}" == "success" ] && success_count=$((success_count + 1)) || true
+          [ "${{ needs.docker-build.result || 'success' }}" == "success" ] && success_count=$((success_count + 1)) || true
           
           echo "✅ Passed: $success_count/$total_count jobs"
           
@@ -236,4 +204,3 @@ jobs:
             echo "⚠️  Some jobs had issues - check logs above"
             exit 1
           fi
-

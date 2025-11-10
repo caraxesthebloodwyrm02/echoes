@@ -643,26 +643,22 @@ class NetworkCommunicator(BaseCommunicator):
     def _get_connection(self):
         """Get a connection from the pool or create a new one"""
         connection = None
-        from_pool = False
         try:
             # Try to get from pool
             try:
                 connection = self._connection_pool.get_nowait()
-                from_pool = True
                 # Test if connection is still alive
                 if self._test_connection(connection):
                     yield connection
                 else:
                     connection.close()
                     connection = None
-                    from_pool = False
             except queue.Empty:
                 pass
 
             # Create new connection if needed
             if connection is None:
                 connection = self._create_connection()
-                from_pool = False
 
             yield connection
 
@@ -1376,13 +1372,10 @@ class PsychologicalCommunicator(BaseCommunicator):
         word_count = len(content.split())
         if word_count < 10:
             factors["length"] = 0.9
-            length_reason = "Concise"
         elif word_count < 50:
             factors["length"] = 0.8
-            length_reason = "Balanced"
         else:
             factors["length"] = 0.6
-            length_reason = "Verbose"
 
         # Structure factor
         has_punctuation = any(p in content for p in ".!?")

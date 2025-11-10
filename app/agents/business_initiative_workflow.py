@@ -18,6 +18,7 @@ from .models import AgentConfig, ModelSettings
 
 class AgentRole(str, Enum):
     """Roles that agents can take in the workflow."""
+
     TRIAGE = "triage"
     LAUNCH_HELPER = "launch_helper"
     GET_DATA = "get_data"
@@ -26,6 +27,7 @@ class AgentRole(str, Enum):
 @dataclass
 class AgentStep:
     """Represents a single step in the workflow."""
+
     agent_name: str
     role: AgentRole
     instructions: str
@@ -39,17 +41,25 @@ class AgentStep:
 @dataclass
 class WorkflowResult:
     """Result of a workflow execution."""
+
     success: bool
     output: Dict[str, Any]
     steps: List[Dict[str, Any]]
-    timestamp: str = field(default_factory=lambda: datetime.now(timezone.utc).isoformat())
+    timestamp: str = field(
+        default_factory=lambda: datetime.now(timezone.utc).isoformat()
+    )
 
 
 class TriageSchema(BaseModel):
     """Schema for Triage agent output."""
-    has_all_details: bool = Field(..., description="Whether all required details are present")
+
+    has_all_details: bool = Field(
+        ..., description="Whether all required details are present"
+    )
     initiative_goal: str = Field(..., description="The goal of the initiative")
-    target_timeframe: str = Field(..., description="Target completion date or timeframe")
+    target_timeframe: str = Field(
+        ..., description="Target completion date or timeframe"
+    )
     current_resources: str = Field(..., description="Available resources or capacity")
 
 
@@ -88,8 +98,8 @@ If all three details are present anywhere in the conversation, respond with a JS
 - has_all_details: true
 - initiative_goal: <user-provided goal>
 - target_timeframe: <user-provided date or period>
-- current_resources: <user-provided resources>"""
-            )
+- current_resources: <user-provided resources>""",
+            ),
         )
 
     def _create_launch_helper_agent(self) -> Agent:
@@ -113,8 +123,8 @@ Your task is to create a comprehensive, actionable plan that includes:
 
 Provide your response in a structured markdown format with clear sections and bullet points.
 
-Consider the user's initiative goal, target timeframe, and available resources when creating the plan."""
-            )
+Consider the user's initiative goal, target timeframe, and available resources when creating the plan.""",
+            ),
         )
 
     def _create_get_data_agent(self) -> Agent:
@@ -134,11 +144,13 @@ Politely ask the user for any of the following that are missing:
 2. Target completion date or timeframe
 3. Available resources (team size, budget, tools)
 
-Be concise and ask one clear question at a time. Once you have all the information, summarize it back to the user for confirmation."""
-            )
+Be concise and ask one clear question at a time. Once you have all the information, summarize it back to the user for confirmation.""",
+            ),
         )
 
-    async def run_workflow(self, user_input: str, context: Optional[Dict[str, Any]] = None) -> WorkflowResult:
+    async def run_workflow(
+        self, user_input: str, context: Optional[Dict[str, Any]] = None
+    ) -> WorkflowResult:
         """
         Run the business initiative planning workflow.
 
@@ -154,17 +166,17 @@ Be concise and ask one clear question at a time. Once you have all the informati
 
         # Initialize workflow result
         result = WorkflowResult(
-            success=False,
-            output={"workflow_id": workflow_id},
-            steps=[]
+            success=False, output={"workflow_id": workflow_id}, steps=[]
         )
 
         # Add user input to conversation history
-        self.conversation_history.append({
-            "role": "user",
-            "content": user_input,
-            "timestamp": datetime.now(timezone.utc).isoformat()
-        })
+        self.conversation_history.append(
+            {
+                "role": "user",
+                "content": user_input,
+                "timestamp": datetime.now(timezone.utc).isoformat(),
+            }
+        )
 
         try:
             # Step 1: Triage the request
@@ -172,13 +184,15 @@ Be concise and ask one clear question at a time. Once you have all the informati
                 agent=self.triage_agent,
                 role=AgentRole.TRIAGE,
                 input_data={"query": user_input, "context": context or {}},
-                workflow_id=workflow_id
+                workflow_id=workflow_id,
             )
             result.steps.append(self._format_step_result(triage_step))
 
             # Parse triage result
             try:
-                triage_result = TriageSchema.model_validate_json(triage_step.output["response"])
+                triage_result = TriageSchema.model_validate_json(
+                    triage_step.output["response"]
+                )
                 result.output["triage"] = triage_result.model_dump()
 
                 if triage_result.has_all_details:
@@ -190,9 +204,9 @@ Be concise and ask one clear question at a time. Once you have all the informati
                             "initiative_goal": triage_result.initiative_goal,
                             "target_timeframe": triage_result.target_timeframe,
                             "current_resources": triage_result.current_resources,
-                            "context": context or {}
+                            "context": context or {},
                         },
-                        workflow_id=workflow_id
+                        workflow_id=workflow_id,
                     )
                     result.steps.append(self._format_step_result(launch_step))
                     result.output["launch_plan"] = launch_step.output["response"]
@@ -204,13 +218,19 @@ Be concise and ask one clear question at a time. Once you have all the informati
                         role=AgentRole.GET_DATA,
                         input_data={
                             "missing_fields": {
-                                "initiative_goal": not bool(triage_result.initiative_goal),
-                                "target_timeframe": not bool(triage_result.target_timeframe),
-                                "current_resources": not bool(triage_result.current_resources)
+                                "initiative_goal": not bool(
+                                    triage_result.initiative_goal
+                                ),
+                                "target_timeframe": not bool(
+                                    triage_result.target_timeframe
+                                ),
+                                "current_resources": not bool(
+                                    triage_result.current_resources
+                                ),
                             },
-                            "context": context or {}
+                            "context": context or {},
                         },
-                        workflow_id=workflow_id
+                        workflow_id=workflow_id,
                     )
                     result.steps.append(self._format_step_result(data_step))
                     result.output["missing_info_request"] = data_step.output["response"]
@@ -233,7 +253,7 @@ Be concise and ask one clear question at a time. Once you have all the informati
         agent: Agent,
         role: AgentRole,
         input_data: Dict[str, Any],
-        workflow_id: str
+        workflow_id: str,
     ) -> AgentStep:
         """Execute a single agent step in the workflow."""
         start_time = datetime.now(timezone.utc)
@@ -242,14 +262,13 @@ Be concise and ask one clear question at a time. Once you have all the informati
             role=role,
             instructions=agent.config.system_prompt,
             input_data=input_data,
-            timestamp=start_time.isoformat()
+            timestamp=start_time.isoformat(),
         )
 
         try:
             # Execute the agent
             response = await agent.process(
-                query=input_data.get("query", ""),
-                context=input_data.get("context", {})
+                query=input_data.get("query", ""), context=input_data.get("context", {})
             )
 
             # Record successful execution
@@ -257,13 +276,15 @@ Be concise and ask one clear question at a time. Once you have all the informati
             step.success = True
 
             # Add to conversation history
-            self.conversation_history.append({
-                "role": "assistant",
-                "content": response,
-                "agent": agent.name,
-                "workflow_id": workflow_id,
-                "timestamp": datetime.now(timezone.utc).isoformat()
-            })
+            self.conversation_history.append(
+                {
+                    "role": "assistant",
+                    "content": response,
+                    "agent": agent.name,
+                    "workflow_id": workflow_id,
+                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                }
+            )
 
         except Exception as e:
             error_msg = f"{agent.name} execution failed: {str(e)}"
@@ -272,7 +293,9 @@ Be concise and ask one clear question at a time. Once you have all the informati
             step.success = False
 
         # Calculate duration
-        step.duration_ms = (datetime.now(timezone.utc) - start_time).total_seconds() * 1000
+        step.duration_ms = (
+            datetime.now(timezone.utc) - start_time
+        ).total_seconds() * 1000
 
         return step
 
@@ -285,7 +308,7 @@ Be concise and ask one clear question at a time. Once you have all the informati
             "duration_ms": step.duration_ms,
             "success": step.success,
             "input": step.input_data,
-            "output": step.output
+            "output": step.output,
         }
 
     def _log_error(self, message: str):

@@ -66,7 +66,7 @@ async def health_check():
 @router.get("/detailed", response_model=HealthCheck)
 async def detailed_health_check():
     """Detailed health check with component status."""
-    settings = get_settings()
+    get_settings()
 
     # Calculate uptime
     uptime = (datetime.now() - _start_time).total_seconds()

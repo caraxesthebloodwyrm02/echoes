@@ -11,8 +11,11 @@ from typing import Any
 
 # Import enhanced clarifier engine for new functionality
 try:
-    from .enhanced_clarifier_engine import (ClarifierType, CuriosityCategory,
-                                            EnhancedClarifierEngine)
+    from .enhanced_clarifier_engine import (
+        ClarifierType,
+        CuriosityCategory,
+        EnhancedClarifierEngine,
+    )
 
     ENHANCED_CLARIFIER_AVAILABLE = True
 except ImportError:

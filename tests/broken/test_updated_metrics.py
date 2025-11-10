@@ -8,7 +8,6 @@ import time
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core.ai.openai_client import OpenAIClient
-from monitoring.cache_metrics import CacheMetrics
 
 def test_metrics():
     """Test the updated metrics functionality"""
@@ -31,7 +30,7 @@ def test_metrics():
     for i, messages in enumerate(test_messages, 1):
         try:
             start = time.perf_counter()
-            response = client.chat_completion(
+            client.chat_completion(
                 messages=messages,
                 model="gpt-3.5-turbo"
             )

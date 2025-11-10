@@ -1168,7 +1168,7 @@ async def run_personal_use_scenarios():
         await personal_scenarios.personal_finance_scenario()
 
         # Generate user-centric report
-        report = await personal_scenarios.generate_user_centric_report()
+        await personal_scenarios.generate_user_centric_report()
 
         print("\n" + "=" * 80)
         print("🎉 PERSONAL USE SCENARIOS DEMONSTRATION COMPLETE")

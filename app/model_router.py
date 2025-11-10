@@ -16,7 +16,12 @@ import time
 from collections import defaultdict
 import os
 
-_ORCH_ENABLED = os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in ("1", "true", "yes", "on")
+_ORCH_ENABLED = os.getenv("ECHOES_ORCHESTRAL_ENABLED", "").lower() in (
+    "1",
+    "true",
+    "yes",
+    "on",
+)
 try:
     if _ORCH_ENABLED:
         from app.orchestral_model_router import route_request_with_orchestral, get_orchestral_routing_status  # type: ignore
@@ -313,12 +318,14 @@ class ModelRouter:
 
         return None
 
+
 # Optional helper API to route with orchestral when enabled
 def route_request(prompt: str, context: dict | None = None) -> dict | str:
     if _ORCH_ENABLED and route_request_with_orchestral:
         return route_request_with_orchestral(prompt, context or {})
     router = ModelRouter()
     return router.select_model(prompt)
+
 
 def routing_status() -> dict:
     if _ORCH_ENABLED and get_orchestral_routing_status:

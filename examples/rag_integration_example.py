@@ -6,6 +6,7 @@ generation with retrieved context.
 """
 
 import logging
+
 # Add parent directory to path
 import sys
 from pathlib import Path

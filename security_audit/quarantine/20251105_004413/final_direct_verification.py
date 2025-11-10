@@ -136,7 +136,7 @@ async def verify_authentic_openai_connection():
         passed_checks = sum(1 for check in authentic_checks.values() if check)
         total_checks = len(authentic_checks)
         
-        print(f"📊 Authenticity Checks:")
+        print("📊 Authenticity Checks:")
         for check_name, passed in authentic_checks.items():
             status = "✅" if passed else "❌"
             print(f"   {status} {check_name}")

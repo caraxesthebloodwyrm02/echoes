@@ -104,7 +104,6 @@ class TestECommerceDemoCredibility(unittest.TestCase):
 
         monthly_orders = 1200
         avg_order_value = 285
-        cart_abandonment_rate = 0.35
 
         # Test cart abandonment opportunity
         potential_recovery = monthly_orders * 0.10 * avg_order_value
@@ -177,8 +176,6 @@ class TestInvestmentAdvisorCredibility(unittest.TestCase):
 
         portfolio_value = 500_000_000
         ytd_return = 0.175
-        portfolio_beta = 0.89
-        sharpe_ratio = 1.58
 
         ytd_gain = portfolio_value * ytd_return
         self.assertEqual(ytd_gain, 87_500_000, "YTD gain should be $87.5M")
@@ -447,11 +444,11 @@ class TestOverallSystemCredibility(unittest.TestCase):
         print("\n[Test 4.1] Knowledge Management Persistence...")
 
         # Add test knowledge
-        k_id1 = self.assistant.gather_knowledge(
+        self.assistant.gather_knowledge(
             "Test knowledge entry 1", "test_source", "test_category", ["test"]
         )
 
-        k_id2 = self.assistant.gather_knowledge(
+        self.assistant.gather_knowledge(
             "Test knowledge entry 2", "test_source", "test_category", ["test"]
         )
 

@@ -12,6 +12,7 @@ from typing import Any, Dict, List
 # Import orchestral components
 import sys
 from pathlib import Path
+
 sys.path.append(str(Path(__file__).parent.parent))
 
 try:
@@ -22,6 +23,7 @@ except ImportError:
     TemplateProcessor = None
 
 logger = logging.getLogger(__name__)
+
 
 class OrchestralModelRouter:
     """
@@ -34,8 +36,16 @@ class OrchestralModelRouter:
         self.default_model = "gpt-4o-mini"
         self.complexity_threshold = 0.7
         self.web_search_indicators = [
-            "search", "find", "lookup", "research", "what is", "who is",
-            "when did", "where is", "why does", "how does"
+            "search",
+            "find",
+            "lookup",
+            "research",
+            "what is",
+            "who is",
+            "when did",
+            "where is",
+            "why does",
+            "how does",
         ]
 
         # Orchestral components
@@ -44,8 +54,12 @@ class OrchestralModelRouter:
                 echo_core_path=str(Path(__file__).parent.parent),
                 reverb_module_path=str(Path(__file__).parent.parent.parent / "Reverb"),
                 delay_module_path=str(Path(__file__).parent.parent.parent / "Delay"),
-                routing_connector_path=str(Path(__file__).parent.parent.parent / "Routing"),
-                arcade_platform_path=str(Path(__file__).parent.parent.parent / "Arcade")
+                routing_connector_path=str(
+                    Path(__file__).parent.parent.parent / "Routing"
+                ),
+                arcade_platform_path=str(
+                    Path(__file__).parent.parent.parent / "Arcade"
+                ),
             )
             self.conductor = OrchestralConductor(self.orchestral_config)
             self.template_processor = TemplateProcessor()
@@ -59,7 +73,9 @@ class OrchestralModelRouter:
         self.performance_metrics = defaultdict(list)
         self.routing_decisions = defaultdict(int)
 
-    def route_request(self, prompt: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+    def route_request(
+        self, prompt: str, context: Dict[str, Any] = None
+    ) -> Dict[str, Any]:
         """
         Route request to optimal model with orchestral enhancement.
 
@@ -79,7 +95,9 @@ class OrchestralModelRouter:
         tool_requirements = self._analyze_tool_requirements(prompt)
 
         # Base model selection
-        selected_model = self._select_base_model(complexity, needs_web_search, tool_requirements)
+        selected_model = self._select_base_model(
+            complexity, needs_web_search, tool_requirements
+        )
 
         # Apply orchestral enhancement if available
         if self.orchestral_enabled:
@@ -88,32 +106,44 @@ class OrchestralModelRouter:
             )
         else:
             routing_result = {
-                'selected_model': selected_model,
-                'complexity': complexity,
-                'needs_web_search': needs_web_search,
-                'tool_requirements': tool_requirements,
-                'orchestral_enhanced': False
+                "selected_model": selected_model,
+                "complexity": complexity,
+                "needs_web_search": needs_web_search,
+                "tool_requirements": tool_requirements,
+                "orchestral_enhanced": False,
             }
 
         # Track performance
         processing_time = time.time() - start_time
-        self.performance_metrics['routing_time'].append(processing_time)
+        self.performance_metrics["routing_time"].append(processing_time)
         self.routing_decisions[selected_model] += 1
 
-        routing_result['routing_time'] = processing_time
-        routing_result['timestamp'] = time.time()
+        routing_result["routing_time"] = processing_time
+        routing_result["timestamp"] = time.time()
 
-        logger.info(f"Routed to {selected_model} in {processing_time:.3f}s (orchestral: {routing_result.get('orchestral_enhanced', False)})")
+        logger.info(
+            f"Routed to {selected_model} in {processing_time:.3f}s (orchestral: {routing_result.get('orchestral_enhanced', False)})"
+        )
 
         return routing_result
 
     def _calculate_complexity(self, prompt: str) -> float:
         """Calculate prompt complexity score."""
         factors = {
-            'length': min(len(prompt) / 1000, 1.0),
-            'questions': prompt.count('?') / 10,
-            'technical_terms': len(re.findall(r'\b(API|algorithm|function|class|method)\b', prompt, re.IGNORECASE)) / 5,
-            'complex_sentences': len(re.findall(r'\b(how|why|explain|analyze|compare)\b', prompt, re.IGNORECASE)) / 5
+            "length": min(len(prompt) / 1000, 1.0),
+            "questions": prompt.count("?") / 10,
+            "technical_terms": len(
+                re.findall(
+                    r"\b(API|algorithm|function|class|method)\b", prompt, re.IGNORECASE
+                )
+            )
+            / 5,
+            "complex_sentences": len(
+                re.findall(
+                    r"\b(how|why|explain|analyze|compare)\b", prompt, re.IGNORECASE
+                )
+            )
+            / 5,
         }
 
         complexity = sum(factors.values()) / len(factors)
@@ -122,7 +152,9 @@ class OrchestralModelRouter:
     def _needs_web_search(self, prompt: str) -> bool:
         """Determine if prompt requires web search."""
         prompt_lower = prompt.lower()
-        return any(indicator in prompt_lower for indicator in self.web_search_indicators)
+        return any(
+            indicator in prompt_lower for indicator in self.web_search_indicators
+        )
 
     def _analyze_tool_requirements(self, prompt: str) -> List[str]:
         """Analyze what tools are needed for the prompt."""
@@ -130,10 +162,10 @@ class OrchestralModelRouter:
         prompt_lower = prompt.lower()
 
         tool_indicators = {
-            'code_execution': ['run', 'execute', 'compile', 'test'],
-            'file_operations': ['file', 'read', 'write', 'save', 'open'],
-            'web_search': ['search', 'find', 'lookup', 'research'],
-            'data_analysis': ['analyze', 'process', 'calculate', 'statistics']
+            "code_execution": ["run", "execute", "compile", "test"],
+            "file_operations": ["file", "read", "write", "save", "open"],
+            "web_search": ["search", "find", "lookup", "research"],
+            "data_analysis": ["analyze", "process", "calculate", "statistics"],
         }
 
         for tool, indicators in tool_indicators.items():
@@ -142,7 +174,9 @@ class OrchestralModelRouter:
 
         return tools
 
-    def _select_base_model(self, complexity: float, needs_web_search: bool, tools: List[str]) -> str:
+    def _select_base_model(
+        self, complexity: float, needs_web_search: bool, tools: List[str]
+    ) -> str:
         """Select base model based on requirements."""
         if complexity > self.complexity_threshold or needs_web_search or len(tools) > 2:
             return "gpt-4o"
@@ -151,7 +185,9 @@ class OrchestralModelRouter:
         else:
             return self.default_model
 
-    def _apply_orchestral_routing(self, prompt: str, base_model: str, complexity: float, context: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_orchestral_routing(
+        self, prompt: str, base_model: str, complexity: float, context: Dict[str, Any]
+    ) -> Dict[str, Any]:
         """Apply orchestral enhancement to routing decision."""
 
         # Determine optimal processing pattern
@@ -165,36 +201,44 @@ class OrchestralModelRouter:
             pattern = "list_providers"
 
         # Apply template processing
-        template_result = self.template_processor.process(pattern, {
-            'query': prompt,
-            'complexity': complexity,
-            'base_model': base_model
-        })
+        template_result = self.template_processor.process(
+            pattern,
+            {"query": prompt, "complexity": complexity, "base_model": base_model},
+        )
 
         # Enhance with spatial/temporal optimization
         enhanced_result = template_result.copy()
-        enhanced_result.update({
-            'selected_model': base_model,
-            'complexity': complexity,
-            'orchestral_pattern': pattern,
-            'spatial_enhancement': True,
-            'temporal_optimization': True,
-            'orchestral_enhanced': True
-        })
+        enhanced_result.update(
+            {
+                "selected_model": base_model,
+                "complexity": complexity,
+                "orchestral_pattern": pattern,
+                "spatial_enhancement": True,
+                "temporal_optimization": True,
+                "orchestral_enhanced": True,
+            }
+        )
 
         return enhanced_result
 
     def get_routing_statistics(self) -> Dict[str, Any]:
         """Get routing performance statistics."""
         stats = {
-            'total_routes': sum(self.routing_decisions.values()),
-            'model_distribution': dict(self.routing_decisions),
-            'average_routing_time': sum(self.performance_metrics['routing_time']) / len(self.performance_metrics['routing_time']) if self.performance_metrics['routing_time'] else 0,
-            'orchestral_enabled': self.orchestral_enabled
+            "total_routes": sum(self.routing_decisions.values()),
+            "model_distribution": dict(self.routing_decisions),
+            "average_routing_time": sum(self.performance_metrics["routing_time"])
+            / len(self.performance_metrics["routing_time"])
+            if self.performance_metrics["routing_time"]
+            else 0,
+            "orchestral_enabled": self.orchestral_enabled,
         }
 
         if self.orchestral_enabled:
-            stats['orchestral_capabilities'] = ['spatial_enhancement', 'temporal_optimization', 'pattern_routing']
+            stats["orchestral_capabilities"] = [
+                "spatial_enhancement",
+                "temporal_optimization",
+                "pattern_routing",
+            ]
 
         return stats
 
@@ -203,15 +247,25 @@ class OrchestralModelRouter:
         self.performance_metrics.clear()
         self.routing_decisions.clear()
 
+
 # Global instance
 orchestral_router = OrchestralModelRouter()
 
-def route_request_with_orchestral(prompt: str, context: Dict[str, Any] = None) -> Dict[str, Any]:
+
+def route_request_with_orchestral(
+    prompt: str, context: Dict[str, Any] = None
+) -> Dict[str, Any]:
     """Convenience function for routing with orchestral enhancement."""
     return orchestral_router.route_request(prompt, context)
+
 
 def get_orchestral_routing_status() -> Dict[str, Any]:
     """Get current orchestral routing status."""
     return orchestral_router.get_routing_statistics()
 
-__all__ = ["OrchestralModelRouter", "route_request_with_orchestral", "get_orchestral_routing_status"]
+
+__all__ = [
+    "OrchestralModelRouter",
+    "route_request_with_orchestral",
+    "get_orchestral_routing_status",
+]

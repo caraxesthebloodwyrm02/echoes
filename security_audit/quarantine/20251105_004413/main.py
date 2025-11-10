@@ -19,7 +19,7 @@ from datetime import UTC, datetime
 from typing import Any
 
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, Request
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
 from pydantic import BaseModel, Field
 
 # Import configuration

@@ -1,0 +1,12 @@
+Your repo root: E:\Projects\Echoes
+Looking for your coverage xml at: coverage.xml
+\nTop targets (module, approximate non-blank lines, percent covered if known):
+ - venv.Lib.site-packages.idna.uts46data  | lines~8665 | covered%=None
+ - venv.Lib.site-packages.pip._vendor.idna.uts46data  | lines~8509 | covered%=None
+ - venv.Lib.site-packages.numpy._core.tests.test_multiarray  | lines~8029 | covered%=None
+ - venv.Lib.site-packages.numpy.ma.core  | lines~6999 | covered%=None
+ - venv.Lib.site-packages.chardet.langrussianmodel  | lines~5700 | covered%=None
+ - venv.Lib.site-packages.pip_api._vendor.pyparsing  | lines~5605 | covered%=None
+ - venv.Lib.site-packages.pygments.lexers._lasso_builtins  | lines~5323 | covered%=None
+ - venv.Lib.site-packages.numpy._core._add_newdocs  | lines~5277 | covered%=None
+Generated 8 smoke tests into tests\generated and wrote your report to tests\generated\coverage_ignition_report.json

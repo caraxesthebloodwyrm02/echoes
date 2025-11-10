@@ -162,7 +162,7 @@ def recommend_targets(
     """
     entries: list[tuple[str, int, float | None]] = []
     for fp, size in size_map.items():
-        rel = os.path.normpath(fp)
+        os.path.normpath(fp)
         cov = None
         # Try to match by filename ending
         for cfp, data in coverage_files.items():

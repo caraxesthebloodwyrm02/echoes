@@ -12,9 +12,11 @@ import time
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.parallel_simulation_engine import (SimulationStatus,
-                                                         SimulationType,
-                                                         parallel_simulation)
+    from core_modules.parallel_simulation_engine import (
+        SimulationStatus,
+        SimulationType,
+        parallel_simulation,
+    )
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running from the Echoes project root")

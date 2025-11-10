@@ -6,6 +6,7 @@ import time
 import random
 from .cache_metrics import CacheMetrics
 
+
 def demo_metrics():
     """Demonstrate optimized CacheMetrics functionality with realistic load testing."""
     print("🚀 Optimized CacheMetrics Demo")
@@ -13,8 +14,8 @@ def demo_metrics():
 
     # Initialize metrics with custom configuration
     metrics = CacheMetrics(
-        max_samples=5000,          # Keep last 5000 response times
-        memory_sample_rate=0.01    # Sample 1% of operations for memory
+        max_samples=5000,  # Keep last 5000 response times
+        memory_sample_rate=0.01,  # Sample 1% of operations for memory
     )
 
     print("Simulating cache operations under load...")
@@ -55,10 +56,10 @@ def demo_metrics():
     print(f"  90th Percentile: {stats['p90_response_time']*1000:.2f} ms")
 
     # Calculate and display cache vs API performance
-    if stats['hit_rate'] > 0 and stats['hit_rate'] < 1.0:
+    if stats["hit_rate"] > 0 and stats["hit_rate"] < 1.0:
         # Get all response times and separate hits/misses
         all_times = metrics.response_times
-        split_idx = int(len(all_times) * (1 - stats['hit_rate']))
+        split_idx = int(len(all_times) * (1 - stats["hit_rate"]))
 
         if split_idx > 0 and split_idx < len(all_times):
             api_times = all_times[:split_idx]  # First part is misses
@@ -81,6 +82,7 @@ def demo_metrics():
         print(f"  Current: {metrics.memory_usage[-1]:.1f} MB")
 
     print(f"\n🏁 Test completed in {duration:.2f} seconds")
+
 
 if __name__ == "__main__":
     demo_metrics()

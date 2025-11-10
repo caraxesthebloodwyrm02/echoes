@@ -37,8 +37,7 @@ class TestConfigBoost:
 
     def test_config_defaults_coverage(self):
         """Test config validation error paths"""
-        from api.config import (APIConfig, PatternDetectionConfig,
-                                SecurityConfig)
+        from api.config import APIConfig, PatternDetectionConfig, SecurityConfig
 
         try:
             # Test with existing config classes

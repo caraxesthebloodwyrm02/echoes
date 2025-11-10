@@ -192,8 +192,7 @@ class TestAssistantV2CoreFunctionality:
     def test_10_conversation_management(self):
         """Test conversation context management"""
         try:
-            from assistant_v2_core import (ConversationContext,
-                                           EchoesAssistantV2)
+            from assistant_v2_core import ConversationContext, EchoesAssistantV2
 
             mock_context = Mock()
             mock_context.get_conversation_id.return_value = "test-conv-123"

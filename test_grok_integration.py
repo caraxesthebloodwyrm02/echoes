@@ -33,12 +33,18 @@ async def test_grok_integration():
         print("\n🤖 Testing Grok-beta model...")
         response = await client.chat_completion(
             messages=[
-                {"role": "system", "content": "You are Grok, a helpful AI built by xAI."},
-                {"role": "user", "content": "Hello! Can you tell me about yourself in one sentence?"}
+                {
+                    "role": "system",
+                    "content": "You are Grok, a helpful AI built by xAI.",
+                },
+                {
+                    "role": "user",
+                    "content": "Hello! Can you tell me about yourself in one sentence?",
+                },
             ],
             model="grok-beta",
             temperature=0.7,
-            max_tokens=100
+            max_tokens=100,
         )
 
         if response and "choices" in response:
@@ -51,12 +57,18 @@ async def test_grok_integration():
         print("\n🖼️  Testing Grok-vision-beta model...")
         response = await client.chat_completion(
             messages=[
-                {"role": "system", "content": "You are Grok, a helpful AI built by xAI."},
-                {"role": "user", "content": "What's the meaning of life according to xAI's philosophy?"}
+                {
+                    "role": "system",
+                    "content": "You are Grok, a helpful AI built by xAI.",
+                },
+                {
+                    "role": "user",
+                    "content": "What's the meaning of life according to xAI's philosophy?",
+                },
             ],
             model="grok-vision-beta",
             temperature=0.8,
-            max_tokens=150
+            max_tokens=150,
         )
 
         if response and "choices" in response:
@@ -76,12 +88,14 @@ async def test_grok_integration():
     except Exception as e:
         print(f"❌ Test failed: {e}")
         import traceback
+
         traceback.print_exc()
 
 
 if __name__ == "__main__":
     # Set up logging
     import logging
+
     logging.basicConfig(level=logging.INFO)
 
     # Run the test

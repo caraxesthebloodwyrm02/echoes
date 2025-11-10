@@ -13,6 +13,7 @@ from typing import Dict, Any, Optional, List
 logging.basicConfig(level=logging.WARNING)  # Only warnings and errors
 logger = logging.getLogger(__name__)
 
+
 class PureOpenAIDirect:
     """100% Pure OpenAI connection - absolutely no interference."""
 
@@ -26,6 +27,7 @@ class PureOpenAIDirect:
         # Direct OpenAI import - no Echoes interference
         try:
             import openai
+
             # Create client with no additional configuration
             self.client = openai.OpenAI(api_key=self.api_key)
             self.connection_type = "pure_openai"
@@ -40,7 +42,7 @@ class PureOpenAIDirect:
         model: str = "gpt-3.5-turbo",
         max_tokens: Optional[int] = None,
         temperature: float = 0.7,
-        **kwargs
+        **kwargs,
     ) -> Dict[str, Any]:
         """
         Pure chat completion - absolutely no interference.
@@ -62,7 +64,7 @@ class PureOpenAIDirect:
                 messages=messages,
                 max_tokens=max_tokens,
                 temperature=temperature,
-                **kwargs
+                **kwargs,
             )
 
             # Return raw response with minimal processing
@@ -72,13 +74,13 @@ class PureOpenAIDirect:
                 "usage": {
                     "prompt_tokens": response.usage.prompt_tokens,
                     "completion_tokens": response.usage.completion_tokens,
-                    "total_tokens": response.usage.total_tokens
+                    "total_tokens": response.usage.total_tokens,
                 },
                 "finish_reason": response.choices[0].finish_reason,
                 "created": response.created,
                 "id": response.id,
                 "pure_openai": True,
-                "zero_interference": True
+                "zero_interference": True,
             }
 
         except Exception as e:
@@ -92,7 +94,7 @@ class PureOpenAIDirect:
             response = await self.pure_chat(
                 messages=[{"role": "user", "content": "Say 'Hello'"}],
                 max_tokens=5,
-                temperature=0.0
+                temperature=0.0,
             )
 
             # Check if response respects token limit
@@ -105,22 +107,26 @@ class PureOpenAIDirect:
             print(f"   • Completion Tokens: {completion_tokens}")
             print(f"   • Total Tokens: {total_tokens}")
             print("   • Max Tokens Requested: 5")
-            print(f"   • Token Limit Respected: {completion_tokens <= 10}")  # Allow small buffer
+            print(
+                f"   • Token Limit Respected: {completion_tokens <= 10}"
+            )  # Allow small buffer
 
             return {
                 "success": True,
                 "completion_tokens": completion_tokens,
                 "total_tokens": total_tokens,
                 "limit_respected": completion_tokens <= 10,
-                "pure_openai": True
+                "pure_openai": True,
             }
 
         except Exception as e:
             logger.error(f"Pure connection test failed: {e}")
             return {"success": False, "error": str(e)}
 
+
 # Global pure connection instance
 _pure_connection = None
+
 
 def get_pure_connection() -> PureOpenAIDirect:
     """Get pure OpenAI connection instance."""
@@ -128,6 +134,7 @@ def get_pure_connection() -> PureOpenAIDirect:
     if _pure_connection is None:
         _pure_connection = PureOpenAIDirect()
     return _pure_connection
+
 
 async def main():
     """Test pure OpenAI connection."""
@@ -151,6 +158,7 @@ async def main():
 
     except Exception as e:
         print(f"❌ Pure connection test crashed: {e}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

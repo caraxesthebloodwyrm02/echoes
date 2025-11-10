@@ -109,8 +109,7 @@ def test_security_config():
     print("🧪 Testing Security Configuration...")
 
     try:
-        from config.security_config import (PasswordManager,
-                                            get_security_manager)
+        from config.security_config import PasswordManager, get_security_manager
 
         security = get_security_manager()
         print(

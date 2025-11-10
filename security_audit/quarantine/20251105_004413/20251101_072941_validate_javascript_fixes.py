@@ -253,7 +253,7 @@ def main():
         )
 
         # Save report
-        filename = validator.save_report()
+        validator.save_report()
 
         # Recommendations
         if summary["success_rate"] < 0.8:

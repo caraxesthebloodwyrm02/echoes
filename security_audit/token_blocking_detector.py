@@ -5,11 +5,10 @@ Identifies and eliminates functions that block iteration through token level lim
 """
 
 import ast
-import os
 import sys
 import re
 from pathlib import Path
-from typing import List, Dict, Any, Set, Tuple
+from typing import Dict, Any
 from datetime import datetime
 
 class TokenBlockingDetector:
@@ -241,7 +240,7 @@ class TokenBlockingDetector:
                 script_lines.append('    # CRITICAL: Token constant blocking')
                 for item in issues['token_constants']:
                     script_lines.append(f'    # Line {item["line"]}: {item["code"]}')
-                    script_lines.append(f'    # Remove DEFAULT_MAX_TOKENS = 4000')
+                    script_lines.append('    # Remove DEFAULT_MAX_TOKENS = 4000')
             
             # Add removal commands for token blocking logic
             if issues.get('token_blocking_logic'):
@@ -276,7 +275,7 @@ def main():
     results = detector.scan_directory()
     
     # Display results
-    print(f"📊 Token Blocking Scan Results:")
+    print("📊 Token Blocking Scan Results:")
     print(f"   • Total files scanned: {results['total_files']}")
     print(f"   • Files with token blockers: {results['infected_files']}")
     print("")

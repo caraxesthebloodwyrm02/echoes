@@ -156,7 +156,7 @@ def main():
 
         # Try to create a RAG instance
         try:
-            rag = create_rag_system("balanced")
+            create_rag_system("balanced")
             results["passed"].append("RAG system instantiable")
             print("   [OK] RAG system can be instantiated")
         except Exception as e:
@@ -177,8 +177,8 @@ def main():
                                       ModelRouter)
 
         router = ModelRouter()
-        metrics = ModelMetrics()
-        cache = ModelResponseCache()
+        ModelMetrics()
+        ModelResponseCache()
 
         results["passed"].append(
             "ModelRouter, ModelMetrics, ModelResponseCache importable"

@@ -262,7 +262,7 @@ class TestSchoolingLoadBalancer:
         nodes[1].get_load.return_value = 0.8
         nodes[2].get_load.return_value = 0.1
 
-        assert balancer._needs_coordination() == True
+        assert balancer._needs_coordination()
 
     def test_no_coordination_needed(self):
         """Test that balanced loads don't require coordination."""
@@ -274,7 +274,7 @@ class TestSchoolingLoadBalancer:
         nodes[1].get_load.return_value = 0.6
         nodes[2].get_load.return_value = 0.4
 
-        assert balancer._needs_coordination() == False
+        assert not balancer._needs_coordination()
 
 
 class TestDecoySystem:
@@ -305,7 +305,7 @@ class TestDecoySystem:
 
         result = system.monitor_interaction(decoy_id, "scan", "192.168.1.100")
 
-        assert result == True
+        assert result
         assert system.decoys[decoy_id]["interactions"] == 1
         assert "scan_192.168.1.100" in system.attack_patterns
         assert system.attack_patterns["scan_192.168.1.100"] == 1
@@ -315,7 +315,7 @@ class TestDecoySystem:
         system = DecoySystem()
 
         result = system.monitor_interaction("unknown_decoy", "scan", "192.168.1.100")
-        assert result == False
+        assert not result
 
     @patch.object(DecoySystem, "_initiate_countermeasures")
     def test_countermeasure_trigger(self, mock_countermeasures):

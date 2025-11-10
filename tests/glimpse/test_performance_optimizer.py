@@ -6,10 +6,14 @@ import asyncio
 import pytest
 
 from glimpse.Glimpse import Draft, GlimpseResult
-from glimpse.performance_optimizer import (AdaptiveTimeout, PerformanceCache,
-                                           PerformanceMetrics,
-                                           PerformanceOptimizer, RequestQueue,
-                                           monitor_performance)
+from glimpse.performance_optimizer import (
+    AdaptiveTimeout,
+    PerformanceCache,
+    PerformanceMetrics,
+    PerformanceOptimizer,
+    RequestQueue,
+    monitor_performance,
+)
 
 
 class TestPerformanceCache:

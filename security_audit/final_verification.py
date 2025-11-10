@@ -6,7 +6,6 @@ Tests Echoes after pruning to ensure zero malicious patterns remain.
 
 import asyncio
 import sys
-import os
 from pathlib import Path
 from datetime import datetime
 
@@ -197,7 +196,7 @@ async def main():
     """Main verification function."""
     print("🔒 Echoes Final Security Verification")
     print("=" * 60)
-    print(f"Testing after precision pruning...")
+    print("Testing after precision pruning...")
     print(f"Timestamp: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     print("")
     

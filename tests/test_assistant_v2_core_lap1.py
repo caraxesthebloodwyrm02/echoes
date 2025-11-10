@@ -59,10 +59,13 @@ class TestAssistantV2CoreFoundation:
     def test_2_core_dataclasses_import(self):
         """Test core dataclasses and configuration imports"""
         try:
-            from assistant_v2_core import (AssistantConfig,
-                                           ConversationContext,
-                                           StatusIndicator, StreamChunk,
-                                           ToolCallResult)
+            from assistant_v2_core import (
+                AssistantConfig,
+                ConversationContext,
+                StatusIndicator,
+                StreamChunk,
+                ToolCallResult,
+            )
 
             # Test dataclass creation
             config = AssistantConfig()

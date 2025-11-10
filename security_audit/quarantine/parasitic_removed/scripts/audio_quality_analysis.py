@@ -186,7 +186,7 @@ def main():
     results = compare_compression_impact()
 
     # Generate TTS integration proposal
-    proposal = generate_tts_integration_proposal()
+    generate_tts_integration_proposal()
 
     print("\n🎯 NEXT SESSION TARGET IDENTIFIED")
     print("=" * 50)

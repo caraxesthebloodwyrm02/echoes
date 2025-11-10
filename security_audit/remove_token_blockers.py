@@ -4,7 +4,6 @@ Emergency Token Blocking Pattern Removal
 CRITICAL: Functions that block iteration through token level limiting
 """
 
-import os
 import re
 from pathlib import Path
 

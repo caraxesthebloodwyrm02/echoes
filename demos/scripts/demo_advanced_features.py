@@ -24,10 +24,15 @@ from datetime import datetime
 # Add current directory to path for imports
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from assistant import (AdvancedHistoryManager, APILoggingDashboard,
-                       ConversationalAutocomplete, EnhancedCLI,
-                       IntelligentAssistant, RuntimeToolManager,
-                       VisualContextManager)
+from assistant import (
+    AdvancedHistoryManager,
+    APILoggingDashboard,
+    ConversationalAutocomplete,
+    EnhancedCLI,
+    IntelligentAssistant,
+    RuntimeToolManager,
+    VisualContextManager,
+)
 
 
 def demonstrate_conversational_autocomplete():

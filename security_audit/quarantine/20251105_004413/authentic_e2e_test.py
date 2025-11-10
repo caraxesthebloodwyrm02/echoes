@@ -38,7 +38,7 @@ async def test_token_limit_respect():
             )
             
             completion_tokens = response["usage"]["completion_tokens"]
-            total_tokens = response["usage"]["total_tokens"]
+            response["usage"]["total_tokens"]
             
             # Check if token limit is respected (with small buffer for OpenAI behavior)
             limit_respected = completion_tokens <= test_case["buffer"]
@@ -49,7 +49,7 @@ async def test_token_limit_respect():
                 all_passed = False
                 print(f"      ❌ Expected <= {test_case['buffer']}, got {completion_tokens}")
             else:
-                print(f"      ✅ Token limit respected")
+                print("      ✅ Token limit respected")
         
         return all_passed
         

@@ -99,7 +99,7 @@ async def test_direct_response_properties():
         passed_checks = sum(1 for check in checks.values() if check)
         total_checks = len(checks)
         
-        print(f"📊 Response Property Checks:")
+        print("📊 Response Property Checks:")
         for check_name, passed in checks.items():
             status = "✅" if passed else "❌"
             print(f"   {status} {check_name}")
@@ -144,7 +144,7 @@ async def test_no_request_modification():
         passed_checks = sum(1 for check in checks.values() if check)
         total_checks = len(checks)
         
-        print(f"📊 Request Modification Checks:")
+        print("📊 Request Modification Checks:")
         for check_name, passed in checks.items():
             status = "✅" if passed else "❌"
             print(f"   {status} {check_name}")

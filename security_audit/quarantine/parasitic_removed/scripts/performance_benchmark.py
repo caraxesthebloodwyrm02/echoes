@@ -41,7 +41,7 @@ class PerformanceBenchmark:
             start_time = time.time()
 
             try:
-                response = self.client.chat.completions.create(
+                self.client.chat.completions.create(
                     model="gpt-4o-mini",
                     messages=[{"role": "user", "content": f"Count to {i+1} in words"}],
                     max_tokens=50,
@@ -123,7 +123,7 @@ class PerformanceBenchmark:
             for req in range(requests_per_user):
                 start_time = time.time()
                 try:
-                    response = self.assistant.chat(
+                    self.assistant.chat(
                         f"User {user_id} request {req+1}", stream=False
                     )
                     latency = time.time() - start_time
@@ -277,7 +277,7 @@ def main():
                 break
 
         # Save and display results
-        filename = benchmark.save_report(results, args.output)
+        benchmark.save_report(results, args.output)
 
         print("\n" + "=" * 60)
         print("🏁 PERFORMANCE BENCHMARK COMPLETE")

@@ -52,8 +52,8 @@ class Window2:
 
 
 def merge_windows():
-    window1 = Window1()
-    window2 = Window2()
+    Window1()
+    Window2()
 
 
 # Run the function to create and merge the windows

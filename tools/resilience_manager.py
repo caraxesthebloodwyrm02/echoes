@@ -21,10 +21,12 @@ from enum import Enum
 from functools import wraps
 import hashlib
 
+
 class CircuitState(Enum):
     CLOSED = "closed"
     OPEN = "open"
     HALF_OPEN = "half_open"
+
 
 @dataclass
 class CircuitBreakerConfig:
@@ -33,13 +35,17 @@ class CircuitBreakerConfig:
     expected_exception: type = Exception
     success_threshold: int = 3
 
+
 @dataclass
 class DependencyConfig:
     name: str
     timeout: float = 10.0
     retry_attempts: int = 3
     retry_delay: float = 1.0
-    circuit_breaker_config: CircuitBreakerConfig = field(default_factory=CircuitBreakerConfig)
+    circuit_breaker_config: CircuitBreakerConfig = field(
+        default_factory=CircuitBreakerConfig
+    )
+
 
 class CircuitBreaker:
     """Advanced circuit breaker implementation"""
@@ -62,7 +68,11 @@ class CircuitBreaker:
                 raise Exception("Circuit breaker is OPEN")
 
         try:
-            result = await func(*args, **kwargs) if asyncio.iscoroutinefunction(func) else func(*args, **kwargs)
+            result = (
+                await func(*args, **kwargs)
+                if asyncio.iscoroutinefunction(func)
+                else func(*args, **kwargs)
+            )
             self._on_success()
             return result
         except self.config.expected_exception as e:
@@ -72,8 +82,8 @@ class CircuitBreaker:
     def _should_attempt_reset(self) -> bool:
         """Check if circuit breaker should attempt reset"""
         return (
-            self.last_failure_time and
-            time.time() - self.last_failure_time >= self.config.recovery_timeout
+            self.last_failure_time
+            and time.time() - self.last_failure_time >= self.config.recovery_timeout
         )
 
     def _on_success(self):
@@ -92,7 +102,9 @@ class CircuitBreaker:
 
         if self.failure_count >= self.config.failure_threshold:
             self.state = CircuitState.OPEN
-            self.logger.warning(f"Circuit breaker opened after {self.failure_count} failures")
+            self.logger.warning(
+                f"Circuit breaker opened after {self.failure_count} failures"
+            )
 
     def _reset(self):
         """Reset circuit breaker to closed state"""
@@ -100,6 +112,7 @@ class CircuitBreaker:
         self.failure_count = 0
         self.success_count = 0
         self.logger.info("Circuit breaker reset to CLOSED state")
+
 
 class DependencyManager:
     """Manages third-party dependencies with resilience"""
@@ -113,12 +126,14 @@ class DependencyManager:
     def register_dependency(self, config: DependencyConfig):
         """Register a third-party dependency"""
         self.dependencies[config.name] = config
-        self.circuit_breakers[config.name] = CircuitBreaker(config.circuit_breaker_config)
+        self.circuit_breakers[config.name] = CircuitBreaker(
+            config.circuit_breaker_config
+        )
         self.health_status[config.name] = {
             "status": "unknown",
             "last_check": None,
             "response_time": 0.0,
-            "error_count": 0
+            "error_count": 0,
         }
         self.logger.info(f"Registered dependency: {config.name}")
 
@@ -135,18 +150,19 @@ class DependencyManager:
         try:
             # Apply timeout
             result = await asyncio.wait_for(
-                circuit_breaker.execute(func, *args, **kwargs),
-                timeout=config.timeout
+                circuit_breaker.execute(func, *args, **kwargs), timeout=config.timeout
             )
 
             # Update health status
             response_time = time.time() - start_time
-            self.health_status[name].update({
-                "status": "healthy",
-                "last_check": datetime.now(),
-                "response_time": response_time,
-                "error_count": 0
-            })
+            self.health_status[name].update(
+                {
+                    "status": "healthy",
+                    "last_check": datetime.now(),
+                    "response_time": response_time,
+                    "error_count": 0,
+                }
+            )
 
             return result
 
@@ -172,6 +188,7 @@ class DependencyManager:
         """Check health of all dependencies"""
         return {name: status.copy() for name, status in self.health_status.items()}
 
+
 class InterruptionPreventer:
     """Prevents system interruptions through proactive monitoring"""
 
@@ -181,15 +198,19 @@ class InterruptionPreventer:
         self.alert_thresholds: Dict[str, Dict[str, float]] = {}
         self.logger = logging.getLogger(__name__)
 
-    def monitor_service(self, name: str, health_check: Callable,
-                       fallback_strategy: Callable = None,
-                       alert_thresholds: Dict[str, float] = None):
+    def monitor_service(
+        self,
+        name: str,
+        health_check: Callable,
+        fallback_strategy: Callable = None,
+        alert_thresholds: Dict[str, float] = None,
+    ):
         """Monitor a service for potential interruptions"""
         self.monitored_services[name] = {
             "health_check": health_check,
             "last_check": None,
             "status": "unknown",
-            "consecutive_failures": 0
+            "consecutive_failures": 0,
         }
 
         if fallback_strategy:
@@ -208,7 +229,11 @@ class InterruptionPreventer:
         service = self.monitored_services[name]
 
         try:
-            result = await service["health_check"]() if asyncio.iscoroutinefunction(service["health_check"]) else service["health_check"]()
+            result = (
+                await service["health_check"]()
+                if asyncio.iscoroutinefunction(service["health_check"])
+                else service["health_check"]()
+            )
 
             service["last_check"] = datetime.now()
             service["status"] = "healthy"
@@ -217,7 +242,7 @@ class InterruptionPreventer:
             return {
                 "status": "healthy",
                 "last_check": service["last_check"],
-                "data": result
+                "data": result,
             }
 
         except Exception as e:
@@ -235,7 +260,7 @@ class InterruptionPreventer:
                 "status": "unhealthy",
                 "last_check": service["last_check"],
                 "consecutive_failures": service["consecutive_failures"],
-                "error": str(e)
+                "error": str(e),
             }
 
     def _should_trigger_fallback(self, name: str) -> bool:
@@ -251,10 +276,13 @@ class InterruptionPreventer:
         """Trigger fallback strategy for a service"""
         if name in self.fallback_strategies:
             try:
-                await self.fallback_strategies[name]() if asyncio.iscoroutinefunction(self.fallback_strategies[name]) else self.fallback_strategies[name]()
+                await self.fallback_strategies[name]() if asyncio.iscoroutinefunction(
+                    self.fallback_strategies[name]
+                ) else self.fallback_strategies[name]()
                 self.logger.info(f"Fallback strategy triggered for service: {name}")
             except Exception as e:
                 self.logger.error(f"Fallback strategy failed for {name}: {e}")
+
 
 class PerformanceOptimizer:
     """Optimizes system performance based on 18-hour analysis"""
@@ -269,18 +297,22 @@ class PerformanceOptimizer:
         if timestamp is None:
             timestamp = datetime.now()
 
-        self.metrics_history.append({
-            "name": name,
-            "value": value,
-            "timestamp": timestamp,
-            "hash": self._generate_metric_hash(name, value, timestamp)
-        })
+        self.metrics_history.append(
+            {
+                "name": name,
+                "value": value,
+                "timestamp": timestamp,
+                "hash": self._generate_metric_hash(name, value, timestamp),
+            }
+        )
 
         # Keep only last 1000 metrics
         if len(self.metrics_history) > 1000:
             self.metrics_history = self.metrics_history[-1000:]
 
-    def _generate_metric_hash(self, name: str, value: float, timestamp: datetime) -> str:
+    def _generate_metric_hash(
+        self, name: str, value: float, timestamp: datetime
+    ) -> str:
         """Generate hash for metric deduplication"""
         data = f"{name}{value}{timestamp.isoformat()}"
         return hashlib.md5(data.encode()).hexdigest()
@@ -307,7 +339,7 @@ class PerformanceOptimizer:
                 "min": min(values),
                 "max": max(values),
                 "latest": values[-1],
-                "trend": self._calculate_trend(values)
+                "trend": self._calculate_trend(values),
             }
 
         return analysis
@@ -339,7 +371,11 @@ class PerformanceOptimizer:
 
         for name, strategy in self.optimization_strategies.items():
             try:
-                result = await strategy() if asyncio.iscoroutinefunction(strategy) else strategy()
+                result = (
+                    await strategy()
+                    if asyncio.iscoroutinefunction(strategy)
+                    else strategy()
+                )
                 results[name] = {"status": "success", "result": result}
                 self.logger.info(f"Applied optimization strategy: {name}")
             except Exception as e:
@@ -348,8 +384,10 @@ class PerformanceOptimizer:
 
         return results
 
+
 def resilient(circuit_breaker_config: CircuitBreakerConfig = None):
     """Decorator for making functions resilient"""
+
     def decorator(func):
         circuit_breaker = CircuitBreaker(circuit_breaker_config)
 
@@ -362,14 +400,17 @@ def resilient(circuit_breaker_config: CircuitBreakerConfig = None):
             return asyncio.run(circuit_breaker.execute(func, *args, **kwargs))
 
         return async_wrapper if asyncio.iscoroutinefunction(func) else sync_wrapper
+
     return decorator
+
 
 # Global resilience manager instance
 resilience_manager = {
     "dependency_manager": DependencyManager(),
     "interruption_preventer": InterruptionPreventer(),
-    "performance_optimizer": PerformanceOptimizer()
+    "performance_optimizer": PerformanceOptimizer(),
 }
+
 
 # Example usage and initialization
 def initialize_resilience():
@@ -377,27 +418,30 @@ def initialize_resilience():
     dep_manager = resilience_manager["dependency_manager"]
 
     # Register common dependencies
-    dep_manager.register_dependency(DependencyConfig(
-        name="openai_api",
-        timeout=30.0,
-        retry_attempts=3,
-        circuit_breaker_config=CircuitBreakerConfig(
-            failure_threshold=3,
-            recovery_timeout=60.0
+    dep_manager.register_dependency(
+        DependencyConfig(
+            name="openai_api",
+            timeout=30.0,
+            retry_attempts=3,
+            circuit_breaker_config=CircuitBreakerConfig(
+                failure_threshold=3, recovery_timeout=60.0
+            ),
         )
-    ))
+    )
 
-    dep_manager.register_dependency(DependencyConfig(
-        name="vector_database",
-        timeout=10.0,
-        retry_attempts=2,
-        circuit_breaker_config=CircuitBreakerConfig(
-            failure_threshold=5,
-            recovery_timeout=30.0
+    dep_manager.register_dependency(
+        DependencyConfig(
+            name="vector_database",
+            timeout=10.0,
+            retry_attempts=2,
+            circuit_breaker_config=CircuitBreakerConfig(
+                failure_threshold=5, recovery_timeout=30.0
+            ),
         )
-    ))
+    )
 
     logging.info("Resilience manager initialized")
+
 
 if __name__ == "__main__":
     # Example usage
@@ -409,6 +453,7 @@ if __name__ == "__main__":
         async def risky_operation():
             # Simulate potential failure
             import random
+
             if random.random() < 0.3:
                 raise Exception("Random failure")
             return "Success"

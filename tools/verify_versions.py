@@ -23,11 +23,11 @@ SECURITY_REQUIREMENTS = {
 def parse_version(version_str: str) -> Tuple[int, ...]:
     """Parse version string into tuple of integers for comparison."""
     # Remove any pre-release markers and extract version numbers
-    version_match = re.search(r'(\d+(?:\.\d+)*)', version_str)
+    version_match = re.search(r"(\d+(?:\.\d+)*)", version_str)
     if not version_match:
         return (0, 0, 0)
 
-    version_parts = version_match.group(1).split('.')
+    version_parts = version_match.group(1).split(".")
     return tuple(int(part) for part in version_parts)
 
 
@@ -52,18 +52,24 @@ def compare_versions(version1: str, version2: str) -> int:
     return 0
 
 
-def extract_package_version(requirements_content: str, package_name: str) -> Optional[str]:
+def extract_package_version(
+    requirements_content: str, package_name: str
+) -> Optional[str]:
     """Extract version for a specific package from requirements content."""
-    for line in requirements_content.split('\n'):
+    for line in requirements_content.split("\n"):
         line = line.strip()
-        if line.startswith(f'{package_name}>='):
+        if line.startswith(f"{package_name}>="):
             # Extract version after >=
-            version_match = re.search(rf'{re.escape(package_name)}>=(\d+(?:\.\d+)*)', line)
+            version_match = re.search(
+                rf"{re.escape(package_name)}>=(\d+(?:\.\d+)*)", line
+            )
             if version_match:
                 return version_match.group(1)
-        elif line.startswith(f'{package_name}=='):
+        elif line.startswith(f"{package_name}=="):
             # Extract version after ==
-            version_match = re.search(rf'{re.escape(package_name)}==(\d+(?:\.\d+)*)', line)
+            version_match = re.search(
+                rf"{re.escape(package_name)}==(\d+(?:\.\d+)*)", line
+            )
             if version_match:
                 return version_match.group(1)
     return None
@@ -75,7 +81,7 @@ def verify_requirements_file(file_path: Path) -> Tuple[bool, Dict[str, str]]:
         return True, {}  # File doesn't exist, no violation
 
     try:
-        content = file_path.read_text(encoding='utf-8')
+        content = file_path.read_text(encoding="utf-8")
     except Exception as e:
         print(f"Error reading {file_path}: {e}")
         return False, {"error": str(e)}

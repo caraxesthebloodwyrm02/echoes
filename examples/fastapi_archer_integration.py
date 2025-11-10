@@ -15,8 +15,12 @@ from typing import Any
 sys.path.append(str(Path(__file__).parent.parent))
 
 import uvicorn
-from communication import (ArcherFramework, CommunicationMessage,
-                           CommunicationType, create_communicator)
+from communication import (
+    ArcherFramework,
+    CommunicationMessage,
+    CommunicationType,
+    create_communicator,
+)
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 

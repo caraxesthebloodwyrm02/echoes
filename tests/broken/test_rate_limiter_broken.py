@@ -53,7 +53,6 @@ def test_placeholder():
         self.assertIn(used_tokens, [1, 2])
 
         # Fast forward time by 2 seconds (should refill 2 tokens)
-        original_tokens = self.rate_limiter.tokens
         with patch("time.monotonic", return_value=self.rate_limiter.last_update + 2):
             acquired, wait_time = await self.rate_limiter.acquire(endpoint="test")
             self.assertTrue(acquired)
@@ -69,7 +68,6 @@ def test_placeholder():
         self.assertEqual(endpoint_stats.get_success_rate(), 1.0)
 
         # Check that rate increases with high success rate
-        old_rate = self.rate_limiter.current_rpm
         await self.rate_limiter._adjust_rate()
         # Rate should increase with high success rate
         # Note: The adjustment might not happen immediately due to timing
@@ -89,7 +87,6 @@ def test_placeholder():
         self.assertEqual(endpoint_stats.total_requests, 10)
 
         # Check that rate decreases with errors
-        old_rate = self.rate_limiter.current_rpm
         await self.rate_limiter._adjust_rate()
         # Rate should decrease with errors
         # Note: The adjustment might not happen immediately due to timing

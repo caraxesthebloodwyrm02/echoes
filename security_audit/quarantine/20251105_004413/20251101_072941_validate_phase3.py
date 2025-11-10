@@ -22,7 +22,7 @@ def test_environment_variable_parsing():
         "true",
         "yes",
     )
-    assert use_responses_api == False, f"Expected False, got {use_responses_api}"
+    assert not use_responses_api, f"Expected False, got {use_responses_api}"
     print("✅ Default state: False")
 
     # Test various true values
@@ -34,7 +34,7 @@ def test_environment_variable_parsing():
             "yes",
         )
         assert (
-            use_responses_api == True
+            use_responses_api
         ), f"Expected True for {true_value}, got {use_responses_api}"
         print(f"✅ {true_value} -> True")
 
@@ -47,7 +47,7 @@ def test_environment_variable_parsing():
             "yes",
         )
         assert (
-            use_responses_api == False
+            not use_responses_api
         ), f"Expected False for {false_value}, got {use_responses_api}"
         print(f"✅ {false_value} -> False")
 

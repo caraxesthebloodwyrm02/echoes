@@ -1283,7 +1283,7 @@ async def run_scientific_research_suite():
         await research_suite.interdisciplinary_innovation()
 
         # Generate scientific impact report
-        report = await research_suite.generate_scientific_impact_report()
+        await research_suite.generate_scientific_impact_report()
 
         print("\n" + "=" * 80)
         print("🎉 SCIENTIFIC RESEARCH TEST SUITE COMPLETE")

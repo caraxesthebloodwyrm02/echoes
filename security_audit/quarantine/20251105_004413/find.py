@@ -407,7 +407,7 @@ class WebSearcher:
                     # Filter for movies if possible, or include all as general media
                     if not show_data.get("type") or show_data.get("type") == "Scripted":
                         # Treat as movie/general media
-                        network = show_data.get("network", {})
+                        show_data.get("network", {})
 
                         results.append(
                             {

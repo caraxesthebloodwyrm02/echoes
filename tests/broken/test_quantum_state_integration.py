@@ -186,7 +186,6 @@ class TestQuantumStateIntegration:
         qsm.initialize_quantum_states()
 
         # Perform several transitions
-        initial_state = qsm.state_machine.current_state
         states = [qsm.transition_state() for _ in range(5)]
 
         # Rollback one step

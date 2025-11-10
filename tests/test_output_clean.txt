@@ -1,0 +1,270 @@
+============================= test session starts =============================
+platform win32 -- Python 3.14.0, pytest-8.4.2, pluggy-1.6.0 -- E:\Projects\Echoes\venv\Scripts\python.exe
+cachedir: .pytest_cache
+rootdir: E:\Projects\Echoes
+configfile: pytest.ini
+plugins: anyio-4.11.0, cov-7.0.0
+collecting ... collected 121 items
+
+tests/test_main_boost.py::TestMainAPIBoost::test_middleware_setup_coverage PASSED [  0%]
+tests/test_main_boost.py::TestMainAPIBoost::test_websocket_connection_manager_broadcast PASSED [  1%]
+tests/test_main_boost.py::TestMainAPIBoost::test_error_handlers_500 PASSED [  2%]
+tests/test_main_boost.py::TestMainAPIBoost::test_specific_route_handlers PASSED [  3%]
+tests/test_main_boost.py::TestMainAPIBoost::test_dependency_injection_paths PASSED [  4%]
+tests/test_main_boost.py::TestMainAPIBoost::test_logging_functionality PASSED [  4%]
+tests/test_main_boost.py::TestMainAPIBoost::test_app_startup_sequence PASSED [  5%]
+tests/test_main_boost.py::TestMainAPIBoost::test_websocket_endpoint_coverage PASSED [  6%]
+tests/test_main_boost.py::TestMainAPIBoost::test_cors_middleware_paths PASSED [  7%]
+tests/test_fifo_boost.py::TestConfigBoost::test_config_env_loading SKIPPED [  8%]
+tests/test_fifo_boost.py::TestConfigBoost::test_config_validation_edge_cases PASSED [  9%]
+tests/test_fifo_boost.py::TestConfigBoost::test_config_defaults_coverage PASSED [  9%]
+tests/test_fifo_boost.py::TestMiddlewareBoost::test_rate_limiter_edge_cases PASSED [ 10%]
+tests/test_fifo_boost.py::TestMiddlewareBoost::test_authentication_middleware_paths PASSED [ 11%]
+tests/test_fifo_boost.py::TestMiddlewareBoost::test_request_logging_coverage PASSED [ 12%]
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_pattern_detector_initialization PASSED [ 13%]
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_detected_pattern_dataclass PASSED [ 14%]
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_pattern_detection_basic PASSED [ 14%]
+tests/test_fifo_boost.py::TestAppModulesBoost::test_app_actions_imports PASSED [ 15%]
+tests/test_fifo_boost.py::TestAppModulesBoost::test_app_agents_imports PASSED [ 16%]
+tests/test_fifo_boost.py::TestAppModulesBoost::test_app_filesystem_imports PASSED [ 17%]
+tests/test_fifo_boost.py::TestAppModulesBoost::test_app_knowledge_imports PASSED [ 18%]
+tests/test_fifo_boost.py::TestToolsBoost::test_tools_imports PASSED      [ 19%]
+tests/test_fifo_boost.py::TestToolsBoost::test_glimpse_tools_imports PASSED [ 19%]
+tests/test_fifo_boost.py::TestToolsBoost::test_tools_registry_imports PASSED [ 20%]
+tests/test_midlist_boost.py::TestGlimpseEngineBoost::test_glimpse_engine_import PASSED [ 21%]
+tests/test_midlist_boost.py::TestGlimpseEngineBoost::test_glimpse_engine_basic_methods PASSED [ 22%]
+tests/test_midlist_boost.py::TestGlimpseEngineBoost::test_glimpse_clarifier_imports PASSED [ 23%]
+tests/test_midlist_boost.py::TestAppWorkflowBoost::test_agent_workflow_import PASSED [ 23%]
+tests/test_midlist_boost.py::TestAppWorkflowBoost::test_agent_workflow_basic SKIPPED [ 24%]
+tests/test_midlist_boost.py::TestToolsGlimpseBoost::test_glimpse_tools_import PASSED [ 25%]
+tests/test_midlist_boost.py::TestToolsGlimpseBoost::test_glimpse_tools_methods PASSED [ 26%]
+tests/test_midlist_boost.py::TestCoreUtilitiesBoost::test_display_utils_import SKIPPED [ 27%]
+tests/test_midlist_boost.py::TestCoreUtilitiesBoost::test_exporter_import SKIPPED [ 28%]
+tests/test_midlist_boost.py::TestDemoModulesBoost::test_demo_imports PASSED [ 28%]
+tests/test_midlist_boost.py::TestLargeModuleStrategic::test_assistant_v2_core_imports PASSED [ 29%]
+tests/test_midlist_boost.py::TestLargeModuleStrategic::test_glimpse_alignment_imports SKIPPED [ 30%]
+tests/test_midlist_boost.py::TestLargeModuleStrategic::test_automation_guardrails_imports SKIPPED [ 31%]
+tests/test_final_boost.py::TestHighROIBoost::test_knowledge_graph_comprehensive SKIPPED [ 32%]
+tests/test_final_boost.py::TestHighROIBoost::test_legal_safeguards_comprehensive SKIPPED [ 33%]
+tests/test_final_boost.py::TestHighROIBoost::test_enhanced_accounting_comprehensive SKIPPED [ 33%]
+tests/test_final_boost.py::TestGlimpseModulesStrategic::test_glimpse_engine_advanced PASSED [ 34%]
+tests/test_final_boost.py::TestGlimpseModulesStrategic::test_glimpse_clarifier_advanced PASSED [ 35%]
+tests/test_final_boost.py::TestGlimpseModulesStrategic::test_glimpse_performance_optimizer PASSED [ 36%]
+tests/test_final_boost.py::TestCoreModulesComprehensive::test_echoes_core_rag_v2 SKIPPED [ 37%]
+tests/test_final_boost.py::TestCoreModulesComprehensive::test_core_modules_personality_engine PASSED [ 38%]
+tests/test_final_boost.py::TestCoreModulesComprehensive::test_core_modules_train_of_thought SKIPPED [ 38%]
+tests/test_final_boost.py::TestDemoModulesStrategic::test_demo_catch_release_advanced PASSED [ 39%]
+tests/test_final_boost.py::TestDemoModulesStrategic::test_demo_parallel_simulation_advanced PASSED [ 40%]
+tests/test_final_boost.py::TestDemoModulesStrategic::test_demo_unified_scenario_advanced PASSED [ 41%]
+tests/test_final_boost.py::TestStrategicImports::test_all_glimpse_imports SKIPPED [ 42%]
+tests/test_final_boost.py::TestStrategicImports::test_all_automation_imports SKIPPED [ 42%]
+tests/test_final_boost.py::TestStrategicImports::test_all_utility_imports PASSED [ 43%]
+tests/test_lap3_fifo.py::TestCoreModulesBoost::test_caching_system SKIPPED [ 44%]
+tests/test_lap3_fifo.py::TestCoreModulesBoost::test_catch_release_system SKIPPED [ 45%]
+tests/test_lap3_fifo.py::TestCoreModulesBoost::test_context_manager PASSED [ 46%]
+tests/test_lap3_fifo.py::TestCoreModulesBoost::test_cross_reference_system PASSED [ 47%]
+tests/test_lap3_fifo.py::TestCoreModulesBoost::test_dynamic_error_handler PASSED [ 47%]
+tests/test_lap3_fifo.py::TestHighImpactModules::test_assistant_v2_core_imports PASSED [ 48%]
+tests/test_lap3_fifo.py::TestHighImpactModules::test_glimpse_alignment_imports SKIPPED [ 49%]
+tests/test_lap3_fifo.py::TestHighImpactModules::test_demo_modules_strategic PASSED [ 50%]
+tests/test_lap3_fifo.py::TestHighImpactModules::test_automation_guardrails_comprehensive SKIPPED [ 51%]
+tests/test_lap3_fifo.py::TestHighImpactModules::test_utility_modules_complete PASSED [ 52%]
+tests/test_triple_push.py::TestTripleCoverageStrategy::test_strategic_import_blast PASSED [ 52%]
+tests/test_triple_push.py::TestTripleCoverageStrategy::test_assistant_v2_core_strategic PASSED [ 53%]
+tests/test_triple_push.py::TestTripleCoverageStrategy::test_glimpse_alignment_strategic SKIPPED [ 54%]
+tests/test_triple_push.py::TestTripleCoverageStrategy::test_automation_guardrails_comprehensive SKIPPED [ 55%]
+tests/test_triple_push.py::TestTripleCoverageStrategy::test_large_file_strategic_coverage PASSED [ 56%]
+tests/test_triple_push.py::TestExperienceDrivenOptimization::test_mock_driven_coverage PASSED [ 57%]
+tests/test_triple_push.py::TestExperienceDrivenOptimization::test_branch_coverage_optimization PASSED [ 57%]
+tests/test_triple_push.py::TestExperienceDrivenOptimization::test_integration_style_coverage PASSED [ 58%]
+tests/test_triple_push.py::TestExperienceDrivenOptimization::test_error_path_coverage PASSED [ 59%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_1_api_config_environment_priority SKIPPED [ 60%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_2_api_middleware_request_logging_details PASSED [ 61%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases PASSED [ 61%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_4_api_self_rag_verification_options PASSED [ 62%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_5_api_main_websocket_functionality PASSED [ 63%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_6_tools_glimpse_tools_method_coverage PASSED [ 64%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_7_glimpse_engine_performance_methods PASSED [ 65%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_8_app_agents_workflow_states PASSED [ 66%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_9_app_filesystem_tools_operations PASSED [ 66%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_10_knowledge_graph_relationship_types PASSED [ 67%]
+tests/test_precision_100.py::TestPrecisionAdditions::test_11_legal_safeguards_compliance_checks PASSED [ 68%]
+tests/test_precision_100.py::TestExperienceDrivenGaps::test_12_demo_modules_functionality_coverage PASSED [ 69%]
+tests/test_config.py::TestEngineConfig::test_engine_config_defaults PASSED [ 70%]
+tests/test_config.py::TestSecurityConfig::test_security_config_defaults PASSED [ 71%]
+tests/test_config.py::TestAPIConfig::test_api_config_defaults PASSED     [ 71%]
+tests/test_config.py::TestPatternDetectionConfig::test_pattern_config_defaults PASSED [ 72%]
+tests/test_config.py::TestSelfRAGConfig::test_rag_config_defaults PASSED [ 73%]
+tests/test_config.py::TestEchoesAPIConfig::test_echoes_config_defaults PASSED [ 74%]
+tests/test_config.py::TestConfigFunctions::test_get_config PASSED        [ 75%]
+tests/test_config.py::TestConfigFunctions::test_load_config_from_env PASSED [ 76%]
+tests/test_config.py::TestConfigFunctions::test_validate_config_valid PASSED [ 76%]
+tests/test_config.py::TestConfigFunctions::test_setup_logging PASSED     [ 77%]
+tests/test_main.py::TestMainAPI::test_root_endpoint PASSED               [ 78%]
+tests/test_main.py::TestMainAPI::test_health_endpoint PASSED             [ 79%]
+tests/test_main.py::TestMainAPI::test_app_creation PASSED                [ 80%]
+tests/test_main.py::TestMainAPI::test_cors_middleware PASSED             [ 80%]
+tests/test_main.py::TestMainAPI::test_websocket_endpoint_exists PASSED   [ 81%]
+tests/test_main.py::TestMainAPI::test_pattern_detection_endpoint PASSED  [ 82%]
+tests/test_main.py::TestMainAPI::test_self_rag_endpoint PASSED           [ 83%]
+tests/test_main.py::TestMainAPI::test_search_endpoint PASSED             [ 84%]
+tests/test_main.py::TestMainAPI::test_error_handling PASSED              [ 85%]
+tests/test_main.py::TestMainAPI::test_websocket_connection PASSED        [ 85%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_init PASSED [ 86%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_allow_first_request PASSED [ 87%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_under_limit PASSED [ 88%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_over_limit PASSED [ 89%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_window_reset PASSED [ 90%]
+tests/test_middleware.py::TestRateLimiter::test_rate_limiter_different_clients PASSED [ 90%]
+tests/test_middleware.py::TestRateLimiter::test_get_remaining_requests PASSED [ 91%]
+tests/test_middleware.py::TestAuthenticationMiddleware::test_auth_middleware_init PASSED [ 92%]
+tests/test_middleware.py::TestAuthenticationMiddleware::test_auth_middleware_disabled PASSED [ 93%]
+tests/test_middleware.py::TestAuthenticationMiddleware::test_auth_middleware_enabled_no_key PASSED [ 94%]
+tests/test_middleware.py::TestRequestLoggingMiddleware::test_logging_middleware_init PASSED [ 95%]
+tests/test_self_rag.py::TestVerificationResult::test_verification_result_init PASSED [ 95%]
+tests/test_self_rag.py::TestVerificationResult::test_verification_result_methods PASSED [ 96%]
+tests/test_self_rag.py::TestSelfRAGVerifier::test_self_rag_init PASSED   [ 97%]
+tests/test_self_rag.py::TestSelfRAGVerifier::test_self_rag_verify_claim PASSED [ 98%]
+tests/test_self_rag.py::TestSelfRAGVerifier::test_self_rag_verify_claim_with_options PASSED [ 99%]
+tests/test_self_rag.py::TestSelfRAGVerifier::test_self_rag_batch_verify SKIPPED [100%]
+ERROR: Coverage failure: total of 21 is less than fail-under=75
+
+
+============================== warnings summary ===============================
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_pattern_detection_basic
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+  E:\Projects\Echoes\api\pattern_detection.py:126: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    start_time = datetime.utcnow()
+
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_pattern_detection_basic
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+  E:\Projects\Echoes\api\pattern_detection.py:164: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    processing_time = (datetime.utcnow() - start_time).total_seconds()
+
+tests/test_fifo_boost.py::TestPatternDetectionBoost::test_pattern_detection_basic
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+tests/test_precision_100.py::TestPrecisionAdditions::test_3_api_pattern_detection_edge_cases
+  E:\Projects\Echoes\api\pattern_detection.py:171: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    timestamp=datetime.utcnow(),
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=============================== tests coverage ================================
+_______________ coverage: platform win32, python 3.14.0-final-0 _______________
+
+Name                                         Stmts   Miss  Cover   Missing
+--------------------------------------------------------------------------
+api\config.py                                  117     16    86%   136, 140, 145-148, 152-155, 159-162, 166, 169
+api\main.py                                    117     24    79%   83-84, 182, 187, 202-227, 235-262, 272-273, 299-300
+api\middleware.py                              120     34    72%   61-67, 90, 95-120, 127, 132, 137, 146, 154-157, 204-210, 226-228
+api\pattern_detection.py                        97     25    74%   42, 65, 189-203, 249-262, 272-291, 309-319
+api\self_rag.py                                 88     17    81%   104-108, 214, 216, 241, 249-251, 254-256, 285-292
+app\__init__.py                                  5      1    80%   7
+app\actions\action_executor.py                 119     98    18%   30, 37-38, 43-128, 132-169, 173-215, 220-244, 249, 254, 259, 263-266, 270-275
+app\agents\agent.py                             27     18    33%   12-14, 18-44, 48-49, 53
+app\agents\agent_workflow.py                   145    103    29%   40, 55, 78, 88-117, 125-183, 194-200, 205-217, 221-232, 236-249, 253-263, 267-273, 281-339, 354-407, 418, 422
+app\agents\models.py                            21      2    90%   41, 45
+app\filesystem\fs_tools.py                     183    168     8%   22-36, 41-99, 106-148, 154-171, 177-207, 211-235, 239-277, 290-367
+app\knowledge\knowledge_manager.py             136    112    18%   27, 39-52, 56-62, 66-68, 72-77, 81-82, 94-123, 127, 137-155, 159-160, 164-166, 170-185, 189-193, 202-234, 238-249, 253-278
+app\model_router.py                            141    116    18%   29-56, 76-97, 110-136, 148-178, 182-216, 232-236, 249-261, 272-282, 296-297, 307-315, 327-337, 349-350, 359-382, 386-387
+app\values.py                                  104     81    22%   22-23, 41-52, 56-58, 62-64, 75-83, 96-107, 119-128, 140-151, 155-162, 166-178, 184-206, 210-232, 236-259, 263, 279-281
+assistant_v2_core.py                          2170   1965     9%   27-33, 59-62, 73-83, 89-113, 122-127, 133-136, 143-147, 154-158, 165-172, 179-184, 191-195, 201-208, 214-220, 226-233, 238-244, 252-254, 261, 264-266, 274-279, 283-289, 293-311, 332-337, 340-349, 352-371, 374-377, 380-382, 388-390, 393-406, 409-415, 418-419, 425-426, 429-431, 442-448, 451, 498-727, 739-750, 754-769, 773-823, 827-876, 888-899, 911-916, 924-936, 947-976, 991-1029, 1040-1072, 1075-1117, 1129-1173, 1192-1230, 1259-1401, 1416-1867, 1880-2203, 2207, 2210, 2213, 2218, 2223-2224, 2227, 2230-2231, 2234, 2237, 2250-2272, 2275, 2278, 2281, 2284, 2287-2300, 2305-2344, 2357-2367, 2381-2389, 2403-2410, 2424-2432, 2443-2450, 2464-2472, 2483-2496, 2503-2505, 2516-2533, 2539-2556, 2568-2657, 2660-2706, 2709-2723, 2726-2761, 2764-2801, 2804, 2807-2839, 2842-2844, 2859-2866, 2882-2891, 2907-2934, 2948-2969, 2989-3020, 3036-3069, 3086-3132, 3143-3155, 3178-3201, 3219-3242, 3258-3287, 3302-3336, 3343-3367, 3380-3413, 3429-3453, 3469-3495, 3511-3526, 3537-3552, 3571-3622, 3637-3714, 3728-3753, 3768-3803, 3818-3891, 3902-3917, 3932-3993, 4026-4095, 4116-4187, 4202-4248, 4264-4324, 4332-4333, 4339, 4343-4344, 4348-4349, 4353, 4358, 4366-4426, 4433-5013
+automation\guardrails\ingest_docs.py            15     13    13%   6-26
+automation\guardrails\middleware.py            144    141     2%   4-337
+automation\guardrails\validate_api.py           32     32     0%   1-53
+check_api_key.py                                65     65     0%   6-93
+check_config_classes.py                          6      6     0%   1-7
+core\display_utils.py                            7      5    29%   15-20
+core\exporter.py                                 7      4    43%   10-11, 16-17
+core_modules\caching.py                         48     26    46%   21-33, 37-46, 50-51, 61-71
+core_modules\catch_release_system.py           313    212    32%   55-58, 81-90, 93-101, 104-108, 111-114, 117-120, 173-174, 183-191, 200-229, 235-254, 260-300, 304-339, 343-349, 353-359, 363-381, 386-400, 405-443, 447-449, 455-474, 490-491, 494-497, 500-501, 506-523, 528-548, 565-580, 585-610, 614-617
+core_modules\context_manager.py                 65     39    40%   44, 57-63, 76-83, 95-99, 112-118, 130-131, 143-153, 166-173
+core_modules\cross_reference_system.py         156    118    24%   93-124, 137-151, 155-184, 188-203, 207-219, 223-251, 255-266, 270-279, 283, 287-297, 301-326, 330-348, 352
+core_modules\dynamic_error_handler.py          106     52    51%   89, 91, 95-97, 99-101, 106-109, 118-122, 127-139, 148-161, 170, 181, 190, 199, 208-210, 219, 228, 237-239, 248, 257, 277, 281-302
+core_modules\humor_engine.py                   164    116    29%   262-291, 296-314, 319-343, 350-378, 384-400, 406-415, 419-435, 439-448, 452-466, 470-495, 508-511
+core_modules\intent_awareness_engine.py        208    140    33%   208-249, 259-290, 294-336, 340-384, 388-412, 416-417, 421-438, 442-447, 451-464, 473-486
+core_modules\metrics.py                         65     37    43%   42-43, 54-55, 66-74, 86-93, 105, 114, 123-125, 129-130, 142, 151-172, 180, 184-186
+core_modules\model_router.py                    48     17    65%   62, 75-83, 92, 104-106, 118-122
+core_modules\parallel_simulation_engine.py     300    211    30%   124-148, 157-175, 179-180, 185-262, 268-291, 316-349, 374-412, 437-471, 497-536, 559-618, 644-667, 692-700, 704, 709-723, 728-746, 750, 754-758, 763-772, 776-782, 795-807, 811, 815, 819-829, 835-861, 884-901, 906-914, 919-928
+core_modules\personality_engine.py             143     99    31%   129-165, 169-173, 181-203, 208-239, 243-257, 261-277, 281-296, 300
+core_modules\train_of_thought_tracker.py       310    236    24%   16-20, 80, 142-186, 190-220, 224-248, 252-292, 296-306, 314-339, 343-366, 370-386, 390-417, 421-424, 428-437, 441-471, 475-506, 510-533, 537-557, 561-588, 592-621, 625-644
+coverage_pattern_analyzer.py                    88     88     0%   7-187
+demo_catch_release.py                          233    217     7%   18-21, 25-67, 71-119, 123-181, 185-223, 227-279, 283-344, 348-395, 399-443
+demo_enhanced_features.py                      122    106    13%   25-28, 32-60, 64-97, 101-132, 136-169, 173-210, 214-235
+demo_humor_engine.py                           186    170     9%   17-20, 24-55, 59-85, 89-113, 117-152, 156-186, 190-245, 249-289, 293-313, 317-354
+demo_intent_thought_tracking.py                217    198     9%   19-22, 26-61, 65-92, 96-131, 135-151, 155-184, 188-208, 212-234, 238-272, 276-333, 337-371
+demo_parallel_simulation.py                    310    292     6%   21-24, 28-102, 106-161, 165-216, 220-268, 272-334, 338-376, 380-442, 446-511, 515-568
+demo_unified_scenario.py                       306    270    12%   27-30, 36-38, 53-72, 76-109, 113-139, 143-168, 172-205, 209-234, 238-271, 275-297, 301-318, 322-328, 332-336, 340-344, 348-353, 357-361, 365-419, 424-444, 448-497, 501-523
+echoes\core\rag_v2.py                           91     69    24%   27-30, 34-51, 56-71, 75-85, 89-118, 126-142, 146-162, 166, 176, 185
+enhanced_accounting.py                          73     35    52%   44-47, 60-74, 78, 82, 86, 91-102, 110-125, 134, 138-144, 153
+glimpse\__init__.py                             13      5    62%   11, 38-42
+glimpse\alignment.py                           459    447     3%   13-1174
+glimpse\batch_helpers.py                        32     32     0%   5-73
+glimpse\benchmark_cached_batch.py               37     37     0%   5-65
+glimpse\benchmark_glimpse.py                    15     15     0%   1-21
+glimpse\benchmark_openai.py                     17     17     0%   5-27
+glimpse\cache_helpers.py                        81     72    11%   21-173
+glimpse\clarifier_engine.py                    130     95    27%   18-20, 45-48, 62-64, 122-127, 131-156, 168-173, 186-191, 195-197, 213-262, 274-285, 300-320
+glimpse\demo_glimpse_engine.py                  19     19     0%   1-27
+glimpse\engine.py                              191    106    45%   14-15, 20-21, 71-115, 142, 145-147, 151-161, 165, 181, 219, 222-224, 227-228, 232, 235-291, 295-296, 300, 305-329
+glimpse\enhanced_clarifier_engine.py           113     74    35%   38-41, 56-63, 67-73, 80-87, 183-192, 204-241, 255-265, 274, 291-311, 326-361
+glimpse\load_test_openai.py                     53     53     0%   6-81
+glimpse\metrics.py                              58     55     5%   9-174
+glimpse\metrics_server.py                       63     63     0%   5-115
+glimpse\openai_wrapper.py                      121    110     9%   17-23, 35-360
+glimpse\performance_optimizer.py               174    108    38%   41-42, 46-62, 66-77, 81-82, 86-90, 105-106, 111-127, 142-150, 157, 173, 186-224, 228-230, 252-266, 270-274, 278, 291, 297-310, 317-319
+glimpse\rate_limiter.py                        148    140     5%   20-340
+glimpse\sampler_openai.py                       55     50     9%   10-101
+glimpse\vis.py                                  15     15     0%   1-26
+knowledge_graph.py                              50     20    60%   21-22, 34-35, 47-48, 61, 65, 69, 73, 78-85, 89, 102
+legal_safeguards.py                             52     19    63%   38-39, 52, 56, 60, 64, 68, 72-81, 85-93, 102, 117
+multimodal_resonance.py                         90     63    30%   22-29, 33-42, 55-56, 70-85, 89-107, 111-122, 126-141, 145, 158
+run_tests.py                                    23     23     0%   17-56
+setup.py                                         2      2     0%   1-3
+start_api.py                                    58     58     0%   9-131
+test_integration.py                             90     90     0%   6-147
+test_integration_quick.py                       78     78     0%   6-121
+tools\__init__.py                               42     20    52%   25-26, 30, 34-35, 39-40, 44-47, 51-68, 75, 83, 87
+tools\examples.py                               17      5    71%   12-13, 18, 36-37
+tools\glimpse_tools.py                         175    129    26%   19-43, 61-83, 92-106, 110, 125-129, 145-163, 167-181, 185, 196, 212-216, 239-257, 261-275, 279, 290, 306-310, 330-348, 352-366, 370, 381, 393, 397, 408, 417-429
+tools\registry.py                               45     42     7%   10-90
+ucr.py                                          39     18    54%   17-19, 23, 27, 34-36, 53-55, 59-65, 69-71, 75
+--------------------------------------------------------------------------
+TOTAL                                         9984   7874    21%
+
+13 files skipped due to complete coverage.
+Coverage XML written to file coverage.xml
+FAIL Required test coverage of 75% not reached. Total coverage: 21.13%
+=========================== short test summary info ===========================
+SKIPPED [1] tests\test_fifo_boost.py:22: Environment loading has complex dependencies
+SKIPPED [1] tests\test_midlist_boost.py:57: AgentWorkflow initialization failed
+SKIPPED [1] tests\test_midlist_boost.py:90: core.display_utils not available
+SKIPPED [1] tests\test_midlist_boost.py:98: core.exporter not available
+SKIPPED [1] tests\test_midlist_boost.py:140: glimpse.alignment not available
+SKIPPED [1] tests\test_midlist_boost.py:155: automation.guardrails.middleware not available
+SKIPPED [1] tests\test_final_boost.py:25: KnowledgeGraph advanced features not available
+SKIPPED [1] tests\test_final_boost.py:39: LegalSafeguards advanced features not available
+SKIPPED [1] tests\test_final_boost.py:53: Enhanced accounting features not available
+SKIPPED [1] tests\test_final_boost.py:126: RAGEngine not available
+SKIPPED [1] tests\test_final_boost.py:158: ThoughtTracker not available
+SKIPPED [1] tests\test_final_boost.py:228: glimpse.alignment not available
+SKIPPED [1] tests\test_final_boost.py:243: automation.guardrails.middleware not available
+SKIPPED [1] tests\test_lap3_fifo.py:32: core_modules.caching not available
+SKIPPED [1] tests\test_lap3_fifo.py:64: core_modules.catch_release_system not available
+SKIPPED [1] tests\test_lap3_fifo.py:192: glimpse.alignment not available
+SKIPPED [1] tests\test_lap3_fifo.py:230: automation.guardrails.middleware not available
+SKIPPED [1] tests\test_triple_push.py:136: glimpse.alignment not available
+SKIPPED [1] tests\test_triple_push.py:157: automation.guardrails.middleware not available
+SKIPPED [1] tests\test_precision_100.py:34: Config validation complex
+SKIPPED [1] tests\test_self_rag.py:99: SelfRAGVerifier batch methods not available
+================ 100 passed, 21 skipped, 18 warnings in 3.56s =================

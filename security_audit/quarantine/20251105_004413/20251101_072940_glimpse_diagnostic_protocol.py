@@ -891,7 +891,7 @@ def main():
     print("=" * 60)
 
     # Initialize diagnostic Glimpse
-    engine = SandstormDiagnosticEngine()
+    SandstormDiagnosticEngine()
 
     # Execute complete protocol
     diagnostic_report = Glimpse.execute_sandstorm_protocol()

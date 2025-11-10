@@ -5,11 +5,9 @@ Identifies malicious socket-based interception and cloning patterns.
 """
 
 import ast
-import os
 import sys
-import re
 from pathlib import Path
-from typing import List, Dict, Any, Set, Tuple
+from typing import Dict, Any
 from datetime import datetime
 
 class SocketLevelDetector:
@@ -304,7 +302,7 @@ def main():
     results = detector.scan_directory()
     
     # Display results
-    print(f"📊 Socket-Level Scan Results:")
+    print("📊 Socket-Level Scan Results:")
     print(f"   • Total files scanned: {results['total_files']}")
     print(f"   • Files with socket threats: {results['infected_files']}")
     print("")
