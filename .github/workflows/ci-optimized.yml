@@ -116,7 +116,7 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
-          pip install pytest pytest-cov pytest-timeout pytest-xdist
+          pip install pytest pytest-cov pytest-timeout pytest-xdist pytest-asyncio anyio aiohttp prompt_toolkit
 
       - name: Run tests with coverage
         run: |

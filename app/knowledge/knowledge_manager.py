@@ -6,7 +6,9 @@ Handles knowledge gathering, storage, retrieval, and context building.
 
 import json
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from pathlib import Path
 from typing import Any
 

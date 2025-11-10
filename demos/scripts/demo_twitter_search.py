@@ -1,7 +1,9 @@
 # demo_twitter_search.py
 import os
 import time
-from datetime import UTC, datetime, timedelta
+from datetime import datetime, timedelta, timezone
+
+UTC = timezone.utc
 
 from tweepy import TooManyRequests
 from twitter_credentials import check_credentials, get_twitter_credentials

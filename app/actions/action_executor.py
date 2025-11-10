@@ -13,7 +13,9 @@ Enables the assistant to take autonomous actions:
 import os
 import time
 from dataclasses import asdict, dataclass
-from datetime import UTC, datetime
+from datetime import datetime, timezone
+
+UTC = timezone.utc
 from typing import Any
 
 # ATLAS Integration
