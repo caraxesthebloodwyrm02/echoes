@@ -20,7 +20,7 @@ class TestFreudJungDisagreement:
         Like the bookcase noise - is it meaningful or random?
         Needs more context to decide.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Deliberately vague input
         vague_draft = Draft(
@@ -29,7 +29,7 @@ class TestFreudJungDisagreement:
             constraints="",  # No constraints
         )
 
-        result = await Glimpse.glimpse(vague_draft)
+        result = await engine.glimpse(vague_draft)
 
         # Should process (Glimpse handles ambiguity gracefully)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -41,7 +41,7 @@ class TestFreudJungDisagreement:
         Test inputs with multiple valid interpretations.
         Like Freud seeing furniture settling vs. Jung seeing synchronicity.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Ambiguous: could mean several things
         ambiguous_draft = Draft(
@@ -50,7 +50,7 @@ class TestFreudJungDisagreement:
             constraints="",  # No context about WHICH logs or WHAT to look for
         )
 
-        result = await Glimpse.glimpse(ambiguous_draft)
+        result = await engine.glimpse(ambiguous_draft)
 
         # Should handle gracefully
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -62,7 +62,7 @@ class TestFreudJungDisagreement:
         Test handling of internally conflicting requirements.
         Like asking for both stability and radical change.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Conflicting constraints
         conflict_draft = Draft(
@@ -71,7 +71,7 @@ class TestFreudJungDisagreement:
             constraints="no breaking changes, maintain backward compatibility, zero downtime",
         )
 
-        result = await Glimpse.glimpse(conflict_draft)
+        result = await engine.glimpse(conflict_draft)
 
         # Should process (Glimpse is resilient to contradictions)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -87,7 +87,7 @@ class TestUncertaintyQuantification:
         Test cases where alignment confidence is low.
         The system should acknowledge uncertainty.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Edge case: minimal information
         minimal_draft = Draft(
@@ -96,7 +96,7 @@ class TestUncertaintyQuantification:
             constraints="",
         )
 
-        result = await Glimpse.glimpse(minimal_draft)
+        result = await engine.glimpse(minimal_draft)
 
         # Should process gracefully
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -108,7 +108,7 @@ class TestUncertaintyQuantification:
         Test cases where some aspects align but others don't.
         Like Jung and Freud agreeing the noise happened but disagreeing on cause.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Partial match: good intent but missing constraints
         partial_draft = Draft(
@@ -117,7 +117,7 @@ class TestUncertaintyQuantification:
             constraints="",  # Missing: which queries? what metrics?
         )
 
-        result = await Glimpse.glimpse(partial_draft)
+        result = await engine.glimpse(partial_draft)
 
         # Should work (Glimpse handles partial info)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -133,7 +133,7 @@ class TestClarifierActivation:
         Test that empty/missing goals trigger clarifiers.
         Can't validate alignment without knowing the intent.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Input but no clear goal
         no_goal_draft = Draft(
@@ -142,7 +142,7 @@ class TestClarifierActivation:
             constraints="technical accuracy",
         )
 
-        result = await Glimpse.glimpse(no_goal_draft)
+        result = await engine.glimpse(no_goal_draft)
 
         # Should process (Glimpse handles empty goals)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -154,7 +154,7 @@ class TestClarifierActivation:
         Test clarifier activation for contradictory inputs.
         Like the Jung-Freud disagreement - need to clarify the interpretation.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Contradictory input
         contradiction_draft = Draft(
@@ -163,7 +163,7 @@ class TestClarifierActivation:
             constraints="no modifications",
         )
 
-        result = await Glimpse.glimpse(contradiction_draft)
+        result = await engine.glimpse(contradiction_draft)
 
         # Should process (Glimpse handles contradictions)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -174,12 +174,12 @@ class TestClarifierActivation:
         """
         Test that clarifier questions are relevant and helpful.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Trigger clarifier with vague input
         draft = Draft(input_text="help with the thing", goal="", constraints="")
 
-        result = await Glimpse.glimpse(draft)
+        result = await engine.glimpse(draft)
 
         # Should always provide meaningful essence
         assert len(result.essence) > 0
@@ -194,7 +194,7 @@ class TestEdgeCaseHandling:
         Test handling of non-ASCII and special characters.
         Edge case that might reveal encoding issues.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Unicode and emojis
         unicode_draft = Draft(
@@ -203,7 +203,7 @@ class TestEdgeCaseHandling:
             constraints="production",
         )
 
-        result = await Glimpse.glimpse(unicode_draft)
+        result = await engine.glimpse(unicode_draft)
 
         # Should handle gracefully
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -215,7 +215,7 @@ class TestEdgeCaseHandling:
         Test handling of very long inputs.
         Edge case for token limits and processing.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Very long input
         long_input = "optimize " * 500  # 500 repetitions
@@ -223,7 +223,7 @@ class TestEdgeCaseHandling:
             input_text=long_input, goal="improve", constraints="production"
         )
 
-        result = await Glimpse.glimpse(long_draft)
+        result = await engine.glimpse(long_draft)
 
         # Should handle without crashing
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -234,7 +234,7 @@ class TestEdgeCaseHandling:
         Test handling of mixed case and formatting.
         Should recognize patterns regardless of formatting.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Mixed formatting
         mixed_draft = Draft(
@@ -243,7 +243,7 @@ class TestEdgeCaseHandling:
             constraints="PRODUCTION",
         )
 
-        result = await Glimpse.glimpse(mixed_draft)
+        result = await engine.glimpse(mixed_draft)
 
         # Should normalize and process
         assert result.status in ["aligned", "not_aligned", "redial"]

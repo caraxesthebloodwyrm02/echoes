@@ -30,8 +30,8 @@ class TestSynchronicityDetection:
 
         results = []
         for draft in seeker_drafts:
-            GlimpseEngine()  # Fresh Glimpse for each
-            result = await Glimpse.glimpse(draft)
+            engine = GlimpseEngine()  # Fresh Glimpse for each
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should complete (aligned, not_aligned, or redial are all valid)
@@ -46,7 +46,7 @@ class TestSynchronicityDetection:
         Test rejection of surface-level matches that lack deep meaning.
         Like Freud's skepticism of Jung's bookcase - not every coincidence is meaningful.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Keyword stuffing without meaning
         random_draft = Draft(
@@ -55,7 +55,7 @@ class TestSynchronicityDetection:
             constraints="social media post",  # Wrong context
         )
 
-        result = await Glimpse.glimpse(random_draft)
+        result = await engine.glimpse(random_draft)
 
         # Should process (Glimpse is resilient)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -99,7 +99,7 @@ class TestMeaningfulCoincidence:
         Test cases where alignment carries high meaning.
         Like Jung's bookcase incident - when inner and outer align meaningfully.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # High semantic and intent alignment
         meaningful_draft = Draft(
@@ -108,7 +108,7 @@ class TestMeaningfulCoincidence:
             constraints="production-safe, well-tested, immediate",
         )
 
-        result = await Glimpse.glimpse(meaningful_draft)
+        result = await engine.glimpse(meaningful_draft)
 
         # Should process successfully
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -120,7 +120,7 @@ class TestMeaningfulCoincidence:
         Test cases where surface matches lack deeper meaning.
         Like random furniture creaking vs. psychic phenomenon.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Surface keywords match but intent diverges
         surface_draft = Draft(
@@ -129,7 +129,7 @@ class TestMeaningfulCoincidence:
             constraints="marketing copy",  # Wrong context
         )
 
-        result = await Glimpse.glimpse(surface_draft)
+        result = await engine.glimpse(surface_draft)
 
         # Should process (Glimpse is resilient)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -145,8 +145,6 @@ class TestCollectivePatterns:
         Test recognition of universal intents across different contexts.
         Like Jung's collective unconscious - patterns that transcend individual experience.
         """
-        GlimpseEngine()
-
         # Universal "help-seeking" pattern in different domains
         help_patterns = [
             Draft("debug this error", "solve problem", "technical"),
@@ -154,9 +152,10 @@ class TestCollectivePatterns:
             Draft("guide me through setup", "assistance", "onboarding"),
         ]
 
+        engine = GlimpseEngine()
         results = []
         for draft in help_patterns:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should be processed successfully
@@ -174,8 +173,6 @@ class TestCollectivePatterns:
         Test pattern recognition that works across different contexts.
         Like archetypes appearing in different cultural mythologies.
         """
-        GlimpseEngine()
-
         # Same pattern (optimization) in different technical contexts
         optimization_patterns = [
             Draft("optimize database queries", "improve performance", "backend"),
@@ -183,9 +180,10 @@ class TestCollectivePatterns:
             Draft("compress images", "improve performance", "assets"),
         ]
 
+        engine = GlimpseEngine()
         results = []
         for draft in optimization_patterns:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should recognize the optimization archetype

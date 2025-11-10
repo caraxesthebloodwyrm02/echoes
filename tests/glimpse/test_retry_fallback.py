@@ -20,7 +20,7 @@ class TestRetryLogic:
         Test that the system retries after initial misalignment.
         First attempt fails, second attempt may succeed.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Draft that might need refinement
         draft = Draft(
@@ -30,7 +30,7 @@ class TestRetryLogic:
         )
 
         # First attempt
-        r1 = await Glimpse.glimpse(draft)
+        r1 = await engine.glimpse(draft)
 
         # If not aligned, should allow retry
         if r1.status == "not_aligned":
@@ -39,7 +39,7 @@ class TestRetryLogic:
             draft.constraints = "production-safe"
 
             # Second attempt
-            r2 = await Glimpse.glimpse(draft)
+            r2 = await engine.glimpse(draft)
             assert r2.attempt <= 2
 
     @pytest.mark.asyncio
@@ -48,7 +48,7 @@ class TestRetryLogic:
         Test that the system respects the 2-attempt limit.
         After 2 tries, should trigger redial.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         draft = Draft(
             input_text="contradictory task",
@@ -57,15 +57,15 @@ class TestRetryLogic:
         )
 
         # Attempt 1
-        r1 = await Glimpse.glimpse(draft)
+        r1 = await engine.glimpse(draft)
         assert r1.attempt == 1
 
         # Attempt 2
-        r2 = await Glimpse.glimpse(draft)
+        r2 = await engine.glimpse(draft)
         assert r2.attempt == 2
 
         # Attempt 3 should trigger redial
-        r3 = await Glimpse.glimpse(draft)
+        r3 = await engine.glimpse(draft)
         assert r3.status == "redial"
         assert r3.attempt == 2  # Doesn't increment beyond limit
 
@@ -75,12 +75,12 @@ class TestRetryLogic:
         Test that refinement between retries can lead to success.
         Progressive clarification should improve alignment.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Start vague
         draft = Draft(input_text="improve system", goal="enhance", constraints="")
 
-        r1 = await Glimpse.glimpse(draft)
+        r1 = await engine.glimpse(draft)
 
         # Refine based on feedback
         if r1.delta:
@@ -89,7 +89,7 @@ class TestRetryLogic:
             draft.goal = "optimize slow queries"
             draft.constraints = "maintain backward compatibility"
 
-        r2 = await Glimpse.glimpse(draft)
+        r2 = await engine.glimpse(draft)
 
         # Second attempt should show refinement
         assert r2.attempt in [1, 2]
@@ -104,15 +104,15 @@ class TestRedialBehavior:
         Test that redial status is set after exceeding attempt limit.
         User should be prompted to rephrase or reconnect.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Use same draft repeatedly to exhaust attempts
         draft = Draft("vague", "", "")
 
         # Exhaust attempts
-        await Glimpse.glimpse(draft)
-        await Glimpse.glimpse(draft)
-        r3 = await Glimpse.glimpse(draft)
+        await engine.glimpse(draft)
+        await engine.glimpse(draft)
+        r3 = await engine.glimpse(draft)
 
         # Should redial
         assert r3.status == "redial"
@@ -123,18 +123,18 @@ class TestRedialBehavior:
         Test that attempt counter resets for new drafts.
         Redial is per-draft, not per-Glimpse.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Exhaust attempts on first draft
         draft1 = Draft("first", "task", "")
-        await Glimpse.glimpse(draft1)
-        await Glimpse.glimpse(draft1)
-        r3 = await Glimpse.glimpse(draft1)
+        await engine.glimpse(draft1)
+        await engine.glimpse(draft1)
+        r3 = await engine.glimpse(draft1)
         assert r3.status == "redial"
 
         # New draft should start fresh (may have redial due to previous attempts)
         draft2 = Draft("second task", "different goal", "new constraints")
-        r4 = await Glimpse.glimpse(draft2)
+        r4 = await engine.glimpse(draft2)
         assert r4.status in ["aligned", "not_aligned", "redial"]
 
 
@@ -147,14 +147,14 @@ class TestFallbackMechanisms:
         Test that the system degrades gracefully under failure.
         Should provide useful feedback even when alignment fails.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Problematic draft
         draft = Draft(
             input_text="", goal="", constraints=""  # Empty input  # Empty goal
         )
 
-        result = await Glimpse.glimpse(draft)
+        result = await engine.glimpse(draft)
 
         # Should handle gracefully with feedback
         assert result.status in ["aligned", "not_aligned", "clarifier_needed"]
@@ -166,17 +166,17 @@ class TestFallbackMechanisms:
         Test that status history is maintained across attempts.
         Helps diagnose why alignment failed.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         draft = Draft("test", "goal", "constraints")
 
         # First attempt
-        r1 = await Glimpse.glimpse(draft)
+        r1 = await engine.glimpse(draft)
         assert len(r1.status_history) > 0
 
         # Second attempt (if not aligned)
         if r1.status == "not_aligned":
-            r2 = await Glimpse.glimpse(draft)
+            r2 = await engine.glimpse(draft)
             assert len(r2.status_history) >= len(r1.status_history)
 
     @pytest.mark.asyncio
@@ -185,7 +185,7 @@ class TestFallbackMechanisms:
         Test that essence is always provided, even on failure.
         Essential for understanding what went wrong.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Various failure scenarios
         failure_cases = [
@@ -196,7 +196,7 @@ class TestFallbackMechanisms:
 
         # Should always provide essence (except redial)
         for draft in failure_cases:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             assert result.status in ["aligned", "not_aligned", "redial"]
             if result.status == "redial":
                 assert result.essence == ""
@@ -213,7 +213,7 @@ class TestSafeExecution:
         Test that the system never crashes, always returns a result.
         Critical for production safety.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Edge cases that might break naive implementations
         edge_cases = [
@@ -227,7 +227,7 @@ class TestSafeExecution:
 
         for draft in edge_cases:
             try:
-                result = await Glimpse.glimpse(draft)
+                result = await engine.glimpse(draft)
                 assert result is not None
                 assert result.status in [
                     "aligned",
@@ -244,17 +244,17 @@ class TestSafeExecution:
         Test that Glimpse remains in safe state after failures.
         Should be reusable for subsequent requests.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Cause a failure
         bad_draft = Draft("", "", "")
-        await Glimpse.glimpse(bad_draft)
+        await engine.glimpse(bad_draft)
 
         # Glimpse should still work for good drafts
         good_draft = Draft(
             "clear task description", "well-defined goal", "specific constraints"
         )
-        r2 = await Glimpse.glimpse(good_draft)
+        r2 = await engine.glimpse(good_draft)
 
         # Should process normally (may not be fresh start due to Glimpse state)
         assert r2.status in ["aligned", "not_aligned", "redial"]
@@ -270,16 +270,16 @@ class TestErrorRecovery:
         Test recovery from transient failures (network, etc.).
         System should retry and potentially succeed.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Simulate recovery by successful subsequent attempt
         draft = Draft("task", "goal", "constraints")
 
         # First attempt (might fail)
-        r1 = await Glimpse.glimpse(draft)
+        r1 = await engine.glimpse(draft)
 
         # System should allow retry
-        r2 = await Glimpse.glimpse(draft)
+        r2 = await engine.glimpse(draft)
 
         # At least one should complete
         assert r1.status is not None
@@ -291,7 +291,7 @@ class TestErrorRecovery:
         Test that error states provide informative feedback.
         Users need to understand what went wrong.
         """
-        GlimpseEngine()
+        engine = GlimpseEngine()
 
         # Cause various error conditions
         error_cases = [
@@ -300,7 +300,7 @@ class TestErrorRecovery:
         ]
 
         for draft in error_cases:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
 
             # Should provide useful feedback
             if result.status == "not_aligned":
