@@ -5,19 +5,22 @@ Tracks performance metrics, usage statistics, and system health
 
 import logging
 import time
-from typing import Dict, Any, Optional, List
+from collections import defaultdict
 from dataclasses import dataclass, field
 from datetime import datetime
-from collections import defaultdict
+from typing import Any
 
 logger = logging.getLogger(__name__)
+
 
 @dataclass
 class MetricSnapshot:
     """Snapshot of metrics at a point in time"""
+
     timestamp: datetime
-    metrics: Dict[str, Any]
-    tags: Dict[str, str] = field(default_factory=dict)
+    metrics: dict[str, Any]
+    tags: dict[str, str] = field(default_factory=dict)
+
 
 class ModelMetrics:
     """
@@ -26,11 +29,13 @@ class ModelMetrics:
     """
 
     def __init__(self):
-        self.metrics: Dict[str, Any] = defaultdict(int)
-        self.snapshots: List[MetricSnapshot] = []
+        self.metrics: dict[str, Any] = defaultdict(int)
+        self.snapshots: list[MetricSnapshot] = []
         self.logger = logging.getLogger(__name__)
 
-    def increment(self, metric_name: str, value: int = 1, tags: Optional[Dict[str, str]] = None):
+    def increment(
+        self, metric_name: str, value: int = 1, tags: dict[str, str] | None = None
+    ):
         """
         Increment a counter metric
 
@@ -42,7 +47,7 @@ class ModelMetrics:
         self.metrics[metric_name] += value
         self.logger.debug(f"Incremented {metric_name} by {value}")
 
-    def gauge(self, metric_name: str, value: float, tags: Optional[Dict[str, str]] = None):
+    def gauge(self, metric_name: str, value: float, tags: dict[str, str] | None = None):
         """
         Set a gauge metric (current value)
 
@@ -54,7 +59,9 @@ class ModelMetrics:
         self.metrics[metric_name] = value
         self.logger.debug(f"Set gauge {metric_name} to {value}")
 
-    def timing(self, metric_name: str, duration: float, tags: Optional[Dict[str, str]] = None):
+    def timing(
+        self, metric_name: str, duration: float, tags: dict[str, str] | None = None
+    ):
         """
         Record a timing metric
 
@@ -73,7 +80,7 @@ class ModelMetrics:
 
         self.logger.debug(f"Recorded timing {metric_name}: {duration:.3f}s")
 
-    def snapshot(self, tags: Optional[Dict[str, str]] = None) -> MetricSnapshot:
+    def snapshot(self, tags: dict[str, str] | None = None) -> MetricSnapshot:
         """
         Take a snapshot of current metrics
 
@@ -84,9 +91,7 @@ class ModelMetrics:
             MetricSnapshot object
         """
         snapshot = MetricSnapshot(
-            timestamp=datetime.now(),
-            metrics=dict(self.metrics),
-            tags=tags or {}
+            timestamp=datetime.now(), metrics=dict(self.metrics), tags=tags or {}
         )
         self.snapshots.append(snapshot)
         self.logger.debug("Created metrics snapshot")
@@ -104,7 +109,7 @@ class ModelMetrics:
         """
         return self.metrics.get(metric_name, 0)
 
-    def get_all_metrics(self) -> Dict[str, Any]:
+    def get_all_metrics(self) -> dict[str, Any]:
         """
         Get all current metrics
 
@@ -129,7 +134,7 @@ class ModelMetrics:
         self.metrics.clear()
         self.logger.debug("Reset all metrics")
 
-    def get_recent_snapshots(self, count: int = 5) -> List[MetricSnapshot]:
+    def get_recent_snapshots(self, count: int = 5) -> list[MetricSnapshot]:
         """
         Get recent metric snapshots
 
@@ -141,7 +146,7 @@ class ModelMetrics:
         """
         return self.snapshots[-count:] if self.snapshots else []
 
-    def get_performance_summary(self) -> Dict[str, Any]:
+    def get_performance_summary(self) -> dict[str, Any]:
         """
         Get a summary of performance metrics
 
@@ -153,7 +158,7 @@ class ModelMetrics:
             "error_rate": 0.0,
             "avg_response_time": self.get_metric("response_time_avg"),
             "cache_hit_rate": 0.0,
-            "uptime_seconds": self.get_metric("uptime_seconds")
+            "uptime_seconds": self.get_metric("uptime_seconds"),
         }
 
         # Calculate error rate
@@ -171,13 +176,16 @@ class ModelMetrics:
 
         return summary
 
+
 # Global instance for easy access
 model_metrics = ModelMetrics()
+
 
 # Convenience functions for timing
 def start_timer():
     """Start a timer for performance measurement"""
     return time.time()
+
 
 def end_timer(start_time: float, metric_name: str = "operation"):
     """End a timer and record the duration"""

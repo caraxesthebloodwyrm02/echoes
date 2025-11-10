@@ -1,455 +1,110 @@
-# Echoes AI Assistant - .gitignore
-# Generated: 2025-10-22
-# Follows principles: ignore generated/temp files, secrets, OS/IDE files, dependencies
+# Large files
+**/Echoes Automation Blueprint.pdf
 
-# =============================================================================
-# PYTHON - Core Python files
-# =============================================================================
-# Byte-compiled / optimized / DLL files
+# Root backup directory
+.root_backup/
+backup_cache_safe/
+
+# Python
 __pycache__/
 *.py[cod]
 *$py.class
-
-# Python virtual environments
-.venv/
-venv/
-env/
-ENV/
-env.bak/
-venv.bak/
-
-# Python packaging
-*.egg
-*.egg-info/
-dist/
+*.so
+.Python
 build/
-*.whl
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
 
-# PyInstaller
-*.manifest
-*.spec
+# Virtual Environment
+venv/
+ENV/
+.venv/
 
-# Unit test / coverage reports
-htmlcov/
-.tox/
-.nox/
-.coverage
-.coverage.*
-.cache
-nosetests.xml
-coverage.xml
-*.cover
-*.py,cover
-.hypothesis/
-.pytest_cache/
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+*.sublime-*
 
-# Type checking
-.mypy_cache/
-.dmypy.json
-dmypy.json
+# Logs
+*.log
+logs/
 
-# =============================================================================
-# SECRETS & SENSITIVE DATA
-# =============================================================================
-# Environment variables and secrets
+# Local development
 .env
 .env.local
 .env.*.local
-*.key
-*.pem
-*.crt
-*.p12
-*.pfx
 
-# API keys and credentials
-secrets/
-credentials/
-config/secrets.json
-.env.production
-.env.staging
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
 
-# =============================================================================
-# OS & IDE SPECIFIC FILES
-# =============================================================================
-# Windows
+# Data files
+*.csv
+*.json
+*.pth
+*.h5
+*.pkl
+*.pth
+*.pt
+*.bin
+*.npy
+*.npz
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# System Files
+.DS_Store
 Thumbs.db
-Thumbs.db:encryptable
-ehthumbs.db
-ehthumbs_vista.db
-Desktop.ini
-*.stackdump
 
-# macOS
+# Project specific
+**/data/memory/session_*.json
+**/data/cifar-10-batches-py/
+**/data/cifar-10-python.tar.gz
+
+# Testing
+.coverage
+htmlcov/
+.tox/
+.nox/
+.pytest_cache/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# VS Code
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# OS generated files
 .DS_Store
 .DS_Store?
 ._*
 .Spotlight-V100
 .Trashes
 ehthumbs.db
-Thumbs.db
-
-# Linux
-*~
-.nfs*
-
-# IDEs
-.vscode/
-.idea/
-*.swp
-*.swo
-*~
-
-# =============================================================================
-# NODE.JS / JAVASCRIPT (if applicable)
-# =============================================================================
-node_modules/
-npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
-.npm
-.yarn-integrity
-
-# =============================================================================
-# DOCKER
-# =============================================================================
-.dockerignore
-Dockerfile.*
-docker-compose.override.yml
-
-# =============================================================================
-# LOGS & TEMPORARY FILES
-# =============================================================================
-# Root-level logs
-logs/
-# Nested logs directories
-**/logs/
-# Log files
-*.log
-*.log.*
-
-# Temporary directories
-tmp/
-temp/
-.tmp/
-.temp/
-.temp-*
-*.tmp
-
-# =============================================================================
-# DATA & CACHE
-# =============================================================================
-# Vector databases and indices
-data/vector_index/
-data/models/cache/
-data/memory/cache/
-data/memory/*.json
-
-# Large model files
-*.bin
-*.safetensors
-*.gguf
-*.ggml
-
-# Cache directories
-.cache/
-.cache-*
-.cache/
-
-# Notebooks
-*.ipynb
-
-# Large data files (add specific patterns as needed)
-*.sqlite3
-*.db
-
-# Project run outputs
-results/
-demo_workspace/
-
-# Generated Python files from templates
-*generated_*.py
-*_generated.py
-
-# =============================================================================
-# BUILD & DEPLOYMENT ARTIFACTS
-# =============================================================================
-# Build outputs
-build/
-dist/
-*.tar.gz
-*.zip
-
-# Deployment artifacts
-.terraform/
-*.tfstate
-*.tfstate.*
-.terraform.lock.hcl
-
-# =============================================================================
-# TESTING & DEVELOPMENT
-# =============================================================================
-# Test data
-tests/fixtures/large_files/
-tests/temp/
-test_output/
-
-# Development tools
-.devcontainer/
-.vscode/
-
-# Generated tree output
-tree_structure.txt
-
-# Temporary files
-*.tmp
-*.temp
-temp/
-tmp/
-
-# Generated Python files from templates
-*generated_*.py
-*_generated.py
-
-# Large data files (add specific patterns as needed)
-*.sqlite3
-*.db
-
-# Project specific ignores
-c_o_r_e/
-# Generated documentation
-docs/_build/
-docs/api/
-
-# Backup files
-*.bak
-*.backup
-*~backup~
-config_backup_*/
-
-# Local development
-local_settings.py
-local_config.py
-
-# =============================================================================
-# ECHOES PROJECT SPECIFIC
-# =============================================================================
-# Backup directories
-.root_backup/
-backup/
-backups/
-
-# Generated alignment reports (keep template)
-glimpse/alignment_report_*.json
-!glimpse/alignment_report.json
-
-# Temporary diagnostic files
-scripts/*_diagnostic_*.py
-scripts/*_fixed.py
-scripts/*_temp.py
-scripts/*_backup.py
-
-# Model artifacts and checkpoints
-models/experiment_*/
-models/quick_start/
-*.pth
-*.pt
-*.h5
-*.hdf5
-
-# Vector indices
-vector_index/
-*.faiss
-*.pkl
-
-# Configuration backups
-config/*backup*
-config/*old*
-
-# Test outputs and artifacts
-test_outputs/
-test_results/
-*.test
-tests/temp/
-
-# Monitoring and metrics
-monitoring/
-metrics/
-*.metrics
-
-# Deployment artifacts
-deploy/
-docker/.env
-docker-compose.override.yml
-
-# Large datasets
-data/cifar-10-batches-py/
-datasets/
-data/raw/
-data/processed/
-
-# Training artifacts
-checkpoints/
-wandb/
-mlruns/
-tensorboard_logs/
-
-# Download and temporary files
-*.download
-*.crdownload
-
-# Audio/Video files (if temporary)
-*.m4a
-*.mp3
-*.wav
-*.mp4
-*.avi
-
-# Archive files
-*.zip
-*.tar.gz
-*.rar
-*.7z
-
-# Project-specific temporary directories
-Q4/outputs/
-Chat/
-autosave/
-demo_workspace/
-
-# Generated documentation builds
-docs/_build/
-docs/build/
-
-# Local development files
-local_settings.py
-local_config.py
-.local/
-local/
-
-# Windsurf (keep config)
-.windsurf/
-!.windsurf/config.json
-
-# =============================================================================
-# EXCEPTIONS - Files that should NOT be ignored
-# =============================================================================
-!requirements.txt
-!requirements-dev.txt
-!requirements-full.txt
-!Pipfile.lock
-!poetry.lock
-!package-lock.json
-!yarn.lock
-
-# Keep important configuration files
-!.env.example
-!.env.template
-!config/example.env
-
-# Keep documentation
-!README.md
-!CHANGELOG.md
-!LICENSE
-!CONTRIBUTING.md
-!SECURITY.md
-!VERSION
-!Makefile
-!pyproject.toml
-!pytest.ini
-!setup.py
-
-# Keep essential docs
-!docs/
-!docs/*.md
-!docs/*.txt
-
-# Keep test fixtures that are small and essential
-!tests/fixtures/*.json
-!tests/fixtures/*.py
-!tests/test_*.py
-
-# Keep core Python files
-!assistant_v2_core.py
-!enhanced_accounting.py
-!tools/*.py
-!app/*.py
-!api/*.py
-!core/*.py
-!automation/*.py
-!demos/*.py
-!examples/*.py
-
-# Keep essential scripts
-!start_api.py
-!run_tests.py
-!deploy_production.sh
-
-# Keep configuration files
-!.gitattributes
-!.gitignore
-!.gitmodules
-!.pre-commit-config.yaml
-!Dockerfile
-!docker-compose*.yml
-
-# =============================================================================
-# CUSTOM PROJECT SPECIFIC
-# =============================================================================
-# Echoes-specific temporary files
-Q4/outputs/
-Chat/
-autosave/
-
-# Large data files
-*.sqlite3
-*.db
-
-# Generated Python files from templates
-*generated_*.py
-*_generated.py
-
-# =============================================================================
-# ADDITIONAL TAILORED RULES
-# =============================================================================
-
-# Ignore autosave directories anywhere in the project
-**/autosave/
-
-# C# / .NET build artifacts
-**/bin/
-**/obj/
-*.dll
-*.exe
-*.pdb
-*.cache
-
-# SBOM output directory
-sbom/
-
-# .NET solution files
-*.sln
-
-# Node/JS build artifacts
-.next/
-.nuxt/
-.parcel-cache/
-.turbo/
-
-# TypeScript build info files
-*.tsbuildinfo
-
-# Coverage outputs
-coverage/
-coverage-html/
-# Python virtual environment
-.venv/
-venv/
-env/
-
-# IDE specific
-.vscode/
-.idea/
-
-# OS generated files
-.DS_Store
 Thumbs.db

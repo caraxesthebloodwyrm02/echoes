@@ -5,7 +5,8 @@ Manages JWT token generation, validation, and refresh
 
 import os
 from datetime import timedelta
-from typing import Dict, Any, Optional
+from typing import Any
+
 import jwt
 from jwt.exceptions import InvalidTokenError
 from src.utils.datetime_utils import utc_now
@@ -14,13 +15,21 @@ from src.utils.datetime_utils import utc_now
 class JWTHandler:
     """Handle JWT token operations"""
 
-    def __init__(self, secret_key: Optional[str] = None, algorithm: str = "HS256"):
-        self.secret_key = secret_key or os.getenv("JWT_SECRET_KEY", "your-secret-key-change-in-production")
+    def __init__(self, secret_key: str | None = None, algorithm: str = "HS256"):
+        self.secret_key = secret_key or os.getenv(
+            "JWT_SECRET_KEY", "your-secret-key-change-in-production"
+        )
         self.algorithm = algorithm
-        self.access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
-        self.refresh_token_expire_days = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
+        self.access_token_expire_minutes = int(
+            os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
+        )
+        self.refresh_token_expire_days = int(
+            os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
+        )
 
-    def create_access_token(self, data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+    def create_access_token(
+        self, data: dict[str, Any], expires_delta: timedelta | None = None
+    ) -> str:
         """
         Create a JWT access token
 
@@ -43,7 +52,7 @@ class JWTHandler:
         encoded_jwt = jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
         return encoded_jwt
 
-    def create_refresh_token(self, data: Dict[str, Any]) -> str:
+    def create_refresh_token(self, data: dict[str, Any]) -> str:
         """
         Create a JWT refresh token
 
@@ -61,7 +70,7 @@ class JWTHandler:
         encoded_jwt = jwt.encode(to_encode, self.secret_key, algorithm=self.algorithm)
         return encoded_jwt
 
-    def verify_token(self, token: str) -> Dict[str, Any]:
+    def verify_token(self, token: str) -> dict[str, Any]:
         """
         Verify and decode a JWT token
 
@@ -99,7 +108,11 @@ class JWTHandler:
             raise InvalidTokenError("Invalid token type")
 
         # Create new access token with user data
-        user_data = {"sub": payload.get("sub"), "role": payload.get("role"), "platforms": payload.get("platforms", [])}
+        user_data = {
+            "sub": payload.get("sub"),
+            "role": payload.get("role"),
+            "platforms": payload.get("platforms", []),
+        }
 
         return self.create_access_token(user_data)
 
@@ -108,17 +121,19 @@ class JWTHandler:
 _jwt_handler = JWTHandler()
 
 
-def create_access_token(data: Dict[str, Any], expires_delta: Optional[timedelta] = None) -> str:
+def create_access_token(
+    data: dict[str, Any], expires_delta: timedelta | None = None
+) -> str:
     """Create an access token (convenience function)"""
     return _jwt_handler.create_access_token(data, expires_delta)
 
 
-def create_refresh_token(data: Dict[str, Any]) -> str:
+def create_refresh_token(data: dict[str, Any]) -> str:
     """Create a refresh token (convenience function)"""
     return _jwt_handler.create_refresh_token(data)
 
 
-def verify_token(token: str) -> Dict[str, Any]:
+def verify_token(token: str) -> dict[str, Any]:
     """Verify a token (convenience function)"""
     return _jwt_handler.verify_token(token)
 

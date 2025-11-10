@@ -2,18 +2,19 @@
 OpenAI-backed sampler for Glimpse using direct OpenAI API calls.
 Bypasses the wrapper layer for direct access to OpenAI's API.
 """
-import asyncio
 import logging
-from typing import Optional, Tuple, Awaitable
+
 import openai
-from glimpse.Glimpse import Draft, GlimpseResult, Sampler
-from .cache_helpers import cached_openai_call
+
+from glimpse.Glimpse import Draft
 
 logger = logging.getLogger(__name__)
+
 
 def _map_openai_error_to_status(exc: Exception) -> str:
     """Map OpenAI exceptions to GlimpseResult status values."""
     import openai
+
     if isinstance(exc, openai.RateLimitError):
         return "rate_limited"
     if isinstance(exc, openai.AuthenticationError):
@@ -31,19 +32,45 @@ def _map_openai_error_to_status(exc: Exception) -> str:
     # Fallback
     return "error"
 
-async def _essence_only_fallback(draft: Draft) -> Tuple[str, str, Optional[str], bool]:
+
+async def _essence_only_fallback(draft: Draft) -> tuple[str, str, str | None, bool]:
     """Return a minimal essence-only result when full API fails."""
     # Simple heuristic: extract key nouns/verbs from input and goal
     tokens = draft.input_text.split() + draft.goal.split()
     # Remove stopwords and keep first few meaningful words
-    stopwords = {"the", "a", "an", "and", "or", "but", "in", "on", "at", "to", "for", "of", "with", "by", "is", "are", "was", "were"}
+    stopwords = {
+        "the",
+        "a",
+        "an",
+        "and",
+        "or",
+        "but",
+        "in",
+        "on",
+        "at",
+        "to",
+        "for",
+        "of",
+        "with",
+        "by",
+        "is",
+        "are",
+        "was",
+        "were",
+    }
     filtered = [t for t in tokens if t.lower() not in stopwords][:8]
     essence = f"Essence (fallback): {' '.join(filtered)} | constraints: {draft.constraints or 'none'}"
     return "", essence, None, False
 
-@cached_openai_call()
-async def _openai_chat_completion(messages: list[dict], model: str, temperature: float, max_tokens: Optional[int], **kwargs) -> dict:
-    """Cached wrapper around the actual OpenAI chat completion using direct API."""
+
+async def _openai_chat_completion(
+    messages: list[dict],
+    model: str,
+    temperature: float,
+    max_tokens: int | None,
+    **kwargs,
+) -> dict:
+    """Direct OpenAI chat completion - no caching, no interception."""
     # Create AsyncOpenAI client directly (no wrapper)
     client = openai.AsyncOpenAI()
 
@@ -53,13 +80,14 @@ async def _openai_chat_completion(messages: list[dict], model: str, temperature:
         model=model,
         temperature=temperature,
         max_tokens=max_tokens,
-        **kwargs
+        **kwargs,
     )
 
     # Return the response as a dict (compatible with existing code)
     return response.model_dump()
 
-async def openai_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
+
+async def openai_sampler(draft: Draft) -> tuple[str, str, str | None, bool]:
     """
     OpenAI-backed sampler compatible with GlimpseEngine.
     Returns (sample, essence, delta, aligned) tuple.
@@ -91,7 +119,10 @@ async def openai_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
         return content, essence, None, True
     except Exception as e:
         status = _map_openai_error_to_status(e)
-        logger.warning("openai_sampler_mapped_error", extra={"status": status, "error": str(e), "draft": draft})
+        logger.warning(
+            "openai_sampler_mapped_error",
+            extra={"status": status, "error": str(e), "draft": draft},
+        )
         # Attempt essence-only fallback for transient or recoverable errors
         if status in {"rate_limited", "server_error", "error"}:
             sample, essence, delta, aligned = await _essence_only_fallback(draft)
@@ -99,6 +130,7 @@ async def openai_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
         # For client errors (auth, bad request, etc.), return a clear error essence
         error_essence = f"Error: {status}. Unable to generate response."
         return "", error_essence, None, False
+
 
 # Register as the default sampler if desired by importing this module
 # Example: from glimpse.sampler_openai import openai_sampler as default_sampler

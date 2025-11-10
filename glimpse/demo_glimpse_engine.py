@@ -1,5 +1,7 @@
 import asyncio
-from glimpse.Glimpse import GlimpseEngine, Draft
+
+from glimpse.Glimpse import Draft, GlimpseEngine
+
 
 async def main() -> None:
     engine = GlimpseEngine()
@@ -25,6 +27,7 @@ async def main() -> None:
         print("History:", res2.status_history)
 
     Glimpse.commit(draft)
+
 
 if __name__ == "__main__":
     asyncio.run(main())

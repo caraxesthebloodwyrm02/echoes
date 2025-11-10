@@ -5,9 +5,11 @@ Runs repeated and batched requests to measure latency reductions.
 import asyncio
 import time
 from statistics import mean
-from glimpse.Glimpse import GlimpseEngine, Draft
-from glimpse.sampler_openai import openai_sampler
+
 from glimpse.cache_helpers import get_default_cache
+from glimpse.Glimpse import Draft, GlimpseEngine
+from glimpse.sampler_openai import openai_sampler
+
 
 async def run_once_unique():
     """Run a unique draft (cache miss)."""
@@ -21,6 +23,7 @@ async def run_once_unique():
     await Glimpse.glimpse(draft)
     return time.perf_counter() - start
 
+
 async def run_once_repeated():
     """Run a repeated draft (should hit cache)."""
     engine = GlimpseEngine(sampler=openai_sampler)
@@ -33,12 +36,14 @@ async def run_once_repeated():
     await Glimpse.glimpse(draft)
     return time.perf_counter() - start
 
+
 async def run_batch(drafts):
     """Run multiple drafts concurrently."""
     engine = GlimpseEngine(sampler=openai_sampler)
     start = time.perf_counter()
     await asyncio.gather(*(Glimpse.glimpse(d) for d in drafts))
     return time.perf_counter() - start
+
 
 async def main():
     print("=== Cache and Batch Benchmark ===")
@@ -63,6 +68,7 @@ async def main():
     # Cache stats
     cache = get_default_cache()
     print(f"Cache hit rate: {cache.get_hit_rate():.2%}")
+
 
 if __name__ == "__main__":
     asyncio.run(main())

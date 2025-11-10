@@ -1,0 +1,14 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="PyTests (sanitized)" type="tests" factoryName="py.test">
+    <option name="INTERPRETER_OPTIONS" value="" />
+    <option name="PARENT_ENVS" value="true" />
+    <envs />
+    <option name="SDK_HOME" value="" />
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+    <option name="TARGET" value="tests" />
+    <option name="TARGET_TYPE" value="PATH" />
+    <option name="ADDITIONAL_ARGS" value="-c root_configs/pytest.ini" />
+    <option name="USE_PARAM" value="false" />
+    <method v="2" />
+  </configuration>
+</component>

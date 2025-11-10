@@ -5,14 +5,16 @@ Safe filesystem operations with error handling and security.
 """
 
 import os
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any
 
 
 class FilesystemTools:
     """Safe filesystem operations."""
 
-    def __init__(self, root_dir: Optional[str] = None, allowed_patterns: Optional[List[str]] = None):
+    def __init__(
+        self, root_dir: str | None = None, allowed_patterns: list[str] | None = None
+    ):
         """Initialize filesystem tools."""
         self.root_dir = Path(root_dir or os.getcwd()).resolve()
         self.allowed_patterns = allowed_patterns or ["*"]
@@ -35,16 +37,19 @@ class FilesystemTools:
         except Exception:
             return False
 
-    def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> Dict[str, Any]:
+    def list_directory(
+        self, dirpath: str, pattern: str = "*", recursive: bool = False
+    ) -> dict[str, Any]:
         """List directory contents safely."""
+
         # Like good code structure:
         def handle_user_request(request):
             # Phase 1: Analysis
             understand_request(request)
-            
-            # Phase 2: Planning  
+
+            # Phase 2: Planning
             plan_approach(request)
-            
+
             # Phase 3: Execution
             execute_plan()
 
@@ -99,17 +104,21 @@ class FilesystemTools:
             return {"success": False, "error": f"Error listing directory: {str(e)}"}
 
     def read_file(
-        self, filepath: str, encoding: str = "utf-8", max_size: int = 1024 * 1024  # 1MB default
-    ) -> Dict[str, Any]:
+        self,
+        filepath: str,
+        encoding: str = "utf-8",
+        max_size: int = 1024 * 1024,  # 1MB default
+    ) -> dict[str, Any]:
         """Read file contents safely."""
+
         # Like good code structure:
         def handle_user_request(request):
             # Phase 1: Analysis
             understand_request(request)
-            
-            # Phase 2: Planning  
+
+            # Phase 2: Planning
             plan_approach(request)
-            
+
             # Phase 3: Execution
             execute_plan()
 
@@ -128,10 +137,13 @@ class FilesystemTools:
 
             file_size = path.stat().st_size
             if file_size > max_size:
-                return {"success": False, "error": f"File too large: {file_size} bytes (max: {max_size})"}
+                return {
+                    "success": False,
+                    "error": f"File too large: {file_size} bytes (max: {max_size})",
+                }
 
             # Phase 2: File Reading
-            with open(path, "r", encoding=encoding) as f:
+            with open(path, encoding=encoding) as f:
                 content = f.read()
 
             # Phase 3: Result Compilation
@@ -148,8 +160,12 @@ class FilesystemTools:
             return {"success": False, "error": f"Error reading file: {str(e)}"}
 
     def write_file(
-        self, filepath: str, content: str, encoding: str = "utf-8", create_dirs: bool = True
-    ) -> Dict[str, Any]:
+        self,
+        filepath: str,
+        content: str,
+        encoding: str = "utf-8",
+        create_dirs: bool = True,
+    ) -> dict[str, Any]:
         """Write file contents safely."""
         try:
             path = Path(filepath).resolve()
@@ -165,14 +181,23 @@ class FilesystemTools:
             with open(path, "w", encoding=encoding) as f:
                 f.write(content)
 
-            return {"success": True, "filepath": filepath, "size": path.stat().st_size, "created": not path.exists()}
+            return {
+                "success": True,
+                "filepath": filepath,
+                "size": path.stat().st_size,
+                "created": not path.exists(),
+            }
 
         except Exception as e:
             return {"success": False, "error": f"Error writing file: {str(e)}"}
 
     def search_files(
-        self, query: str, search_path: Optional[str] = None, file_pattern: str = "*", max_results: int = 50
-    ) -> Dict[str, Any]:
+        self,
+        query: str,
+        search_path: str | None = None,
+        file_pattern: str = "*",
+        max_results: int = 50,
+    ) -> dict[str, Any]:
         """Search for files by name or content."""
         try:
             base_path = Path(search_path or self.root_dir).resolve()
@@ -201,12 +226,17 @@ class FilesystemTools:
                         }
                     )
 
-            return {"success": True, "query": query, "results": results, "total": len(results)}
+            return {
+                "success": True,
+                "query": query,
+                "results": results,
+                "total": len(results),
+            }
 
         except Exception as e:
             return {"success": False, "error": f"Error searching files: {str(e)}"}
 
-    def get_file_info(self, filepath: str) -> Dict[str, Any]:
+    def get_file_info(self, filepath: str) -> dict[str, Any]:
         """Get file metadata."""
         try:
             path = Path(filepath).resolve()
@@ -234,7 +264,9 @@ class FilesystemTools:
         except Exception as e:
             return {"success": False, "error": f"Error getting file info: {str(e)}"}
 
-    def get_directory_tree(self, dirpath: str, max_depth: int = 3, include_files: bool = True) -> Dict[str, Any]:
+    def get_directory_tree(
+        self, dirpath: str, max_depth: int = 3, include_files: bool = True
+    ) -> dict[str, Any]:
         """Get directory tree structure."""
         try:
             path = Path(dirpath).resolve()
@@ -245,11 +277,15 @@ class FilesystemTools:
             if not path.exists() or not path.is_dir():
                 return {"success": False, "error": f"Directory not found: {dirpath}"}
 
-            def build_tree(p: Path, depth: int) -> Dict[str, Any]:
+            def build_tree(p: Path, depth: int) -> dict[str, Any]:
                 if depth > max_depth:
                     return None
 
-                node = {"name": p.name, "path": str(p.relative_to(self.root_dir)), "is_dir": p.is_dir()}
+                node = {
+                    "name": p.name,
+                    "path": str(p.relative_to(self.root_dir)),
+                    "is_dir": p.is_dir(),
+                }
 
                 if p.is_dir():
                     children = []
@@ -276,7 +312,9 @@ class FilesystemTools:
         except Exception as e:
             return {"success": False, "error": f"Error building tree: {str(e)}"}
 
-    def organize_roi_files(self, roi_results: Dict[str, Any], base_dir: str = "roi_analysis") -> Dict[str, Any]:
+    def organize_roi_files(
+        self, roi_results: dict[str, Any], base_dir: str = "roi_analysis"
+    ) -> dict[str, Any]:
         """
         Organize ROI analysis files into a structured directory.
 
@@ -293,7 +331,12 @@ class FilesystemTools:
             base_path.mkdir(parents=True, exist_ok=True)
 
             organized_files = {}
-            institution_name = roi_results.get("stakeholder_config", {}).get("institution_name", "unknown").lower().replace(" ", "_")
+            institution_name = (
+                roi_results.get("stakeholder_config", {})
+                .get("institution_name", "unknown")
+                .lower()
+                .replace(" ", "_")
+            )
 
             # Create institution-specific directory
             inst_dir = base_path / institution_name
@@ -346,7 +389,7 @@ class FilesystemTools:
                 "customization_level": roi_results.get("customization_level"),
                 "roi_metrics": roi_results.get("roi_metrics"),
                 "file_count": len(organized_files),
-                "organized_files": organized_files
+                "organized_files": organized_files,
             }
 
             metadata_path = inst_dir / "metadata.json"
@@ -360,7 +403,7 @@ class FilesystemTools:
                 "base_directory": str(base_path),
                 "institution_directory": str(inst_dir),
                 "organized_files": organized_files,
-                "total_files": len(organized_files)
+                "total_files": len(organized_files),
             }
 
         except Exception as e:

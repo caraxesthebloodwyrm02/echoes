@@ -4,28 +4,33 @@ Routes requests to appropriate language models based on context and requirements
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass
 from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
+
 class ModelType(Enum):
     """Available model types"""
+
     GPT_4 = "gpt-4"
     GPT_3_5_TURBO = "gpt-3.5-turbo"
     CLAUDE = "claude"
     LOCAL = "local"
 
+
 @dataclass
 class ModelConfig:
     """Configuration for a model"""
+
     name: str
     type: ModelType
     max_tokens: int = 4096
     temperature: float = 0.7
     supports_streaming: bool = True
     cost_per_token: float = 0.0
+
 
 class ModelRouter:
     """
@@ -34,22 +39,40 @@ class ModelRouter:
     """
 
     def __init__(self):
-        self.models: Dict[str, ModelConfig] = {}
+        self.models: dict[str, ModelConfig] = {}
         self.logger = logging.getLogger(__name__)
         self._initialize_default_models()
 
     def _initialize_default_models(self):
         """Initialize default model configurations"""
         default_models = [
-            ModelConfig("gpt-4", ModelType.GPT_4, max_tokens=8192, temperature=0.7, cost_per_token=0.03),
-            ModelConfig("gpt-3.5-turbo", ModelType.GPT_3_5_TURBO, max_tokens=4096, temperature=0.7, cost_per_token=0.002),
-            ModelConfig("claude-3-opus", ModelType.CLAUDE, max_tokens=4096, temperature=0.7, cost_per_token=0.015),
+            ModelConfig(
+                "gpt-4",
+                ModelType.GPT_4,
+                max_tokens=8192,
+                temperature=0.7,
+                cost_per_token=0.03,
+            ),
+            ModelConfig(
+                "gpt-3.5-turbo",
+                ModelType.GPT_3_5_TURBO,
+                max_tokens=4096,
+                temperature=0.7,
+                cost_per_token=0.002,
+            ),
+            ModelConfig(
+                "claude-3-opus",
+                ModelType.CLAUDE,
+                max_tokens=4096,
+                temperature=0.7,
+                cost_per_token=0.015,
+            ),
         ]
 
         for model in default_models:
             self.models[model.name] = model
 
-    def get_model(self, model_name: str) -> Optional[ModelConfig]:
+    def get_model(self, model_name: str) -> ModelConfig | None:
         """
         Get model configuration by name
 
@@ -61,7 +84,7 @@ class ModelRouter:
         """
         return self.models.get(model_name)
 
-    def route_request(self, context: Dict[str, Any]) -> ModelConfig:
+    def route_request(self, context: dict[str, Any]) -> ModelConfig:
         """
         Route a request to the most appropriate model
 
@@ -82,7 +105,7 @@ class ModelRouter:
         else:
             return self.models.get("claude-3-opus", list(self.models.values())[0])
 
-    def get_available_models(self) -> List[str]:
+    def get_available_models(self) -> list[str]:
         """
         Get list of available model names
 
@@ -120,6 +143,7 @@ class ModelRouter:
             self.logger.info(f"Removed model: {model_name}")
             return True
         return False
+
 
 # Global instance for easy access
 model_router = ModelRouter()

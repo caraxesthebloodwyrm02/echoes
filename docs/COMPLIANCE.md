@@ -4,6 +4,11 @@
 
 This document outlines the Educational Ecosystem Framework's compliance with major regulatory frameworks and standards applicable to educational technology systems.
 
+### Quick References
+- Policy Specification: `POLICY_SPEC.md`
+- Policy Governance: `docs/POLICY_GOVERNANCE.md`
+- Key Rotation Procedures: `docs/KEY_ROTATION.md`
+
 ## Regulatory Compliance
 
 ### FERPA (Family Educational Rights and Privacy Act)

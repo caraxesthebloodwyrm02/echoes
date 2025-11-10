@@ -3,11 +3,11 @@ API Key Management
 Handles API key generation, validation, and storage
 """
 
-import secrets
 import hashlib
 import json
+import secrets
 from pathlib import Path
-from typing import Dict, List, Optional
+
 from src.utils.datetime_utils import utc_now
 
 
@@ -16,17 +16,17 @@ class APIKeyManager:
 
     def __init__(self, storage_path: str = "api_keys.json"):
         self.storage_path = Path(storage_path)
-        self.keys: Dict[str, Dict] = self._load_keys()
+        self.keys: dict[str, dict] = self._load_keys()
 
-    def _load_keys(self) -> Dict[str, Dict]:
+    def _load_keys(self) -> dict[str, dict]:
         """Load API keys from storage - handle empty files gracefully"""
         if self.storage_path.exists():
             try:
-                with open(self.storage_path, "r") as f:
+                with open(self.storage_path) as f:
                     content = f.read().strip()
                     if content:
                         return json.loads(content)
-            except (json.JSONDecodeError, IOError):
+            except (OSError, json.JSONDecodeError):
                 pass  # Return empty dict on error
         return {}
 
@@ -39,7 +39,9 @@ class APIKeyManager:
         """Hash an API key for secure storage"""
         return hashlib.sha256(key.encode()).hexdigest()
 
-    def generate_key(self, name: str, role: str = "analyst", platforms: Optional[List[str]] = None) -> str:
+    def generate_key(
+        self, name: str, role: str = "analyst", platforms: list[str] | None = None
+    ) -> str:
         """
         Generate a new API key
 
@@ -68,7 +70,7 @@ class APIKeyManager:
         self._save_keys()
         return api_key
 
-    def validate_key(self, api_key: str) -> Optional[Dict]:
+    def validate_key(self, api_key: str) -> dict | None:
         """
         Validate an API key
 
@@ -113,7 +115,7 @@ class APIKeyManager:
 
         return False
 
-    def list_keys(self) -> List[Dict]:
+    def list_keys(self) -> list[dict]:
         """
         List all API keys (without revealing the actual keys)
 

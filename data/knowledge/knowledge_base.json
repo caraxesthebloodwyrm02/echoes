@@ -437,5 +437,14 @@
       "echoes",
       "assistant"
     ]
+  },
+  "096f0abcadc6": {
+    "id": "096f0abcadc6",
+    "content": "test",
+    "source": "test knowledge",
+    "category": "general",
+    "timestamp": "2025-11-01T19:02:18.517137+00:00",
+    "metadata": {},
+    "tags": []
   }
 }

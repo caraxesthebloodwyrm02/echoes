@@ -2,175 +2,25 @@
 requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
-[project]
-name = "echoes"
-version = "0.1.0"
-description = "Enterprise multimodal AI assistant platform with consent-based licensing"
-readme = "README.md"
-license = {text = "Consent-Based License"}
-requires-python = ">=3.12"
-authors = [
-    {name = "Erfan Kabir", email = "irfankabir02@gmail.com"},
-]
-maintainers = [
-    {name = "Erfan Kabir", email = "irfankabir02@gmail.com"},
-]
-keywords = ["ai", "assistant", "multimodal", "fastapi", "openai", "langchain"]
-classifiers = [
-    "Development Status :: 4 - Beta",
-    "Intended Audience :: Developers",
-    "License :: Other/Proprietary License",
-    "Operating System :: OS Independent",
-    "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-    "Programming Language :: Python :: 3 :: Only",
-    "Topic :: Scientific/Engineering :: Artificial Intelligence",
-    "Topic :: Software Development :: Libraries :: Python Modules",
-]
-dependencies = [
-    # Core AI & API Layers
-    "openai==2.6.1",
-    "fastapi==0.120.2",
-    "uvicorn==0.38.0",
-    "httpx==0.28.1",
-    "requests==2.32.5",
-    "python-dotenv==1.2.1",
-
-    # Security & Rate Limiting
-    "slowapi==0.1.9",
-    "pygments==2.19.2",
-
-    # LangChain Ecosystem
-    "langchain==0.3.21",
-    "langchain-core>=0.3.45,<1.0.0",
-    "langchain-community==0.4.1",
-    "langchain-openai==0.2.0",
-
-    # Data Science & ML
-    "numpy>=1.24.0",
-    "pandas>=2.0.0",
-    "scikit-learn>=1.3.0",
-
-    # Utilities
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
-    "python-multipart>=0.0.6",
-    "aiofiles>=0.23.0",
-]
-
-[project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "pytest-cov>=4.0.0",
-    "black>=23.0.0",
-    "ruff>=0.1.0",
-    "mypy>=1.0.0",
-    "pre-commit>=3.0.0",
-]
-docs = [
-    "mkdocs>=1.4.0",
-    "mkdocs-material>=9.0.0",
-]
-
-[project.urls]
-Homepage = "https://github.com/caraxesthebloodwyrm02/echoes"
-Repository = "https://github.com/caraxesthebloodwyrm02/echoes"
-Issues = "https://github.com/caraxesthebloodwyrm02/echoes/issues"
-Documentation = "https://echoes.readthedocs.io/"
-
 [tool.black]
 line-length = 88
-target-version = ['py312']
+target-version = ['py311']
 include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
+
+[tool.isort]
+profile = "black"
+line_length = 88
 
 [tool.ruff]
-target-version = "py312"
-line-length = 88
-select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
-]
-ignore = [
-    "E501", # line too long, handled by black
-    "B008", # do not perform function calls in argument defaults
-    "C901", # too complex
+# Basic error checking
+extend-select = ["E", "W", "F", "I"]
+
+# Ignore these specific rules
+extend-ignore = [
+    "E501",  # line too long (handled by black)
+    "E203",  # whitespace before ':' (incompatible with black)
 ]
 
 [tool.ruff.per-file-ignores]
+# Allow unused imports in __init__.py
 "__init__.py" = ["F401"]
-"tests/**/*" = ["B011"]
-
-[tool.mypy]
-python_version = "3.12"
-warn_return_any = true
-warn_unused_configs = true
-disallow_untyped_defs = true
-check_untyped_defs = true
-no_implicit_optional = true
-warn_redundant_casts = true
-warn_unused_ignores = true
-warn_no_return = true
-warn_unreachable = true
-disallow_untyped_decorators = true
-disallow_incomplete_defs = true
-no_implicit_reexport = true
-strict_equality = true
-strict_optional = true
-
-# No overrides needed - all dependencies are properly typed
-
-[tool.pytest.ini_options]
-minversion = "7.0"
-addopts = "-ra -q --strict-markers --tb=short --maxfail=10"
-testpaths = ["tests"]
-python_files = "test_*.py *_test.py"
-python_classes = "Test*"
-python_functions = "test_*"
-norecursedirs = [".git", ".tox", "dist", "build", "*.egg", "__pycache__", ".venv", "venv"]
-markers = [
-    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "integration: marks tests as integration tests",
-    "Glimpse: marks tests as Glimpse tests",
-]
-
-[tool.coverage.run]
-source = ["echoes", "app", "api"]
-omit = [
-    "*/tests/*",
-    "*/test_*.py",
-    "setup.py",
-]
-
-[tool.coverage.report]
-exclude_lines = [
-    "pragma: no cover",
-    "def __repr__",
-    "if self.debug:",
-    "if settings.DEBUG",
-    "raise AssertionError",
-    "raise NotImplementedError",
-    "if 0:",
-    "if __name__ == .__main__.:",
-    "class .*\\bProtocol\\):",
-    "@(abc\\.)?abstractmethod",
-]

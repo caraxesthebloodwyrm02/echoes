@@ -16,6 +16,7 @@ Scientific Impact: $2.7B cost savings, 3 breakthrough discoveries, 12 patents
 
 import json
 from datetime import datetime
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -25,7 +26,10 @@ class SpaceResearchDemo:
     def __init__(self):
         """Initialize the demo."""
         self.assistant = EchoesAssistantV2(
-            enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False
+            enable_tools=True,
+            enable_rag=False,
+            enable_streaming=False,
+            enable_status=False,
         )
         self.discoveries = []
         self.cost_savings = 0
@@ -72,20 +76,28 @@ class SpaceResearchDemo:
 
     def _phase_1_trajectory(self):
         """Phase 1: Trajectory optimization."""
-        self.print_section("PHASE 1: Trajectory Optimization via Pattern Recognition", "🛰️")
+        self.print_section(
+            "PHASE 1: Trajectory Optimization via Pattern Recognition", "🛰️"
+        )
 
         print("\n[Step 1.1] Analyzing 25 years of Mars mission data...")
 
         missions = {"missions": 5, "fuel_average": 950, "current_estimate": 85000}
-        self.assistant.gather_knowledge(json.dumps(missions), "nasa_db", "mission_data", ["historical"])
+        self.assistant.gather_knowledge(
+            json.dumps(missions), "nasa_db", "mission_data", ["historical"]
+        )
 
         print("\n[Step 1.2] Running pattern recognition...")
         result = self.assistant.run_workflow(
-            "data_enrichment", topic="Optimize Mars trajectory", context={"data": missions}
+            "data_enrichment",
+            topic="Optimize Mars trajectory",
+            context={"data": missions},
         )
 
         if result["success"]:
-            print(f"  ✓ Analysis: {len(result['steps'])} steps, {result['total_duration_ms']:.0f}ms")
+            print(
+                f"  ✓ Analysis: {len(result['steps'])} steps, {result['total_duration_ms']:.0f}ms"
+            )
             print("\n[Step 1.3] Discovery: Hybrid Cycler-Hohmann Trajectory")
             print("  • 40% fuel reduction | $1.8B savings | 23 days faster")
             print("  • 94% confidence | Patent #1: Novel trajectory method")
@@ -95,15 +107,28 @@ class SpaceResearchDemo:
 
     def _phase_2_life_support(self):
         """Phase 2: Life support innovation."""
-        self.print_section("PHASE 2: Life Support Innovation via Context Awareness", "🌱")
+        self.print_section(
+            "PHASE 2: Life Support Innovation via Context Awareness", "🌱"
+        )
 
-        print("\n[Step 2.1] Cross-domain analysis (biology + naval + polar + agriculture)...")
-        data = {"system_mass": 8500, "power": 12.5, "reliability": 0.92, "cost": 450_000_000}
-        self.assistant.gather_knowledge(json.dumps(data), "life_support_db", "life_support", ["current"])
+        print(
+            "\n[Step 2.1] Cross-domain analysis (biology + naval + polar + agriculture)..."
+        )
+        data = {
+            "system_mass": 8500,
+            "power": 12.5,
+            "reliability": 0.92,
+            "cost": 450_000_000,
+        }
+        self.assistant.gather_knowledge(
+            json.dumps(data), "life_support_db", "life_support", ["current"]
+        )
 
         print("\n[Step 2.2] Context-aware synthesis...")
         result = self.assistant.run_workflow(
-            "triage", user_input="Innovate life support via cross-domain", context={"data": data}
+            "triage",
+            user_input="Innovate life support via cross-domain",
+            context={"data": data},
         )
 
         if result["success"]:
@@ -117,14 +142,20 @@ class SpaceResearchDemo:
 
     def _phase_3_propulsion(self):
         """Phase 3: Propulsion breakthrough."""
-        self.print_section("PHASE 3: Propulsion Breakthrough via Pattern Recognition", "⚡")
+        self.print_section(
+            "PHASE 3: Propulsion Breakthrough via Pattern Recognition", "⚡"
+        )
 
         print("\n[Step 3.1] Analyzing propulsion patterns across mission phases...")
         data = {"chemical_isp": 450, "ion_isp": 3000, "mission_delta_v": 6.2}
-        self.assistant.gather_knowledge(json.dumps(data), "propulsion_db", "propulsion", ["research"])
+        self.assistant.gather_knowledge(
+            json.dumps(data), "propulsion_db", "propulsion", ["research"]
+        )
 
         print("\n[Step 3.2] Pattern-based breakthrough analysis...")
-        result = self.assistant.run_workflow("data_enrichment", topic="Breakthrough propulsion", context={"data": data})
+        result = self.assistant.run_workflow(
+            "data_enrichment", topic="Breakthrough propulsion", context={"data": data}
+        )
 
         if result["success"]:
             print(f"  ✓ Analysis: {result['total_duration_ms']:.0f}ms")
@@ -145,7 +176,9 @@ class SpaceResearchDemo:
 
         print("\n[Step 4.2] Creating multi-level educational framework...")
         ed_data = {"levels": 4, "reach": "565K/year", "universities": 150}
-        self.assistant.gather_knowledge(json.dumps(ed_data), "education", "education", ["framework"])
+        self.assistant.gather_knowledge(
+            json.dumps(ed_data), "education", "education", ["framework"]
+        )
 
         print("\n[Step 4.3] Educational Impact:")
         print("  • 4 audience levels: High school → Industry")
@@ -165,7 +198,9 @@ class SpaceResearchDemo:
             "patents": self.patents_identified,
             "open_access": True,
         }
-        self.assistant.write_file("data/space_research_publication.json", json.dumps(pub, indent=2))
+        self.assistant.write_file(
+            "data/space_research_publication.json", json.dumps(pub, indent=2)
+        )
 
         print(f"\n  📄 Primary Paper: {pub['primary_paper']}")
         print(f"  📚 Supporting Papers: {pub['supporting_papers']}")
@@ -209,7 +244,9 @@ class SpaceResearchDemo:
         print("\n" + "=" * 80)
         print("✅ ECHOES AI: ACCELERATING SPACE EXPLORATION RESEARCH")
         print("=" * 80)
-        print(f"\n💡 Scientific Value: {self.format_currency(self.cost_savings)} + 3 breakthroughs")
+        print(
+            f"\n💡 Scientific Value: {self.format_currency(self.cost_savings)} + 3 breakthroughs"
+        )
         print("🎓 Educational Impact: 565K students/researchers empowered annually")
         print("🚀 Ready for: NASA, ESA, SpaceX, research institutions worldwide")
         print("\n" + "=" * 80 + "\n")
