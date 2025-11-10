@@ -39,6 +39,23 @@ ENV/
 *.swo
 *.sublime-*
 
+# PyCharm/IntelliJ IDEA inspection files
+*.inspection.xml
+Py*.xml
+GrazieInspection.xml
+DuplicatedCode.xml
+DuplicatedCode_aggregate.xml
+.descriptions.xml
+AiaStyle.xml
+SpellCheckingInspection.xml
+
+# Development files
+Pipfile
+Pipfile.lock
+test_failure.txt.txt
+"New Text Document.txt"
+full_coverage_test_runner.py
+
 # Logs
 *.log
 logs/
@@ -91,6 +108,10 @@ sample_files/
 sessions/
 *.ipynb
 stage_files.ps1
+
+# Reports and test outputs
+reports/
+test_failure.txt.txt
 
 # Testing
 .coverage
