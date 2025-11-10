@@ -7,6 +7,8 @@ from dataclasses import dataclass, field
 from enum import Enum, auto
 from typing import Callable, Dict, List, Optional, Tuple, Union
 
+from smart_terminal.core.predictor import CommandPredictor
+
 
 class FeedbackType(Enum):
     """Types of contextual feedback that can be provided."""
