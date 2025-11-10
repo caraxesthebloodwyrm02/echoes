@@ -64,50 +64,50 @@ class ClarifierEngine:
             print("✅ Using enhanced clarifier engine with post-execution curiosity")
         else:
             print("📋 Using legacy clarifier engine")
-        
+
         # Always initialize clarifier_rules for compatibility
         self.clarifier_rules = {
-                # Audience clarifiers
-                "customer": Clarifier(
-                    type=ClarifierType.AUDIENCE,
-                    question="Is this for customers or internal team?",
-                    options=["customers", "internal"],
-                    default="internal",
-                ),
-                "external": Clarifier(
-                    type=ClarifierType.AUDIENCE,
-                    question="Is this for external stakeholders?",
-                    options=["external", "internal"],
-                    default="internal",
-                ),
-                "public": Clarifier(
-                    type=ClarifierType.AUDIENCE,
-                    question="Is this for public consumption?",
-                    options=["public", "private"],
-                    default="private",
-                ),
-                # Tone clarifiers
-                "formal": Clarifier(
-                    type=ClarifierType.TONE,
-                    question="Should this be formal or informal?",
-                    options=["formal", "informal"],
-                    default="informal",
-                ),
-                # Length clarifiers
-                "brief": Clarifier(
-                    type=ClarifierType.LENGTH,
-                    question="How detailed should this be?",
-                    options=["brief", "detailed", "comprehensive"],
-                    default="brief",
-                ),
-                # Format clarifiers
-                "list": Clarifier(
-                    type=ClarifierType.FORMAT,
-                    question="What format would you prefer?",
-                    options=["bullet points", "paragraphs", "numbered list"],
-                    default="bullet points",
-                ),
-            }
+            # Audience clarifiers
+            "customer": Clarifier(
+                type=ClarifierType.AUDIENCE,
+                question="Is this for customers or internal team?",
+                options=["customers", "internal"],
+                default="internal",
+            ),
+            "external": Clarifier(
+                type=ClarifierType.AUDIENCE,
+                question="Is this for external stakeholders?",
+                options=["external", "internal"],
+                default="internal",
+            ),
+            "public": Clarifier(
+                type=ClarifierType.AUDIENCE,
+                question="Is this for public consumption?",
+                options=["public", "private"],
+                default="private",
+            ),
+            # Tone clarifiers
+            "formal": Clarifier(
+                type=ClarifierType.TONE,
+                question="Should this be formal or informal?",
+                options=["formal", "informal"],
+                default="informal",
+            ),
+            # Length clarifiers
+            "brief": Clarifier(
+                type=ClarifierType.LENGTH,
+                question="How detailed should this be?",
+                options=["brief", "detailed", "comprehensive"],
+                default="brief",
+            ),
+            # Format clarifiers
+            "list": Clarifier(
+                type=ClarifierType.FORMAT,
+                question="What format would you prefer?",
+                options=["bullet points", "paragraphs", "numbered list"],
+                default="bullet points",
+            ),
+        }
 
     def detect_ambiguity(
         self, input_text: str, goal: str, constraints: str

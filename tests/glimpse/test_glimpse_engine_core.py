@@ -77,16 +77,20 @@ def test_cancel_on_edit_does_not_consume_try_and_debounces():
 
 def test_clarifier_when_intent_unspecified():
     import os
+
     async def run():
         # Enable pre-execution clarifier for this test
         old_val = os.environ.get("GLIMPSE_PREEXEC_CLARIFIER")
         os.environ["GLIMPSE_PREEXEC_CLARIFIER"] = "true"
-        
+
         try:
             # Need to reimport to pick up the env var change
             from glimpse.engine import GlimpseEngine as ReloadedEngine
+
             engine = ReloadedEngine()
-            r = await engine.glimpse(Draft(input_text="message", goal="", constraints=""))
+            r = await engine.glimpse(
+                Draft(input_text="message", goal="", constraints="")
+            )
 
             # With unspecified goal, clarifier should appear in delta and mark not_aligned
             assert r.status == "not_aligned"
