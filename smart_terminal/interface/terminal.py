@@ -449,7 +449,7 @@ class TerminalInterface:
 
         # Create a container that shows feedback when available
         from prompt_toolkit.filters import Condition
-        
+
         feedback_container = ConditionalContainer(
             content=HSplit(
                 [

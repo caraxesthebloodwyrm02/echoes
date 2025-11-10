@@ -121,11 +121,16 @@ class TestSmartTerminalE2E:
 
         # Test with invalid feedback file path - should create empty feedback
         feedback = FeedbackHandler("/invalid/path/feedback.json")
-        assert feedback.feedback == {"suggestions": [], "ratings": []}  # Should be empty, not raise exception
+        assert feedback.feedback == {
+            "suggestions": [],
+            "ratings": [],
+        }  # Should be empty, not raise exception
 
         # Test with invalid preset - should return default
         preset = TerminalPreset.get_preset("invalid_preset")
-        assert preset == TerminalPreset.DEVELOPER  # Should return default, not raise exception
+        assert (
+            preset == TerminalPreset.DEVELOPER
+        )  # Should return default, not raise exception
 
     def test_preset_functionality(self):
         """Test terminal presets functionality."""
