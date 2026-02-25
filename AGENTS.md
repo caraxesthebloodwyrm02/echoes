@@ -33,3 +33,5 @@ EchoesAssistantV2 is a Python 3.12+ multimodal AI assistant platform with 8 inte
 3. **pytest.ini coverage:** Has `--cov-fail-under=75` which fails. Use `--no-cov` flag when running tests.
 4. **Virtual environment:** The venv is at `/workspace/venv`. Always activate with `source venv/bin/activate` before running commands.
 5. **`python3.12-venv`** system package is required but not pre-installed; the update script handles venv creation.
+6. **Network egress:** The Cursor Cloud VM blocks outbound HTTPS to `api.openai.com` (and likely other external APIs). Features requiring OpenAI API calls (chat, demos, full integration tests) will fail with `ConnectionError`. Core module tests and the quick integration test work fully offline.
+7. **`STATUS_RETRY` undefined:** `assistant_v2_core.py` references `STATUS_RETRY` (a string constant) that was never defined. This causes chat API error-retry paths to fail with `NameError` instead of retrying gracefully.
