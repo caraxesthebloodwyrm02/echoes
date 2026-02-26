@@ -7,7 +7,8 @@ Glimpse settings, security, and performance parameters.
 
 import os
 from typing import Optional, Dict, Any
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pathlib import Path
 
 
@@ -37,9 +38,7 @@ class EngineConfig(BaseSettings):
     chunk_overlap: int = Field(default=50, env="CHUNK_OVERLAP")
     chunk_method: str = Field(default="sentence", env="CHUNK_METHOD")
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 class SecurityConfig(BaseSettings):
@@ -62,6 +61,8 @@ class SecurityConfig(BaseSettings):
     cors_allow_methods: list = Field(default=["*"], env="CORS_ALLOW_METHODS")
     cors_allow_headers: list = Field(default=["*"], env="CORS_ALLOW_HEADERS")
 
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
 
 class APIConfig(BaseSettings):
     """Main API server configuration"""
@@ -83,9 +84,7 @@ class APIConfig(BaseSettings):
     websocket_ping_interval: int = Field(default=20, env="WEBSOCKET_PING_INTERVAL")
     websocket_ping_timeout: int = Field(default=20, env="WEBSOCKET_PING_TIMEOUT")
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 class PatternDetectionConfig(BaseSettings):
@@ -98,6 +97,8 @@ class PatternDetectionConfig(BaseSettings):
         default=True, env="PATTERN_STATISTICAL_ENABLED"
     )
 
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
 
 class SelfRAGConfig(BaseSettings):
     """Configuration for SELF-RAG truth verification"""
@@ -108,6 +109,8 @@ class SelfRAGConfig(BaseSettings):
     )
     uncertainty_threshold: float = Field(default=0.4, env="RAG_UNCERTAINTY_THRESHOLD")
     max_evidence_chunks: int = Field(default=10, env="RAG_MAX_EVIDENCE_CHUNKS")
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 class EchoesAPIConfig(BaseSettings):
@@ -130,9 +133,7 @@ class EchoesAPIConfig(BaseSettings):
         default="development", env="ENVIRONMENT"
     )  # development, staging, production
 
-    class Config:
-        env_file = ".env"
-        env_file_encoding = "utf-8"
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
 # Global configuration instance

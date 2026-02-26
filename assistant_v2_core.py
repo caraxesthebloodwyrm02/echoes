@@ -45,7 +45,6 @@ from pathlib import Path
 from dataclasses import dataclass, field
 from core_modules.caching import cached_method
 from core_modules.context_manager import ContextManager
-from core_modules.model_router import ModelRouter
 from core_modules.metrics import ModelMetrics
 from core_modules.dynamic_error_handler import error_handler
 from core_modules.personality_engine import personality_engine
@@ -406,10 +405,11 @@ MAX_TOOL_ITERATIONS = 5
 # Status constants
 STATUS_SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
 STATUS_COMPLETE = "✅"
-STATUS_ERROR = ""
-STATUS_WORKING = ""
-STATUS_SEARCH = ""
-STATUS_TOOL = ""
+STATUS_ERROR = "❌"
+STATUS_WORKING = "⚙️"
+STATUS_SEARCH = "🔍"
+STATUS_TOOL = "🔧"
+STATUS_RETRY = "↻"
 
 
 class EnhancedStatusIndicator:

@@ -1,2 +1,0 @@
-az login
-az account show

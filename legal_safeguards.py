@@ -191,7 +191,12 @@ class CognitiveAccountingSystem:
             dpr = {**partial, "chain_hash": chain_hash}
             full_serialized = json.dumps(dpr, sort_keys=True)
 
-            secret = os.environ.get("JWT_SECRET", "echoes-default-secret")
+            secret = os.environ.get("JWT_SECRET")
+            if not secret:
+                raise EnvironmentError(
+                    "JWT_SECRET environment variable is required for provenance signing. "
+                    "Refusing to sign with a default — set JWT_SECRET to a secure random value."
+                )
             signature = hmac.new(
                 secret.encode(), full_serialized.encode(), hashlib.sha256
             ).hexdigest()

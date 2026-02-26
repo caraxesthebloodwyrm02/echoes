@@ -1,7 +1,8 @@
 """Configuration for OpenAI AAE Prototype."""
 
 import os
-from pydantic import BaseSettings, Field
+from pydantic import Field
+from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
 class OpenAIConfig(BaseSettings):
@@ -27,9 +28,7 @@ class OpenAIConfig(BaseSettings):
     enable_policies: bool = Field(True, env="ENABLE_POLICIES")
     enable_explanations: bool = Field(True, env="ENABLE_EXPLANATIONS")
 
-    class Config:
-        env_file = ".env"
-        extra = "forbid"
+    model_config = SettingsConfigDict(env_file=".env", extra="forbid")
 
 
 # Global config instance

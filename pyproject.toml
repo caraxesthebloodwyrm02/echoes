@@ -10,10 +10,10 @@ readme = "README.md"
 license = {text = "Consent-Based License"}
 requires-python = ">=3.12"
 authors = [
-    {name = "Erfan Kabir", email = "irfankabir02@gmail.com"},
+    {name = "Irfan Kabir", email = "irfankabir02@gmail.com"},
 ]
 maintainers = [
-    {name = "Erfan Kabir", email = "irfankabir02@gmail.com"},
+    {name = "Irfan Kabir", email = "irfankabir02@gmail.com"},
 ]
 keywords = ["ai", "assistant", "multimodal", "fastapi", "openai", "langchain"]
 classifiers = [
@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     # Core AI & API Layers
-    "openai==2.6.1",
+    "openai>=1.40.0,<2.0.0",
     "fastapi==0.120.2",
     "uvicorn==0.38.0",
     "httpx==0.28.1",
@@ -42,9 +42,9 @@ dependencies = [
     "pygments==2.19.2",
 
     # LangChain Ecosystem
-    "langchain==0.3.21",
+    "langchain==0.3.23",
     "langchain-core>=0.3.45,<1.0.0",
-    "langchain-community==0.4.1",
+    "langchain-community==0.3.21",
     "langchain-openai==0.2.0",
 
     # Data Science & ML
@@ -57,6 +57,7 @@ dependencies = [
     "pydantic-settings>=2.0.0",
     "python-multipart>=0.0.6",
     "aiofiles>=0.23.0",
+    "prometheus-client>=0.20.0",
 ]
 
 [project.optional-dependencies]
