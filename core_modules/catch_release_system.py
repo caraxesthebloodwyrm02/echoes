@@ -3,18 +3,17 @@ Catch and Release System - Intelligent caching for quick cross-referencing
 Maintains conversation continuity while enabling rapid context switching and retrieval
 """
 
-import logging
 import hashlib
-import time
 import json
-from typing import Dict, Any, List, Optional, Set, Tuple, Union
-from datetime import datetime, timedelta
-from dataclasses import dataclass, field, asdict
-from enum import Enum
-from collections import defaultdict, OrderedDict
-import threading
+import logging
 import pickle
-import weakref
+import threading
+import time
+from collections import OrderedDict, defaultdict
+from dataclasses import asdict, dataclass, field
+from datetime import datetime, timedelta
+from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -53,10 +52,10 @@ class CacheEntry:
     last_accessed: datetime
     access_count: int = 0
     size_bytes: int = 0
-    tags: Set[str] = field(default_factory=set)
-    related_keys: Set[str] = field(default_factory=set)
+    tags: set[str] = field(default_factory=set)
+    related_keys: set[str] = field(default_factory=set)
     importance_score: float = 0.5
-    expiration: Optional[datetime] = None
+    expiration: datetime | None = None
 
     def __post_init__(self):
         if self.last_accessed is None:
@@ -72,8 +71,8 @@ class CrossReferenceResult:
     content: Any
     source_key: str
     relevance_score: float
-    context_info: Dict[str, Any]
-    retrieval_path: List[str]
+    context_info: dict[str, Any]
+    retrieval_path: list[str]
     confidence: float
 
 
@@ -87,7 +86,7 @@ class LRUCache:
         self.hits = 0
         self.misses = 0
 
-    def get(self, key: str) -> Optional[Any]:
+    def get(self, key: str) -> Any | None:
         with self.lock:
             if key in self.cache:
                 # Move to end (most recently used)
@@ -123,7 +122,7 @@ class LRUCache:
             self.hits = 0
             self.misses = 0
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         with self.lock:
             total_requests = self.hits + self.misses
             hit_rate = self.hits / total_requests if total_requests > 0 else 0
@@ -189,7 +188,7 @@ class CatchAndReleaseSystem:
         self.cleanup_thread.start()
 
     def _generate_cache_key(
-        self, content: Any, content_type: ContentType, context: Dict[str, Any] = None
+        self, content: Any, content_type: ContentType, context: dict[str, Any] = None
     ) -> str:
         """Generate a unique cache key for content"""
         # Create a deterministic key based on content and context
@@ -208,10 +207,10 @@ class CatchAndReleaseSystem:
         content: Any,
         content_type: ContentType,
         cache_level: CacheLevel = CacheLevel.SHORT_TERM,
-        tags: Set[str] = None,
+        tags: set[str] = None,
         importance: float = 0.5,
-        context: Dict[str, Any] = None,
-        ttl_hours: Optional[int] = None,
+        context: dict[str, Any] = None,
+        ttl_hours: int | None = None,
     ) -> str:
         """Catch and cache content for quick retrieval"""
 
@@ -249,7 +248,7 @@ class CatchAndReleaseSystem:
         logger.debug(f"Caught content: {cache_key} ({content_type.value})")
         return cache_key
 
-    def release(self, cache_key: str, update_access: bool = True) -> Optional[Any]:
+    def release(self, cache_key: str, update_access: bool = True) -> Any | None:
         """Release (retrieve) cached content"""
 
         # Try all caches in order of priority
@@ -281,14 +280,13 @@ class CatchAndReleaseSystem:
     def cross_reference(
         self,
         query: str,
-        content_types: List[ContentType] = None,
+        content_types: list[ContentType] = None,
         max_results: int = 10,
         min_relevance: float = 0.3,
-    ) -> List[CrossReferenceResult]:
+    ) -> list[CrossReferenceResult]:
         """Quick cross-reference lookup across cached content"""
 
         results = []
-        query_lower = query.lower()
 
         # Search all caches
         all_entries = []
@@ -298,7 +296,7 @@ class CatchAndReleaseSystem:
             self.long_term_cache,
             self.permanent_cache,
         ]:
-            for key, entry in cache.cache.items():
+            for _key, entry in cache.cache.items():
                 if not content_types or entry.content_type in content_types:
                     all_entries.append(entry)
 
@@ -376,7 +374,7 @@ class CatchAndReleaseSystem:
         )
         return min(total_score, 1.0)
 
-    def _build_retrieval_path(self, cache_key: str) -> List[str]:
+    def _build_retrieval_path(self, cache_key: str) -> list[str]:
         """Build the retrieval path for a cache entry"""
         path = [cache_key]
 
@@ -396,7 +394,7 @@ class CatchAndReleaseSystem:
         }
         return mapping.get(level, self.short_term_cache)
 
-    def _update_indexes(self, entry: CacheEntry, context: Dict[str, Any] = None):
+    def _update_indexes(self, entry: CacheEntry, context: dict[str, Any] = None):
         """Update search indexes for a cache entry"""
         content_str = str(entry.content).lower()
 
@@ -418,7 +416,7 @@ class CatchAndReleaseSystem:
         time_bucket = entry.created_at.strftime("%Y%m%d_%H")  # Hour buckets
         self.temporal_index[time_bucket].append(entry.key)
 
-    def _extract_concepts(self, text: str) -> List[str]:
+    def _extract_concepts(self, text: str) -> list[str]:
         """Extract key concepts from text"""
         # Simple concept extraction - could be enhanced with NLP
         import re
@@ -439,11 +437,11 @@ class CatchAndReleaseSystem:
         concepts.extend(cap_terms)
 
         # Return unique concepts
-        return list(set(c.lower() for c in concepts if len(c) > 2))
+        return list({c.lower() for c in concepts if len(c) > 2})
 
     def find_related(
         self, cache_key: str, max_depth: int = 2
-    ) -> List[CrossReferenceResult]:
+    ) -> list[CrossReferenceResult]:
         """Find related cached content"""
 
         visited = set()
@@ -497,7 +495,7 @@ class CatchAndReleaseSystem:
         self.relationship_graph[key2].add(key1)
         logger.debug(f"Created relationship: {key1} <-> {key2}")
 
-    def get_conversation_continuity(self, session_id: str = None) -> Dict[str, Any]:
+    def get_conversation_continuity(self, session_id: str = None) -> dict[str, Any]:
         """Get conversation continuity information"""
 
         # Find recent conversation entries
@@ -573,7 +571,7 @@ class CatchAndReleaseSystem:
         for related_keys in self.relationship_graph.values():
             related_keys.discard(cache_key)
 
-    def get_cache_statistics(self) -> Dict[str, Any]:
+    def get_cache_statistics(self) -> dict[str, Any]:
         """Get comprehensive cache statistics"""
 
         total_size = 0

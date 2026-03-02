@@ -5,10 +5,10 @@ Handles knowledge gathering, storage, retrieval, and context building.
 """
 
 import json
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timezone
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
 from pathlib import Path
-from dataclasses import dataclass, asdict
+from typing import Any
 
 
 @dataclass
@@ -20,21 +20,21 @@ class KnowledgeEntry:
     source: str
     category: str
     timestamp: str
-    metadata: Dict[str, Any]
-    tags: List[str]
+    metadata: dict[str, Any]
+    tags: list[str]
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
     @staticmethod
-    def from_dict(data: Dict[str, Any]) -> "KnowledgeEntry":
+    def from_dict(data: dict[str, Any]) -> "KnowledgeEntry":
         return KnowledgeEntry(**data)
 
 
 class KnowledgeManager:
     """Manages knowledge gathering, storage, and retrieval."""
 
-    def __init__(self, storage_path: Optional[str] = None):
+    def __init__(self, storage_path: str | None = None):
         """Initialize the knowledge manager."""
         if storage_path:
             self.storage_path = Path(storage_path)
@@ -45,8 +45,8 @@ class KnowledgeManager:
         self.knowledge_file = self.storage_path / "knowledge_base.json"
         self.context_file = self.storage_path / "context.json"
 
-        self.knowledge: Dict[str, KnowledgeEntry] = {}
-        self.context: Dict[str, Any] = {}
+        self.knowledge: dict[str, KnowledgeEntry] = {}
+        self.context: dict[str, Any] = {}
 
         self._load_knowledge()
         self._load_context()
@@ -55,7 +55,7 @@ class KnowledgeManager:
         """Load knowledge from storage."""
         if self.knowledge_file.exists():
             try:
-                with open(self.knowledge_file, "r", encoding="utf-8") as f:
+                with open(self.knowledge_file, encoding="utf-8") as f:
                     data = json.load(f)
                     self.knowledge = {
                         k: KnowledgeEntry.from_dict(v) for k, v in data.items()
@@ -73,7 +73,7 @@ class KnowledgeManager:
         """Load context from storage."""
         if self.context_file.exists():
             try:
-                with open(self.context_file, "r", encoding="utf-8") as f:
+                with open(self.context_file, encoding="utf-8") as f:
                     self.context = json.load(f)
             except Exception:
                 self.context = {}
@@ -88,28 +88,17 @@ class KnowledgeManager:
         content: str,
         source: str,
         category: str = "general",
-        tags: Optional[List[str]] = None,
-        metadata: Optional[Dict[str, Any]] = None,
+        tags: list[str] | None = None,
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """Add knowledge entry."""
-
-        # Like good code structure:
-        def handle_user_request(request):
-            # Phase 1: Analysis
-            understand_request(request)
-
-            # Phase 2: Planning
-            plan_approach(request)
-
-            # Phase 3: Execution
-            execute_plan()
 
         # Phase 1: Input Processing
         import hashlib
 
         # Generate ID
         entry_id = hashlib.md5(
-            f"{content}{source}{datetime.now(timezone.utc).isoformat()}".encode()
+            f"{content}{source}{datetime.now(UTC).isoformat()}".encode()
         ).hexdigest()[:12]
 
         entry = KnowledgeEntry(
@@ -117,7 +106,7 @@ class KnowledgeManager:
             content=content,
             source=source,
             category=category,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             metadata=metadata or {},
             tags=tags or [],
         )
@@ -127,17 +116,17 @@ class KnowledgeManager:
 
         return entry_id
 
-    def get_knowledge(self, entry_id: str) -> Optional[KnowledgeEntry]:
+    def get_knowledge(self, entry_id: str) -> KnowledgeEntry | None:
         """Get knowledge entry by ID."""
         return self.knowledge.get(entry_id)
 
     def search_knowledge(
         self,
-        query: Optional[str] = None,
-        category: Optional[str] = None,
-        tags: Optional[List[str]] = None,
+        query: str | None = None,
+        category: str | None = None,
+        tags: list[str] | None = None,
         limit: int = 10,
-    ) -> List[KnowledgeEntry]:
+    ) -> list[KnowledgeEntry]:
         """Search knowledge entries."""
         results = list(self.knowledge.values())
 
@@ -168,7 +157,7 @@ class KnowledgeManager:
         self.context[key] = value
         self._save_context()
 
-    def get_context(self, key: Optional[str] = None) -> Any:
+    def get_context(self, key: str | None = None) -> Any:
         """Get context."""
         if key:
             return self.context.get(key)
@@ -193,7 +182,7 @@ class KnowledgeManager:
 
         return "\n".join(summary_parts) if summary_parts else "No context available"
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get knowledge statistics."""
         categories = {}
         for entry in self.knowledge.values():
@@ -207,7 +196,7 @@ class KnowledgeManager:
         }
 
     def store_roi_analysis(
-        self, roi_results: Dict[str, Any], analysis_id: Optional[str] = None
+        self, roi_results: dict[str, Any], analysis_id: str | None = None
     ) -> str:
         """Store ROI analysis results in knowledge base."""
         if not analysis_id:
@@ -260,10 +249,10 @@ class KnowledgeManager:
 
     def search_roi_analyses(
         self,
-        institution: Optional[str] = None,
-        business_type: Optional[str] = None,
+        institution: str | None = None,
+        business_type: str | None = None,
         limit: int = 10,
-    ) -> List[KnowledgeEntry]:
+    ) -> list[KnowledgeEntry]:
         """Search ROI analyses by institution or business type."""
         query = "ROI Analysis"
         tags = ["roi"]
@@ -280,7 +269,7 @@ class KnowledgeManager:
 
         return results
 
-    def get_roi_summary(self) -> Dict[str, Any]:
+    def get_roi_summary(self) -> dict[str, Any]:
         """Get summary of all ROI analyses."""
         roi_entries = self.search_knowledge(category="roi_analysis", limit=1000)
 

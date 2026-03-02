@@ -9,9 +9,9 @@ Enables the assistant to take autonomous actions:
 """
 
 import time
-from typing import Dict, Any, Optional, List
-from datetime import datetime, timezone
-from dataclasses import dataclass, asdict
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from typing import Any
 
 
 @dataclass
@@ -22,11 +22,11 @@ class ActionResult:
     action_type: str
     status: str  # success, failed, pending
     result: Any
-    error: Optional[str] = None
+    error: str | None = None
     duration_ms: float = 0.0
     timestamp: str = ""
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -34,22 +34,11 @@ class ActionExecutor:
     """Executes actions on behalf of the assistant."""
 
     def __init__(self):
-        self.action_history: List[ActionResult] = []
+        self.action_history: list[ActionResult] = []
         self.action_counter = 0
 
     def execute_inventory_action(self, action_type: str, **kwargs) -> ActionResult:
         """Execute an inventory action via ATLAS."""
-
-        # Like good code structure:
-        def handle_user_request(request):
-            # Phase 1: Analysis
-            understand_request(request)
-
-            # Phase 2: Planning
-            plan_approach(request)
-
-            # Phase 3: Execution
-            execute_plan()
 
         # Phase 1: Setup
         self.action_counter += 1
@@ -112,7 +101,7 @@ class ActionExecutor:
                 status="success",
                 result=result_data,
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         except Exception as e:
@@ -124,7 +113,7 @@ class ActionExecutor:
                 result=None,
                 error=str(e),
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         self.action_history.append(result)
@@ -153,7 +142,7 @@ class ActionExecutor:
                 result=result_data.data if result_data.success else result_data.error,
                 error=None if result_data.success else result_data.error,
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         except Exception as e:
@@ -165,7 +154,7 @@ class ActionExecutor:
                 result=None,
                 error=str(e),
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         self.action_history.append(result)
@@ -199,7 +188,7 @@ class ActionExecutor:
                 status="success",
                 result=result_data,
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         except Exception as e:
@@ -211,13 +200,13 @@ class ActionExecutor:
                 result=None,
                 error=str(e),
                 duration_ms=duration_ms,
-                timestamp=datetime.now(timezone.utc).isoformat(),
+                timestamp=datetime.now(UTC).isoformat(),
             )
 
         self.action_history.append(result)
         return result
 
-    def _generate_roi_analysis_package(self, **kwargs) -> Dict[str, Any]:
+    def _generate_roi_analysis_package(self, **kwargs) -> dict[str, Any]:
         """Generate a complete ROI analysis package."""
         # This would integrate with the ROI tool to generate all formats
         from tools.roi_analysis_tool import ROIAnalysisTool
@@ -251,30 +240,30 @@ class ActionExecutor:
             raise Exception(f"ROI generation failed: {result.error}")
 
     def _save_roi_template(
-        self, template_name: str, template_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, template_name: str, template_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Save an ROI analysis template."""
         # Implementation for saving templates
         return {"template_name": template_name, "saved": True}
 
-    def _load_roi_analysis(self, analysis_id: str) -> Dict[str, Any]:
+    def _load_roi_analysis(self, analysis_id: str) -> dict[str, Any]:
         """Load a previously generated ROI analysis."""
         # Implementation for loading saved analyses
         return {"analysis_id": analysis_id, "loaded": True}
 
-    def _compare_roi_scenarios(self, scenario_ids: List[str]) -> Dict[str, Any]:
+    def _compare_roi_scenarios(self, scenario_ids: list[str]) -> dict[str, Any]:
         """Compare multiple ROI analysis scenarios."""
         # Implementation for scenario comparison
         return {"scenarios_compared": len(scenario_ids), "comparison": "completed"}
 
-    def get_action_history(self, limit: Optional[int] = None) -> List[Dict[str, Any]]:
+    def get_action_history(self, limit: int | None = None) -> list[dict[str, Any]]:
         """Get action history."""
         history = self.action_history
         if limit:
             history = history[-limit:]
         return [a.to_dict() for a in history]
 
-    def get_action_summary(self) -> Dict[str, Any]:
+    def get_action_summary(self) -> dict[str, Any]:
         """Get summary of actions executed."""
         total = len(self.action_history)
         successful = sum(1 for a in self.action_history if a.status == "success")

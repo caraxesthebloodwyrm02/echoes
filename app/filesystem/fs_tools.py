@@ -4,9 +4,10 @@ Enhanced Filesystem Tools for EchoesAssistantV2
 Safe filesystem operations with error handling and security.
 """
 
+import json
 import os
-from typing import Dict, Any, List, Optional
 from pathlib import Path
+from typing import Any
 
 
 class FilesystemTools:
@@ -14,8 +15,8 @@ class FilesystemTools:
 
     def __init__(
         self,
-        root_dir: Optional[str] = None,
-        allowed_patterns: Optional[List[str]] = None,
+        root_dir: str | None = None,
+        allowed_patterns: list[str] | None = None,
     ):
         """Initialize filesystem tools."""
         self.root_dir = Path(root_dir or os.getcwd()).resolve()
@@ -42,19 +43,8 @@ class FilesystemTools:
 
     def list_directory(
         self, dirpath: str, pattern: str = "*", recursive: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """List directory contents safely."""
-
-        # Like good code structure:
-        def handle_user_request(request):
-            # Phase 1: Analysis
-            understand_request(request)
-
-            # Phase 2: Planning
-            plan_approach(request)
-
-            # Phase 3: Execution
-            execute_plan()
 
         # Phase 1: Path Validation
         try:
@@ -111,19 +101,8 @@ class FilesystemTools:
         filepath: str,
         encoding: str = "utf-8",
         max_size: int = 1024 * 1024,  # 1MB default
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Read file contents safely."""
-
-        # Like good code structure:
-        def handle_user_request(request):
-            # Phase 1: Analysis
-            understand_request(request)
-
-            # Phase 2: Planning
-            plan_approach(request)
-
-            # Phase 3: Execution
-            execute_plan()
 
         # Phase 1: Path and Size Validation
         try:
@@ -146,7 +125,7 @@ class FilesystemTools:
                 }
 
             # Phase 2: File Reading
-            with open(path, "r", encoding=encoding) as f:
+            with open(path, encoding=encoding) as f:
                 content = f.read()
 
             # Phase 3: Result Compilation
@@ -168,7 +147,7 @@ class FilesystemTools:
         content: str,
         encoding: str = "utf-8",
         create_dirs: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Write file contents safely."""
         try:
             path = Path(filepath).resolve()
@@ -197,10 +176,10 @@ class FilesystemTools:
     def search_files(
         self,
         query: str,
-        search_path: Optional[str] = None,
+        search_path: str | None = None,
         file_pattern: str = "*",
         max_results: int = 50,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Search for files by name or content."""
         try:
             base_path = Path(search_path or self.root_dir).resolve()
@@ -239,7 +218,7 @@ class FilesystemTools:
         except Exception as e:
             return {"success": False, "error": f"Error searching files: {str(e)}"}
 
-    def get_file_info(self, filepath: str) -> Dict[str, Any]:
+    def get_file_info(self, filepath: str) -> dict[str, Any]:
         """Get file metadata."""
         try:
             path = Path(filepath).resolve()
@@ -269,7 +248,7 @@ class FilesystemTools:
 
     def get_directory_tree(
         self, dirpath: str, max_depth: int = 3, include_files: bool = True
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Get directory tree structure."""
         try:
             path = Path(dirpath).resolve()
@@ -280,7 +259,7 @@ class FilesystemTools:
             if not path.exists() or not path.is_dir():
                 return {"success": False, "error": f"Directory not found: {dirpath}"}
 
-            def build_tree(p: Path, depth: int) -> Dict[str, Any]:
+            def build_tree(p: Path, depth: int) -> dict[str, Any]:
                 if depth > max_depth:
                     return None
 
@@ -316,8 +295,8 @@ class FilesystemTools:
             return {"success": False, "error": f"Error building tree: {str(e)}"}
 
     def organize_roi_files(
-        self, roi_results: Dict[str, Any], base_dir: str = "roi_analysis"
-    ) -> Dict[str, Any]:
+        self, roi_results: dict[str, Any], base_dir: str = "roi_analysis"
+    ) -> dict[str, Any]:
         """
         Organize ROI analysis files into a structured directory.
 
