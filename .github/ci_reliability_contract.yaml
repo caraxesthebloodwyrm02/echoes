@@ -1,0 +1,108 @@
+# CI/CD Reliability Contract
+# Schema for machine validation and human reference
+schema_version: "1.0.0"
+last_updated: "2025-03-02"
+
+pipeline:
+  name: echoes-ci
+  repository: caraxesthebloodwyrm02/echoes
+  default_branch: main
+
+triggers:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+environment:
+  python_version: "3.12"
+  os: ubuntu-latest
+  env_vars:
+    API_KEY_REQUIRED: "false"
+
+jobs:
+  lint:
+    name: Lint
+    timeout_minutes: 5
+    steps:
+      - ruff_check:
+          paths: [api/, app/]
+          description: "Ruff lint on api/ and app/ only"
+      - ruff_format:
+          paths: [api/, app/]
+          mode: check
+    success_criteria:
+      - all_steps_exit_zero: true
+    excluded_from_lint: [glimpse/, tools/, core/, src/, misc/]
+
+  test:
+    name: Test
+    timeout_minutes: 10
+    steps:
+      - pytest:
+          paths: [tests/]
+          addopts: "-ra --strict-markers --tb=short --maxfail=10"
+          ignore:
+            - tests/test_quantum_state_integration.py
+            - tests/benchmark_rate_limiter.py
+    success_criteria:
+      - exit_code: 0
+      - no_unexpected_errors: true
+    known_skips:
+      - file: tests/test_rag_orbit.py
+        reason: "NumPy DLL load failure on Windows/Python 3.13"
+        condition: "numpy import fails"
+      - file: tests/test_quantum_state_integration.py
+        reason: "Import chain requires numpy; collection fails if numpy broken"
+      - file: tests/glimpse/test_coverage_completions.py
+        condition: "matplotlib not available"
+      - file: tests/glimpse/test_dashboard_callbacks.py
+        condition: "Q4 dashboard module not found"
+    api_key_dependent:
+      - tests/test_all_demos.py
+      - tests/test_agentic_assistant.py
+      - tests/test_echoes_assistant_v2_comprehensive.py
+      - tests/test_model_router.py
+      - tests/test_multi_agent_workflows.py
+    module_dependent:
+      - file: tests/test_ethos.py
+        requires: core.ethos
+        status: "missing module"
+
+  security:
+    name: Security
+    timeout_minutes: 5
+    steps:
+      - pip_audit:
+          ignore_vulns:
+            - CVE-2025-6984
+            - CVE-2026-26013
+    success_criteria:
+      - exit_code: 0
+
+  gate:
+    name: Gate
+    needs: [lint, test, security]
+    success_criteria:
+      - all_upstream_success: true
+
+coverage:
+  enforced_in_ci: false
+  local_config:
+    fail_under: 75
+    source: [app, api, glimpse, tools, core, src]
+  note: "CI overrides addopts and does not run coverage"
+
+guarantees:
+  - "Lint passes iff api/ and app/ pass ruff check and format"
+  - "Test passes iff pytest exits 0 with CI addopts (no coverage)"
+  - "Push is green when lint, test, security, and gate all succeed"
+  - "Skipped/error tests: quantum (numpy), rag_orbit (numpy), demos/assistant (OPENAI_API_KEY), ethos (core.ethos), guardrails (c_o_r_e)"
+
+validation:
+  required_jobs: [lint, test, security]
+  optional_jobs: [gate]
+  ci_command_equivalents:
+    lint: "ruff check api/ app/ && ruff format --check api/ app/"
+    test: "pytest tests/ -v --tb=short --maxfail=10 --ignore=tests/test_quantum_state_integration.py --ignore=tests/benchmark_rate_limiter.py -o addopts='-ra --strict-markers --tb=short --maxfail=10'"
+    security: "pip-audit --ignore-vuln CVE-2025-6984 --ignore-vuln CVE-2026-26013"

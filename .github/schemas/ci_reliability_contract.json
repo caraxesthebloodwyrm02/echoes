@@ -1,0 +1,36 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://github.com/caraxesthebloodwyrm02/echoes/ci_reliability_contract.json",
+  "title": "CI/CD Reliability Contract",
+  "type": "object",
+  "required": ["schema_version", "pipeline", "jobs", "guarantees"],
+  "properties": {
+    "schema_version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$"
+    },
+    "pipeline": {
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "repository": { "type": "string" },
+        "default_branch": { "type": "string" }
+      }
+    },
+    "jobs": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "properties": {
+          "name": { "type": "string" },
+          "timeout_minutes": { "type": "integer" },
+          "success_criteria": { "type": "array" }
+        }
+      }
+    },
+    "guarantees": {
+      "type": "array",
+      "items": { "type": "string" }
+    }
+  }
+}
