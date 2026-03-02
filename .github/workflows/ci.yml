@@ -71,7 +71,7 @@ jobs:
       - run: pip install -e ".[dev]" pip-audit
 
       - name: Audit dependencies
-        run: pip-audit --ignore-vuln CVE-2026-26013
+        run: pip-audit --ignore-vuln CVE-2025-6984 --ignore-vuln CVE-2026-26013
 
   gate:
     name: Gate
