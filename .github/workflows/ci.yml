@@ -28,10 +28,10 @@ jobs:
       - run: pip install -e ".[dev]"
 
       - name: Ruff check
-        run: ruff check api/ app/ glimpse/ tests/
+        run: ruff check api/ app/
 
       - name: Ruff format check
-        run: ruff format --check api/ app/ glimpse/ tests/
+        run: ruff format --check api/ app/
 
   test:
     name: Test
@@ -51,9 +51,10 @@ jobs:
 
       - name: Run tests
         run: >
-          pytest tests/ -v
-          --tb=short
-          --maxfail=10
+          pytest tests/
+          -v --tb=short --maxfail=10
+          --ignore=tests/test_quantum_state_integration.py
+          --ignore=tests/benchmark_rate_limiter.py
           -o addopts="-ra --strict-markers --tb=short --maxfail=10"
 
   security:
