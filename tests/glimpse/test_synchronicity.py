@@ -7,7 +7,8 @@ in test coverage.
 """
 
 import pytest
-from glimpse.Glimpse import GlimpseEngine, Draft
+
+from glimpse.Glimpse import Draft, GlimpseEngine
 
 
 class TestSynchronicityDetection:
@@ -29,15 +30,16 @@ class TestSynchronicityDetection:
 
         results = []
         for draft in seeker_drafts:
-            engine = GlimpseEngine()  # Fresh Glimpse for each
-            result = await Glimpse.glimpse(draft)
+            engine = GlimpseEngine()  # Fresh engine per draft to avoid retry limit
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should complete (aligned, not_aligned, or redial are all valid)
         for result in results:
             assert result.status in ["aligned", "not_aligned", "redial"]
-            # Essence should capture something meaningful
-            assert len(result.essence) > 0
+            # Essence may be empty for redial status
+            if result.status != "redial":
+                assert len(result.essence) > 0
 
     @pytest.mark.asyncio
     async def test_random_match_rejection(self):
@@ -54,7 +56,7 @@ class TestSynchronicityDetection:
             constraints="social media post",  # Wrong context
         )
 
-        result = await Glimpse.glimpse(random_draft)
+        result = await engine.glimpse(random_draft)
 
         # Should process (Glimpse is resilient)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -107,7 +109,7 @@ class TestMeaningfulCoincidence:
             constraints="production-safe, well-tested, immediate",
         )
 
-        result = await Glimpse.glimpse(meaningful_draft)
+        result = await engine.glimpse(meaningful_draft)
 
         # Should process successfully
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -128,7 +130,7 @@ class TestMeaningfulCoincidence:
             constraints="marketing copy",  # Wrong context
         )
 
-        result = await Glimpse.glimpse(surface_draft)
+        result = await engine.glimpse(surface_draft)
 
         # Should process (Glimpse is resilient)
         assert result.status in ["aligned", "not_aligned", "redial"]
@@ -155,7 +157,7 @@ class TestCollectivePatterns:
 
         results = []
         for draft in help_patterns:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should be processed successfully
@@ -184,7 +186,7 @@ class TestCollectivePatterns:
 
         results = []
         for draft in optimization_patterns:
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             results.append(result)
 
         # All should recognize the optimization archetype

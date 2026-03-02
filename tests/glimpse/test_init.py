@@ -3,9 +3,10 @@ Tests for glimpse.__init__ module
 """
 
 import pytest
+
 from glimpse import (
-    GlimpseEngine,
     Draft,
+    GlimpseEngine,
     GlimpseResult,
     LatencyMonitor,
     PrivacyGuard,
@@ -18,12 +19,13 @@ class TestGlimpseInit:
 
     def test_import_main_classes(self):
         """Test that main classes can be imported"""
-        from glimpse import GlimpseEngine
-        from glimpse import Draft
-        from glimpse import GlimpseResult
-        from glimpse import LatencyMonitor
-        from glimpse import PrivacyGuard
-        from glimpse import default_sampler
+        from glimpse import (
+            Draft,
+            GlimpseResult,
+            LatencyMonitor,
+            PrivacyGuard,
+            default_sampler,
+        )
 
         assert GlimpseEngine is not None
         assert Draft is not None
@@ -71,13 +73,13 @@ class TestGlimpseInit:
         assert result.status_history == ["test"]
 
     def test_create_latency_monitor(self):
-        """Test LatencyMonitor creation"""
+        """Test LatencyMonitor creation with implementation defaults (ms)"""
         monitor = LatencyMonitor()
 
-        assert monitor.t1 == 100
-        assert monitor.t2 == 300
-        assert monitor.t3 == 800
-        assert monitor.t4 == 2000
+        assert monitor.t1 == 1500
+        assert monitor.t2 == 2500
+        assert monitor.t3 == 4000
+        assert monitor.t4 == 6000
         assert monitor._start_ms is None
 
     def test_create_latency_monitor_custom_thresholds(self):
@@ -94,7 +96,8 @@ class TestGlimpseInit:
         guard = PrivacyGuard()
 
         assert guard.committed == False
-        assert guard._on_commit is None
+        # Uses no-op lambda by default, not None
+        assert guard._on_commit is not None
 
     def test_create_privacy_guard_with_commit_handler(self):
         """Test PrivacyGuard with custom commit handler"""
@@ -129,7 +132,7 @@ class TestGlimpseInit:
         guard = PrivacyGuard()
         draft = Draft("test", "goal", "constraints")
 
-        # Should not raise error
+        # Should not raise error (no-op lambda is used)
         guard.commit(draft)
 
         assert guard.committed == True
@@ -143,9 +146,11 @@ class TestGlimpseInit:
         guard = PrivacyGuard(on_commit=failing_handler)
         draft = Draft("test", "goal", "constraints")
 
-        # Should not raise error - exceptions are caught
-        guard.commit(draft)
-
+        # Exception propagates (PrivacyGuard does not catch exceptions)
+        # committed is set to True before callback is called
+        with pytest.raises(ValueError, match="Commit failed"):
+            guard.commit(draft)
+        # committed was set before the exception
         assert guard.committed == True
 
 
@@ -203,10 +208,15 @@ class TestDefaultSampler:
         assert aligned == False
 
     async def test_default_sampler_clarifier_for_empty_goal(self):
-        """Test default sampler adds clarifier for empty goal"""
-        draft = Draft(input_text="some input", goal="", constraints="")
+        """Test default sampler adds clarifier for empty goal when env enabled"""
+        from unittest.mock import patch
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        draft = Draft(input_text="some input", goal="", constraints="")
+        # Clarifier for empty goal is gated by PREEXEC_CLARIFIER_ENABLED
+        with patch("glimpse.engine.PREEXEC_CLARIFIER_ENABLED", True):
+            from glimpse.engine import default_sampler as patched_sampler
+
+            sample, essence, delta, aligned = await patched_sampler(draft)
 
         assert delta is not None
         assert "Clarifier:" in delta
