@@ -4,11 +4,10 @@ Enhanced Accounting module - Mock implementation for assistant functionality.
 Provides enhanced accounting and value tracking for the Echoes assistant.
 """
 
-from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass
-from enum import Enum
 from datetime import datetime
-import json
+from enum import Enum
+from typing import Any
 
 
 class ValueType(Enum):
@@ -41,7 +40,7 @@ class ValueEntry:
     unit: str
     description: str
     timestamp: datetime = None
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.timestamp is None:
@@ -54,8 +53,8 @@ class EnhancedAccountingSystem:
     """Enhanced accounting system for tracking various value types."""
 
     def __init__(self):
-        self.entries: List[ValueEntry] = []
-        self.balances: Dict[ValueType, float] = {vt: 0.0 for vt in ValueType}
+        self.entries: list[ValueEntry] = []
+        self.balances: dict[ValueType, float] = dict.fromkeys(ValueType, 0.0)
         self.period = AccountingPeriod.REAL_TIME
 
     def record_value(
@@ -64,7 +63,7 @@ class EnhancedAccountingSystem:
         amount: float,
         unit: str,
         description: str,
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> str:
         """Record a value entry."""
         import uuid
@@ -87,15 +86,15 @@ class EnhancedAccountingSystem:
         """Get balance for a specific value type."""
         return self.balances.get(value_type, 0.0)
 
-    def get_entries_by_type(self, value_type: ValueType) -> List[ValueEntry]:
+    def get_entries_by_type(self, value_type: ValueType) -> list[ValueEntry]:
         """Get all entries of a specific type."""
         return [entry for entry in self.entries if entry.value_type == value_type]
 
-    def get_entries_in_period(self, start: datetime, end: datetime) -> List[ValueEntry]:
+    def get_entries_in_period(self, start: datetime, end: datetime) -> list[ValueEntry]:
         """Get entries within a time period."""
         return [entry for entry in self.entries if start <= entry.timestamp <= end]
 
-    def calculate_roi(self, value_type: ValueType) -> Dict[str, float]:
+    def calculate_roi(self, value_type: ValueType) -> dict[str, float]:
         """Calculate simple ROI for a value type."""
         entries = self.get_entries_by_type(value_type)
         if not entries:
@@ -114,9 +113,7 @@ class EnhancedAccountingSystem:
         roi = (returned - invested) / invested * 100
         return {"roi": roi, "total_invested": abs(invested), "total_returned": returned}
 
-    def generate_report(
-        self, period: Optional[AccountingPeriod] = None
-    ) -> Dict[str, Any]:
+    def generate_report(self, period: AccountingPeriod | None = None) -> dict[str, Any]:
         """Generate accounting report."""
         report_period = period or self.period
 
@@ -150,7 +147,7 @@ class EnhancedAccountingSystem:
         self.entries = [e for e in self.entries if e.timestamp > cutoff]
 
         # Recalculate balances
-        self.balances = {vt: 0.0 for vt in ValueType}
+        self.balances = dict.fromkeys(ValueType, 0.0)
         for entry in self.entries:
             self.balances[entry.value_type] += entry.amount
 

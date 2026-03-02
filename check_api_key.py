@@ -54,7 +54,7 @@ def check_api_key():
     try:
         import openai
 
-        client = openai.OpenAI(api_key=api_key)
+        _client = openai.OpenAI(api_key=api_key)
         print("✅ OpenAI client initialized successfully")
         print("   Ready for API calls without storing credentials")
 

@@ -1,18 +1,15 @@
+from collections.abc import Callable, Iterable
 from typing import (
     Any,
-    Callable,
-    Iterable,
     Literal,
-    TypeAlias,
     overload,
 )
 
 import numpy as np
-
 from pandas._typing import npt
 
-_BinOp: TypeAlias = Callable[[Any, Any], Any]
-_BoolOp: TypeAlias = Callable[[Any, Any], bool]
+type _BinOp = Callable[[Any, Any], Any]
+type _BoolOp = Callable[[Any, Any], bool]
 
 def scalar_compare(
     values: np.ndarray,  # object[:]

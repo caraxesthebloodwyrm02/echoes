@@ -1,12 +1,8 @@
 #!/usr/bin/env python3
 # echoes_email_generator.py - Email ROI Analysis Generator
-import json
-import sys
-import csv
-from dataclasses import dataclass, asdict
-from typing import Optional, Dict, Any
 import datetime
-import math
+import json
+from dataclasses import dataclass
 
 
 @dataclass
@@ -37,7 +33,7 @@ def load_email_config(yaml_path: str) -> EmailConfig:
     """Load configuration from email YAML file"""
     config = EmailConfig()
     try:
-        with open(yaml_path, "r", encoding="utf-8") as f:
+        with open(yaml_path, encoding="utf-8") as f:
             content = f.read()
 
         # Simple YAML parsing for email config
@@ -249,7 +245,7 @@ def main():
     # Export files
     export_email_files(config, args.output)
 
-    print(f"\n🎯 Ready to send stakeholder email!")
+    print("\n🎯 Ready to send stakeholder email!")
     print(f"Files created: {args.output}.txt, {args.output}_data.json")
 
 

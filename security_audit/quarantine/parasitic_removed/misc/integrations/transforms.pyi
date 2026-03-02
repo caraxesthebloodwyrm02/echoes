@@ -1,10 +1,12 @@
-from .path import Path
-from .patches import Patch
-from .figure import Figure
-import numpy as np
-from numpy.typing import ArrayLike
 from collections.abc import Iterable, Sequence
 from typing import Literal
+
+import numpy as np
+from numpy.typing import ArrayLike
+
+from .figure import Figure
+from .patches import Patch
+from .path import Path
 
 DEBUG: bool
 
@@ -79,7 +81,8 @@ class BboxBase(TransformNode):
     coefs: dict[str, tuple[float, float]]
     def anchored(
         self,
-        c: tuple[float, float] | Literal["C", "SW", "S", "SE", "E", "NE", "N", "NW", "W"],
+        c: tuple[float, float]
+        | Literal["C", "SW", "S", "SE", "E", "NE", "N", "NW", "W"],
         container: BboxBase,
     ) -> Bbox: ...
     def shrunk(self, mx: float, my: float) -> Bbox: ...
@@ -156,7 +159,7 @@ class LockableBbox(BboxBase):
         y0: float | None = ...,
         x1: float | None = ...,
         y1: float | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     @property
     def locked_x0(self) -> float | None: ...
@@ -176,7 +179,6 @@ class LockableBbox(BboxBase):
     def locked_y1(self, y1: float | None) -> None: ...
 
 class Transform(TransformNode):
-
     # Implemented as a standard attrs in base class, but functionally readonly and some subclasses implement as such
     @property
     def input_dims(self) -> int | None: ...
@@ -190,7 +192,9 @@ class Transform(TransformNode):
     @property
     def depth(self) -> int: ...
     def contains_branch(self, other: Transform) -> bool: ...
-    def contains_branch_seperately(self, other_transform: Transform) -> Sequence[bool]: ...
+    def contains_branch_seperately(
+        self, other_transform: Transform
+    ) -> Sequence[bool]: ...
     def __sub__(self, other: Transform) -> Transform: ...
     def __array__(self, *args, **kwargs) -> np.ndarray: ...
     def transform(self, values: ArrayLike) -> np.ndarray: ...
@@ -233,7 +237,9 @@ class Affine2DBase(AffineBase):
 class Affine2D(Affine2DBase):
     def __init__(self, matrix: ArrayLike | None = ..., **kwargs) -> None: ...
     @staticmethod
-    def from_values(a: float, b: float, c: float, d: float, e: float, f: float) -> Affine2D: ...
+    def from_values(
+        a: float, b: float, c: float, d: float, e: float, f: float
+    ) -> Affine2D: ...
     def set_matrix(self, mtx: ArrayLike) -> None: ...
     def clear(self) -> Affine2D: ...
     def rotate(self, theta: float) -> Affine2D: ...
@@ -255,7 +261,9 @@ class BlendedGenericTransform(_BlendedMixin, Transform):
     input_dims: Literal[2]
     output_dims: Literal[2]
     pass_through: bool
-    def __init__(self, x_transform: Transform, y_transform: Transform, **kwargs) -> None: ...
+    def __init__(
+        self, x_transform: Transform, y_transform: Transform, **kwargs
+    ) -> None: ...
     @property
     def depth(self) -> int: ...
     def contains_branch(self, other: Transform) -> Literal[False]: ...
@@ -263,7 +271,9 @@ class BlendedGenericTransform(_BlendedMixin, Transform):
     def is_affine(self) -> bool: ...
 
 class BlendedAffine2D(_BlendedMixin, Affine2DBase):
-    def __init__(self, x_transform: Transform, y_transform: Transform, **kwargs) -> None: ...
+    def __init__(
+        self, x_transform: Transform, y_transform: Transform, **kwargs
+    ) -> None: ...
 
 def blended_transform_factory(
     x_transform: Transform, y_transform: Transform
@@ -292,7 +302,9 @@ class BboxTransformFrom(Affine2DBase):
     def __init__(self, boxin: BboxBase, **kwargs) -> None: ...
 
 class ScaledTranslation(Affine2DBase):
-    def __init__(self, xt: float, yt: float, scale_trans: Affine2DBase, **kwargs) -> None: ...
+    def __init__(
+        self, xt: float, yt: float, scale_trans: Affine2DBase, **kwargs
+    ) -> None: ...
 
 class AffineDeltaTransform(Affine2DBase):
     def __init__(self, transform: Affine2DBase, **kwargs) -> None: ...

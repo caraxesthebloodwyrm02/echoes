@@ -7,16 +7,15 @@ for advanced multimodal understanding capabilities.
 """
 
 import asyncio
-from typing import Dict, Any, List
 import logging
+from typing import Any
 
 from .unified_comprehension import (
-    UnifiedComprehensionSystem,
-    UnifiedInput,
     InputModality,
     ProcessingContext,
+    UnifiedComprehensionSystem,
+    UnifiedInput,
 )
-from .adaptive_fidelity import ProcessingContext as FidelityContext
 
 logger = logging.getLogger(__name__)
 
@@ -43,10 +42,10 @@ class UnifiedComprehensionIntegration:
         text: str = None,
         image_path: str = None,
         audio_path: str = None,
-        sensor_data: Dict[str, Any] = None,
+        sensor_data: dict[str, Any] = None,
         context: ProcessingContext = ProcessingContext.CONVERSATION,
-        user_preferences: Dict[str, Any] = None,
-    ) -> Dict[str, Any]:
+        user_preferences: dict[str, Any] = None,
+    ) -> dict[str, Any]:
         """
         Process multimodal input through the unified comprehension pipeline.
 
@@ -148,10 +147,10 @@ class UnifiedComprehensionIntegration:
 
     async def _create_multimodal_fusion(
         self,
-        individual_results: Dict[str, Any],
+        individual_results: dict[str, Any],
         context: ProcessingContext,
-        user_preferences: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        user_preferences: dict[str, Any],
+    ) -> dict[str, Any]:
         """Create multimodal fusion from individual modality results."""
         # Prepare multimodal data
         multimodal_data = {}
@@ -210,7 +209,7 @@ class UnifiedComprehensionIntegration:
 
     def get_semantic_paths(
         self, concept1: str, concept2: str, max_hops: int = 3
-    ) -> List[List[str]]:
+    ) -> list[list[str]]:
         """
         Find semantic paths between concepts using the Archer framework.
 
@@ -270,9 +269,9 @@ class EnhancedEchoesAssistant:
         message: str,
         image_path: str = None,
         audio_path: str = None,
-        sensor_data: Dict[str, Any] = None,
+        sensor_data: dict[str, Any] = None,
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Enhanced chat with multimodal comprehension.
 
@@ -315,8 +314,8 @@ class EnhancedEchoesAssistant:
         return enhanced_response
 
     def _extract_multimodal_insights(
-        self, comprehension_results: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, comprehension_results: dict[str, Any]
+    ) -> dict[str, Any]:
         """Extract key insights from multimodal processing."""
         insights = {
             "modalities_processed": len(comprehension_results.get("results", {})),
@@ -347,8 +346,8 @@ class EnhancedEchoesAssistant:
         return insights
 
     async def analyze_semantic_relationships(
-        self, concepts: List[str]
-    ) -> Dict[str, Any]:
+        self, concepts: list[str]
+    ) -> dict[str, Any]:
         """
         Analyze semantic relationships between concepts using the Archer framework.
 

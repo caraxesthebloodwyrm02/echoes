@@ -1,7 +1,9 @@
 from collections.abc import Callable, Mapping
 from enum import Enum
-from typing import Any, Generic, Literal as L, TypeVar, overload
-from typing_extensions import ParamSpec, Self, TypeAlias
+from typing import Any, Generic, Self, TypeVar, overload
+from typing import Literal as L
+
+from typing_extensions import ParamSpec
 
 # Define Op and Language enums first to resolve F821 errors
 class Op(Enum):
@@ -41,12 +43,12 @@ _DataT_co = TypeVar("_DataT_co", default=Any, covariant=True)
 _LeftT_co = TypeVar("_LeftT_co", default=Any, covariant=True)
 _RightT_co = TypeVar("_RightT_co", default=Any, covariant=True)
 
-_RelCOrPy: TypeAlias = L["==", "!=", "<", "<=", ">", ">="]
-_RelFortran: TypeAlias = L[".eq.", ".ne.", ".lt.", ".le.", ".gt.", ".ge."]
+type _RelCOrPy = L["==", "!=", "<", "<=", ">", ">="]
+type _RelFortran = L[".eq.", ".ne.", ".lt.", ".le.", ".gt.", ".ge."]
 
-_ToExpr: TypeAlias = Expr | complex | str
-_ToExprN: TypeAlias = _ToExpr | tuple[_ToExprN, ...]
-_NestedString: TypeAlias = str | tuple[_NestedString, ...] | list[_NestedString]
+type _ToExpr = Expr | complex | str
+type _ToExprN = _ToExpr | tuple[_ToExprN, ...]
+type _NestedString = str | tuple[_NestedString, ...] | list[_NestedString]
 
 class OpError(Exception): ...
 class ExprWarning(UserWarning): ...

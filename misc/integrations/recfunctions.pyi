@@ -1,13 +1,12 @@
 from collections.abc import Callable, Iterable, Mapping, Sequence
-from typing import Any, Literal, TypeAlias, overload
-
-from _typeshed import Incomplete
-from typing_extensions import TypeVar
+from typing import Any, Literal, overload
 
 import numpy as np
 import numpy.typing as npt
+from _typeshed import Incomplete
 from numpy._typing import _AnyShape, _DTypeLike, _DTypeLikeVoid
 from numpy.ma.mrecords import MaskedRecords
+from typing_extensions import TypeVar
 
 __all__ = [
     "append_fields",
@@ -41,16 +40,16 @@ _ArrayT = TypeVar("_ArrayT", bound=npt.NDArray[Any])
 _VoidArrayT = TypeVar("_VoidArrayT", bound=npt.NDArray[np.void])
 _NonVoidDTypeT = TypeVar("_NonVoidDTypeT", bound=_NonVoidDType)
 
-_OneOrMany: TypeAlias = _T | Iterable[_T]
-_BuiltinSequence: TypeAlias = tuple[_T, ...] | list[_T]
+type _OneOrMany[_T] = _T | Iterable[_T]
+type _BuiltinSequence[_T] = tuple[_T, ...] | list[_T]
 
-_NestedNames: TypeAlias = tuple[str | _NestedNames, ...]
-_NonVoid: TypeAlias = (
+type _NestedNames = tuple[str | _NestedNames, ...]
+type _NonVoid = (
     np.bool | np.number | np.character | np.datetime64 | np.timedelta64 | np.object_
 )
-_NonVoidDType: TypeAlias = np.dtype[_NonVoid] | np.dtypes.StringDType
+type _NonVoidDType = np.dtype[_NonVoid] | np.dtypes.StringDType
 
-_JoinType: TypeAlias = Literal["inner", "outer", "leftouter"]
+type _JoinType = Literal["inner", "outer", "leftouter"]
 
 ###
 

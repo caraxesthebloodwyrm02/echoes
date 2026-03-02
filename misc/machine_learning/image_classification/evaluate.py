@@ -15,11 +15,12 @@ import argparse
 import json
 import sys
 from pathlib import Path
+
+import matplotlib.pyplot as plt
+import numpy as np
+import seaborn as sns
 import torch
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
-import seaborn as sns
-import numpy as np
 
 # Add the machine_learning directory to Python path
 sys.path.insert(0, str(Path(__file__).parent.parent))

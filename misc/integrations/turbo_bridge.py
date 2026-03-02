@@ -10,9 +10,9 @@ Provides unified API for cross-platform analysis and data exchange.
 """
 
 import logging
-from typing import Dict, Any, Optional, List, Union
-from pathlib import Path
 import sys
+from pathlib import Path
+from typing import Any
 
 from .impact_analytics_connector import ImpactAnalyticsConnector, ImpactMetrics
 
@@ -78,7 +78,7 @@ class TurboBridge:
             return connector.is_connected()
         return connector is not None
 
-    def get_connected_platforms(self) -> List[str]:
+    def get_connected_platforms(self) -> list[str]:
         """Get list of successfully connected platforms."""
         connected = []
         for platform, connector in self.platforms.items():
@@ -89,7 +89,7 @@ class TurboBridge:
                 connected.append(platform)
         return connected
 
-    def unified_analysis(self, request: Dict[str, Any]) -> Dict[str, Any]:
+    def unified_analysis(self, request: dict[str, Any]) -> dict[str, Any]:
         """Perform unified analysis across all connected platforms.
 
         Args:
@@ -153,8 +153,8 @@ class TurboBridge:
         prompt: str,
         response: str,
         safety_score: float,
-        bias_analysis: Dict[str, Any],
-        metadata: Optional[Dict[str, Any]] = None,
+        bias_analysis: dict[str, Any],
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """Record an AI safety evaluation in IMPACT_ANALYTICS."""
         if not self.is_platform_connected("impact_analytics"):
@@ -169,7 +169,7 @@ class TurboBridge:
         milestone_name: str,
         completion_percentage: float,
         category: str = "research",
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """Record a research milestone in IMPACT_ANALYTICS."""
         if not self.is_platform_connected("impact_analytics"):
@@ -186,14 +186,14 @@ class TurboBridge:
 
         return self.platforms["impact_analytics"].get_metrics()
 
-    def generate_impact_report(self) -> Optional[str]:
+    def generate_impact_report(self) -> str | None:
         """Generate IMPACT_ANALYTICS workflow report."""
         if not self.is_platform_connected("impact_analytics"):
             return None
 
         return self.platforms["impact_analytics"].generate_report()
 
-    def health_check(self) -> Dict[str, Any]:
+    def health_check(self) -> dict[str, Any]:
         """Perform health check on all platforms."""
         health = {
             "overall_status": "healthy",
@@ -234,11 +234,11 @@ def create_bridge() -> TurboBridge:
     return TurboBridge()
 
 
-def unified_analysis(request: Dict[str, Any]) -> Dict[str, Any]:
+def unified_analysis(request: dict[str, Any]) -> dict[str, Any]:
     """Convenience function for unified analysis."""
     return turbo_bridge.unified_analysis(request)
 
 
-def get_bridge_health() -> Dict[str, Any]:
+def get_bridge_health() -> dict[str, Any]:
     """Convenience function to check bridge health."""
     return turbo_bridge.health_check()

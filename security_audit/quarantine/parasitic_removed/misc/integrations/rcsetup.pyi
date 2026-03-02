@@ -1,7 +1,7 @@
-from cycler import Cycler
-
 from collections.abc import Callable, Iterable
 from typing import Any, Literal, TypeVar
+
+from cycler import Cycler
 from matplotlib.typing import ColorType, LineStyleType, MarkEveryType
 
 interactive_bk: list[str]
@@ -17,7 +17,12 @@ class ValidateInStrings:
     ignorecase: bool
     valid: dict[str, str]
     def __init__(
-        self, key: str, valid: Iterable[str], ignorecase: bool = ..., *, _deprecated_since: str | None = ...
+        self,
+        key: str,
+        valid: Iterable[str],
+        ignorecase: bool = ...,
+        *,
+        _deprecated_since: str | None = ...,
     ) -> None: ...
     def __call__(self, s: Any) -> str: ...
 
@@ -159,7 +164,11 @@ def cycler(*args, **kwargs) -> Cycler: ...
 def validate_cycler(s: Any) -> Cycler: ...
 def validate_hist_bins(
     s: Any,
-) -> Literal["auto", "sturges", "fd", "doane", "scott", "rice", "sqrt"] | int | list[float]: ...
+) -> (
+    Literal["auto", "sturges", "fd", "doane", "scott", "rice", "sqrt"]
+    | int
+    | list[float]
+): ...
 
 # At runtime is added in __init__.py
 defaultParams: dict[str, Any]

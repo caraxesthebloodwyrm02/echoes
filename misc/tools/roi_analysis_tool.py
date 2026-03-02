@@ -5,13 +5,11 @@ Generates comprehensive ROI analysis packages including stakeholder emails,
 spreadsheets, CSV data, and executive reports for converting pilots into enterprise contracts.
 """
 
-import json
-import csv
-import yaml
-from typing import Dict, Any, List, Optional, Union
+from dataclasses import asdict, dataclass
 from datetime import datetime
-from pathlib import Path
-from dataclasses import dataclass, asdict
+from typing import Any
+
+import yaml
 
 from .base import BaseTool, ToolResult
 
@@ -27,7 +25,7 @@ class ROIMetrics:
     roi_percentage: float
     annual_net_benefit: float
     three_year_value: float
-    savings_breakdown: Dict[str, float]
+    savings_breakdown: dict[str, float]
 
 
 @dataclass
@@ -36,13 +34,13 @@ class StakeholderConfig:
 
     institution_name: str
     email_subject: str
-    email_to: List[str]
+    email_to: list[str]
     email_from: str
     team_size: int
     decision_deadline: str
     contract_duration: str
     rollout_timeline: str
-    stakeholder_priorities: Dict[str, str]
+    stakeholder_priorities: dict[str, str]
 
 
 class ROIAnalysisTool(BaseTool):
@@ -65,7 +63,7 @@ class ROIAnalysisTool(BaseTool):
         # Template storage
         self.templates = self._load_templates()
 
-    def _load_templates(self) -> Dict[str, Any]:
+    def _load_templates(self) -> dict[str, Any]:
         """Load ROI analysis templates."""
         return {
             "email_config": {
@@ -114,9 +112,9 @@ class ROIAnalysisTool(BaseTool):
     def __call__(
         self,
         business_type: str,
-        analysis_data: Dict[str, Any],
-        stakeholder_info: Dict[str, Any],
-        output_formats: List[str] = None,
+        analysis_data: dict[str, Any],
+        stakeholder_info: dict[str, Any],
+        output_formats: list[str] = None,
         customization_level: str = "comprehensive",
     ) -> ToolResult:
         """
@@ -176,8 +174,8 @@ class ROIAnalysisTool(BaseTool):
             )
 
     def _validate_and_process_data(
-        self, analysis_data: Dict[str, Any], stakeholder_info: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, analysis_data: dict[str, Any], stakeholder_info: dict[str, Any]
+    ) -> dict[str, Any]:
         """Validate input data and apply business-specific adjustments."""
         # Extract core metrics with defaults
         validated = {
@@ -228,7 +226,7 @@ class ROIAnalysisTool(BaseTool):
         return validated
 
     def _calculate_financial_metrics(
-        self, validated_data: Dict[str, Any]
+        self, validated_data: dict[str, Any]
     ) -> ROIMetrics:
         """Calculate comprehensive financial metrics."""
         monthly_investment = validated_data["monthly_investment"]
@@ -250,8 +248,8 @@ class ROIAnalysisTool(BaseTool):
     def _generate_stakeholder_config(
         self,
         business_type: str,
-        validated_data: Dict[str, Any],
-        stakeholder_info: Dict[str, Any],
+        validated_data: dict[str, Any],
+        stakeholder_info: dict[str, Any],
         customization_level: str,
     ) -> StakeholderConfig:
         """Generate stakeholder-specific configuration."""
@@ -288,8 +286,8 @@ class ROIAnalysisTool(BaseTool):
         )
 
     def _generate_stakeholder_priorities(
-        self, validated_data: Dict[str, Any]
-    ) -> Dict[str, str]:
+        self, validated_data: dict[str, Any]
+    ) -> dict[str, str]:
         """Generate stakeholder-specific messaging."""
         priorities = {}
         templates = self.templates["stakeholder_priorities"]
@@ -310,8 +308,8 @@ class ROIAnalysisTool(BaseTool):
         format_type: str,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        validated_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Generate specific output format."""
         if format_type == "yaml":
             return self._generate_yaml_config(
@@ -334,8 +332,8 @@ class ROIAnalysisTool(BaseTool):
         self,
         stakeholder_config: StakeholderConfig,
         roi_metrics: ROIMetrics,
-        validated_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        validated_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Generate YAML configuration for stakeholder emails."""
         config = {
             "email_subject": stakeholder_config.email_subject,
@@ -365,8 +363,8 @@ class ROIAnalysisTool(BaseTool):
         }
 
     def _generate_csv_data(
-        self, roi_metrics: ROIMetrics, validated_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, roi_metrics: ROIMetrics, validated_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Generate CSV data for analysis."""
         rows = []
 
@@ -463,8 +461,8 @@ class ROIAnalysisTool(BaseTool):
         self,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        validated_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Generate spreadsheet-style CSV data."""
         sheets = {}
 
@@ -524,8 +522,8 @@ class ROIAnalysisTool(BaseTool):
         self,
         roi_metrics: ROIMetrics,
         stakeholder_config: StakeholderConfig,
-        validated_data: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        validated_data: dict[str, Any],
+    ) -> dict[str, Any]:
         """Generate executive summary report."""
         # Format savings breakdown
         breakdown_lines = []
@@ -561,7 +559,7 @@ class ROIAnalysisTool(BaseTool):
             "size": len(report_content),
         }
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return OpenAI function schema."""
         return {
             "type": "function",

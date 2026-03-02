@@ -2,6 +2,7 @@
 """
 Comprehensive test of both Responses API and Chat Completions API
 """
+
 import os
 
 from assistant_v2_core import EchoesAssistantV2

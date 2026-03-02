@@ -13,17 +13,17 @@ Enhanced assistant with specialized capabilities for:
 Architecture: Multi-agent with specialized tools and context-aware responses
 """
 
-import os
-import json
 import asyncio
+import json
+import os
 import re
-from typing import Dict, Any, List, Optional, Tuple, Callable
-from datetime import datetime, timezone
+from collections.abc import Callable
 from dataclasses import dataclass, field
 from enum import Enum
+from typing import Any
 
-from openai import OpenAI
 from direct_rag_system import DirectRAGSystem
+from openai import OpenAI
 
 
 class DecisionDomain(Enum):
@@ -54,7 +54,7 @@ class ToolDefinition:
     description: str
     category: ToolCategory
     domain: DecisionDomain
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
     handler: Callable
     requires_context: bool = False
     confidence_threshold: float = 0.8
@@ -67,11 +67,11 @@ class DecisionContext:
     domain: DecisionDomain
     complexity: str  # simple, moderate, complex
     urgency: str  # low, medium, high
-    stakeholders: List[str]
-    constraints: List[str]
-    objectives: List[str]
-    available_tools: List[str] = field(default_factory=list)
-    retrieved_knowledge: List[Dict[str, Any]] = field(default_factory=list)
+    stakeholders: list[str]
+    constraints: list[str]
+    objectives: list[str]
+    available_tools: list[str] = field(default_factory=list)
+    retrieved_knowledge: list[dict[str, Any]] = field(default_factory=list)
 
 
 @dataclass
@@ -80,12 +80,12 @@ class ProfessionalResponse:
 
     domain: DecisionDomain
     confidence_score: float
-    recommendations: List[str]
-    risks_assessed: List[str]
-    next_steps: List[str]
-    legal_disclaimers: List[str] = field(default_factory=list)
-    financial_projections: Dict[str, Any] = field(default_factory=dict)
-    sources_cited: List[str] = field(default_factory=list)
+    recommendations: list[str]
+    risks_assessed: list[str]
+    next_steps: list[str]
+    legal_disclaimers: list[str] = field(default_factory=list)
+    financial_projections: dict[str, Any] = field(default_factory=dict)
+    sources_cited: list[str] = field(default_factory=list)
     formatted_response: str = ""
 
 
@@ -101,7 +101,7 @@ class AdvancedEchoesAssistant:
     - Context-aware decision support
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """Initialize the advanced assistant."""
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
@@ -125,7 +125,7 @@ class AdvancedEchoesAssistant:
             "🚀 Advanced Echoes Assistant V3 initialized with legal & financial capabilities"
         )
 
-    def _initialize_knowledge_bases(self) -> Dict[DecisionDomain, DirectRAGSystem]:
+    def _initialize_knowledge_bases(self) -> dict[DecisionDomain, DirectRAGSystem]:
         """Initialize domain-specific knowledge bases."""
         knowledge_bases = {}
 
@@ -150,7 +150,7 @@ class AdvancedEchoesAssistant:
 
         return knowledge_bases
 
-    def _initialize_tools(self) -> Dict[str, ToolDefinition]:
+    def _initialize_tools(self) -> dict[str, ToolDefinition]:
         """Initialize specialized tools for decision support."""
         tools = {}
 
@@ -294,7 +294,7 @@ class AdvancedEchoesAssistant:
 
         return tools
 
-    def _initialize_challenge_patterns(self) -> Dict[str, Dict[str, Any]]:
+    def _initialize_challenge_patterns(self) -> dict[str, dict[str, Any]]:
         """Initialize pattern recognition for user challenges."""
         return {
             "contract_review": {
@@ -398,7 +398,7 @@ class AdvancedEchoesAssistant:
         return context
 
     async def process_query(
-        self, query: str, user_context: Optional[Dict[str, Any]] = None
+        self, query: str, user_context: dict[str, Any] | None = None
     ) -> ProfessionalResponse:
         """Process user query with full decision support pipeline."""
         print(f"🎯 Processing query: {query[:100]}...")
@@ -440,7 +440,7 @@ class AdvancedEchoesAssistant:
 
     def _extract_tool_parameters(
         self, query: str, tool: ToolDefinition
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Extract parameters for tool execution from query."""
         # Simplified parameter extraction - in production, use more sophisticated NLP
         params = {}
@@ -475,8 +475,8 @@ class AdvancedEchoesAssistant:
         self,
         query: str,
         context: DecisionContext,
-        tool_results: Dict[str, Any],
-        user_context: Optional[Dict[str, Any]],
+        tool_results: dict[str, Any],
+        user_context: dict[str, Any] | None,
     ) -> ProfessionalResponse:
         """Generate professional response with all analysis components."""
 
@@ -507,7 +507,7 @@ class AdvancedEchoesAssistant:
         return structured_response
 
     def _build_system_prompt(
-        self, context: DecisionContext, tool_results: Dict[str, Any]
+        self, context: DecisionContext, tool_results: dict[str, Any]
     ) -> str:
         """Build comprehensive system prompt for professional responses."""
         domain_knowledge = ""
@@ -544,8 +544,8 @@ Format your response as a structured professional analysis."""
 
     # Tool Handlers
     async def _analyze_contract_risks(
-        self, contract_text: str, risk_categories: List[str] = None
-    ) -> Dict[str, Any]:
+        self, contract_text: str, risk_categories: list[str] = None
+    ) -> dict[str, Any]:
         """Analyze contract risks."""
         # Simplified implementation - in production, use specialized legal AI
         risks = {
@@ -558,7 +558,7 @@ Format your response as a structured professional analysis."""
 
     async def _evaluate_legal_precedence(
         self, legal_issue: str, jurisdiction: str = "general"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Evaluate legal precedence."""
         # Simplified implementation
         evaluation = {
@@ -577,7 +577,7 @@ Format your response as a structured professional analysis."""
         expected_returns: float,
         time_period_years: float,
         risk_adjustment: float = 1.0,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate ROI with projections."""
         total_return = expected_returns - initial_investment
         roi_percentage = (total_return / initial_investment) * 100
@@ -600,9 +600,9 @@ Format your response as a structured professional analysis."""
     async def _evaluate_fair_price(
         self,
         item_description: str,
-        market_rates: Dict[str, Any] = None,
-        complexity_factors: List[str] = None,
-    ) -> Dict[str, Any]:
+        market_rates: dict[str, Any] = None,
+        complexity_factors: list[str] = None,
+    ) -> dict[str, Any]:
         """Evaluate fair market price."""
         # Simplified market analysis
         base_price = 100.0  # Placeholder
@@ -628,7 +628,7 @@ Format your response as a structured professional analysis."""
         skill_level: str,
         market_rate_per_hour: float = None,
         complexity_multiplier: float = 1.0,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate fair value for work."""
         # Default market rates by skill level
         default_rates = {
@@ -665,7 +665,7 @@ class ProfessionalResponseFormatter:
     """Format responses in professional structure."""
 
     def parse_and_structure(
-        self, raw_response: str, context: DecisionContext, tool_results: Dict[str, Any]
+        self, raw_response: str, context: DecisionContext, tool_results: dict[str, Any]
     ) -> ProfessionalResponse:
         """Parse AI response and structure it professionally."""
 
@@ -723,7 +723,7 @@ class ProfessionalResponseFormatter:
         self,
         response: ProfessionalResponse,
         context: DecisionContext,
-        tool_results: Dict[str, Any],
+        tool_results: dict[str, Any],
     ) -> str:
         """Format the final professional response."""
         formatted = f"""# {context.domain.value.title()} Analysis Report
@@ -751,7 +751,7 @@ Confidence Score: {response.confidence_score * 100:.1f}%
 
 
 # Factory function
-def create_advanced_assistant(api_key: Optional[str] = None) -> AdvancedEchoesAssistant:
+def create_advanced_assistant(api_key: str | None = None) -> AdvancedEchoesAssistant:
     """Create an advanced Echoes assistant instance."""
     return AdvancedEchoesAssistant(api_key=api_key)
 

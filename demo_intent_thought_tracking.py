@@ -4,9 +4,9 @@ Demo script showcasing advanced intent awareness and train-of-thought tracking
 Demonstrates natural language understanding, entity identification, and thought chain analysis
 """
 
+import json
 import os
 import sys
-import json
 import time
 from datetime import datetime
 
@@ -14,15 +14,10 @@ from datetime import datetime
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.intent_awareness_engine import (
-        intent_engine,
-        IntentType,
-        EntityType,
-    )
+    from core_modules.intent_awareness_engine import intent_engine
     from core_modules.train_of_thought_tracker import (
-        thought_tracker,
         ThoughtType,
-        LinkType,
+        thought_tracker,
     )
 except ImportError as e:
     print(f"Import error: {e}")
@@ -204,7 +199,7 @@ def demo_critical_links():
     # Find critical links
     critical_links = thought_tracker.find_critical_links()
 
-    print(f"\n🎯 Critical Links Between Thoughts:")
+    print("\n🎯 Critical Links Between Thoughts:")
 
     if critical_links:
         for i, (from_id, to_id, strength) in enumerate(critical_links[:5], 1):
@@ -243,7 +238,7 @@ def demo_critical_insights():
 
     insights = thought_tracker.get_critical_insights()
 
-    print(f"\n🎯 Critical Insights Extracted:")
+    print("\n🎯 Critical Insights Extracted:")
 
     if insights:
         for i, insight in enumerate(insights[:5], 1):
@@ -271,7 +266,7 @@ def demo_conversation_state():
     # Get conversation state from intent engine
     intent_state = intent_engine.summarize_conversation_state()
 
-    print(f"\n🧠 Intent Engine State:")
+    print("\n🧠 Intent Engine State:")
     print(f"  Total thoughts: {intent_state.get('thought_count', 0)}")
     print(f"  Intent distribution: {intent_state.get('intent_distribution', {})}")
     print(
@@ -286,7 +281,7 @@ def demo_conversation_state():
         "active_chains": len(thought_tracker.active_chains),
     }
 
-    print(f"\n🧠 Thought Network State:")
+    print("\n🧠 Thought Network State:")
     for key, value in thought_summary.items():
         print(f"  {key.replace('_', ' ').title()}: {value}")
 
@@ -317,16 +312,16 @@ def demo_export_functionality():
         print(f"   Insights: {len(export_data['critical_insights'])}")
 
         # Show a sample of the exported data
-        print(f"\n📄 Sample Export Structure:")
-        print(f"   {{")
-        print(f"     \"thoughts\": {len(export_data['thoughts'])} items,")
-        print(f"     \"links\": {len(export_data['links'])} items,")
-        print(f"     \"chains\": {len(export_data['chains'])} items,")
-        print(f"     \"patterns\": {list(export_data['patterns'].keys())},")
+        print("\n📄 Sample Export Structure:")
+        print("   {")
+        print(f'     "thoughts": {len(export_data["thoughts"])} items,')
+        print(f'     "links": {len(export_data["links"])} items,')
+        print(f'     "chains": {len(export_data["chains"])} items,')
+        print(f'     "patterns": {list(export_data["patterns"].keys())},')
         print(
-            f"     \"critical_insights\": {len(export_data['critical_insights'])} items"
+            f'     "critical_insights": {len(export_data["critical_insights"])} items'
         )
-        print(f"   }}")
+        print("   }")
 
     except Exception as e:
         print(f"❌ Export failed: {e}")
@@ -346,18 +341,18 @@ def demo_advanced_features():
     Should I try a different architecture like XGBoost instead?
     """
 
-    print(f"\n🎯 Complex Scenario Analysis:")
+    print("\n🎯 Complex Scenario Analysis:")
     print(f"   {scenario.strip()}")
 
     # Comprehensive analysis
     intent = intent_engine.detect_intent(scenario)
     entities = intent_engine.extract_entities(scenario)
 
-    print(f"\n🧠 Intent Analysis:")
+    print("\n🧠 Intent Analysis:")
     print(f"   Primary Intent: {intent.type.value.replace('_', ' ').title()}")
     print(f"   Confidence: {intent.confidence:.2f}")
 
-    print(f"\n📊 Entity Analysis:")
+    print("\n📊 Entity Analysis:")
     entity_groups = {}
     for entity in entities:
         if entity.type not in entity_groups:
@@ -378,7 +373,7 @@ def demo_advanced_features():
     # Get thought importance
     thought_meta = thought_tracker.thought_metadata[thought_id]
 
-    print(f"\n💭 Thought Analysis:")
+    print("\n💭 Thought Analysis:")
     print(f"   Thought Type: {ThoughtType.PROBLEM_SOLVING.value.title()}")
     print(f"   Importance Score: {thought_meta['importance']:.2f}")
     print(f"   Entity Count: {len(thought_meta['entities'])}")
@@ -393,7 +388,7 @@ def demo_advanced_features():
     ]
 
     if scenario_insights:
-        print(f"\n💡 Generated Insights:")
+        print("\n💡 Generated Insights:")
         for insight in scenario_insights[:2]:
             print(
                 f"   • {insight.get('insight_type', 'unknown')}: High importance thought with multiple entities"

@@ -1,4 +1,4 @@
-from typing import Protocol, TypeAlias, TypeVar, assert_type
+from typing import Protocol, TypeVar, assert_type
 
 import numpy as np
 from numpy._typing import _64Bit
@@ -23,16 +23,16 @@ def do_invert(x: CanInvert[_T]) -> _T: ...
 def do_neg(x: CanNeg[_T]) -> _T: ...
 def do_pos(x: CanPos[_T]) -> _T: ...
 
-_Bool_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.bool]]
-_UInt8_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.uint8]]
-_Int16_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.int16]]
-_LongLong_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.longlong]]
-_Float32_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.float32]]
-_Float64_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.float64]]
-_LongDouble_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.longdouble]]
-_Complex64_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.complex64]]
-_Complex128_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.complex128]]
-_CLongDouble_1d: TypeAlias = np.ndarray[tuple[int], np.dtype[np.clongdouble]]
+type _Bool_1d = np.ndarray[tuple[int], np.dtype[np.bool]]
+type _UInt8_1d = np.ndarray[tuple[int], np.dtype[np.uint8]]
+type _Int16_1d = np.ndarray[tuple[int], np.dtype[np.int16]]
+type _LongLong_1d = np.ndarray[tuple[int], np.dtype[np.longlong]]
+type _Float32_1d = np.ndarray[tuple[int], np.dtype[np.float32]]
+type _Float64_1d = np.ndarray[tuple[int], np.dtype[np.float64]]
+type _LongDouble_1d = np.ndarray[tuple[int], np.dtype[np.longdouble]]
+type _Complex64_1d = np.ndarray[tuple[int], np.dtype[np.complex64]]
+type _Complex128_1d = np.ndarray[tuple[int], np.dtype[np.complex128]]
+type _CLongDouble_1d = np.ndarray[tuple[int], np.dtype[np.clongdouble]]
 
 b1_1d: _Bool_1d
 u1_1d: _UInt8_1d

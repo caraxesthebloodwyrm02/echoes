@@ -3,7 +3,6 @@ from typing import (
     Final,
     Literal,
     SupportsIndex,
-    TypeAlias,
     TypeVar,
     overload,
 )
@@ -50,15 +49,15 @@ __all__: Final[Sequence[str]] = [
     "trimseq",
 ]
 
-_AnyLineF: TypeAlias = Callable[
+type _AnyLineF = Callable[
     [_CoefLike_co, _CoefLike_co],
     _CoefArray,
 ]
-_AnyMulF: TypeAlias = Callable[
+type _AnyMulF = Callable[
     [npt.ArrayLike, npt.ArrayLike],
     _CoefArray,
 ]
-_AnyVanderF: TypeAlias = Callable[
+type _AnyVanderF = Callable[
     [npt.ArrayLike, SupportsIndex],
     _CoefArray,
 ]

@@ -1,13 +1,14 @@
-from .backend_bases import RendererBase
-
+import numpy as np
 from matplotlib.typing import ColorType
 
-import numpy as np
+from .backend_bases import RendererBase
 
 class TexManager:
     texcache: str
     @classmethod
-    def get_basefile(cls, tex: str, fontsize: float, dpi: float | None = ...) -> str: ...
+    def get_basefile(
+        cls, tex: str, fontsize: float, dpi: float | None = ...
+    ) -> str: ...
     @classmethod
     def get_font_preamble(cls) -> str: ...
     @classmethod
@@ -19,7 +20,9 @@ class TexManager:
     @classmethod
     def make_png(cls, tex: str, fontsize: float, dpi: float) -> str: ...
     @classmethod
-    def get_grey(cls, tex: str, fontsize: float | None = ..., dpi: float | None = ...) -> np.ndarray: ...
+    def get_grey(
+        cls, tex: str, fontsize: float | None = ..., dpi: float | None = ...
+    ) -> np.ndarray: ...
     @classmethod
     def get_rgba(
         cls,

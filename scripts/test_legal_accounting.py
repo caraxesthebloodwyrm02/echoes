@@ -3,9 +3,9 @@
 Comprehensive test of Legal Safeguards & Enhanced Accounting System
 Demonstrates LICENSE ideology implementation and cognitive effort accounting
 """
+
 import asyncio
-import datetime
-from pathlib import Path
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -48,7 +48,7 @@ async def test_legal_safeguards_accounting():
         account = consent_result["user_account"]
         values = consent_result["values_protection"]
 
-        print(f"   ✅ Consent Agreement Created:")
+        print("   ✅ Consent Agreement Created:")
         print(f"      📋 Consent ID: {consent['consent_id']}")
         print(f"      👤 User ID: {consent['user_id']}")
         print(f"      🎯 Consent Type: {consent['consent_type']}")
@@ -58,7 +58,7 @@ async def test_legal_safeguards_accounting():
         print(f"      📅 Granted At: {consent['granted_at']}")
         print(f"      ✅ Terms Accepted: {consent['terms_accepted']}")
         print(f"   📁 User Account Created: {account['user_id']}")
-        print(f"   🌟 Values Protection:")
+        print("   🌟 Values Protection:")
         for value, description in values.items():
             print(f"      • {value.title()}: {description}")
     else:
@@ -144,7 +144,7 @@ async def test_legal_safeguards_accounting():
                 f"   ❌ Failed to track session {i}: {effort_result.get('error', 'Unknown error')}"
             )
 
-    print(f"\n   📊 Total Cognitive Effort Summary:")
+    print("\n   📊 Total Cognitive Effort Summary:")
     print(f"      ⚡ Total Joules: {total_joules:.2f}")
     print(f"      💰 Total Net Value: ${total_value:.4f}")
 
@@ -177,7 +177,7 @@ async def test_legal_safeguards_accounting():
                 f"      📊 Overall Score: {compliance['overall_compliance_score']:.1f}%"
             )
             print(f"      🏆 Status: {compliance['compliance_status']}")
-            print(f"      🌟 Values Upheld:")
+            print("      🌟 Values Upheld:")
             for value, description in values.items():
                 print(f"         • {value.title()}: {description}")
         else:
@@ -198,8 +198,8 @@ async def test_legal_safeguards_accounting():
         compliance = statement_result["legal_compliance"]
         values = statement_result["values_reflection"]
 
-        print(f"   ✅ Financial Statement Generated:")
-        print(f"      📊 Period Summary:")
+        print("   ✅ Financial Statement Generated:")
+        print("      📊 Period Summary:")
         print(
             f"         • Total Transactions: {statement['summary']['total_transactions']}"
         )
@@ -212,17 +212,17 @@ async def test_legal_safeguards_accounting():
             f"         • Average per Transaction: ${statement['summary']['average_value_per_transaction']:.4f}"
         )
 
-        print(f"      💳 Payout Eligibility:")
+        print("      💳 Payout Eligibility:")
         print(f"         • Eligible: {payout['eligible']}")
         if payout["eligible"]:
             print(f"         • Payout Amount: ${payout['payout_amount']:.4f}")
             print(f"         • Joules Earned: {payout['cognitive_joules_earned']:.2f}")
 
-        print(f"      ⚖️ Legal Compliance:")
+        print("      ⚖️ Legal Compliance:")
         print(f"         • Consent Status: {compliance['consent_status']}")
         print(f"         • Compliance Rate: {compliance['compliance_rate']:.1f}%")
 
-        print(f"      🌟 Values Reflection:")
+        print("      🌟 Values Reflection:")
         for value, reflection in values.items():
             print(f"         • {value.title()}: {reflection}")
     else:
@@ -273,8 +273,8 @@ async def test_legal_safeguards_accounting():
         accounting = stats_result["enhanced_accounting"]
         values = stats_result["values_implementation"]
 
-        print(f"   ✅ System Statistics Retrieved:")
-        print(f"      ⚖️ Legal Safeguards:")
+        print("   ✅ System Statistics Retrieved:")
+        print("      ⚖️ Legal Safeguards:")
         print(
             f"         • Total Consents: {legal['license_compliance']['total_consents']}"
         )
@@ -288,7 +288,7 @@ async def test_legal_safeguards_accounting():
             f"         • Implemented Safeguards: {legal['legal_safeguards']['implemented_safeguards']}"
         )
 
-        print(f"      💰 Enhanced Accounting:")
+        print("      💰 Enhanced Accounting:")
         print(f"         • Total Users: {accounting['total_users']}")
         print(f"         • Total Transactions: {accounting['total_transactions']}")
         print(
@@ -307,7 +307,7 @@ async def test_legal_safeguards_accounting():
             f"         • Total Platform Fees: ${float(accounting['total_platform_fees']):.4f}"
         )
 
-        print(f"      🌟 Values Implementation:")
+        print("      🌟 Values Implementation:")
         for value, implementation in values.items():
             print(f"         • {value.title()}:")
             if isinstance(implementation, dict):
@@ -320,7 +320,7 @@ async def test_legal_safeguards_accounting():
     print("\n7️⃣ Full System Integration Test...")
 
     full_stats = assistant.get_stats()
-    print(f"   ✅ EchoesAssistantV2 Complete Integration:")
+    print("   ✅ EchoesAssistantV2 Complete Integration:")
     print(
         f"      🧠 Knowledge Graph: {'Enabled' if full_stats.get('knowledge_graph_enabled') else 'Disabled'}"
     )
@@ -345,7 +345,7 @@ async def test_legal_safeguards_accounting():
 
     if "legal_safeguards_stats" in full_stats:
         legal_stats = full_stats["legal_safeguards_stats"]
-        print(f"      ⚖️ Legal Metrics:")
+        print("      ⚖️ Legal Metrics:")
         print(
             f"         • Consent compliance: {legal_stats['license_compliance']['compliance_rate']:.1f}%"
         )
@@ -355,7 +355,7 @@ async def test_legal_safeguards_accounting():
 
     if "enhanced_accounting_stats" in full_stats:
         acct_stats = full_stats["enhanced_accounting_stats"]
-        print(f"      💰 Accounting Metrics:")
+        print("      💰 Accounting Metrics:")
         print(f"         • Users served: {acct_stats['total_users']}")
         print(f"         • Transactions processed: {acct_stats['total_transactions']}")
         print(

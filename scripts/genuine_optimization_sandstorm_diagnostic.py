@@ -9,15 +9,16 @@ Purpose: Transform high-density process noise into clear diagnostic visibility w
 genuine system improvements and maintained high standards.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import yaml
 import json
-from typing import Dict, Any
-from dataclasses import dataclass, field
-from pathlib import Path
 import logging
-from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import matplotlib.pyplot as plt
+import numpy as np
+import yaml
 
 # Configure logging for diagnostic reproducibility (UTF-8 compatible)
 logging.basicConfig(
@@ -37,12 +38,12 @@ class DiagnosticSignature:
 
     source_name: str
     duration: float
-    impact_analysis: Dict[str, float] = field(default_factory=dict)
-    atmospheric_metrics: Dict[str, float] = field(default_factory=dict)
-    throughput_dynamics: Dict[str, float] = field(default_factory=dict)
-    observability_streams: Dict[str, float] = field(default_factory=dict)
-    validation_intelligence: Dict[str, float] = field(default_factory=dict)
-    ai_anomaly_signature: Dict[str, float] = field(default_factory=dict)
+    impact_analysis: dict[str, float] = field(default_factory=dict)
+    atmospheric_metrics: dict[str, float] = field(default_factory=dict)
+    throughput_dynamics: dict[str, float] = field(default_factory=dict)
+    observability_streams: dict[str, float] = field(default_factory=dict)
+    validation_intelligence: dict[str, float] = field(default_factory=dict)
+    ai_anomaly_signature: dict[str, float] = field(default_factory=dict)
     unified_quality: float = 0.0
     coherence_score: float = 0.0
 
@@ -61,10 +62,10 @@ class GenuineOptimizationSandstormDiagnostic:
         self.unified_alert_active = False
         self.performance_metrics = {}
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load configuration with genuine optimization settings"""
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f)
                 logger.info(f"Configuration loaded from {config_path}")
                 return self._apply_genuine_optimization_standards(config)
@@ -75,8 +76,8 @@ class GenuineOptimizationSandstormDiagnostic:
             return self._get_genuine_optimization_defaults()
 
     def _apply_genuine_optimization_standards(
-        self, config: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Apply genuine optimization standards - maintain high thresholds"""
         if "sandstorm_dev_protocol" not in config:
             config["sandstorm_dev_protocol"] = {}
@@ -98,7 +99,7 @@ class GenuineOptimizationSandstormDiagnostic:
 
         return config
 
-    def _get_genuine_optimization_defaults(self) -> Dict[str, Any]:
+    def _get_genuine_optimization_defaults(self) -> dict[str, Any]:
         """Genuine optimization default configuration"""
         return {
             "sandstorm_dev_protocol": {
@@ -144,7 +145,7 @@ class GenuineOptimizationSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_raw(self, data: Any) -> dict[str, float]:
         """Simple, effective impact analysis"""
         return {
             "issues_density": min(data.get("issues", 0.85), 1.0),
@@ -154,7 +155,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "diagnostic_clarity": max(0.0, 1.0 - data.get("complexity", 0.8)),
         }
 
-    def _analyze_atmospheric_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_raw(self, data: Any) -> dict[str, float]:
         """Simple, effective atmospheric metrics"""
         return {
             "error_rate": min(data.get("error_rate", 0.9), 1.0),
@@ -164,7 +165,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "harmonic_balance": max(0.0, 1.0 - data.get("error_rate", 0.9)),
         }
 
-    def _analyze_throughput_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_raw(self, data: Any) -> dict[str, float]:
         """Simple, effective throughput dynamics"""
         return {
             "rps_observed": min(data.get("rps_normalized", 0.5), 1.0),
@@ -173,7 +174,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "flow_resonance": max(0.0, data.get("throughput_stability", 0.4)),
         }
 
-    def _analyze_observability_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability_raw(self, data: Any) -> dict[str, float]:
         """Simple, effective observability streams"""
         return {
             "error_density": min(data.get("error_density", 0.9), 1.0),
@@ -182,7 +183,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "signal_clarity": max(0.0, 1.0 - data.get("warning_noise", 0.8)),
         }
 
-    def _analyze_validation_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_raw(self, data: Any) -> dict[str, float]:
         """Simple, effective validation intelligence"""
         return {
             "glimpse_coverage": max(0.0, data.get("glimpse_coverage", 0.5)),
@@ -220,7 +221,7 @@ class GenuineOptimizationSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple impact analysis for atmospheric layer"""
         return {
             "issues_density": max(0.0, data.get("issues", 0.25)),
@@ -230,7 +231,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "diagnostic_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_atmospheric_processed(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_processed(self, data: Any) -> dict[str, float]:
         """Simple atmospheric metrics without over-engineering"""
         return {
             "error_rate": max(0.0, data.get("error_rate", 0.15)),
@@ -240,7 +241,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "harmonic_balance": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_throughput_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple throughput metrics for atmospheric layer"""
         return {
             "rps_observed": min(data.get("rps_normalized", 0.9), 1.0),
@@ -249,7 +250,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "flow_resonance": min(data.get("throughput_stability", 0.8), 1.0),
         }
 
-    def _analyze_observability_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple observability metrics for atmospheric layer"""
         return {
             "error_density": max(0.0, data.get("error_density", 0.2)),
@@ -258,7 +259,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "signal_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_validation_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple validation metrics for atmospheric layer"""
         return {
             "glimpse_coverage": min(data.get("glimpse_coverage", 0.93), 1.0),
@@ -401,7 +402,7 @@ class GenuineOptimizationSandstormDiagnostic:
         coherence = atmospheric_unit / max(raw_unit, 0.1)
         return min(coherence, 1.0)
 
-    def _extract_ai_anomaly_signature(self, total_coherence: float) -> Dict[str, float]:
+    def _extract_ai_anomaly_signature(self, total_coherence: float) -> dict[str, float]:
         """Simple AI anomaly detection signature"""
         return {
             "anomaly_confidence": total_coherence * 0.9,
@@ -707,7 +708,7 @@ class GenuineOptimizationSandstormDiagnostic:
 
     def export_genuine_optimization_report(
         self, output_path: str = "genuine_optimization_outputs"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export genuine optimization diagnostic report"""
         logger.info("Exporting genuine optimization diagnostic report")
         out = Path(output_path)
@@ -717,7 +718,7 @@ class GenuineOptimizationSandstormDiagnostic:
             "protocol_info": {
                 "name": "GENUINE_OPTIMIZATION_SANDSTORM_DIAGNOSTIC",
                 "version": "2.2.0",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "unified_alert_active": self.unified_alert_active,
                 "intent": "Transform high-density process noise into clear diagnostic visibility with genuine performance improvements and maintained high standards",
             },
@@ -860,13 +861,13 @@ def main():
     )
 
     # Activate glimpse unified alert with maintained high standards
-    print(f"\nActivating glimpse Alert with High Standards...")
+    print("\nActivating glimpse Alert with High Standards...")
     activated = protocol.activate_sandstorm_alert()
 
     if activated:
         logger.info("glimpse alert active - Genuine optimization achieved!")
-        print(f"\n🎯 glimpse ALERT ACTIVE - Genuine Diagnostic Clarity Achieved")
-        print(f"Chaos successfully transformed into comprehension!")
+        print("\n🎯 glimpse ALERT ACTIVE - Genuine Diagnostic Clarity Achieved")
+        print("Chaos successfully transformed into comprehension!")
     else:
         improvement_needed = protocol.analysis.get("improvement_needed", 0)
         logger.info(
@@ -875,14 +876,14 @@ def main():
         print(
             f"\n⚠️ glimpse ALERT INACTIVE - {improvement_needed:.3f} improvement needed"
         )
-        print(f"Focus on genuine system improvements, not threshold manipulation")
+        print("Focus on genuine system improvements, not threshold manipulation")
 
     # Generate genuine optimization visualizations and reports
     protocol.generate_genuine_optimization_visualization()
     report = protocol.export_genuine_optimization_report()
 
-    print(f"\nGenuine optimization outputs saved to genuine_optimization_outputs/")
-    print(f"\nGenuine Optimization Summary:")
+    print("\nGenuine optimization outputs saved to genuine_optimization_outputs/")
+    print("\nGenuine Optimization Summary:")
     print(f"   Impact Layer Quality: {impact_sig.unified_quality:.3f}")
     print(f"   Atmospheric Quality: {atmospheric_sig.unified_quality:.3f}")
     print(
@@ -896,12 +897,12 @@ def main():
         f"   Coherence Achievement: {protocol.analysis.get('unified_coherence', 0):.3f}"
     )
 
-    print(f"\n🌊 Genuine optimization approach:")
-    print(f"   High standards maintained (0.750 threshold)")
-    print(f"   Simple, effective algorithms restored")
-    print(f"   Realistic data improvements")
-    print(f"   No threshold manipulation")
-    print(f"   Focus on root cause fixes")
+    print("\n🌊 Genuine optimization approach:")
+    print("   High standards maintained (0.750 threshold)")
+    print("   Simple, effective algorithms restored")
+    print("   Realistic data improvements")
+    print("   No threshold manipulation")
+    print("   Focus on root cause fixes")
 
 
 if __name__ == "__main__":

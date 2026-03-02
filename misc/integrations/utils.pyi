@@ -25,10 +25,8 @@ from typing import (
 from typing import Literal as L
 from unittest.case import SkipTest
 
-from _typeshed import ConvertibleToFloat, GenericPath, StrOrBytesPath, StrPath
-from typing_extensions import TypeVar
-
 import numpy as np
+from _typeshed import ConvertibleToFloat, GenericPath, StrOrBytesPath, StrPath
 from numpy._typing import (
     ArrayLike,
     DTypeLike,
@@ -38,6 +36,7 @@ from numpy._typing import (
     _ArrayLikeObject_co,
     _ArrayLikeTD64_co,
 )
+from typing_extensions import TypeVar
 
 __all__ = [
     "IS_EDITABLE",
@@ -96,17 +95,17 @@ _FT = TypeVar("_FT", bound=Callable[..., Any])
 _W_co = TypeVar("_W_co", bound=_WarnLog | None, default=_WarnLog | None, covariant=True)
 _T_or_bool = TypeVar("_T_or_bool", default=bool)
 
-_StrLike: TypeAlias = str | bytes
-_RegexLike: TypeAlias = _StrLike | Pattern[Any]
-_NumericArrayLike: TypeAlias = _ArrayLikeNumber_co | _ArrayLikeObject_co
+type _StrLike = str | bytes
+type _RegexLike = _StrLike | Pattern[Any]
+type _NumericArrayLike = _ArrayLikeNumber_co | _ArrayLikeObject_co
 
 _ExceptionSpec: TypeAlias = type[_ET] | tuple[type[_ET], ...]
-_WarningSpec: TypeAlias = type[Warning]
-_WarnLog: TypeAlias = list[warnings.WarningMessage]
-_ToModules: TypeAlias = Iterable[types.ModuleType]
+type _WarningSpec = type[Warning]
+type _WarnLog = list[warnings.WarningMessage]
+type _ToModules = Iterable[types.ModuleType]
 
 # Must return a bool or an ndarray/generic type that is supported by `np.logical_and.reduce`
-_ComparisonFunc: TypeAlias = Callable[
+type _ComparisonFunc = Callable[
     [NDArray[Any], NDArray[Any]],
     bool | np.bool | np.number | NDArray[np.bool | np.number | np.object_],
 ]

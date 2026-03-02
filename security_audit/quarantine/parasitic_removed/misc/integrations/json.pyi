@@ -1,6 +1,6 @@
+from collections.abc import Callable
 from typing import (
     Any,
-    Callable,
 )
 
 def ujson_dumps(
@@ -11,7 +11,8 @@ def ujson_dumps(
     orient: str = ...,
     date_unit: str = ...,
     iso_dates: bool = ...,
-    default_handler: None | Callable[[Any], str | float | bool | list | dict | None] = ...,
+    default_handler: None
+    | Callable[[Any], str | float | bool | list | dict | None] = ...,
 ) -> str: ...
 def ujson_loads(
     s: str,

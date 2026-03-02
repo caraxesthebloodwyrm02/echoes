@@ -1,7 +1,7 @@
 import json
 import os
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 
 class InventoryStorage:
@@ -13,16 +13,16 @@ class InventoryStorage:
             self.path = root / "data" / "atlas_inventory.json"
         self.path.parent.mkdir(parents=True, exist_ok=True)
 
-    def load(self) -> Dict[str, Any]:
+    def load(self) -> dict[str, Any]:
         if not self.path.exists():
             return {}
         try:
-            with open(self.path, "r", encoding="utf-8") as f:
+            with open(self.path, encoding="utf-8") as f:
                 return json.load(f)
         except Exception:
             return {}
 
-    def save(self, data: Dict[str, Any]) -> None:
+    def save(self, data: dict[str, Any]) -> None:
         tmp = self.path.with_suffix(".tmp")
         with open(tmp, "w", encoding="utf-8") as f:
             json.dump(data, f, indent=2)

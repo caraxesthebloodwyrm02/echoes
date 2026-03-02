@@ -10,17 +10,16 @@ Demonstrates the RAG Orbit baseline implementation with:
 """
 
 import sys
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add src to path
 sys.path.insert(0, str(Path(__file__).parent))
 
 from src.rag_orbit.chunking import create_standard_chunker
 from src.rag_orbit.embeddings import create_standard_generator
-from src.rag_orbit.retrieval import create_standard_retriever
 from src.rag_orbit.provenance import ProvenanceTracker
-
+from src.rag_orbit.retrieval import create_standard_retriever
 
 # Sample documents for demo
 DOCUMENTS = {
@@ -86,14 +85,14 @@ DOCUMENTS = {
 
 def print_header(text: str) -> None:
     """Print formatted section header."""
-    print(f"\n{'='*70}")
+    print(f"\n{'=' * 70}")
     print(f"  {text}")
     print("=" * 70)
 
 
 def print_subheader(text: str) -> None:
     """Print formatted subsection header."""
-    print(f"\n{'-'*70}")
+    print(f"\n{'-' * 70}")
     print(f"  {text}")
     print("-" * 70)
 

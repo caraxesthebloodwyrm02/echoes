@@ -5,11 +5,10 @@ Provides contextual humor, stress reduction, and pressure management through wit
 
 import logging
 import random
-import time
-from typing import Dict, Any, List, Optional, Tuple
+from dataclasses import dataclass, field
 from datetime import datetime, timedelta
 from enum import Enum
-from dataclasses import dataclass, field
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -44,7 +43,7 @@ class HumorResponse:
     humor_type: HumorType
     appropriateness: float  # 0.0 to 1.0
     pressure_target: PressureLevel
-    context_tags: List[str] = field(default_factory=list)
+    context_tags: list[str] = field(default_factory=list)
     delivery_style: str = "playful"  # playful, deadpan, enthusiastic, gentle
 
 
@@ -371,8 +370,8 @@ class HumorEngine:
         self,
         pressure_level: PressureLevel,
         context: str = "",
-        humor_type: Optional[HumorType] = None,
-    ) -> Optional[HumorResponse]:
+        humor_type: HumorType | None = None,
+    ) -> HumorResponse | None:
         """Generate a contextually appropriate humor response"""
 
         # Select humor type if not specified
@@ -438,7 +437,7 @@ class HumorEngine:
 
     def _get_humor_content(
         self, humor_type: HumorType, pressure_level: PressureLevel, context: str
-    ) -> Optional[str]:
+    ) -> str | None:
         """Get humor content for the specific type and pressure level"""
 
         # Try contextual templates first
@@ -490,7 +489,7 @@ class HumorEngine:
         else:
             return "playful"
 
-    def _extract_context_tags(self, context: str) -> List[str]:
+    def _extract_context_tags(self, context: str) -> list[str]:
         """Extract relevant tags from context"""
         tags = []
         context_lower = context.lower()
@@ -508,7 +507,7 @@ class HumorEngine:
 
         return tags
 
-    def get_pressure_summary(self) -> Dict[str, Any]:
+    def get_pressure_summary(self) -> dict[str, Any]:
         """Get a summary of current pressure state"""
         if not self.pressure_history:
             return {"status": "no_data"}
@@ -534,7 +533,9 @@ class HumorEngine:
             trend = (
                 "increasing"
                 if recent_values[-1] > recent_values[0]
-                else "decreasing" if recent_values[-1] < recent_values[0] else "stable"
+                else "decreasing"
+                if recent_values[-1] < recent_values[0]
+                else "stable"
             )
         else:
             trend = "stable"

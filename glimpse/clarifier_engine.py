@@ -6,18 +6,15 @@ UPDATED: Now uses post-execution curiosity questions instead of pre-execution bl
 to improve user engagement and continuous learning.
 """
 
-from typing import Optional, Tuple, List, Dict, Any
 from dataclasses import dataclass
 from enum import Enum
-import time
-import random
+from typing import Any
 
 # Import enhanced clarifier engine for new functionality
 try:
     from .enhanced_clarifier_engine import (
-        EnhancedClarifierEngine,
         ClarifierType,
-        CuriosityCategory,
+        EnhancedClarifierEngine,
     )
 
     ENHANCED_CLARIFIER_AVAILABLE = True
@@ -45,8 +42,8 @@ class Clarifier:
 
     type: ClarifierType
     question: str
-    options: List[str]
-    default: Optional[str] = None
+    options: list[str]
+    default: str | None = None
 
     def format_question(self) -> str:
         """Format the clarifier as a user-facing question"""
@@ -110,11 +107,35 @@ class ClarifierEngine:
                     options=["bullet points", "paragraphs", "numbered list"],
                     default="bullet points",
                 ),
+                "scope": Clarifier(
+                    type=ClarifierType.SCOPE,
+                    question="Do you want a narrow or broad scope?",
+                    options=["narrow", "broad", "full"],
+                    default="full",
+                ),
+                "language": Clarifier(
+                    type=ClarifierType.LANGUAGE,
+                    question="What language level should I use?",
+                    options=["simple", "technical", "formal"],
+                    default="simple",
+                ),
+                "urgency": Clarifier(
+                    type=ClarifierType.URGENCY,
+                    question="How urgent is this request?",
+                    options=["low", "normal", "urgent"],
+                    default="normal",
+                ),
+                "detail_level": Clarifier(
+                    type=ClarifierType.DETAIL_LEVEL,
+                    question="How much detail do you want?",
+                    options=["high-level", "balanced", "deep"],
+                    default="balanced",
+                ),
             }
 
     def detect_ambiguity(
         self, input_text: str, goal: str, constraints: str
-    ) -> List[Clarifier]:
+    ) -> list[Clarifier]:
         """
         Detect ambiguities in the input and suggest clarifiers
 
@@ -137,13 +158,21 @@ class ClarifierEngine:
 
     def _legacy_detect_ambiguity(
         self, input_text: str, goal: str, constraints: str
-    ) -> List[Clarifier]:
+    ) -> list[Clarifier]:
         """Legacy ambiguity detection (blocking questions)"""
         clarifiers = []
         text_lower = input_text.lower()
         constraints_lower = constraints.lower()
 
         # Check for audience ambiguity
+        if not goal.strip() and "audience" not in constraints_lower:
+            clarifiers.append(self.clarifier_rules["customer"])
+
+        if (
+            any(word in text_lower for word in ["customer", "client", "user"])
+            and "audience" not in constraints_lower
+        ):
+            clarifiers.append(self.clarifier_rules["customer"])
         if (
             any(word in text_lower for word in ["customer", "client", "user"])
             and "audience" not in constraints_lower
@@ -180,12 +209,50 @@ class ClarifierEngine:
         ):
             clarifiers.append(self.clarifier_rules["list"])
 
+        # Check for scope ambiguity
+        if (
+            any(
+                word in text_lower
+                for word in ["focus", "scope", "aspect", "overview", "broad", "narrow"]
+            )
+            and "scope" not in constraints_lower
+        ):
+            clarifiers.append(self.clarifier_rules["scope"])
+
+        # Check for language ambiguity
+        if (
+            any(
+                word in text_lower
+                for word in ["simplify", "understand", "plain", "technical", "complex"]
+            )
+            and "language" not in constraints_lower
+        ):
+            clarifiers.append(self.clarifier_rules["language"])
+
+        # Check for urgency ambiguity
+        if (
+            any(
+                word in text_lower
+                for word in ["urgent", "asap", "immediately", "right away"]
+            )
+            and "urgency" not in constraints_lower
+        ):
+            clarifiers.append(self.clarifier_rules["urgency"])
+
+        # Check for detail-level ambiguity
+        if (
+            any(
+                word in text_lower
+                for word in ["detail", "detailed", "comprehensive", "deep", "in-depth"]
+            )
+            and "detail_level" not in constraints_lower
+        ):
+            clarifiers.append(self.clarifier_rules["detail_level"])
+
         # Limit to maximum 3 clarifiers
         return clarifiers[:3]
 
-    def generate_post_execution_curiosity(
-        self, context: Dict[str, Any]
-    ) -> Optional[str]:
+    def generate_post_execution_curiosity(self, context: dict[str, Any]) -> str | None:
         """
         Generate a post-execution curiosity question
 
@@ -203,8 +270,8 @@ class ClarifierEngine:
             return None
 
     def apply_curiosity_response(
-        self, response: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, response: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Apply a curiosity response to update user profile
 
@@ -224,7 +291,7 @@ class ClarifierEngine:
                 )
         return {"preference_updated": False}
 
-    def get_learned_preferences(self) -> Dict[str, Any]:
+    def get_learned_preferences(self) -> dict[str, Any]:
         """Get learned user preferences"""
         if self.enhanced_mode:
             return self.enhanced_engine.get_user_preferences()
@@ -300,7 +367,7 @@ class ClarifierEngine:
         else:
             return new_constraint
 
-    def generate_clarifier_delta(self, clarifiers: List[Clarifier]) -> str:
+    def generate_clarifier_delta(self, clarifiers: list[Clarifier]) -> str:
         """
         Generate a delta string for multiple clarifiers
 
@@ -373,7 +440,7 @@ if __name__ == "__main__":
     ]
 
     for text, goal, constraints in test_cases:
-        clarifiers = Glimpse.detect_ambiguity(text, goal, constraints)
+        clarifiers = engine.detect_ambiguity(text, goal, constraints)
         print(f"\nInput: {text}")
         print(f"Detected clarifiers: {len(clarifiers)}")
         for c in clarifiers:

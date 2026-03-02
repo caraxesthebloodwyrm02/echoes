@@ -1,7 +1,6 @@
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
-
 from pandas._typing import (
     AxisInt,
     DtypeObj,

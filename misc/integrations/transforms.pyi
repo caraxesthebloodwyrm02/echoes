@@ -1,10 +1,12 @@
-from .path import Path
-from .patches import Patch
-from .figure import Figure
-import numpy as np
-from numpy.typing import ArrayLike
 from collections.abc import Iterable, Sequence
 from typing import Literal
+
+import numpy as np
+from numpy.typing import ArrayLike
+
+from .figure import Figure
+from .patches import Patch
+from .path import Path
 
 DEBUG: bool
 
@@ -179,7 +181,6 @@ class LockableBbox(BboxBase):
     def locked_y1(self, y1: float | None) -> None: ...
 
 class Transform(TransformNode):
-
     # Implemented as a standard attrs in base class, but functionally readonly and some subclasses implement as such
     @property
     def input_dims(self) -> int | None: ...

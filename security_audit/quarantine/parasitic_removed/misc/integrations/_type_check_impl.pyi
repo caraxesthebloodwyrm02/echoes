@@ -1,11 +1,9 @@
 from collections.abc import Container, Iterable
-from typing import Any, Protocol, TypeAlias, overload, type_check_only
+from typing import Any, Protocol, overload, type_check_only
 from typing import Literal as L
 
-from _typeshed import Incomplete
-from typing_extensions import TypeVar
-
 import numpy as np
+from _typeshed import Incomplete
 from numpy._typing import (
     ArrayLike,
     NDArray,
@@ -17,6 +15,7 @@ from numpy._typing import (
     _ScalarLike_co,
     _SupportsArray,
 )
+from typing_extensions import TypeVar
 
 __all__ = [
     "common_type",
@@ -38,12 +37,14 @@ _ScalarT = TypeVar("_ScalarT", bound=np.generic)
 _ScalarT_co = TypeVar("_ScalarT_co", bound=np.generic, covariant=True)
 _RealT = TypeVar("_RealT", bound=np.floating | np.integer | np.bool)
 
-_FloatMax32: TypeAlias = np.float32 | np.float16
-_ComplexMax128: TypeAlias = np.complex128 | np.complex64
-_RealMax64: TypeAlias = np.float64 | np.float32 | np.float16 | np.integer
-_Real: TypeAlias = np.floating | np.integer
-_InexactMax32: TypeAlias = np.inexact[_32Bit] | np.float16
-_NumberMax64: TypeAlias = np.number[_64Bit] | np.number[_32Bit] | np.number[_16Bit] | np.integer
+type _FloatMax32 = np.float32 | np.float16
+type _ComplexMax128 = np.complex128 | np.complex64
+type _RealMax64 = np.float64 | np.float32 | np.float16 | np.integer
+type _Real = np.floating | np.integer
+type _InexactMax32 = np.inexact[_32Bit] | np.float16
+type _NumberMax64 = (
+    np.number[_64Bit] | np.number[_32Bit] | np.number[_16Bit] | np.integer
+)
 
 @type_check_only
 class _HasReal(Protocol[_T_co]):
@@ -63,7 +64,9 @@ class _HasDType(Protocol[_ScalarT_co]):
 ###
 
 def mintypecode(
-    typechars: Iterable[str | ArrayLike], typeset: str | Container[str] = "GDFgdf", default: str = "d"
+    typechars: Iterable[str | ArrayLike],
+    typeset: str | Container[str] = "GDFgdf",
+    default: str = "d",
 ) -> str: ...
 @overload
 def real(val: _HasReal[_T]) -> _T: ...  # type: ignore[overload-overlap]
@@ -134,11 +137,17 @@ def nan_to_num(
 
 # NOTE: The [overload-overlap] mypy error is a false positive
 @overload
-def real_if_close(a: _ArrayLike[np.complex64], tol: float = 100) -> NDArray[np.float32 | np.complex64]: ...  # type: ignore[overload-overlap]
+def real_if_close(
+    a: _ArrayLike[np.complex64], tol: float = 100
+) -> NDArray[np.float32 | np.complex64]: ...  # type: ignore[overload-overlap]
 @overload
-def real_if_close(a: _ArrayLike[np.complex128], tol: float = 100) -> NDArray[np.float64 | np.complex128]: ...
+def real_if_close(
+    a: _ArrayLike[np.complex128], tol: float = 100
+) -> NDArray[np.float64 | np.complex128]: ...
 @overload
-def real_if_close(a: _ArrayLike[np.clongdouble], tol: float = 100) -> NDArray[np.longdouble | np.clongdouble]: ...
+def real_if_close(
+    a: _ArrayLike[np.clongdouble], tol: float = 100
+) -> NDArray[np.longdouble | np.clongdouble]: ...
 @overload
 def real_if_close(a: _ArrayLike[_RealT], tol: float = 100) -> NDArray[_RealT]: ...
 @overload
@@ -192,9 +201,13 @@ def typename(char: L["O"]) -> L["object"]: ...
 @overload
 def common_type() -> type[np.float16]: ...
 @overload
-def common_type(a0: _HasDType[np.float16], /, *ai: _HasDType[np.float16]) -> type[np.float16]: ...  # type: ignore[overload-overlap]
+def common_type(
+    a0: _HasDType[np.float16], /, *ai: _HasDType[np.float16]
+) -> type[np.float16]: ...  # type: ignore[overload-overlap]
 @overload
-def common_type(a0: _HasDType[np.float32], /, *ai: _HasDType[_FloatMax32]) -> type[np.float32]: ...  # type: ignore[overload-overlap]
+def common_type(
+    a0: _HasDType[np.float32], /, *ai: _HasDType[_FloatMax32]
+) -> type[np.float32]: ...  # type: ignore[overload-overlap]
 @overload
 def common_type(  # type: ignore[overload-overlap]
     a0: _HasDType[np.float64 | np.integer],

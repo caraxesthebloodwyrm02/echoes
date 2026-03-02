@@ -6,10 +6,10 @@ Tests the GlimpseApiGetTool, GlimpseApiPostTool, and GlimpseConnectPlatformsTool
 classes to ensure they work correctly with the EchoesAssistantV2 framework.
 """
 
-import pytest
 import json
 import time
-from unittest.mock import Mock, patch, MagicMock
+from unittest.mock import Mock
+
 from tools.glimpse_tools import (
     GlimpseApiGetTool,
     GlimpseApiPostTool,
@@ -291,12 +291,12 @@ class TestGlimpseToolIntegration:
             assert callable(tool.get_stats), f"{tool.name} get_stats not callable"
 
             # All tools must have to_openai_schema method
-            assert hasattr(
-                tool, "to_openai_schema"
-            ), f"{tool.name} missing to_openai_schema method"
-            assert callable(
-                tool.to_openai_schema
-            ), f"{tool.name} to_openai_schema not callable"
+            assert hasattr(tool, "to_openai_schema"), (
+                f"{tool.name} missing to_openai_schema method"
+            )
+            assert callable(tool.to_openai_schema), (
+                f"{tool.name} to_openai_schema not callable"
+            )
 
     def test_tool_schemas_are_valid_json(self):
         """Test that all tool schemas are valid JSON."""

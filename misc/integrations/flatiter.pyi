@@ -1,4 +1,4 @@
-from typing import Literal, TypeAlias, assert_type
+from typing import Literal, assert_type
 
 import numpy as np
 import numpy.typing as npt
@@ -6,7 +6,7 @@ import numpy.typing as npt
 a: np.flatiter[npt.NDArray[np.str_]]
 a_1d: np.flatiter[np.ndarray[tuple[int], np.dtype[np.bytes_]]]
 
-Size: TypeAlias = Literal[42]
+type Size = Literal[42]
 a_1d_fixed: np.flatiter[np.ndarray[tuple[Size], np.dtype[np.object_]]]
 
 assert_type(a.base, npt.NDArray[np.str_])

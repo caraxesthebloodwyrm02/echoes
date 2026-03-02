@@ -4,11 +4,9 @@ RAG V2 module - Simple implementation for assistant functionality.
 Provides Retrieval-Augmented Generation capabilities for the Echoes assistant.
 """
 
-from typing import Dict, List, Any, Optional, Union
-from dataclasses import dataclass
 import hashlib
-import json
-from pathlib import Path
+from dataclasses import dataclass
+from typing import Any
 
 
 @dataclass
@@ -17,8 +15,8 @@ class Document:
 
     id: str
     content: str
-    metadata: Dict[str, Any]
-    embedding: Optional[List[float]] = None
+    metadata: dict[str, Any]
+    embedding: list[float] | None = None
 
 
 class SimpleRAGSystem:
@@ -26,11 +24,11 @@ class SimpleRAGSystem:
 
     def __init__(self, preset: str = "balanced"):
         self.preset = preset
-        self.documents: Dict[str, Document] = {}
-        self.embeddings_cache: Dict[str, List[float]] = {}
+        self.documents: dict[str, Document] = {}
+        self.embeddings_cache: dict[str, list[float]] = {}
         self.config = self._get_preset_config(preset)
 
-    def _get_preset_config(self, preset: str) -> Dict[str, Any]:
+    def _get_preset_config(self, preset: str) -> dict[str, Any]:
         """Get configuration for preset."""
         configs = {
             "fast": {"max_results": 3, "similarity_threshold": 0.5, "chunk_size": 500},
@@ -47,7 +45,7 @@ class SimpleRAGSystem:
         }
         return configs.get(preset, configs["balanced"])
 
-    def _create_embedding(self, text: str) -> List[float]:
+    def _create_embedding(self, text: str) -> list[float]:
         """Create simple embedding using hash-based approach."""
         # Use text hash to create deterministic pseudo-embedding
         hash_obj = hashlib.md5(text.encode())
@@ -67,12 +65,12 @@ class SimpleRAGSystem:
 
         return embedding[:128]
 
-    def _cosine_similarity(self, vec1: List[float], vec2: List[float]) -> float:
+    def _cosine_similarity(self, vec1: list[float], vec2: list[float]) -> float:
         """Calculate cosine similarity."""
         if not vec1 or not vec2:
             return 0.0
 
-        dot_product = sum(a * b for a, b in zip(vec1, vec2))
+        dot_product = sum(a * b for a, b in zip(vec1, vec2, strict=False))
         magnitude1 = sum(a * a for a in vec1) ** 0.5
         magnitude2 = sum(b * b for b in vec2) ** 0.5
 
@@ -82,8 +80,8 @@ class SimpleRAGSystem:
         return dot_product / (magnitude1 * magnitude2)
 
     def add_documents(
-        self, documents: Union[str, List[str], Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, documents: str | list[str] | dict[str, Any]
+    ) -> dict[str, Any]:
         """Add documents to the RAG system."""
         added_count = 0
 
@@ -117,7 +115,7 @@ class SimpleRAGSystem:
             "total_chunks": added_count,  # Simple implementation doesn't chunk
         }
 
-    def search(self, query: str, max_results: Optional[int] = None) -> List[Document]:
+    def search(self, query: str, max_results: int | None = None) -> list[Document]:
         """Search for relevant documents."""
         if not query:
             return []
@@ -157,7 +155,7 @@ class SimpleRAGSystem:
 
         return "\n\n".join(context_parts)
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get RAG system statistics."""
         return {
             "total_documents": len(self.documents),
@@ -178,7 +176,7 @@ try:
     # In a real implementation, would check for OpenAI client
     # For now, we'll use the simple implementation
     OPENAI_RAG_AVAILABLE = False
-except:
+except Exception:
     pass
 
 

@@ -1,8 +1,8 @@
-from typing import Any, Literal, TypeAlias, assert_type
+from typing import Any, Literal, assert_type
 
 import numpy as np
 
-_1: TypeAlias = Literal[1]
+type _1 = Literal[1]
 
 b: np.bool
 u8: np.uint64

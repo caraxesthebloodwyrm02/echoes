@@ -15,13 +15,11 @@ Author: Cascade AI Assistant
 Date: October 2025
 """
 
-from typing import Dict, Any, List, Optional, Callable
-from enum import Enum
-from dataclasses import dataclass
-from datetime import datetime, timezone
-import numpy as np
-import json
 import logging
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from typing import Any
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -41,7 +39,7 @@ class StateTransition:
     from_state: str
     to_state: str
     probability: float
-    conditions: Optional[Dict[str, Any]] = None
+    conditions: dict[str, Any] | None = None
 
     def __post_init__(self):
         if not 0 <= self.probability <= 1:
@@ -53,13 +51,13 @@ class QuantumState:
     Core quantum state representation with superposition and entanglement capabilities
     """
 
-    def __init__(self, initial_state: Dict[str, Any] = None):
-        self._state: Dict[str, Any] = initial_state or {}
-        self._entangled: Dict[str, List[str]] = {}
-        self._history: List[tuple] = []
-        self._observers: List[Callable] = []
+    def __init__(self, initial_state: dict[str, Any] = None):
+        self._state: dict[str, Any] = initial_state or {}
+        self._entangled: dict[str, list[str]] = {}
+        self._history: list[tuple] = []
+        self._observers: list[Callable] = []
 
-    def update(self, key: str, value: Any, entangle_with: List[str] = None):
+    def update(self, key: str, value: Any, entangle_with: list[str] = None):
         """
         Update a state value with optional entanglement
 
@@ -72,7 +70,7 @@ class QuantumState:
 
         # Update the state
         self._state[key] = value
-        self._history.append((key, previous, value, datetime.now(timezone.utc)))
+        self._history.append((key, previous, value, datetime.now(UTC)))
 
         # Handle entanglement
         if entangle_with:
@@ -101,7 +99,7 @@ class QuantumState:
         """
         return self._state.get(key)
 
-    def get_entangled(self, key: str) -> Dict[str, Any]:
+    def get_entangled(self, key: str) -> dict[str, Any]:
         """
         Get all states entangled with the given key
 
@@ -114,7 +112,7 @@ class QuantumState:
         entangled_keys = self._entangled.get(key, [])
         return {k: self._state.get(k) for k in entangled_keys}
 
-    def get_superposition(self, keys: List[str]) -> Dict[str, Any]:
+    def get_superposition(self, keys: list[str]) -> dict[str, Any]:
         """
         Get multiple states in a single operation (superposition measurement)
 
@@ -126,7 +124,7 @@ class QuantumState:
         """
         return {k: self._state.get(k) for k in keys}
 
-    def get_history(self, key: str) -> List[tuple]:
+    def get_history(self, key: str) -> list[tuple]:
         """
         Get historical values for a state
 
@@ -154,7 +152,7 @@ class QuantumState:
             except Exception as e:
                 logger.error(f"Observer notification failed: {e}")
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         """Serialize state to dictionary"""
         return {
             "state": self._state,
@@ -162,7 +160,7 @@ class QuantumState:
             "history_length": len(self._history),
         }
 
-    def from_dict(self, data: Dict[str, Any]):
+    def from_dict(self, data: dict[str, Any]):
         """Deserialize state from dictionary"""
         self._state = data.get("state", {})
         self._entangled = data.get("entangled", {})

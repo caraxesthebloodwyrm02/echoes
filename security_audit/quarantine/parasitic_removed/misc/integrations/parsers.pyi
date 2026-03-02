@@ -1,10 +1,9 @@
+from collections.abc import Hashable
 from typing import (
-    Hashable,
     Literal,
 )
 
 import numpy as np
-
 from pandas._typing import (
     ArrayLike,
     Dtype,
@@ -72,4 +71,6 @@ class TextReader:
 # _maybe_upcast, na_values are only exposed for testing
 na_values: dict
 
-def _maybe_upcast(arr, use_dtype_backend: bool = ..., dtype_backend: str = ...) -> np.ndarray: ...
+def _maybe_upcast(
+    arr, use_dtype_backend: bool = ..., dtype_backend: str = ...
+) -> np.ndarray: ...

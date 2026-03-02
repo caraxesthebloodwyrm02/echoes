@@ -2,6 +2,7 @@
 """
 Test the fixed Responses API implementation
 """
+
 import os
 
 # Enable Responses API

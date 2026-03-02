@@ -7,29 +7,22 @@ Author: Prince (Echoes AI Platform)
 License: Consent-Based License v2.0
 """
 
-import os
-import json
-import hashlib
-import datetime
-import pandas as pd
-import numpy as np
-import secrets
 import base64
-from typing import Dict, List, Any, Optional, Union, Tuple
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
-from decimal import Decimal, ROUND_HALF_UP
+import datetime
+import hashlib
+import json
+import secrets
+from dataclasses import asdict, dataclass, field
+from decimal import Decimal
 from enum import Enum
+from pathlib import Path
+from typing import Any
 
 from enhanced_legal_safeguards import (
-    EnhancedCognitiveEffortAccounting,
-    get_enhanced_cognitive_accounting,
-    CognitiveEffortMetrics,
-    ConsentRecord,
-    ConsentType,
-    ProtectionLevel,
     DataRetention,
     PrivacyControl,
+    ProtectionLevel,
+    get_enhanced_cognitive_accounting,
 )
 
 
@@ -93,16 +86,16 @@ class TransactionRecord:
     platform_cut: Decimal
     net_value: Decimal
     cognitive_joules: float
-    effort_metrics: Dict[str, Any]
-    consent_compliance: Dict[str, Any]
-    blockchain_hash: Optional[str] = None
+    effort_metrics: dict[str, Any]
+    consent_compliance: dict[str, Any]
+    blockchain_hash: str | None = None
     # New enhanced protection fields
     privacy_bonus_applied: Decimal = Decimal("0.00")
     user_protection_level: str = "enhanced"
     data_retention_compliant: bool = True
     consent_withdrawal_provision: bool = True
     user_encryption_verified: bool = False
-    audit_trail_hash: Optional[str] = None
+    audit_trail_hash: str | None = None
     payout_eligibility: bool = True
     tax_optimization_applied: bool = False
     cross_border_compliance: bool = True
@@ -130,9 +123,9 @@ class UserAccount:
     total_tax_paid: Decimal = Decimal("0.00")
     total_platform_fees: Decimal = Decimal("0.00")
     total_privacy_bonus: Decimal = Decimal("0.00")  # New: Track privacy bonuses
-    consent_records: List[str] = field(default_factory=list)
-    transactions: List[str] = field(default_factory=list)
-    value_breakdown: Dict[str, Decimal] = field(default_factory=dict)
+    consent_records: list[str] = field(default_factory=list)
+    transactions: list[str] = field(default_factory=list)
+    value_breakdown: dict[str, Decimal] = field(default_factory=dict)
     # New enhanced protection fields
     privacy_preference: PrivacyControl = PrivacyControl.MINIMAL_COLLECTION
     protection_level: ProtectionLevel = ProtectionLevel.ENHANCED
@@ -144,9 +137,9 @@ class UserAccount:
     tax_optimization_enabled: bool = False
     audit_notifications: bool = True
     data_retention_policy: DataRetention = DataRetention.THIRTY_DAYS
-    user_encryption_key: Optional[str] = None
+    user_encryption_key: str | None = None
 
-    def update_totals(self, transactions: List[TransactionRecord]):
+    def update_totals(self, transactions: list[TransactionRecord]):
         """Enhanced totals update with privacy bonus tracking"""
         self.total_cognitive_joules = sum(t.cognitive_joules for t in transactions)
         self.total_gross_value = sum(t.gross_value for t in transactions)
@@ -197,13 +190,13 @@ class PayoutRecord:
 
     payout_id: str
     user_id: str
-    transaction_ids: List[str]
+    transaction_ids: list[str]
     total_amount: Decimal
     payout_method: PayoutMethod
     requested_at: str
-    processed_at: Optional[str]
+    processed_at: str | None
     status: str  # pending, processing, completed, failed, cancelled
-    transaction_hash: Optional[str] = None
+    transaction_hash: str | None = None
     # New enhanced protection fields
     user_verified: bool = False
     security_checks_passed: bool = False
@@ -272,7 +265,7 @@ class EnhancedAccountingSystem:
         payout_method: PayoutMethod = PayoutMethod.BANK_TRANSFER,
         tax_jurisdiction: TaxJurisdiction = TaxJurisdiction.US_STANDARD,
         payout_threshold: Decimal = Decimal("10.00"),
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create enhanced user account with comprehensive protection"""
         try:
             # Check if account already exists
@@ -331,9 +324,9 @@ class EnhancedAccountingSystem:
         user_id: str,
         session_id: str,
         cognitive_joules: float,
-        effort_metrics: Dict[str, Any],
+        effort_metrics: dict[str, Any],
         value_type: ValueType = ValueType.COGNITIVE_JOULES,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Process enhanced transaction with user protection and privacy bonuses"""
         try:
             # Verify user account exists
@@ -469,9 +462,9 @@ class EnhancedAccountingSystem:
     def request_enhanced_payout(
         self,
         user_id: str,
-        payout_method: Optional[PayoutMethod] = None,
-        amount: Optional[Decimal] = None,
-    ) -> Dict[str, Any]:
+        payout_method: PayoutMethod | None = None,
+        amount: Decimal | None = None,
+    ) -> dict[str, Any]:
         """Request enhanced payout with comprehensive user security"""
         try:
             # Verify user account
@@ -574,7 +567,7 @@ class EnhancedAccountingSystem:
 
     def generate_enhanced_financial_statement(
         self, user_id: str, period_days: int = 30
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate enhanced financial statement with user protection transparency"""
         try:
             # Verify user account
@@ -716,11 +709,11 @@ class EnhancedAccountingSystem:
         key_hash = hashlib.sha256(key_material).digest()
         return base64.urlsafe_b64encode(key_hash).decode()
 
-    def _load_user_accounts(self) -> Dict[str, UserAccount]:
+    def _load_user_accounts(self) -> dict[str, UserAccount]:
         """Load user accounts with enhanced deserialization"""
         accounts_file = self.storage_path / "user_accounts.json"
         if accounts_file.exists():
-            with open(accounts_file, "r", encoding="utf-8") as f:
+            with open(accounts_file, encoding="utf-8") as f:
                 data = json.load(f)
                 accounts = {}
                 for user_id, account_data in data.items():
@@ -792,11 +785,11 @@ class EnhancedAccountingSystem:
         with open(accounts_file, "w", encoding="utf-8") as f:
             json.dump(accounts_data, f, indent=2, ensure_ascii=False)
 
-    def _load_transactions(self) -> Dict[str, TransactionRecord]:
+    def _load_transactions(self) -> dict[str, TransactionRecord]:
         """Load transactions with enhanced deserialization"""
         transactions_file = self.storage_path / "transactions.json"
         if transactions_file.exists():
-            with open(transactions_file, "r", encoding="utf-8") as f:
+            with open(transactions_file, encoding="utf-8") as f:
                 data = json.load(f)
                 transactions = {}
                 for txn_id, txn_data in data.items():
@@ -844,11 +837,11 @@ class EnhancedAccountingSystem:
         with open(transactions_file, "w", encoding="utf-8") as f:
             json.dump(transactions_data, f, indent=2, ensure_ascii=False)
 
-    def _load_payout_records(self) -> Dict[str, PayoutRecord]:
+    def _load_payout_records(self) -> dict[str, PayoutRecord]:
         """Load payout records with enhanced deserialization"""
         payouts_file = self.storage_path / "payout_records.json"
         if payouts_file.exists():
-            with open(payouts_file, "r", encoding="utf-8") as f:
+            with open(payouts_file, encoding="utf-8") as f:
                 data = json.load(f)
                 payouts = {}
                 for payout_id, payout_data in data.items():

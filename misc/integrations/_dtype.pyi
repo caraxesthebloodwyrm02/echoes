@@ -1,15 +1,14 @@
-from typing import Final, TypeAlias, TypedDict, overload, type_check_only
+from typing import Final, TypedDict, overload, type_check_only
 from typing import Literal as L
 
-from typing_extensions import ReadOnly, TypeVar
-
 import numpy as np
+from typing_extensions import ReadOnly, TypeVar
 
 ###
 
 _T = TypeVar("_T")
 
-_Name: TypeAlias = L[
+type _Name = L[
     "uint",
     "int",
     "complex",

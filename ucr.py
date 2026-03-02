@@ -6,7 +6,6 @@ In a real implementation, this would provide environment and project management.
 """
 
 import os
-from typing import Dict, Any, Optional, List
 from pathlib import Path
 
 
@@ -22,7 +21,7 @@ class UCREnvironment:
         """Set an environment variable."""
         self.variables[key] = value
 
-    def get_variable(self, key: str) -> Optional[str]:
+    def get_variable(self, key: str) -> str | None:
         """Get an environment variable."""
         return self.variables.get(key)
 
@@ -67,7 +66,7 @@ class UCR:
         self.projects[name] = project
         return project
 
-    def get_env_vars(self) -> Dict[str, str]:
+    def get_env_vars(self) -> dict[str, str]:
         """Get environment variables."""
         return dict(os.environ)
 

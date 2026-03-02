@@ -1,9 +1,9 @@
+from typing import overload
+
 from matplotlib.axes import Axes
 from matplotlib.contour import ContourSet
 from matplotlib.tri._triangulation import Triangulation
-
 from numpy.typing import ArrayLike
-from typing import overload
 
 # TODO: more explicit args/kwargs (for all things in this module)?
 
@@ -12,7 +12,11 @@ class TriContourSet(ContourSet):
 
 @overload
 def tricontour(
-    ax: Axes, triangulation: Triangulation, z: ArrayLike, levels: int | ArrayLike = ..., **kwargs
+    ax: Axes,
+    triangulation: Triangulation,
+    z: ArrayLike,
+    levels: int | ArrayLike = ...,
+    **kwargs,
 ) -> TriContourSet: ...
 @overload
 def tricontour(
@@ -24,11 +28,15 @@ def tricontour(
     *,
     triangles: ArrayLike = ...,
     mask: ArrayLike = ...,
-    **kwargs
+    **kwargs,
 ) -> TriContourSet: ...
 @overload
 def tricontourf(
-    ax: Axes, triangulation: Triangulation, z: ArrayLike, levels: int | ArrayLike = ..., **kwargs
+    ax: Axes,
+    triangulation: Triangulation,
+    z: ArrayLike,
+    levels: int | ArrayLike = ...,
+    **kwargs,
 ) -> TriContourSet: ...
 @overload
 def tricontourf(
@@ -40,5 +48,5 @@ def tricontourf(
     *,
     triangles: ArrayLike = ...,
     mask: ArrayLike = ...,
-    **kwargs
+    **kwargs,
 ) -> TriContourSet: ...

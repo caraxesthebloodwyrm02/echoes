@@ -5,10 +5,10 @@ Validation and safety utilities for tool-calling operations in Echoes Assistant.
 Ensures structured, safe, and context-aware updates before applying code or document edits.
 """
 
-import re
-import json
 import ast
-from typing import List, Dict, Any, Union
+import json
+import re
+from typing import Any
 
 
 class ToolValidationError(Exception):
@@ -19,7 +19,7 @@ class SyntaxValidationError(Exception):
     """Raised when code syntax validation fails."""
 
 
-def validate_edit_payload(edits: List[Dict[str, Any]]) -> bool:
+def validate_edit_payload(edits: list[dict[str, Any]]) -> bool:
     """
     Validates a list of edit objects for canmore.update_textdoc or similar tools.
     Ensures required keys exist and are correctly typed.
@@ -56,8 +56,8 @@ def validate_edit_payload(edits: List[Dict[str, Any]]) -> bool:
 
 
 def generate_synced_edits(
-    context: Dict[str, str], updates: Dict[str, str]
-) -> List[Dict[str, Any]]:
+    context: dict[str, str], updates: dict[str, str]
+) -> list[dict[str, Any]]:
     """
     Creates a set of synchronized edit objects based on context mappings.
     context: {identifier: existing_code_snippet}
@@ -81,7 +81,7 @@ def generate_synced_edits(
     return edits
 
 
-def validate_json_structure(payload: Union[str, Dict[str, Any]]) -> bool:
+def validate_json_structure(payload: str | dict[str, Any]) -> bool:
     """
     Ensures the JSON payload is valid before passing to a tool.
     """
@@ -118,7 +118,7 @@ def lint_feedback(error_message: str) -> str:
 
 
 def safe_apply_edits(
-    current_code: str, edits: List[Dict[str, Any]], validate_syntax_after: bool = True
+    current_code: str, edits: list[dict[str, Any]], validate_syntax_after: bool = True
 ) -> str:
     """
     Applies validated edits safely to code and optionally checks syntax.
@@ -143,14 +143,14 @@ def safe_apply_edits(
     return updated_code
 
 
-def summarize_edits(edits: List[Dict[str, Any]]) -> str:
+def summarize_edits(edits: list[dict[str, Any]]) -> str:
     """
     Returns a human-readable summary of what the edits are doing.
     """
     summary_lines = []
     for idx, edit in enumerate(edits):
         summary_lines.append(
-            f"Edit {idx+1}: Replace pattern '{edit['pattern'][:30]}...' "
+            f"Edit {idx + 1}: Replace pattern '{edit['pattern'][:30]}...' "
             f"({'multiple' if edit['multiple'] else 'single'})"
         )
     return "\n".join(summary_lines)

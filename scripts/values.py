@@ -5,10 +5,10 @@ Manages three core values: respect, accuracy, helpfulness
 Provides scoring mechanisms for response evaluation and behavior learning.
 """
 
-from typing import Dict, Any, Optional, Tuple
-from dataclasses import dataclass
 import json
+from dataclasses import dataclass
 from pathlib import Path
+from typing import Any
 
 
 @dataclass
@@ -128,8 +128,8 @@ class ValueSystem:
         self.save_values()
 
     def evaluate_response(
-        self, response: str, context: Optional[Dict[str, Any]] = None
-    ) -> Dict[str, float]:
+        self, response: str, context: dict[str, Any] | None = None
+    ) -> dict[str, float]:
         """
         Evaluate a response against all core values and highlight factors.
 
@@ -163,7 +163,7 @@ class ValueSystem:
 
         return scores
 
-    def get_overall_score(self, response_scores: Dict[str, float]) -> float:
+    def get_overall_score(self, response_scores: dict[str, float]) -> float:
         """
         Calculate overall score: 80% core values + 20% highlight factors.
 
@@ -216,8 +216,8 @@ class ValueSystem:
     def provide_feedback(
         self,
         response: str,
-        user_feedback: Dict[str, float],
-        context: Optional[Dict[str, Any]] = None,
+        user_feedback: dict[str, float],
+        context: dict[str, Any] | None = None,
     ) -> None:
         """
         Update value scores based on user feedback.
@@ -267,7 +267,7 @@ class ValueSystem:
             return
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Load core values
@@ -296,7 +296,7 @@ class ValueSystem:
             pass
 
     def _evaluate_respect(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for respect (avoiding harm, empathy, boundaries)."""
         response_lower = response.lower()
@@ -340,7 +340,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_accuracy(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for accuracy (factual correctness, avoiding uncertainty)."""
         response_lower = response.lower()
@@ -383,7 +383,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_helpfulness(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for helpfulness (solving problems, providing value)."""
         response_lower = response.lower()
@@ -428,7 +428,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_community(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for community (building connections, inclusivity)."""
         response_lower = response.lower()
@@ -463,7 +463,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_faith(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for faith (trust, belief in potential)."""
         response_lower = response.lower()
@@ -506,7 +506,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_service(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for service (selfless help, dedication)."""
         response_lower = response.lower()
@@ -548,7 +548,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_growth(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for growth (continuous improvement, learning)."""
         response_lower = response.lower()
@@ -592,7 +592,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_love(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for love (compassion, empathy, care)."""
         response_lower = response.lower()
@@ -636,7 +636,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_integrity(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for integrity (honesty, ethical behavior)."""
         response_lower = response.lower()
@@ -680,7 +680,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_innovation(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for innovation (creativity, forward-thinking)."""
         response_lower = response.lower()
@@ -725,7 +725,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_excellence(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for excellence (quality, high standards)."""
         response_lower = response.lower()
@@ -768,7 +768,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_teamwork(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for teamwork (collaboration, unity)."""
         response_lower = response.lower()
@@ -811,7 +811,7 @@ class ValueSystem:
         return max(0.0, min(1.0, score))
 
     def _evaluate_accountability(
-        self, response: str, context: Optional[Dict[str, Any]] = None
+        self, response: str, context: dict[str, Any] | None = None
     ) -> float:
         """Evaluate response for accountability (responsibility, ownership)."""
         response_lower = response.lower()
@@ -853,7 +853,7 @@ class ValueSystem:
 
         return max(0.0, min(1.0, score))
 
-    def get_values_summary(self) -> Dict[str, Any]:
+    def get_values_summary(self) -> dict[str, Any]:
         """Get a summary of current values and their scores."""
         summary = {}
 

@@ -1,6 +1,6 @@
 import re
 from collections.abc import Callable, Iterable, Mapping
-from typing import IO, Any, Concatenate, Final, Never, ParamSpec, TypeAlias, overload
+from typing import IO, Any, Concatenate, Final, Never, ParamSpec, overload
 from typing import Literal as L
 
 from _typeshed import StrOrBytesPath, StrPath
@@ -12,9 +12,9 @@ from .auxfuncs import isintent_dict as isintent_dict
 
 _Tss = ParamSpec("_Tss")
 
-_VisitResult: TypeAlias = list[Any] | dict[str, Any] | None
-_VisitItem: TypeAlias = tuple[str | None, _VisitResult]
-_VisitFunc: TypeAlias = Callable[
+type _VisitResult = list[Any] | dict[str, Any] | None
+type _VisitItem = tuple[str | None, _VisitResult]
+type _VisitFunc[**_Tss] = Callable[
     Concatenate[_VisitItem, list[_VisitItem], _VisitResult, _Tss], _VisitItem | None
 ]
 

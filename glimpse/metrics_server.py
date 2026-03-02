@@ -5,9 +5,8 @@ Exposes a /metrics endpoint that can be scraped by Prometheus.
 
 import asyncio
 import logging
-from typing import Optional
+
 from aiohttp import web
-from prometheus_client import generate_latest
 
 logger = logging.getLogger(__name__)
 
@@ -19,8 +18,8 @@ class MetricsServer:
         self.host = host
         self.port = port
         self.app = web.Application()
-        self.runner: Optional[web.AppRunner] = None
-        self.site: Optional[web.TCPSite] = None
+        self.runner: web.AppRunner | None = None
+        self.site: web.TCPSite | None = None
 
         # Setup routes
         self.app.router.add_get("/metrics", self.handle_metrics)
@@ -63,7 +62,7 @@ class MetricsServer:
 
 
 # Global metrics server instance
-_metrics_server: Optional[MetricsServer] = None
+_metrics_server: MetricsServer | None = None
 
 
 async def start_metrics_server(host: str = "0.0.0.0", port: int = 8000) -> None:
@@ -82,7 +81,7 @@ async def stop_metrics_server() -> None:
         _metrics_server = None
 
 
-def get_metrics_server() -> Optional[MetricsServer]:
+def get_metrics_server() -> MetricsServer | None:
     """Get the global metrics server instance."""
     return _metrics_server
 
@@ -90,7 +89,6 @@ def get_metrics_server() -> Optional[MetricsServer]:
 # For running the server directly for testing
 async def main():
     import signal
-    import sys
 
     # Configure logging
     logging.basicConfig(

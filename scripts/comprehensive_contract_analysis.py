@@ -7,7 +7,8 @@ with a complete professional contract risk assessment.
 """
 
 import asyncio
-from advanced_echoes_assistant import create_advanced_assistant, DecisionDomain
+
+from advanced_echoes_assistant import create_advanced_assistant
 
 
 async def comprehensive_contract_analysis():
@@ -114,7 +115,7 @@ async def comprehensive_contract_analysis():
 def generate_comprehensive_risk_report(contract_text: str) -> str:
     """Generate a comprehensive professional contract risk analysis."""
 
-    report = f"""# Legal Contract Risk Analysis Report
+    report = """# Legal Contract Risk Analysis Report
 
 ## Executive Summary
 **Confidence Score: 85%**

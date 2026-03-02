@@ -4,18 +4,19 @@ Integrates security framework and ethics framework into the main AI operations.
 """
 
 import logging
-from typing import Dict, List, Any, Optional, Callable
+from collections.abc import Callable
+from datetime import UTC, datetime
 from functools import wraps
-from datetime import datetime, timezone
+from typing import Any
 
 # Security and Ethics imports
 try:
-    from .security_framework import security_manager, SecurityEvent
-    from .ethics_framework import ethics_assessor, EthicalDecision
+    from .ethics_framework import EthicalDecision, ethics_assessor
+    from .security_framework import SecurityEvent, security_manager
 except ImportError:
     # Fallback for direct script execution
-    from security_framework import security_manager, SecurityEvent
-    from ethics_framework import ethics_assessor, EthicalDecision
+    from ethics_framework import EthicalDecision, ethics_assessor
+    from security_framework import SecurityEvent, security_manager
 
 # Configure integration logger
 integration_logger = logging.getLogger("echoes.security_ethics")
@@ -28,7 +29,7 @@ class SecureEthicalAI:
     def __init__(self, enable_security: bool = True, enable_ethics: bool = True):
         self.enable_security = enable_security
         self.enable_ethics = enable_ethics
-        self.operation_hooks: Dict[str, List[Callable]] = {}
+        self.operation_hooks: dict[str, list[Callable]] = {}
 
     def secure_ethical_operation(
         self, operation_name: str, requires_ethics_review: bool = False
@@ -75,7 +76,7 @@ class SecureEthicalAI:
 
                     # Log ethical decision
                     decision = EthicalDecision(
-                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        timestamp=datetime.now(UTC).isoformat(),
                         user_id=user_id,
                         action=operation_name,
                         context=context,
@@ -157,7 +158,7 @@ class SecureEthicalAI:
 
                     # Enhanced logging
                     decision = EthicalDecision(
-                        timestamp=datetime.now(timezone.utc).isoformat(),
+                        timestamp=datetime.now(UTC).isoformat(),
                         user_id=user_id,
                         action=f"kardashev_{operation_name}",
                         context=context,
@@ -179,7 +180,7 @@ class SecureEthicalAI:
 
         return decorator
 
-    def _extract_context(self, args, kwargs) -> Dict[str, Any]:
+    def _extract_context(self, args, kwargs) -> dict[str, Any]:
         """Extract operation context from function arguments."""
         context = {}
 
@@ -198,13 +199,13 @@ class SecureEthicalAI:
                 context[field] = getattr(args[0], field)
 
         # Add metadata
-        context["timestamp"] = datetime.now(timezone.utc).isoformat()
+        context["timestamp"] = datetime.now(UTC).isoformat()
         context["arg_count"] = len(args)
         context["kwarg_keys"] = list(kwargs.keys())
 
         return context
 
-    def _perform_human_review(self, assessment: Dict[str, Any], user_id: str) -> bool:
+    def _perform_human_review(self, assessment: dict[str, Any], user_id: str) -> bool:
         """Perform human review for high-risk operations."""
         report = ethics_assessor.generate_ethical_report(assessment)
 
@@ -220,7 +221,7 @@ class SecureEthicalAI:
         return True  # Auto-approve for development
 
     def _perform_kardashev_review(
-        self, assessment: Dict[str, Any], user_id: str
+        self, assessment: dict[str, Any], user_id: str
     ) -> bool:
         """Perform enhanced review for Kardashev-scale operations."""
         report = ethics_assessor.generate_ethical_report(assessment)
@@ -243,7 +244,7 @@ class SecureEthicalAI:
             self.operation_hooks[key] = []
         self.operation_hooks[key].append(hook_func)
 
-    def _run_hooks(self, operation: str, hook_type: str, context: Dict[str, Any]):
+    def _run_hooks(self, operation: str, hook_type: str, context: dict[str, Any]):
         """Run operation hooks."""
         key = f"{operation}:{hook_type}"
         if key in self.operation_hooks:
@@ -253,12 +254,12 @@ class SecureEthicalAI:
                 except Exception as e:
                     integration_logger.error(f"Hook execution failed: {e}")
 
-    def get_security_status(self) -> Dict[str, Any]:
+    def get_security_status(self) -> dict[str, Any]:
         """Get comprehensive security and ethics status."""
         status = {
             "security_enabled": self.enable_security,
             "ethics_enabled": self.enable_ethics,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         if self.enable_security:
@@ -280,7 +281,7 @@ class SecureEthicalAI:
         operation_name: str,
         user_id: str,
         success: bool,
-        details: Dict[str, Any] = None,
+        details: dict[str, Any] = None,
     ):
         """Manually audit an operation."""
         if self.enable_security:
@@ -308,13 +309,13 @@ class KardashevEthicsMonitor:
         self.coordination_log = []
 
     def track_kardashev_operation(
-        self, operation: str, user_id: str, impact_assessment: Dict[str, Any]
+        self, operation: str, user_id: str, impact_assessment: dict[str, Any]
     ):
         """Track a Kardashev-scale operation."""
         entry = {
             "operation": operation,
             "user_id": user_id,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "impact_assessment": impact_assessment,
             "monitoring_active": True,
         }
@@ -324,7 +325,7 @@ class KardashevEthicsMonitor:
             f"Kardashev operation tracked: {operation} by {user_id}"
         )
 
-    def assess_global_impact(self, operation_type: str) -> Dict[str, Any]:
+    def assess_global_impact(self, operation_type: str) -> dict[str, Any]:
         """Assess global impact of operation types."""
         # Analyze patterns across Kardashev operations
         similar_ops = [
@@ -352,13 +353,13 @@ class KardashevEthicsMonitor:
             "international_review_required": avg_risk > 0.8,
         }
 
-    def log_coordination_event(self, event: str, stakeholders: List[str], impact: str):
+    def log_coordination_event(self, event: str, stakeholders: list[str], impact: str):
         """Log global coordination events."""
         entry = {
             "event": event,
             "stakeholders": stakeholders,
             "impact": impact,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
         self.coordination_log.append(entry)

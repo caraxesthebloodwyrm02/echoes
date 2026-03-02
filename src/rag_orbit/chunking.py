@@ -1,13 +1,12 @@
 from dataclasses import dataclass
 from hashlib import sha256
-from typing import List, Optional, Tuple
 
 
 @dataclass
 class ChunkMetadata:
     chunk_id: str
     source_document: str
-    category: Optional[str]
+    category: str | None
     checksum: str
 
     def to_dict(self):
@@ -33,16 +32,18 @@ class DocumentChunker:
         self.chunk_size = chunk_size
         self.overlap = overlap
 
-    def chunk_document(self, text: str, source_document: str, category: Optional[str] = None) -> List[Chunk]:
+    def chunk_document(
+        self, text: str, source_document: str, category: str | None = None
+    ) -> list[Chunk]:
         if not text:
             return []
         words = text.split()
-        chunks: List[Chunk] = []
+        chunks: list[Chunk] = []
         step = max(1, self.chunk_size - self.overlap)
         idx = 0
         n = len(words)
         while idx < n:
-            segment = words[idx: idx + self.chunk_size]
+            segment = words[idx : idx + self.chunk_size]
             if not segment:
                 break
             chunk_text = " ".join(segment)
@@ -62,13 +63,13 @@ class DocumentChunker:
             idx += step
         return chunks
 
-    def chunk_batch(self, documents: List[Tuple[str, str, Optional[str]]]) -> List[Chunk]:
-        out: List[Chunk] = []
+    def chunk_batch(self, documents: list[tuple[str, str, str | None]]) -> list[Chunk]:
+        out: list[Chunk] = []
         for text, source_document, category in documents:
             out.extend(self.chunk_document(text, source_document, category))
         return out
 
-    def validate_chunks(self, chunks: List[Chunk]):
+    def validate_chunks(self, chunks: list[Chunk]):
         errors = []
         for chunk in chunks:
             if not chunk.text.strip():

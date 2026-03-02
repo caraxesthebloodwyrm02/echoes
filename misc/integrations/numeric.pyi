@@ -6,7 +6,6 @@ from typing import (
     NoReturn,
     SupportsAbs,
     SupportsIndex,
-    TypeAlias,
     TypeGuard,
     TypeVar,
     Unpack,
@@ -199,7 +198,7 @@ _AnyShapeT = TypeVar(
     tuple[int, ...],
 )
 
-_CorrelateMode: TypeAlias = L["valid", "same", "full"]
+type _CorrelateMode = L["valid", "same", "full"]
 
 @overload
 def zeros_like(

@@ -1,7 +1,8 @@
 # responses_quickstart.py
 # Requirements: pip install openai
 import json
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+
 from openai import OpenAI
 
 client = OpenAI()  # reads OPENAI_API_KEY from env
@@ -39,7 +40,7 @@ if "TOOL_CALL:" in text:
 
     # Example local tool handler: get_time
     if tool_req.get("tool") == "get_time":
-        result_value = datetime.now(timezone.utc).astimezone().isoformat()
+        result_value = datetime.now(UTC).astimezone().isoformat()
     else:
         result_value = {"error": "unknown tool"}
 

@@ -3,20 +3,14 @@ Benchmark script for testing the adaptive rate limiter under load.
 """
 
 import asyncio
-import time
-import statistics
-import random
-import sys
 import os
-from typing import List, Dict, Any, Optional
+import random
+import statistics
+import sys
+import time
+from typing import Any
 
 try:
-    import matplotlib.pyplot as plt
-
-    MATPLOTLIB_AVAILABLE = True
-except ImportError:
-    MATPLOTLIB_AVAILABLE = False
-    plt = None
     import matplotlib.pyplot as plt
 
     MATPLOTLIB_AVAILABLE = True
@@ -31,8 +25,6 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from glimpse.rate_limiter import (
     AdaptiveRateLimiter,
-    get_default_rate_limiter,
-    set_default_rate_limiter,
 )
 
 
@@ -88,12 +80,12 @@ class RateLimiterBenchmark:
                 # Randomly fail 5% of requests to test error handling
                 if random.random() < 0.05:
                     await self.rate_limiter.record_error("benchmark")
-                    success = False
+                    _success = False
                 else:
                     await self.rate_limiter.record_success(
                         "benchmark", token_count=token_count
                     )
-                    success = True
+                    _success = True
 
                 # Record metrics
                 self.metrics["successful_requests"] += 1
@@ -184,7 +176,7 @@ class RateLimiterBenchmark:
 
         return stats, self.metrics
 
-    def plot_results(self, metrics: Dict[str, Any], output_file: str = None):
+    def plot_results(self, metrics: dict[str, Any], output_file: str = None):
         """Plot benchmark results."""
         if not metrics["timestamps"]:
             print("No metrics to plot")
@@ -279,8 +271,8 @@ async def main():
     )
     print(f"Rate Limited:       {stats['rate_limited_requests']}")
     print(f"Request Rate:       {stats['request_rate']:.1f} req/s")
-    print(f"Avg Response Time:  {stats['avg_response_time']*1000:.1f} ms")
-    print(f"P95 Response Time:  {stats['p95_response_time']*1000:.1f} ms")
+    print(f"Avg Response Time:  {stats['avg_response_time'] * 1000:.1f} ms")
+    print(f"P95 Response Time:  {stats['p95_response_time'] * 1000:.1f} ms")
     print(f"Final RPM:          {stats['final_rpm']:.1f}")
     print(f"Min/Max RPM:        {stats['min_rpm']:.1f} / {stats['max_rpm']:.1f}")
 

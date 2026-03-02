@@ -1,18 +1,18 @@
+from collections.abc import Callable, Sequence
+from typing import Any, Literal, overload
+
 import matplotlib.artist as martist
-from matplotlib.backend_bases import RendererBase, Event, FigureCanvasBase
-from matplotlib.colors import Colormap, Normalize
 import matplotlib.text as mtext
+import numpy as np
+from matplotlib.backend_bases import Event, FigureCanvasBase, RendererBase
+from matplotlib.colors import Colormap, Normalize
 from matplotlib.figure import Figure, SubFigure
 from matplotlib.font_manager import FontProperties
 from matplotlib.image import BboxImage
 from matplotlib.patches import FancyArrowPatch, FancyBboxPatch
 from matplotlib.transforms import Bbox, BboxBase, Transform
 from matplotlib.typing import CoordsType
-
-import numpy as np
 from numpy.typing import ArrayLike
-from collections.abc import Callable, Sequence
-from typing import Any, Literal, overload
 
 DEBUG: bool
 
@@ -30,13 +30,19 @@ class OffsetBox(martist.Artist):
     def set_figure(self, fig: Figure | SubFigure) -> None: ...
     def set_offset(
         self,
-        xy: tuple[float, float] | Callable[[float, float, float, float, RendererBase], tuple[float, float]],
+        xy: tuple[float, float]
+        | Callable[[float, float, float, float, RendererBase], tuple[float, float]],
     ) -> None: ...
     @overload
     def get_offset(self, bbox: Bbox, renderer: RendererBase) -> tuple[float, float]: ...
     @overload
     def get_offset(
-        self, width: float, height: float, xdescent: float, ydescent: float, renderer: RendererBase
+        self,
+        width: float,
+        height: float,
+        xdescent: float,
+        ydescent: float,
+        renderer: RendererBase,
     ) -> tuple[float, float]: ...
     def set_width(self, width: float) -> None: ...
     def set_height(self, height: float) -> None: ...
@@ -153,7 +159,10 @@ class AnchoredOffsetbox(OffsetBox):
         child: OffsetBox | None = ...,
         prop: FontProperties | None = ...,
         frameon: bool = ...,
-        bbox_to_anchor: BboxBase | tuple[float, float] | tuple[float, float, float, float] | None = ...,
+        bbox_to_anchor: BboxBase
+        | tuple[float, float]
+        | tuple[float, float, float, float]
+        | None = ...,
         bbox_transform: Transform | None = ...,
         **kwargs,
     ) -> None: ...
@@ -161,13 +170,22 @@ class AnchoredOffsetbox(OffsetBox):
     def get_child(self) -> OffsetBox | None: ...
     def get_children(self) -> list[martist.Artist]: ...
     def get_bbox_to_anchor(self) -> Bbox: ...
-    def set_bbox_to_anchor(self, bbox: BboxBase, transform: Transform | None = ...) -> None: ...
+    def set_bbox_to_anchor(
+        self, bbox: BboxBase, transform: Transform | None = ...
+    ) -> None: ...
     def update_frame(self, bbox: Bbox, fontsize: float | None = ...) -> None: ...
 
 class AnchoredText(AnchoredOffsetbox):
     txt: TextArea
     def __init__(
-        self, s: str, loc: str, *, pad: float = ..., borderpad: float = ..., prop: dict[str, Any] | None = ..., **kwargs
+        self,
+        s: str,
+        loc: str,
+        *,
+        pad: float = ...,
+        borderpad: float = ...,
+        prop: dict[str, Any] | None = ...,
+        **kwargs,
     ) -> None: ...
 
 class OffsetImage(OffsetBox):
@@ -263,7 +281,9 @@ class DraggableBase:
 
 class DraggableOffsetBox(DraggableBase):
     offsetbox: OffsetBox
-    def __init__(self, ref_artist: martist.Artist, offsetbox: OffsetBox, use_blit: bool = ...) -> None: ...
+    def __init__(
+        self, ref_artist: martist.Artist, offsetbox: OffsetBox, use_blit: bool = ...
+    ) -> None: ...
     def save_offset(self) -> None: ...
     def update_offset(self, dx: float, dy: float) -> None: ...
     def get_loc_in_canvas(self) -> tuple[float, float]: ...

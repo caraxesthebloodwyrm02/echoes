@@ -7,16 +7,15 @@ Author: Prince (Echoes AI Platform)
 License: Consent-Based License v2.0
 """
 
-import os
-import json
-import hashlib
-import datetime
-import secrets
 import base64
-from typing import Dict, List, Any, Optional, Union, Set
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
+import datetime
+import hashlib
+import json
+import secrets
+from dataclasses import asdict, dataclass, field
 from enum import Enum
+from pathlib import Path
+from typing import Any
 
 
 class ConsentType(Enum):
@@ -74,13 +73,13 @@ class CognitiveEffortMetrics:
     creativity_score: float  # 0.0-1.0
     innovation_potential: float  # 0.0-1.0
     joules_of_work: float  # Calculated cognitive energy
-    thought_processes: List[str]  # Tracked thought patterns
+    thought_processes: list[str]  # Tracked thought patterns
     insights_generated: int
     problems_solved: int
     value_created: float  # Monetary value estimation
     privacy_preference: PrivacyControl  # New: User privacy preference
     data_retention_policy: DataRetention  # New: User retention choice
-    encryption_key_hash: Optional[str] = None  # New: User encryption control
+    encryption_key_hash: str | None = None  # New: User encryption control
 
     def calculate_joules(self) -> float:
         """Enhanced cognitive joules calculation with user protection factors"""
@@ -125,12 +124,12 @@ class ConsentRecord:
     scope_of_use: str
     duration: str
     granted_at: str
-    expires_at: Optional[str]
+    expires_at: str | None
     terms_accepted: bool
     protection_level: ProtectionLevel
-    special_conditions: List[str] = field(default_factory=list)
-    revocation_rights: Dict[str, Any] = field(default_factory=dict)
-    compensation_terms: Dict[str, Any] = field(default_factory=dict)
+    special_conditions: list[str] = field(default_factory=list)
+    revocation_rights: dict[str, Any] = field(default_factory=dict)
+    compensation_terms: dict[str, Any] = field(default_factory=dict)
     # New enhanced protection fields
     data_retention_policy: DataRetention = DataRetention.THIRTY_DAYS
     privacy_control: PrivacyControl = PrivacyControl.MINIMAL_COLLECTION
@@ -155,11 +154,11 @@ class LegalSafeguard:
     name: str
     description: str
     protection_level: ProtectionLevel
-    applicable_consent_types: List[ConsentType]
+    applicable_consent_types: list[ConsentType]
     implementation_code: str
     monitoring_required: bool
-    violation_consequences: List[str]
-    user_rights: List[str]
+    violation_consequences: list[str]
+    user_rights: list[str]
     # New enhanced protection features
     data_minimization: bool = True
     purpose_limitation: bool = True
@@ -167,7 +166,7 @@ class LegalSafeguard:
     accuracy_rights: bool = True
     transparency_requirements: bool = True
     accountability_measures: bool = True
-    security_certifications: List[str] = field(default_factory=list)
+    security_certifications: list[str] = field(default_factory=list)
     user_verification_required: bool = False
     independent_audit_available: bool = True
     breach_notification_hours: int = 72
@@ -184,13 +183,13 @@ class UserPrivacyProfile:
     privacy_preference: PrivacyControl
     data_retention_policy: DataRetention
     protection_level: ProtectionLevel
-    consent_preferences: Dict[str, bool] = field(default_factory=dict)
-    data_processing_limitations: List[str] = field(default_factory=list)
-    third_party_restrictions: List[str] = field(default_factory=dict)
-    geographic_restrictions: List[str] = field(default_factory=list)
-    encryption_requirements: Dict[str, bool] = field(default_factory=dict)
-    audit_preferences: Dict[str, bool] = field(default_factory=dict)
-    notification_preferences: Dict[str, bool] = field(default_factory=dict)
+    consent_preferences: dict[str, bool] = field(default_factory=dict)
+    data_processing_limitations: list[str] = field(default_factory=list)
+    third_party_restrictions: list[str] = field(default_factory=dict)
+    geographic_restrictions: list[str] = field(default_factory=list)
+    encryption_requirements: dict[str, bool] = field(default_factory=dict)
+    audit_preferences: dict[str, bool] = field(default_factory=dict)
+    notification_preferences: dict[str, bool] = field(default_factory=dict)
 
 
 class EnhancedCognitiveEffortAccounting:
@@ -228,11 +227,11 @@ class EnhancedCognitiveEffortAccounting:
             "breach_detection_active": True,
         }
 
-    def _load_enhanced_safeguards(self) -> Dict[str, LegalSafeguard]:
+    def _load_enhanced_safeguards(self) -> dict[str, LegalSafeguard]:
         """Load enhanced legal safeguards with user protection"""
         safeguards_file = self.storage_path / "legal_safeguards.json"
         if safeguards_file.exists():
-            with open(safeguards_file, "r", encoding="utf-8") as f:
+            with open(safeguards_file, encoding="utf-8") as f:
                 data = json.load(f)
                 safeguards = {}
                 for safeguard_id, safeguard_data in data.items():
@@ -255,7 +254,7 @@ class EnhancedCognitiveEffortAccounting:
         # Create enhanced default safeguards
         return self._create_enhanced_default_safeguards()
 
-    def _create_enhanced_default_safeguards(self) -> Dict[str, LegalSafeguard]:
+    def _create_enhanced_default_safeguards(self) -> dict[str, LegalSafeguard]:
         """Create enhanced default safeguards with comprehensive user protection"""
         safeguards = {
             "cognitive_liberty_protection": LegalSafeguard(
@@ -429,7 +428,7 @@ class EnhancedCognitiveEffortAccounting:
         privacy_preference: PrivacyControl,
         data_retention: DataRetention,
         protection_level: ProtectionLevel,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create comprehensive user privacy profile"""
         try:
             profile_id = (
@@ -534,7 +533,7 @@ class EnhancedCognitiveEffortAccounting:
         protection_level: ProtectionLevel,
         privacy_preference: PrivacyControl = PrivacyControl.MINIMAL_COLLECTION,
         data_retention: DataRetention = DataRetention.THIRTY_DAYS,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create enhanced consent record with comprehensive user protection"""
         try:
             consent_id = f"consent_{user_id}_{consent_type.value}_{datetime.datetime.now().isoformat()}"
@@ -627,12 +626,12 @@ class EnhancedCognitiveEffortAccounting:
         cognitive_complexity_score: float,
         creativity_score: float,
         innovation_potential: float,
-        thought_processes: List[str],
+        thought_processes: list[str],
         insights_generated: int,
         problems_solved: int,
         privacy_preference: PrivacyControl = PrivacyControl.MINIMAL_COLLECTION,
         data_retention: DataRetention = DataRetention.THIRTY_DAYS,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Track enhanced cognitive effort with user protection features"""
         try:
             effort_id = (
@@ -692,7 +691,7 @@ class EnhancedCognitiveEffortAccounting:
 
     def verify_enhanced_user_protection(
         self, user_id: str, operation_type: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Verify enhanced user protection compliance"""
         try:
             compliance_checks = {
@@ -746,7 +745,9 @@ class EnhancedCognitiveEffortAccounting:
                 "protection_level": (
                     "SOVEREIGN"
                     if protection_score >= 0.9
-                    else "PREMIUM" if protection_score >= 0.7 else "ENHANCED"
+                    else "PREMIUM"
+                    if protection_score >= 0.7
+                    else "ENHANCED"
                 ),
                 "user_rights_active": [
                     "Data sovereignty",
@@ -764,7 +765,7 @@ class EnhancedCognitiveEffortAccounting:
                 "error": f"Failed to verify enhanced user protection: {str(e)}",
             }
 
-    def _save_enhanced_safeguards(self, safeguards: Dict[str, LegalSafeguard]):
+    def _save_enhanced_safeguards(self, safeguards: dict[str, LegalSafeguard]):
         """Save enhanced legal safeguards with proper serialization"""
         safeguards_file = self.storage_path / "legal_safeguards.json"
         safeguards_data = {}
@@ -779,11 +780,11 @@ class EnhancedCognitiveEffortAccounting:
         with open(safeguards_file, "w", encoding="utf-8") as f:
             json.dump(safeguards_data, f, indent=2, ensure_ascii=False)
 
-    def _load_consent_records(self) -> Dict[str, ConsentRecord]:
+    def _load_consent_records(self) -> dict[str, ConsentRecord]:
         """Load consent records with enhanced deserialization"""
         consents_file = self.storage_path / "consent_records.json"
         if consents_file.exists():
-            with open(consents_file, "r", encoding="utf-8") as f:
+            with open(consents_file, encoding="utf-8") as f:
                 data = json.load(f)
                 records = {}
                 for consent_id, consent_data in data.items():
@@ -824,11 +825,11 @@ class EnhancedCognitiveEffortAccounting:
         with open(consents_file, "w", encoding="utf-8") as f:
             json.dump(consents_data, f, indent=2, ensure_ascii=False)
 
-    def _load_cognitive_efforts(self) -> Dict[str, CognitiveEffortMetrics]:
+    def _load_cognitive_efforts(self) -> dict[str, CognitiveEffortMetrics]:
         """Load cognitive efforts with enhanced deserialization"""
         efforts_file = self.storage_path / "cognitive_efforts.json"
         if efforts_file.exists():
-            with open(efforts_file, "r", encoding="utf-8") as f:
+            with open(efforts_file, encoding="utf-8") as f:
                 data = json.load(f)
                 efforts = {}
                 for effort_id, effort_data in data.items():
@@ -859,11 +860,11 @@ class EnhancedCognitiveEffortAccounting:
         with open(efforts_file, "w", encoding="utf-8") as f:
             json.dump(efforts_data, f, indent=2, ensure_ascii=False)
 
-    def _load_privacy_profiles(self) -> Dict[str, UserPrivacyProfile]:
+    def _load_privacy_profiles(self) -> dict[str, UserPrivacyProfile]:
         """Load user privacy profiles"""
         profiles_file = self.storage_path / "privacy_profiles.json"
         if profiles_file.exists():
-            with open(profiles_file, "r", encoding="utf-8") as f:
+            with open(profiles_file, encoding="utf-8") as f:
                 data = json.load(f)
                 profiles = {}
                 for profile_id, profile_data in data.items():

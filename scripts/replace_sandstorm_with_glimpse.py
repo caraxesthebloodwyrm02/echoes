@@ -3,7 +3,6 @@
 Replace 'glimpse' with 'glimpse' in all relevant files
 """
 
-import os
 import re
 from pathlib import Path
 
@@ -51,7 +50,7 @@ def should_process_file(filepath: Path) -> bool:
 def update_file_content(filepath: Path) -> bool:
     """Update file content with replacements."""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         updated = False
@@ -120,7 +119,7 @@ def main():
                 print(f"Updated: {filepath}")
                 updated_count += 1
 
-    print(f"\n=== Summary ===")
+    print("\n=== Summary ===")
     print(f"Files renamed: {renamed_count}")
     print(f"Files updated: {updated_count}")
     print("\nReplacement complete!")

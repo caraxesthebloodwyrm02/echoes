@@ -5,9 +5,7 @@ Daily Routine for Funding Your Dream Journey
 Calculate how much to save daily from today to fund your NYE 2025 roundtrip
 """
 
-from datetime import datetime, timedelta
-from typing import Dict, List, Tuple
-import json
+from datetime import datetime
 
 
 class SavingsRoutineCalculator:
@@ -52,7 +50,7 @@ class SavingsRoutineCalculator:
             return 0
         return sum(self.trip_costs[destination].values())
 
-    def calculate_daily_savings_needed(self, destination: str) -> Tuple[float, float]:
+    def calculate_daily_savings_needed(self, destination: str) -> tuple[float, float]:
         """
         Calculate daily savings needed
         Returns: (daily_amount_usd, daily_amount_bdt)

@@ -4,15 +4,14 @@ Knowledge Graph System for EchoesAssistantV2
 Enables meaningful communication through semantic relationships and memory
 """
 
-import os
 import json
-import asyncio
-from typing import Dict, List, Any, Optional, Set, Tuple
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from pathlib import Path
-import networkx as nx
 from collections import defaultdict, deque
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import networkx as nx
 
 
 @dataclass
@@ -23,14 +22,10 @@ class KnowledgeNode:
     type: str  # person, place, concept, event, document, etc.
     label: str
     description: str = ""
-    properties: Dict[str, Any] = field(default_factory=dict)
-    embeddings: Optional[List[float]] = None
-    created_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
-    last_accessed: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    properties: dict[str, Any] = field(default_factory=dict)
+    embeddings: list[float] | None = None
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_accessed: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     access_count: int = 0
     confidence: float = 1.0
 
@@ -43,10 +38,8 @@ class KnowledgeRelation:
     target_id: str
     relation_type: str  # related_to, part_of, causes, enables, etc.
     weight: float = 1.0
-    properties: Dict[str, Any] = field(default_factory=dict)
-    created_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    properties: dict[str, Any] = field(default_factory=dict)
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     confidence: float = 1.0
 
 
@@ -56,15 +49,13 @@ class MemoryFragment:
 
     id: str
     content: str
-    context: Dict[str, Any]
-    entities: List[str] = field(default_factory=list)
-    concepts: List[str] = field(default_factory=list)
-    timestamp: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    context: dict[str, Any]
+    entities: list[str] = field(default_factory=list)
+    concepts: list[str] = field(default_factory=list)
+    timestamp: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
     importance: float = 1.0
     decay_rate: float = 0.1  # How quickly this memory fades
-    associated_nodes: List[str] = field(default_factory=list)
+    associated_nodes: list[str] = field(default_factory=list)
 
 
 class KnowledgeGraph:
@@ -78,18 +69,18 @@ class KnowledgeGraph:
         self.graph = nx.MultiDiGraph()
 
         # In-memory indices
-        self.nodes: Dict[str, KnowledgeNode] = {}
-        self.relations: List[KnowledgeRelation] = []
-        self.memories: List[MemoryFragment] = []
+        self.nodes: dict[str, KnowledgeNode] = {}
+        self.relations: list[KnowledgeRelation] = []
+        self.memories: list[MemoryFragment] = []
 
         # Indices for fast lookup
-        self.type_index: Dict[str, Set[str]] = defaultdict(set)
-        self.label_index: Dict[str, Set[str]] = defaultdict(set)
-        self.memory_index: Dict[str, Set[str]] = defaultdict(set)
+        self.type_index: dict[str, set[str]] = defaultdict(set)
+        self.label_index: dict[str, set[str]] = defaultdict(set)
+        self.memory_index: dict[str, set[str]] = defaultdict(set)
 
         # Communication context
         self.conversation_history: deque = deque(maxlen=100)
-        self.active_context: Dict[str, Any] = {}
+        self.active_context: dict[str, Any] = {}
 
         # Load existing data
         self._load_knowledge()
@@ -100,7 +91,7 @@ class KnowledgeGraph:
             # Load nodes
             nodes_file = self.storage_path / "nodes.json"
             if nodes_file.exists():
-                with open(nodes_file, "r", encoding="utf-8") as f:
+                with open(nodes_file, encoding="utf-8") as f:
                     nodes_data = json.load(f)
                     for node_data in nodes_data:
                         node = KnowledgeNode(**node_data)
@@ -112,7 +103,7 @@ class KnowledgeGraph:
             # Load relations
             relations_file = self.storage_path / "relations.json"
             if relations_file.exists():
-                with open(relations_file, "r", encoding="utf-8") as f:
+                with open(relations_file, encoding="utf-8") as f:
                     relations_data = json.load(f)
                     for rel_data in relations_data:
                         relation = KnowledgeRelation(**rel_data)
@@ -128,7 +119,7 @@ class KnowledgeGraph:
             # Load memories
             memories_file = self.storage_path / "memories.json"
             if memories_file.exists():
-                with open(memories_file, "r", encoding="utf-8") as f:
+                with open(memories_file, encoding="utf-8") as f:
                     memories_data = json.load(f)
                     for mem_data in memories_data:
                         memory = MemoryFragment(**mem_data)
@@ -198,8 +189,8 @@ class KnowledgeGraph:
         return memory.id
 
     def find_nodes(
-        self, query: str, node_type: Optional[str] = None, limit: int = 10
-    ) -> List[KnowledgeNode]:
+        self, query: str, node_type: str | None = None, limit: int = 10
+    ) -> list[KnowledgeNode]:
         """Find nodes by label or type"""
         results = []
         query_lower = query.lower()
@@ -221,8 +212,8 @@ class KnowledgeGraph:
         return results[:limit]
 
     def get_related_nodes(
-        self, node_id: str, relation_type: Optional[str] = None, max_depth: int = 2
-    ) -> List[KnowledgeNode]:
+        self, node_id: str, relation_type: str | None = None, max_depth: int = 2
+    ) -> list[KnowledgeNode]:
         """Get nodes related to a given node"""
         if node_id not in self.nodes:
             return []
@@ -254,8 +245,8 @@ class KnowledgeGraph:
         return [self.nodes[nid] for nid in related if nid in self.nodes]
 
     def retrieve_memories(
-        self, query: str, context: Optional[Dict] = None, limit: int = 5
-    ) -> List[MemoryFragment]:
+        self, query: str, context: dict | None = None, limit: int = 5
+    ) -> list[MemoryFragment]:
         """Retrieve relevant memories based on query and context"""
         query_lower = query.lower()
         scored_memories = []
@@ -285,7 +276,7 @@ class KnowledgeGraph:
 
             # Time decay (recent memories are more relevant)
             days_old = (
-                datetime.now(timezone.utc)
+                datetime.now(UTC)
                 - datetime.fromisoformat(memory.timestamp.replace("Z", "+00:00"))
             ).days
             decay_factor = max(0.1, 1.0 - (days_old * memory.decay_rate / 100))
@@ -302,11 +293,11 @@ class KnowledgeGraph:
         return [mem for mem, score in scored_memories[:limit]]
 
     def update_conversation_context(
-        self, message: str, response: str, entities: List[str] = None
+        self, message: str, response: str, entities: list[str] = None
     ):
         """Update conversation context for meaningful communication"""
         context_entry = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "message": message,
             "response": response,
             "entities": entities or [],
@@ -326,7 +317,7 @@ class KnowledgeGraph:
             }
         )
 
-    def get_communication_context(self, query: str) -> Dict[str, Any]:
+    def get_communication_context(self, query: str) -> dict[str, Any]:
         """Get rich context for meaningful communication"""
         # Find relevant entities in query
         entities = self.find_nodes(query, limit=5)
@@ -362,7 +353,7 @@ class KnowledgeGraph:
             },
         }
 
-    def extract_entities_and_concepts(self, text: str) -> Tuple[List[str], List[str]]:
+    def extract_entities_and_concepts(self, text: str) -> tuple[list[str], list[str]]:
         """Extract entities and concepts from text (simplified version)"""
         # This is a simplified implementation
         # In production, you'd use NLP libraries like spaCy or transformers
@@ -381,7 +372,7 @@ class KnowledgeGraph:
 
             # Check multi-word phrases
             if i < len(words) - 1:
-                phrase = f"{words[i]} {words[i+1]}"
+                phrase = f"{words[i]} {words[i + 1]}"
                 if phrase in known_entities:
                     entities.append(phrase)
 
@@ -402,7 +393,7 @@ class KnowledgeGraph:
 
         # Create memory fragment
         memory = MemoryFragment(
-            id=f"mem_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')}",
+            id=f"mem_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S_%f')}",
             content=message,
             context={
                 "response": response,
@@ -420,7 +411,7 @@ class KnowledgeGraph:
         # Update conversation context
         self.update_conversation_context(message, response, entities)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get knowledge graph statistics"""
         return {
             "nodes": len(self.nodes),
@@ -428,7 +419,7 @@ class KnowledgeGraph:
             "memories": len(self.memories),
             "node_types": dict(Counter(node.type for node in self.nodes.values())),
             "conversation_turns": len(self.conversation_history),
-            "last_updated": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(UTC).isoformat(),
         }
 
 

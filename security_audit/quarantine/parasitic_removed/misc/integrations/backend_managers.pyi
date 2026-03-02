@@ -1,9 +1,9 @@
+from collections.abc import Callable, Iterable
+from typing import Any, TypeVar
+
 from matplotlib import backend_tools, widgets
 from matplotlib.backend_bases import FigureCanvasBase
 from matplotlib.figure import Figure
-
-from collections.abc import Callable, Iterable
-from typing import Any, TypeVar
 
 class ToolEvent:
     name: str
@@ -59,4 +59,6 @@ class ToolManager:
     ) -> None: ...
     @property
     def tools(self) -> dict[str, backend_tools.ToolBase]: ...
-    def get_tool(self, name: str | backend_tools.ToolBase, warn: bool = ...) -> backend_tools.ToolBase | None: ...
+    def get_tool(
+        self, name: str | backend_tools.ToolBase, warn: bool = ...
+    ) -> backend_tools.ToolBase | None: ...

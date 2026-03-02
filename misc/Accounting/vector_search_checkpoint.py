@@ -67,13 +67,13 @@ What should be the next strategic checkpoint for the Echoes platform?""",
 
     print("\n=== VECTOR SEARCH RESULTS FOR NEXT CHECKPOINT ===")
     print(f"Query: {query}")
-    print(f'Total results found: {len(results["results"])}')
+    print(f"Total results found: {len(results['results'])}")
     print()
 
     for i, result in enumerate(results["results"], 1):
-        print(f'{i}. Relevance Score: {result["score"]:.3f}')
-        print(f'   Content: {result["content"][:300]}...')
-        print(f'   Metadata: {result["metadata"]}')
+        print(f"{i}. Relevance Score: {result['score']:.3f}")
+        print(f"   Content: {result['content'][:300]}...")
+        print(f"   Metadata: {result['metadata']}")
         print()
 
     # Generate insights based on search results

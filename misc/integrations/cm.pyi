@@ -1,4 +1,5 @@
 from collections.abc import Iterator, Mapping
+
 from matplotlib import colors
 from matplotlib.colorizer import _ScalarMappable
 

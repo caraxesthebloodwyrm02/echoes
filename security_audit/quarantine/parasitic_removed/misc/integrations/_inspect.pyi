@@ -1,6 +1,6 @@
 import types
 from collections.abc import Callable, Mapping
-from typing import Any, Final, TypeAlias, TypeVar, overload
+from typing import Any, Final, TypeVar, overload
 
 from _typeshed import SupportsLenAndGetItem
 from typing_extensions import TypeIs
@@ -12,11 +12,11 @@ __all__ = ["formatargspec", "getargspec"]
 _T = TypeVar("_T")
 _RT = TypeVar("_RT")
 
-_StrSeq: TypeAlias = SupportsLenAndGetItem[str]
-_NestedSeq: TypeAlias = list[_T | _NestedSeq[_T]] | tuple[_T | _NestedSeq[_T], ...]
+type _StrSeq = SupportsLenAndGetItem[str]
+type _NestedSeq[_T] = list[_T | _NestedSeq[_T]] | tuple[_T | _NestedSeq[_T], ...]
 
-_JoinFunc: TypeAlias = Callable[[list[_T]], _T]
-_FormatFunc: TypeAlias = Callable[[_T], str]
+type _JoinFunc[_T] = Callable[[list[_T]], _T]
+type _FormatFunc[_T] = Callable[[_T], str]
 
 ###
 
@@ -37,12 +37,18 @@ def getargs(co: types.CodeType) -> tuple[list[str], str | None, str | None]: ...
 def getargspec(
     func: types.MethodType | types.FunctionType,
 ) -> tuple[list[str], str | None, str | None, tuple[Any, ...]]: ...
-def getargvalues(frame: types.FrameType) -> tuple[list[str], str | None, str | None, dict[str, Any]]: ...
+def getargvalues(
+    frame: types.FrameType,
+) -> tuple[list[str], str | None, str | None, dict[str, Any]]: ...
 def joinseq(seq: _StrSeq) -> str: ...
 @overload
-def strseq(object: _NestedSeq[str], convert: Callable[[Any], Any], join: _JoinFunc[str] = ...) -> str: ...
+def strseq(
+    object: _NestedSeq[str], convert: Callable[[Any], Any], join: _JoinFunc[str] = ...
+) -> str: ...
 @overload
-def strseq(object: _NestedSeq[_T], convert: Callable[[_T], _RT], join: _JoinFunc[_RT]) -> _RT: ...
+def strseq(
+    object: _NestedSeq[_T], convert: Callable[[_T], _RT], join: _JoinFunc[_RT]
+) -> _RT: ...
 def formatargspec(
     args: _StrSeq,
     varargs: str | None = None,

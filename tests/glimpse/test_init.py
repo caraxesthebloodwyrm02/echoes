@@ -2,6 +2,8 @@
 Tests for glimpse.__init__ module
 """
 
+from unittest.mock import patch
+
 import pytest
 
 from glimpse import (
@@ -10,12 +12,12 @@ from glimpse import (
     GlimpseResult,
     LatencyMonitor,
     PrivacyGuard,
-    default_sampler,
 )
+from glimpse.engine import local_default_sampler
 
 
 class TestGlimpseInit:
-    """Test the glimpse module imports and initialization"""
+    """Test the glimpse module imports and initialisation"""
 
     def test_import_main_classes(self):
         """Test that main classes can be imported"""
@@ -25,6 +27,7 @@ class TestGlimpseInit:
             LatencyMonitor,
             PrivacyGuard,
             default_sampler,
+            local_default_sampler,
         )
 
         assert GlimpseEngine is not None
@@ -33,6 +36,7 @@ class TestGlimpseInit:
         assert LatencyMonitor is not None
         assert PrivacyGuard is not None
         assert default_sampler is not None
+        assert local_default_sampler is not None
 
     def test_create_draft(self):
         """Test Draft creation"""
@@ -69,7 +73,7 @@ class TestGlimpseInit:
         assert result.sample == "test sample"
         assert result.essence == "test essence"
         assert result.delta is None
-        assert result.stale == False
+        assert not result.stale
         assert result.status_history == ["test"]
 
     def test_create_latency_monitor(self):
@@ -95,7 +99,7 @@ class TestGlimpseInit:
         """Test PrivacyGuard creation"""
         guard = PrivacyGuard()
 
-        assert guard.committed == False
+        assert not guard.committed
         # Uses no-op lambda by default, not None
         assert guard._on_commit is not None
 
@@ -108,7 +112,7 @@ class TestGlimpseInit:
 
         guard = PrivacyGuard(on_commit=test_handler)
 
-        assert guard.committed == False
+        assert not guard.committed
         assert guard._on_commit == test_handler
 
     def test_privacy_guard_commit(self):
@@ -123,7 +127,7 @@ class TestGlimpseInit:
 
         guard.commit(draft)
 
-        assert guard.committed == True
+        assert guard.committed
         assert len(committed_drafts) == 1
         assert committed_drafts[0] == draft
 
@@ -135,7 +139,7 @@ class TestGlimpseInit:
         # Should not raise error (no-op lambda is used)
         guard.commit(draft)
 
-        assert guard.committed == True
+        assert guard.committed
 
     def test_privacy_guard_commit_handler_exception(self):
         """Test PrivacyGuard commit when handler raises exception"""
@@ -151,20 +155,25 @@ class TestGlimpseInit:
         with pytest.raises(ValueError, match="Commit failed"):
             guard.commit(draft)
         # committed was set before the exception
-        assert guard.committed == True
+        assert guard.committed
 
 
 @pytest.mark.asyncio
 class TestDefaultSampler:
-    """Test the default sampler function"""
+    """Test the built-in local default sampler (offline, no API key required).
+
+    All tests in this class target ``local_default_sampler`` — the
+    dependency-free implementation that is always available regardless of the
+    GLIMPSE_USE_OPENAI setting.  This keeps the suite hermetic and CI-safe.
+    """
 
     async def test_default_sampler_basic(self):
-        """Test default sampler with basic input"""
+        """Test local sampler with basic input"""
         draft = Draft(
             input_text="test input", goal="test goal", constraints="test constraints"
         )
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert isinstance(sample, str)
         assert isinstance(essence, str)
@@ -174,67 +183,64 @@ class TestDefaultSampler:
         assert len(essence) > 0
 
     async def test_default_sampler_empty_input(self):
-        """Test default sampler with empty input"""
+        """Test local sampler with empty input"""
         draft = Draft("", "", "")
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert sample == "(no content)"
         assert "Intent: (unspecified)" in essence
         assert "constraints: none" in essence
 
     async def test_default_sampler_long_input(self):
-        """Test default sampler with long input"""
+        """Test local sampler with long input — truncates at 90 chars"""
         long_text = "x" * 200
         draft = Draft(long_text, "goal", "constraints")
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert "…" in sample  # Should truncate long text
-        assert len(sample) <= 93  # 90 chars + "..."
+        assert len(sample) <= 93  # 90 chars + "…"
 
     async def test_default_sampler_refactor_conflict(self):
-        """Test default sampler detects refactor conflict"""
+        """Test local sampler detects refactor/no-change conflict"""
         draft = Draft(
             input_text="refactor the code",
             goal="improve structure",
             constraints="no change needed",
         )
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert delta is not None
         assert "conflict" in delta.lower()
-        assert aligned == False
+        assert not aligned
 
     async def test_default_sampler_clarifier_for_empty_goal(self):
-        """Test default sampler adds clarifier for empty goal when env enabled"""
-        from unittest.mock import patch
-
+        """Local sampler adds clarifier for empty goal when PREEXEC_CLARIFIER_ENABLED=True"""
         draft = Draft(input_text="some input", goal="", constraints="")
-        # Clarifier for empty goal is gated by PREEXEC_CLARIFIER_ENABLED
-        with patch("glimpse.engine.PREEXEC_CLARIFIER_ENABLED", True):
-            from glimpse.engine import default_sampler as patched_sampler
 
-            sample, essence, delta, aligned = await patched_sampler(draft)
+        # PREEXEC_CLARIFIER_ENABLED is evaluated at function call time so patching works.
+        with patch("glimpse.engine.PREEXEC_CLARIFIER_ENABLED", True):
+            sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert delta is not None
         assert "Clarifier:" in delta
         assert "audience" in delta.lower()
-        assert aligned == False
+        assert not aligned
 
     async def test_default_sampler_no_conflict(self):
-        """Test default sampler with no conflicts"""
+        """Test local sampler with no conflicts"""
         draft = Draft(
             input_text="simple task",
             goal="complete work",
             constraints="normal approach",
         )
 
-        sample, essence, delta, aligned = await default_sampler(draft)
+        sample, essence, delta, aligned = await local_default_sampler(draft)
 
         assert delta is None
-        assert aligned == True
+        assert aligned
 
 
 if __name__ == "__main__":

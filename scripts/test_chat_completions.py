@@ -2,6 +2,7 @@
 """
 Test both Responses API and Chat Completions API
 """
+
 import os
 
 # Test with Chat Completions API (fallback)

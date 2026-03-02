@@ -1,10 +1,11 @@
-from typing import List, Optional, Dict, Any
+from typing import Any
+
 from .models import InventoryItem, utc_now_iso
 from .storage import InventoryStorage
 
 
 class InventoryService:
-    def __init__(self, storage: Optional[InventoryStorage] = None) -> None:
+    def __init__(self, storage: InventoryStorage | None = None) -> None:
         self.storage = storage or InventoryStorage()
 
     def add_item(
@@ -16,7 +17,7 @@ class InventoryService:
         location: str,
         min_stock: int = 0,
         max_stock: int = 0,
-        attributes: Optional[Dict[str, Any]] = None,
+        attributes: dict[str, Any] | None = None,
     ) -> InventoryItem:
         data = self.storage.load()
         if sku in data:
@@ -39,8 +40,8 @@ class InventoryService:
         return item
 
     def list_items(
-        self, category: Optional[str] = None, location: Optional[str] = None
-    ) -> List[InventoryItem]:
+        self, category: str | None = None, location: str | None = None
+    ) -> list[InventoryItem]:
         data = self.storage.load()
         items = [InventoryItem.from_dict(d) for d in data.values()]
         if category:
@@ -49,7 +50,7 @@ class InventoryService:
             items = [i for i in items if i.location == location]
         return items
 
-    def get_item(self, sku: str) -> Optional[InventoryItem]:
+    def get_item(self, sku: str) -> InventoryItem | None:
         data = self.storage.load()
         d = data.get(sku)
         return InventoryItem.from_dict(d) if d else None
@@ -76,13 +77,13 @@ class InventoryService:
         self.storage.save(data)
         return InventoryItem.from_dict(d)
 
-    def report(self, report_type: str = "summary") -> Dict[str, Any]:
+    def report(self, report_type: str = "summary") -> dict[str, Any]:
         items = self.list_items()
         total_items = len(items)
         total_qty = sum(i.quantity for i in items)
         low_stock = [i for i in items if i.min_stock and i.quantity <= i.min_stock]
         over_stock = [i for i in items if i.max_stock and i.quantity >= i.max_stock]
-        by_category: Dict[str, int] = {}
+        by_category: dict[str, int] = {}
         for i in items:
             by_category[i.category] = by_category.get(i.category, 0) + i.quantity
         if report_type == "low":

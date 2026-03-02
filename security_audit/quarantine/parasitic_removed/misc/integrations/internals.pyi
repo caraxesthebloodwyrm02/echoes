@@ -1,20 +1,17 @@
+import weakref
+from collections.abc import Iterator, Sequence
 from typing import (
-    Iterator,
-    Sequence,
     final,
     overload,
 )
-import weakref
 
 import numpy as np
-
+from pandas import Index
 from pandas._typing import (
     ArrayLike,
     Self,
     npt,
 )
-
-from pandas import Index
 from pandas.core.internals.blocks import Block as B
 
 def slice_len(slc: slice, objlen: int = ...) -> int: ...
@@ -35,6 +32,7 @@ def update_blklocs_and_blknos(
     loc: int,
     nblocks: int,
 ) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]: ...
+
 @final
 class BlockPlacement:
     def __init__(self, val: int | slice | np.ndarray) -> None: ...
@@ -47,7 +45,9 @@ class BlockPlacement:
     @property
     def is_slice_like(self) -> bool: ...
     @overload
-    def __getitem__(self, loc: slice | Sequence[int] | npt.NDArray[np.intp]) -> BlockPlacement: ...
+    def __getitem__(
+        self, loc: slice | Sequence[int] | npt.NDArray[np.intp]
+    ) -> BlockPlacement: ...
     @overload
     def __getitem__(self, loc: int) -> int: ...
     def __iter__(self) -> Iterator[int]: ...
@@ -78,7 +78,9 @@ class BlockManager:
     _is_consolidated: bool
     _blknos: np.ndarray
     _blklocs: np.ndarray
-    def __init__(self, blocks: tuple[B, ...], axes: list[Index], verify_integrity=...) -> None: ...
+    def __init__(
+        self, blocks: tuple[B, ...], axes: list[Index], verify_integrity=...
+    ) -> None: ...
     def get_slice(self, slobj: slice, axis: int = ...) -> Self: ...
     def _rebuild_blknos_and_blklocs(self) -> None: ...
 

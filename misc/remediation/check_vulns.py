@@ -1,6 +1,6 @@
 import json
 
-with open("remediation/pip-audit-pre-scan.json", "r") as f:
+with open("remediation/pip-audit-pre-scan.json") as f:
     data = json.load(f)
 
 vulns = [d for d in data["dependencies"] if d.get("vulns", [])]

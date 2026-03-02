@@ -7,8 +7,8 @@ Uses the echoes/core/rag_v2.py wrapper for reliable results.
 """
 
 import sys
-from pathlib import Path
 import time
+from pathlib import Path
 
 # Add the echoes directory to path
 sys.path.insert(0, str(Path(__file__).parent / "echoes"))
@@ -91,14 +91,14 @@ def setup_knowledge_base(rag_system):
                 }
             ]
         )
-        print(f"  Added chunk {i+1}: {result}")
+        print(f"  Added chunk {i + 1}: {result}")
 
     print("Knowledge base setup complete")
 
 
 def run_query(rag_system, query, query_num):
     """Run a single query and return formatted results."""
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"QUERY {query_num}: {query}")
     print("=" * 60)
 
@@ -116,7 +116,7 @@ def run_query(rag_system, query, query_num):
             content = result.get("content", "").strip()
             score = result.get("score", 0)
             if content and score > 0.5:  # Only high-confidence results
-                answer_parts.append(f"[{i+1}] {content}")
+                answer_parts.append(f"[{i + 1}] {content}")
 
         if answer_parts:
             answer = " ".join(answer_parts)
@@ -182,7 +182,7 @@ def main():
         results.append(result)
 
     # Summary
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("SUMMARY")
     print("=" * 60)
 

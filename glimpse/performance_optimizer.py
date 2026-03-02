@@ -4,14 +4,13 @@ Optimizes performance for high-latency scenarios with caching, async processing,
 """
 
 import asyncio
-import time
 import hashlib
-from typing import Dict, Any, Optional, List, Tuple, Callable
-from dataclasses import dataclass, field
+import time
 from collections import defaultdict
-import json
-import weakref
+from collections.abc import Callable
+from dataclasses import dataclass
 from functools import wraps
+from typing import Any
 
 
 @dataclass
@@ -32,8 +31,8 @@ class PerformanceCache:
     def __init__(self, max_size: int = 1000, ttl_seconds: int = 3600):
         self.max_size = max_size
         self.ttl_seconds = ttl_seconds
-        self.cache: Dict[str, Tuple[Any, float]] = {}
-        self.access_times: Dict[str, float] = {}
+        self.cache: dict[str, tuple[Any, float]] = {}
+        self.access_times: dict[str, float] = {}
         self.lock = asyncio.Lock()
         self.hits = 0
         self.misses = 0
@@ -43,7 +42,7 @@ class PerformanceCache:
         content = f"{input_text}|{goal}|{constraints}"
         return hashlib.sha256(content.encode()).hexdigest()
 
-    async def get(self, input_text: str, goal: str, constraints: str) -> Optional[Any]:
+    async def get(self, input_text: str, goal: str, constraints: str) -> Any | None:
         """Get cached result if available and not expired"""
         key = self._generate_key(input_text, goal, constraints)
 
@@ -176,7 +175,7 @@ class PerformanceOptimizer:
 
     async def optimized_glimpse(
         self, draft, sampler_func: Callable
-    ) -> Tuple[Any, float]:
+    ) -> tuple[Any, float]:
         """
         Execute glimpse with performance optimizations
 
@@ -219,7 +218,7 @@ class PerformanceOptimizer:
 
             return result, execution_time
 
-        except asyncio.TimeoutError:
+        except TimeoutError:
             self.metrics.failed_requests += 1
             # Return a fallback result for high latency
             fallback_result = await self._create_fallback_result(draft)
@@ -241,8 +240,8 @@ class PerformanceOptimizer:
         )
 
     async def batch_glimpses(
-        self, drafts: List[Any], sampler_func: Callable
-    ) -> List[Tuple[Any, float]]:
+        self, drafts: list[Any], sampler_func: Callable
+    ) -> list[tuple[Any, float]]:
         """
         Process multiple glimpse requests in batch for efficiency
 
@@ -308,7 +307,7 @@ def monitor_performance(optimizer: PerformanceOptimizer):
                 execution_time = time.time() - start_time
                 optimizer.timeout.record_latency(execution_time)
                 return result
-            except Exception as e:
+            except Exception:
                 optimizer.metrics.failed_requests += 1
                 raise
 
@@ -320,7 +319,8 @@ def monitor_performance(optimizer: PerformanceOptimizer):
 # Example usage
 async def example_optimized_sampler(draft):
     """Example of an optimized sampler function"""
-    # Simulate some processing time
+    from glimpse.Glimpse import GlimpseResult
+
     await asyncio.sleep(0.1)
 
     return GlimpseResult(

@@ -1,24 +1,31 @@
 from dataclasses import dataclass, field
 from hashlib import md5
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any
 
 
 @dataclass
 class ProvenanceRecord:
     record_id: str
     operation_type: str
-    payload: Dict[str, Any] = field(default_factory=dict)
-    parent_record_id: Optional[str] = None
+    payload: dict[str, Any] = field(default_factory=dict)
+    parent_record_id: str | None = None
 
 
 class ProvenanceTracker:
     def __init__(self):
-        self.records: Dict[str, ProvenanceRecord] = {}
+        self.records: dict[str, ProvenanceRecord] = {}
 
     def _new_id(self, seed: str) -> str:
         return md5(seed.encode("utf-8")).hexdigest()
 
-    def record_chunking(self, source_document: str, num_chunks: int, chunk_ids: List[str], chunker_config: Dict[str, Any], text_checksum: str):
+    def record_chunking(
+        self,
+        source_document: str,
+        num_chunks: int,
+        chunk_ids: list[str],
+        chunker_config: dict[str, Any],
+        text_checksum: str,
+    ):
         rid = self._new_id(f"chunk:{source_document}:{num_chunks}:{text_checksum}")
         self.records[rid] = ProvenanceRecord(
             record_id=rid,
@@ -33,7 +40,15 @@ class ProvenanceTracker:
         )
         return rid
 
-    def record_retrieval(self, query: str, query_checksum: str, num_results: int, result_chunk_ids: List[str], retrieval_metrics: Dict[str, Any], parent_record_id: Optional[str] = None):
+    def record_retrieval(
+        self,
+        query: str,
+        query_checksum: str,
+        num_results: int,
+        result_chunk_ids: list[str],
+        retrieval_metrics: dict[str, Any],
+        parent_record_id: str | None = None,
+    ):
         rid = self._new_id(f"retrieve:{query}:{query_checksum}:{num_results}")
         self.records[rid] = ProvenanceRecord(
             record_id=rid,
@@ -49,7 +64,7 @@ class ProvenanceTracker:
         )
         return rid
 
-    def validate_record(self, record_id: str) -> Tuple[bool, Optional[str]]:
+    def validate_record(self, record_id: str) -> tuple[bool, str | None]:
         if record_id not in self.records:
             return False, "record_not_found"
         return True, None

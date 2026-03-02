@@ -1,11 +1,11 @@
 from collections.abc import Callable
-from typing import Any, NamedTuple, TypeAlias
+from typing import Any, NamedTuple
 
 import numpy as np
 
 __all__: list[str] = ["interface"]
 
-_CDataVoidPointer: TypeAlias = Any
+type _CDataVoidPointer = Any
 
 class interface(NamedTuple):
     state_address: int

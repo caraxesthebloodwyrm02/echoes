@@ -1,9 +1,9 @@
 from pathlib import Path
-from typing import IO, Any, TypeAlias
+from typing import IO, Any
 
 from _typeshed import OpenBinaryMode, OpenTextMode
 
-_Mode: TypeAlias = OpenBinaryMode | OpenTextMode
+type _Mode = OpenBinaryMode | OpenTextMode
 
 ###
 

@@ -2,13 +2,13 @@ import ctypes as ct
 import datetime as dt
 from decimal import Decimal
 from fractions import Fraction
-from typing import Any, Literal, LiteralString, TypeAlias, assert_type
+from typing import Any, Literal, LiteralString, assert_type
 
 import numpy as np
 from numpy.dtypes import StringDType
 
 # a combination of likely `object` dtype-like candidates (no `_co`)
-_PyObjectLike: TypeAlias = Decimal | Fraction | dt.datetime | dt.timedelta
+type _PyObjectLike = Decimal | Fraction | dt.datetime | dt.timedelta
 
 dtype_U: np.dtype[np.str_]
 dtype_V: np.dtype[np.void]
@@ -52,7 +52,9 @@ assert_type(np.dtype(py_int_co), np.dtype[np.int_ | np.bool])
 assert_type(np.dtype(int), np.dtype[np.int_ | np.bool])
 assert_type(np.dtype(py_float_co), np.dtype[np.float64 | np.int_ | np.bool])
 assert_type(np.dtype(float), np.dtype[np.float64 | np.int_ | np.bool])
-assert_type(np.dtype(py_complex_co), np.dtype[np.complex128 | np.float64 | np.int_ | np.bool])
+assert_type(
+    np.dtype(py_complex_co), np.dtype[np.complex128 | np.float64 | np.int_ | np.bool]
+)
 assert_type(np.dtype(complex), np.dtype[np.complex128 | np.float64 | np.int_ | np.bool])
 assert_type(np.dtype(py_object), np.dtype[np.object_])
 assert_type(np.dtype(str), np.dtype[np.str_])

@@ -14,7 +14,6 @@ from typing import (
     NoReturn,
     Protocol,
     SupportsIndex,
-    TypeAlias,
     TypedDict,
     TypeVar,
     Unpack,
@@ -32,13 +31,13 @@ from ._scalars import _ScalarLike_co
 from ._shape import _ShapeLike
 
 _T = TypeVar("_T")
-_2Tuple: TypeAlias = tuple[_T, _T]
-_3Tuple: TypeAlias = tuple[_T, _T, _T]
-_4Tuple: TypeAlias = tuple[_T, _T, _T, _T]
+type _2Tuple[_T] = tuple[_T, _T]
+type _3Tuple[_T] = tuple[_T, _T, _T]
+type _4Tuple[_T] = tuple[_T, _T, _T, _T]
 
-_2PTuple: TypeAlias = tuple[_T, _T, *tuple[_T, ...]]
-_3PTuple: TypeAlias = tuple[_T, _T, _T, *tuple[_T, ...]]
-_4PTuple: TypeAlias = tuple[_T, _T, _T, _T, *tuple[_T, ...]]
+type _2PTuple[_T] = tuple[_T, _T, *tuple[_T, ...]]
+type _3PTuple[_T] = tuple[_T, _T, _T, *tuple[_T, ...]]
+type _4PTuple[_T] = tuple[_T, _T, _T, _T, *tuple[_T, ...]]
 
 _NTypes = TypeVar("_NTypes", bound=int, covariant=True)
 _IDType = TypeVar("_IDType", covariant=True)
@@ -633,7 +632,9 @@ class _PyFunc_Nin2_Nout1(ufunc, Generic[_ReturnType_co, _IDType]):  # type: igno
         out: NDArray[Any] | tuple[NDArray[Any]] | None = ...,
         **kwargs: Unpack[_PyFunc_Kwargs_Nargs3],
     ) -> Any: ...
-    def at(self, a: _SupportsArrayUFunc, ixs: _ArrayLikeInt_co, b: ArrayLike, /) -> None: ...
+    def at(
+        self, a: _SupportsArrayUFunc, ixs: _ArrayLikeInt_co, b: ArrayLike, /
+    ) -> None: ...
     @overload
     def reduce(
         self,

@@ -1,11 +1,10 @@
 from collections.abc import Callable, Sequence
+from typing import TypeVar
+
 from matplotlib.artist import Artist
 from matplotlib.legend import Legend
 from matplotlib.offsetbox import OffsetBox
 from matplotlib.transforms import Transform
-
-from typing import TypeVar
-
 from numpy.typing import ArrayLike
 
 def update_from_first_child(tgt: Artist, src: Artist) -> None: ...
@@ -17,7 +16,9 @@ class HandlerBase:
         ypad: float = ...,
         update_func: Callable[[Artist, Artist], None] | None = ...,
     ) -> None: ...
-    def update_prop(self, legend_handle: Artist, orig_handle: Artist, legend: Legend) -> None: ...
+    def update_prop(
+        self, legend_handle: Artist, orig_handle: Artist, legend: Legend
+    ) -> None: ...
     def adjust_drawing_area(
         self,
         legend: Legend,
@@ -28,7 +29,9 @@ class HandlerBase:
         height: float,
         fontsize: float,
     ) -> tuple[float, float, float, float]: ...
-    def legend_artist(self, legend: Legend, orig_handle: Artist, fontsize: float, handlebox: OffsetBox) -> Artist: ...
+    def legend_artist(
+        self, legend: Legend, orig_handle: Artist, fontsize: float, handlebox: OffsetBox
+    ) -> Artist: ...
     def create_artists(
         self,
         legend: Legend,
@@ -42,7 +45,9 @@ class HandlerBase:
     ) -> Sequence[Artist]: ...
 
 class HandlerNpoints(HandlerBase):
-    def __init__(self, marker_pad: float = ..., numpoints: int | None = ..., **kwargs) -> None: ...
+    def __init__(
+        self, marker_pad: float = ..., numpoints: int | None = ..., **kwargs
+    ) -> None: ...
     def get_numpoints(self, legend: Legend) -> int | None: ...
     def get_xdata(
         self,
@@ -55,7 +60,12 @@ class HandlerNpoints(HandlerBase):
     ) -> tuple[ArrayLike, ArrayLike]: ...
 
 class HandlerNpointsYoffsets(HandlerNpoints):
-    def __init__(self, numpoints: int | None = ..., yoffsets: Sequence[float] | None = ..., **kwargs) -> None: ...
+    def __init__(
+        self,
+        numpoints: int | None = ...,
+        yoffsets: Sequence[float] | None = ...,
+        **kwargs,
+    ) -> None: ...
     def get_ydata(
         self,
         legend: Legend,
@@ -137,7 +147,10 @@ _T = TypeVar("_T", bound=Artist)
 
 class HandlerRegularPolyCollection(HandlerNpointsYoffsets):
     def __init__(
-        self, yoffsets: Sequence[float] | None = ..., sizes: Sequence[float] | None = ..., **kwargs
+        self,
+        yoffsets: Sequence[float] | None = ...,
+        sizes: Sequence[float] | None = ...,
+        **kwargs,
     ) -> None: ...
     def get_numpoints(self, legend: Legend) -> int: ...
     def get_sizes(
@@ -150,7 +163,9 @@ class HandlerRegularPolyCollection(HandlerNpointsYoffsets):
         height: float,
         fontsize: float,
     ) -> Sequence[float]: ...
-    def update_prop(self, legend_handle, orig_handle: Artist, legend: Legend) -> None: ...
+    def update_prop(
+        self, legend_handle, orig_handle: Artist, legend: Legend
+    ) -> None: ...
     def create_collection(
         self,
         orig_handle: _T,
@@ -195,7 +210,7 @@ class HandlerErrorbar(HandlerLine2D):
         yerr_size: float | None = ...,
         marker_pad: float = ...,
         numpoints: int | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_err_size(
         self,
@@ -225,7 +240,7 @@ class HandlerStem(HandlerNpointsYoffsets):
         numpoints: int | None = ...,
         bottom: float | None = ...,
         yoffsets: Sequence[float] | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_ydata(
         self,
@@ -249,7 +264,9 @@ class HandlerStem(HandlerNpointsYoffsets):
     ) -> Sequence[Artist]: ...
 
 class HandlerTuple(HandlerBase):
-    def __init__(self, ndivide: int | None = ..., pad: float | None = ..., **kwargs) -> None: ...
+    def __init__(
+        self, ndivide: int | None = ..., pad: float | None = ..., **kwargs
+    ) -> None: ...
     def create_artists(
         self,
         legend: Legend,

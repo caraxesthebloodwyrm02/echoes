@@ -35,7 +35,6 @@ def test_security_tools():
         return False
 
     try:
-
         tools.append(("cyclonedx-bom", "installed"))
         print("✓ cyclonedx-bom installed")
     except:
@@ -129,7 +128,7 @@ def main():
             "total_tests": total,
             "passed": passed,
             "failed": total - passed,
-            "success_rate": f"{(passed/total)*100:.1f}%",
+            "success_rate": f"{(passed / total) * 100:.1f}%",
         },
         "tests": {
             "pytorch_import": results[0],

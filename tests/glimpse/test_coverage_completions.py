@@ -5,11 +5,9 @@ These tests target the remaining uncovered lines to achieve complete
 test coverage for the Glimpse Preflight System.
 """
 
+from unittest.mock import patch
+
 import pytest
-from unittest.mock import patch, MagicMock, AsyncMock
-import sys
-import asyncio
-from pathlib import Path
 
 # Try to import matplotlib, but make it optional for testing
 try:
@@ -25,9 +23,11 @@ except ImportError:
 
 # Import all glimpse modules to test uncovered paths
 import glimpse
-from glimpse.Glimpse import GlimpseEngine, Draft, GlimpseResult, LatencyMonitor
-from glimpse.clarifier_engine import ClarifierEngine, Clarifier, ClarifierType
-from glimpse.performance_optimizer import PerformanceOptimizer, AdaptiveTimeout
+from glimpse.clarifier_engine import Clarifier, ClarifierEngine, ClarifierType
+from glimpse.Glimpse import Draft, GlimpseEngine, GlimpseResult, LatencyMonitor
+from glimpse.performance_optimizer import AdaptiveTimeout, PerformanceOptimizer
+
+Glimpse = GlimpseEngine()
 
 
 class TestVisualizationModule:
@@ -250,7 +250,6 @@ class TestEngineUncoveredPaths:
         with patch.dict("sys.modules", {"glimpse.performance_optimizer": None}):
             with patch("importlib.import_module", side_effect=ImportError):
                 # Re-import to trigger the import error handling
-                import importlib
                 import sys
 
                 # Remove the module from cache to force re-import
@@ -322,7 +321,7 @@ class TestEngineUncoveredPaths:
 
                 # Glimpse should still work without optional dependencies
                 draft = Draft("test input", "test goal", "test constraints")
-                result = await Glimpse.glimpse(draft)
+                result = await engine.glimpse(draft)
 
                 # Should return a valid result
                 assert isinstance(result, GlimpseResult)
@@ -412,14 +411,14 @@ class TestPerformanceOptimizerUncoveredPaths:
 
         # Test that the optimizer has expected attributes
         assert hasattr(optimizer, "batch_glimpses")
-        assert callable(getattr(optimizer, "batch_glimpses"))
+        assert callable(optimizer.batch_glimpses)
 
         # Test other expected methods if they exist
         if hasattr(optimizer, "monitor_performance"):
-            assert callable(getattr(optimizer, "monitor_performance"))
+            assert callable(optimizer.monitor_performance)
 
         if hasattr(optimizer, "glimpse"):
-            assert callable(getattr(optimizer, "glimpse"))
+            assert callable(optimizer.glimpse)
 
 
 class TestIntegrationEdgeCases:
@@ -433,7 +432,7 @@ class TestIntegrationEdgeCases:
 
             # Should work without clarifier
             draft = Draft("test", "goal", "")
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             assert isinstance(result, GlimpseResult)
 
     @pytest.mark.asyncio
@@ -444,7 +443,7 @@ class TestIntegrationEdgeCases:
 
             # Should work without performance optimizer
             draft = Draft("test", "goal", "")
-            result = await Glimpse.glimpse(draft)
+            result = await engine.glimpse(draft)
             assert isinstance(result, GlimpseResult)
 
     @pytest.mark.asyncio
@@ -463,7 +462,7 @@ class TestIntegrationEdgeCases:
 
                 results = []
                 for draft in drafts:
-                    result = await Glimpse.glimpse(draft)
+                    result = await engine.glimpse(draft)
                     assert isinstance(result, GlimpseResult)
                     results.append(result)
 

@@ -6,7 +6,8 @@ This module provides backward compatibility for tools.
 
 # Use fallback implementation directly to avoid scipy import issues
 import threading
-from typing import Any, Callable, Dict, List
+from collections.abc import Callable
+from typing import Any
 
 
 class ToolRegistry:

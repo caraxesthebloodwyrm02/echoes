@@ -13,13 +13,13 @@ Success Criteria Addressed:
 - Proactive repo referencing and workflow efficiency
 """
 
-import sys
-import json
 import hashlib
-from pathlib import Path
-from typing import Dict, List, Any
-from datetime import datetime
+import json
 import logging
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 # Set up logging
 logging.basicConfig(
@@ -133,7 +133,7 @@ class PersonalRAGAssistant:
         }
 
     def add_personal_data(
-        self, data_source: str, content: str, metadata: Dict[str, Any] = None
+        self, data_source: str, content: str, metadata: dict[str, Any] = None
     ):
         """Add user's personal data to the knowledge base"""
         if metadata is None:
@@ -164,7 +164,7 @@ class PersonalRAGAssistant:
         logger.info(f"Added {len(content)} chars from {data_source} to knowledge base")
 
     def _generate_memory_from_content(
-        self, content: str, source: str, metadata: Dict[str, Any]
+        self, content: str, source: str, metadata: dict[str, Any]
     ):
         """Generate contextual memories from content"""
         # Extract key patterns and insights
@@ -181,7 +181,7 @@ class PersonalRAGAssistant:
 
         self.memory_store[memory_key] = memory
 
-    def _extract_insights(self, content: str, source: str) -> List[str]:
+    def _extract_insights(self, content: str, source: str) -> list[str]:
         """Extract meaningful insights from content"""
         insights = []
 
@@ -233,7 +233,7 @@ class PersonalRAGAssistant:
         # Normalize to 0-1 scale
         return min(matches / len(relevance_keywords), 1.0)
 
-    def _generate_tags(self, content: str, source: str) -> List[str]:
+    def _generate_tags(self, content: str, source: str) -> list[str]:
         """Generate tags for content categorization"""
         tags = [source]
 
@@ -252,7 +252,7 @@ class PersonalRAGAssistant:
 
     def query_with_context(
         self, query: str, context_level: str = "balanced"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Query the system with full personal context awareness
 
@@ -288,7 +288,7 @@ class PersonalRAGAssistant:
             "context_level": context_level,
         }
 
-    def _find_relevant_memories(self, query: str) -> List[Dict[str, Any]]:
+    def _find_relevant_memories(self, query: str) -> list[dict[str, Any]]:
         """Find memories relevant to the query"""
         query_lower = query.lower()
         relevant = []
@@ -308,7 +308,7 @@ class PersonalRAGAssistant:
         )[:5]
 
     def _generate_contextual_response(
-        self, query: str, memories: List[Dict[str, Any]], context_level: str
+        self, query: str, memories: list[dict[str, Any]], context_level: str
     ) -> str:
         """Generate a response that considers user's full context"""
 
@@ -386,7 +386,7 @@ class PersonalRAGAssistant:
 
         return "\n".join(response_parts)
 
-    def get_system_stats(self) -> Dict[str, Any]:
+    def get_system_stats(self) -> dict[str, Any]:
         """Get comprehensive system statistics"""
         return {
             "user_name": self.user_name,
@@ -423,7 +423,7 @@ class PersonalRAGAssistant:
             filepath = self.data_dir / f"personal_rag_state_{self.user_name}.json"
 
         if filepath.exists():
-            with open(filepath, "r") as f:
+            with open(filepath) as f:
                 state = json.load(f)
 
             self.user_context = state.get("user_context", self.user_context)
@@ -500,9 +500,9 @@ def demo_personal_rag():
 
     print("\nTesting context-aware queries...")
     for i, query in enumerate(test_queries, 1):
-        print(f"\n{'='*60}")
+        print(f"\n{'=' * 60}")
         print(f"Query {i}: {query}")
-        print(f"{'='*60}")
+        print(f"{'=' * 60}")
 
         result = assistant.query_with_context(query, context_level="balanced")
 

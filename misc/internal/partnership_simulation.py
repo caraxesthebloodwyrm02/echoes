@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # Exclude the core directory to avoid conflicts with standard library
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -9,8 +9,8 @@ if core_dir in sys.path:
 
 import random
 import statistics
+
 import matplotlib.pyplot as plt
-import numpy as np
 
 # Enhanced partnership funnel simulator
 PATHS = {

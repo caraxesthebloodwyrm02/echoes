@@ -2,7 +2,6 @@ from collections.abc import Sequence
 from typing import (
     Any,
     SupportsIndex,
-    TypeAlias,
 )
 from typing import (
     Literal as L,
@@ -15,7 +14,7 @@ from numpy._typing import (
 
 __all__ = ["histogram", "histogram_bin_edges", "histogramdd"]
 
-_BinKind: TypeAlias = L[
+type _BinKind = L[
     "stone",
     "auto",
     "doane",

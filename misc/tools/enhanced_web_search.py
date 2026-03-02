@@ -4,14 +4,12 @@ Enhanced Web Search Tools for EchoesAssistantV2
 Provides more reliable web search capabilities using multiple approaches.
 """
 
-import os
-import json
 import logging
-from typing import List, Dict, Any, Optional
-import requests
+import os
 from datetime import datetime
-import re
-from urllib.parse import quote, urlencode
+from typing import Any
+
+import requests
 
 from .base import BaseTool, ToolResult
 
@@ -41,7 +39,7 @@ class EnhancedWebSearchTool(BaseTool):
         self.serper_api_key = os.getenv("SERPER_API_KEY")  # Google search via Serper
         self.tavily_api_key = os.getenv("TAVILY_API_KEY")  # Alternative search API
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Generate OpenAI function calling schema."""
         return {
             "type": "function",
@@ -141,7 +139,7 @@ class EnhancedWebSearchTool(BaseTool):
                 success=False, data=None, error=f"Web search failed: {str(e)}"
             )
 
-    def _search_tavily(self, query: str, max_results: int) -> List[Dict[str, Any]]:
+    def _search_tavily(self, query: str, max_results: int) -> list[dict[str, Any]]:
         """Search using Tavily API."""
         try:
             url = "https://api.tavily.com/search"
@@ -175,7 +173,7 @@ class EnhancedWebSearchTool(BaseTool):
             logger.error(f"Tavily search error: {str(e)}")
             return []
 
-    def _search_serper(self, query: str, max_results: int) -> List[Dict[str, Any]]:
+    def _search_serper(self, query: str, max_results: int) -> list[dict[str, Any]]:
         """Search using Serper API (Google search)."""
         try:
             url = "https://google.serper.dev/search"
@@ -207,7 +205,7 @@ class EnhancedWebSearchTool(BaseTool):
             logger.error(f"Serper search error: {str(e)}")
             return []
 
-    def _search_brave(self, query: str, max_results: int) -> List[Dict[str, Any]]:
+    def _search_brave(self, query: str, max_results: int) -> list[dict[str, Any]]:
         """Search using Brave Search API."""
         try:
             url = "https://api.search.brave.com/res/v1/web/search"
@@ -240,7 +238,7 @@ class EnhancedWebSearchTool(BaseTool):
 
     def _search_duckduckgo_html(
         self, query: str, max_results: int
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Search using DuckDuckGo HTML scraping (fallback method)."""
         try:
             # Use DuckDuckGo's HTML version
@@ -288,7 +286,7 @@ class EnhancedWebSearchTool(BaseTool):
 
     def _get_simulated_results(
         self, query: str, max_results: int
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get simulated results for testing when no search methods work."""
         logger.warning("Using simulated search results - no search API available")
 
@@ -317,6 +315,6 @@ class EnhancedWebSearchTool(BaseTool):
         return simulated[:max_results]
 
 
-def create_enhanced_web_search_tools() -> List[BaseTool]:
+def create_enhanced_web_search_tools() -> list[BaseTool]:
     """Create enhanced web search tools."""
     return [EnhancedWebSearchTool()]

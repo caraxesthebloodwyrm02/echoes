@@ -4,12 +4,11 @@ Provides deep contextual understanding and meaningful connections across topics
 """
 
 import logging
-import re
 import random
-from typing import Dict, Any, List, Optional, Set, Tuple
-from datetime import datetime
+import re
 from collections import defaultdict, deque
-import json
+from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -210,7 +209,7 @@ class CrossReferenceSystem:
             for concept in info["concepts"]:
                 self.concept_map[concept].add(domain)
 
-    def analyze_context(self, text: str) -> Dict[str, Any]:
+    def analyze_context(self, text: str) -> dict[str, Any]:
         """Analyze text to extract contextual information"""
         text_lower = text.lower()
 
@@ -253,7 +252,7 @@ class CrossReferenceSystem:
             "sentiment": self._detect_sentiment(text),
         }
 
-    def _extract_key_concepts(self, text: str) -> List[str]:
+    def _extract_key_concepts(self, text: str) -> list[str]:
         """Extract key concepts from text"""
         # Simple extraction based on capitalized words and domain keywords
         concepts = []
@@ -273,8 +272,8 @@ class CrossReferenceSystem:
         return list(set(concepts))
 
     def _identify_relationships(
-        self, text: str, domains: Set[str]
-    ) -> List[Dict[str, str]]:
+        self, text: str, domains: set[str]
+    ) -> list[dict[str, str]]:
         """Identify relationships between concepts and domains"""
         relationships = []
         text_lower = text.lower()
@@ -370,8 +369,8 @@ class CrossReferenceSystem:
             return "neutral"
 
     def generate_cross_references(
-        self, context: Dict[str, Any]
-    ) -> List[Dict[str, Any]]:
+        self, context: dict[str, Any]
+    ) -> list[dict[str, Any]]:
         """Generate relevant cross-references based on context"""
         cross_refs = []
 
@@ -409,7 +408,7 @@ class CrossReferenceSystem:
 
         return cross_refs[:5]  # Return top 5
 
-    def _find_related_concepts(self, concept: str) -> List[str]:
+    def _find_related_concepts(self, concept: str) -> list[str]:
         """Find concepts related to the given concept"""
         related = []
         concept_lower = concept.lower()
@@ -509,7 +508,7 @@ class CrossReferenceSystem:
             )
             self.user_interests = dict(sorted_interests[:8])
 
-    def get_contextual_suggestions(self, current_topic: str) -> List[str]:
+    def get_contextual_suggestions(self, current_topic: str) -> list[str]:
         """Get suggestions based on conversation context and user interests"""
         suggestions = []
 
@@ -535,7 +534,7 @@ class CrossReferenceSystem:
 
         return suggestions[:3]
 
-    def get_knowledge_graph_summary(self) -> Dict[str, Any]:
+    def get_knowledge_graph_summary(self) -> dict[str, Any]:
         """Get a summary of the knowledge graph and connections"""
         return {
             "total_domains": len(self.domains),

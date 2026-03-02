@@ -1,7 +1,7 @@
 import numpy as np
+from scipy.interpolate import CubicSpline  # For soft-knee curve
 from scipy.io import wavfile
 from scipy.signal import resample
-from scipy.interpolate import CubicSpline  # For soft-knee curve
 
 # Tuned Params: Locked from prior teardowns
 fs = 44100  # Sample rate
@@ -56,7 +56,7 @@ def soft_knee_compress(signal, threshold_db=-6, ratio=4, knee_width=3):
 
 for run in range(1, runs + 1):
     print(
-        f"\n--- Run #{run}: {['Foundation', 'Teeth-Grind Humor', 'Maximum Nerve-Fray'][run-1]} ---"
+        f"\n--- Run #{run}: {['Foundation', 'Teeth-Grind Humor', 'Maximum Nerve-Fray'][run - 1]} ---"
     )
 
     # Warped vocal: Gut-grunt base, progressive vibrato
@@ -115,7 +115,7 @@ for run in range(1, runs + 1):
     # Export WAV
     filename = f"sandstorm_run_{run:02d}.wav"
     wavfile.write(filename, fs, (reverbed * 32767).astype(np.int16))
-    print(f"Etched: {filename} – {len(reverbed)/fs:.1f}s of refined dynamics.")
+    print(f"Etched: {filename} – {len(reverbed) / fs:.1f}s of refined dynamics.")
 
 print(
     "\n🔧 Refinement Complete: Protocol operational, artifacts enhanced. Ready for next iteration."

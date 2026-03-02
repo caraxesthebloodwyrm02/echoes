@@ -4,9 +4,9 @@ Staged Unified System Test for Echoes
 Runs tests in stages with clear progress indicators.
 """
 
+import json
 import os
 import time
-import json
 from pathlib import Path
 
 # Echoes imports
@@ -22,7 +22,7 @@ def test_stage_1_initialization():
     try:
         assistant = EchoesAssistantV2(enable_rag=True, rag_preset="openai-balanced")
         print("✅ Echoes Assistant initialized successfully")
-        print(f"   RAG preset: openai-balanced")
+        print("   RAG preset: openai-balanced")
         print(f"   RAG enabled: {assistant.rag is not None}")
         return assistant, True
     except Exception as e:
@@ -367,7 +367,7 @@ def generate_summary_report(stage_results):
     with open("echoes_test_summary.json", "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2)
 
-    print(f"\n💾 Report saved to: echoes_test_summary.json")
+    print("\n💾 Report saved to: echoes_test_summary.json")
     return report
 
 

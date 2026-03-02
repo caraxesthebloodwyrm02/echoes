@@ -2,7 +2,6 @@ from datetime import timedelta
 from typing import Literal
 
 import numpy as np
-
 from pandas._libs.tslibs.dtypes import PeriodDtypeBase
 from pandas._libs.tslibs.nattype import NaTType
 from pandas._libs.tslibs.offsets import BaseOffset
@@ -52,7 +51,9 @@ def period_array_strftime(
 
 # exposed for tests
 def period_asfreq(ordinal: int, freq1: int, freq2: int, end: bool) -> int: ...
-def period_ordinal(y: int, m: int, d: int, h: int, min: int, s: int, us: int, ps: int, freq: int) -> int: ...
+def period_ordinal(
+    y: int, m: int, d: int, h: int, min: int, s: int, us: int, ps: int, freq: int
+) -> int: ...
 def freq_to_dtype_code(freq: BaseOffset) -> int: ...
 def validate_end_alias(how: str) -> Literal["E", "S"]: ...
 

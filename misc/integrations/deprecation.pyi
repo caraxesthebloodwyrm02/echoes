@@ -1,9 +1,6 @@
-from collections.abc import Callable
 import contextlib
-from typing import Any, Literal, ParamSpec, TypedDict, TypeVar, overload
-from typing_extensions import (
-    Unpack,  # < Py 3.11
-)
+from collections.abc import Callable
+from typing import Any, Literal, ParamSpec, TypedDict, TypeVar, Unpack, overload
 
 _P = ParamSpec("_P")
 _R = TypeVar("_R")
@@ -70,6 +67,6 @@ def deprecate_method_override(
     since: str,
     **kwargs: Unpack[NamedDeprecationKwargs],
 ) -> Callable[_P, _R]: ...
-def suppress_matplotlib_deprecation_warning() -> (
-    contextlib.AbstractContextManager[None]
-): ...
+def suppress_matplotlib_deprecation_warning() -> contextlib.AbstractContextManager[
+    None
+]: ...

@@ -5,9 +5,9 @@ Provides backward compatibility with the expected RAG API.
 Uses OpenAI embeddings for OpenAI-first approach.
 """
 
-from typing import List, Dict, Any
 import sys
 from pathlib import Path
+from typing import Any
 
 # Add parent directory to path to import openai_rag modules
 sys.path.insert(0, str(Path(__file__).parent.parent.parent))
@@ -36,7 +36,7 @@ class RAGSystem:
         """Initialize with any RAG instance."""
         self.rag = rag_instance
 
-    def add_documents(self, documents: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def add_documents(self, documents: list[dict[str, Any]]) -> dict[str, Any]:
         """Add documents to the RAG system."""
         doc_ids = []
         for doc in documents:
@@ -51,7 +51,7 @@ class RAGSystem:
 
         return {"total_chunks": len(doc_ids)}
 
-    def search(self, query: str, top_k: int = 5, **kwargs) -> Dict[str, Any]:
+    def search(self, query: str, top_k: int = 5, **kwargs) -> dict[str, Any]:
         """Search for relevant documents."""
         results = self.rag.search(query, top_k=top_k, **kwargs)
 
@@ -80,7 +80,7 @@ class RAGSystem:
         # Return object with results attribute
         return {"results": final_results}
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get RAG system statistics."""
         if hasattr(self.rag, "get_stats"):
             return self.rag.get_stats()

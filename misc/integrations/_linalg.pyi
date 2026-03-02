@@ -5,7 +5,6 @@ from typing import (
     Never,
     SupportsIndex,
     SupportsInt,
-    TypeAlias,
     TypeVar,
     overload,
 )
@@ -81,7 +80,7 @@ __all__ = [
 
 _NumberT = TypeVar("_NumberT", bound=np.number)
 
-_ModeKind: TypeAlias = L["reduced", "complete", "r", "raw"]
+type _ModeKind = L["reduced", "complete", "r", "raw"]
 
 ###
 
@@ -334,7 +333,9 @@ def slogdet(a: _ArrayLikeComplex_co) -> SlogdetResult: ...
 # a 2-tuple of `(a.ndim - 2)`` dimensionl arrays otherwise
 def det(a: _ArrayLikeComplex_co) -> Any: ...
 @overload
-def lstsq(a: _ArrayLikeInt_co, b: _ArrayLikeInt_co, rcond: float | None = ...) -> tuple[
+def lstsq(
+    a: _ArrayLikeInt_co, b: _ArrayLikeInt_co, rcond: float | None = ...
+) -> tuple[
     NDArray[float64],
     NDArray[float64],
     int32,

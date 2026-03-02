@@ -1,8 +1,4 @@
-import sys
-import os
 import pytest
-from agent_pathlib import Path
-from agent_pprint import agent_pprint
 
 # Try to import c_o_r_e modules, skip if not available
 try:

@@ -7,7 +7,6 @@ from typing import (
     Final,
     Protocol,
     SupportsIndex,
-    TypeAlias,
     TypedDict,
     TypeVar,
     Unpack,
@@ -19,10 +18,8 @@ from typing import (
     Literal as L,
 )
 
-from _typeshed import StrOrBytesPath, SupportsLenAndGetItem
-from typing_extensions import CapsuleType
-
 import numpy as np
+from _typeshed import StrOrBytesPath, SupportsLenAndGetItem
 from numpy import (  # type: ignore[attr-defined]
     _AnyShapeT,
     _CastingKind,
@@ -102,6 +99,7 @@ from numpy._typing._ufunc import (
     _PyFunc_Nin3P_Nout1,
 )
 from numpy.lib._array_utils_impl import normalize_axis_index
+from typing_extensions import CapsuleType
 
 __all__ = [
     "_ARRAY_API",
@@ -209,11 +207,11 @@ _Nin = TypeVar("_Nin", bound=int)
 _Nout = TypeVar("_Nout", bound=int)
 
 _ShapeT = TypeVar("_ShapeT", bound=_Shape)
-_Array: TypeAlias = ndarray[_ShapeT, dtype[_ScalarT]]
-_Array1D: TypeAlias = ndarray[tuple[int], dtype[_ScalarT]]
+type _Array[_ShapeT: _Shape, _ScalarT: generic] = ndarray[_ShapeT, dtype[_ScalarT]]
+type _Array1D[_ScalarT: generic] = ndarray[tuple[int], dtype[_ScalarT]]
 
 # Valid time units
-_UnitKind: TypeAlias = L[
+type _UnitKind = L[
     "Y",
     "M",
     "D",
@@ -228,7 +226,7 @@ _UnitKind: TypeAlias = L[
     "fs",
     "as",
 ]
-_RollKind: TypeAlias = L[  # `raise` is deliberately excluded
+type _RollKind = L[  # `raise` is deliberately excluded
     "nat",
     "forward",
     "following",
@@ -1213,7 +1211,7 @@ def compare_chararrays(
 ) -> NDArray[np.bool]: ...
 def add_docstring(obj: Callable[..., Any], docstring: str, /) -> None: ...
 
-_GetItemKeys: TypeAlias = L[
+type _GetItemKeys = L[
     "C",
     "CONTIGUOUS",
     "C_CONTIGUOUS",
@@ -1237,7 +1235,7 @@ _GetItemKeys: TypeAlias = L[
     "FNC",
     "FORC",
 ]
-_SetItemKeys: TypeAlias = L[
+type _SetItemKeys = L[
     "A",
     "ALIGNED",
     "W",

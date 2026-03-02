@@ -2,8 +2,9 @@
 """
 Debug test for Responses API
 """
-import os
+
 import json
+import os
 
 # Test with Responses API enabled (default)
 os.environ["USE_RESPONSES_API"] = "true"

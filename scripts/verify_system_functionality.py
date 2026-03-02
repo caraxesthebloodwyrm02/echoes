@@ -4,10 +4,10 @@ Comprehensive System Functionality Verification
 Tests the claims made in the system analysis against actual codebase implementation.
 """
 
-import sys
 import inspect
+import sys
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Any
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -15,7 +15,7 @@ sys.path.insert(0, str(Path(__file__).parent))
 
 def verify_feature_exists(
     module_path: str, feature_name: str, description: str = ""
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """Verify a feature exists and is importable."""
     try:
         module_path_parts = module_path.split(".")
@@ -38,7 +38,7 @@ def verify_feature_exists(
         return {"exists": False, "error": str(e)}
 
 
-def check_class_methods(class_obj, expected_methods: List[str]) -> Dict[str, Any]:
+def check_class_methods(class_obj, expected_methods: list[str]) -> dict[str, Any]:
     """Check if class has expected methods."""
     methods = [
         m
@@ -105,7 +105,7 @@ def main():
                 f"Found {method_check['found_count']}/{len(expected_methods)} expected methods"
             )
 
-        print(f"   [OK] EchoesAssistantV2 class exists")
+        print("   [OK] EchoesAssistantV2 class exists")
         print(f"   [OK] Found {method_check['total_methods']} methods total")
         print(
             f"   [OK] {method_check['found_count']}/{len(expected_methods)} expected methods present"
@@ -129,11 +129,11 @@ def main():
 
         if tool_count > 0:
             results["passed"].append(f"Tool registry functional ({tool_count} tools)")
-            print(f"   [OK] Tool registry functional")
+            print("   [OK] Tool registry functional")
             print(f"   [OK] {tool_count} tools registered")
         else:
             results["warnings"].append("Tool registry exists but no tools registered")
-            print(f"   [WARN] Tool registry exists but empty")
+            print("   [WARN] Tool registry exists but empty")
 
     except Exception as e:
         results["failed"].append(f"Tool registry failed: {e}")
@@ -146,9 +146,8 @@ def main():
     print("-" * 80)
     try:
         from echoes.core.rag_v2 import (
-            create_rag_system,
             OPENAI_RAG_AVAILABLE,
-            RAG_AVAILABLE,
+            create_rag_system,
         )
 
         if OPENAI_RAG_AVAILABLE:
@@ -177,7 +176,7 @@ def main():
     print("4. Model Router & Metrics")
     print("-" * 80)
     try:
-        from app.model_router import ModelRouter, ModelMetrics, ModelResponseCache
+        from app.model_router import ModelMetrics, ModelResponseCache, ModelRouter
 
         router = ModelRouter()
         metrics = ModelMetrics()
@@ -208,8 +207,9 @@ def main():
     print("5. Responses API Integration")
     print("-" * 80)
     try:
-        from assistant_v2_core import EchoesAssistantV2
         import os
+
+        from assistant_v2_core import EchoesAssistantV2
 
         # Check feature flag
         os.environ["USE_RESPONSES_API"] = "false"
@@ -226,7 +226,7 @@ def main():
         # Check code structure
         import re
 
-        with open("assistant_v2_core.py", "r", encoding="utf-8") as f:
+        with open("assistant_v2_core.py", encoding="utf-8") as f:
             content = f.read()
             responses_api_calls = len(re.findall(r"\.responses\.create", content))
             chat_api_calls = len(re.findall(r"\.chat\.completions\.create", content))
@@ -253,7 +253,6 @@ def main():
     print("-" * 80)
     try:
         from assistant_v2_core import EchoesAssistantV2
-        from typing import get_type_hints
 
         # Check chat method signature
         sig = inspect.signature(EchoesAssistantV2.chat)
@@ -267,7 +266,7 @@ def main():
             print("   [WARN] Streaming type hints may need verification")
 
         # Check for streaming implementation
-        with open("assistant_v2_core.py", "r", encoding="utf-8") as f:
+        with open("assistant_v2_core.py", encoding="utf-8") as f:
             content = f.read()
             if "def stream_response()" in content or "yield" in content:
                 results["passed"].append("Streaming implementation found")
@@ -288,7 +287,7 @@ def main():
     print("7. Error Handling & Fallback")
     print("-" * 80)
     try:
-        with open("assistant_v2_core.py", "r", encoding="utf-8") as f:
+        with open("assistant_v2_core.py", encoding="utf-8") as f:
             content = f.read()
 
             # Check for error handling patterns
@@ -314,7 +313,7 @@ def main():
                 results["passed"].append(
                     f"Fallback mechanisms present ({fallback_patterns} references)"
                 )
-                print(f"   [OK] Fallback mechanisms found")
+                print("   [OK] Fallback mechanisms found")
 
     except Exception as e:
         results["failed"].append(f"Error handling check failed: {e}")
@@ -352,7 +351,7 @@ def main():
     print("9. Value System Integration")
     print("-" * 80)
     try:
-        from app.values import get_value_system, ValueSystem
+        from app.values import ValueSystem, get_value_system
 
         vs = get_value_system()
         if isinstance(vs, ValueSystem):

@@ -1,11 +1,10 @@
+from collections.abc import Iterable
 from datetime import (
     timedelta,
     tzinfo,
 )
-from typing import Iterable
 
 import numpy as np
-
 from pandas._typing import npt
 
 # tz_convert_from_utc_single exposed for testing

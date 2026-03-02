@@ -14,10 +14,10 @@ Run specific test class:
 Run specific test method:
     python run_tests.py TestModelRouter.test_simple_prompt_selection
 """
-import unittest
-import sys
+
 import os
-import argparse
+import sys
+import unittest
 
 # Add project root to Python path
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), ".")))

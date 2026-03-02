@@ -16,6 +16,7 @@ Scientific Impact: $2.7B cost savings, 3 breakthrough discoveries, 12 patents
 
 import json
 from datetime import datetime
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -48,8 +49,8 @@ class SpaceResearchDemo:
     def format_currency(self, amount):
         """Format currency with M/B suffixes."""
         if amount >= 1_000_000_000:
-            return f"${amount/1_000_000_000:.1f}B"
-        return f"${amount/1_000_000:.0f}M"
+            return f"${amount / 1_000_000_000:.1f}B"
+        return f"${amount / 1_000_000:.0f}M"
 
     def run_complete_demo(self):
         """Run the complete space research demo."""

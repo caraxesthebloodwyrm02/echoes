@@ -2,11 +2,8 @@
 # echoes_spreadsheet_generator.py - ROI Analysis for Excel/Google Sheets
 
 import csv
-import json
-import sys
-from dataclasses import dataclass
-from typing import List, Dict, Any
 import datetime
+from dataclasses import dataclass
 
 
 @dataclass
@@ -34,7 +31,7 @@ def load_config(yaml_path: str) -> SpreadsheetConfig:
     """Load configuration from your existing YAML"""
     config = SpreadsheetConfig()
     try:
-        with open(yaml_path, "r", encoding="utf-8") as f:
+        with open(yaml_path, encoding="utf-8") as f:
             content = f.read()
 
         data = {}
@@ -94,7 +91,7 @@ def load_config(yaml_path: str) -> SpreadsheetConfig:
     return config
 
 
-def generate_executive_dashboard(config: SpreadsheetConfig) -> List[List[str]]:
+def generate_executive_dashboard(config: SpreadsheetConfig) -> list[list[str]]:
     """Generate executive summary dashboard data"""
     annual_net = config.net_monthly_benefit * 12
     three_year = annual_net * 3
@@ -123,17 +120,17 @@ def generate_executive_dashboard(config: SpreadsheetConfig) -> List[List[str]]:
         [
             "Labor Efficiency",
             f"${config.labor_efficiency_savings:,.0f}",
-            f"{(config.labor_efficiency_savings/config.monthly_savings)*100:.1f}%",
+            f"{(config.labor_efficiency_savings / config.monthly_savings) * 100:.1f}%",
         ],
         [
             "Error Reduction",
             f"${config.error_reduction_savings:,.0f}",
-            f"{(config.error_reduction_savings/config.monthly_savings)*100:.1f}%",
+            f"{(config.error_reduction_savings / config.monthly_savings) * 100:.1f}%",
         ],
         [
             "Audit Preparation",
             f"${config.audit_preparation_savings:,.0f}",
-            f"{(config.audit_preparation_savings/config.monthly_savings)*100:.1f}%",
+            f"{(config.audit_preparation_savings / config.monthly_savings) * 100:.1f}%",
         ],
         [""],
         ["IMPLEMENTATION TIMELINE"],
@@ -146,7 +143,7 @@ def generate_executive_dashboard(config: SpreadsheetConfig) -> List[List[str]]:
     return dashboard
 
 
-def generate_monthly_projections(config: SpreadsheetConfig) -> List[List[str]]:
+def generate_monthly_projections(config: SpreadsheetConfig) -> list[list[str]]:
     """Generate 12-month cash flow projections"""
     projections = [
         ["MONTHLY CASH FLOW PROJECTIONS"],
@@ -170,20 +167,20 @@ def generate_monthly_projections(config: SpreadsheetConfig) -> List[List[str]]:
     return projections
 
 
-def generate_scenario_analysis(config: SpreadsheetConfig) -> List[List[str]]:
+def generate_scenario_analysis(config: SpreadsheetConfig) -> list[list[str]]:
     """Generate conservative, base, and aggressive scenarios"""
     scenarios = [
         ["SCENARIO ANALYSIS"],
         ["Scenario", "Payback Days", "ROI %", "Monthly Net", "Annual Benefit"],
-        ["Conservative", "7", "350%", f"${45000:,.0f}", f"${45000*12:,.0f}"],
+        ["Conservative", "7", "350%", f"${45000:,.0f}", f"${45000 * 12:,.0f}"],
         [
             "Base Case",
             f"{config.payback_days:.0f}",
             f"{config.roi_percentage:.0f}%",
             f"${config.net_monthly_benefit:,.0f}",
-            f"${config.net_monthly_benefit*12:,.0f}",
+            f"${config.net_monthly_benefit * 12:,.0f}",
         ],
-        ["Aggressive", "3", "750%", f"${85000:,.0f}", f"${85000*12:,.0f}"],
+        ["Aggressive", "3", "750%", f"${85000:,.0f}", f"${85000 * 12:,.0f}"],
         [""],
         ["SENSITIVITY ANALYSIS"],
         ["What If", "Impact on ROI", "New Payback"],
@@ -198,7 +195,7 @@ def generate_scenario_analysis(config: SpreadsheetConfig) -> List[List[str]]:
     return scenarios
 
 
-def export_to_csv(data: List[List[str]], filename: str) -> None:
+def export_to_csv(data: list[list[str]], filename: str) -> None:
     """Export data to CSV format"""
     with open(filename, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
@@ -229,8 +226,8 @@ def export_multiple_sheets(config: SpreadsheetConfig, base_name: str) -> None:
         ["INVESTMENT", f"${config.monthly_investment:,.0f}/month"],
         ["PAYBACK PERIOD", f"{config.payback_days:.0f} days"],
         ["ROI", f"{config.roi_percentage:.0f}%"],
-        ["ANNUAL BENEFIT", f"${config.net_monthly_benefit*12:,.0f}"],
-        ["3-YEAR VALUE", f"${config.net_monthly_benefit*36:,.0f}"],
+        ["ANNUAL BENEFIT", f"${config.net_monthly_benefit * 12:,.0f}"],
+        ["3-YEAR VALUE", f"${config.net_monthly_benefit * 36:,.0f}"],
         [""],
         ["KEY TALKING POINTS"],
         ["• 5-day payback = instant ROI"],
@@ -266,13 +263,13 @@ def main():
     # Export multiple sheets
     export_multiple_sheets(config, args.output)
 
-    print(f"\n🎯 Spreadsheet files created:")
+    print("\n🎯 Spreadsheet files created:")
     print(f"📄 {args.output}_01_executive_dashboard.csv")
     print(f"📄 {args.output}_02_monthly_projections.csv")
     print(f"📄 {args.output}_03_scenario_analysis.csv")
     print(f"📄 {args.output}_04_presentation_summary.csv")
 
-    print(f"\n💡 Open these in Excel/Google Sheets for interactive analysis!")
+    print("\n💡 Open these in Excel/Google Sheets for interactive analysis!")
 
 
 if __name__ == "__main__":

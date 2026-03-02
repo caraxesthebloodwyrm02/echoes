@@ -1,9 +1,8 @@
 from typing import Literal as L
-from typing import SupportsIndex, TypeAlias, TypeVar, overload
-
-from _typeshed import Incomplete
+from typing import SupportsIndex, TypeVar, overload
 
 import numpy as np
+from _typeshed import Incomplete
 from numpy._typing import (
     DTypeLike,
     NDArray,
@@ -17,7 +16,9 @@ __all__ = ["geomspace", "linspace", "logspace"]
 
 _ScalarT = TypeVar("_ScalarT", bound=np.generic)
 
-_ToArrayFloat64: TypeAlias = _DualArrayLike[np.dtype[np.float64 | np.integer | np.bool], float]
+type _ToArrayFloat64 = _DualArrayLike[
+    np.dtype[np.float64 | np.integer | np.bool], float
+]
 
 @overload
 def linspace(

@@ -1,6 +1,6 @@
 import types
 from collections.abc import Callable, Mapping
-from typing import Any, Final, TypeAlias, TypeVar, overload
+from typing import Any, Final, TypeVar, overload
 
 from _typeshed import SupportsLenAndGetItem
 from typing_extensions import TypeIs
@@ -12,11 +12,11 @@ __all__ = ["formatargspec", "getargspec"]
 _T = TypeVar("_T")
 _RT = TypeVar("_RT")
 
-_StrSeq: TypeAlias = SupportsLenAndGetItem[str]
-_NestedSeq: TypeAlias = list[_T | _NestedSeq[_T]] | tuple[_T | _NestedSeq[_T], ...]
+type _StrSeq = SupportsLenAndGetItem[str]
+type _NestedSeq[_T] = list[_T | _NestedSeq[_T]] | tuple[_T | _NestedSeq[_T], ...]
 
-_JoinFunc: TypeAlias = Callable[[list[_T]], _T]
-_FormatFunc: TypeAlias = Callable[[_T], str]
+type _JoinFunc[_T] = Callable[[list[_T]], _T]
+type _FormatFunc[_T] = Callable[[_T], str]
 
 ###
 

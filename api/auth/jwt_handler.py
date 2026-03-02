@@ -9,6 +9,7 @@ from typing import Any
 
 import jwt
 from jwt.exceptions import InvalidTokenError
+
 from src.utils.datetime_utils import utc_now
 
 

@@ -9,12 +9,13 @@ from typing import (
     Generic,
     Protocol,
     Self,
-    TypeAlias,
     overload,
+    override,
     type_check_only,
 )
 from typing import Literal as L
 
+import numpy as np
 from _typeshed import (
     StrOrBytesPath,
     StrPath,
@@ -22,12 +23,10 @@ from _typeshed import (
     SupportsRead,
     SupportsWrite,
 )
-from typing_extensions import TypeVar, deprecated, override
-
-import numpy as np
 from numpy._core.multiarray import packbits, unpackbits
 from numpy._typing import ArrayLike, DTypeLike, NDArray, _DTypeLike, _SupportsArrayFunc
 from numpy.ma.mrecords import MaskedRecords
+from typing_extensions import TypeVar, deprecated
 
 from ._datasource import DataSource as DataSource
 
@@ -48,10 +47,10 @@ _T_co = TypeVar("_T_co", covariant=True)
 _ScalarT = TypeVar("_ScalarT", bound=np.generic)
 _ScalarT_co = TypeVar("_ScalarT_co", bound=np.generic, default=Any, covariant=True)
 
-_FName: TypeAlias = StrPath | Iterable[str] | Iterable[bytes]
-_FNameRead: TypeAlias = StrPath | SupportsRead[str] | SupportsRead[bytes]
-_FNameWriteBytes: TypeAlias = StrPath | SupportsWrite[bytes]
-_FNameWrite: TypeAlias = _FNameWriteBytes | SupportsWrite[str]
+type _FName = StrPath | Iterable[str] | Iterable[bytes]
+type _FNameRead = StrPath | SupportsRead[str] | SupportsRead[bytes]
+type _FNameWriteBytes = StrPath | SupportsWrite[bytes]
+type _FNameWrite = _FNameWriteBytes | SupportsWrite[str]
 
 @type_check_only
 class _SupportsReadSeek(SupportsRead[_T_co], Protocol[_T_co]):
@@ -85,7 +84,11 @@ class NpzFile(Mapping[str, NDArray[_ScalarT_co]]):
     def __del__(self) -> None: ...
     def __enter__(self) -> Self: ...
     def __exit__(
-        self, cls: type[BaseException] | None, e: BaseException | None, tb: types.TracebackType | None, /
+        self,
+        cls: type[BaseException] | None,
+        e: BaseException | None,
+        tb: types.TracebackType | None,
+        /,
     ) -> None: ...
     @override
     def __len__(self) -> int: ...
@@ -110,13 +113,29 @@ def load(
 def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool = True) -> None: ...
 @overload
 @deprecated("The 'fix_imports' flag is deprecated in NumPy 2.1.")
-def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool, fix_imports: bool) -> None: ...
+def save(
+    file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool, fix_imports: bool
+) -> None: ...
 @overload
 @deprecated("The 'fix_imports' flag is deprecated in NumPy 2.1.")
-def save(file: _FNameWriteBytes, arr: ArrayLike, allow_pickle: bool = True, *, fix_imports: bool) -> None: ...
-def savez(file: _FNameWriteBytes, *args: ArrayLike, allow_pickle: bool = True, **kwds: ArrayLike) -> None: ...
+def save(
+    file: _FNameWriteBytes,
+    arr: ArrayLike,
+    allow_pickle: bool = True,
+    *,
+    fix_imports: bool,
+) -> None: ...
+def savez(
+    file: _FNameWriteBytes,
+    *args: ArrayLike,
+    allow_pickle: bool = True,
+    **kwds: ArrayLike,
+) -> None: ...
 def savez_compressed(
-    file: _FNameWriteBytes, *args: ArrayLike, allow_pickle: bool = True, **kwds: ArrayLike
+    file: _FNameWriteBytes,
+    *args: ArrayLike,
+    allow_pickle: bool = True,
+    **kwds: ArrayLike,
 ) -> None: ...
 
 # File-like objects only have to implement `__iter__` and,
@@ -127,7 +146,9 @@ def loadtxt(
     dtype: None = None,
     comments: str | Sequence[str] | None = "#",
     delimiter: str | None = None,
-    converters: Mapping[int | str, Callable[[str], Any]] | Callable[[str], Any] | None = None,
+    converters: Mapping[int | str, Callable[[str], Any]]
+    | Callable[[str], Any]
+    | None = None,
     skiprows: int = 0,
     usecols: int | Sequence[int] | None = None,
     unpack: bool = False,
@@ -144,7 +165,9 @@ def loadtxt(
     dtype: _DTypeLike[_ScalarT],
     comments: str | Sequence[str] | None = "#",
     delimiter: str | None = None,
-    converters: Mapping[int | str, Callable[[str], Any]] | Callable[[str], Any] | None = None,
+    converters: Mapping[int | str, Callable[[str], Any]]
+    | Callable[[str], Any]
+    | None = None,
     skiprows: int = 0,
     usecols: int | Sequence[int] | None = None,
     unpack: bool = False,
@@ -161,7 +184,9 @@ def loadtxt(
     dtype: DTypeLike,
     comments: str | Sequence[str] | None = "#",
     delimiter: str | None = None,
-    converters: Mapping[int | str, Callable[[str], Any]] | Callable[[str], Any] | None = None,
+    converters: Mapping[int | str, Callable[[str], Any]]
+    | Callable[[str], Any]
+    | None = None,
     skiprows: int = 0,
     usecols: int | Sequence[int] | None = None,
     unpack: bool = False,
@@ -289,10 +314,14 @@ def recfromtxt(
     fname: _FName, *, usemask: L[False] = False, **kwargs: object
 ) -> np.recarray[Any, np.dtype[np.record]]: ...
 @overload
-def recfromtxt(fname: _FName, *, usemask: L[True], **kwargs: object) -> MaskedRecords[Any, np.dtype[np.void]]: ...
+def recfromtxt(
+    fname: _FName, *, usemask: L[True], **kwargs: object
+) -> MaskedRecords[Any, np.dtype[np.void]]: ...
 @overload
 def recfromcsv(
     fname: _FName, *, usemask: L[False] = False, **kwargs: object
 ) -> np.recarray[Any, np.dtype[np.record]]: ...
 @overload
-def recfromcsv(fname: _FName, *, usemask: L[True], **kwargs: object) -> MaskedRecords[Any, np.dtype[np.void]]: ...
+def recfromcsv(
+    fname: _FName, *, usemask: L[True], **kwargs: object
+) -> MaskedRecords[Any, np.dtype[np.void]]: ...

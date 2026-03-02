@@ -2,8 +2,9 @@
 """
 Comprehensive test of Glimpse integration and External API Contact in EchoesAssistantV2
 """
+
 import asyncio
-import os
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -109,7 +110,7 @@ async def test_glimpse_integration():
     )
 
     if analysis_result["success"]:
-        print(f"   ✓ Combined analysis completed")
+        print("   ✓ Combined analysis completed")
         print(f"   ✓ Type: {analysis_result['type']}")
         if isinstance(analysis_result["patterns"], dict) and analysis_result[
             "patterns"

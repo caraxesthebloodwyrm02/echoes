@@ -7,7 +7,7 @@ This script manages dependencies across different package managers (pip, poetry)
 import subprocess
 import sys
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any
 
 
 class DependencyManager:
@@ -18,7 +18,7 @@ class DependencyManager:
         self.backend_path = self.root_path / "backend"
         self.requirements_path = self.root_path / "requirements.txt"
 
-    def check_environment(self) -> Dict[str, Any]:
+    def check_environment(self) -> dict[str, Any]:
         """Check the current environment status"""
         status = {
             "python_version": sys.version,
@@ -210,7 +210,7 @@ class DependencyManager:
             print("❌ requirements.txt not found")
             return False
 
-        with open(self.requirements_path, "r") as f:
+        with open(self.requirements_path) as f:
             current_deps = f.read()
 
         deps_to_add = []

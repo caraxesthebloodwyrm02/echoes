@@ -1,4 +1,4 @@
-from core.display_utils import safe_symbol, PALETTE
+from core.display_utils import PALETTE, safe_symbol
 
 
 def test_safe_symbol_basic():

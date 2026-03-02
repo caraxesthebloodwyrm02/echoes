@@ -4,18 +4,16 @@ Enhances cross-references by simulating different scenarios and outcomes in para
 """
 
 import logging
-import asyncio
+import queue
+import threading
 import time
 import uuid
-import json
-import threading
-from typing import Dict, Any, List, Optional, Callable, Tuple, Union
-from datetime import datetime, timedelta
-from dataclasses import dataclass, field, asdict
+from collections.abc import Callable
+from concurrent.futures import ThreadPoolExecutor
+from dataclasses import asdict, dataclass, field
+from datetime import datetime
 from enum import Enum
-from concurrent.futures import ThreadPoolExecutor, as_completed
-import queue
-import weakref
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -48,19 +46,19 @@ class SimulationInstance:
 
     id: str
     simulation_type: SimulationType
-    input_data: Dict[str, Any]
-    parameters: Dict[str, Any]
+    input_data: dict[str, Any]
+    parameters: dict[str, Any]
     status: SimulationStatus
     created_at: datetime
-    started_at: Optional[datetime] = None
-    completed_at: Optional[datetime] = None
-    result: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
+    started_at: datetime | None = None
+    completed_at: datetime | None = None
+    result: dict[str, Any] | None = None
+    error: str | None = None
     confidence: float = 0.0
     relevance_score: float = 0.0
-    parent_id: Optional[str] = None
-    child_ids: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    parent_id: str | None = None
+    child_ids: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -69,12 +67,12 @@ class SimulationResult:
 
     instance_id: str
     simulation_type: SimulationType
-    outcome: Dict[str, Any]
+    outcome: dict[str, Any]
     confidence: float
     reasoning: str
-    insights: List[str]
-    cross_references: List[Dict[str, Any]]
-    possibilities: List[Dict[str, Any]]
+    insights: list[str]
+    cross_references: list[dict[str, Any]]
+    possibilities: list[dict[str, Any]]
     execution_time: float
 
 
@@ -86,15 +84,15 @@ class ParallelSimulationEngine:
         self.max_concurrent_simulations = max_concurrent_simulations
 
         # Simulation storage
-        self.simulations: Dict[str, SimulationInstance] = {}
+        self.simulations: dict[str, SimulationInstance] = {}
         self.simulation_queue = queue.Queue()
-        self.active_simulations: Dict[str, threading.Thread] = {}
+        self.active_simulations: dict[str, threading.Thread] = {}
 
         # Thread pool for execution
         self.executor = ThreadPoolExecutor(max_workers=max_workers)
 
         # Cross-reference integration
-        self.cross_reference_callbacks: List[Callable] = []
+        self.cross_reference_callbacks: list[Callable] = []
 
         # Statistics
         self.stats = {
@@ -115,7 +113,7 @@ class ParallelSimulationEngine:
         )
         self.processor_thread.start()
 
-    def _initialize_templates(self) -> Dict[SimulationType, Callable]:
+    def _initialize_templates(self) -> dict[SimulationType, Callable]:
         """Initialize simulation templates"""
         return {
             SimulationType.SCENARIO_EXPLORATION: self._simulate_scenario_exploration,
@@ -130,8 +128,8 @@ class ParallelSimulationEngine:
     def create_simulation(
         self,
         simulation_type: SimulationType,
-        input_data: Dict[str, Any],
-        parameters: Dict[str, Any] = None,
+        input_data: dict[str, Any],
+        parameters: dict[str, Any] = None,
         parent_id: str = None,
     ) -> str:
         """Create a new simulation instance"""
@@ -281,8 +279,8 @@ class ParallelSimulationEngine:
                 del self.active_simulations[simulation_id]
 
     def _simulate_scenario_exploration(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Simulate different scenarios based on input"""
 
         base_scenario = input_data.get("scenario", "")
@@ -332,8 +330,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_outcome_prediction(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Predict possible outcomes for a given situation"""
 
         action = input_data.get("action", "")
@@ -399,8 +397,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_alternative_paths(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Simulate alternative approaches to a problem"""
 
         problem = input_data.get("problem", "")
@@ -471,8 +469,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_context_expansion(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Expand context with related information"""
 
         topic = input_data.get("topic", "")
@@ -538,8 +536,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_cross_reference_enhancement(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Enhance cross-references with simulation insights"""
 
         query = input_data.get("query", "")
@@ -603,8 +601,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_possibility_space(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Map out the entire possibility space for a topic"""
 
         topic = input_data.get("topic", "")
@@ -703,8 +701,8 @@ class ParallelSimulationEngine:
         }
 
     def _simulate_decision_support(
-        self, input_data: Dict[str, Any], parameters: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], parameters: dict[str, Any]
+    ) -> dict[str, Any]:
         """Provide decision support through simulation"""
 
         decision = input_data.get("decision", "")
@@ -719,8 +717,8 @@ class ParallelSimulationEngine:
                 "option": option,
                 "success_probability": 0.5 + (i * 0.1),  # Varying probabilities
                 "expected_outcome": f"Positive outcome if {option} chosen",
-                "risks": [f"Risk {j+1} for {option}" for j in range(2)],
-                "benefits": [f"Benefit {j+1} for {option}" for j in range(3)],
+                "risks": [f"Risk {j + 1} for {option}" for j in range(2)],
+                "benefits": [f"Benefit {j + 1} for {option}" for j in range(3)],
                 "timeline": f"{4 + i} weeks",
                 "resource_requirements": ["team", "budget", "technology"],
                 "confidence": 0.7 + (i * 0.05),
@@ -752,7 +750,7 @@ class ParallelSimulationEngine:
             "relevance_score": 0.9,
         }
 
-    def get_simulation_result(self, simulation_id: str) -> Optional[SimulationResult]:
+    def get_simulation_result(self, simulation_id: str) -> SimulationResult | None:
         """Get result of a specific simulation"""
 
         if simulation_id not in self.simulations:
@@ -765,13 +763,13 @@ class ParallelSimulationEngine:
 
         return None
 
-    def get_simulation_status(self, simulation_id: str) -> Optional[SimulationInstance]:
+    def get_simulation_status(self, simulation_id: str) -> SimulationInstance | None:
         """Get status of a simulation"""
         return self.simulations.get(simulation_id)
 
     def wait_for_simulation(
         self, simulation_id: str, timeout: float = 30.0
-    ) -> Optional[SimulationResult]:
+    ) -> SimulationResult | None:
         """Wait for simulation to complete"""
 
         start_time = time.time()
@@ -791,8 +789,8 @@ class ParallelSimulationEngine:
         return None
 
     def run_parallel_simulations(
-        self, simulation_configs: List[Dict[str, Any]]
-    ) -> List[SimulationResult]:
+        self, simulation_configs: list[dict[str, Any]]
+    ) -> list[SimulationResult]:
         """Run multiple simulations in parallel"""
 
         simulation_ids = []
@@ -829,7 +827,7 @@ class ParallelSimulationEngine:
             except Exception as e:
                 logger.error(f"Error in cross-reference callback: {e}")
 
-    def _extract_requirements(self, scenario: str) -> List[str]:
+    def _extract_requirements(self, scenario: str) -> list[str]:
         """Extract requirements from scenario description"""
         # Simple requirement extraction
         requirements = []
@@ -844,8 +842,8 @@ class ParallelSimulationEngine:
         return requirements
 
     def _compare_alternatives(
-        self, alternatives: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, alternatives: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Compare alternative approaches"""
         if not alternatives:
             return {}
@@ -866,7 +864,7 @@ class ParallelSimulationEngine:
             },
         }
 
-    def _find_related_domains(self, topic: str) -> List[str]:
+    def _find_related_domains(self, topic: str) -> list[str]:
         """Find domains related to topic"""
         # Simple domain mapping
         domain_map = {
@@ -891,7 +889,7 @@ class ParallelSimulationEngine:
         """Generate future implications for topic"""
         return f"Future trends in {topic} indicate increased integration with emerging technologies and expanding applications"
 
-    def _generate_insights_for_reference(self, reference: Dict[str, Any]) -> List[str]:
+    def _generate_insights_for_reference(self, reference: dict[str, Any]) -> list[str]:
         """Generate insights for a specific reference"""
         insights = []
         ref_type = reference.get("type", "")
@@ -905,7 +903,7 @@ class ParallelSimulationEngine:
 
         return insights
 
-    def get_simulation_statistics(self) -> Dict[str, Any]:
+    def get_simulation_statistics(self) -> dict[str, Any]:
         """Get comprehensive simulation statistics"""
 
         # Status breakdown

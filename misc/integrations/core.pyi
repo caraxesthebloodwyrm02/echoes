@@ -2,12 +2,10 @@
 # ruff: noqa: ANN001, ANN002, ANN003, ANN201, ANN202 ANN204, ANN401
 
 from collections.abc import Sequence
-from typing import Any, Literal, Self, SupportsIndex, TypeAlias, overload
-
-from _typeshed import Incomplete
-from typing_extensions import TypeIs, TypeVar
+from typing import Any, Literal, Self, SupportsIndex, overload
 
 import numpy as np
+from _typeshed import Incomplete
 from numpy import (
     _HasDTypeWithRealAndImag,
     _ModeKind,
@@ -56,6 +54,7 @@ from numpy._typing import (
     _Shape,
     _ShapeLike,
 )
+from typing_extensions import TypeIs, TypeVar
 
 __all__ = [
     "MAError",
@@ -246,8 +245,8 @@ _ArrayT = TypeVar("_ArrayT", bound=ndarray[Any, Any])
 _ScalarT = TypeVar("_ScalarT", bound=generic)
 _ScalarT_co = TypeVar("_ScalarT_co", bound=generic, covariant=True)
 # A subset of `MaskedArray` that can be parametrized w.r.t. `np.generic`
-_MaskedArray: TypeAlias = MaskedArray[_AnyShape, dtype[_ScalarT]]
-_Array1D: TypeAlias = np.ndarray[tuple[int], np.dtype[_ScalarT]]
+type _MaskedArray[_ScalarT: generic] = MaskedArray[_AnyShape, dtype[_ScalarT]]
+type _Array1D[_ScalarT: generic] = np.ndarray[tuple[int], np.dtype[_ScalarT]]
 
 MaskType = bool_
 nomask: bool_[Literal[False]]
@@ -1057,7 +1056,9 @@ class MaskedArray(ndarray[_ShapeT_co, _DTypeT_co]):
     def toflex(self) -> Incomplete: ...
     def torecords(self) -> Incomplete: ...
     def tolist(self, fill_value: Incomplete | None = None) -> Incomplete: ...
-    def tobytes(self, /, fill_value: Incomplete | None = None, order: _OrderKACF = "C") -> bytes: ...  # type: ignore[override]
+    def tobytes(
+        self, /, fill_value: Incomplete | None = None, order: _OrderKACF = "C"
+    ) -> bytes: ...  # type: ignore[override]
     def tofile(
         self, /, fid: Incomplete, sep: str = "", format: str = "%s"
     ) -> Incomplete: ...

@@ -33,6 +33,23 @@ jobs:
       - name: Ruff format check
         run: ruff format --check api/ app/
 
+      - name: Validate CI contract
+        run: |
+          python -c "
+          import json
+          import yaml
+          from jsonschema import validate, ValidationError
+          with open('.github/ci_reliability_contract.yaml') as f:
+            contract = yaml.safe_load(f)
+          with open('.github/schemas/ci_reliability_contract.json') as f:
+            schema = json.load(f)
+          try:
+            validate(instance=contract, schema=schema)
+            print('CI contract valid')
+          except ValidationError as e:
+            raise SystemExit(f'Contract validation failed: {e}')
+          "
+
   test:
     name: Test
     runs-on: ubuntu-latest

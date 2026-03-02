@@ -6,20 +6,18 @@ Identify and validate authentic sources for component reconstruction.
 Cross-reference multiple trusted sources to confirm authenticity.
 """
 
-import hashlib
 import json
 import os
-import sys
-from pathlib import Path
-from datetime import datetime, timezone
 import subprocess
+import sys
+from datetime import UTC, datetime
 
 
 def authenticate_sources(output_file="source_authentication_step2.json"):
     """Step 2: Identify and validate authentic sources."""
 
     auth_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 2: Source Authentication",
         "trusted_sources": {},
@@ -193,9 +191,9 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
 
                 if status_result.returncode == 0 and status_result.stdout.strip():
                     uncommitted_files = len(status_result.stdout.strip().split("\\n"))
-                    auth_data["validation_results"][
-                        "uncommitted_changes"
-                    ] = uncommitted_files
+                    auth_data["validation_results"]["uncommitted_changes"] = (
+                        uncommitted_files
+                    )
                     auth_data["anomalies"].append(
                         f"{uncommitted_files} uncommitted changes detected"
                     )
@@ -267,7 +265,7 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
     anomalies = len(auth_data["anomalies"])
     sources_validated = len(trusted_sources)
 
-    print(f"\\n📊 Source Authentication Summary:")
+    print("\\n📊 Source Authentication Summary:")
     print(f"   Sources validated: {sources_validated}")
     print(f"   Components checked: {total_validations}")
     print(f"   Successful validations: {successful_validations}")

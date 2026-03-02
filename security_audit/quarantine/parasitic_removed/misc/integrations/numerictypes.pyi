@@ -152,7 +152,9 @@ class _TypeCodes(TypedDict):
     Datetime: L["Mm"]
     All: L["?bhilqnpBHILQNPefdgFDGSUVOMm"]
 
-def isdtype(dtype: dtype | type[Any], kind: DTypeLike | tuple[DTypeLike, ...]) -> builtins.bool: ...
+def isdtype(
+    dtype: dtype | type[Any], kind: DTypeLike | tuple[DTypeLike, ...]
+) -> builtins.bool: ...
 def issubdtype(arg1: DTypeLike, arg2: DTypeLike) -> builtins.bool: ...
 
 typecodes: _TypeCodes

@@ -8,17 +8,15 @@ from typing import (
     Final,
     Literal,
     SupportsIndex,
-    TypeAlias,
     TypedDict,
     overload,
     type_check_only,
 )
 
-from typing_extensions import deprecated
-
 import numpy as np
 from numpy._globals import _NoValueType
 from numpy._typing import NDArray, _CharLike_co, _FloatLike_co
+from typing_extensions import deprecated
 
 __all__ = [
     "array2string",
@@ -33,12 +31,12 @@ __all__ = [
 
 ###
 
-_FloatMode: TypeAlias = Literal["fixed", "unique", "maxprec", "maxprec_equal"]
-_LegacyNoStyle: TypeAlias = Literal["1.21", "1.25", "2.1", False]
-_Legacy: TypeAlias = Literal["1.13", _LegacyNoStyle]
-_Sign: TypeAlias = Literal["-", "+", " "]
-_Trim: TypeAlias = Literal["k", ".", "0", "-"]
-_ReprFunc: TypeAlias = Callable[[NDArray[Any]], str]
+type _FloatMode = Literal["fixed", "unique", "maxprec", "maxprec_equal"]
+type _LegacyNoStyle = Literal["1.21", "1.25", "2.1", False]
+type _Legacy = Literal["1.13", _LegacyNoStyle]
+type _Sign = Literal["-", "+", " "]
+type _Trim = Literal["k", ".", "0", "-"]
+type _ReprFunc = Callable[[NDArray[Any]], str]
 
 @type_check_only
 class _FormatDict(TypedDict, total=False):

@@ -38,10 +38,10 @@ Author: Echoes AI Assistant
 """
 
 from .classifier import (
-    ImageClassifier,
     CustomCNN,
-    plot_training_history,
+    ImageClassifier,
     get_class_names,
+    plot_training_history,
 )
 
 __all__ = ["ImageClassifier", "CustomCNN", "plot_training_history", "get_class_names"]

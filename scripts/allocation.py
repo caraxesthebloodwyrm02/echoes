@@ -1,9 +1,7 @@
-import os
+import logging
 import re
 import shutil
-import logging
 from pathlib import Path
-from typing import Dict, List, Set, Optional, Tuple
 
 # Configure logging
 logging.basicConfig(
@@ -58,7 +56,7 @@ class FileOrganizer:
         for config in self.target_dirs.values():
             config["dir"].mkdir(exist_ok=True)
 
-    def get_file_keywords(self, filepath: Path) -> Set[str]:
+    def get_file_keywords(self, filepath: Path) -> set[str]:
         """Extract potential keywords from filename and content."""
         keywords = set()
 
@@ -76,7 +74,7 @@ class FileOrganizer:
                 ".yml",
                 ".json",
             }:
-                with open(filepath, "r", encoding="utf-8", errors="ignore") as f:
+                with open(filepath, encoding="utf-8", errors="ignore") as f:
                     content = f.read(4096).lower()  # Read first 4KB for efficiency
                     # Add words that match our target keywords
                     for word in re.findall(r"\b\w{4,}\b", content):
@@ -90,7 +88,7 @@ class FileOrganizer:
 
         return keywords
 
-    def get_best_match_dir(self, filepath: Path) -> Optional[Path]:
+    def get_best_match_dir(self, filepath: Path) -> Path | None:
         """Determine the best target directory for a file."""
         keywords = self.get_file_keywords(filepath)
         best_match = None
@@ -115,7 +113,7 @@ class FileOrganizer:
 
         return best_match if best_score > 0 else None
 
-    def organize_files(self, dry_run: bool = True) -> Dict[str, List[str]]:
+    def organize_files(self, dry_run: bool = True) -> dict[str, list[str]]:
         """Organize files based on their content and naming."""
         results = {"moved": [], "skipped": [], "errors": []}
 

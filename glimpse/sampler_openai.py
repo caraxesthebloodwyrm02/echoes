@@ -3,11 +3,12 @@ OpenAI-backed sampler for Glimpse using direct OpenAI API calls.
 Bypasses the wrapper layer for direct access to OpenAI's API.
 """
 
-import asyncio
 import logging
-from typing import Optional, Tuple, Awaitable
+
 import openai
-from glimpse.Glimpse import Draft, GlimpseResult, Sampler
+
+from glimpse.Glimpse import Draft
+
 from .cache_helpers import cached_openai_call
 
 logger = logging.getLogger(__name__)
@@ -35,7 +36,7 @@ def _map_openai_error_to_status(exc: Exception) -> str:
     return "error"
 
 
-async def _essence_only_fallback(draft: Draft) -> Tuple[str, str, Optional[str], bool]:
+async def _essence_only_fallback(draft: Draft) -> tuple[str, str, str | None, bool]:
     """Return a minimal essence-only result when full API fails."""
     # Simple heuristic: extract key nouns/verbs from input and goal
     tokens = draft.input_text.split() + draft.goal.split()
@@ -70,7 +71,7 @@ async def _openai_chat_completion(
     messages: list[dict],
     model: str,
     temperature: float,
-    max_tokens: Optional[int],
+    max_tokens: int | None,
     **kwargs,
 ) -> dict:
     """Cached wrapper around the actual OpenAI chat completion using direct API."""
@@ -90,7 +91,7 @@ async def _openai_chat_completion(
     return response.model_dump()
 
 
-async def openai_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
+async def openai_sampler(draft: Draft) -> tuple[str, str, str | None, bool]:
     """
     OpenAI-backed sampler compatible with GlimpseEngine.
     Returns (sample, essence, delta, aligned) tuple.

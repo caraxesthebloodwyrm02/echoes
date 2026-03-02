@@ -4,10 +4,11 @@ Example tools for demonstration purposes.
 Provides sample implementations of tools that can be registered with the tool registry.
 """
 
-from typing import Any, Dict, List
+from typing import Any
+
 from .base import BaseTool, ToolResult
-from .filesystem_tools import create_filesystem_tools
 from .enhanced_web_search import create_enhanced_web_search_tools
+from .filesystem_tools import create_filesystem_tools
 from .roi_analysis_tool import ROIAnalysisTool
 
 
@@ -39,7 +40,7 @@ class CalculatorTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=str(e))
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return OpenAI function schema."""
         return {
             "type": "function",
@@ -92,7 +93,7 @@ class TextAnalyzerTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=str(e))
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return OpenAI function schema."""
         return {
             "type": "function",
@@ -113,7 +114,7 @@ class TextAnalyzerTool(BaseTool):
         }
 
 
-def get_example_tools() -> List[BaseTool]:
+def get_example_tools() -> list[BaseTool]:
     """
     Get a list of example tools for demonstration.
 

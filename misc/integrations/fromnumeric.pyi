@@ -6,16 +6,13 @@ from typing import (
     Never,
     Protocol,
     SupportsIndex,
-    TypeAlias,
     TypeVar,
     overload,
     type_check_only,
 )
 
-from _typeshed import Incomplete
-from typing_extensions import deprecated
-
 import numpy as np
+from _typeshed import Incomplete
 from numpy import (
     _AnyShapeT,
     _CastingKind,
@@ -59,6 +56,7 @@ from numpy._typing import (
     _ScalarLike_co,
     _ShapeLike,
 )
+from typing_extensions import deprecated
 
 __all__ = [
     "all",
@@ -122,9 +120,9 @@ class _SupportsShape(Protocol[_ShapeT_co]):
 
 # a "sequence" that isn't a string, bytes, bytearray, or memoryview
 _T = TypeVar("_T")
-_PyArray: TypeAlias = list[_T] | tuple[_T, ...]
+type _PyArray[_T] = list[_T] | tuple[_T, ...]
 # `int` also covers `bool`
-_PyScalar: TypeAlias = complex | bytes | str
+type _PyScalar = complex | bytes | str
 
 @overload
 def take(
@@ -535,7 +533,7 @@ def trace(
     out: _ArrayT,
 ) -> _ArrayT: ...
 
-_Array1D: TypeAlias = np.ndarray[tuple[int], np.dtype[_ScalarT]]
+type _Array1D[_ScalarT: generic] = np.ndarray[tuple[int], np.dtype[_ScalarT]]
 
 @overload
 def ravel(a: _ArrayLike[_ScalarT], order: _OrderKACF = "C") -> _Array1D[_ScalarT]: ...

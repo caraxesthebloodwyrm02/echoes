@@ -8,7 +8,6 @@ Test different approaches to improve retrieval.
 
 import sys
 from pathlib import Path
-import time
 
 sys.path.insert(0, str(Path(__file__).parent / "echoes"))
 
@@ -29,7 +28,7 @@ def test_retrieval_diagnostics(rag_system, query, expected_keywords):
     for i, result in enumerate(results.get("results", [])):
         content = result.get("content", "")[:200] + "..."
         score = result.get("score", 0)
-        print(f"  [{i+1}] Score: {score:.3f} | Content: {content}")
+        print(f"  [{i + 1}] Score: {score:.3f} | Content: {content}")
 
         # Check for expected keywords
         found_keywords = []
@@ -180,7 +179,7 @@ def main():
                 }
             ]
         )
-        print(f"  Added chunk {i+1}: {result}")
+        print(f"  Added chunk {i + 1}: {result}")
 
     print("\n" + "=" * 60)
 

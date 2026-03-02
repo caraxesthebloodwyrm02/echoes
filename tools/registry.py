@@ -6,11 +6,11 @@ This module provides backward compatibility by importing from core_modules.
 
 # Import from the tools package to avoid circular imports
 try:
-    from . import get_registry, ToolRegistry, register_tool, get_tool, execute_tool
+    from . import ToolRegistry, execute_tool, get_registry, get_tool, register_tool
 except ImportError:
     # Fallback implementation
     import threading
-    from typing import Any, Callable, Dict, List
+    from collections.abc import Callable
 
     class ToolRegistry:
         """Thread-safe tool registry with required methods."""
@@ -40,7 +40,7 @@ except ImportError:
             with self._lock:
                 return name in self._registry
 
-        def list_tools(self) -> List[str]:
+        def list_tools(self) -> list[str]:
             """List all registered tool names."""
             with self._lock:
                 return list(self._registry.keys())

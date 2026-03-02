@@ -1,9 +1,9 @@
-from matplotlib import _tri
-from matplotlib.tri._trifinder import TriFinder
+from typing import Any
 
 import numpy as np
+from matplotlib import _tri
+from matplotlib.tri._trifinder import TriFinder
 from numpy.typing import ArrayLike
-from typing import Any
 
 class Triangulation:
     x: np.ndarray
@@ -24,7 +24,9 @@ class Triangulation:
     def get_cpp_triangulation(self) -> _tri.Triangulation: ...
     def get_masked_triangles(self) -> np.ndarray: ...
     @staticmethod
-    def get_from_args_and_kwargs(*args, **kwargs) -> tuple[Triangulation, tuple[Any, ...], dict[str, Any]]: ...
+    def get_from_args_and_kwargs(
+        *args, **kwargs
+    ) -> tuple[Triangulation, tuple[Any, ...], dict[str, Any]]: ...
     def get_trifinder(self) -> TriFinder: ...
     @property
     def neighbors(self) -> np.ndarray: ...

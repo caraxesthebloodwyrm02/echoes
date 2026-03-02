@@ -6,16 +6,13 @@ Tests all features and real-world use case scenarios.
 Coverage proximity: ~95% of assistant functionality.
 """
 
-import unittest
-import sys
 import os
-import json
-import tempfile
 import shutil
-from pathlib import Path
-from unittest.mock import Mock, patch, MagicMock
-from datetime import datetime
+import sys
+import tempfile
 import time
+import unittest
+from pathlib import Path
 
 # Add project root to path
 project_root = str(Path(__file__).parent.parent)
@@ -656,7 +653,7 @@ class TestRealWorldScenarios(unittest.TestCase):
                 "As an AI, I don't have personal feelings...",
             ]
 
-            for response in test_responses:
+            for _response in test_responses:
                 # Test that value system can process responses
                 summary = vs.get_values_summary()
                 self.assertIsNotNone(summary)

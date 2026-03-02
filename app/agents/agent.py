@@ -1,5 +1,7 @@
 import logging
+
 import openai
+
 from app.agents.models import AgentConfig, ConversationHistory
 
 logger = logging.getLogger(__name__)

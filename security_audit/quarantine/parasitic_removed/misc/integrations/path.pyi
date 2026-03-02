@@ -1,11 +1,11 @@
-from .bezier import BezierSegment
-from .transforms import Affine2D, Transform, Bbox
 from collections.abc import Generator, Iterable, Sequence
+from typing import Any, overload
 
 import numpy as np
 from numpy.typing import ArrayLike
 
-from typing import Any, overload
+from .bezier import BezierSegment
+from .transforms import Affine2D, Bbox, Transform
 
 class Path:
     code_type: type[np.uint8]
@@ -61,8 +61,8 @@ class Path:
         simplify: bool | None = ...,
         curves: bool = ...,
         sketch: tuple[float, float, float] | None = ...,
-    ) -> Generator[tuple[np.ndarray, np.uint8], None, None]: ...
-    def iter_bezier(self, **kwargs) -> Generator[BezierSegment, None, None]: ...
+    ) -> Generator[tuple[np.ndarray, np.uint8]]: ...
+    def iter_bezier(self, **kwargs) -> Generator[BezierSegment]: ...
     def cleaned(
         self,
         transform: Transform | None = ...,
@@ -73,7 +73,7 @@ class Path:
         curves: bool = ...,
         stroke_width: float = ...,
         snap: bool | None = ...,
-        sketch: tuple[float, float, float] | None = ...
+        sketch: tuple[float, float, float] | None = ...,
     ) -> Path: ...
     def transformed(self, transform: Transform) -> Path: ...
     def contains_point(
@@ -117,7 +117,9 @@ class Path:
     @classmethod
     def unit_circle_righthalf(cls) -> Path: ...
     @classmethod
-    def arc(cls, theta1: float, theta2: float, n: int | None = ..., is_wedge: bool = ...) -> Path: ...
+    def arc(
+        cls, theta1: float, theta2: float, n: int | None = ..., is_wedge: bool = ...
+    ) -> Path: ...
     @classmethod
     def wedge(cls, theta1: float, theta2: float, n: int | None = ...) -> Path: ...
     @overload

@@ -10,14 +10,13 @@ A pure RAG implementation using only OpenAI API calls for:
 No external libraries, no middleware, just direct OpenAI API calls.
 """
 
-import os
-import json
 import hashlib
-import numpy as np
-from typing import List, Dict, Any, Optional, Tuple
-from openai import OpenAI
-import asyncio
+import os
 from datetime import datetime
+from typing import Any
+
+import numpy as np
+from openai import OpenAI
 
 
 class DirectRAGSystem:
@@ -31,7 +30,7 @@ class DirectRAGSystem:
     - Context-augmented response generation
     """
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         """Initialize with OpenAI API key."""
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         if not self.api_key:
@@ -40,9 +39,9 @@ class DirectRAGSystem:
         self.client = OpenAI(api_key=self.api_key)
 
         # In-memory storage
-        self.documents: List[str] = []
-        self.embeddings: List[List[float]] = []
-        self.metadata: List[Dict[str, Any]] = []
+        self.documents: list[str] = []
+        self.embeddings: list[list[float]] = []
+        self.metadata: list[dict[str, Any]] = []
 
         # Configuration
         self.embedding_model = "text-embedding-3-small"
@@ -53,7 +52,7 @@ class DirectRAGSystem:
 
         print("✅ Direct RAG System initialized with OpenAI API")
 
-    def add_document(self, text: str, metadata: Optional[Dict[str, Any]] = None) -> str:
+    def add_document(self, text: str, metadata: dict[str, Any] | None = None) -> str:
         """
         Add a document to the RAG system using direct OpenAI API calls.
 
@@ -82,8 +81,8 @@ class DirectRAGSystem:
         return doc_id
 
     def add_documents(
-        self, texts: List[str], metadatas: Optional[List[Dict[str, Any]]] = None
-    ) -> List[str]:
+        self, texts: list[str], metadatas: list[dict[str, Any]] | None = None
+    ) -> list[str]:
         """Add multiple documents."""
         doc_ids = []
         metadatas = metadatas or [{}] * len(texts)
@@ -94,7 +93,7 @@ class DirectRAGSystem:
 
         return doc_ids
 
-    def search(self, query: str, top_k: Optional[int] = None) -> List[Dict[str, Any]]:
+    def search(self, query: str, top_k: int | None = None) -> list[dict[str, Any]]:
         """
         Search for relevant documents using direct OpenAI API calls.
 
@@ -138,7 +137,7 @@ class DirectRAGSystem:
         return results
 
     def generate_response(
-        self, query: str, context_docs: Optional[List[Dict[str, Any]]] = None
+        self, query: str, context_docs: list[dict[str, Any]] | None = None
     ) -> str:
         """
         Generate response using retrieved context via direct OpenAI API calls.
@@ -190,7 +189,7 @@ Based on the context provided above, please provide a comprehensive and accurate
             print(f"Error generating response: {e}")
             return f"I apologize, but I encountered an error while processing your request: {str(e)}"
 
-    def _generate_embedding(self, text: str) -> List[float]:
+    def _generate_embedding(self, text: str) -> list[float]:
         """Generate embedding using OpenAI API directly."""
         # Truncate text if too long (OpenAI has token limits)
         truncated_text = text[:8000]  # Conservative limit
@@ -206,7 +205,7 @@ Based on the context provided above, please provide a comprehensive and accurate
             return [0.0] * 1536  # text-embedding-3-small dimension
 
     def _calculate_similarities(
-        self, query_embedding: List[float], doc_embeddings: List[List[float]]
+        self, query_embedding: list[float], doc_embeddings: list[list[float]]
     ) -> np.ndarray:
         """Calculate cosine similarities between query and documents."""
         query_vec = np.array(query_embedding)
@@ -223,7 +222,7 @@ Based on the context provided above, please provide a comprehensive and accurate
         similarities = dot_products / (doc_norms * query_norm)
         return similarities
 
-    def _format_context(self, context_docs: List[Dict[str, Any]]) -> str:
+    def _format_context(self, context_docs: list[dict[str, Any]]) -> str:
         """Format retrieved documents for context."""
         if not context_docs:
             return "No relevant context found."
@@ -238,7 +237,7 @@ Based on the context provided above, please provide a comprehensive and accurate
 
         return "\n".join(formatted_docs)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get system statistics."""
         return {
             "total_documents": len(self.documents),
@@ -255,7 +254,7 @@ Based on the context provided above, please provide a comprehensive and accurate
         print("🧹 All documents cleared from RAG system")
 
 
-async def create_direct_rag_system(api_key: Optional[str] = None) -> DirectRAGSystem:
+async def create_direct_rag_system(api_key: str | None = None) -> DirectRAGSystem:
     """
     Create a direct RAG system instance.
 

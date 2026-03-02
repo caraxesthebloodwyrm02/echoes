@@ -6,10 +6,10 @@ generation with retrieved context.
 """
 
 import logging
-from pathlib import Path
 
 # Add parent directory to path
 import sys
+from pathlib import Path
 
 sys.path.append(str(Path(__file__).parent.parent))
 

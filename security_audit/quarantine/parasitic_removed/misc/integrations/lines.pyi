@@ -1,24 +1,27 @@
-from .artist import Artist
-from .axes import Axes
-from .backend_bases import MouseEvent, FigureCanvasBase
-from .path import Path
-from .transforms import Bbox
-
 from collections.abc import Callable, Sequence
 from typing import Any, Literal, overload
+
+from numpy.typing import ArrayLike
+
+from .artist import Artist
+from .axes import Axes
+from .backend_bases import FigureCanvasBase, MouseEvent
+from .path import Path
+from .transforms import Bbox
 from .typing import (
+    CapStyleType,
     ColorType,
     DrawStyleType,
     FillStyleType,
-    LineStyleType,
-    CapStyleType,
     JoinStyleType,
-    MarkEveryType,
+    LineStyleType,
     MarkerType,
+    MarkEveryType,
 )
-from numpy.typing import ArrayLike
 
-def segment_hits(cx: ArrayLike, cy: ArrayLike, x: ArrayLike, y: ArrayLike, radius: ArrayLike) -> ArrayLike: ...
+def segment_hits(
+    cx: ArrayLike, cy: ArrayLike, x: ArrayLike, y: ArrayLike, radius: ArrayLike
+) -> ArrayLike: ...
 
 class Line2D(Artist):
     lineStyles: dict[str, str]
@@ -53,7 +56,7 @@ class Line2D(Artist):
         pickradius: float = ...,
         drawstyle: DrawStyleType | None = ...,
         markevery: MarkEveryType | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def contains(self, mouseevent: MouseEvent) -> tuple[bool, dict]: ...
     def get_pickradius(self) -> float: ...
@@ -64,7 +67,9 @@ class Line2D(Artist):
     def set_fillstyle(self, fs: FillStyleType) -> None: ...
     def set_markevery(self, every: MarkEveryType) -> None: ...
     def get_markevery(self) -> MarkEveryType: ...
-    def set_picker(self, p: None | bool | float | Callable[[Artist, MouseEvent], tuple[bool, dict]]) -> None: ...
+    def set_picker(
+        self, p: None | bool | float | Callable[[Artist, MouseEvent], tuple[bool, dict]]
+    ) -> None: ...
     def get_bbox(self) -> Bbox: ...
     @overload
     def set_data(self, args: ArrayLike) -> None: ...
@@ -117,7 +122,11 @@ class Line2D(Artist):
 
 class AxLine(Line2D):
     def __init__(
-        self, xy1: tuple[float, float], xy2: tuple[float, float] | None, slope: float | None, **kwargs
+        self,
+        xy1: tuple[float, float],
+        xy2: tuple[float, float] | None,
+        slope: float | None,
+        **kwargs,
     ) -> None: ...
     def get_xy1(self) -> tuple[float, float] | None: ...
     def get_xy2(self) -> tuple[float, float] | None: ...
@@ -134,7 +143,9 @@ class VertexSelector:
     def __init__(self, line: Line2D) -> None: ...
     @property
     def canvas(self) -> FigureCanvasBase: ...
-    def process_selected(self, ind: Sequence[int], xs: ArrayLike, ys: ArrayLike) -> None: ...
+    def process_selected(
+        self, ind: Sequence[int], xs: ArrayLike, ys: ArrayLike
+    ) -> None: ...
     def onpick(self, event: Any) -> None: ...
 
 lineStyles: dict[str, str]

@@ -6,14 +6,12 @@ Demonstrates contextual humor, stress reduction, and pressure-aware responses
 
 import os
 import sys
-import time
-from datetime import datetime
 
 # Load environment variables
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.humor_engine import humor_engine, PressureLevel, HumorType
+    from core_modules.humor_engine import HumorType, PressureLevel, humor_engine
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running from the Echoes project root")
@@ -285,7 +283,7 @@ def demo_pressure_management():
         summary = humor_engine.get_pressure_summary()
 
         print(
-            f"  Step {i+1}: {summary['current_level'].title()} pressure "
+            f"  Step {i + 1}: {summary['current_level'].title()} pressure "
             f"({summary['current_rpm']} RPM, {summary['current_errors']} errors)"
         )
 
@@ -296,7 +294,7 @@ def demo_pressure_management():
         print(f"           Humor probability: {'High' if would_use_humor else 'Low'}")
 
     # Show recommendations
-    print(f"\n💡 Current pressure recommendations:")
+    print("\n💡 Current pressure recommendations:")
     current_level = PressureLevel(humor_engine.get_pressure_summary()["current_level"])
 
     recommendations = {

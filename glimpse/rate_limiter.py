@@ -4,17 +4,14 @@ Implements token bucket algorithm with dynamic rate adjustment.
 """
 
 import asyncio
-import time
-import math
-from collections import deque
-from typing import Deque, Optional, Dict, Any, Tuple
 import logging
+import time
+from collections import deque
 from dataclasses import dataclass, field
+from typing import Any
 
 # Import metrics
 from .metrics import (
-    record_rate_limit_delay,
-    record_rate_limit_rejection,
     record_rate_limit_adjustment,
 )
 
@@ -29,7 +26,7 @@ class RateLimitStats:
     successful_requests: int = 0
     rate_limited_requests: int = 0
     errors: int = 0
-    request_timestamps: Deque[float] = field(default_factory=deque)
+    request_timestamps: deque[float] = field(default_factory=deque)
 
     def record_success(self):
         """Record a successful request."""
@@ -125,7 +122,7 @@ class AdaptiveRateLimiter:
         self.lock = asyncio.Lock()
 
         # Per-endpoint tracking
-        self.endpoint_stats: Dict[str, RateLimitStats] = {}
+        self.endpoint_stats: dict[str, RateLimitStats] = {}
 
         logger.info(
             f"Initialized AdaptiveRateLimiter with {initial_rpm} RPM and {initial_tpm} TPM "
@@ -208,7 +205,7 @@ class AdaptiveRateLimiter:
         token_count: int = 0,
         endpoint: str = "default",
         max_wait: float = 10.0,
-    ) -> Tuple[bool, float]:
+    ) -> tuple[bool, float]:
         """
         Acquire tokens from the rate limiter.
 
@@ -308,11 +305,9 @@ class AdaptiveRateLimiter:
             self.stats.record_error()
             self._get_endpoint_stats(endpoint).record_error()
 
-    def get_status(self) -> Dict[str, Any]:
+    def get_status(self) -> dict[str, Any]:
         """Get current rate limiter status."""
         now = time.monotonic()
-        elapsed_since_update = now - self.last_update
-
         return {
             "current_rpm": self.current_rpm,
             "current_tpm": self.current_tpm,
@@ -347,7 +342,7 @@ class AdaptiveRateLimiter:
 
 
 # Global rate limiter instance
-_default_rate_limiter: Optional[AdaptiveRateLimiter] = None
+_default_rate_limiter: AdaptiveRateLimiter | None = None
 
 
 def get_default_rate_limiter() -> AdaptiveRateLimiter:

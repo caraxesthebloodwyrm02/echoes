@@ -1,11 +1,10 @@
+from collections.abc import Hashable
 from typing import (
     Any,
-    Hashable,
     Literal,
 )
 
 import numpy as np
-
 from pandas._typing import npt
 
 def unique_label_indices(

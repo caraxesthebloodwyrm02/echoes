@@ -1,19 +1,15 @@
 # TODO(npdtypes): Many types specified here can be made more specific/accurate;
 #  the more specific versions are specified in comments
+from collections.abc import Callable, Generator, Hashable
 from decimal import Decimal
 from typing import (
     Any,
-    Callable,
     Final,
-    Generator,
-    Hashable,
     Literal,
-    TypeAlias,
     overload,
 )
 
 import numpy as np
-
 from pandas._libs.interval import Interval
 from pandas._libs.tslibs import Period
 from pandas._typing import (
@@ -32,7 +28,7 @@ class _NoDefault(Enum):
     no_default = ...
 
 no_default: Final = _NoDefault.no_default
-NoDefault: TypeAlias = Literal[_NoDefault.no_default]
+type NoDefault = Literal[_NoDefault.no_default]
 
 i8max: int
 u8max: int
@@ -54,7 +50,9 @@ def is_int_or_none(obj) -> bool: ...
 def is_float(obj: object) -> TypeGuard[float]: ...
 def is_interval_array(values: np.ndarray) -> bool: ...
 def is_datetime64_array(values: np.ndarray, skipna: bool = True) -> bool: ...
-def is_timedelta_or_timedelta64_array(values: np.ndarray, skipna: bool = True) -> bool: ...
+def is_timedelta_or_timedelta64_array(
+    values: np.ndarray, skipna: bool = True
+) -> bool: ...
 def is_datetime_with_singletz_array(values: np.ndarray) -> bool: ...
 def is_time_array(values: np.ndarray, skipna: bool = ...): ...
 def is_date_array(values: np.ndarray, skipna: bool = ...): ...
@@ -180,7 +178,8 @@ def indices_fast(
     sorted_labels: list[npt.NDArray[np.int64]],
 ) -> dict[Hashable, npt.NDArray[np.intp]]: ...
 def generate_slices(
-    labels: np.ndarray, ngroups: int  # const intp_t[:]
+    labels: np.ndarray,
+    ngroups: int,  # const intp_t[:]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64]]: ...
 def count_level_2d(
     mask: np.ndarray,  # ndarray[uint8_t, ndim=2, cast=True],
@@ -209,4 +208,6 @@ def get_reverse_indexer(
 ) -> npt.NDArray[np.intp]: ...
 def is_bool_list(obj: list) -> bool: ...
 def dtypes_all_equal(types: list[DtypeObj]) -> bool: ...
-def is_range_indexer(left: np.ndarray, n: int) -> bool: ...  # np.ndarray[np.int64, ndim=1]
+def is_range_indexer(
+    left: np.ndarray, n: int
+) -> bool: ...  # np.ndarray[np.int64, ndim=1]

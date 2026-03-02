@@ -1,7 +1,6 @@
 from collections.abc import Callable, Sequence
 from typing import (
     Any,
-    TypeAlias,
     TypeVar,
     overload,
 )
@@ -65,25 +64,25 @@ _InexactT = TypeVar("_InexactT", bound=np.inexact)
 _NumberCoT = TypeVar("_NumberCoT", bound=_Number_co)
 
 # The returned arrays dtype must be compatible with `np.equal`
-_MaskFunc: TypeAlias = Callable[
+type _MaskFunc[_T] = Callable[
     [NDArray[int_], _T], NDArray[_Number_co | timedelta64 | datetime64 | object_]
 ]
 
-_Int_co: TypeAlias = np.integer | np.bool
-_Float_co: TypeAlias = np.floating | _Int_co
-_Number_co: TypeAlias = np.number | np.bool
+type _Int_co = np.integer | np.bool
+type _Float_co = np.floating | _Int_co
+type _Number_co = np.number | np.bool
 
-_ArrayLike1D: TypeAlias = _SupportsArray[np.dtype[_ScalarT]] | Sequence[_ScalarT]
-_ArrayLike1DInt_co: TypeAlias = (
-    _SupportsArray[np.dtype[_Int_co]] | Sequence[int | _Int_co]
+type _ArrayLike1D[_ScalarT: generic] = (
+    _SupportsArray[np.dtype[_ScalarT]] | Sequence[_ScalarT]
 )
-_ArrayLike1DFloat_co: TypeAlias = (
+type _ArrayLike1DInt_co = _SupportsArray[np.dtype[_Int_co]] | Sequence[int | _Int_co]
+type _ArrayLike1DFloat_co = (
     _SupportsArray[np.dtype[_Float_co]] | Sequence[float | _Float_co]
 )
-_ArrayLike2DFloat_co: TypeAlias = (
+type _ArrayLike2DFloat_co = (
     _SupportsArray[np.dtype[_Float_co]] | Sequence[_ArrayLike1DFloat_co]
 )
-_ArrayLike1DNumber_co: TypeAlias = (
+type _ArrayLike1DNumber_co = (
     _SupportsArray[np.dtype[_Number_co]] | Sequence[complex | _Number_co]
 )
 

@@ -5,7 +5,6 @@ Filesystem Function Calling Demo for EchoesAssistantV2
 Demonstrates the enhanced filesystem interaction capabilities using OpenAI's function calling.
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -89,7 +88,7 @@ def demo_filesystem_operations():
                 continue
 
             print("\n🤖 Assistant: ", end="", flush=True)
-            response = assistant.chat(user_input, stream=True)
+            _response = assistant.chat(user_input, stream=True)
 
             # The stream=True option prints the response directly
             # If you want to capture it, use stream=False

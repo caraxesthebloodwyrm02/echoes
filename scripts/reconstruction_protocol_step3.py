@@ -11,8 +11,7 @@ import json
 import os
 import shutil
 import sys
-from pathlib import Path
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def calculate_file_checksum(filepath, algorithm="sha256"):
@@ -31,7 +30,7 @@ def extract_authentic_data(output_file="data_extraction_step3.json"):
     """Step 3: Extract data from authenticated sources."""
 
     extraction_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 3: Data Extraction",
         "extraction_sources": {},
@@ -152,7 +151,7 @@ def extract_authentic_data(output_file="data_extraction_step3.json"):
         (successful_extractions / total_components) * 100 if total_components > 0 else 0
     )
 
-    print(f"\\n📊 Data Extraction Summary:")
+    print("\\n📊 Data Extraction Summary:")
     print(f"   Components processed: {total_components}")
     print(f"   Successful extractions: {successful_extractions}")
     print(f"   Success rate: {extraction_success_rate:.1f}%")

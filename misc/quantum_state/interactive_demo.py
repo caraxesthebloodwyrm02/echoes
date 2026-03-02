@@ -13,8 +13,8 @@ Following the user's workflow:
 7. Run main loop to observe dynamic changes
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -22,8 +22,6 @@ from datetime import datetime
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 # Step 1: Import QuantumState and QuantumStateManager
-from quantum_state.quantum_state import QuantumState
-from quantum_state.quantum_state_machine import QuantumStateMachine
 from quantum_state.quantum_state_manager import QuantumStateManager
 
 

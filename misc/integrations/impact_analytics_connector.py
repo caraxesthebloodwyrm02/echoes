@@ -5,11 +5,11 @@ Connects Echoes platform with the IMPACT_ANALYTICS system on D: drive for
 automated impact tracking and AI safety metrics.
 """
 
-import sys
-from pathlib import Path
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass
 import logging
+import sys
+from dataclasses import dataclass
+from pathlib import Path
+from typing import Any
 
 # Add IMPACT_ANALYTICS to Python path
 IMPACT_ANALYTICS_PATH = Path("D:/IMPACT_ANALYTICS")
@@ -23,11 +23,11 @@ logger = logging.getLogger(__name__)
 class ImpactMetrics:
     """Container for impact metrics data."""
 
-    safety_score: Optional[float] = None
-    bias_reduction_index: Optional[float] = None
-    total_evaluations: Optional[int] = None
-    recent_milestones: Optional[List[Dict[str, Any]]] = None
-    error: Optional[str] = None
+    safety_score: float | None = None
+    bias_reduction_index: float | None = None
+    total_evaluations: int | None = None
+    recent_milestones: list[dict[str, Any]] | None = None
+    error: str | None = None
 
 
 class ImpactAnalyticsConnector:
@@ -62,8 +62,8 @@ class ImpactAnalyticsConnector:
         prompt: str,
         response: str,
         safety_score: float,
-        bias_analysis: Dict[str, Any],
-        metadata: Optional[Dict[str, Any]] = None,
+        bias_analysis: dict[str, Any],
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """Record an AI safety evaluation.
 
@@ -102,7 +102,7 @@ class ImpactAnalyticsConnector:
         milestone_name: str,
         completion_percentage: float,
         category: str = "research",
-        metadata: Optional[Dict[str, Any]] = None,
+        metadata: dict[str, Any] | None = None,
     ) -> bool:
         """Record a research milestone achievement.
 
@@ -161,7 +161,7 @@ class ImpactAnalyticsConnector:
             logger.error(f"Error getting metrics: {e}")
             return ImpactMetrics(error=str(e))
 
-    def generate_report(self) -> Optional[str]:
+    def generate_report(self) -> str | None:
         """Generate a workflow status report.
 
         Returns:
@@ -183,10 +183,10 @@ class ImpactAnalyticsConnector:
 
     def get_metric_history(
         self,
-        metric_name: Optional[str] = None,
-        category: Optional[str] = None,
+        metric_name: str | None = None,
+        category: str | None = None,
         limit: int = 100,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get historical metric data.
 
         Args:
@@ -222,8 +222,8 @@ def record_ai_evaluation(
     prompt: str,
     response: str,
     safety_score: float,
-    bias_analysis: Dict[str, Any],
-    metadata: Optional[Dict[str, Any]] = None,
+    bias_analysis: dict[str, Any],
+    metadata: dict[str, Any] | None = None,
 ) -> bool:
     """Convenience function to record AI evaluation in IMPACT_ANALYTICS."""
     return impact_connector.record_evaluation(
@@ -235,7 +235,7 @@ def record_research_progress(
     milestone_name: str,
     completion_percentage: float,
     category: str = "research",
-    metadata: Optional[Dict[str, Any]] = None,
+    metadata: dict[str, Any] | None = None,
 ) -> bool:
     """Convenience function to record research milestone in IMPACT_ANALYTICS."""
     return impact_connector.record_milestone(
@@ -248,6 +248,6 @@ def get_impact_status() -> ImpactMetrics:
     return impact_connector.get_metrics()
 
 
-def generate_impact_report() -> Optional[str]:
+def generate_impact_report() -> str | None:
     """Convenience function to generate IMPACT_ANALYTICS workflow report."""
     return impact_connector.generate_report()

@@ -6,8 +6,8 @@ Provides complete answers for all 4 queries using the working RAG system.
 """
 
 import sys
-from pathlib import Path
 import time
+from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent / "echoes"))
 
@@ -140,7 +140,7 @@ def create_complete_knowledge_base():
 def get_complete_answer(rag_system, query, query_num):
     """Get complete answer using RAG system."""
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print(f"FINAL ANSWER FOR QUERY {query_num}")
     print("=" * 60)
     print(f"Q: {query}")
@@ -199,7 +199,7 @@ def main():
                 }
             ]
         )
-        print(f"  Loaded chunk {i+1}")
+        print(f"  Loaded chunk {i + 1}")
 
     print("\n" + "=" * 60)
 
@@ -217,14 +217,14 @@ def main():
         answer = get_complete_answer(rag_system, query, i)
         answers.append({"query_number": i, "query": query, "answer": answer})
 
-    print(f"\n{'='*60}")
+    print(f"\n{'=' * 60}")
     print("🎉 ALL QUERIES COMPLETED")
     print("=" * 60)
 
     # Create final documentation
     doc_content = f"""# ✅ COMPLETE RAG Query Answers - All Issues Resolved
 
-**Generated:** {time.strftime('%Y-%m-%d %H:%M:%S')}
+**Generated:** {time.strftime("%Y-%m-%d %H:%M:%S")}
 **System:** Echoes RAG V2 with Enhanced Knowledge Base
 **Status:** ✅ ALL QUERIES ANSWERED SUCCESSFULLY
 
@@ -242,10 +242,10 @@ All 4 queries have been successfully processed and answered using the enhanced R
 """
 
     for item in answers:
-        doc_content += f"""### Query {item['query_number']}: {item['query']}
+        doc_content += f"""### Query {item["query_number"]}: {item["query"]}
 
 **Answer:**
-{item['answer']}
+{item["answer"]}
 
 ---
 

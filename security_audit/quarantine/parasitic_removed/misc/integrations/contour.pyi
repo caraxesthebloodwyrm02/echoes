@@ -1,19 +1,20 @@
+from collections.abc import Callable, Iterable, Sequence
+from typing import Literal
+
+import numpy as np
 from matplotlib import cm
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
 from matplotlib.collections import Collection
 from matplotlib.colorizer import Colorizer, ColorizingArtist
 from matplotlib.colors import Colormap, Normalize
-from matplotlib.path import Path
 from matplotlib.patches import Patch
+from matplotlib.path import Path
 from matplotlib.text import Text
+from matplotlib.ticker import Formatter, Locator
 from matplotlib.transforms import Transform, TransformedPatchPath, TransformedPath
-from matplotlib.ticker import Locator, Formatter
-
 from numpy.typing import ArrayLike
-import numpy as np
-from collections.abc import Callable, Iterable, Sequence
-from typing import Literal
+
 from .typing import ColorType
 
 class ContourLabeler:
@@ -37,7 +38,7 @@ class ContourLabeler:
         use_clabeltext: bool = ...,
         manual: bool | Iterable[tuple[float, float]] = ...,
         rightside_up: bool = ...,
-        zorder: float | None = ...
+        zorder: float | None = ...,
     ) -> list[Text]: ...
     def print_label(self, linecontour: ArrayLike, labelwidth: float) -> bool: ...
     def too_close(self, x: float, y: float, lw: float) -> bool: ...
@@ -46,8 +47,12 @@ class ContourLabeler:
         lev: float,
         fmt: str | Formatter | Callable[[float], str] | dict[float, str],
     ) -> str: ...
-    def locate_label(self, linecontour: ArrayLike, labelwidth: float) -> tuple[float, float, float]: ...
-    def add_label(self, x: float, y: float, rotation: float, lev: float, cvalue: ColorType) -> None: ...
+    def locate_label(
+        self, linecontour: ArrayLike, labelwidth: float
+    ) -> tuple[float, float, float]: ...
+    def add_label(
+        self, x: float, y: float, rotation: float, lev: float, cvalue: ColorType
+    ) -> None: ...
     def add_label_near(
         self,
         x: float,
@@ -129,7 +134,7 @@ class ContourSet(ContourLabeler, Collection):
             | None
         ) = ...,
         clip_path: Patch | Path | TransformedPath | TransformedPatchPath | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def legend_elements(
         self, variable_name: str = ..., str_format: Callable[[float], str] = ...

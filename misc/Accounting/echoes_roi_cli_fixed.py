@@ -1,19 +1,18 @@
 #!/usr/bin/env python3
 # echoes_roi_cli_fixed.py - Fix for YAML currency validation
 
-import json
-import sys
 import csv
-import math
-import os
-from dataclasses import dataclass, asdict
-from typing import Optional, Dict, Any, List
 import datetime
+import json
+import math
+import sys
+from dataclasses import asdict, dataclass
+from typing import Any
 
 
 # Currency formatter (USD by default)
 class Money:
-    def __init__(self, currency: str = "USD", locale: Optional[str] = "en_US"):
+    def __init__(self, currency: str = "USD", locale: str | None = "en_US"):
         self.currency = currency.upper() if currency else "USD"
         self.locale = locale
 
@@ -69,10 +68,10 @@ def _coerce(val: str):
         return s.strip()  # Always strip strings
 
 
-def _minimal_yaml_load(text: str) -> Dict[str, Any]:
-    data: Dict[str, Any] = {}
-    stack: List[Dict[str, Any]] = [data]
-    indent_stack: List[int] = [0]
+def _minimal_yaml_load(text: str) -> dict[str, Any]:
+    data: dict[str, Any] = {}
+    stack: list[dict[str, Any]] = [data]
+    indent_stack: list[int] = [0]
 
     for line in text.splitlines():
         stripped = line.rstrip()
@@ -109,7 +108,7 @@ def _minimal_yaml_load(text: str) -> Dict[str, Any]:
     return data
 
 
-def compute_roi(config: Config) -> Dict[str, Any]:
+def compute_roi(config: Config) -> dict[str, Any]:
     hours_per_month = 4.33
     monthly_labor = (
         config.weekly_hours_saved * hours_per_month
@@ -156,10 +155,10 @@ def compute_roi(config: Config) -> Dict[str, Any]:
     return res
 
 
-def print_report(res: Dict[str, Any], money: Money) -> None:
+def print_report(res: dict[str, Any], money: Money) -> None:
     i = res["inputs"]
     m = res["metrics"]
-    hdr = f"=== ECHOES AI - ROI ANALYSIS ==="
+    hdr = "=== ECHOES AI - ROI ANALYSIS ==="
     subtitle = f"For: {i['compliance_team_size']}-Person Compliance Team @ {i['institution_name']}"
     print(hdr)
     print(subtitle)
@@ -180,13 +179,13 @@ def print_report(res: Dict[str, Any], money: Money) -> None:
     print("=" * 50)
 
 
-def export_json(res: Dict[str, Any], path: str) -> None:
+def export_json(res: dict[str, Any], path: str) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(res, f, indent=2)
     print(f"✓ Wrote JSON: {path}")
 
 
-def export_csv(res: Dict[str, Any], path: str) -> None:
+def export_csv(res: dict[str, Any], path: str) -> None:
     with open(path, "w", newline="", encoding="utf-8") as f:
         writer = csv.writer(f)
         writer.writerow(["Metric", "Value"])
@@ -205,11 +204,11 @@ def export_csv(res: Dict[str, Any], path: str) -> None:
     print(f"✓ Wrote CSV: {path}")
 
 
-def read_yaml_config(path: str) -> Dict[str, Any]:
+def read_yaml_config(path: str) -> dict[str, Any]:
     if path == "-" or path.lower() == "stdin":
         text = sys.stdin.read()
     else:
-        with open(path, "r", encoding="utf-8") as f:
+        with open(path, encoding="utf-8") as f:
             text = f.read()
     return _minimal_yaml_load(text)
 
@@ -220,7 +219,7 @@ def build_config_from_yaml(yaml_path: str) -> Config:
         data = read_yaml_config(yaml_path)
         if not isinstance(data, dict):
             print(
-                f"WARNING: YAML file didn't contain a dictionary at top level",
+                "WARNING: YAML file didn't contain a dictionary at top level",
                 file=sys.stderr,
             )
             return cfg
@@ -268,8 +267,8 @@ def build_config_from_yaml(yaml_path: str) -> Config:
     return cfg
 
 
-def validate_config(cfg: Config) -> List[str]:
-    issues: List[str] = []
+def validate_config(cfg: Config) -> list[str]:
+    issues: list[str] = []
 
     # More flexible validation
     if cfg.compliance_team_size < 0:
@@ -311,7 +310,7 @@ def validate_config(cfg: Config) -> List[str]:
     return issues
 
 
-def main(argv: Optional[List[str]] = None) -> int:
+def main(argv: list[str] | None = None) -> int:
     import argparse
 
     parser = argparse.ArgumentParser(
@@ -391,7 +390,7 @@ def main(argv: Optional[List[str]] = None) -> int:
             print(f"❌ Validation error: {issue}", file=sys.stderr)
         return 2
 
-    print(f"✅ Configuration validated successfully")
+    print("✅ Configuration validated successfully")
     res = compute_roi(cfg)
     money = Money(currency=cfg.currency)
     print()

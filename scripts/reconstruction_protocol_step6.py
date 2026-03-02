@@ -6,18 +6,16 @@ Run comprehensive tests to verify functionality and accuracy of each component
 against baseline metrics from authenticated sources.
 """
 
-import sys
-import asyncio
 import json
-import os
-from datetime import datetime, timezone
+import sys
+from datetime import UTC, datetime
 
 
 def run_verification_and_validation(output_file="verification_validation_step6.json"):
     """Step 6: Comprehensive verification and validation."""
 
     validation_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 6: Verification and Validation",
         "test_results": {},
@@ -93,7 +91,7 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
     total_tests += len(syntax_tests)
     passed_tests += sum(1 for t in syntax_tests.values() if t.get("passed", False))
     print(
-        f'   Syntax tests: {sum(1 for t in syntax_tests.values() if t.get("passed", False))}/{len(syntax_tests)} passed'
+        f"   Syntax tests: {sum(1 for t in syntax_tests.values() if t.get('passed', False))}/{len(syntax_tests)} passed"
     )
 
     # Test 2: Import validation
@@ -103,7 +101,7 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
     total_tests += len(import_tests)
     passed_tests += sum(1 for t in import_tests.values() if t.get("passed", False))
     print(
-        f'   Import tests: {sum(1 for t in import_tests.values() if t.get("passed", False))}/{len(import_tests)} passed'
+        f"   Import tests: {sum(1 for t in import_tests.values() if t.get('passed', False))}/{len(import_tests)} passed"
     )
 
     # Test 3: Functionality validation
@@ -115,7 +113,7 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
         1 for t in functionality_tests.values() if t.get("passed", False)
     )
     print(
-        f'   Functionality tests: {sum(1 for t in functionality_tests.values() if t.get("passed", False))}/{len(functionality_tests)} passed'
+        f"   Functionality tests: {sum(1 for t in functionality_tests.values() if t.get('passed', False))}/{len(functionality_tests)} passed"
     )
 
     # Test 4: Integration validation
@@ -125,7 +123,7 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
     total_tests += len(integration_tests)
     passed_tests += sum(1 for t in integration_tests.values() if t.get("passed", False))
     print(
-        f'   Integration tests: {sum(1 for t in integration_tests.values() if t.get("passed", False))}/{len(integration_tests)} passed'
+        f"   Integration tests: {sum(1 for t in integration_tests.values() if t.get('passed', False))}/{len(integration_tests)} passed"
     )
 
     # Test 5: Performance benchmarks
@@ -157,13 +155,13 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
 
     print(f"\\n📄 Validation report saved to: {output_file}")
 
-    print(f"\\n📊 Verification and Validation Summary:")
+    print("\\n📊 Verification and Validation Summary:")
     print(f"   Total tests run: {total_tests}")
     print(f"   Tests passed: {passed_tests}")
     print(f"   Tests failed: {total_tests - passed_tests}")
     print(f"   Success rate: {validation_success_rate:.1f}%")
     print(
-        f'   Overall status: {validation_data["validation_outcomes"]["overall_validation_status"]}'
+        f"   Overall status: {validation_data['validation_outcomes']['overall_validation_status']}"
     )
 
     if validation_success_rate >= 85 and len(validation_data["anomalies"]) == 0:
@@ -173,7 +171,7 @@ def run_verification_and_validation(output_file="verification_validation_step6.j
         return True
     else:
         print(
-            f'⚠️  STEP 6 ISSUES: Validation rate at {validation_success_rate:.1f}%, {len(validation_data["anomalies"])} anomalies'
+            f"⚠️  STEP 6 ISSUES: Validation rate at {validation_success_rate:.1f}%, {len(validation_data['anomalies'])} anomalies"
         )
         return False
 
@@ -186,7 +184,7 @@ def validate_syntax_all_components(baseline_metrics):
         full_path = f"e:/Projects/Echoes/{component_path}"
 
         try:
-            with open(full_path, "r", encoding="utf-8") as f:
+            with open(full_path, encoding="utf-8") as f:
                 content = f.read()
             compile(content, full_path, "exec")
             results[component_path] = {"passed": True, "details": "Syntax is valid"}
@@ -210,7 +208,7 @@ def validate_imports_all_components(baseline_metrics):
             full_path = f"e:/Projects/Echoes/{component_path}"
 
             try:
-                with open(full_path, "r", encoding="utf-8") as f:
+                with open(full_path, encoding="utf-8") as f:
                     content = f.read()
 
                 expected_imports = metrics["expected_imports"]
@@ -284,7 +282,6 @@ def validate_integration_all_components():
     # Test API can import its dependencies
     try:
         sys.path.insert(0, "e:/Projects/Echoes")
-        from api import pattern_detection, self_rag
 
         results["api_integration"] = {
             "passed": True,
@@ -298,8 +295,6 @@ def validate_integration_all_components():
 
     # Test app can import its components
     try:
-        from app.agents import agent, models
-
         results["app_integration"] = {
             "passed": True,
             "details": "App components import successfully",
@@ -312,8 +307,6 @@ def validate_integration_all_components():
 
     # Test glimpse can import its components
     try:
-        from glimpse import sampler_openai, batch_helpers
-
         results["glimpse_integration"] = {
             "passed": True,
             "details": "Glimpse components import successfully",

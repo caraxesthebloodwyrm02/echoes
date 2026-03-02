@@ -2,7 +2,6 @@
 """
 Final verification of Responses API migration completion
 """
-import os
 
 from assistant_v2_core import EchoesAssistantV2
 

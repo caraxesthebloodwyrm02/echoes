@@ -9,14 +9,13 @@ License: Consent-Based License v2.0
 """
 
 import asyncio
-import json
 import datetime
-import tempfile
+import json
 import os
-import math
 import random
+import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+
 import pandas as pd
 
 from assistant_v2_core import EchoesAssistantV2
@@ -1162,7 +1161,7 @@ class ScientificResearchSuite:
 
             # Display key scientific metrics
             metrics = scientific_report["innovation_metrics"]
-            print(f"\n🌟 Scientific Impact Summary:")
+            print("\n🌟 Scientific Impact Summary:")
             print(f"   🔬 Total Research Domains: {metrics['total_researchers']}")
             print(
                 f"   ⚡ Total Cognitive Joules: {metrics['total_cognitive_joules']:.2f}"
@@ -1170,13 +1169,13 @@ class ScientificResearchSuite:
             print(f"   💰 Total Innovation Value: ${metrics['total_innovation_value']}")
             print(f"   🚀 Breakthrough Potential: {metrics['breakthrough_potential']}")
 
-            print(f"\n🎯 Scientific Advancement Achieved:")
+            print("\n🎯 Scientific Advancement Achieved:")
             for domain, achievement in scientific_report[
                 "scientific_advancement"
             ].items():
                 print(f"   • {domain.replace('_', ' ').title()}: {achievement}")
 
-            print(f"\n🔬 Research Excellence Validated:")
+            print("\n🔬 Research Excellence Validated:")
             for excellence, validation in scientific_report[
                 "research_excellence"
             ].items():
@@ -1228,23 +1227,23 @@ class ScientificResearchSuite:
             elif filename.endswith(".md"):
                 with open(temp_file, "w") as f:
                     f.write(f"# {research_type.replace('_', ' ').title()} Research\n\n")
-                    f.write(f"## Abstract\n\n")
+                    f.write("## Abstract\n\n")
                     f.write(
                         f"This document presents advanced research in {research_type}.\n\n"
                     )
-                    f.write(f"## Methodology\n\n")
-                    f.write(f"- Advanced theoretical frameworks\n")
-                    f.write(f"- Innovative experimental designs\n")
-                    f.write(f"- Rigorous data analysis protocols\n")
-                    f.write(f"- Cross-disciplinary integration approaches\n\n")
-                    f.write(f"## Key Findings\n\n")
+                    f.write("## Methodology\n\n")
+                    f.write("- Advanced theoretical frameworks\n")
+                    f.write("- Innovative experimental designs\n")
+                    f.write("- Rigorous data analysis protocols\n")
+                    f.write("- Cross-disciplinary integration approaches\n\n")
+                    f.write("## Key Findings\n\n")
                     f.write(f"1. Breakthrough discovery in {research_type}\n")
-                    f.write(f"2. Novel applications identified\n")
-                    f.write(f"3. Paradigm-shifting implications confirmed\n")
-                    f.write(f"4. Future research directions established\n\n")
-                    f.write(f"## Innovation Impact\n\n")
+                    f.write("2. Novel applications identified\n")
+                    f.write("3. Paradigm-shifting implications confirmed\n")
+                    f.write("4. Future research directions established\n\n")
+                    f.write("## Innovation Impact\n\n")
                     f.write(
-                        f"Transformative potential for scientific advancement and practical applications.\n"
+                        "Transformative potential for scientific advancement and practical applications.\n"
                     )
             else:
                 with open(temp_file, "w") as f:
@@ -1252,10 +1251,10 @@ class ScientificResearchSuite:
                         f"{research_type.replace('_', ' ').title()} Research Data\n"
                     )
                     f.write(f"Advanced research content for {research_type}\n")
-                    f.write(f"Breakthrough discoveries and innovations\n")
-                    f.write(f"Scientific rigor and methodology excellence\n")
-                    f.write(f"Cross-disciplinary applications and implications\n")
-                    f.write(f"Future research directions and collaborations\n")
+                    f.write("Breakthrough discoveries and innovations\n")
+                    f.write("Scientific rigor and methodology excellence\n")
+                    f.write("Cross-disciplinary applications and implications\n")
+                    f.write("Future research directions and collaborations\n")
 
             return temp_file
 

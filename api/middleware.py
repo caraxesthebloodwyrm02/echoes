@@ -4,16 +4,14 @@ Middleware for Echoes API
 Provides authentication, rate limiting, and request processing middleware.
 """
 
-import time
+import asyncio
 import logging
-from typing import Optional, Dict, Any
-from fastapi import Request, HTTPException, status
+import time
+from collections import defaultdict
+
+from fastapi import Request, status
 from fastapi.responses import JSONResponse
 from starlette.middleware.base import BaseHTTPMiddleware
-from collections import defaultdict
-import asyncio
-
-from api.config import get_config
 
 logger = logging.getLogger(__name__)
 
@@ -24,7 +22,7 @@ class RateLimiter:
     def __init__(self, requests_per_window: int = 60, window_seconds: int = 60):
         self.requests_per_window = requests_per_window
         self.window_seconds = window_seconds
-        self.requests: Dict[str, list] = defaultdict(list)
+        self.requests: dict[str, list] = defaultdict(list)
 
     def is_allowed(self, client_id: str) -> bool:
         """Check if request is allowed for the client"""
@@ -98,7 +96,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         # Extract API key
         api_key = self._extract_api_key(request)
         if not api_key:
-            logger.warning(f"Auth failure: missing API key from {request.client.host if request.client else 'unknown'}")
+            logger.warning(
+                f"Auth failure: missing API key from {request.client.host if request.client else 'unknown'}"
+            )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "API key required"},
@@ -106,7 +106,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         # Validate API key
         if api_key not in self.config.security.allowed_api_keys:
-            logger.warning(f"Auth failure: invalid API key from {request.client.host if request.client else 'unknown'}")
+            logger.warning(
+                f"Auth failure: invalid API key from {request.client.host if request.client else 'unknown'}"
+            )
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "Invalid API key"},
@@ -115,7 +117,9 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         # Apply rate limiting
         client_id = api_key
         if not self.rate_limiter.is_allowed(client_id):
-            logger.warning(f"Rate limit exceeded for {request.client.host if request.client else 'unknown'}")
+            logger.warning(
+                f"Rate limit exceeded for {request.client.host if request.client else 'unknown'}"
+            )
             return self._rate_limit_response(client_id)
 
         # Add client info to request state
@@ -126,7 +130,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         response = await call_next(request)
         return response
 
-    def _extract_api_key(self, request: Request) -> Optional[str]:
+    def _extract_api_key(self, request: Request) -> str | None:
         """Extract API key from request"""
         # Try Authorization header
         auth_header = request.headers.get("Authorization")
@@ -228,7 +232,7 @@ class TimeoutMiddleware(BaseHTTPMiddleware):
             return await asyncio.wait_for(
                 call_next(request), timeout=self.timeout_seconds
             )
-        except asyncio.TimeoutError:
+        except TimeoutError:
             logger.warning(
                 f"Request timeout after {self.timeout_seconds}s: {request.method} {request.url.path}"
             )

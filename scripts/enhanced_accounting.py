@@ -7,25 +7,22 @@ Author: Prince (Echoes AI Platform)
 License: Consent-Based License v2.0
 """
 
-import os
-import json
-import hashlib
 import datetime
-import pandas as pd
-import numpy as np
-from typing import Dict, List, Any, Optional, Union, Tuple
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
+import hashlib
+import json
+from dataclasses import asdict, dataclass, field
 from decimal import Decimal
 from enum import Enum
+from pathlib import Path
+from typing import Any
+
+import pandas as pd
 
 from legal_safeguards import (
-    CognitiveEffortAccounting,
-    get_cognitive_accounting,
     CognitiveEffortMetrics,
-    ConsentRecord,
     ConsentType,
     ProtectionLevel,
+    get_cognitive_accounting,
 )
 
 
@@ -63,9 +60,9 @@ class TransactionRecord:
     platform_cut: Decimal
     net_value: Decimal
     cognitive_joules: float
-    effort_metrics: Dict[str, Any]
-    consent_compliance: Dict[str, Any]
-    blockchain_hash: Optional[str] = None
+    effort_metrics: dict[str, Any]
+    consent_compliance: dict[str, Any]
+    blockchain_hash: str | None = None
 
     def calculate_blockchain_hash(self) -> str:
         """Calculate blockchain-style hash for immutability"""
@@ -84,9 +81,9 @@ class UserAccount:
     total_net_value: Decimal = Decimal("0.00")
     total_tax_paid: Decimal = Decimal("0.00")
     total_platform_fees: Decimal = Decimal("0.00")
-    consent_records: List[str] = field(default_factory=list)
-    transactions: List[str] = field(default_factory=list)
-    value_breakdown: Dict[str, Decimal] = field(default_factory=dict)
+    consent_records: list[str] = field(default_factory=list)
+    transactions: list[str] = field(default_factory=list)
+    value_breakdown: dict[str, Decimal] = field(default_factory=dict)
 
     def update_totals(self):
         """Update total values from transactions"""
@@ -109,7 +106,7 @@ class FinancialStatement:
     total_platform_revenue: Decimal
     average_joules_per_user: float
     average_value_per_user: Decimal
-    value_distribution: Dict[str, Decimal]
+    value_distribution: dict[str, Decimal]
 
 
 class CognitiveAccountingSystem:
@@ -135,13 +132,13 @@ class CognitiveAccountingSystem:
         }
 
         # User accounts
-        self.user_accounts: Dict[str, UserAccount] = {}
+        self.user_accounts: dict[str, UserAccount] = {}
 
         # Transaction records
-        self.transactions: Dict[str, TransactionRecord] = {}
+        self.transactions: dict[str, TransactionRecord] = {}
 
         # Financial statements
-        self.financial_statements: Dict[str, FinancialStatement] = {}
+        self.financial_statements: dict[str, FinancialStatement] = {}
 
         # Core values alignment
         self.values_accounting = {
@@ -315,7 +312,7 @@ class CognitiveAccountingSystem:
 
     def generate_user_statement(
         self, user_id: str, period_start: str, period_end: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate detailed user financial statement"""
 
         if user_id not in self.user_accounts:
@@ -450,7 +447,7 @@ class CognitiveAccountingSystem:
 
         return statement
 
-    def calculate_payout_eligibility(self, user_id: str) -> Dict[str, Any]:
+    def calculate_payout_eligibility(self, user_id: str) -> dict[str, Any]:
         """Calculate if user is eligible for payout"""
 
         if user_id not in self.user_accounts:
@@ -494,8 +491,8 @@ class CognitiveAccountingSystem:
         }
 
     def _calculate_values_alignment_score(
-        self, transactions: List[TransactionRecord]
-    ) -> Dict[str, Any]:
+        self, transactions: list[TransactionRecord]
+    ) -> dict[str, Any]:
         """Calculate alignment with core values"""
 
         total_score = 0.0
@@ -549,7 +546,9 @@ class CognitiveAccountingSystem:
             "compliance_status": (
                 "Excellent"
                 if total_score >= 90
-                else "Good" if total_score >= 75 else "Needs Improvement"
+                else "Good"
+                if total_score >= 75
+                else "Needs Improvement"
             ),
         }
 
@@ -603,7 +602,7 @@ class CognitiveAccountingSystem:
             # Load user accounts
             accounts_file = self.storage_path / "user_accounts.json"
             if accounts_file.exists():
-                with open(accounts_file, "r", encoding="utf-8") as f:
+                with open(accounts_file, encoding="utf-8") as f:
                     accounts_data = json.load(f)
                     for user_id, account_dict in accounts_data.items():
                         # Convert Decimal fields back
@@ -625,7 +624,7 @@ class CognitiveAccountingSystem:
             # Load transactions
             transactions_file = self.storage_path / "transactions.json"
             if transactions_file.exists():
-                with open(transactions_file, "r", encoding="utf-8") as f:
+                with open(transactions_file, encoding="utf-8") as f:
                     transactions_data = json.load(f)
                     for tx_id, tx_dict in transactions_data.items():
                         # Convert Decimal fields and enums
@@ -641,7 +640,7 @@ class CognitiveAccountingSystem:
             # Load financial statements
             statements_file = self.storage_path / "financial_statements.json"
             if statements_file.exists():
-                with open(statements_file, "r", encoding="utf-8") as f:
+                with open(statements_file, encoding="utf-8") as f:
                     statements_data = json.load(f)
                     for stmt_id, stmt_dict in statements_data.items():
                         # Convert Decimal fields and enums

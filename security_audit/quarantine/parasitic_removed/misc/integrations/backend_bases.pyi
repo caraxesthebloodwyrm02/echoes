@@ -1,10 +1,13 @@
-from enum import Enum, IntEnum
 import os
+from collections.abc import Callable, Iterable, Sequence
+from enum import Enum, IntEnum
+from typing import IO, Any, Literal, NamedTuple, TypeVar
+
 from matplotlib import (
+    _api,
     cbook,
     transforms,
     widgets,
-    _api,
 )
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
@@ -17,13 +20,13 @@ from matplotlib.path import Path
 from matplotlib.texmanager import TexManager
 from matplotlib.text import Text
 from matplotlib.transforms import Bbox, BboxBase, Transform, TransformedPath
-
-from collections.abc import Callable, Iterable, Sequence
-from typing import Any, IO, Literal, NamedTuple, TypeVar
 from numpy.typing import ArrayLike
-from .typing import ColorType, LineStyleType, CapStyleType, JoinStyleType
 
-def register_backend(format: str, backend: str | type[FigureCanvasBase], description: str | None = ...) -> None: ...
+from .typing import CapStyleType, ColorType, JoinStyleType, LineStyleType
+
+def register_backend(
+    format: str, backend: str | type[FigureCanvasBase], description: str | None = ...
+) -> None: ...
 def get_registered_canvas_class(format: str) -> type[FigureCanvasBase]: ...
 
 class RendererBase:
@@ -199,11 +202,15 @@ class Event:
     name: str
     canvas: FigureCanvasBase
     guiEvent: Any
-    def __init__(self, name: str, canvas: FigureCanvasBase, guiEvent: Any | None = ...) -> None: ...
+    def __init__(
+        self, name: str, canvas: FigureCanvasBase, guiEvent: Any | None = ...
+    ) -> None: ...
 
 class DrawEvent(Event):
     renderer: RendererBase
-    def __init__(self, name: str, canvas: FigureCanvasBase, renderer: RendererBase) -> None: ...
+    def __init__(
+        self, name: str, canvas: FigureCanvasBase, renderer: RendererBase
+    ) -> None: ...
 
 class ResizeEvent(Event):
     width: int
@@ -403,7 +410,9 @@ class NavigationToolbar2:
     mode: _Mode
     def __init__(self, canvas: FigureCanvasBase) -> None: ...
     def set_message(self, s: str) -> None: ...
-    def draw_rubberband(self, event: Event, x0: float, y0: float, x1: float, y1: float) -> None: ...
+    def draw_rubberband(
+        self, event: Event, x0: float, y0: float, x1: float, y1: float
+    ) -> None: ...
     def remove_rubberband(self) -> None: ...
     def home(self, *args) -> None: ...
     def back(self, *args) -> None: ...
@@ -462,9 +471,13 @@ class _Backend:
     FigureManager: type[FigureManagerBase]
     mainloop: None | Callable[[], Any]
     @classmethod
-    def new_figure_manager(cls, num: int | str, *args, **kwargs) -> FigureManagerBase: ...
+    def new_figure_manager(
+        cls, num: int | str, *args, **kwargs
+    ) -> FigureManagerBase: ...
     @classmethod
-    def new_figure_manager_given_figure(cls, num: int | str, figure: Figure) -> FigureManagerBase: ...
+    def new_figure_manager_given_figure(
+        cls, num: int | str, figure: Figure
+    ) -> FigureManagerBase: ...
     @classmethod
     def draw_if_interactive(cls) -> None: ...
     @classmethod

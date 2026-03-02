@@ -2,7 +2,9 @@
 """
 Comprehensive test of Knowledge Graph and Meaningful Communication in EchoesAssistantV2
 """
+
 import asyncio
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -169,8 +171,8 @@ async def test_knowledge_graph_integration():
     )
 
     if communication_result["success"]:
-        print(f"   ✅ Meaningful communication completed")
-        print(f"   📊 Context used:")
+        print("   ✅ Meaningful communication completed")
+        print("   📊 Context used:")
         print(f"      - Entities: {communication_result['context_used']['entities']}")
         print(f"      - Memories: {communication_result['context_used']['memories']}")
         print(
@@ -197,7 +199,7 @@ async def test_knowledge_graph_integration():
     stats_result = assistant.get_knowledge_graph_stats()
     if stats_result["success"]:
         stats = stats_result["stats"]
-        print(f"   ✅ Knowledge Graph Statistics:")
+        print("   ✅ Knowledge Graph Statistics:")
         print(f"      📊 Nodes: {stats['nodes']}")
         print(f"      🔗 Relations: {stats['relations']}")
         print(f"      💭 Memories: {stats['memories']}")
@@ -208,7 +210,7 @@ async def test_knowledge_graph_integration():
     print("\n🔟 Getting full assistant statistics...")
 
     full_stats = assistant.get_stats()
-    print(f"   ✅ Full Assistant Statistics:")
+    print("   ✅ Full Assistant Statistics:")
     print(
         f"      🧠 Knowledge Graph: {'Enabled' if full_stats.get('knowledge_graph_stats') else 'Disabled'}"
     )

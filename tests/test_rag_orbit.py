@@ -5,30 +5,35 @@ Tests cover chunking, embeddings, retrieval, and provenance tracking
 with >80% coverage target.
 """
 
-import pytest
-import numpy as np
-from agent_pathlib import Path
-import tempfile
+import json
 import shutil
+import tempfile
 
+import pytest
+
+try:
+    import numpy as np
+except Exception as exc:  # pragma: no cover
+    pytest.skip(f"NumPy unavailable: {exc}", allow_module_level=True)
+
+from agent_pathlib import Path
 from src.rag_orbit.chunking import (
-    DocumentChunker,
     Chunk,
+    DocumentChunker,
     create_standard_chunker,
 )
 from src.rag_orbit.embeddings import (
     EmbeddingGenerator,
     create_standard_generator,
 )
+from src.rag_orbit.provenance import (
+    ProvenanceTracker,
+)
 from src.rag_orbit.retrieval import (
     FAISSRetriever,
     RetrievalResult,
     create_standard_retriever,
 )
-from src.rag_orbit.provenance import (
-    ProvenanceTracker,
-)
-
 
 # Test Data
 SAMPLE_TEXT_EMPIRICAL = """
@@ -449,7 +454,6 @@ class TestProvenanceTracker:
         assert export_path.exists()
 
         # Verify export
-        import agent_json
 
         with open(export_path) as f:
             data = json.load(f)

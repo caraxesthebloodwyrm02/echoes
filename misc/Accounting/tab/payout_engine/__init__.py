@@ -13,14 +13,14 @@ Features:
 - Audit trail for all transactions
 """
 
-import os
 import json
+import os
 import time
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, field, asdict
-from decimal import Decimal, ROUND_HALF_UP
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime, timezone
+from decimal import ROUND_HALF_UP, Decimal
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -30,9 +30,9 @@ class PayoutCalculation:
     payout_id: str
     user_id: str
     base_amount: Decimal
-    tax_calculations: Dict[str, Decimal] = field(default_factory=dict)
-    platform_fees: Dict[str, Decimal] = field(default_factory=dict)
-    processing_fees: Dict[str, Decimal] = field(default_factory=dict)
+    tax_calculations: dict[str, Decimal] = field(default_factory=dict)
+    platform_fees: dict[str, Decimal] = field(default_factory=dict)
+    processing_fees: dict[str, Decimal] = field(default_factory=dict)
     total_deductions: Decimal = Decimal("0.00")
     net_amount: Decimal = Decimal("0.00")
     currency: str = "USD"
@@ -51,9 +51,9 @@ class PayoutRecord:
     payment_reference: str
     status: str  # pending, processing, completed, failed
     initiated_at: str
-    completed_at: Optional[str] = None
-    failure_reason: Optional[str] = None
-    audit_trail: List[Dict[str, Any]] = field(default_factory=list)
+    completed_at: str | None = None
+    failure_reason: str | None = None
+    audit_trail: list[dict[str, Any]] = field(default_factory=list)
 
 
 class TaxEngine:
@@ -98,7 +98,7 @@ class TaxEngine:
         jurisdiction: str = "US",
         state_province: str = "",
         user_type: str = "individual",
-    ) -> Dict[str, Decimal]:
+    ) -> dict[str, Decimal]:
         """
         Calculate applicable taxes automatically.
 
@@ -209,7 +209,7 @@ class FeeEngine:
         amount: Decimal,
         currency: str = "USD",
         payment_method: str = "bank_transfer",
-    ) -> Dict[str, Decimal]:
+    ) -> dict[str, Decimal]:
         """
         Calculate all applicable fees transparently.
 
@@ -305,7 +305,7 @@ class PayoutEngine:
             base_amount=work_amount,
             currency=currency,
             jurisdiction=jurisdiction,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
         )
 
         # Calculate taxes automatically
@@ -363,7 +363,7 @@ class PayoutEngine:
             payment_method=payment_method,
             payment_reference="",
             status="pending",
-            initiated_at=datetime.now(timezone.utc).isoformat(),
+            initiated_at=datetime.now(UTC).isoformat(),
             audit_trail=[],
         )
 
@@ -387,7 +387,7 @@ class PayoutEngine:
 
             record.payment_reference = payment_reference
             record.status = "completed"
-            record.completed_at = datetime.now(timezone.utc).isoformat()
+            record.completed_at = datetime.now(UTC).isoformat()
 
             record.audit_trail.append(
                 {
@@ -402,7 +402,7 @@ class PayoutEngine:
             record.failure_reason = str(e)
             record.audit_trail.append(
                 {
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                     "action": "payout_failed",
                     "details": f"Payment failed: {str(e)}",
                 }
@@ -413,7 +413,7 @@ class PayoutEngine:
 
         return record
 
-    def get_user_payout_history(self, user_id: str) -> List[PayoutRecord]:
+    def get_user_payout_history(self, user_id: str) -> list[PayoutRecord]:
         """Get payout history for a user."""
         user_payouts_file = self.data_dir / f"user_{user_id}_payouts.json"
 
@@ -421,7 +421,7 @@ class PayoutEngine:
             return []
 
         try:
-            with open(user_payouts_file, "r") as f:
+            with open(user_payouts_file) as f:
                 payouts_data = json.load(f)
 
             records = []
@@ -438,7 +438,7 @@ class PayoutEngine:
             print(f"Error loading payout history for user {user_id}: {e}")
             return []
 
-    def get_payout_transparency_report(self, payout_id: str) -> Dict[str, Any]:
+    def get_payout_transparency_report(self, payout_id: str) -> dict[str, Any]:
         """Generate complete transparency report for a payout."""
         # Load payout record
         record = self._load_payout_record(payout_id)
@@ -525,7 +525,7 @@ class PayoutEngine:
         # Load existing payouts or create new structure
         if user_payouts_file.exists():
             try:
-                with open(user_payouts_file, "r") as f:
+                with open(user_payouts_file) as f:
                     payouts_data = json.load(f)
             except:
                 payouts_data = {"user_id": record.user_id, "payouts": []}
@@ -550,7 +550,7 @@ class PayoutEngine:
         with open(user_payouts_file, "w") as f:
             json.dump(payouts_data, f, indent=2)
 
-    def _load_payout_record(self, payout_id: str) -> Optional[PayoutRecord]:
+    def _load_payout_record(self, payout_id: str) -> PayoutRecord | None:
         """Load a specific payout record."""
         # This would search through all user payout files
         # For simplicity, we'll return None (implement in production)
@@ -563,7 +563,7 @@ def process_user_payout(
     work_amount: float,
     jurisdiction: str = "US",
     payment_method: str = "bank_transfer",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Process a complete payout for a user.
 
@@ -606,7 +606,7 @@ def process_user_payout(
     return result
 
 
-def get_user_payment_history(user_id: str) -> Dict[str, Any]:
+def get_user_payment_history(user_id: str) -> dict[str, Any]:
     """Get complete payment history for a user."""
     engine = PayoutEngine()
 

@@ -2,13 +2,10 @@
 # echoes_email_generator.py - Email ROI Analysis Generator
 # Purpose: Generate professional stakeholder emails from ROI YAML config
 
-import json
-import sys
 import csv
-from dataclasses import dataclass, asdict
-from typing import Optional, Dict, Any
 import datetime
-import math
+import json
+from dataclasses import dataclass
 
 
 @dataclass
@@ -49,14 +46,14 @@ def load_email_config(yaml_path: str) -> EmailConfig:
     try:
         import yaml
 
-        with open(yaml_path, "r", encoding="utf-8") as f:
+        with open(yaml_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
     except ImportError:
         print("Note: Install PyYAML for full YAML support (pip install pyyaml)")
         # Minimal YAML parsing for email config
         data = {}
         try:
-            with open(yaml_path, "r", encoding="utf-8") as f:
+            with open(yaml_path, encoding="utf-8") as f:
                 for line in f:
                     if ":" in line and not line.strip().startswith("#"):
                         key, val = line.split(":", 1)
@@ -319,7 +316,7 @@ def convert_to_html(email_text: str) -> str:
         </style>
     </head>
     <body>
-        {''.join(html_lines)}
+        {"".join(html_lines)}
     </body>
     </html>
     """
@@ -414,7 +411,7 @@ def main():
     # Export files
     export_email_files(config, args.output)
 
-    print(f"\n🎯 Ready to send stakeholder email!")
+    print("\n🎯 Ready to send stakeholder email!")
     print(
         f"Files created: {args.output}.txt, {args.output}.html, {args.output}_data.json, {args.output}_metrics.csv"
     )

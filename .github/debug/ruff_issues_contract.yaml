@@ -1,0 +1,96 @@
+# Ruff Issues Debug Contract
+# Maps Ruff lint issues in glimpse/ and tools/ (excluded from CI lint scope)
+# Regenerate: ruff check glimpse/ tools/
+# JSON export: ruff check glimpse/ tools/ --output-format=json
+# Generated: 2025-03-02
+
+schema_version: "1.0.0"
+scope: [glimpse/, tools/]
+ci_lint_paths: [api/, app/]  # CI only lints these; glimpse/tools are out of scope
+total_issues: 35
+auto_fixable: 16  # --unsafe-fixes
+
+issues_by_file:
+  glimpse/alignment.py:
+    - { code: UP042, line: 22, message: "Class ModelType inherits from both str and enum.Enum", fix: "Use enum.StrEnum" }
+    - { code: W291, line: 170, message: "Trailing whitespace", fix: "Remove trailing whitespace" }
+    - { code: E722, line: 320, message: "Do not use bare except", fix: "Use except Exception:" }
+    - { code: E721, line: 341, message: "Use isinstance() for type comparisons", fix: "param.annotation is int -> isinstance" }
+    - { code: E721, line: 343, message: "Use isinstance() for type comparisons" }
+    - { code: E721, line: 345, message: "Use isinstance() for type comparisons" }
+    - { code: B007, line: 750, message: "Loop variable domain unused", fix: "Rename to _domain" }
+    - { code: F841, line: 761, message: "avg_sentence_length assigned but never used" }
+
+  glimpse/benchmark_cached_batch.py:
+    - { code: F841, line: 17, message: "engine assigned but never used" }
+    - { code: F821, line: 24, message: "Undefined name Glimpse", fix: "Import GlimpseEngine; use engine.glimpse()" }
+    - { code: F841, line: 30, message: "engine assigned but never used" }
+    - { code: F821, line: 37, message: "Undefined name Glimpse" }
+    - { code: F841, line: 43, message: "engine assigned but never used" }
+    - { code: F821, line: 45, message: "Undefined name Glimpse" }
+
+  glimpse/benchmark_glimpse.py:
+    - { code: F841, line: 9, message: "engine assigned but never used" }
+    - { code: F821, line: 16, message: "Undefined name Glimpse" }
+
+  glimpse/benchmark_openai.py:
+    - { code: F841, line: 15, message: "engine assigned but never used" }
+    - { code: F821, line: 22, message: "Undefined name Glimpse" }
+
+  glimpse/cache_helpers.py:
+    - { code: F841, line: 178, message: "start_time assigned but never used" }
+
+  glimpse/clarifier_engine.py:
+    - { code: F401, line: 17, message: "CuriosityCategory imported but unused" }
+    - { code: F821, line: 444, message: "Undefined name Glimpse", fix: "Use ClarifierEngine().detect_ambiguity()" }
+
+  glimpse/engine.py:
+    - { code: F841, line: 329, message: "engine assigned but never used in _demo()" }
+    - { code: F821, line: 336, message: "Undefined name Glimpse", fix: "Use engine not Glimpse in _demo" }
+    - { code: F821, line: 347, message: "Undefined name Glimpse" }
+    - { code: F821, line: 353, message: "Undefined name Glimpse" }
+
+  glimpse/load_test_openai.py:
+    - { code: F841, line: 73, message: "engine assigned but never used" }
+    - { code: F821, line: 86, message: "Undefined name Glimpse" }
+
+  glimpse/metrics.py:
+    - { code: F841, line: 137, message: "status assigned but never used" }
+
+  glimpse/openai_wrapper.py:
+    - { code: B904, line: 129, message: "raise without 'from err' in except", fix: "raise ... from TimeoutError" }
+
+  glimpse/performance_optimizer.py:
+    - { code: F821, line: 325, message: "Undefined name GlimpseResult", fix: "Import from glimpse.Glimpse" }
+
+  glimpse/rate_limiter.py:
+    - { code: F841, line: 311, message: "elapsed_since_update assigned but never used" }
+
+  glimpse/vis.py:
+    - { code: B007, line: 26, message: "Loop variable point unused", fix: "Rename to _point" }
+    - { code: B905, line: 26, message: "zip() without explicit strict=" }
+
+  tools/__init__.py:
+    - { code: UP035, line: 10, message: "typing.Dict deprecated, use dict" }
+    - { code: UP035, line: 10, message: "typing.List deprecated, use list" }
+
+# Rule code summary
+rules_summary:
+  F821: 8   # Undefined name (Glimpse, GlimpseResult)
+  F841: 12  # Unused variable
+  F401: 1   # Unused import
+  E721: 3   # Type comparison (use isinstance)
+  E722: 1   # Bare except
+  B007: 2   # Unused loop variable
+  B904: 1   # raise without from
+  B905: 1   # zip() strict=
+  UP042: 1  # str+Enum -> StrEnum
+  UP035: 2  # Deprecated typing.Dict/List
+  W291: 1   # Trailing whitespace
+
+# Root cause patterns
+patterns:
+  undefined_glimpse: "Benchmark/demo scripts use legacy Glimpse (module-level) but import GlimpseEngine; should use engine.glimpse()"
+  unused_engine: "engine = GlimpseEngine() created but Glimpse.glimpse() used instead"
+  deprecated_typing: "Replace typing.Dict/List with dict/list"
+  type_comparison: "Use param.annotation is int not param.annotation == int"

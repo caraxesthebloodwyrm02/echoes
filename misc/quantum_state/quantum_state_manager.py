@@ -13,14 +13,16 @@ Features:
 - Performance monitoring
 """
 
-from typing import Dict, Any, List, Optional, Callable
+import json
+import logging
+import os
+from collections.abc import Callable
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from typing import Any
+
 from .quantum_state import QuantumState, QuantumStateError
 from .quantum_state_machine import QuantumStateMachine
-from dataclasses import dataclass
-from datetime import datetime, timezone
-import json
-import os
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +35,7 @@ class StateMetrics:
     total_measurements: int = 0
     average_transition_time: float = 0.0
     entangled_states_count: int = 0
-    last_updated: Optional[datetime] = None
+    last_updated: datetime | None = None
 
 
 class QuantumStateManager:
@@ -41,13 +43,13 @@ class QuantumStateManager:
     Main quantum-inspired state management interface
     """
 
-    def __init__(self, persistence_file: Optional[str] = None):
+    def __init__(self, persistence_file: str | None = None):
         self.quantum_state = QuantumState()
         self.state_machine = QuantumStateMachine()
-        self.observers: List[Callable] = []
+        self.observers: list[Callable] = []
         self.metrics = StateMetrics()
         self.persistence_file = persistence_file
-        self.interference_patterns: Dict[str, float] = {}
+        self.interference_patterns: dict[str, float] = {}
 
         # Load persisted state if available
         if persistence_file and os.path.exists(persistence_file):
@@ -86,7 +88,7 @@ class QuantumStateManager:
 
         logger.info("Quantum state management system initialized")
 
-    def update_state(self, key: str, value: Any, entangle_with: List[str] = None):
+    def update_state(self, key: str, value: Any, entangle_with: list[str] = None):
         """
         Update a quantum state with optional entanglement
 
@@ -95,17 +97,17 @@ class QuantumStateManager:
             value: New value
             entangle_with: Keys to entangle with
         """
-        start_time = datetime.now(timezone.utc)
+        start_time = datetime.now(UTC)
 
         self.quantum_state.update(key, value, entangle_with)
         self.metrics.total_updates += 1
-        self.metrics.last_updated = datetime.now(timezone.utc)
+        self.metrics.last_updated = datetime.now(UTC)
 
         # Update entangled states count
         self.metrics.entangled_states_count = len(self.quantum_state._entangled)
 
         # Calculate transition time
-        transition_time = (datetime.now(timezone.utc) - start_time).total_seconds()
+        transition_time = (datetime.now(UTC) - start_time).total_seconds()
         self.metrics.average_transition_time = (
             (self.metrics.average_transition_time * (self.metrics.total_updates - 1))
             + transition_time
@@ -116,11 +118,11 @@ class QuantumStateManager:
         self.metrics.total_measurements += 1
         return self.quantum_state.measure(key)
 
-    def get_superposition(self, keys: List[str]) -> Dict[str, Any]:
+    def get_superposition(self, keys: list[str]) -> dict[str, Any]:
         """Get multiple states in superposition"""
         return self.quantum_state.get_superposition(keys)
 
-    def get_entangled_states(self, key: str) -> Dict[str, Any]:
+    def get_entangled_states(self, key: str) -> dict[str, Any]:
         """Get states entangled with the given key"""
         return self.quantum_state.get_entangled(key)
 
@@ -177,7 +179,7 @@ class QuantumStateManager:
         """Get current performance metrics"""
         return self.metrics
 
-    def get_state_history(self, key: str) -> List[tuple]:
+    def get_state_history(self, key: str) -> list[tuple]:
         """Get historical values for a state"""
         return self.quantum_state.get_history(key)
 
@@ -214,7 +216,7 @@ class QuantumStateManager:
         if not self.persistence_file or not os.path.exists(self.persistence_file):
             raise QuantumStateError("No persistence file available")
 
-        with open(self.persistence_file, "r") as f:
+        with open(self.persistence_file) as f:
             state_data = json.load(f)
 
         # Restore quantum state

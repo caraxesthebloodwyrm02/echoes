@@ -3,14 +3,13 @@ Ethics Framework for Echoes AI System
 Implements ethical AI principles, impact assessment, and Kardashev-scale considerations.
 """
 
-import json
 import logging
-from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional, Callable
-from dataclasses import dataclass, asdict
-from enum import Enum
-from pathlib import Path
 import threading
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from enum import Enum
+from typing import Any
 
 # Configure ethics logger
 ethics_logger = logging.getLogger("echoes.ethics")
@@ -51,14 +50,14 @@ class EthicalDecision:
     timestamp: str
     user_id: str
     action: str
-    context: Dict[str, Any]
-    ethical_analysis: Dict[str, Any]
+    context: dict[str, Any]
+    ethical_analysis: dict[str, Any]
     decision_made: str
     rationale: str
-    alternatives_considered: List[str]
+    alternatives_considered: list[str]
     monitoring_required: bool
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -70,14 +69,14 @@ class ImpactAssessment:
     severity: float  # 0.0 to 1.0
     probability: float  # 0.0 to 1.0
     description: str
-    mitigation_strategies: List[str]
-    stakeholders_affected: List[str]
+    mitigation_strategies: list[str]
+    stakeholders_affected: list[str]
 
     def risk_score(self) -> float:
         """Calculate risk score as severity × probability."""
         return self.severity * self.probability
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return asdict(self)
 
 
@@ -86,14 +85,14 @@ class EthicsFramework:
 
     def __init__(self):
         self.principles = self._load_principles()
-        self.impact_assessors: Dict[ImpactCategory, Callable] = {}
-        self.decision_log: List[EthicalDecision] = []
+        self.impact_assessors: dict[ImpactCategory, Callable] = {}
+        self.decision_log: list[EthicalDecision] = []
         self._lock = threading.RLock()
 
         # Register default impact assessors
         self._register_default_assessors()
 
-    def _load_principles(self) -> Dict[EthicalPrinciple, Dict[str, Any]]:
+    def _load_principles(self) -> dict[EthicalPrinciple, dict[str, Any]]:
         """Load ethical principles definitions."""
         return {
             EthicalPrinciple.TRANSPARENCY: {
@@ -192,7 +191,7 @@ class EthicsFramework:
             ImpactCategory.GLOBAL_COORDINATION: self._assess_global_coordination,
         }
 
-    def assess_impact(self, action: str, context: Dict[str, Any]) -> Dict[str, Any]:
+    def assess_impact(self, action: str, context: dict[str, Any]) -> dict[str, Any]:
         """Perform comprehensive impact assessment."""
         assessments = {}
 
@@ -220,14 +219,14 @@ class EthicsFramework:
 
         return {
             "action": action,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "assessments": assessments,
             "overall_risk_score": total_risk,
             "recommendations": self._generate_recommendations(assessments, total_risk),
         }
 
     def _assess_environmental(
-        self, action: str, context: Dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> ImpactAssessment:
         """Assess environmental impact."""
         # Analyze action for environmental implications
@@ -261,7 +260,7 @@ class EthicsFramework:
             ],
         )
 
-    def _assess_social(self, action: str, context: Dict[str, Any]) -> ImpactAssessment:
+    def _assess_social(self, action: str, context: dict[str, Any]) -> ImpactAssessment:
         """Assess social impact."""
         social_indicators = [
             "bias_detection",
@@ -291,7 +290,7 @@ class EthicsFramework:
         )
 
     def _assess_economic(
-        self, action: str, context: Dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> ImpactAssessment:
         """Assess economic impact."""
         economic_indicators = [
@@ -321,7 +320,7 @@ class EthicsFramework:
             stakeholders_affected=["workers", "businesses", "consumers", "markets"],
         )
 
-    def _assess_privacy(self, action: str, context: Dict[str, Any]) -> ImpactAssessment:
+    def _assess_privacy(self, action: str, context: dict[str, Any]) -> ImpactAssessment:
         """Assess privacy impact."""
         privacy_sensitive_actions = [
             "data_processing",
@@ -353,7 +352,7 @@ class EthicsFramework:
             stakeholders_affected=["users", "data_subjects", "privacy_regulators"],
         )
 
-    def _assess_bias(self, action: str, context: Dict[str, Any]) -> ImpactAssessment:
+    def _assess_bias(self, action: str, context: dict[str, Any]) -> ImpactAssessment:
         """Assess bias impact."""
         bias_indicators = [
             "classification",
@@ -384,7 +383,7 @@ class EthicsFramework:
         )
 
     def _assess_autonomy(
-        self, action: str, context: Dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> ImpactAssessment:
         """Assess autonomy impact."""
         autonomy_impacting_actions = [
@@ -417,7 +416,7 @@ class EthicsFramework:
         )
 
     def _assess_security(
-        self, action: str, context: Dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> ImpactAssessment:
         """Assess security impact."""
         security_critical_actions = [
@@ -451,7 +450,7 @@ class EthicsFramework:
         )
 
     def _assess_global_coordination(
-        self, action: str, context: Dict[str, Any]
+        self, action: str, context: dict[str, Any]
     ) -> ImpactAssessment:
         """Assess global coordination impact."""
         global_actions = [
@@ -487,8 +486,8 @@ class EthicsFramework:
         )
 
     def _generate_recommendations(
-        self, assessments: Dict[str, Any], overall_risk: float
-    ) -> List[str]:
+        self, assessments: dict[str, Any], overall_risk: float
+    ) -> list[str]:
         """Generate ethical recommendations based on assessments."""
         recommendations = []
 
@@ -531,8 +530,8 @@ class EthicsFramework:
             ethics_logger.info(f"Ethical decision logged: {decision.action}")
 
     def get_decision_history(
-        self, user_id: Optional[str] = None, action_filter: Optional[str] = None
-    ) -> List[EthicalDecision]:
+        self, user_id: str | None = None, action_filter: str | None = None
+    ) -> list[EthicalDecision]:
         """Retrieve ethical decision history."""
         decisions = self.decision_log
 
@@ -547,8 +546,8 @@ class EthicsFramework:
         return decisions
 
     def kardashev_ethics_check(
-        self, action: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, action: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Special ethics check for Kardashev-scale operations."""
         base_assessment = self.assess_impact(action, context)
 
@@ -586,18 +585,18 @@ class EthicalImpactAssessor:
         self.framework = EthicsFramework()
 
     def assess_operation(
-        self, operation_name: str, user_id: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, operation_name: str, user_id: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Assess the ethical impact of an operation."""
         return self.framework.assess_impact(operation_name, context)
 
     def kardashev_assessment(
-        self, operation_name: str, user_id: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, operation_name: str, user_id: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Special assessment for Kardashev-scale operations."""
         return self.framework.kardashev_ethics_check(operation_name, context)
 
-    def requires_human_review(self, assessment: Dict[str, Any]) -> bool:
+    def requires_human_review(self, assessment: dict[str, Any]) -> bool:
         """Determine if operation requires human ethical review."""
         risk_score = assessment.get("overall_risk_score", 0)
         kardashev_risk = assessment.get("kardashev_adjusted_risk", risk_score)
@@ -605,7 +604,7 @@ class EthicalImpactAssessor:
         # High-risk thresholds
         return kardashev_risk > 0.7 or risk_score > 0.8
 
-    def generate_ethical_report(self, assessment: Dict[str, Any]) -> str:
+    def generate_ethical_report(self, assessment: dict[str, Any]) -> str:
         """Generate a human-readable ethical assessment report."""
         lines = [
             "# Ethical Impact Assessment Report",

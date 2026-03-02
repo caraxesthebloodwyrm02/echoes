@@ -4,9 +4,9 @@ Knowledge Graph module - Mock implementation for assistant functionality.
 Provides a simple knowledge graph implementation for the Echoes assistant.
 """
 
-from typing import Dict, List, Any, Optional
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 
 @dataclass
@@ -15,7 +15,7 @@ class KnowledgeNode:
 
     id: str
     type: str
-    properties: Dict[str, Any]
+    properties: dict[str, Any]
     created_at: datetime = None
 
     def __post_init__(self):
@@ -30,7 +30,7 @@ class KnowledgeRelation:
     source_id: str
     target_id: str
     relation_type: str
-    properties: Dict[str, Any] = None
+    properties: dict[str, Any] = None
 
     def __post_init__(self):
         if self.properties is None:
@@ -43,8 +43,8 @@ class MemoryFragment:
 
     id: str
     content: str
-    embedding: Optional[List[float]] = None
-    metadata: Dict[str, Any] = None
+    embedding: list[float] | None = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -55,9 +55,9 @@ class SimpleKnowledgeGraph:
     """Simple in-memory knowledge graph implementation."""
 
     def __init__(self):
-        self.nodes: Dict[str, KnowledgeNode] = {}
-        self.relations: List[KnowledgeRelation] = []
-        self.fragments: Dict[str, MemoryFragment] = {}
+        self.nodes: dict[str, KnowledgeNode] = {}
+        self.relations: list[KnowledgeRelation] = []
+        self.fragments: dict[str, MemoryFragment] = {}
 
     def add_node(self, node: KnowledgeNode):
         """Add a node to the graph."""
@@ -71,11 +71,11 @@ class SimpleKnowledgeGraph:
         """Add a memory fragment."""
         self.fragments[fragment.id] = fragment
 
-    def get_node(self, node_id: str) -> Optional[KnowledgeNode]:
+    def get_node(self, node_id: str) -> KnowledgeNode | None:
         """Get a node by ID."""
         return self.nodes.get(node_id)
 
-    def query(self, query: str) -> List[KnowledgeNode]:
+    def query(self, query: str) -> list[KnowledgeNode]:
         """Simple query implementation."""
         # Basic text search in node properties
         results = []
@@ -87,7 +87,7 @@ class SimpleKnowledgeGraph:
                     break
         return results
 
-    def get_statistics(self) -> Dict[str, int]:
+    def get_statistics(self) -> dict[str, int]:
         """Get graph statistics."""
         return {
             "nodes": len(self.nodes),

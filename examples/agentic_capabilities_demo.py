@@ -9,7 +9,6 @@ Shows how EchoesAssistantV2 can now:
 - Combine multiple tools for sophisticated workflows
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -35,7 +34,7 @@ def demo_agentic_capabilities():
         session_id="agentic_demo",
     )
 
-    print(f"✅ Assistant ready!")
+    print("✅ Assistant ready!")
     print(f"   Total tools available: {len(assistant.list_tools())}")
 
     # Show all available tools
@@ -90,7 +89,7 @@ def demo_agentic_capabilities():
     print("🚀 Interactive Demo Scenarios")
     print("=" * 80)
 
-    for i, scenario in enumerate(demo_scenarios, 1):
+    for _i, scenario in enumerate(demo_scenarios, 1):
         print(f"\n{scenario['title']}")
         print(f"   {scenario['description']}")
         print(f"   💬 Prompt: {scenario['prompt']}")

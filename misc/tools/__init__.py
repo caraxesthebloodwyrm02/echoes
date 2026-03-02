@@ -4,24 +4,24 @@ Tools Package
 This package contains all the tools available in the Echoes Assistant.
 """
 
+import importlib
 import os
 import sys
-import importlib
 
 # Add project root to path for consistent imports
 sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
 
 try:
     _m = importlib.import_module("core.ethos")
-    getattr(_m, "enforce")()
+    _m.enforce()
 except Exception:
     pass
 
 # Import tool modules to make them available when importing from tools
 try:
-    from .base import BaseTool, ToolResult, ToolError
+    from .base import BaseTool, ToolError, ToolResult
 except ImportError:
-    from tools.base import BaseTool, ToolResult, ToolError
+    from tools.base import BaseTool, ToolError, ToolResult
 
 try:
     from .examples import get_example_tools

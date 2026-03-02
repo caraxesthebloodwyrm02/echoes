@@ -6,17 +6,14 @@ from typing import (
     Protocol,
     SupportsIndex,
     SupportsInt,
-    TypeAlias,
     TypeVar,
     overload,
     type_check_only,
 )
 from typing import Literal as L
 
-from _typeshed import Incomplete
-from typing_extensions import TypeIs, deprecated
-
 import numpy as np
+from _typeshed import Incomplete
 from numpy import (
     _OrderKACF,
     bool_,
@@ -55,6 +52,7 @@ from numpy._typing import (
     _ScalarLike_co,
     _ShapeLike,
 )
+from typing_extensions import TypeIs, deprecated
 
 __all__ = [
     "angle",
@@ -106,8 +104,8 @@ _ScalarT1 = TypeVar("_ScalarT1", bound=generic)
 _ScalarT2 = TypeVar("_ScalarT2", bound=generic)
 _ArrayT = TypeVar("_ArrayT", bound=np.ndarray)
 
-_2Tuple: TypeAlias = tuple[_T, _T]
-_MeshgridIdx: TypeAlias = L["ij", "xy"]
+type _2Tuple[_T] = tuple[_T, _T]
+type _MeshgridIdx = L["ij", "xy"]
 
 @type_check_only
 class _TrimZerosSequence(Protocol[_T_co]):
@@ -136,7 +134,9 @@ def flip(m: _ScalarT, axis: None = ...) -> _ScalarT: ...
 @overload
 def flip(m: _ScalarLike_co, axis: None = ...) -> Any: ...
 @overload
-def flip(m: _ArrayLike[_ScalarT], axis: _ShapeLike | None = ...) -> NDArray[_ScalarT]: ...
+def flip(
+    m: _ArrayLike[_ScalarT], axis: _ShapeLike | None = ...
+) -> NDArray[_ScalarT]: ...
 @overload
 def flip(m: ArrayLike, axis: _ShapeLike | None = ...) -> NDArray[Any]: ...
 def iterable(y: object) -> TypeIs[Iterable[Any]]: ...
@@ -222,7 +222,11 @@ def asarray_chkfinite(
 def piecewise(
     x: _ArrayLike[_ScalarT],
     condlist: _ArrayLike[bool_] | Sequence[_ArrayLikeBool_co],
-    funclist: Sequence[Callable[Concatenate[NDArray[_ScalarT], _Pss], NDArray[_ScalarT | Any]] | _ScalarT | object],
+    funclist: Sequence[
+        Callable[Concatenate[NDArray[_ScalarT], _Pss], NDArray[_ScalarT | Any]]
+        | _ScalarT
+        | object
+    ],
     /,
     *args: _Pss.args,
     **kw: _Pss.kwargs,
@@ -231,7 +235,9 @@ def piecewise(
 def piecewise(
     x: ArrayLike,
     condlist: _ArrayLike[bool_] | Sequence[_ArrayLikeBool_co],
-    funclist: Sequence[Callable[Concatenate[NDArray[Any], _Pss], NDArray[Any]] | object],
+    funclist: Sequence[
+        Callable[Concatenate[NDArray[Any], _Pss], NDArray[Any]] | object
+    ],
     /,
     *args: _Pss.args,
     **kw: _Pss.kwargs,
@@ -544,7 +550,10 @@ def median(
 ) -> Any: ...
 @overload
 def median(
-    a: _ArrayLikeFloat_co | _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeFloat_co
+    | _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeObject_co,
     axis: _ShapeLike | None = ...,
     out: None = ...,
     overwrite_input: bool = ...,
@@ -552,7 +561,10 @@ def median(
 ) -> Any: ...
 @overload
 def median(
-    a: _ArrayLikeFloat_co | _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeFloat_co
+    | _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeObject_co,
     axis: _ShapeLike | None,
     out: _ArrayT,
     overwrite_input: bool = ...,
@@ -560,7 +572,10 @@ def median(
 ) -> _ArrayT: ...
 @overload
 def median(
-    a: _ArrayLikeFloat_co | _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeFloat_co
+    | _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeObject_co,
     axis: _ShapeLike | None = ...,
     *,
     out: _ArrayT,
@@ -568,7 +583,7 @@ def median(
     keepdims: bool = ...,
 ) -> _ArrayT: ...
 
-_MethodKind: TypeAlias = L[
+type _MethodKind = L[
     "inverted_cdf",
     "averaged_inverted_cdf",
     "closest_observation",
@@ -706,7 +721,10 @@ def percentile(
 ) -> NDArray[object_]: ...
 @overload
 def percentile(
-    a: _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeDT64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeDT64_co
+    | _ArrayLikeObject_co,
     q: _ArrayLikeFloat_co,
     axis: _ShapeLike | None = ...,
     out: None = ...,
@@ -718,7 +736,10 @@ def percentile(
 ) -> Any: ...
 @overload
 def percentile(
-    a: _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeDT64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeDT64_co
+    | _ArrayLikeObject_co,
     q: _ArrayLikeFloat_co,
     axis: _ShapeLike | None,
     out: _ArrayT,
@@ -730,7 +751,10 @@ def percentile(
 ) -> _ArrayT: ...
 @overload
 def percentile(
-    a: _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeDT64_co | _ArrayLikeObject_co,
+    a: _ArrayLikeComplex_co
+    | _ArrayLikeTD64_co
+    | _ArrayLikeDT64_co
+    | _ArrayLikeObject_co,
     q: _ArrayLikeFloat_co,
     axis: _ShapeLike | None = ...,
     *,
@@ -801,9 +825,16 @@ def trapezoid(
     x: _ArrayLikeComplex_co | _ArrayLikeTD64_co | _ArrayLikeObject_co | None = ...,
     dx: float = ...,
     axis: SupportsIndex = ...,
-) -> floating | complexfloating | timedelta64 | NDArray[floating | complexfloating | timedelta64 | object_]: ...
+) -> (
+    floating
+    | complexfloating
+    | timedelta64
+    | NDArray[floating | complexfloating | timedelta64 | object_]
+): ...
 @deprecated("Use 'trapezoid' instead")
-def trapz(y: ArrayLike, x: ArrayLike | None = None, dx: float = 1.0, axis: int = -1) -> generic | NDArray[generic]: ...
+def trapz(
+    y: ArrayLike, x: ArrayLike | None = None, dx: float = 1.0, axis: int = -1
+) -> generic | NDArray[generic]: ...
 @overload
 def meshgrid(
     *,

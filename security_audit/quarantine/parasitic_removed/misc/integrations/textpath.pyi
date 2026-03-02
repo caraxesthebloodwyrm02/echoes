@@ -1,11 +1,10 @@
+from typing import Literal
+
+import numpy as np
 from matplotlib.font_manager import FontProperties
 from matplotlib.ft2font import FT2Font
 from matplotlib.mathtext import MathTextParser, VectorParse
 from matplotlib.path import Path
-
-import numpy as np
-
-from typing import Literal
 
 class TextToPath:
     FONT_SCALE: float
@@ -15,7 +14,9 @@ class TextToPath:
     def get_text_width_height_descent(
         self, s: str, prop: FontProperties, ismath: bool | Literal["TeX"]
     ) -> tuple[float, float, float]: ...
-    def get_text_path(self, prop: FontProperties, s: str, ismath: bool | Literal["TeX"] = ...) -> list[np.ndarray]: ...
+    def get_text_path(
+        self, prop: FontProperties, s: str, ismath: bool | Literal["TeX"] = ...
+    ) -> list[np.ndarray]: ...
     def get_glyphs_with_font(
         self,
         font: FT2Font,

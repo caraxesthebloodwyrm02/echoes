@@ -1,19 +1,18 @@
-from collections.abc import Callable, Sequence
 import os
 import pathlib
+from collections.abc import Callable, Sequence
 from typing import Any, BinaryIO, Literal
 
 import numpy as np
-from numpy.typing import ArrayLike, NDArray
 import PIL.Image
-
-from matplotlib.axes import Axes
 from matplotlib import colorizer
-from matplotlib.backend_bases import RendererBase, MouseEvent
+from matplotlib.axes import Axes
+from matplotlib.backend_bases import MouseEvent, RendererBase
 from matplotlib.colorizer import Colorizer
 from matplotlib.colors import Colormap, Normalize
 from matplotlib.figure import Figure
-from matplotlib.transforms import Affine2D, BboxBase, Bbox, Transform
+from matplotlib.transforms import Affine2D, Bbox, BboxBase, Transform
+from numpy.typing import ArrayLike, NDArray
 
 #
 # These names are re-exported from matplotlib._image.
@@ -75,7 +74,7 @@ class _ImageBase(colorizer.ColorizingArtist):
         resample: bool | None = ...,
         *,
         interpolation_stage: Literal["data", "rgba", "auto"] | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_size(self) -> tuple[int, int]: ...
     def set_alpha(self, alpha: float | ArrayLike | None) -> None: ...
@@ -115,19 +114,23 @@ class AxesImage(_ImageBase):
         filterrad: float = ...,
         resample: bool = ...,
         interpolation_stage: Literal["data", "rgba", "auto"] | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_window_extent(self, renderer: RendererBase | None = ...) -> Bbox: ...
     def make_image(
         self, renderer: RendererBase, magnification: float = ..., unsampled: bool = ...
     ) -> tuple[np.ndarray, float, float, Affine2D]: ...
-    def set_extent(self, extent: tuple[float, float, float, float], **kwargs) -> None: ...
+    def set_extent(
+        self, extent: tuple[float, float, float, float], **kwargs
+    ) -> None: ...
     def get_extent(self) -> tuple[float, float, float, float]: ...
     def get_cursor_data(self, event: MouseEvent) -> None | float: ...
 
 class NonUniformImage(AxesImage):
     mouseover: bool
-    def __init__(self, ax: Axes, *, interpolation: Literal["nearest", "bilinear"] = ..., **kwargs) -> None: ...
+    def __init__(
+        self, ax: Axes, *, interpolation: Literal["nearest", "bilinear"] = ..., **kwargs
+    ) -> None: ...
     def set_data(self, x: ArrayLike, y: ArrayLike, A: ArrayLike) -> None: ...  # type: ignore[override]
     # more limited interpolation available here than base class
     def set_interpolation(self, s: Literal["nearest", "bilinear"]) -> None: ...  # type: ignore[override]
@@ -143,7 +146,7 @@ class PcolorImage(AxesImage):
         cmap: str | Colormap | None = ...,
         norm: str | Normalize | None = ...,
         colorizer: Colorizer | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def set_data(self, x: ArrayLike, y: ArrayLike, A: ArrayLike) -> None: ...  # type: ignore[override]
 
@@ -163,7 +166,7 @@ class FigureImage(_ImageBase):
         offsetx: int = ...,
         offsety: int = ...,
         origin: Literal["upper", "lower"] | None = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_extent(self) -> tuple[float, float, float, float]: ...
 
@@ -181,11 +184,13 @@ class BboxImage(_ImageBase):
         filternorm: bool = ...,
         filterrad: float = ...,
         resample: bool = ...,
-        **kwargs
+        **kwargs,
     ) -> None: ...
     def get_window_extent(self, renderer: RendererBase | None = ...) -> Bbox: ...
 
-def imread(fname: str | pathlib.Path | BinaryIO, format: str | None = ...) -> np.ndarray: ...
+def imread(
+    fname: str | pathlib.Path | BinaryIO, format: str | None = ...
+) -> np.ndarray: ...
 def imsave(
     fname: str | os.PathLike | BinaryIO,
     arr: ArrayLike,
@@ -197,7 +202,7 @@ def imsave(
     dpi: float = ...,
     *,
     metadata: dict[str, str] | None = ...,
-    pil_kwargs: dict[str, Any] | None = ...
+    pil_kwargs: dict[str, Any] | None = ...,
 ) -> None: ...
 def pil_to_array(pilImage: PIL.Image.Image) -> np.ndarray: ...
 def thumbnail(

@@ -11,7 +11,7 @@ from .auxfuncs import _Bool, _Var
 
 _VT = TypeVar("_VT", default=str)
 
-_Predicate: TypeAlias = Callable[[_Var], _Bool]
+type _Predicate = Callable[[_Var], _Bool]
 _RuleDict: TypeAlias = dict[str, _VT]
 _DefDict: TypeAlias = dict[_Predicate, _VT]
 

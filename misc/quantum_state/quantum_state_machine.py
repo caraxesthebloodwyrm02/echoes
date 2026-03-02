@@ -12,10 +12,13 @@ Key Features:
 - State history and rollback capabilities
 """
 
-from typing import Dict, Any, List, Optional, Callable
-from .quantum_state import QuantumState, StateTransition
-import numpy as np
 import logging
+from collections.abc import Callable
+from typing import Any
+
+import numpy as np
+
+from .quantum_state import QuantumState, StateTransition
 
 logger = logging.getLogger(__name__)
 
@@ -27,10 +30,10 @@ class QuantumStateMachine:
 
     def __init__(self):
         self.states = set()
-        self.transitions: List[StateTransition] = []
-        self.current_state: Optional[str] = None
-        self.state_history: List[str] = []
-        self.transition_callbacks: Dict[str, List[Callable]] = {}
+        self.transitions: list[StateTransition] = []
+        self.current_state: str | None = None
+        self.state_history: list[str] = []
+        self.transition_callbacks: dict[str, list[Callable]] = {}
 
     def add_state(self, state: str):
         """Add a new state to the machine"""
@@ -43,7 +46,7 @@ class QuantumStateMachine:
         from_state: str,
         to_state: str,
         probability: float,
-        conditions: Optional[Dict[str, Any]] = None,
+        conditions: dict[str, Any] | None = None,
     ):
         """
         Add a probabilistic transition between states
@@ -68,7 +71,7 @@ class QuantumStateMachine:
         else:
             raise QuantumStateError(f"Unknown state: {state}")
 
-    def next_state(self, quantum_state: Optional[QuantumState] = None) -> str:
+    def next_state(self, quantum_state: QuantumState | None = None) -> str:
         """
         Probabilistically transition to the next state
 
@@ -109,7 +112,7 @@ class QuantumStateMachine:
         return self.current_state
 
     def _check_conditions(
-        self, transition: StateTransition, quantum_state: Optional[QuantumState]
+        self, transition: StateTransition, quantum_state: QuantumState | None
     ) -> bool:
         """Check if transition conditions are met"""
         if transition.conditions is None:
@@ -167,7 +170,7 @@ class QuantumStateMachine:
             self.state_history = [initial_state]
             logger.info(f"Reset to initial state: {initial_state}")
 
-    def get_state_graph(self) -> Dict[str, List[tuple]]:
+    def get_state_graph(self) -> dict[str, list[tuple]]:
         """Get the state transition graph"""
         graph = {}
         for state in self.states:

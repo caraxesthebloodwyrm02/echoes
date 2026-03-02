@@ -7,8 +7,9 @@ a comprehensive analysis of the implemented optimizations and their expected imp
 """
 
 import json
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+
 from integrations import record_ai_evaluation, record_research_progress
 
 
@@ -243,7 +244,7 @@ def main():
     record_optimization_results(report)
 
     print("\n🎉 RAG Optimization Implementation Complete!")
-    print(f"   - All 3 patches successfully implemented")
+    print("   - All 3 patches successfully implemented")
     print(
         f"   - {report['optimization_summary']['targets_achieved']}/{report['optimization_summary']['total_targets']} targets achieved"
     )

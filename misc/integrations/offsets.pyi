@@ -1,3 +1,4 @@
+from collections.abc import Collection
 from datetime import (
     datetime,
     time,
@@ -5,14 +6,12 @@ from datetime import (
 )
 from typing import (
     Any,
-    Collection,
     Literal,
     TypeVar,
     overload,
 )
 
 import numpy as np
-
 from pandas._libs.tslibs.nattype import NaTType
 from pandas._typing import (
     OffsetCalendar,

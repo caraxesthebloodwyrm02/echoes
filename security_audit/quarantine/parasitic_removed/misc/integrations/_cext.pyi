@@ -6,12 +6,13 @@
 # The full license is in the file LICENSE, distributed with this software.
 # --------------------------------------------------------------------------------------
 
-from typing import Any, Iterable, NoReturn, Tuple, type_check_only
+from collections.abc import Iterable
+from typing import Any, NoReturn, type_check_only
 
 try:
     from typing import Literal
 except ImportError:
-    from typing_extensions import Literal  # type: ignore
+    from typing import Literal  # type: ignore
 
 __version__: str
 __kiwi_version__: str
@@ -79,7 +80,9 @@ class Term:
     """Product of a variable by a constant pre-factor."""
 
     __hash__: None  # type: ignore
-    def __init__(self, variable: Variable, coefficient: int | float = 1.0, /) -> None: ...
+    def __init__(
+        self, variable: Variable, coefficient: int | float = 1.0, /
+    ) -> None: ...
     def coefficient(self) -> float:
         """Get the coefficient for the term."""
 
@@ -109,11 +112,13 @@ class Expression:
     """Sum of terms and an additional constant."""
 
     __hash__: None  # type: ignore
-    def __init__(self, terms: Iterable[Term], constant: int | float = 0.0, /) -> None: ...
+    def __init__(
+        self, terms: Iterable[Term], constant: int | float = 0.0, /
+    ) -> None: ...
     def constant(self) -> float:
         """Get the constant for the expression."""
 
-    def terms(self) -> Tuple[Term, ...]:
+    def terms(self) -> tuple[Term, ...]:
         """Get the tuple of terms for the expression."""
 
     def value(self) -> float:

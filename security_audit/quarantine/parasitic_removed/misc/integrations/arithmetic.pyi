@@ -665,7 +665,9 @@ assert_type(AR_floating**f, npt.NDArray[np.floating])
 assert_type(AR_floating / f, npt.NDArray[np.floating])
 assert_type(AR_floating // f, npt.NDArray[np.floating])
 assert_type(AR_floating % f, npt.NDArray[np.floating])
-assert_type(divmod(AR_floating, f), tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]])
+assert_type(
+    divmod(AR_floating, f), tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]
+)
 
 assert_type(f + AR_floating, npt.NDArray[np.floating])
 assert_type(f - AR_floating, npt.NDArray[np.floating])
@@ -674,7 +676,9 @@ assert_type(f**AR_floating, npt.NDArray[np.floating])
 assert_type(f / AR_floating, npt.NDArray[np.floating])
 assert_type(f // AR_floating, npt.NDArray[np.floating])
 assert_type(f % AR_floating, npt.NDArray[np.floating])
-assert_type(divmod(f, AR_floating), tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]])
+assert_type(
+    divmod(f, AR_floating), tuple[npt.NDArray[np.floating], npt.NDArray[np.floating]]
+)
 
 # character-like
 

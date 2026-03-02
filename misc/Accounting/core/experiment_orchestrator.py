@@ -1,25 +1,25 @@
 """Main experiment orchestrator for AAE framework."""
 
-import time
-from typing import Dict, List, Optional, Any
 from datetime import datetime
+from typing import Any
+
+from .config import AAEConfig
 from .models import (
+    AccountabilityMetrics,
+    AccountingMetrics,
     ExperimentConfig,
     ExperimentGroup,
     ExperimentResults,
-    AccountingMetrics,
-    AccountabilityMetrics,
 )
-from .config import AAEConfig
 
 
 class ExperimentOrchestrator:
     """Main controller for AAE experiments."""
 
-    def __init__(self, config: Optional[AAEConfig] = None):
+    def __init__(self, config: AAEConfig | None = None):
         self.config = config or AAEConfig()
-        self.experiments: Dict[str, ExperimentConfig] = {}
-        self.active_experiments: Dict[str, ExperimentResults] = {}
+        self.experiments: dict[str, ExperimentConfig] = {}
+        self.active_experiments: dict[str, ExperimentResults] = {}
 
     def create_experiment(self, name: str, **kwargs) -> "ExperimentInstance":
         """Create a new experiment instance."""
@@ -51,15 +51,15 @@ class ExperimentOrchestrator:
         # Create experiment instance
         return ExperimentInstance(exp_config, self.config)
 
-    def get_experiment(self, name: str) -> Optional[ExperimentConfig]:
+    def get_experiment(self, name: str) -> ExperimentConfig | None:
         """Get experiment configuration by name."""
         return self.experiments.get(name)
 
-    def list_experiments(self) -> List[str]:
+    def list_experiments(self) -> list[str]:
         """List all experiment names."""
         return list(self.experiments.keys())
 
-    def get_active_experiments(self) -> List[str]:
+    def get_active_experiments(self) -> list[str]:
         """Get names of currently active experiments."""
         return list(self.active_experiments.keys())
 
@@ -70,8 +70,8 @@ class ExperimentInstance:
     def __init__(self, config: ExperimentConfig, orchestrator_config: AAEConfig):
         self.config = config
         self.orchestrator_config = orchestrator_config
-        self.groups: List[ExperimentGroup] = []
-        self.results: Optional[ExperimentResults] = None
+        self.groups: list[ExperimentGroup] = []
+        self.results: ExperimentResults | None = None
         self.dataset = None
         self._setup_groups()
 
@@ -145,7 +145,7 @@ class ExperimentInstance:
         }
         print(f"   Generated {self.dataset['transactions']} transactions")
 
-    def _run_groups(self) -> Dict[str, Dict[str, Any]]:
+    def _run_groups(self) -> dict[str, dict[str, Any]]:
         """Run all experimental groups."""
         print("👥 Running experimental groups...")
         results = {}
@@ -173,7 +173,7 @@ class ExperimentInstance:
 
         return results
 
-    def _run_oracle_group(self) -> Dict[str, Any]:
+    def _run_oracle_group(self) -> dict[str, Any]:
         """Run the Oracle (ground truth) group."""
         return {
             "score": 100.0,
@@ -190,7 +190,7 @@ class ExperimentInstance:
             ),
         }
 
-    def _run_ai_group(self) -> Dict[str, Any]:
+    def _run_ai_group(self) -> dict[str, Any]:
         """Run the AI Control group."""
         # Simulate AI performance
         return {
@@ -209,7 +209,7 @@ class ExperimentInstance:
             ),
         }
 
-    def _run_human_group(self) -> Dict[str, Any]:
+    def _run_human_group(self) -> dict[str, Any]:
         """Run the Human Control group."""
         return {
             "score": 78.0,
@@ -228,7 +228,7 @@ class ExperimentInstance:
             ),
         }
 
-    def _run_hybrid_group(self) -> Dict[str, Any]:
+    def _run_hybrid_group(self) -> dict[str, Any]:
         """Run the Hybrid Model group."""
         return {
             "score": 92.0,
@@ -248,8 +248,8 @@ class ExperimentInstance:
         }
 
     def _calculate_scores(
-        self, group_results: Dict[str, Dict[str, Any]]
-    ) -> Dict[str, float]:
+        self, group_results: dict[str, dict[str, Any]]
+    ) -> dict[str, float]:
         """Calculate final scores for each group."""
         scores = {}
         weights = self.config.scoring_weights
@@ -277,7 +277,7 @@ class ExperimentInstance:
 
         return scores
 
-    def _generate_findings(self, scores: Dict[str, float]) -> List[str]:
+    def _generate_findings(self, scores: dict[str, float]) -> list[str]:
         """Generate key findings from experiment results."""
         findings = []
 

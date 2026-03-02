@@ -3,11 +3,11 @@ Enhanced Clarifier Glimpse with Post-Execution Curiosity System
 Transforms clarifiers from interrogators to learning companions
 """
 
-from typing import Optional, Tuple, List, Dict, Any
+import random
+import time
 from dataclasses import dataclass
 from enum import Enum
-import time
-import random
+from typing import Any
 
 
 class ClarifierType(Enum):
@@ -32,10 +32,10 @@ class Clarifier:
     """Represents a clarifier question and its options"""
 
     type: ClarifierType
-    category: Optional[CuriosityCategory]
+    category: CuriosityCategory | None
     question: str
-    options: List[str]
-    default: Optional[str] = None
+    options: list[str]
+    default: str | None = None
 
     def format_question(self) -> str:
         """Format the clarifier as a user-facing question"""
@@ -182,7 +182,7 @@ class EnhancedClarifierEngine:
 
     def detect_critical_ambiguity(
         self, input_text: str, goal: str, constraints: str
-    ) -> List[Clarifier]:
+    ) -> list[Clarifier]:
         """
         Detect critical ambiguities that require pre-execution clarification
         Only used for high-stakes or potentially harmful scenarios
@@ -211,9 +211,7 @@ class EnhancedClarifierEngine:
         # Maximum 1 critical clarifier to avoid blocking
         return clarifiers[:1]
 
-    def generate_curiosity_question(
-        self, context: Dict[str, Any]
-    ) -> Optional[Clarifier]:
+    def generate_curiosity_question(self, context: dict[str, Any]) -> Clarifier | None:
         """
         Generate a curiosity question based on context and engagement
 
@@ -264,7 +262,7 @@ class EnhancedClarifierEngine:
 
     def apply_curiosity_response(
         self, clarifier: Clarifier, response: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Apply a curiosity response to update user profile
 
@@ -293,7 +291,7 @@ class EnhancedClarifierEngine:
             "engagement_score": self.engagement_tracker.engagement_score,
         }
 
-    def get_user_preferences(self) -> Dict[str, Any]:
+    def get_user_preferences(self) -> dict[str, Any]:
         """Get learned user preferences"""
         return {
             "profile": self.engagement_tracker.user_profile,
@@ -302,7 +300,7 @@ class EnhancedClarifierEngine:
             "response_rate": self.engagement_tracker.curiosity_response_rate,
         }
 
-    def generate_preferred_constraints(self, context: Dict[str, Any]) -> str:
+    def generate_preferred_constraints(self, context: dict[str, Any]) -> str:
         """
         Generate constraints based on learned user preferences
 
@@ -380,7 +378,7 @@ async def enhanced_sampler_with_curiosity(
 
     # Generate response using learned preferences
     sample = f"Sample response with learned preferences: {full_constraints}"
-    essence = f"Essence: Tailored response based on user profile"
+    essence = "Essence: Tailored response based on user profile"
 
     # Generate post-execution curiosity question
     curiosity = clarifier_engine.generate_curiosity_question(context)

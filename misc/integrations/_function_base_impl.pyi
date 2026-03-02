@@ -7,17 +7,14 @@ from typing import (
     Protocol,
     SupportsIndex,
     SupportsInt,
-    TypeAlias,
     TypeVar,
     overload,
     type_check_only,
 )
 from typing import Literal as L
 
-from _typeshed import Incomplete
-from typing_extensions import TypeIs, deprecated
-
 import numpy as np
+from _typeshed import Incomplete
 from numpy import (
     _OrderKACF,
     bool_,
@@ -56,6 +53,7 @@ from numpy._typing import (
     _ScalarLike_co,
     _ShapeLike,
 )
+from typing_extensions import TypeIs, deprecated
 
 __all__ = [
     "select",
@@ -107,8 +105,8 @@ _ScalarT1 = TypeVar("_ScalarT1", bound=generic)
 _ScalarT2 = TypeVar("_ScalarT2", bound=generic)
 _ArrayT = TypeVar("_ArrayT", bound=np.ndarray)
 
-_2Tuple: TypeAlias = tuple[_T, _T]
-_MeshgridIdx: TypeAlias = L["ij", "xy"]
+type _2Tuple[_T] = tuple[_T, _T]
+type _MeshgridIdx = L["ij", "xy"]
 
 @type_check_only
 class _TrimZerosSequence(Protocol[_T_co]):
@@ -592,7 +590,7 @@ def median(
     keepdims: bool = ...,
 ) -> _ArrayT: ...
 
-_MethodKind: TypeAlias = L[
+type _MethodKind = L[
     "inverted_cdf",
     "averaged_inverted_cdf",
     "closest_observation",

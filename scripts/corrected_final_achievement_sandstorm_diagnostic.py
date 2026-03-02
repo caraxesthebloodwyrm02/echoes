@@ -9,15 +9,16 @@ Purpose: Transform high-density process noise into clear diagnostic visibility w
 simple algorithms and targeted micro-improvements.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import yaml
 import json
-from typing import Dict, Any
-from dataclasses import dataclass, field
-from pathlib import Path
 import logging
-from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import matplotlib.pyplot as plt
+import numpy as np
+import yaml
 
 # Configure logging for diagnostic reproducibility (UTF-8 compatible)
 logging.basicConfig(
@@ -37,12 +38,12 @@ class DiagnosticSignature:
 
     source_name: str
     duration: float
-    impact_analysis: Dict[str, float] = field(default_factory=dict)
-    atmospheric_metrics: Dict[str, float] = field(default_factory=dict)
-    throughput_dynamics: Dict[str, float] = field(default_factory=dict)
-    observability_streams: Dict[str, float] = field(default_factory=dict)
-    validation_intelligence: Dict[str, float] = field(default_factory=dict)
-    ai_anomaly_signature: Dict[str, float] = field(default_factory=dict)
+    impact_analysis: dict[str, float] = field(default_factory=dict)
+    atmospheric_metrics: dict[str, float] = field(default_factory=dict)
+    throughput_dynamics: dict[str, float] = field(default_factory=dict)
+    observability_streams: dict[str, float] = field(default_factory=dict)
+    validation_intelligence: dict[str, float] = field(default_factory=dict)
+    ai_anomaly_signature: dict[str, float] = field(default_factory=dict)
     unified_quality: float = 0.0
     coherence_score: float = 0.0
 
@@ -61,10 +62,10 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         self.unified_alert_active = False
         self.performance_metrics = {}
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load configuration with corrected final achievement settings"""
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f)
                 logger.info(f"Configuration loaded from {config_path}")
                 return self._apply_corrected_final_settings(config)
@@ -74,7 +75,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             )
             return self._get_corrected_final_defaults()
 
-    def _apply_corrected_final_settings(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_corrected_final_settings(self, config: dict[str, Any]) -> dict[str, Any]:
         """Apply corrected final settings - simplicity restored"""
         if "sandstorm_dev_protocol" not in config:
             config["sandstorm_dev_protocol"] = {}
@@ -95,7 +96,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
 
         return config
 
-    def _get_corrected_final_defaults(self) -> Dict[str, Any]:
+    def _get_corrected_final_defaults(self) -> dict[str, Any]:
         """Corrected final default configuration"""
         return {
             "sandstorm_dev_protocol": {
@@ -140,7 +141,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_raw(self, data: Any) -> dict[str, float]:
         """Simple impact analysis with micro-optimized data"""
         return {
             "issues_density": min(data.get("issues", 0.76), 1.0),  # Micro-improvement
@@ -158,7 +159,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             ),  # Micro-improvement
         }
 
-    def _analyze_atmospheric_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_raw(self, data: Any) -> dict[str, float]:
         """Simple atmospheric metrics with micro-optimized data"""
         return {
             "error_rate": min(data.get("error_rate", 0.80), 1.0),  # Micro-improvement
@@ -176,7 +177,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             ),  # Micro-improvement
         }
 
-    def _analyze_throughput_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_raw(self, data: Any) -> dict[str, float]:
         """Simple throughput dynamics with micro-optimized data"""
         return {
             "rps_observed": min(
@@ -193,7 +194,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             ),  # Micro-improvement
         }
 
-    def _analyze_observability_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability_raw(self, data: Any) -> dict[str, float]:
         """Simple observability streams with micro-optimized data"""
         return {
             "error_density": min(
@@ -210,7 +211,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             ),  # Micro-improvement
         }
 
-    def _analyze_validation_raw(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_raw(self, data: Any) -> dict[str, float]:
         """Simple validation intelligence with micro-optimized data"""
         return {
             "glimpse_coverage": max(
@@ -256,7 +257,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple impact analysis for atmospheric layer"""
         return {
             "issues_density": max(0.0, data.get("issues", 0.25)),
@@ -266,7 +267,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             "diagnostic_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_atmospheric_processed(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_processed(self, data: Any) -> dict[str, float]:
         """Simple atmospheric metrics"""
         return {
             "error_rate": max(0.0, data.get("error_rate", 0.15)),
@@ -276,7 +277,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             "harmonic_balance": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_throughput_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple throughput metrics for atmospheric layer"""
         return {
             "rps_observed": min(data.get("rps_normalized", 0.9), 1.0),
@@ -285,7 +286,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             "flow_resonance": min(data.get("throughput_stability", 0.8), 1.0),
         }
 
-    def _analyze_observability_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple observability metrics for atmospheric layer"""
         return {
             "error_density": max(0.0, data.get("error_density", 0.2)),
@@ -294,7 +295,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             "signal_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_validation_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_atmospheric(self, data: Any) -> dict[str, float]:
         """Simple validation metrics for atmospheric layer"""
         return {
             "glimpse_coverage": min(data.get("glimpse_coverage", 0.93), 1.0),
@@ -445,7 +446,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
         coherence = atmospheric_unit / max(raw_unit, 0.1)
         return min(coherence, 1.0)
 
-    def _extract_ai_anomaly_signature(self, total_coherence: float) -> Dict[str, float]:
+    def _extract_ai_anomaly_signature(self, total_coherence: float) -> dict[str, float]:
         """Simple AI anomaly detection signature (restored)"""
         return {
             "anomaly_confidence": total_coherence * 0.9,
@@ -865,7 +866,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
 
     def export_corrected_final_report(
         self, output_path: str = "corrected_final_outputs"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export corrected final achievement diagnostic report"""
         logger.info("Exporting corrected final achievement diagnostic report")
         out = Path(output_path)
@@ -875,7 +876,7 @@ class CorrectedFinalAchievementSandstormDiagnostic:
             "protocol_info": {
                 "name": "CORRECTED_FINAL_ACHIEVEMENT_SANDSTORM_DIAGNOSTIC",
                 "version": "2.4.0",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "unified_alert_active": self.unified_alert_active,
                 "intent": "Achieve authentic 0.750+ coherence with restored simplicity and micro-optimizations",
             },
@@ -1036,30 +1037,30 @@ def main():
     )
 
     # Activate glimpse unified alert with corrected final approach
-    print(f"\n🎯 Activating Corrected Final Achievement glimpse Alert...")
+    print("\n🎯 Activating Corrected Final Achievement glimpse Alert...")
     activated = protocol.activate_sandstorm_alert()
 
     if activated:
-        logger.info(f"🎉 Corrected final achievement successful!")
-        print(f"\n🎯 glimpse ALERT ACTIVE - Corrected Final Achievement!")
+        logger.info("🎉 Corrected final achievement successful!")
+        print("\n🎯 glimpse ALERT ACTIVE - Corrected Final Achievement!")
         print(
             f"✅ Coherence: {protocol.analysis.get('unified_coherence', 0):.3f} >= Target: 0.750"
         )
-        print(f"🎊 Simplicity restored + micro-optimizations applied!")
-        print(f"🎵 Chaos successfully transformed into comprehension!")
-        print(f"🎵 Maintenance becomes music through authentic simplicity!")
+        print("🎊 Simplicity restored + micro-optimizations applied!")
+        print("🎵 Chaos successfully transformed into comprehension!")
+        print("🎵 Maintenance becomes music through authentic simplicity!")
     else:
         gap_remaining = protocol.analysis.get("gap_remaining", 0)
         logger.info(f"Gap remaining: {gap_remaining:.3f}")
         print(f"\n⚠️ glimpse ALERT INACTIVE - {gap_remaining:.3f} gap remaining")
-        print(f"🔧 Continue with simplicity-based micro-improvements")
+        print("🔧 Continue with simplicity-based micro-improvements")
 
     # Generate corrected final achievement visualizations and reports
     protocol.generate_corrected_final_visualization()
     report = protocol.export_corrected_final_report()
 
-    print(f"\n📁 Corrected final achievement outputs saved to corrected_final_outputs/")
-    print(f"\n🎯 Corrected Final Achievement Summary:")
+    print("\n📁 Corrected final achievement outputs saved to corrected_final_outputs/")
+    print("\n🎯 Corrected Final Achievement Summary:")
     print(f"   🌊 Impact Layer Quality: {impact_sig.unified_quality:.3f}")
     print(f"   🌤️ Atmospheric Quality: {atmospheric_sig.unified_quality:.3f}")
     print(
@@ -1075,16 +1076,16 @@ def main():
     print(
         f"   ⚖️ Standards Maintained: {protocol.config['sandstorm_dev_protocol']['unified_trigger']['activation_threshold'] == 0.750}"
     )
-    print(f"   🔧 Simplicity Restored: True")
-    print(f"   🎯 Micro-Optimizations Applied: True")
-    print(f"   🚫 Over-Engineering Eliminated: True")
+    print("   🔧 Simplicity Restored: True")
+    print("   🎯 Micro-Optimizations Applied: True")
+    print("   🚫 Over-Engineering Eliminated: True")
 
-    print(f"\n🌊 Corrected final achievement approach:")
-    print(f"   ✅ Simple, effective algorithms restored")
-    print(f"   ✅ Targeted micro-optimizations applied")
-    print(f"   ✅ No complex weights or penalties")
-    print(f"   ✅ No data quality enhancements")
-    print(f"   ✅ Authentic achievement through simplicity")
+    print("\n🌊 Corrected final achievement approach:")
+    print("   ✅ Simple, effective algorithms restored")
+    print("   ✅ Targeted micro-optimizations applied")
+    print("   ✅ No complex weights or penalties")
+    print("   ✅ No data quality enhancements")
+    print("   ✅ Authentic achievement through simplicity")
 
 
 if __name__ == "__main__":

@@ -4,11 +4,10 @@ Audio Quality Analysis - Soft-Knee Compression Impact Assessment
 Analyzes the improvements from cubic spline-based soft-knee compression
 """
 
+import os
+
 import numpy as np
 from scipy.io import wavfile
-import matplotlib.pyplot as plt
-from scipy import stats
-import os
 
 
 def analyze_audio_quality(filename):
@@ -71,7 +70,7 @@ def compare_compression_impact():
             metrics = analyze_audio_quality(filename)
             results.append(metrics)
 
-            print(f"\n🎵 Run #{i+1}: {run_name}")
+            print(f"\n🎵 Run #{i + 1}: {run_name}")
             print(f"   Peak Level: {metrics['peak_db']:.2f} dB")
             print(f"   RMS Level: {metrics['rms_db']:.2f} dB")
             print(f"   Crest Factor: {metrics['crest_factor']:.2f} dB")
@@ -82,7 +81,7 @@ def compare_compression_impact():
 
     # Analyze trends
     if len(results) >= 2:
-        print(f"\n📊 COMPRESSION ANALYSIS TRENDS")
+        print("\n📊 COMPRESSION ANALYSIS TRENDS")
         print("=" * 50)
 
         # Dynamic range preservation
@@ -101,7 +100,7 @@ def compare_compression_impact():
         avg_clipping = np.mean(clipping_reduction)
         avg_dynamic_range = np.mean(dr_preservation)
 
-        print(f"\n🎯 QUALITY ASSESSMENT")
+        print("\n🎯 QUALITY ASSESSMENT")
         print(f"   Average Clipping: {avg_clipping:.2%} (Target: <1%)")
         print(f"   Average Dynamic Range: {avg_dynamic_range:.1f}dB (Target: >15dB)")
 
@@ -189,13 +188,13 @@ def main():
     # Generate TTS integration proposal
     proposal = generate_tts_integration_proposal()
 
-    print(f"\n🎯 NEXT SESSION TARGET IDENTIFIED")
+    print("\n🎯 NEXT SESSION TARGET IDENTIFIED")
     print("=" * 50)
     print("Primary Focus: TTS Integration for Lyrics Overlay")
     print("Secondary Focus: Voice Character Customization")
     print("Tertiary Focus: Audio Distribution Formats")
 
-    print(f"\n📈 EXPECTED IMPACT")
+    print("\n📈 EXPECTED IMPACT")
     print("- Narrative Enhancement: +40% storytelling capability")
     print("- Market Viability: +60% commercial potential")
     print("- Production Quality: +25% professional polish")

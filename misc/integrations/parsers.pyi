@@ -1,10 +1,9 @@
+from collections.abc import Hashable
 from typing import (
-    Hashable,
     Literal,
 )
 
 import numpy as np
-
 from pandas._typing import (
     ArrayLike,
     Dtype,

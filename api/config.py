@@ -5,11 +5,11 @@ Provides centralized configuration for all API components including
 Glimpse settings, security, and performance parameters.
 """
 
-import os
-from typing import Optional, Dict, Any
+from pathlib import Path
+from typing import Any
+
 from pydantic import Field
 from pydantic_settings import BaseSettings, SettingsConfigDict
-from pathlib import Path
 
 
 class EngineConfig(BaseSettings):
@@ -45,7 +45,7 @@ class SecurityConfig(BaseSettings):
     """Security and authentication configuration"""
 
     # API Keys
-    openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
+    openai_api_key: str | None = Field(default=None, env="OPENAI_API_KEY")
     api_key_required: bool = Field(default=True, env="API_KEY_REQUIRED")
     allowed_api_keys: list = Field(default_factory=list, env="ALLOWED_API_KEYS")
 
@@ -156,7 +156,7 @@ def load_config_from_env() -> EchoesAPIConfig:
     return EchoesAPIConfig()
 
 
-def validate_config(config: EchoesAPIConfig) -> Dict[str, Any]:
+def validate_config(config: EchoesAPIConfig) -> dict[str, Any]:
     """Validate configuration and return validation results"""
     issues = []
 

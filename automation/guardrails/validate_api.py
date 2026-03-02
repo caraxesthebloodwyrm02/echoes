@@ -1,5 +1,6 @@
-from ingest_docs import parse_security_protocols
 import time
+
+from ingest_docs import parse_security_protocols
 
 
 # --- Rate Limiter Simulation ---
@@ -101,7 +102,7 @@ if __name__ == "__main__":
         # The first 2 should pass, the 3rd should fail
         expected_pass = i < 2
         print(
-            f"Request {i+1}: [{'PASS' if is_valid == expected_pass else 'FAIL'}] {message}"
+            f"Request {i + 1}: [{'PASS' if is_valid == expected_pass else 'FAIL'}] {message}"
         )
 
     # Wait for tokens to replenish

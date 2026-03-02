@@ -1,9 +1,9 @@
 from pathlib import Path
-from typing import IO, Any, TypeAlias
+from typing import IO, Any
 
 from _typeshed import OpenBinaryMode, OpenTextMode
 
-_Mode: TypeAlias = OpenBinaryMode | OpenTextMode
+type _Mode = OpenBinaryMode | OpenTextMode
 
 ###
 
@@ -17,7 +17,12 @@ class DataSource:
     # Whether the file-object is opened in string or bytes mode (by default)
     # depends on the file-extension of `path`
     def open(
-        self, /, path: str, mode: _Mode = "r", encoding: str | None = None, newline: str | None = None
+        self,
+        /,
+        path: str,
+        mode: _Mode = "r",
+        encoding: str | None = None,
+        newline: str | None = None,
     ) -> IO[Any]: ...
 
 class Repository(DataSource):

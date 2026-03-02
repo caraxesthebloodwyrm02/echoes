@@ -4,9 +4,9 @@ Cost optimization module for the Echoes AI Assistant.
 Provides smart model routing and usage analytics for OpenAI API cost optimization.
 """
 
-from typing import Dict, List, Any, Optional
 import logging
-from datetime import datetime, timezone
+from datetime import UTC, datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -180,7 +180,7 @@ class CostOptimizer:
         model: str,
         input_tokens: int,
         output_tokens: int,
-        cost: Optional[float] = None,
+        cost: float | None = None,
     ) -> None:
         """Track API usage and costs."""
         if cost is None:
@@ -204,7 +204,7 @@ class CostOptimizer:
         self.usage_stats["model_usage"][model]["cost"] += cost
 
         # Daily stats
-        today = datetime.now(timezone.utc).date().isoformat()
+        today = datetime.now(UTC).date().isoformat()
         if today not in self.usage_stats["daily_stats"]:
             self.usage_stats["daily_stats"][today] = {
                 "cost": 0.0,
@@ -216,10 +216,10 @@ class CostOptimizer:
         self.usage_stats["daily_stats"][today]["tokens"] += input_tokens + output_tokens
         self.usage_stats["daily_stats"][today]["requests"] += 1
 
-    def check_cost_alerts(self) -> List[str]:
+    def check_cost_alerts(self) -> list[str]:
         """Check if any cost alerts should be triggered."""
         alerts = []
-        today = datetime.now(timezone.utc).date().isoformat()
+        today = datetime.now(UTC).date().isoformat()
 
         # Daily cost alert
         daily_cost = self.usage_stats["daily_stats"].get(today, {}).get("cost", 0.0)
@@ -232,7 +232,7 @@ class CostOptimizer:
             )
 
         # Monthly cost projection
-        current_month = datetime.now(timezone.utc).strftime("%Y-%m")
+        current_month = datetime.now(UTC).strftime("%Y-%m")
         monthly_cost = sum(
             day_stats.get("cost", 0.0)
             for day_key, day_stats in self.usage_stats["daily_stats"].items()
@@ -264,7 +264,7 @@ class CostOptimizer:
 
         return alerts
 
-    def get_usage_report(self) -> Dict[str, Any]:
+    def get_usage_report(self) -> dict[str, Any]:
         """Generate comprehensive usage report."""
         report = {
             "total_stats": self.usage_stats.copy(),
@@ -275,7 +275,7 @@ class CostOptimizer:
 
         return report
 
-    def _calculate_savings_potential(self) -> Dict[str, Any]:
+    def _calculate_savings_potential(self) -> dict[str, Any]:
         """Calculate potential cost savings."""
         # Analyze current model usage and suggest optimizations
         total_cost = self.usage_stats["total_cost"]
@@ -294,7 +294,7 @@ class CostOptimizer:
             "savings_percentage": (potential_savings / max(0.01, total_cost)) * 100,
         }
 
-    def _analyze_model_efficiency(self) -> Dict[str, Any]:
+    def _analyze_model_efficiency(self) -> dict[str, Any]:
         """Analyze which models are most cost-effective."""
         efficiency = {}
 
@@ -312,7 +312,7 @@ class CostOptimizer:
 
         return efficiency
 
-    def _generate_recommendations(self) -> List[str]:
+    def _generate_recommendations(self) -> list[str]:
         """Generate optimization recommendations."""
         recommendations = []
 
@@ -327,7 +327,7 @@ class CostOptimizer:
                     )
 
         # Check for high daily costs
-        today = datetime.now(timezone.utc).date().isoformat()
+        today = datetime.now(UTC).date().isoformat()
         daily_cost = self.usage_stats["daily_stats"].get(today, {}).get("cost", 0.0)
         if daily_cost > 5.0:
             recommendations.append(

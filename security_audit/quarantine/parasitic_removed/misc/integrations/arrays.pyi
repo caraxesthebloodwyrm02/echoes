@@ -1,7 +1,6 @@
-from typing import Sequence
+from collections.abc import Sequence
 
 import numpy as np
-
 from pandas._typing import (
     AxisInt,
     DtypeObj,
@@ -35,4 +34,6 @@ class NDArrayBacked:
     @property
     def T(self): ...
     @classmethod
-    def _concat_same_type(cls, to_concat: Sequence[Self], axis: AxisInt = ...) -> Self: ...
+    def _concat_same_type(
+        cls, to_concat: Sequence[Self], axis: AxisInt = ...
+    ) -> Self: ...

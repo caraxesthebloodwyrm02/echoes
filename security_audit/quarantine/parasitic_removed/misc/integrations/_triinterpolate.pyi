@@ -1,7 +1,7 @@
-from matplotlib.tri import Triangulation, TriFinder
-
 from typing import Literal
+
 import numpy as np
+from matplotlib.tri import Triangulation, TriFinder
 from numpy.typing import ArrayLike
 
 class TriInterpolator:
@@ -13,7 +13,9 @@ class TriInterpolator:
     ) -> None: ...
     # __call__ and gradient are not actually implemented by the ABC, but are specified as required
     def __call__(self, x: ArrayLike, y: ArrayLike) -> np.ma.MaskedArray: ...
-    def gradient(self, x: ArrayLike, y: ArrayLike) -> tuple[np.ma.MaskedArray, np.ma.MaskedArray]: ...
+    def gradient(
+        self, x: ArrayLike, y: ArrayLike
+    ) -> tuple[np.ma.MaskedArray, np.ma.MaskedArray]: ...
 
 class LinearTriInterpolator(TriInterpolator): ...
 

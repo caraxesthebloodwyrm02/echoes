@@ -1,5 +1,5 @@
-import sys
 import os
+import sys
 
 # Exclude the core directory to avoid conflicts with standard library
 project_root = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +13,7 @@ from assistant_v2_core import EchoesAssistantV2
 def main():
     assistant = EchoesAssistantV2()
 
-    query = """Please provide a plan to initiate analysis of the following files:
+    query = r"""Please provide a plan to initiate analysis of the following files:
 - e:\Projects\Echoes\ATLAS\Project Directory Overview.png
 - e:\Projects\Echoes\ATLAS\Project Progress_ Day 1 Summary.png
 - e:\Projects\Echoes\ATLAS\Software Project Directory Structure.png

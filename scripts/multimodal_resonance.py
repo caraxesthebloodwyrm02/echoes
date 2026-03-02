@@ -4,16 +4,14 @@ Multimodal Resonance Glimpse for EchoesAssistantV2
 File extension-based grounding vectors with resonance processing
 """
 
-import os
 import json
-import asyncio
-from typing import Dict, List, Any, Optional, Tuple, Union
-from dataclasses import dataclass, field
-from datetime import datetime, timezone
-from pathlib import Path
-import numpy as np
 from collections import defaultdict
-import mimetypes
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import numpy as np
 
 
 @dataclass
@@ -23,12 +21,12 @@ class ModalityVector:
     extension: str
     modality_type: str  # vision, text, audio, structured, geometric
     resonance_frequency: float  # 0.0-1.0, how well it resonates with processing
-    processing_layers: List[str]  # hierarchical processing layers
+    processing_layers: list[str]  # hierarchical processing layers
     quality_factor: float  # nuance and quality level
     semantic_density: float  # information density per Glimpse
     temporal_nature: str  # static, dynamic, streaming
     extraction_complexity: float  # difficulty of information extraction
-    cross_modal_bridges: List[str]  # connections to other modalities
+    cross_modal_bridges: list[str]  # connections to other modalities
 
 
 @dataclass
@@ -38,7 +36,7 @@ class ResonancePattern:
     input_modality: str
     output_modality: str
     resonance_strength: float  # 0.0-1.0
-    processing_pathway: List[str]
+    processing_pathway: list[str]
     transformation_complexity: float
     semantic_preservation: float  # how much meaning is preserved
     enhancement_potential: float  # potential for enhancement during processing
@@ -51,16 +49,12 @@ class MultimodalMemory:
     id: str
     file_path: str
     modality_vector: ModalityVector
-    extracted_content: Dict[str, Any]
-    resonance_signature: Dict[str, float]  # resonance with different processing modes
-    cross_modal_associations: List[str]  # associations to other modalities
-    processing_history: List[Dict]  # how it was processed
-    created_at: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
-    last_resonated: str = field(
-        default_factory=lambda: datetime.now(timezone.utc).isoformat()
-    )
+    extracted_content: dict[str, Any]
+    resonance_signature: dict[str, float]  # resonance with different processing modes
+    cross_modal_associations: list[str]  # associations to other modalities
+    processing_history: list[dict]  # how it was processed
+    created_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
+    last_resonated: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
 
 class MultimodalResonanceEngine:
@@ -150,15 +144,15 @@ class MultimodalResonanceEngine:
         self.resonance_patterns = self._initialize_resonance_patterns()
 
         # Multimodal memory storage
-        self.multimodal_memories: Dict[str, MultimodalMemory] = {}
+        self.multimodal_memories: dict[str, MultimodalMemory] = {}
 
         # Resonance tracking
-        self.resonance_history: List[Dict] = []
+        self.resonance_history: list[dict] = []
 
         # Load existing data
         self._load_multimodal_data()
 
-    def _initialize_modality_vectors(self) -> Dict[str, ModalityVector]:
+    def _initialize_modality_vectors(self) -> dict[str, ModalityVector]:
         """Initialize grounding vectors for file extensions"""
         vectors = {}
 
@@ -319,7 +313,7 @@ class MultimodalResonanceEngine:
 
         return vectors
 
-    def _initialize_resonance_patterns(self) -> Dict[str, ResonancePattern]:
+    def _initialize_resonance_patterns(self) -> dict[str, ResonancePattern]:
         """Initialize resonance patterns between modalities"""
         patterns = {}
 
@@ -410,7 +404,7 @@ class MultimodalResonanceEngine:
         try:
             memories_file = self.storage_path / "multimodal_memories.json"
             if memories_file.exists():
-                with open(memories_file, "r", encoding="utf-8") as f:
+                with open(memories_file, encoding="utf-8") as f:
                     memories_data = json.load(f)
                     for mem_data in memories_data:
                         # Reconstruct modality vector
@@ -446,7 +440,7 @@ class MultimodalResonanceEngine:
         except Exception as e:
             print(f"Warning: Could not save multimodal data: {e}")
 
-    def get_modality_vector(self, file_path: str) -> Optional[ModalityVector]:
+    def get_modality_vector(self, file_path: str) -> ModalityVector | None:
         """Get modality vector for a file based on its extension"""
         ext = Path(file_path).suffix.lower()
         return self.modality_vectors.get(ext)
@@ -470,7 +464,7 @@ class MultimodalResonanceEngine:
 
     def process_multimodal_file(
         self, file_path: str, extraction_target: str = "text"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Process a multimodal file with resonance-based understanding"""
 
         # Get modality vector
@@ -492,7 +486,7 @@ class MultimodalResonanceEngine:
         )
 
         # Create multimodal memory
-        memory_id = f"mm_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')}"
+        memory_id = f"mm_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S_%f')}"
         memory = MultimodalMemory(
             id=memory_id,
             file_path=file_path,
@@ -512,7 +506,7 @@ class MultimodalResonanceEngine:
             cross_modal_associations=modality_vector.cross_modal_bridges,
             processing_history=[
                 {
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                     "action": "initial_processing",
                     "pathway": pathway,
                     "resonance": resonance_strength,
@@ -527,7 +521,7 @@ class MultimodalResonanceEngine:
         # Track resonance
         self.resonance_history.append(
             {
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "file_path": file_path,
                 "input_modality": modality_vector.modality_type,
                 "output_modality": extraction_target,
@@ -560,7 +554,7 @@ class MultimodalResonanceEngine:
 
     def _determine_processing_pathway(
         self, modality_vector: ModalityVector, target: str, resonance: float
-    ) -> List[str]:
+    ) -> list[str]:
         """Determine optimal processing pathway based on resonance"""
         base_layers = modality_vector.processing_layers
 
@@ -581,7 +575,7 @@ class MultimodalResonanceEngine:
 
     def find_resonant_files(
         self, target_modality: str, min_resonance: float = 0.5
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Find files that resonate well with target modality"""
         resonant_files = []
 
@@ -604,7 +598,7 @@ class MultimodalResonanceEngine:
         resonant_files.sort(key=lambda x: x["resonance_strength"], reverse=True)
         return resonant_files
 
-    def get_cross_modal_insights(self, file_path: str) -> Dict[str, Any]:
+    def get_cross_modal_insights(self, file_path: str) -> dict[str, Any]:
         """Get insights about cross-modal potential for a file"""
         modality_vector = self.get_modality_vector(file_path)
         if not modality_vector:
@@ -643,8 +637,8 @@ class MultimodalResonanceEngine:
         return {"success": True, "insights": insights}
 
     def optimize_processing_strategy(
-        self, files: List[str], target_output: str
-    ) -> Dict[str, Any]:
+        self, files: list[str], target_output: str
+    ) -> dict[str, Any]:
         """Optimize processing strategy for multiple files"""
         file_analyses = []
 
@@ -697,7 +691,7 @@ class MultimodalResonanceEngine:
 
         return {"success": True, "strategy": strategy}
 
-    def get_resonance_statistics(self) -> Dict[str, Any]:
+    def get_resonance_statistics(self) -> dict[str, Any]:
         """Get comprehensive statistics about multimodal resonance"""
         if not self.multimodal_memories:
             return {"success": False, "error": "No multimodal memories available"}
@@ -738,7 +732,7 @@ class MultimodalResonanceEngine:
                     modality: len(layers)
                     for modality, layers in self.processing_layers.items()
                 },
-                "last_updated": datetime.now(timezone.utc).isoformat(),
+                "last_updated": datetime.now(UTC).isoformat(),
             },
         }
 

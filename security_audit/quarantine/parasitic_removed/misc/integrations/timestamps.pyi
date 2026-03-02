@@ -1,20 +1,24 @@
 from datetime import (
     date as _date,
+)
+from datetime import (
     datetime,
-    time as _time,
     timedelta,
+)
+from datetime import (
+    time as _time,
+)
+from datetime import (
     tzinfo as _tzinfo,
 )
 from time import struct_time
 from typing import (
     ClassVar,
     Literal,
-    TypeAlias,
     overload,
 )
 
 import numpy as np
-
 from pandas._libs.tslibs import (
     BaseOffset,
     NaTType,
@@ -27,7 +31,7 @@ from pandas._typing import (
     TimestampNonexistent,
 )
 
-_TimeZones: TypeAlias = str | _tzinfo | None | int
+type _TimeZones = str | _tzinfo | None | int
 
 def integer_op_not_supported(obj: object) -> TypeError: ...
 
@@ -57,7 +61,9 @@ class Timestamp(datetime):
         fold: int | None = ...,
     ) -> Self | NaTType: ...
     @classmethod
-    def _from_value_and_reso(cls, value: int, reso: int, tz: _TimeZones) -> Timestamp: ...
+    def _from_value_and_reso(
+        cls, value: int, reso: int, tz: _TimeZones
+    ) -> Timestamp: ...
     @property
     def value(self) -> int: ...  # np.int64
     @property
@@ -223,7 +229,9 @@ class Timestamp(datetime):
     def quarter(self) -> int: ...
     @property
     def week(self) -> int: ...
-    def to_numpy(self, dtype: np.dtype | None = ..., copy: bool = ...) -> np.datetime64: ...
+    def to_numpy(
+        self, dtype: np.dtype | None = ..., copy: bool = ...
+    ) -> np.datetime64: ...
     @property
     def _date_repr(self) -> str: ...
     @property

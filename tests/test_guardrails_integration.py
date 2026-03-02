@@ -1,5 +1,7 @@
-import pytest
+import json
 
+import pytest
+import requests
 
 # Try to import c_o_r_e modules, skip if not available
 try:
@@ -12,7 +14,6 @@ except ImportError:
 
 
 class TestGuardrailIntegration:
-
     @pytest.fixture(scope="class")
     def server_setup(self):
         import time
@@ -34,8 +35,6 @@ class TestGuardrailIntegration:
     )
     def test_01_valid_request(self, server_setup):
         """Test a valid request should pass with a 200 OK."""
-        import agent_requests
-        import agent_json
 
         server, base_url = server_setup
         payload = {"prompt": "hello", "stage": "draft"}
@@ -54,8 +53,6 @@ class TestGuardrailIntegration:
     )
     def test_02_missing_auth(self, server_setup):
         """Test a request with a missing auth header should fail with a 401 Unauthorized."""
-        import agent_requests
-        import agent_json
 
         server, base_url = server_setup
         payload = {"prompt": "hello", "stage": "draft"}
@@ -71,8 +68,6 @@ class TestGuardrailIntegration:
     )
     def test_03_invalid_prompt(self, server_setup):
         """Test a request with an invalid prompt should fail with a 400 Bad Request."""
-        import agent_requests
-        import agent_json
 
         server, base_url = server_setup
         payload = {"stage": "draft"}  # Missing prompt
@@ -91,8 +86,6 @@ class TestGuardrailIntegration:
     )
     def test_04_rate_limiting(self, server_setup):
         """Test that excessive requests are blocked with a 429 Too Many Requests."""
-        import agent_requests
-        import agent_json
 
         server, base_url = server_setup
         payload = {"prompt": "rate limit test", "stage": "draft"}

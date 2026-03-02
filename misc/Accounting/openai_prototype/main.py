@@ -1,26 +1,26 @@
 """OpenAI-powered AAE Phase 1 Prototype - FastAPI Integration."""
 
-import os
-import json
-import asyncio
-from typing import List, Dict, Any, Optional
-from fastapi import FastAPI, UploadFile, File, HTTPException
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
 import base64
-import pandas as pd
 import io
+import json
+import os
+from typing import Any
+
+import pandas as pd
+from fastapi import FastAPI, File, HTTPException, UploadFile
+from fastapi.middleware.cors import CORSMiddleware
+from langchain_community.chat_models import ChatOpenAI
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
 # OpenAI imports
 from openai import OpenAI
-from langchain_community.chat_models import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
+from pydantic import BaseModel
+
+from Accounting.core.experiment_orchestrator import ExperimentOrchestrator
 
 # Existing AAE imports
 from Accounting.dataset.innovate_inc_generator import InnovateIncGenerator
-from Accounting.core.experiment_orchestrator import ExperimentOrchestrator
-from Accounting.core.models import ExperimentConfig
 
 # Initialize OpenAI
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -45,7 +45,7 @@ class TransactionFlag(BaseModel):
 
 
 class AuditResponse(BaseModel):
-    flags: List[TransactionFlag]
+    flags: list[TransactionFlag]
     total_transactions: int
     flagged_count: int
     processing_time_seconds: float
@@ -89,7 +89,7 @@ class OpenAIAuditEngine:
         self.audit_chain = audit_prompt | self.llm | parser
 
     async def audit_transactions(
-        self, transactions: List[Dict[str, Any]]
+        self, transactions: list[dict[str, Any]]
     ) -> AuditResponse:
         """Analyze transactions using OpenAI."""
         import time
@@ -127,7 +127,7 @@ class OpenAIAuditEngine:
                 status_code=500, detail=f"OpenAI analysis failed: {str(e)}"
             )
 
-    def extract_invoice_data(self, image_bytes: bytes) -> Dict[str, Any]:
+    def extract_invoice_data(self, image_bytes: bytes) -> dict[str, Any]:
         """Extract key fields from invoice using GPT-4 Vision."""
         try:
             # Convert image to base64
@@ -276,7 +276,7 @@ async def extract_invoice(file: UploadFile = File(...)):
 async def run_experiment(
     name: str = "OpenAI_AAE_Experiment",
     dataset_size: str = "medium",
-    groups: List[str] = ["human", "ai", "hybrid", "oracle"],
+    groups: list[str] = ["human", "ai", "hybrid", "oracle"],
 ):
     """Run complete AAE experiment with OpenAI integration."""
     try:

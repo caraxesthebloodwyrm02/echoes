@@ -4,8 +4,7 @@ Glimpse Tools Module
 This module provides tools for interacting with the Glimpse API.
 """
 
-import json
-from typing import Dict, Any, List, Optional, Union
+from typing import Any
 
 
 class GlimpseToolBase:
@@ -25,7 +24,7 @@ class GlimpseToolBase:
             "last_call": None,
         }
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Return statistics about tool usage with calculated averages."""
         # Update stats from direct attributes for compatibility
         self.stats.update(
@@ -42,7 +41,7 @@ class GlimpseToolBase:
         )
         return self.stats
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return the OpenAI function calling schema for this tool."""
         raise NotImplementedError("Subclasses must implement this method")
 
@@ -67,7 +66,7 @@ class GlimpseApiGetTool(GlimpseToolBase):
         self._total_response_time = 0.0
         self._last_call_time = None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Return statistics about tool usage with calculated averages."""
         # Update stats from direct attributes for compatibility
         self.stats.update(
@@ -85,7 +84,7 @@ class GlimpseApiGetTool(GlimpseToolBase):
         return self.stats
 
     @property
-    def input_schema(self) -> Dict[str, Any]:
+    def input_schema(self) -> dict[str, Any]:
         """Return the input schema for this tool."""
         return {
             "type": "object",
@@ -110,7 +109,7 @@ class GlimpseApiGetTool(GlimpseToolBase):
             "required": ["url"],
         }
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return the OpenAI function calling schema."""
         return {
             "type": "function",
@@ -124,11 +123,11 @@ class GlimpseApiGetTool(GlimpseToolBase):
     def execute(
         self,
         url: str,
-        params: Optional[Dict] = None,
-        headers: Optional[Dict] = None,
-        timeout: Optional[float] = None,
+        params: dict | None = None,
+        headers: dict | None = None,
+        timeout: float | None = None,
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute the GET request with enhanced tracking.
 
         Args:
@@ -204,7 +203,7 @@ class GlimpseApiPostTool(GlimpseToolBase):
         self._total_response_time = 0.0
         self._last_call_time = None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Return statistics about tool usage with calculated averages."""
         # Update stats from direct attributes for compatibility
         self.stats.update(
@@ -222,7 +221,7 @@ class GlimpseApiPostTool(GlimpseToolBase):
         return self.stats
 
     @property
-    def input_schema(self) -> Dict[str, Any]:
+    def input_schema(self) -> dict[str, Any]:
         """Return the input schema for this tool with support for multiple data formats."""
         return {
             "type": "object",
@@ -247,7 +246,7 @@ class GlimpseApiPostTool(GlimpseToolBase):
             "required": ["url", "data"],
         }
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return the OpenAI function calling schema."""
         return {
             "type": "function",
@@ -261,10 +260,10 @@ class GlimpseApiPostTool(GlimpseToolBase):
     def execute(
         self,
         url: str,
-        data: Union[Dict, str, List],
-        headers: Optional[Dict] = None,
+        data: dict | str | list,
+        headers: dict | None = None,
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute the POST request with support for multiple data formats.
 
         Args:
@@ -345,7 +344,7 @@ class GlimpseConnectPlatformsTool(GlimpseToolBase):
         self._total_response_time = 0.0
         self._last_call_time = None
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Return statistics about tool usage with calculated averages."""
         # Update stats from direct attributes for compatibility
         self.stats.update(
@@ -363,7 +362,7 @@ class GlimpseConnectPlatformsTool(GlimpseToolBase):
         return self.stats
 
     @property
-    def input_schema(self) -> Dict[str, Any]:
+    def input_schema(self) -> dict[str, Any]:
         """Return the input schema for this tool."""
         return {
             "type": "object",
@@ -395,7 +394,7 @@ class GlimpseConnectPlatformsTool(GlimpseToolBase):
             "required": ["source_path", "target_path", "integration_mode"],
         }
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Return the OpenAI function calling schema."""
         return {
             "type": "function",
@@ -411,9 +410,9 @@ class GlimpseConnectPlatformsTool(GlimpseToolBase):
         source_path: str,
         target_path: str,
         integration_mode: str,
-        config: Optional[Dict] = None,
+        config: dict | None = None,
         **kwargs,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Execute the platform connection with automatic compatibility analysis."""
         import time
 
@@ -459,7 +458,7 @@ class GlimpseConnectPlatformsTool(GlimpseToolBase):
             return {"status": "error", "message": str(e), "data": None}
 
 
-def get_glimpse_tools(assistant=None) -> List[GlimpseToolBase]:
+def get_glimpse_tools(assistant=None) -> list[GlimpseToolBase]:
     """Get all available Glimpse tools."""
     return [
         GlimpseApiGetTool(assistant),

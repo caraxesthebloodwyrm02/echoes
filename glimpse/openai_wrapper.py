@@ -4,11 +4,13 @@ Intended to be imported by samplers or performance optimizer modules.
 """
 
 import asyncio
-import time
-import random
 import logging
+import random
+import time
+from collections.abc import Callable
 from contextlib import asynccontextmanager
-from typing import Any, Callable, Optional, Dict, Tuple
+from typing import Any
+
 import openai
 from openai import OpenAIError, RateLimitError
 
@@ -30,17 +32,17 @@ from .metrics import (
     record_openai_request,
     record_openai_tokens,
     record_rate_limit_delay,
+    record_rate_limit_metrics,
     record_rate_limit_rejection,
     record_rate_limit_wait_time,
-    record_rate_limit_metrics,
 )
-from .rate_limiter import get_default_rate_limiter, AdaptiveRateLimiter
+from .rate_limiter import AdaptiveRateLimiter, get_default_rate_limiter
 
 logger = logging.getLogger(__name__)
 
 
 @asynccontextmanager
-async def log_latency(label: str, payload: Dict[str, Any]):
+async def log_latency(label: str, payload: dict[str, Any]):
     """Async context manager to log request latency with metadata."""
     start = time.perf_counter()
     try:
@@ -57,7 +59,7 @@ async def log_latency(label: str, payload: Dict[str, Any]):
         )
         # Optional: record to PerformanceMetrics if available
         try:
-            from .performance_optimizer import PerformanceOptimizer
+            pass
 
             # Attempt to get a shared optimizer instance if one exists
             # This is a soft integration; no hard dependency required
@@ -71,9 +73,9 @@ async def call_with_backoff(
     base_delay: float = 0.5,
     max_delay: float = 60.0,
     endpoint: str = "unknown",
-    rate_limiter: Optional[AdaptiveRateLimiter] = None,
+    rate_limiter: AdaptiveRateLimiter | None = None,
     **kwargs,  # OpenAI API parameters go here
-) -> Tuple[Any, Dict[str, Any]]:
+) -> tuple[Any, dict[str, Any]]:
     """
     Call an async function with exponential backoff on RateLimitError.
     OpenAI API parameters should be passed as kwargs.
@@ -122,9 +124,9 @@ async def call_with_backoff(
                     record_rate_limit_delay(endpoint)
                     record_rate_limit_wait_time(wait_time, endpoint)
 
-            except asyncio.TimeoutError:
+            except TimeoutError:
                 record_rate_limit_rejection(endpoint)
-                raise RuntimeError(f"Rate limit acquisition timed out for {endpoint}")
+                raise RuntimeError(f"Rate limit acquisition timed out for {endpoint}") from None
 
         try:
             try:
@@ -303,8 +305,8 @@ class AsyncOpenAIClient:
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
-        rate_limiter: Optional[AdaptiveRateLimiter] = None,
+        api_key: str | None = None,
+        rate_limiter: AdaptiveRateLimiter | None = None,
     ):
         self._client = openai.AsyncOpenAI(api_key=api_key)
         self._rate_limiter = rate_limiter or get_default_rate_limiter()
@@ -314,8 +316,8 @@ class AsyncOpenAIClient:
         messages: list[dict],
         model: str = "gpt-4o-mini",
         temperature: float = 0.7,
-        max_tokens: Optional[int] = None,
-        rate_limiter: Optional[AdaptiveRateLimiter] = None,
+        max_tokens: int | None = None,
+        rate_limiter: AdaptiveRateLimiter | None = None,
         **kwargs,
     ) -> dict:
         """Make an async chat completion request with automatic retries and metrics."""
@@ -375,7 +377,7 @@ class AsyncOpenAIClient:
 
 
 # Convenience global client (can be replaced or configured)
-_default_client: Optional[AsyncOpenAIClient] = None
+_default_client: AsyncOpenAIClient | None = None
 
 
 def get_default_client() -> AsyncOpenAIClient:

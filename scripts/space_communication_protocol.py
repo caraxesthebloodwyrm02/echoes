@@ -4,12 +4,7 @@ Enhanced Communication Protocol for EchoesAssistantV2
 Establishes meaningful communication within vast space by bypassing Glimpse alignment issues
 """
 
-import numpy as np
-from scipy.io import wavfile
-from scipy.signal import lfilter, resample
 import time
-import os
-import json
 from datetime import datetime
 
 
@@ -208,7 +203,7 @@ def main():
     test_query = "how can i establish a practical method for establishing meaningful communication within vast space"
     result = protocol.establish_direct_channel(test_query)
 
-    print(f"\n✅ Direct Channel Result:")
+    print("\n✅ Direct Channel Result:")
     print(f"   Status: {result['status']}")
     print(f"   Intent: {result['intent']}")
     print(f"   Bypass Active: {result['bypass_active']}")

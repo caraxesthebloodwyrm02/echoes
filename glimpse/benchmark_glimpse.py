@@ -1,7 +1,8 @@
 import asyncio
 import time
 from statistics import mean
-from glimpse.Glimpse import GlimpseEngine, Draft
+
+from glimpse.Glimpse import Draft, GlimpseEngine
 
 
 async def run_once():
@@ -12,7 +13,7 @@ async def run_once():
         "focus on errors",
     )
     start = time.perf_counter()
-    await Glimpse.glimpse(draft)
+    await engine.glimpse(draft)
     return time.perf_counter() - start
 
 

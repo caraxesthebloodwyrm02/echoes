@@ -1,5 +1,5 @@
 from collections.abc import Sequence
-from typing import Any, Literal, TypeAlias, TypeVar, overload
+from typing import Any, Literal, TypeVar, overload
 
 import numpy as np
 from numpy import _OrderKACF, number
@@ -27,9 +27,9 @@ _ArrayT = TypeVar(
     bound=NDArray[np.bool | number],
 )
 
-_OptimizeKind: TypeAlias = bool | Literal["greedy", "optimal"] | Sequence[Any] | None
-_CastingSafe: TypeAlias = Literal["no", "equiv", "safe", "same_kind"]
-_CastingUnsafe: TypeAlias = Literal["unsafe"]
+type _OptimizeKind = bool | Literal["greedy", "optimal"] | Sequence[Any] | None
+type _CastingSafe = Literal["no", "equiv", "safe", "same_kind"]
+type _CastingUnsafe = Literal["unsafe"]
 
 # TODO: Properly handle the `casting`-based combinatorics
 # TODO: We need to evaluate the content `__subscripts` in order

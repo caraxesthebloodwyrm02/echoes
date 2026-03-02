@@ -13,13 +13,14 @@ semantic grounding forces that maintain meaning consistency across
 text, vision, audio, and sensor modalities.
 """
 
-import numpy as np
-from typing import Dict, Any, List, Optional, Tuple, Set, Union
-from dataclasses import dataclass, field
-from enum import Enum
 import logging
 from collections import defaultdict
+from dataclasses import dataclass, field
+from enum import Enum
+from typing import Any
+
 import networkx as nx
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -41,9 +42,9 @@ class SemanticNode:
     modality: str
     embedding: np.ndarray
     confidence: float = 1.0
-    grounding_forces: Dict[GroundingForce, float] = field(default_factory=dict)
-    connected_nodes: Set[str] = field(default_factory=set)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    grounding_forces: dict[GroundingForce, float] = field(default_factory=dict)
+    connected_nodes: set[str] = field(default_factory=set)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -55,7 +56,7 @@ class AlignmentForce:
     force_type: GroundingForce
     strength: float
     modality_bridge: str
-    transformation_matrix: Optional[np.ndarray] = None
+    transformation_matrix: np.ndarray | None = None
 
 
 class ArcherFramework:
@@ -68,9 +69,9 @@ class ArcherFramework:
 
     def __init__(self):
         self.semantic_graph: nx.Graph = nx.Graph()
-        self.modality_bridges: Dict[str, Dict[str, np.ndarray]] = {}
-        self.grounding_forces: Dict[str, Dict[GroundingForce, float]] = {}
-        self.alignment_history: List[AlignmentForce] = []
+        self.modality_bridges: dict[str, dict[str, np.ndarray]] = {}
+        self.grounding_forces: dict[str, dict[GroundingForce, float]] = {}
+        self.alignment_history: list[AlignmentForce] = []
 
         # Initialize fundamental force parameters
         self.force_parameters = {
@@ -173,7 +174,7 @@ class ArcherFramework:
         source_concept: str,
         target_concept: str,
         force_type: GroundingForce = GroundingForce.ELECTROMAGNETIC,
-    ) -> Optional[AlignmentForce]:
+    ) -> AlignmentForce | None:
         """
         Align two semantic concepts using specified grounding force.
 
@@ -258,7 +259,7 @@ class ArcherFramework:
             return None
 
     def _calculate_gravitational_alignment(
-        self, source_node: Dict[str, Any], target_node: Dict[str, Any]
+        self, source_node: dict[str, Any], target_node: dict[str, Any]
     ) -> float:
         """Calculate gravitational alignment strength between concepts."""
         params = self.force_parameters[GroundingForce.GRAVITATIONAL]
@@ -285,7 +286,7 @@ class ArcherFramework:
             )
 
     def _calculate_electromagnetic_alignment(
-        self, source_node: Dict[str, Any], target_node: Dict[str, Any]
+        self, source_node: dict[str, Any], target_node: dict[str, Any]
     ) -> float:
         """Calculate electromagnetic alignment strength between concepts."""
         params = self.force_parameters[GroundingForce.ELECTROMAGNETIC]
@@ -319,7 +320,7 @@ class ArcherFramework:
         )
 
     def _calculate_strong_nuclear_alignment(
-        self, source_node: Dict[str, Any], target_node: Dict[str, Any]
+        self, source_node: dict[str, Any], target_node: dict[str, Any]
     ) -> float:
         """Calculate strong nuclear alignment strength (tight binding of primitives)."""
         params = self.force_parameters[GroundingForce.STRONG_NUCLEAR]
@@ -347,7 +348,7 @@ class ArcherFramework:
         return 0.0
 
     def _calculate_weak_nuclear_alignment(
-        self, source_node: Dict[str, Any], target_node: Dict[str, Any]
+        self, source_node: dict[str, Any], target_node: dict[str, Any]
     ) -> float:
         """Calculate weak nuclear alignment strength (flexible transformations)."""
         params = self.force_parameters[GroundingForce.WEAK_NUCLEAR]
@@ -403,16 +404,16 @@ class ArcherFramework:
             if existing_node_id not in self.grounding_forces:
                 self.grounding_forces[existing_node_id] = {}
 
-            self.grounding_forces[existing_node_id][
-                GroundingForce.GRAVITATIONAL
-            ] = force_strength
-            self.grounding_forces[new_node.concept_id][
-                GroundingForce.GRAVITATIONAL
-            ] = force_strength
+            self.grounding_forces[existing_node_id][GroundingForce.GRAVITATIONAL] = (
+                force_strength
+            )
+            self.grounding_forces[new_node.concept_id][GroundingForce.GRAVITATIONAL] = (
+                force_strength
+            )
 
     def find_semantic_paths(
         self, start_concept: str, end_concept: str, max_hops: int = 3
-    ) -> List[List[str]]:
+    ) -> list[list[str]]:
         """
         Find semantic paths between concepts using grounding forces.
 
@@ -512,7 +513,7 @@ class ArcherFramework:
             logger.error(f"Failed to optimize semantic layout: {str(e)}")
             return False
 
-    def get_alignment_statistics(self) -> Dict[str, Any]:
+    def get_alignment_statistics(self) -> dict[str, Any]:
         """Get statistics about the current semantic alignment state."""
         stats = {
             "total_nodes": len(self.semantic_graph.nodes),

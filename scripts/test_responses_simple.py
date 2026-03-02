@@ -2,6 +2,7 @@
 """
 Test the Responses API migration with proper tool handling
 """
+
 import os
 
 # Test with Responses API enabled (default)

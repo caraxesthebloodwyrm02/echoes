@@ -9,8 +9,9 @@ Implements:
 """
 
 import logging
-from typing import Dict, List, Optional, Any
-from .base import BaseTool, ToolResult, ToolError
+from typing import Any
+
+from .base import BaseTool, ToolError, ToolResult
 
 logger = logging.getLogger(__name__)
 
@@ -28,15 +29,15 @@ class ToolRegistry:
 
     def __init__(self):
         """Initialize the tool registry."""
-        self._tools: Dict[str, BaseTool] = {}
-        self._tool_categories: Dict[str, List[str]] = {}
-        self._access_control: Dict[str, List[str]] = {}  # tool_name: [allowed_roles]
+        self._tools: dict[str, BaseTool] = {}
+        self._tool_categories: dict[str, list[str]] = {}
+        self._access_control: dict[str, list[str]] = {}  # tool_name: [allowed_roles]
 
     def register(
         self,
         tool: BaseTool,
         category: str = "general",
-        allowed_roles: Optional[List[str]] = None,
+        allowed_roles: list[str] | None = None,
     ) -> None:
         """
         Register a tool in the registry.
@@ -88,7 +89,7 @@ class ToolRegistry:
 
             logger.info(f"Unregistered tool: {tool_name}")
 
-    def get(self, tool_name: str) -> Optional[BaseTool]:
+    def get(self, tool_name: str) -> BaseTool | None:
         """
         Get a tool by name.
 
@@ -112,7 +113,7 @@ class ToolRegistry:
         """
         return tool_name in self._tools
 
-    def list_tools(self, category: Optional[str] = None) -> List[str]:
+    def list_tools(self, category: str | None = None) -> list[str]:
         """
         List all tools or tools in a category.
 
@@ -126,12 +127,12 @@ class ToolRegistry:
             return self._tool_categories.get(category, [])
         return list(self._tools.keys())
 
-    def list_categories(self) -> List[str]:
+    def list_categories(self) -> list[str]:
         """Get list of all categories."""
         return list(self._tool_categories.keys())
 
     def execute(
-        self, tool_name: str, user_role: Optional[str] = None, **kwargs
+        self, tool_name: str, user_role: str | None = None, **kwargs
     ) -> ToolResult:
         """
         Execute a tool with access control.
@@ -163,7 +164,7 @@ class ToolRegistry:
         # Execute the tool
         return tool(**kwargs)
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """
         Get registry statistics.
 
@@ -180,9 +181,7 @@ class ToolRegistry:
             },
         }
 
-    def get_openai_schemas(
-        self, category: Optional[str] = None
-    ) -> List[Dict[str, Any]]:
+    def get_openai_schemas(self, category: str | None = None) -> list[dict[str, Any]]:
         """
         Get OpenAI function calling schemas for registered tools.
 
@@ -202,7 +201,7 @@ class ToolRegistry:
 
         return schemas
 
-    def search_tools(self, query: str) -> List[str]:
+    def search_tools(self, query: str) -> list[str]:
         """
         Search tools by name or description.
 

@@ -396,7 +396,9 @@ class RandomState:
         p: _ArrayLikeFloat_co | None = ...,
     ) -> NDArray[Any]: ...
     @overload
-    def uniform(self, low: float = ..., high: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def uniform(
+        self, low: float = ..., high: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def uniform(
         self,
@@ -413,7 +415,9 @@ class RandomState:
     @overload
     def randn(self, *args: int) -> NDArray[float64]: ...
     @overload
-    def random_integers(self, low: int, high: int | None = ..., size: None = ...) -> int: ...  # type: ignore[misc]
+    def random_integers(
+        self, low: int, high: int | None = ..., size: None = ...
+    ) -> int: ...  # type: ignore[misc]
     @overload
     def random_integers(
         self,
@@ -426,7 +430,9 @@ class RandomState:
     @overload
     def standard_normal(self, size: _ShapeLike = ...) -> NDArray[float64]: ...  # type: ignore[misc]
     @overload
-    def normal(self, loc: float = ..., scale: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def normal(
+        self, loc: float = ..., scale: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def normal(
         self,
@@ -483,7 +489,9 @@ class RandomState:
         self, df: _ArrayLikeFloat_co, size: _ShapeLike | None = ...
     ) -> NDArray[float64]: ...
     @overload
-    def noncentral_chisquare(self, df: float, nonc: float, size: None = ...) -> float: ...  # type: ignore[misc]
+    def noncentral_chisquare(
+        self, df: float, nonc: float, size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def noncentral_chisquare(
         self,
@@ -533,7 +541,9 @@ class RandomState:
     @overload
     def standard_cauchy(self, size: _ShapeLike = ...) -> NDArray[float64]: ...
     @overload
-    def laplace(self, loc: float = ..., scale: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def laplace(
+        self, loc: float = ..., scale: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def laplace(
         self,
@@ -542,7 +552,9 @@ class RandomState:
         size: _ShapeLike | None = ...,
     ) -> NDArray[float64]: ...
     @overload
-    def gumbel(self, loc: float = ..., scale: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def gumbel(
+        self, loc: float = ..., scale: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def gumbel(
         self,
@@ -551,7 +563,9 @@ class RandomState:
         size: _ShapeLike | None = ...,
     ) -> NDArray[float64]: ...
     @overload
-    def logistic(self, loc: float = ..., scale: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def logistic(
+        self, loc: float = ..., scale: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def logistic(
         self,
@@ -560,7 +574,9 @@ class RandomState:
         size: _ShapeLike | None = ...,
     ) -> NDArray[float64]: ...
     @overload
-    def lognormal(self, mean: float = ..., sigma: float = ..., size: None = ...) -> float: ...  # type: ignore[misc]
+    def lognormal(
+        self, mean: float = ..., sigma: float = ..., size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def lognormal(
         self,
@@ -584,7 +600,9 @@ class RandomState:
         size: _ShapeLike | None = ...,
     ) -> NDArray[float64]: ...
     @overload
-    def triangular(self, left: float, mode: float, right: float, size: None = ...) -> float: ...  # type: ignore[misc]
+    def triangular(
+        self, left: float, mode: float, right: float, size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def triangular(
         self,
@@ -627,7 +645,9 @@ class RandomState:
         self, p: _ArrayLikeFloat_co, size: _ShapeLike | None = ...
     ) -> NDArray[long]: ...
     @overload
-    def hypergeometric(self, ngood: int, nbad: int, nsample: int, size: None = ...) -> int: ...  # type: ignore[misc]
+    def hypergeometric(
+        self, ngood: int, nbad: int, nsample: int, size: None = ...
+    ) -> int: ...  # type: ignore[misc]
     @overload
     def hypergeometric(
         self,

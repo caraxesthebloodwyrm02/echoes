@@ -7,8 +7,8 @@ Demonstrates the integration of quantum-inspired state management with EchoesAss
 Shows how quantum concepts enhance AI assistant performance and state handling.
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -114,7 +114,7 @@ def demo_probabilistic_transitions():
         old_state = qsm.state_machine.current_state
         new_state = qsm.transition_state()
         transitions.append((old_state, new_state))
-        print(f"     {i+1}. {old_state} → {new_state}")
+        print(f"     {i + 1}. {old_state} → {new_state}")
         time.sleep(0.1)  # Small delay for demo effect
 
     # Analyze transitions

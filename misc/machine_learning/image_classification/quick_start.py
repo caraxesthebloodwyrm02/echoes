@@ -16,8 +16,8 @@ This will:
 Author: Echoes AI Assistant
 """
 
-import sys
 import subprocess
+import sys
 from pathlib import Path
 
 

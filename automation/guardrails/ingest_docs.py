@@ -3,7 +3,7 @@ import re
 
 def parse_security_protocols(doc_path):
     """Parses the DEPLOYMENT_AND_OPERATIONS.md file to extract security protocols."""
-    with open(doc_path, "r", encoding="utf-8") as f:
+    with open(doc_path, encoding="utf-8") as f:
         content = f.read()
 
     protocols = {}

@@ -6,10 +6,11 @@ Analyzing current 57.37% accuracy bottleneck and implementing targeted
 cross-channel processing improvements for significant performance gains.
 """
 
-import numpy as np
-from typing import Dict, Any, List, Tuple, Optional
 import logging
 from collections import defaultdict
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -29,7 +30,7 @@ class CrossChannelAccuracyEnhancer:
             "stable_classes": 0.85,  # Target 85% for well-performing classes
         }
 
-    def _analyze_confusion_matrix(self) -> Dict[str, Any]:
+    def _analyze_confusion_matrix(self) -> dict[str, Any]:
         """Analyze confusion matrix patterns to identify improvement opportunities."""
 
         # Based on evaluation results, major confusion patterns:
@@ -66,7 +67,7 @@ class CrossChannelAccuracyEnhancer:
 
         return confusion_patterns
 
-    def _build_channel_optimization_map(self) -> Dict[str, Any]:
+    def _build_channel_optimization_map(self) -> dict[str, Any]:
         """Build targeted optimization strategies for different channel types."""
 
         return {
@@ -113,8 +114,8 @@ class CrossChannelAccuracyEnhancer:
         }
 
     def apply_accuracy_enhancements(
-        self, input_signals: Dict[str, np.ndarray], current_predictions: np.ndarray
-    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        self, input_signals: dict[str, np.ndarray], current_predictions: np.ndarray
+    ) -> tuple[np.ndarray, dict[str, Any]]:
         """
         Apply cross-channel enhancements to improve prediction accuracy.
 
@@ -271,7 +272,7 @@ class CrossChannelAccuracyEnhancer:
         return enhanced_predictions
 
     def _apply_multimodal_fusion(
-        self, input_signals: Dict[str, np.ndarray], predictions: np.ndarray
+        self, input_signals: dict[str, np.ndarray], predictions: np.ndarray
     ) -> np.ndarray:
         """Apply multimodal fusion for comprehensive enhancement."""
 
@@ -361,7 +362,7 @@ class CrossChannelAccuracyEnhancer:
         return 0
 
     def _weighted_channel_vote(
-        self, channel_votes: Dict[str, int], weights: Dict[str, float]
+        self, channel_votes: dict[str, int], weights: dict[str, float]
     ) -> int:
         """Apply weighted voting across channels."""
         vote_counts = defaultdict(float)
@@ -383,7 +384,7 @@ class CrossChannelAccuracyEnhancer:
         merged[mask] = pred2[mask]
         return merged
 
-    def analyze_improvement_potential(self) -> Dict[str, Any]:
+    def analyze_improvement_potential(self) -> dict[str, Any]:
         """Analyze the potential accuracy improvements from cross-channel enhancements."""
 
         analysis = {

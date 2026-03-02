@@ -9,15 +9,16 @@ Tests real-world queries across all integrated areas:
 - Knowledge retrieval
 """
 
+import json
 import os
 import time
-import json
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
+
+from echoes.rag_langchain_loader import load_directory_and_ingest
 
 # Echoes imports
 from assistant_v2_core import EchoesAssistantV2
-from echoes.rag_langchain_loader import load_directory_and_ingest
 
 
 class EchoesUnifiedTester:

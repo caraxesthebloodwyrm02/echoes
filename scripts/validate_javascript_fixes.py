@@ -4,12 +4,11 @@ JavaScript Issues Mitigation Validator
 Tests if the Windsurf JavaScript fixes are effective
 """
 
-import time
 import json
-import subprocess
 import sys
-from pathlib import Path
+import time
 from datetime import datetime
+from pathlib import Path
 
 
 class JavaScriptIssuesValidator:
@@ -110,7 +109,7 @@ class JavaScriptIssuesValidator:
             if not settings_path.exists():
                 return {"success": False, "error": "settings.json not found"}
 
-            with open(settings_path, "r") as f:
+            with open(settings_path) as f:
                 settings = json.load(f)
 
             # Check for JavaScript mitigation settings
@@ -134,7 +133,7 @@ class JavaScriptIssuesValidator:
             if not extensions_path.exists():
                 return {"success": False, "error": "extensions.json not found"}
 
-            with open(extensions_path, "r") as f:
+            with open(extensions_path) as f:
                 extensions = json.load(f)
 
             recommendations = extensions.get("recommendations", [])
@@ -241,13 +240,13 @@ def main():
 
         # Display summary
         summary = results["summary"]
-        print(f"\n🎯 VALIDATION SUMMARY")
+        print("\n🎯 VALIDATION SUMMARY")
         print("=" * 50)
         print(f"Total Tests: {summary['total_tests']}")
         print(f"✅ Passed: {summary['passed_tests']}")
         print(f"❌ Failed: {summary['failed_tests']}")
         print(f"⚠️  Errors: {summary['error_tests']}")
-        print(f"📈 Success Rate: {summary['success_rate']*100:.1f}%")
+        print(f"📈 Success Rate: {summary['success_rate'] * 100:.1f}%")
         print(f"⏱️  Total Duration: {summary['total_duration']:.2f}s")
         print(
             f"🔧 JavaScript Issues Mitigated: {'✅ YES' if summary['javascript_issues_mitigated'] else '❌ NO'}"

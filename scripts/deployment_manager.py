@@ -6,18 +6,18 @@ Feature flag controlled rollout for OpenAI Responses API migration
 This script manages the production deployment with gradual rollout capabilities.
 """
 
+import json
 import os
 import sys
-import json
 import time
 from pathlib import Path
-from typing import Dict, Any, Optional
+from typing import Any
 
 
 class ProductionDeploymentManager:
     """Manages production deployment with feature flag controls"""
 
-    def __init__(self, base_dir: Optional[str] = None):
+    def __init__(self, base_dir: str | None = None):
         self.base_dir = Path(base_dir or Path.cwd())
         self.config_dir = self.base_dir / "config"
         self.config_dir.mkdir(exist_ok=True)
@@ -43,7 +43,7 @@ class ProductionDeploymentManager:
         config_file = self.config_dir / "deployment_config.json"
         if config_file.exists():
             try:
-                with open(config_file, "r") as f:
+                with open(config_file) as f:
                     self.deployment_config.update(json.load(f))
                 print("✓ Loaded existing deployment configuration")
             except Exception as e:
@@ -105,7 +105,7 @@ class ProductionDeploymentManager:
         self.save_config()
         print(f"✓ Rollout percentage updated to {percentage}%")
 
-    def check_health_status(self) -> Dict[str, Any]:
+    def check_health_status(self) -> dict[str, Any]:
         """Check deployment health status"""
         # Simulate health checks - in real deployment, this would check:
         # - API response times
@@ -137,7 +137,7 @@ class ProductionDeploymentManager:
 
         return health_status
 
-    def get_rollout_status(self) -> Dict[str, Any]:
+    def get_rollout_status(self) -> dict[str, Any]:
         """Get current rollout status"""
         health = self.check_health_status()
 
@@ -152,7 +152,7 @@ class ProductionDeploymentManager:
             },
         }
 
-    def create_production_config(self) -> Dict[str, Any]:
+    def create_production_config(self) -> dict[str, Any]:
         """Create production-ready configuration"""
         prod_config = {
             "openai": {

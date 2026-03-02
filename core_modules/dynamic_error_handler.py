@@ -4,10 +4,9 @@ Provides intelligent error handling with self-healing capabilities
 """
 
 import logging
-import traceback
 import re
-from typing import Dict, Any, Optional, List, Callable
 from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -40,8 +39,8 @@ class DynamicErrorHandler:
         self.auto_fix_enabled = True
 
     def handle_error(
-        self, error: Exception, context: Dict[str, Any] = None
-    ) -> Dict[str, Any]:
+        self, error: Exception, context: dict[str, Any] = None
+    ) -> dict[str, Any]:
         """
         Handle an error with automated fix attempts
 
@@ -76,8 +75,8 @@ class DynamicErrorHandler:
         }
 
     def _analyze_error(
-        self, error_msg: str, error_type: str, context: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, error_msg: str, error_type: str, context: dict[str, Any]
+    ) -> dict[str, Any]:
         """Analyze the error to understand its nature and cause"""
         analysis = {
             "severity": "medium",
@@ -121,9 +120,9 @@ class DynamicErrorHandler:
         self,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Optional[Dict[str, Any]]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any] | None:
         """Attempt to automatically fix the error"""
         for pattern, fix_func in self.error_patterns.items():
             match = re.search(pattern, error_msg)
@@ -140,9 +139,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix import errors by suggesting correct imports"""
         missing_name = match.group(1)
 
@@ -170,9 +169,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix missing module errors"""
         module_name = match.group(1)
 
@@ -199,9 +198,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix missing attribute errors"""
         attr_name = match.group(1)
 
@@ -217,9 +216,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix authentication errors"""
         return {
             "fix_type": "auth_fix",
@@ -233,9 +232,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix rate limit errors"""
         return {
             "fix_type": "rate_limit_fix",
@@ -249,9 +248,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Handle general API errors"""
         return {
             "fix_type": "api_general_fix",
@@ -265,9 +264,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix unexpected keyword argument errors"""
         kwarg_name = match.group(1)
 
@@ -283,9 +282,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix missing required arguments"""
         return {
             "fix_type": "args_fix",
@@ -299,9 +298,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix type errors"""
         return {
             "fix_type": "type_fix",
@@ -315,9 +314,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix file not found errors"""
         file_path = match.group(1)
 
@@ -333,9 +332,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix permission errors"""
         return {
             "fix_type": "permission_fix",
@@ -349,9 +348,9 @@ class DynamicErrorHandler:
         match,
         error_msg: str,
         error_type: str,
-        analysis: Dict[str, Any],
-        context: Dict[str, Any],
-    ) -> Dict[str, Any]:
+        analysis: dict[str, Any],
+        context: dict[str, Any],
+    ) -> dict[str, Any]:
         """Fix network errors"""
         return {
             "fix_type": "network_fix",
@@ -363,8 +362,8 @@ class DynamicErrorHandler:
     def _log_error_fix(
         self,
         error: Exception,
-        analysis: Dict[str, Any],
-        fix_result: Optional[Dict[str, Any]],
+        analysis: dict[str, Any],
+        fix_result: dict[str, Any] | None,
     ):
         """Log error and fix attempt for learning"""
         log_entry = {
@@ -380,7 +379,7 @@ class DynamicErrorHandler:
         if len(self.fix_history) > 100:
             self.fix_history = self.fix_history[-100:]
 
-    def get_fix_statistics(self) -> Dict[str, Any]:
+    def get_fix_statistics(self) -> dict[str, Any]:
         """Get statistics about error fixes"""
         if not self.fix_history:
             return {"total_errors": 0}

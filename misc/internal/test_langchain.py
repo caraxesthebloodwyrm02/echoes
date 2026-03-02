@@ -11,7 +11,7 @@ except ImportError as e:
 try:
     import langchain_text_splitters
 
-    print(f"✓ langchain_text_splitters imported successfully")
+    print("✓ langchain_text_splitters imported successfully")
 except ImportError as e:
     print(f"✗ langchain_text_splitters import failed: {e}")
 

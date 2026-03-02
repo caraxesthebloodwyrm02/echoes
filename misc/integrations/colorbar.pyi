@@ -1,16 +1,17 @@
+from collections.abc import Sequence
+from typing import Any, Literal, overload
+
 import matplotlib.spines as mspines
-from matplotlib import cm, collections, colors, contour, colorizer
+import numpy as np
+from matplotlib import cm, collections, colorizer, colors, contour
 from matplotlib.axes import Axes
 from matplotlib.axis import Axis
 from matplotlib.backend_bases import RendererBase
 from matplotlib.patches import Patch
-from matplotlib.ticker import Locator, Formatter
+from matplotlib.ticker import Formatter, Locator
 from matplotlib.transforms import Bbox
-
-import numpy as np
 from numpy.typing import ArrayLike
-from collections.abc import Sequence
-from typing import Any, Literal, overload
+
 from .typing import ColorType
 
 class _ColorbarSpine(mspines.Spines):

@@ -1,8 +1,8 @@
+from typing import Any, Literal
+
 from matplotlib.axes import Axes
 from matplotlib.ticker import Formatter
 from matplotlib.transforms import Transform
-
-from typing import Any, Literal
 
 class GeoAxes(Axes):
     class ThetaFormatter(Formatter):
@@ -13,12 +13,16 @@ class GeoAxes(Axes):
     def get_xaxis_transform(
         self, which: Literal["tick1", "tick2", "grid"] = ...
     ) -> Transform: ...
-    def get_xaxis_text1_transform(self, pad: float) -> tuple[
+    def get_xaxis_text1_transform(
+        self, pad: float
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_xaxis_text2_transform(self, pad: float) -> tuple[
+    def get_xaxis_text2_transform(
+        self, pad: float
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
@@ -26,12 +30,16 @@ class GeoAxes(Axes):
     def get_yaxis_transform(
         self, which: Literal["tick1", "tick2", "grid"] = ...
     ) -> Transform: ...
-    def get_yaxis_text1_transform(self, pad: float) -> tuple[
+    def get_yaxis_text1_transform(
+        self, pad: float
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_text2_transform(self, pad: float) -> tuple[
+    def get_yaxis_text2_transform(
+        self, pad: float
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],

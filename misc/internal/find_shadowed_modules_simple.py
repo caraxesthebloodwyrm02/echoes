@@ -5,8 +5,6 @@ from pathlib import Path
 
 def get_stdlib_modules():
     """Get a set of Python standard library module names"""
-    import sysconfig
-    import sys
 
     # Get standard library paths
     stdlib_paths = [

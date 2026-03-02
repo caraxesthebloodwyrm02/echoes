@@ -6,19 +6,17 @@ Based on OpenAI's function calling best practices.
 """
 
 import os
-import json
-import shutil
-from typing import Dict, Any, List, Optional
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-from .base import BaseTool, ToolResult, ToolError
+from .base import BaseTool, ToolResult
 
 
 class ReadFileTool(BaseTool):
     """Tool for safely reading file contents."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="read_file",
             description="Read the contents of a text file. Supports various file types including code, configuration, and text files.",
@@ -78,7 +76,7 @@ class ReadFileTool(BaseTool):
             if not self._is_safe_path(path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             if not path.exists():
@@ -138,7 +136,7 @@ class ReadFileTool(BaseTool):
 
             # Read file
             try:
-                with open(path, "r", encoding=encoding) as f:
+                with open(path, encoding=encoding) as f:
                     content = f.read()
             except UnicodeDecodeError:
                 return ToolResult(
@@ -179,7 +177,7 @@ class ReadFileTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=f"Error reading file: {str(e)}")
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -209,7 +207,7 @@ class ReadFileTool(BaseTool):
 class WriteFileTool(BaseTool):
     """Tool for safely writing file contents."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="write_file",
             description="Write content to a text file. Creates directories if they don't exist. Overwrites existing files.",
@@ -277,7 +275,7 @@ class WriteFileTool(BaseTool):
             if not self._is_safe_path(path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             # Size check
@@ -317,7 +315,7 @@ class WriteFileTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=f"Error writing file: {str(e)}")
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -356,7 +354,7 @@ class WriteFileTool(BaseTool):
 class ListDirectoryTool(BaseTool):
     """Tool for listing directory contents."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="list_directory",
             description="List the contents of a directory, including files and subdirectories.",
@@ -412,7 +410,7 @@ class ListDirectoryTool(BaseTool):
             if not self._is_safe_path(path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             if not path.exists():
@@ -485,7 +483,7 @@ class ListDirectoryTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=f"Error listing directory: {str(e)}")
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -524,7 +522,7 @@ class ListDirectoryTool(BaseTool):
 class SearchFilesTool(BaseTool):
     """Tool for searching files by name or content."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="search_files",
             description="Search for files by filename or content within files. Supports pattern matching.",
@@ -560,7 +558,7 @@ class SearchFilesTool(BaseTool):
     def __call__(
         self,
         query: str,
-        search_path: Optional[str] = None,
+        search_path: str | None = None,
         search_type: str = "filename",
         file_pattern: str = "*",
         max_results: int = 50,
@@ -584,7 +582,7 @@ class SearchFilesTool(BaseTool):
             if not self._is_safe_path(base_path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             if not base_path.exists():
@@ -665,7 +663,7 @@ class SearchFilesTool(BaseTool):
                             continue
 
                         # Read and search content
-                        with open(item, "r", encoding="utf-8", errors="ignore") as f:
+                        with open(item, encoding="utf-8", errors="ignore") as f:
                             content = f.read()
                             search_content = (
                                 content if case_sensitive else content.lower()
@@ -719,7 +717,7 @@ class SearchFilesTool(BaseTool):
         except Exception as e:
             return ToolResult(success=False, error=f"Error searching files: {str(e)}")
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -771,7 +769,7 @@ class SearchFilesTool(BaseTool):
 class CreateDirectoryTool(BaseTool):
     """Tool for creating directories."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="create_directory",
             description="Create a new directory. Creates parent directories if they don't exist.",
@@ -833,7 +831,7 @@ class CreateDirectoryTool(BaseTool):
             if not self._is_safe_path(path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             # Check if path exists
@@ -877,7 +875,7 @@ class CreateDirectoryTool(BaseTool):
                 success=False, error=f"Error creating directory: {str(e)}"
             )
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -911,7 +909,7 @@ class CreateDirectoryTool(BaseTool):
 class GetFileInfoTool(BaseTool):
     """Tool for getting file metadata."""
 
-    def __init__(self, root_dir: Optional[str] = None):
+    def __init__(self, root_dir: str | None = None):
         super().__init__(
             name="get_file_info",
             description="Get detailed metadata about a file or directory including size, creation date, and modification date.",
@@ -958,7 +956,7 @@ class GetFileInfoTool(BaseTool):
             if not self._is_safe_path(path):
                 return ToolResult(
                     success=False,
-                    error=f"Access denied: Path not allowed or potentially dangerous",
+                    error="Access denied: Path not allowed or potentially dangerous",
                 )
 
             if not path.exists():
@@ -987,7 +985,7 @@ class GetFileInfoTool(BaseTool):
                     "md",
                 ]:
                     try:
-                        with open(path, "r", encoding="utf-8", errors="ignore") as f:
+                        with open(path, encoding="utf-8", errors="ignore") as f:
                             line_count = sum(1 for _ in f)
                     except Exception:
                         pass
@@ -1025,7 +1023,7 @@ class GetFileInfoTool(BaseTool):
             size /= 1024.0
         return f"{size:.1f} PB"
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert to OpenAI function calling schema."""
         return {
             "type": "function",
@@ -1047,7 +1045,7 @@ class GetFileInfoTool(BaseTool):
 
 
 # Initialize all filesystem tools
-def create_filesystem_tools(root_dir: Optional[str] = None) -> List[BaseTool]:
+def create_filesystem_tools(root_dir: str | None = None) -> list[BaseTool]:
     """Create and return all filesystem tools."""
     return [
         ReadFileTool(root_dir),

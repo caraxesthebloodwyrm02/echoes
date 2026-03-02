@@ -13,18 +13,19 @@ Features:
 - Easy setup and configuration
 """
 
-import os
 import json
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-from pathlib import Path
+import os
+from datetime import UTC, datetime, timezone
 from decimal import Decimal
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from audit_trail import get_user_compliance_status
+from payment_gateway import get_user_payment_status, setup_user_payment_method
+from payout_engine import get_user_payment_history
 
 # Import Tab components
 from work_tracking import WorkTracker
-from payout_engine import get_user_payment_history
-from payment_gateway import get_user_payment_status, setup_user_payment_method
-from audit_trail import get_user_compliance_status
 
 
 class UserPortal:
@@ -48,7 +49,7 @@ class UserPortal:
 
         print("✅ User Portal initialized - complete user compensation control")
 
-    def get_user_dashboard(self, user_id: str) -> Dict[str, Any]:
+    def get_user_dashboard(self, user_id: str) -> dict[str, Any]:
         """
         Get complete user dashboard with all compensation information.
 
@@ -80,7 +81,7 @@ class UserPortal:
 
         dashboard = {
             "user_id": user_id,
-            "last_updated": datetime.now(timezone.utc).isoformat(),
+            "last_updated": datetime.now(UTC).isoformat(),
             "contribution_overview": {
                 "total_hours_worked": contribution_summary["total_time_invested_hours"],
                 "contribution_score": contribution_summary["contribution_score"],
@@ -127,8 +128,8 @@ class UserPortal:
         return dashboard
 
     def setup_payment_method(
-        self, user_id: str, method_type: str, method_details: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, user_id: str, method_type: str, method_details: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Easy setup of payment methods through the portal.
 
@@ -167,7 +168,7 @@ class UserPortal:
                 ],
             }
 
-    def request_manual_payout(self, user_id: str, reason: str = "") -> Dict[str, Any]:
+    def request_manual_payout(self, user_id: str, reason: str = "") -> dict[str, Any]:
         """
         Request manual payout for accumulated work.
 
@@ -238,7 +239,7 @@ class UserPortal:
                 ],
             }
 
-    def generate_transparency_report(self, user_id: str) -> Dict[str, Any]:
+    def generate_transparency_report(self, user_id: str) -> dict[str, Any]:
         """Generate complete transparency report for the user."""
         dashboard = self.get_user_dashboard(user_id)
 
@@ -247,7 +248,7 @@ class UserPortal:
 
         report = {
             "user_id": user_id,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "period": "All time",
             "executive_summary": {
                 "total_contribution_hours": dashboard["contribution_overview"][
@@ -309,7 +310,7 @@ class UserPortal:
         return report
 
     def _calculate_pending_payout(
-        self, contribution_summary: Dict[str, Any], payout_history: Dict[str, Any]
+        self, contribution_summary: dict[str, Any], payout_history: dict[str, Any]
     ) -> float:
         """Calculate pending payout amount."""
         # Use compensation eligibility to determine rate
@@ -326,8 +327,8 @@ class UserPortal:
         return max(0, gross_amount - total_paid)
 
     def _estimate_next_payout(
-        self, contribution_summary: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, contribution_summary: dict[str, Any]
+    ) -> dict[str, Any]:
         """Estimate when next automatic payout will occur."""
         total_hours = contribution_summary["total_time_invested_hours"]
         hours_needed = 40 - total_hours  # Auto payout at 40 hours
@@ -346,7 +347,7 @@ class UserPortal:
         }
 
     def _calculate_annual_projection(
-        self, contribution_summary: Dict[str, Any]
+        self, contribution_summary: dict[str, Any]
     ) -> float:
         """Calculate annual earnings projection."""
         total_hours = contribution_summary["total_time_invested_hours"]
@@ -360,7 +361,7 @@ class UserPortal:
 
         return annual_earnings
 
-    def _get_recent_work_summary(self, user_id: str) -> Dict[str, Any]:
+    def _get_recent_work_summary(self, user_id: str) -> dict[str, Any]:
         """Get summary of recent work activity."""
         work_history = self.work_tracker.get_user_work_history(user_id, limit=10)
 
@@ -380,16 +381,18 @@ class UserPortal:
             "activity_level": (
                 "high"
                 if total_hours > 20
-                else "moderate" if total_hours > 10 else "low"
+                else "moderate"
+                if total_hours > 10
+                else "low"
             ),
         }
 
     def _generate_quick_actions(
         self,
         user_id: str,
-        contribution_summary: Dict[str, Any],
-        payment_status: Dict[str, Any],
-    ) -> List[Dict[str, Any]]:
+        contribution_summary: dict[str, Any],
+        payment_status: dict[str, Any],
+    ) -> list[dict[str, Any]]:
         """Generate quick actions based on user status."""
         actions = []
 
@@ -442,7 +445,7 @@ class UserPortal:
         )  # Normalize to 7-point scale
         return hours * base_rate * quality_multiplier
 
-    def _calculate_impact_metrics(self, work_history: List) -> Dict[str, Any]:
+    def _calculate_impact_metrics(self, work_history: list) -> dict[str, Any]:
         """Calculate impact metrics from work history."""
         if not work_history:
             return {"total_impact": 0, "average_quality": 0, "consistency_score": 0}
@@ -467,27 +470,27 @@ class UserPortal:
 
 
 # Portal access functions
-def get_user_portal_dashboard(user_id: str) -> Dict[str, Any]:
+def get_user_portal_dashboard(user_id: str) -> dict[str, Any]:
     """Get user's portal dashboard."""
     portal = UserPortal()
     return portal.get_user_dashboard(user_id)
 
 
 def setup_user_payment_portal(
-    user_id: str, method_type: str, method_details: Dict[str, Any]
-) -> Dict[str, Any]:
+    user_id: str, method_type: str, method_details: dict[str, Any]
+) -> dict[str, Any]:
     """Setup payment method through portal."""
     portal = UserPortal()
     return portal.setup_payment_method(user_id, method_type, method_details)
 
 
-def request_payout_portal(user_id: str, reason: str = "") -> Dict[str, Any]:
+def request_payout_portal(user_id: str, reason: str = "") -> dict[str, Any]:
     """Request payout through portal."""
     portal = UserPortal()
     return portal.request_manual_payout(user_id, reason)
 
 
-def get_transparency_report_portal(user_id: str) -> Dict[str, Any]:
+def get_transparency_report_portal(user_id: str) -> dict[str, Any]:
     """Get transparency report through portal."""
     portal = UserPortal()
     return portal.generate_transparency_report(user_id)

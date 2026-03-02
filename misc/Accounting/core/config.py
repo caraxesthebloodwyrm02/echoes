@@ -1,14 +1,14 @@
 """Configuration management for AAE framework."""
 
 import os
-from typing import Dict, Any, Optional
 from pathlib import Path
+from typing import Any
 
 
 class AAEConfig:
     """Configuration manager for AAE experiments."""
 
-    def __init__(self, config_file: Optional[str] = None):
+    def __init__(self, config_file: str | None = None):
         self.config_file = config_file or self._get_default_config_path()
         self._config = {}
         self.load_config()
@@ -23,7 +23,7 @@ class AAEConfig:
             if os.path.exists(self.config_file):
                 import json
 
-                with open(self.config_file, "r") as f:
+                with open(self.config_file) as f:
                     self._config = json.load(f)
         except Exception as e:
             print(f"Warning: Could not load config file: {e}")
@@ -40,7 +40,7 @@ class AAEConfig:
         except Exception as e:
             print(f"Warning: Could not save config file: {e}")
 
-    def _get_default_config(self) -> Dict[str, Any]:
+    def _get_default_config(self) -> dict[str, Any]:
         """Get default configuration."""
         return {
             "experiment": {
@@ -101,7 +101,7 @@ class AAEConfig:
         # Set the final value
         config[keys[-1]] = value
 
-    def validate_experiment_config(self, config: Dict[str, Any]) -> bool:
+    def validate_experiment_config(self, config: dict[str, Any]) -> bool:
         """Validate experiment configuration."""
         required_keys = ["name", "groups"]
 
@@ -123,7 +123,7 @@ class AAEConfig:
 
         return True
 
-    def validate_dataset_config(self, config: Dict[str, Any]) -> bool:
+    def validate_dataset_config(self, config: dict[str, Any]) -> bool:
         """Validate dataset configuration."""
         years = config.get("years", 2)
         if not (1 <= years <= self.get("dataset.max_years", 5)):

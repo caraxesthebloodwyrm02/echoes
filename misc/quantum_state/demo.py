@@ -7,8 +7,8 @@ Demonstration of the quantum-inspired state management system.
 Shows how to use superposition, entanglement, and probabilistic transitions.
 """
 
-import sys
 import os
+import sys
 import time
 from datetime import datetime
 
@@ -48,7 +48,7 @@ def demo_basic_operations():
     print("\n3. Probabilistic state transitions:")
     for i in range(5):
         current = qsm.transition_state()
-        print(f"   Transition {i+1}: {current}")
+        print(f"   Transition {i + 1}: {current}")
         time.sleep(0.1)  # Small delay for demonstration
 
 
@@ -95,7 +95,7 @@ def demo_interference():
     print("State transitions with interference:")
     for i in range(10):
         current = qsm.transition_state()
-        print(f"   Step {i+1}: {current}")
+        print(f"   Step {i + 1}: {current}")
 
 
 def demo_persistence():

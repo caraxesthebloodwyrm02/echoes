@@ -14,11 +14,9 @@ Integrates:
 # ============================================================================
 # Standard library imports
 # ============================================================================
+import json
 import os
 import sys
-import json
-import hashlib
-import uuid
 import time
 
 # Import numpy for calculations
@@ -35,31 +33,27 @@ except ImportError:
         return sum(data) / len(data) if data else 0
 
     np = type("obj", (object,), {"mean": mean})()
-import re
 import asyncio
+from collections.abc import Iterator
 
 # Import timedelta from datetime
-from datetime import datetime, timezone, timedelta
-from typing import Dict, List, Any, Optional, Iterator, Union, Callable
+from datetime import UTC, datetime, timedelta
 from pathlib import Path
-from dataclasses import dataclass, field
+from typing import Any
+
 from core_modules.caching import cached_method
-from core_modules.context_manager import ContextManager
-from core_modules.metrics import ModelMetrics
-from core_modules.dynamic_error_handler import error_handler
-from core_modules.personality_engine import personality_engine
+from core_modules.catch_release_system import CacheLevel, ContentType, catch_release
 from core_modules.cross_reference_system import cross_reference_system
-from core_modules.intent_awareness_engine import intent_engine, IntentType, EntityType
-from core_modules.train_of_thought_tracker import thought_tracker, ThoughtType, LinkType
-from core_modules.humor_engine import humor_engine, PressureLevel, HumorType
-from core_modules.catch_release_system import catch_release, CacheLevel, ContentType
+from core_modules.dynamic_error_handler import error_handler
+from core_modules.humor_engine import PressureLevel, humor_engine
+from core_modules.intent_awareness_engine import IntentType, intent_engine
+from core_modules.metrics import ModelMetrics
 from core_modules.parallel_simulation_engine import (
-    parallel_simulation,
     SimulationType,
-    SimulationStatus,
+    parallel_simulation,
 )
-from functools import wraps
-from enum import Enum
+from core_modules.personality_engine import personality_engine
+from core_modules.train_of_thought_tracker import ThoughtType, thought_tracker
 
 try:
     import yaml
@@ -72,12 +66,12 @@ except ImportError:
 
 # Core dependencies
 from dotenv import load_dotenv
-from openai import OpenAI, APIError, AuthenticationError
+from openai import APIError, AuthenticationError, OpenAI
 
 # Tool Framework
 try:
+    import tools.examples  # noqa: F401  # side-effect: registers built-in tools
     from tools.registry import get_registry
-    from tools.examples import *  # Load all built-in tools
 
     TOOLS_AVAILABLE = True
 except ImportError as e:
@@ -105,11 +99,11 @@ except ImportError as e:
 # Glimpse Suite - Streamlined imports with fallback
 try:
     from glimpse import (
-        GlimpseEngine,
-        Draft,
-        PrivacyGuard,
-        GlimpseResult,
         ClarifierEngine,
+        Draft,
+        GlimpseEngine,
+        GlimpseResult,
+        PrivacyGuard,
     )
 
     GLIMPSE_AVAILABLE = True
@@ -206,7 +200,7 @@ except ImportError as e:
 
 # Dynamic Model Router
 try:
-    from app.model_router import ModelRouter, ModelResponseCache, ModelMetrics
+    from app.model_router import ModelMetrics, ModelResponseCache, ModelRouter
 
     MODEL_ROUTER_AVAILABLE = True
 except ImportError as e:
@@ -254,10 +248,10 @@ except ImportError as e:
 # Knowledge Graph Integration
 try:
     from knowledge_graph import (
-        get_knowledge_graph,
         KnowledgeNode,
         KnowledgeRelation,
         MemoryFragment,
+        get_knowledge_graph,
     )
 
     KNOWLEDGE_GRAPH_AVAILABLE = True
@@ -275,9 +269,9 @@ except ImportError as e:
 # Multimodal Resonance Glimpse
 try:
     from multimodal_resonance import (
-        get_multimodal_resonance_engine,
         ModalityVector,
         MultimodalMemory,
+        get_multimodal_resonance_engine,
     )
 
     MULTIMODAL_AVAILABLE = True
@@ -294,10 +288,10 @@ except ImportError as e:
 # Legal Safeguards & Enhanced Accounting
 try:
     from legal_safeguards import (
-        get_cognitive_accounting,
         CognitiveEffortMetrics,
         ConsentType,
         ProtectionLevel,
+        get_cognitive_accounting,
     )
 
     LEGAL_SAFEGUARDS_AVAILABLE = True
@@ -313,7 +307,7 @@ except ImportError as e:
     ProtectionLevel = None
 
 try:
-    from enhanced_accounting import get_enhanced_accounting, ValueType, AccountingPeriod
+    from enhanced_accounting import AccountingPeriod, ValueType, get_enhanced_accounting
 
     ENHANCED_ACCOUNTING_AVAILABLE = True
 except ImportError as e:
@@ -328,9 +322,11 @@ except ImportError as e:
 
 # API Integration for External Contact
 try:
-    import aiohttp
     import asyncio
-    from typing import Dict, Any, Optional, List, Iterator, Union
+    from collections.abc import Iterator
+    from typing import Any
+
+    import aiohttp
 
     API_AVAILABLE = True
 except ImportError:
@@ -339,7 +335,7 @@ except ImportError:
 
 # RAG System V2
 try:
-    from echoes.core.rag_v2 import create_rag_system, OPENAI_RAG_AVAILABLE
+    from echoes.core.rag_v2 import OPENAI_RAG_AVAILABLE, create_rag_system
 
     RAG_AVAILABLE = True
     if OPENAI_RAG_AVAILABLE:
@@ -355,7 +351,7 @@ load_dotenv()
 
 
 # Load prompts
-def list_available_prompts() -> List[str]:
+def list_available_prompts() -> list[str]:
     prompts_dir = Path("prompts")
     if not prompts_dir.exists():
         print(f"No prompts directory found at {prompts_dir}")
@@ -367,7 +363,7 @@ def list_available_prompts() -> List[str]:
 def show_prompt_content(prompt_name: str) -> None:
     prompt_path = Path("prompts") / f"{prompt_name}.yaml"
     try:
-        with open(prompt_path, "r", encoding="utf-8") as f:
+        with open(prompt_path, encoding="utf-8") as f:
             content = f.read()
             print(f"\n=== {prompt_name} ===\n{content}\n" + "=" * 40)
     except Exception as e:
@@ -381,7 +377,7 @@ def load_prompt(prompt_name: str) -> str:
 
     prompt_path = Path("prompts") / f"{prompt_name}.yaml"
     try:
-        with open(prompt_path, "r", encoding="utf-8") as f:
+        with open(prompt_path, encoding="utf-8") as f:
             data = yaml.safe_load(f)
             # Handle both direct string prompts and structured YAML
             if isinstance(data, str):
@@ -413,7 +409,6 @@ STATUS_RETRY = "↻"
 
 
 class EnhancedStatusIndicator:
-
     def __init__(self, enabled: bool = True):
         self.enabled = enabled
         self.current_phase = None
@@ -442,7 +437,7 @@ class EnhancedStatusIndicator:
             self.current_step += 1
             icon = STATUS_COMPLETE
             elapsed = (
-                f"({(time.time() - self.phase_start_time)*1000:.0f}ms)"
+                f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)"
                 if self.phase_start_time
                 else ""
             )
@@ -464,7 +459,7 @@ class EnhancedStatusIndicator:
         if not self.enabled:
             return
         elapsed = (
-            f"({(time.time() - self.phase_start_time)*1000:.0f}ms)"
+            f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)"
             if self.phase_start_time
             else ""
         )
@@ -477,7 +472,6 @@ class EnhancedStatusIndicator:
 
 
 class ContextManager:
-
     def __init__(self, max_history: int = 10, max_tokens: int = 8000):
         self.max_history = max_history
         self.max_tokens = max_tokens
@@ -491,7 +485,7 @@ class ContextManager:
             {
                 "role": role,
                 "content": content,
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
             }
         )
 
@@ -501,7 +495,7 @@ class ContextManager:
                 -self.max_history * 2 :
             ]
 
-    def get_messages(self, session_id: str, limit: Optional[int] = None) -> List[Dict]:
+    def get_messages(self, session_id: str, limit: int | None = None) -> list[dict]:
         if session_id not in self.conversations:
             return []
 
@@ -516,34 +510,33 @@ class ContextManager:
 
 
 class MemoryStore:
-
     def __init__(self, storage_path: str = "data/memory"):
         self.storage_path = Path(storage_path)
         self.storage_path.mkdir(parents=True, exist_ok=True)
 
-    def save_conversation(self, session_id: str, messages: List[Dict]):
+    def save_conversation(self, session_id: str, messages: list[dict]):
         file_path = self.storage_path / f"{session_id}.json"
         with open(file_path, "w", encoding="utf-8") as f:
             json.dump(
                 {
                     "session_id": session_id,
                     "messages": messages,
-                    "saved_at": datetime.now(timezone.utc).isoformat(),
+                    "saved_at": datetime.now(UTC).isoformat(),
                 },
                 f,
                 indent=2,
             )
 
-    def load_conversation(self, session_id: str) -> Optional[List[Dict]]:
+    def load_conversation(self, session_id: str) -> list[dict] | None:
         file_path = self.storage_path / f"{session_id}.json"
         if not file_path.exists():
             return None
 
-        with open(file_path, "r", encoding="utf-8") as f:
+        with open(file_path, encoding="utf-8") as f:
             data = json.load(f)
             return data.get("messages", [])
 
-    def list_conversations(self) -> List[str]:
+    def list_conversations(self) -> list[str]:
         return [f.stem for f in self.storage_path.glob("*.json")]
 
 
@@ -569,10 +562,10 @@ class EchoesAssistantV2:
         enable_glimpse: bool = True,
         enable_external_contact: bool = True,
         enable_value_system: bool = True,
-        session_id: Optional[str] = None,
-        model: Optional[str] = None,
-        temperature: Optional[float] = None,
-        max_tokens: Optional[int] = None,
+        session_id: str | None = None,
+        model: str | None = None,
+        temperature: float | None = None,
+        max_tokens: int | None = None,
     ):
         """
         Initialize the enhanced assistant.
@@ -778,10 +771,10 @@ class EchoesAssistantV2:
                 try:
                     os.makedirs("results", exist_ok=True)
                     import json as _json
-                    from datetime import datetime as _dt, timezone as _tz
+                    from datetime import datetime as _dt
 
                     rec = {
-                        "ts": _dt.now(_tz.utc).isoformat(),
+                        "ts": _dt.now(UTC).isoformat(),
                         "input_text": draft.input_text,
                         "goal": draft.goal,
                         "constraints": draft.constraints,
@@ -848,8 +841,8 @@ class EchoesAssistantV2:
         )
 
     def add_knowledge(
-        self, documents: List[Union[str, Dict]], metadata: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, documents: list[str | dict], metadata: dict | None = None
+    ) -> dict[str, Any]:
         """Add documents to the knowledge base.
 
         Args:
@@ -872,7 +865,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _convert_tools_to_responses_format(self, tools: List[Dict]) -> List[Dict]:
+    def _convert_tools_to_responses_format(self, tools: list[dict]) -> list[dict]:
         """Convert OpenAI tool schemas to Responses API format."""
         if not tools:
             return None
@@ -893,7 +886,7 @@ class EchoesAssistantV2:
 
         return responses_tools
 
-    def _convert_to_responses_input(self, messages: List[Dict]) -> List[Dict]:
+    def _convert_to_responses_input(self, messages: list[dict]) -> list[dict]:
         """Convert messages format to Responses API input format."""
         responses_input = []
 
@@ -949,7 +942,7 @@ class EchoesAssistantV2:
 
         return responses_input
 
-    def _convert_to_chat_messages(self, responses_input: List[Dict]) -> List[Dict]:
+    def _convert_to_chat_messages(self, responses_input: list[dict]) -> list[dict]:
         """Convert Responses API input format back to chat messages format."""
         messages = []
 
@@ -1005,7 +998,7 @@ class EchoesAssistantV2:
 
         return messages
 
-    def update_context(self, key: str, value: Any) -> Dict[str, Any]:
+    def update_context(self, key: str, value: Any) -> dict[str, Any]:
         """Update context information for the assistant.
 
         Args:
@@ -1029,7 +1022,7 @@ class EchoesAssistantV2:
         return self._context.copy()
 
     @cached_method(max_size=20, ttl_seconds=60)  # Cache for 1 minute
-    def get_context(self, key: Optional[str] = None) -> Any:
+    def get_context(self, key: str | None = None) -> Any:
         """Get context information.
 
         Args:
@@ -1065,7 +1058,7 @@ class EchoesAssistantV2:
 
         return "\n".join(summary_lines)
 
-    def save_context(self, filepath: Optional[str] = None) -> Dict[str, Any]:
+    def save_context(self, filepath: str | None = None) -> dict[str, Any]:
         """Save current context to a JSON file.
 
         Args:
@@ -1106,8 +1099,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def load_context(
-        self, filepath: Optional[str] = None, session_id: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, filepath: str | None = None, session_id: str | None = None
+    ) -> dict[str, Any]:
         """Load context from a JSON file.
 
         Args:
@@ -1125,7 +1118,7 @@ class EchoesAssistantV2:
             filepath = data_dir / f"context_{session_id}.json"
 
         try:
-            with open(filepath, "r", encoding="utf-8") as f:
+            with open(filepath, encoding="utf-8") as f:
                 context_data = json.load(f)
 
             if "context" in context_data:
@@ -1158,8 +1151,8 @@ class EchoesAssistantV2:
         self,
         query: str,
         top_k: int = 3,
-        status: Optional[EnhancedStatusIndicator] = None,
-    ) -> List[Dict]:
+        status: EnhancedStatusIndicator | None = None,
+    ) -> list[dict]:
         if not self.enable_rag or not self.rag:
             return []
 
@@ -1202,7 +1195,7 @@ class EchoesAssistantV2:
             return []
 
     def _execute_tool_call(
-        self, tool_call, status: Optional[EnhancedStatusIndicator] = None
+        self, tool_call, status: EnhancedStatusIndicator | None = None
     ) -> str:
         if not self.enable_tools or not self.tool_registry:
             error_msg = "Tool calling is disabled or registry not available"
@@ -1252,9 +1245,7 @@ class EchoesAssistantV2:
                 status.error(error_msg)
             return f"Error: {error_msg}"
 
-    def _improve_response(
-        self, original: str, scores: Dict[str, float]
-    ) -> Optional[str]:
+    def _improve_response(self, original: str, scores: dict[str, float]) -> str | None:
         """Attempt to improve a response that scored poorly on values.
 
         Args:
@@ -1278,13 +1269,13 @@ class EchoesAssistantV2:
                 return None
 
             # Create improvement prompt
-            prompt = f"""Improve this response to be {', '.join(improvements)}.
+            prompt = f"""Improve this response to be {", ".join(improvements)}.
             Keep the core meaning but enhance the tone and clarity.
             Preserve any code blocks or technical details exactly.
-            
+
             Original response:
             {original}
-            
+
             Improved response:"""
 
             # Get improved version
@@ -1311,8 +1302,8 @@ class EchoesAssistantV2:
             return None
 
     def provide_feedback(
-        self, response_id: str, ratings: Dict[str, float], comment: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, response_id: str, ratings: dict[str, float], comment: str | None = None
+    ) -> dict[str, Any]:
         """Provide feedback on a specific assistant response.
 
         Args:
@@ -1347,7 +1338,7 @@ class EchoesAssistantV2:
 
         # Log the feedback
         feedback_entry = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "response_id": response_id,
             "ratings": ratings,
             "comment": comment,
@@ -1372,13 +1363,13 @@ class EchoesAssistantV2:
     def chat(
         self,
         message: str,
-        system_prompt: Optional[str] = None,
-        stream: Optional[bool] = None,
-        show_status: Optional[bool] = None,
+        system_prompt: str | None = None,
+        stream: bool | None = None,
+        show_status: bool | None = None,
         context_limit: int = 5,
-        prompt_file: Optional[str] = None,
-        require_approval: Optional[bool] = None,
-    ) -> Union[str, Iterator[str]]:
+        prompt_file: str | None = None,
+        require_approval: bool | None = None,
+    ) -> str | Iterator[str]:
         """Chat with the assistant.
 
         Args:
@@ -1568,6 +1559,9 @@ class EchoesAssistantV2:
                     require_approval,
                     user_intent,
                     user_entities,
+                    context=context,
+                    user_thought=user_thought,
+                    conv_cache_key=conv_cache_key,
                 )
         except Exception as e:
             error_msg = f"Error in chat method: {str(e)}"
@@ -1579,15 +1573,20 @@ class EchoesAssistantV2:
     def _chat_nonstreaming(
         self,
         message: str,
-        system_prompt: Optional[str] = None,
-        show_status: Optional[bool] = None,
+        system_prompt: str | None = None,
+        show_status: bool | None = None,
         context_limit: int = 5,
-        prompt_file: Optional[str] = None,
-        require_approval: Optional[bool] = None,
+        prompt_file: str | None = None,
+        require_approval: bool | None = None,
         user_intent=None,
         user_entities=None,
+        context: dict | None = None,
+        user_thought: Any | None = None,
+        conv_cache_key: str | None = None,
     ) -> str:
         """Non-streaming chat implementation."""
+        context = context or {}
+
         # Status indicator
         status = EnhancedStatusIndicator(
             enabled=show_status if show_status is not None else self.enable_status
@@ -1617,7 +1616,7 @@ class EchoesAssistantV2:
                 if rag_context:
                     context_text = "\n\n".join(
                         [
-                            f"[Source {i+1}]: {ctx['text'][:200]}..."
+                            f"[Source {i + 1}]: {ctx['text'][:200]}..."
                             for i, ctx in enumerate(rag_context)
                         ]
                     )
@@ -1903,7 +1902,7 @@ class EchoesAssistantV2:
                 content=assistant_response,
                 thought_type=response_thought_type,
                 entities=[e.text for e in response_entities],
-                parent_thoughts=[user_thought] if "user_thought" in locals() else None,
+                parent_thoughts=[user_thought] if user_thought is not None else None,
             )
 
             # Catch assistant response for continuity
@@ -1927,7 +1926,7 @@ class EchoesAssistantV2:
             )
 
             # Create relationship between user message and assistant response
-            if "conv_cache_key" in locals() and "resp_cache_key" in locals():
+            if conv_cache_key is not None and "resp_cache_key" in locals():
                 catch_release.create_relationship(
                     conv_cache_key, resp_cache_key, strength=0.9
                 )
@@ -1951,7 +1950,7 @@ class EchoesAssistantV2:
 
             # Add entity insights
             if user_entities:
-                unique_entities = list(set(e.text for e in user_entities))
+                unique_entities = list({e.text for e in user_entities})
                 if len(unique_entities) > 1:
                     enhanced_response += f"\n\n📊 **Entities identified:** {', '.join(unique_entities[:5])}"
 
@@ -2042,7 +2041,7 @@ class EchoesAssistantV2:
                 for insight in critical_insights[:2]:
                     if insight.get("insight_type") == "cross_chain_connector":
                         enhanced_response += (
-                            f"\n• Linked concepts across different discussion threads"
+                            "\n• Linked concepts across different discussion threads"
                         )
 
             # Update pressure metrics and add humor if appropriate
@@ -2088,9 +2087,9 @@ class EchoesAssistantV2:
 
             # Add pressure indicator for very high load
             if pressure_level == PressureLevel.CRITICAL:
-                enhanced_response += f"\n\n⚡ **Running at maximum capacity!** I'm handling this like a boss! 💪"
+                enhanced_response += "\n\n⚡ **Running at maximum capacity!** I'm handling this like a boss! 💪"
             elif pressure_level == PressureLevel.OVERWHELMED:
-                enhanced_response += f"\n\n🔥 **Things are heating up!** Thanks for your patience - we're crushing this together! 🤝"
+                enhanced_response += "\n\n🔥 **Things are heating up!** Thanks for your patience - we're crushing this together! 🤝"
 
             return enhanced_response
 
@@ -2150,11 +2149,11 @@ class EchoesAssistantV2:
     def _chat_streaming(
         self,
         message: str,
-        system_prompt: Optional[str] = None,
-        show_status: Optional[bool] = None,
+        system_prompt: str | None = None,
+        show_status: bool | None = None,
         context_limit: int = 5,
-        prompt_file: Optional[str] = None,
-        require_approval: Optional[bool] = None,
+        prompt_file: str | None = None,
+        require_approval: bool | None = None,
     ) -> Iterator[str]:
         """Streaming chat implementation."""
         # Status indicator
@@ -2186,7 +2185,7 @@ class EchoesAssistantV2:
                 if rag_context:
                     context_text = "\n\n".join(
                         [
-                            f"[Source {i+1}]: {ctx['text'][:200]}..."
+                            f"[Source {i + 1}]: {ctx['text'][:200]}..."
                             for i, ctx in enumerate(rag_context)
                         ]
                     )
@@ -2561,14 +2560,14 @@ class EchoesAssistantV2:
                 status.error(error_msg)
             yield error_msg
 
-    def get_conversation_history(self) -> List[Dict]:
+    def get_conversation_history(self) -> list[dict]:
         """Get conversation history for the current session."""
         return self.context_manager.get_messages(self.session_id)
 
-    def get_action_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_action_history(self, limit: int = 10) -> list[dict[str, Any]]:
         return self.action_executor.get_action_history(limit)
 
-    def get_action_summary(self) -> Dict[str, Any]:
+    def get_action_summary(self) -> dict[str, Any]:
         return self.action_executor.get_action_summary()
 
     def gather_knowledge(
@@ -2576,46 +2575,46 @@ class EchoesAssistantV2:
         content: str,
         source: str,
         category: str = "general",
-        tags: Optional[List[str]] = None,
+        tags: list[str] | None = None,
     ) -> str:
         return self.knowledge_manager.add_knowledge(content, source, category, tags)
 
     def search_knowledge(
         self,
-        query: Optional[str] = None,
-        category: Optional[str] = None,
+        query: str | None = None,
+        category: str | None = None,
         limit: int = 10,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         entries = self.knowledge_manager.search_knowledge(query, category, limit=limit)
         return [e.to_dict() for e in entries]
 
     def store_roi_analysis(
-        self, roi_results: Dict[str, Any], analysis_id: Optional[str] = None
+        self, roi_results: dict[str, Any], analysis_id: str | None = None
     ) -> str:
         return self.knowledge_manager.store_roi_analysis(roi_results, analysis_id)
 
     def search_roi_analyses(
         self,
-        institution: Optional[str] = None,
-        business_type: Optional[str] = None,
+        institution: str | None = None,
+        business_type: str | None = None,
         limit: int = 10,
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         entries = self.knowledge_manager.search_roi_analyses(
             institution, business_type, limit
         )
         return [e.to_dict() for e in entries]
 
-    def get_roi_summary(self) -> Dict[str, Any]:
+    def get_roi_summary(self) -> dict[str, Any]:
         return self.knowledge_manager.get_roi_summary()
 
     def list_directory(
         self, dirpath: str, pattern: str = "*", recursive: bool = False
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         return self.fs_tools.list_directory(dirpath, pattern, recursive)
 
     def get_directory_tree(
-        self, dirpath: str, max_depth: int = 3, exclude_dirs: List[str] = None
-    ) -> Dict[str, Any]:
+        self, dirpath: str, max_depth: int = 3, exclude_dirs: list[str] = None
+    ) -> dict[str, Any]:
         """Get a tree structure of a directory.
 
         Args:
@@ -2653,23 +2652,23 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def read_file(self, filepath: str) -> Dict[str, Any]:
+    def read_file(self, filepath: str) -> dict[str, Any]:
         return self.fs_tools.read_file(filepath)
 
-    def write_file(self, filepath: str, content: str) -> Dict[str, Any]:
+    def write_file(self, filepath: str, content: str) -> dict[str, Any]:
         return self.fs_tools.write_file(filepath, content)
 
     def search_files(
-        self, query: str, search_path: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, query: str, search_path: str | None = None
+    ) -> dict[str, Any]:
         return self.fs_tools.search_files(query, search_path)
 
     def organize_roi_files(
-        self, roi_results: Dict[str, Any], base_dir: str = "roi_analysis"
-    ) -> Dict[str, Any]:
+        self, roi_results: dict[str, Any], base_dir: str = "roi_analysis"
+    ) -> dict[str, Any]:
         return self.fs_tools.organize_roi_files(roi_results, base_dir)
 
-    def run_workflow(self, workflow_type: str, **kwargs) -> Dict[str, Any]:
+    def run_workflow(self, workflow_type: str, **kwargs) -> dict[str, Any]:
         if workflow_type == "triage":
             result = self.agent_workflow.run_triage_workflow(
                 user_input=kwargs.get("user_input", ""), context=kwargs.get("context")
@@ -2688,7 +2687,7 @@ class EchoesAssistantV2:
         return result
 
     @cached_method(max_size=10, ttl_seconds=300)  # Cache for 5 minutes
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get comprehensive statistics about the assistant."""
         stats = {
             "session_id": self.session_id,
@@ -2741,8 +2740,8 @@ class EchoesAssistantV2:
         return stats
 
     def update_quantum_state(
-        self, key: str, value: Any, entangle_with: List[str] = None
-    ) -> Dict[str, Any]:
+        self, key: str, value: Any, entangle_with: list[str] = None
+    ) -> dict[str, Any]:
         """Update a quantum state with optional entanglement.
 
         Args:
@@ -2764,7 +2763,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def measure_quantum_state(self, key: str) -> Dict[str, Any]:
+    def measure_quantum_state(self, key: str) -> dict[str, Any]:
         """Measure (read) a quantum state.
 
         Args:
@@ -2779,7 +2778,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_quantum_superposition(self, keys: List[str]) -> Dict[str, Any]:
+    def get_quantum_superposition(self, keys: list[str]) -> dict[str, Any]:
         """Get multiple quantum states in superposition.
 
         Args:
@@ -2794,7 +2793,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_quantum_entangled_states(self, key: str) -> Dict[str, Any]:
+    def get_quantum_entangled_states(self, key: str) -> dict[str, Any]:
         """Get states entangled with the given key.
 
         Args:
@@ -2809,7 +2808,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def transition_quantum_state(self) -> Dict[str, Any]:
+    def transition_quantum_state(self) -> dict[str, Any]:
         """Perform a probabilistic quantum state transition.
 
         Returns:
@@ -2821,7 +2820,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_quantum_state_history(self, key: str) -> Dict[str, Any]:
+    def get_quantum_state_history(self, key: str) -> dict[str, Any]:
         """Get historical values for a quantum state.
 
         Args:
@@ -2836,7 +2835,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_quantum_metrics(self) -> Dict[str, Any]:
+    def get_quantum_metrics(self) -> dict[str, Any]:
         """Get quantum state management performance metrics.
 
         Returns:
@@ -2861,7 +2860,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def list_tools(self, category: Optional[str] = None) -> List[str]:
+    def list_tools(self, category: str | None = None) -> list[str]:
         """List available tools, optionally filtered by category."""
         if hasattr(self, "tool_registry") and self.tool_registry:
             return self.tool_registry.list_tools()
@@ -2869,7 +2868,7 @@ class EchoesAssistantV2:
 
     def save_quantum_state(
         self, filepath: str = "quantum_state_backup.json"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Save the current quantum state to a file.
 
         Args:
@@ -2904,7 +2903,7 @@ class EchoesAssistantV2:
 
     def load_quantum_state(
         self, filepath: str = "quantum_state_backup.json"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         try:
             temp_qsm = QuantumStateManager(persistence_file=filepath)
             temp_qsm.load_state()
@@ -2932,10 +2931,10 @@ class EchoesAssistantV2:
     def analyze_directory(
         self,
         directory_path: str,
-        output_file: Optional[str] = None,
+        output_file: str | None = None,
         max_depth: int = 10,
-        exclude_dirs: Optional[List[str]] = None,
-    ) -> Dict[str, Any]:
+        exclude_dirs: list[str] | None = None,
+    ) -> dict[str, Any]:
         exclude_dirs = exclude_dirs or [
             ".git",
             "__pycache__",
@@ -2978,7 +2977,7 @@ class EchoesAssistantV2:
 
         analysis = {
             "directory": str(directory_path),
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "file_count": stats["file_count"],
             "dir_count": stats["dir_count"],
             "file_types": stats["file_types"],
@@ -3037,8 +3036,8 @@ class EchoesAssistantV2:
             raise
 
     def _get_directory_structure(
-        self, root_path: Path, max_depth: int, exclude_dirs: List[str]
-    ) -> Dict[str, Any]:
+        self, root_path: Path, max_depth: int, exclude_dirs: list[str]
+    ) -> dict[str, Any]:
         root_path = root_path.resolve()
         structure = {
             "name": root_path.name,
@@ -3091,10 +3090,10 @@ class EchoesAssistantV2:
 
         return structure
 
-    def _collect_file_stats(self, structure: Dict[str, Any]) -> Dict[str, Any]:
+    def _collect_file_stats(self, structure: dict[str, Any]) -> dict[str, Any]:
         stats = {"file_count": 0, "dir_count": 0, "file_types": {}}
 
-        def _walk(node: Dict[str, Any]):
+        def _walk(node: dict[str, Any]):
             node_type = node.get("type")
             if node_type == "file":
                 stats["file_count"] += 1
@@ -3109,12 +3108,12 @@ class EchoesAssistantV2:
         return stats
 
     def _format_directory_structure(
-        self, structure: Dict[str, Any], indent: int = 0, max_lines: int = 400
+        self, structure: dict[str, Any], indent: int = 0, max_lines: int = 400
     ) -> str:
-        lines: List[str] = []
+        lines: list[str] = []
         truncated = False
 
-        def _walk(node: Dict[str, Any], depth: int) -> None:
+        def _walk(node: dict[str, Any], depth: int) -> None:
             nonlocal truncated
             if truncated:
                 return
@@ -3149,11 +3148,11 @@ class EchoesAssistantV2:
         return "\n".join(lines)
 
     def _summarize_top_directories(
-        self, structure: Dict[str, Any], max_entries: int = 20
+        self, structure: dict[str, Any], max_entries: int = 20
     ) -> str:
-        entries: List[Dict[str, Any]] = []
+        entries: list[dict[str, Any]] = []
 
-        def _collect(node: Dict[str, Any]) -> None:
+        def _collect(node: dict[str, Any]) -> None:
             if node.get("type") != "directory":
                 return
             entries.append(
@@ -3190,7 +3189,7 @@ class EchoesAssistantV2:
 
         return "\n".join(lines)
 
-    async def get_model_metrics(self) -> Dict[str, Any]:
+    async def get_model_metrics(self) -> dict[str, Any]:
         return await self.model_metrics.get_metrics()
 
     def print_model_metrics(self):
@@ -3240,7 +3239,7 @@ class EchoesAssistantV2:
     # GLIMPSE PREFLIGHT SYSTEM METHODS
     # ============================================================================
 
-    def enable_glimpse_preflight(self, enabled: bool = True) -> Dict[str, Any]:
+    def enable_glimpse_preflight(self, enabled: bool = True) -> dict[str, Any]:
         """Enable or disable Glimpse preflight system.
 
         Args:
@@ -3261,7 +3260,7 @@ class EchoesAssistantV2:
 
     def set_glimpse_anchors(
         self, goal: str = "", constraints: str = ""
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Set goal and constraints for Glimpse preflight.
 
         Args:
@@ -3284,7 +3283,7 @@ class EchoesAssistantV2:
             "message": "Glimpse anchors updated",
         }
 
-    async def glimpse_preflight(self, message: str) -> Dict[str, Any]:
+    async def glimpse_preflight(self, message: str) -> dict[str, Any]:
         """Perform Glimpse preflight check on a message.
 
         Args:
@@ -3319,7 +3318,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def commit_glimpse(self, message: str) -> Dict[str, Any]:
+    def commit_glimpse(self, message: str) -> dict[str, Any]:
         """Commit a Glimpse preview (execute side effects).
 
         Args:
@@ -3353,8 +3352,8 @@ class EchoesAssistantV2:
     # ============================================================================
 
     async def detect_patterns_external(
-        self, text: str, context: Optional[Dict] = None, options: Optional[Dict] = None
-    ) -> Dict[str, Any]:
+        self, text: str, context: dict | None = None, options: dict | None = None
+    ) -> dict[str, Any]:
         """Detect patterns using external API.
 
         Args:
@@ -3401,9 +3400,9 @@ class EchoesAssistantV2:
     async def verify_truth_external(
         self,
         claim: str,
-        evidence: Optional[List[str]] = None,
-        context: Optional[Dict] = None,
-    ) -> Dict[str, Any]:
+        evidence: list[str] | None = None,
+        context: dict | None = None,
+    ) -> dict[str, Any]:
         """Verify truth of a claim using external API.
 
         Args:
@@ -3450,8 +3449,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     async def initiate_contact(
-        self, message_type: str, data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, message_type: str, data: dict[str, Any]
+    ) -> dict[str, Any]:
         """Initiate contact with external API - BRIDGE FUNCTION.
 
         This is the main bridge between internal assistant and external APIs.
@@ -3508,7 +3507,7 @@ class EchoesAssistantV2:
                         if not isinstance(truth_result, Exception)
                         else {"success": False, "error": str(truth_result)}
                     ),
-                    "timestamp": datetime.now(timezone.utc).isoformat(),
+                    "timestamp": datetime.now(UTC).isoformat(),
                 }
             else:
                 return {
@@ -3518,7 +3517,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_external_status(self) -> Dict[str, Any]:
+    def get_external_status(self) -> dict[str, Any]:
         """Get status of external API connections.
 
         Returns:
@@ -3539,7 +3538,7 @@ class EchoesAssistantV2:
         return {
             "success": True,
             "status": status,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     # ============================================================================
@@ -3552,8 +3551,8 @@ class EchoesAssistantV2:
         node_type: str,
         label: str,
         description: str = "",
-        properties: Dict[str, Any] = None,
-    ) -> Dict[str, Any]:
+        properties: dict[str, Any] = None,
+    ) -> dict[str, Any]:
         """Add a knowledge node to the graph.
 
         Args:
@@ -3594,8 +3593,8 @@ class EchoesAssistantV2:
         target_id: str,
         relation_type: str,
         weight: float = 1.0,
-        properties: Dict[str, Any] = None,
-    ) -> Dict[str, Any]:
+        properties: dict[str, Any] = None,
+    ) -> dict[str, Any]:
         """Add a relationship between knowledge nodes.
 
         Args:
@@ -3631,8 +3630,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def add_memory_fragment(
-        self, content: str, context: Dict[str, Any], importance: float = 1.0
-    ) -> Dict[str, Any]:
+        self, content: str, context: dict[str, Any], importance: float = 1.0
+    ) -> dict[str, Any]:
         """Add a memory fragment to the knowledge system.
 
         Args:
@@ -3653,7 +3652,7 @@ class EchoesAssistantV2:
             )
 
             memory = MemoryFragment(
-                id=f"mem_{datetime.now(timezone.utc).strftime('%Y%m%d_%H%M%S_%f')}",
+                id=f"mem_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S_%f')}",
                 content=content,
                 context=context,
                 entities=entities,
@@ -3674,8 +3673,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def communicate_with_context(
-        self, message: str, system_prompt: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, message: str, system_prompt: str | None = None
+    ) -> dict[str, Any]:
         """Enable meaningful communication using knowledge graph context.
 
         Args:
@@ -3717,7 +3716,7 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def _build_contextual_prompt(
-        self, base_prompt: Optional[str], context: Dict[str, Any]
+        self, base_prompt: str | None, context: dict[str, Any]
     ) -> str:
         """Build an enhanced prompt with knowledge graph context."""
         contextual_parts = []
@@ -3753,8 +3752,8 @@ class EchoesAssistantV2:
         return "\n\n".join(contextual_parts)
 
     def search_knowledge_graph(
-        self, query: str, node_type: Optional[str] = None, limit: int = 10
-    ) -> Dict[str, Any]:
+        self, query: str, node_type: str | None = None, limit: int = 10
+    ) -> dict[str, Any]:
         """Search the knowledge graph for relevant information.
 
         Args:
@@ -3800,8 +3799,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def get_knowledge_relationships(
-        self, node_id: str, relation_type: Optional[str] = None, max_depth: int = 2
-    ) -> Dict[str, Any]:
+        self, node_id: str, relation_type: str | None = None, max_depth: int = 2
+    ) -> dict[str, Any]:
         """Get relationships for a specific knowledge node.
 
         Args:
@@ -3838,8 +3837,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def retrieve_relevant_memories(
-        self, query: str, context: Optional[Dict] = None, limit: int = 5
-    ) -> Dict[str, Any]:
+        self, query: str, context: dict | None = None, limit: int = 5
+    ) -> dict[str, Any]:
         """Retrieve memories relevant to a query.
 
         Args:
@@ -3877,7 +3876,7 @@ class EchoesAssistantV2:
 
     def learn_from_interaction(
         self, user_message: str, assistant_response: str, confidence: float = 0.8
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Learn from user interactions to improve future communication.
 
         Args:
@@ -3904,7 +3903,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_knowledge_graph_stats(self) -> Dict[str, Any]:
+    def get_knowledge_graph_stats(self) -> dict[str, Any]:
         """Get comprehensive statistics about the knowledge graph.
 
         Returns:
@@ -3930,7 +3929,7 @@ class EchoesAssistantV2:
 
     def process_multimodal_file(
         self, file_path: str, extraction_target: str = "text"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Process a multimodal file with resonance-based understanding.
 
         Args:
@@ -3999,7 +3998,7 @@ class EchoesAssistantV2:
 
     def analyze_multimodal_directory(
         self, directory_path: str, extraction_target: str = "text"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Analyze all files in a directory with multimodal resonance.
 
         Args:
@@ -4100,7 +4099,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_cross_modal_insights(self, file_path: str) -> Dict[str, Any]:
+    def get_cross_modal_insights(self, file_path: str) -> dict[str, Any]:
         """Get cross-modal transformation insights for a file.
 
         Args:
@@ -4140,7 +4139,7 @@ class EchoesAssistantV2:
 
     def find_resonant_content(
         self, target_modality: str, min_resonance: float = 0.5
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Find content that resonates with target modality.
 
         Args:
@@ -4192,8 +4191,8 @@ class EchoesAssistantV2:
             return {"success": False, "error": str(e)}
 
     def create_resonant_understanding(
-        self, query: str, modality_preference: Optional[str] = None
-    ) -> Dict[str, Any]:
+        self, query: str, modality_preference: str | None = None
+    ) -> dict[str, Any]:
         """Create understanding by resonating across multiple modalities.
 
         Args:
@@ -4241,15 +4240,15 @@ class EchoesAssistantV2:
 
             # Generate enhanced response with multimodal context
             enhanced_prompt = f"""You are an AI assistant with advanced multimodal understanding capabilities.
-            
+
 Query: {query}
 Target Modality: {target_modality}
-Resonance Strength: {multimodal_context['resonance_strength']:.2f}
+Resonance Strength: {multimodal_context["resonance_strength"]:.2f}
 
 Knowledge Context:
-- Entities found: {len(multimodal_context['knowledge_entities'])}
-- Resonant files: {len(multimodal_context['resonant_files'])}
-- Relevant memories: {len(multimodal_context['relevant_memories'])}
+- Entities found: {len(multimodal_context["knowledge_entities"])}
+- Resonant files: {len(multimodal_context["resonant_files"])}
+- Relevant memories: {len(multimodal_context["relevant_memories"])}
 
 Provide a comprehensive response that leverages this multimodal understanding. Consider the different types of content (vision, text, audio, structured data) and their relationships."""
 
@@ -4287,7 +4286,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_multimodal_statistics(self) -> Dict[str, Any]:
+    def get_multimodal_statistics(self) -> dict[str, Any]:
         """Get comprehensive statistics about multimodal resonance Glimpse.
 
         Returns:
@@ -4311,8 +4310,8 @@ Provide a comprehensive response that leverages this multimodal understanding. C
             return {"success": False, "error": str(e)}
 
     def optimize_multimodal_workflow(
-        self, files: List[str], objective: str = "comprehensive_analysis"
-    ) -> Dict[str, Any]:
+        self, files: list[str], objective: str = "comprehensive_analysis"
+    ) -> dict[str, Any]:
         """Optimize multimodal processing workflow for specific objectives.
 
         Args:
@@ -4376,7 +4375,9 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 workflow_strategy["processing_tier"] = (
                     "fast"
                     if total_complexity < 5
-                    else "medium" if total_complexity < 15 else "complex"
+                    else "medium"
+                    if total_complexity < 15
+                    else "complex"
                 )
 
             return {
@@ -4400,10 +4401,10 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         complexity_score: float,
         creativity_score: float,
         innovation_score: float,
-        thought_processes: List[str],
+        thought_processes: list[str],
         insights_generated: int,
         problems_solved: int,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Track user's cognitive efforts and calculate value.
 
         Args:
@@ -4497,7 +4498,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         consent_type: str = "personal_development",
         purpose_description: str = "AI assistance and cognitive work",
         scope_of_use: str = "general_assistance",
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Create user consent agreement aligned with LICENSE values.
 
         Args:
@@ -4583,7 +4584,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
 
     def generate_user_financial_statement(
         self, user_id: str, period_days: int = 30
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate comprehensive financial statement for user.
 
         Args:
@@ -4598,10 +4599,8 @@ Provide a comprehensive response that leverages this multimodal understanding. C
 
         try:
             # Calculate period dates
-            period_end = datetime.now(timezone.utc).isoformat()
-            period_start = (
-                datetime.now(timezone.utc) - timedelta(days=period_days)
-            ).isoformat()
+            period_end = datetime.now(UTC).isoformat()
+            period_start = (datetime.now(UTC) - timedelta(days=period_days)).isoformat()
 
             # Generate statement from accounting system
             statement = self.accounting_system.generate_user_statement(
@@ -4631,8 +4630,8 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 "values_reflection": {
                     "integrity": f"Transparent accounting of {statement['summary']['total_transactions']} transactions",
                     "trust": f"Fair net value of ${statement['summary']['net_value']:.2f} after taxes and fees",
-                    "creativity": f"Creative contributions valued through bonus multipliers",
-                    "delightful_humor": f"Positive engagement reflected in value scores",
+                    "creativity": "Creative contributions valued through bonus multipliers",
+                    "delightful_humor": "Positive engagement reflected in value scores",
                     "freedom_of_thought": f"Cognitive rights protected with {legal_compliance['license_compliance']['compliance_rate']:.1f}% compliance",
                 },
             }
@@ -4642,7 +4641,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
 
     def verify_license_compliance(
         self, operation_type: str, user_id: str, scope: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Verify compliance with Consent-Based License.
 
         Args:
@@ -4764,7 +4763,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         # All users should be treated fairly
         return True
 
-    def get_legal_accounting_statistics(self) -> Dict[str, Any]:
+    def get_legal_accounting_statistics(self) -> dict[str, Any]:
         """Get comprehensive legal and accounting statistics.
 
         Returns:
@@ -4901,10 +4900,10 @@ def interactive_mode():
             try:
                 os.makedirs("results", exist_ok=True)
                 import json as _json
-                from datetime import datetime as _dt, timezone as _tz
+                from datetime import datetime as _dt
 
                 rec = {
-                    "ts": _dt.now(_tz.utc).isoformat(),
+                    "ts": _dt.now(UTC).isoformat(),
                     "input_text": d.input_text,
                     "goal": d.goal,
                     "constraints": d.constraints,
@@ -5154,7 +5153,7 @@ def interactive_mode():
                         )
 
                         if results:
-                            print(f"\n📊 **Simulation Results:**")
+                            print("\n📊 **Simulation Results:**")
                             for i, result in enumerate(results, 1):
                                 sim_type = result.simulation_type.value.replace(
                                     "_", " "
@@ -5185,20 +5184,20 @@ def interactive_mode():
                     # Show simulation statistics
                     sim_stats = parallel_simulation.get_simulation_statistics()
 
-                    print(f"\n🧠 **Parallel Simulation Statistics:**")
+                    print("\n🧠 **Parallel Simulation Statistics:**")
                     print(f"  Total simulations: {sim_stats['total_simulations']}")
                     print(f"  Active simulations: {sim_stats['active_simulations']}")
                     print(f"  Queue size: {sim_stats['queue_size']}")
 
-                    print(f"\n  Status breakdown:")
+                    print("\n  Status breakdown:")
                     for status, count in sim_stats["status_breakdown"].items():
                         print(f"    {status}: {count}")
 
-                    print(f"\n  Type breakdown:")
+                    print("\n  Type breakdown:")
                     for sim_type, count in sim_stats["type_breakdown"].items():
                         print(f"    {sim_type}: {count}")
 
-                    print(f"\n  Performance:")
+                    print("\n  Performance:")
                     perf = sim_stats["performance"]
                     print(f"    Success rate: {perf['success_rate']:.1%}")
                     print(
@@ -5207,7 +5206,7 @@ def interactive_mode():
                     print(f"    Average confidence: {perf['average_confidence']:.1%}")
                     print(f"    Average relevance: {perf['average_relevance']:.1%}")
 
-                    print(f"\n  Configuration:")
+                    print("\n  Configuration:")
                     print(f"    Max workers: {sim_stats['max_workers']}")
                     print(f"    Max concurrent: {sim_stats['max_concurrent']}")
                     continue
@@ -5221,14 +5220,14 @@ def interactive_mode():
                         result = parallel_simulation.get_simulation_result(sim_id)
 
                         if result:
-                            print(f"\n🧠 **Simulation Result:**")
+                            print("\n🧠 **Simulation Result:**")
                             print(f"  ID: {result.instance_id}")
                             print(f"  Type: {result.simulation_type.value}")
                             print(f"  Confidence: {result.confidence:.1%}")
                             print(f"  Execution time: {result.execution_time:.2f}s")
                             print(f"  Reasoning: {result.reasoning}")
 
-                            print(f"\n  Outcome:")
+                            print("\n  Outcome:")
                             for key, value in result.outcome.items():
                                 if isinstance(value, list) and len(value) > 0:
                                     print(f"    {key}: {len(value)} items")
@@ -5238,7 +5237,7 @@ def interactive_mode():
                                     print(f"    {key}: {value}")
 
                             if result.insights:
-                                print(f"\n  Insights:")
+                                print("\n  Insights:")
                                 for insight in result.insights:
                                     print(f"    • {insight}")
 
@@ -5264,7 +5263,7 @@ def interactive_mode():
                 if command == "clearsims":
                     # Clear completed simulations
                     parallel_simulation.clear_completed_simulations()
-                    print(f"\n🗑️ **Cleared completed simulations**")
+                    print("\n🗑️ **Cleared completed simulations**")
                     continue
 
                 if command.startswith("possibilities "):
@@ -5288,7 +5287,7 @@ def interactive_mode():
 
                         if result and result.outcome:
                             outcome = result.outcome
-                            print(f"\n📊 **Possibility Space Analysis:**")
+                            print("\n📊 **Possibility Space Analysis:**")
                             print(
                                 f"  Total dimensions: {outcome.get('total_dimensions', 0)}"
                             )
@@ -5301,7 +5300,7 @@ def interactive_mode():
 
                             space = outcome.get("possibility_space", [])
                             if space:
-                                print(f"\n  Dimensions:")
+                                print("\n  Dimensions:")
                                 for dim in space:
                                     print(
                                         f"    • {dim.get('name', 'unknown')}: {dim.get('complexity', '')} complexity, {dim.get('impact', '')} impact"
@@ -5311,7 +5310,7 @@ def interactive_mode():
                                         print(f"      - {poss}")
 
                             if result.insights:
-                                print(f"\n  Insights:")
+                                print("\n  Insights:")
                                 for insight in result.insights:
                                     print(f"    • {insight}")
                         else:

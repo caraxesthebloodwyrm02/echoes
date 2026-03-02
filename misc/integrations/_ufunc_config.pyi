@@ -4,7 +4,6 @@ from typing import (
     Any,
     Final,
     Literal,
-    TypeAlias,
     TypedDict,
     TypeVar,
     type_check_only,
@@ -22,8 +21,8 @@ __all__ = [
     "errstate",
 ]
 
-_ErrKind: TypeAlias = Literal["ignore", "warn", "raise", "call", "print", "log"]
-_ErrCall: TypeAlias = Callable[[str, int], Any] | SupportsWrite[str]
+type _ErrKind = Literal["ignore", "warn", "raise", "call", "print", "log"]
+type _ErrCall = Callable[[str, int], Any] | SupportsWrite[str]
 
 _CallableT = TypeVar("_CallableT", bound=Callable[..., object])
 

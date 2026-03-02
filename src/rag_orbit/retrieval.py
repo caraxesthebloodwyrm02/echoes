@@ -1,13 +1,14 @@
+from collections.abc import Sequence
 from dataclasses import dataclass
 from math import sqrt
-from typing import Any, Dict, List, Optional, Sequence
+from typing import Any
 
 
 @dataclass
 class RetrievalResult:
     chunk_id: str
     text: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
     similarity_score: float
 
 
@@ -19,17 +20,17 @@ class RetrievalMetrics:
 class FAISSRetriever:
     def __init__(self, embedding_dim: int = 384):
         self.embedding_dim = embedding_dim
-        self._embeddings: List[List[float]] = []
-        self._texts: List[str] = []
-        self._metadata: List[Dict[str, Any]] = []
-        self._chunk_ids: List[str] = []
+        self._embeddings: list[list[float]] = []
+        self._texts: list[str] = []
+        self._metadata: list[dict[str, Any]] = []
+        self._chunk_ids: list[str] = []
 
     def add_documents(
         self,
         embeddings: Sequence[Sequence[float]],
-        texts: List[str],
-        metadata: List[Dict[str, Any]],
-        chunk_ids: List[str],
+        texts: list[str],
+        metadata: list[dict[str, Any]],
+        chunk_ids: list[str],
     ):
         for embedding in embeddings:
             self._embeddings.append([float(value) for value in embedding])
@@ -37,7 +38,12 @@ class FAISSRetriever:
         self._metadata.extend(metadata)
         self._chunk_ids.extend(chunk_ids)
 
-    def search(self, query_embedding: Sequence[float], top_k: int = 5, category_filter: Optional[str] = None):
+    def search(
+        self,
+        query_embedding: Sequence[float],
+        top_k: int = 5,
+        category_filter: str | None = None,
+    ):
         if not len(self._texts):
             return [], RetrievalMetrics(num_results=0)
 
@@ -50,7 +56,9 @@ class FAISSRetriever:
             if category_filter and md.get("category") != category_filter:
                 continue
             en = sqrt(sum(value * value for value in emb)) or 1.0
-            score = float(sum(left * right for left, right in zip(query, emb)) / (qn * en))
+            score = float(
+                sum(left * right for left, right in zip(query, emb, strict=False)) / (qn * en)
+            )
             rows.append((score, idx))
 
         rows.sort(key=lambda x: x[0], reverse=True)
@@ -67,7 +75,13 @@ class FAISSRetriever:
         return results, RetrievalMetrics(num_results=len(results))
 
     def get_stats(self):
-        categories = sorted({str(md.get("category")) for md in self._metadata if md.get("category") is not None})
+        categories = sorted(
+            {
+                str(md.get("category"))
+                for md in self._metadata
+                if md.get("category") is not None
+            }
+        )
         return {
             "total_documents": len(self._texts),
             "categories": categories,

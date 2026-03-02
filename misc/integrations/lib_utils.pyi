@@ -2,8 +2,8 @@ from io import StringIO
 from typing import assert_type
 
 import numpy as np
-from numpy.lib import array_utils
 import numpy.typing as npt
+from numpy.lib import array_utils
 
 AR: npt.NDArray[np.float64]
 AR_DICT: dict[str, npt.NDArray[np.float64]]

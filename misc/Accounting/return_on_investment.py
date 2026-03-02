@@ -2,13 +2,11 @@
 # echoes_roi_stakeholder.py - Executive ROI Presentation Tool
 # Purpose: Generate clean, professional ROI reports for stakeholder meetings
 
-import json
-import sys
 import csv
-from dataclasses import dataclass, asdict
-from typing import Optional
 import datetime
+import json
 import math
+from dataclasses import dataclass
 
 
 @dataclass
@@ -247,23 +245,23 @@ def export_powerpoint_summary(summary: dict, filename: str) -> None:
         f.write(
             f"""
 ECHOES AI - COMPLIANCE AUTOMATION ROI ANALYSIS
-{overview['institution']}
-Presented by: {overview['presenter']} | {overview['date']}
+{overview["institution"]}
+Presented by: {overview["presenter"]} | {overview["date"]}
 
 SLIDE 1: EXECUTIVE SUMMARY
-• ROI: {metrics['roi_percentage']:.0f}%
-• Payback: {metrics['payback_days']:.0f} days  
-• Net Monthly Benefit: ${metrics['net_monthly_benefit']:,.0f}
+• ROI: {metrics["roi_percentage"]:.0f}%
+• Payback: {metrics["payback_days"]:.0f} days  
+• Net Monthly Benefit: ${metrics["net_monthly_benefit"]:,.0f}
 
 SLIDE 2: SAVINGS BREAKDOWN
-• Labor Efficiency: ${savings['labor_efficiency']:,.0f}/month
-• Error Reduction: ${savings['error_reduction']:,.0f}/month  
-• Audit Preparation: ${savings['audit_preparation']:,.0f}/month
-• Total: ${metrics['total_monthly_savings']:,.0f}/month
+• Labor Efficiency: ${savings["labor_efficiency"]:,.0f}/month
+• Error Reduction: ${savings["error_reduction"]:,.0f}/month  
+• Audit Preparation: ${savings["audit_preparation"]:,.0f}/month
+• Total: ${metrics["total_monthly_savings"]:,.0f}/month
 
 SLIDE 3: BUSINESS CASE
-• Annual Net Benefit: ${metrics['annual_net_benefit']:,.0f}
-• 3-Year Value: ${metrics['three_year_value']:,.0f}
+• Annual Net Benefit: ${metrics["annual_net_benefit"]:,.0f}
+• 3-Year Value: ${metrics["three_year_value"]:,.0f}
 • Risk Reduction: 75% fewer compliance errors
 
 SLIDE 4: RECOMMENDATION
@@ -366,8 +364,8 @@ def main():
     if args.export_ppt:
         export_powerpoint_summary(summary, args.export_ppt)
 
-    print(f"\n🎯 Ready for stakeholder presentation!")
-    print(f"Use --export-ppt to create PowerPoint summary")
+    print("\n🎯 Ready for stakeholder presentation!")
+    print("Use --export-ppt to create PowerPoint summary")
 
 
 if __name__ == "__main__":

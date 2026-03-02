@@ -2,6 +2,7 @@
 """
 Test the Responses API migration
 """
+
 import os
 
 # Test with Responses API enabled (default)
@@ -72,6 +73,7 @@ def test_chat_completions_fallback():
 
     # Re-import to get fresh instance
     import importlib
+
     import assistant_v2_core
 
     importlib.reload(assistant_v2_core)

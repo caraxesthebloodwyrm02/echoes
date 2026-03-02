@@ -1,9 +1,9 @@
 """Synthetic dataset generator for Innovate Inc. company data."""
 
 import random
-from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Any
 from dataclasses import dataclass, field
+from datetime import datetime, timedelta
+from typing import Any
 
 
 # Simple name generators without faker dependency
@@ -65,7 +65,7 @@ class Document:
     document_type: str  # 'invoice', 'receipt', 'contract', 'payroll', 'ledger'
     date: datetime
     amount: float
-    parties: List[str]
+    parties: list[str]
     content: str = ""
     file_path: str = ""
 
@@ -75,11 +75,11 @@ class Dataset:
     """Complete synthetic dataset for Innovate Inc."""
 
     company_name: str = "Innovate Inc."
-    transactions: List[Transaction] = field(default_factory=list)
-    documents: List[Document] = field(default_factory=list)
-    planted_errors: List[Dict[str, Any]] = field(default_factory=list)
-    start_date: Optional[datetime] = None
-    end_date: Optional[datetime] = None
+    transactions: list[Transaction] = field(default_factory=list)
+    documents: list[Document] = field(default_factory=list)
+    planted_errors: list[dict[str, Any]] = field(default_factory=list)
+    start_date: datetime | None = None
+    end_date: datetime | None = None
 
 
 class InnovateIncGenerator:
@@ -304,7 +304,7 @@ class InnovateIncGenerator:
             transaction_id=f"TRF-{index:06d}",
             date=date,
             amount=amount,
-            description=f"Transfer between accounts",
+            description="Transfer between accounts",
             account_from=from_account,
             account_to=to_account,
             transaction_type="transfer",
@@ -502,7 +502,7 @@ class InnovateIncGenerator:
                 transaction_type="expense",
                 category="Office Supplies",
                 vendor=fake_vendor,
-                reference=f"PO-{1000+i}",
+                reference=f"PO-{1000 + i}",
             )
 
             dataset.transactions.append(fraud_transaction)

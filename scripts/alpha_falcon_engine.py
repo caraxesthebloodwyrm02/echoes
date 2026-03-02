@@ -1,8 +1,9 @@
+import os
+import time
+
 import numpy as np
 from scipy.io import wavfile
-from scipy.signal import lfilter, resample
-import time
-import os
+from scipy.signal import resample
 
 
 class AlphaFalconEngine:
@@ -183,7 +184,7 @@ class AlphaFalconEngine:
         # Evolved lyrics timestamps - shift with run count
         lyrics = self.evolve_lyrics()
 
-        print(f"\n🎤 Lyrics drop at:")
+        print("\n🎤 Lyrics drop at:")
         for time, line in lyrics:
             print(f"   {time:.1f}s: {line}")
 
@@ -279,7 +280,7 @@ class AlphaFalconEngine:
         print("   Audio quality indicators:")
         print(f"      🎛️ Compression ratio: {4.0 + (2.0 * self.glow_plug_heat):.1f}:1")
         print(f"      📉 Threshold: {(0.8 - (0.05 * self.glow_plug_heat)):.2f}")
-        print(f"      🔄 Knee width: 0.1 (soft)")
+        print("      🔄 Knee width: 0.1 (soft)")
 
         return insights, kintsugi
 

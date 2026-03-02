@@ -5,11 +5,11 @@ Detects user intent, extracts entities, and maintains conversation context
 
 import logging
 import re
-from typing import Dict, Any, List, Optional, Set, Tuple, NamedTuple
-from datetime import datetime
 from collections import defaultdict, deque
 from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -60,7 +60,7 @@ class Entity:
     context: str
     start_pos: int
     end_pos: int
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -69,9 +69,9 @@ class Intent:
 
     type: IntentType
     confidence: float
-    keywords: List[str]
+    keywords: list[str]
     context: str
-    parameters: Dict[str, Any] = field(default_factory=dict)
+    parameters: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -81,13 +81,13 @@ class ThoughtNode:
     id: str
     content: str
     timestamp: datetime
-    entities: List[Entity]
+    entities: list[Entity]
     intent: Intent
-    parent_ids: List[str] = field(default_factory=list)
-    child_ids: List[str] = field(default_factory=list)
-    cross_links: List[str] = field(default_factory=list)
+    parent_ids: list[str] = field(default_factory=list)
+    child_ids: list[str] = field(default_factory=list)
+    cross_links: list[str] = field(default_factory=list)
     importance: float = 0.5
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class IntentAwarenessEngine:
@@ -437,7 +437,7 @@ class IntentAwarenessEngine:
 
     def _extract_intent_parameters(
         self, intent_type: IntentType, text: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract parameters specific to the intent type"""
         params = {}
 
@@ -476,7 +476,7 @@ class IntentAwarenessEngine:
 
         return params
 
-    def extract_entities(self, text: str) -> List[Entity]:
+    def extract_entities(self, text: str) -> list[Entity]:
         """Extract entities from text"""
         entities = []
 
@@ -528,7 +528,7 @@ class IntentAwarenessEngine:
         return unique_entities
 
     def create_thought_node(
-        self, text: str, parent_ids: List[str] = None
+        self, text: str, parent_ids: list[str] = None
     ) -> ThoughtNode:
         """Create a new thought node with intent and entities"""
         node_id = (
@@ -619,12 +619,12 @@ class IntentAwarenessEngine:
                 node.cross_links.append(other_id)
                 other_node.cross_links.append(node.id)
 
-    def get_thought_chain(self, limit: int = 10) -> List[ThoughtNode]:
+    def get_thought_chain(self, limit: int = 10) -> list[ThoughtNode]:
         """Get the recent chain of thoughts"""
         recent_ids = list(self.thought_chain)[-limit:]
         return [self.thoughts[tid] for tid in recent_ids if tid in self.thoughts]
 
-    def find_critical_links(self) -> List[Tuple[str, str, float]]:
+    def find_critical_links(self) -> list[tuple[str, str, float]]:
         """Find critical cross-links between thoughts"""
         links = []
 
@@ -649,7 +649,7 @@ class IntentAwarenessEngine:
         # Sort by strength and return top links
         return sorted(links, key=lambda x: x[2], reverse=True)[:10]
 
-    def get_entity_evolution(self, entity_name: str) -> List[ThoughtNode]:
+    def get_entity_evolution(self, entity_name: str) -> list[ThoughtNode]:
         """Track how an entity evolves through the conversation"""
         entity_key = entity_name.lower()
         if entity_key not in self.entity_graph:
@@ -658,7 +658,7 @@ class IntentAwarenessEngine:
         thought_ids = self.entity_graph[entity_key]
         return [self.thoughts[tid] for tid in thought_ids if tid in self.thoughts]
 
-    def get_intent_flow(self) -> Dict[str, Any]:
+    def get_intent_flow(self) -> dict[str, Any]:
         """Analyze the flow of intents through conversation"""
         if not self.intent_history:
             return {}
@@ -670,7 +670,7 @@ class IntentAwarenessEngine:
         # Detect intent transitions
         transitions = defaultdict(int)
         for i in range(1, len(self.intent_history)):
-            transition = f"{self.intent_history[i-1]} → {self.intent_history[i]}"
+            transition = f"{self.intent_history[i - 1]} → {self.intent_history[i]}"
             transitions[transition] += 1
 
         return {
@@ -682,7 +682,7 @@ class IntentAwarenessEngine:
             "current_focus": self.intent_history[-1] if self.intent_history else None,
         }
 
-    def summarize_conversation_state(self) -> Dict[str, Any]:
+    def summarize_conversation_state(self) -> dict[str, Any]:
         """Get a comprehensive summary of the conversation state"""
         recent_thoughts = self.get_thought_chain(5)
         critical_links = self.find_critical_links()

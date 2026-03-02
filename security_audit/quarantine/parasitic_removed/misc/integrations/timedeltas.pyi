@@ -2,13 +2,11 @@ from datetime import timedelta
 from typing import (
     ClassVar,
     Literal,
-    TypeAlias,
     TypeVar,
     overload,
 )
 
 import numpy as np
-
 from pandas._libs.tslibs import (
     NaTType,
     Tick,
@@ -21,7 +19,7 @@ from pandas._typing import (
 
 # This should be kept consistent with the keys in the dict timedelta_abbrevs
 # in pandas/_libs/tslibs/timedeltas.pyx
-UnitChoices: TypeAlias = Literal[
+type UnitChoices = Literal[
     "Y",
     "y",
     "M",
@@ -85,8 +83,12 @@ def delta_to_nanoseconds(
     reso: int = ...,  # NPY_DATETIMEUNIT
     round_ok: bool = ...,
 ) -> int: ...
-def floordiv_object_array(left: np.ndarray, right: npt.NDArray[np.object_]) -> np.ndarray: ...
-def truediv_object_array(left: np.ndarray, right: npt.NDArray[np.object_]) -> np.ndarray: ...
+def floordiv_object_array(
+    left: np.ndarray, right: npt.NDArray[np.object_]
+) -> np.ndarray: ...
+def truediv_object_array(
+    left: np.ndarray, right: npt.NDArray[np.object_]
+) -> np.ndarray: ...
 
 class Timedelta(timedelta):
     _creso: int
@@ -136,9 +138,13 @@ class Timedelta(timedelta):
     @overload
     def __floordiv__(self, other: float) -> Timedelta: ...
     @overload
-    def __floordiv__(self, other: npt.NDArray[np.timedelta64]) -> npt.NDArray[np.intp]: ...
+    def __floordiv__(
+        self, other: npt.NDArray[np.timedelta64]
+    ) -> npt.NDArray[np.intp]: ...
     @overload
-    def __floordiv__(self, other: npt.NDArray[np.number]) -> npt.NDArray[np.timedelta64] | Timedelta: ...
+    def __floordiv__(
+        self, other: npt.NDArray[np.number]
+    ) -> npt.NDArray[np.timedelta64] | Timedelta: ...
     @overload
     def __rfloordiv__(self, other: timedelta | str) -> int: ...
     @overload
@@ -157,7 +163,9 @@ class Timedelta(timedelta):
     def __gt__(self, other: timedelta) -> bool: ...
     def __hash__(self) -> int: ...
     def isoformat(self) -> str: ...
-    def to_numpy(self, dtype: npt.DTypeLike = ..., copy: bool = False) -> np.timedelta64: ...
+    def to_numpy(
+        self, dtype: npt.DTypeLike = ..., copy: bool = False
+    ) -> np.timedelta64: ...
     def view(self, dtype: npt.DTypeLike) -> object: ...
     @property
     def unit(self) -> str: ...

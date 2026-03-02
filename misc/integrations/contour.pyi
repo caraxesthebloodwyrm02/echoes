@@ -1,19 +1,20 @@
+from collections.abc import Callable, Iterable, Sequence
+from typing import Literal
+
+import numpy as np
 from matplotlib import cm
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
 from matplotlib.collections import Collection
 from matplotlib.colorizer import Colorizer, ColorizingArtist
 from matplotlib.colors import Colormap, Normalize
-from matplotlib.path import Path
 from matplotlib.patches import Patch
+from matplotlib.path import Path
 from matplotlib.text import Text
+from matplotlib.ticker import Formatter, Locator
 from matplotlib.transforms import Transform, TransformedPatchPath, TransformedPath
-from matplotlib.ticker import Locator, Formatter
-
 from numpy.typing import ArrayLike
-import numpy as np
-from collections.abc import Callable, Iterable, Sequence
-from typing import Literal
+
 from .typing import ColorType
 
 class ContourLabeler:

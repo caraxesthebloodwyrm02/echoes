@@ -9,12 +9,13 @@ from typing import (
     Generic,
     Protocol,
     Self,
-    TypeAlias,
     overload,
+    override,
     type_check_only,
 )
 from typing import Literal as L
 
+import numpy as np
 from _typeshed import (
     StrOrBytesPath,
     StrPath,
@@ -22,12 +23,10 @@ from _typeshed import (
     SupportsRead,
     SupportsWrite,
 )
-from typing_extensions import TypeVar, deprecated, override
-
-import numpy as np
 from numpy._core.multiarray import packbits, unpackbits
 from numpy._typing import ArrayLike, DTypeLike, NDArray, _DTypeLike, _SupportsArrayFunc
 from numpy.ma.mrecords import MaskedRecords
+from typing_extensions import TypeVar, deprecated
 
 from ._datasource import DataSource as DataSource
 
@@ -48,10 +47,10 @@ _T_co = TypeVar("_T_co", covariant=True)
 _ScalarT = TypeVar("_ScalarT", bound=np.generic)
 _ScalarT_co = TypeVar("_ScalarT_co", bound=np.generic, default=Any, covariant=True)
 
-_FName: TypeAlias = StrPath | Iterable[str] | Iterable[bytes]
-_FNameRead: TypeAlias = StrPath | SupportsRead[str] | SupportsRead[bytes]
-_FNameWriteBytes: TypeAlias = StrPath | SupportsWrite[bytes]
-_FNameWrite: TypeAlias = _FNameWriteBytes | SupportsWrite[str]
+type _FName = StrPath | Iterable[str] | Iterable[bytes]
+type _FNameRead = StrPath | SupportsRead[str] | SupportsRead[bytes]
+type _FNameWriteBytes = StrPath | SupportsWrite[bytes]
+type _FNameWrite = _FNameWriteBytes | SupportsWrite[str]
 
 @type_check_only
 class _SupportsReadSeek(SupportsRead[_T_co], Protocol[_T_co]):

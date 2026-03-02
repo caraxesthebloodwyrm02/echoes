@@ -3,14 +3,12 @@ Caching helpers for Glimpse, tuned for OpenAI API responses.
 Provides prompt-aware keying, TTL/LRU eviction, and optional persistence.
 """
 
-import asyncio
 import hashlib
 import json
+import logging
 import time
 from collections import OrderedDict
-from contextlib import asynccontextmanager
-from typing import Any, Dict, Optional, Tuple, List, Union
-import logging
+from typing import Any
 
 # Import metrics
 from .metrics import record_cache_hit, record_cache_miss, update_cache_size
@@ -27,13 +25,13 @@ class PromptCache:
     def __init__(self, max_size: int = 1000, ttl_seconds: int = 3600):
         self.max_size = max_size
         self.ttl_seconds = ttl_seconds
-        self._cache: OrderedDict[str, Tuple[Any, float]] = OrderedDict()
+        self._cache: OrderedDict[str, tuple[Any, float]] = OrderedDict()
         self._hits = 0
         self._misses = 0
 
     @staticmethod
     def _hash_prompt(
-        messages: list[dict], model: str, temperature: float, max_tokens: Optional[int]
+        messages: list[dict], model: str, temperature: float, max_tokens: int | None
     ) -> str:
         """Create a deterministic SHA-256 hash for the request."""
         payload = {
@@ -50,8 +48,8 @@ class PromptCache:
         messages: list[dict],
         model: str,
         temperature: float,
-        max_tokens: Optional[int],
-    ) -> Optional[Any]:
+        max_tokens: int | None,
+    ) -> Any | None:
         """Return cached response if available and not expired."""
         key = self._hash_prompt(messages, model, temperature, max_tokens)
         entry = self._cache.get(key)
@@ -82,7 +80,7 @@ class PromptCache:
         messages: list[dict],
         model: str,
         temperature: float,
-        max_tokens: Optional[int],
+        max_tokens: int | None,
         response: Any,
     ) -> None:
         """Cache the response with LRU eviction."""
@@ -116,7 +114,7 @@ class PromptCache:
 
 
 # Global cache instance (can be swapped or configured)
-_default_cache: Optional[PromptCache] = None
+_default_cache: PromptCache | None = None
 
 
 def get_default_cache() -> PromptCache:
@@ -129,7 +127,7 @@ def get_default_cache() -> PromptCache:
 
 
 # Decorator to auto-cache any async function that matches the signature
-def cached_openai_call(cache: Optional[PromptCache] = None, skip_cache: bool = False):
+def cached_openai_call(cache: PromptCache | None = None, skip_cache: bool = False):
     """
     Decorator for async OpenAI call functions with caching.
 
@@ -143,7 +141,7 @@ def cached_openai_call(cache: Optional[PromptCache] = None, skip_cache: bool = F
             messages: list[dict],
             model: str,
             temperature: float,
-            max_tokens: Optional[int] = None,
+            max_tokens: int | None = None,
             **kwargs,
         ) -> Any:
             # Skip cache if requested or temperature > 0 (non-deterministic)
@@ -177,7 +175,6 @@ def cached_openai_call(cache: Optional[PromptCache] = None, skip_cache: bool = F
                 return cached
 
             # Cache miss - call the function and cache the result
-            start_time = time.perf_counter()
             try:
                 result = await func(messages, model, temperature, max_tokens, **kwargs)
 

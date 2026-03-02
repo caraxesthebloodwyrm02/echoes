@@ -1,6 +1,6 @@
 from collections.abc import Callable, Mapping
 from pprint import pprint as show
-from typing import Any, Final, Never, TypeAlias, TypeVar, overload
+from typing import Any, Final, Never, TypeVar, overload
 from typing import Literal as L
 
 from _typeshed import FileDescriptorOrPath
@@ -111,12 +111,12 @@ __all__ = [
 _VT = TypeVar("_VT")
 _RT = TypeVar("_RT")
 
-_Var: TypeAlias = Mapping[str, list[str]]
-_ROut: TypeAlias = Mapping[str, str]
-_F2CMap: TypeAlias = Mapping[str, Mapping[str, str]]
+type _Var = Mapping[str, list[str]]
+type _ROut = Mapping[str, str]
+type _F2CMap = Mapping[str, Mapping[str, str]]
 
-_Bool: TypeAlias = bool | L[0, 1]
-_Intent: TypeAlias = L[
+type _Bool = bool | L[0, 1]
+type _Intent = L[
     "INTENT_IN",
     "INTENT_OUT",
     "INTENT_INOUT",

@@ -3,11 +3,12 @@
 Complete demonstration of EchoesAssistantV2 with Glimpse and External API Contact
 This shows the full bridge between internals and externals
 """
+
 import asyncio
-import os
-import sys
 import subprocess
+import sys
 import time
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -56,7 +57,7 @@ async def full_bridge_demo():
             enable_external_contact=True,
         )
 
-        print(f"\n✅ Assistant initialized with full bridge capabilities")
+        print("\n✅ Assistant initialized with full bridge capabilities")
         print(f"   - Glimpse preflight: {assistant.enable_glimpse}")
         print(f"   - External contact: {assistant.enable_external_contact}")
         print(f"   - Responses API: {assistant.use_responses_api}")
@@ -126,7 +127,7 @@ async def full_bridge_demo():
                     f"   ✅ {claim[:50]}... → {truth_result['verdict']} ({truth_result['confidence']:.2f})"
                 )
             else:
-                print(f"   ⚠️  External verification unavailable")
+                print("   ⚠️  External verification unavailable")
 
         # Step 5: Combined Analysis through Bridge
         print("\n5️⃣ Running combined analysis through initiate_contact bridge...")
@@ -148,7 +149,7 @@ async def full_bridge_demo():
         )
 
         if bridge_result["success"]:
-            print(f"   ✅ Combined analysis completed")
+            print("   ✅ Combined analysis completed")
             print(f"   📊 Analysis type: {bridge_result['type']}")
 
             # Show patterns if available

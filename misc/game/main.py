@@ -1,8 +1,8 @@
-import pygame
 import sys
-from enum import Enum
 from dataclasses import dataclass
-from typing import Tuple, List, Optional
+from enum import Enum
+
+import pygame
 
 # Game constants
 SCREEN_WIDTH = 800
@@ -53,7 +53,7 @@ class GameState(Enum):
 
 
 class Ghost:
-    def __init__(self, x: int, y: int, color: Tuple[int, int, int]):
+    def __init__(self, x: int, y: int, color: tuple[int, int, int]):
         self.position = Position(x, y)
         self.start_position = Position(x, y)
         self.state = GhostState.CHASE

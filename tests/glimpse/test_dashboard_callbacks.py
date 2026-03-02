@@ -4,6 +4,7 @@ import pytest
 
 try:
     import dashboard  # or Q4.dashboard when restored  # noqa: F401
+
     DASHBOARD_AVAILABLE = True
 except ImportError:
     DASHBOARD_AVAILABLE = False

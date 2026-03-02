@@ -1,5 +1,5 @@
 from collections.abc import Callable, Iterator, MutableMapping
-from typing import Literal, TypeVar, overload
+from typing import Literal, Self, TypeVar, overload
 
 import matplotlib.patches as mpatches
 from matplotlib.axes import Axes
@@ -7,14 +7,15 @@ from matplotlib.axis import Axis
 from matplotlib.path import Path
 from matplotlib.transforms import Transform
 from matplotlib.typing import ColorType
-from typing_extensions import Self
 
 class Spine(mpatches.Patch):
     axes: Axes
     spine_type: str
     axis: Axis | None
     def __init__(self, axes: Axes, spine_type: str, path: Path, **kwargs) -> None: ...
-    def set_patch_arc(self, center: tuple[float, float], radius: float, theta1: float, theta2: float) -> None: ...
+    def set_patch_arc(
+        self, center: tuple[float, float], radius: float, theta1: float, theta2: float
+    ) -> None: ...
     def set_patch_circle(self, center: tuple[float, float], radius: float) -> None: ...
     def set_patch_line(self) -> None: ...
     def get_patch_transform(self) -> Transform: ...
@@ -23,11 +24,14 @@ class Spine(mpatches.Patch):
     def clear(self) -> None: ...
     def set_position(
         self,
-        position: Literal["center", "zero"] | tuple[Literal["outward", "axes", "data"], float],
+        position: Literal["center", "zero"]
+        | tuple[Literal["outward", "axes", "data"], float],
     ) -> None: ...
     def get_position(
         self,
-    ) -> Literal["center", "zero"] | tuple[Literal["outward", "axes", "data"], float]: ...
+    ) -> (
+        Literal["center", "zero"] | tuple[Literal["outward", "axes", "data"], float]
+    ): ...
     def get_spine_transform(self) -> Transform: ...
     def set_bounds(self, low: float | None = ..., high: float | None = ...) -> None: ...
     def get_bounds(self) -> tuple[float, float]: ...
@@ -46,10 +50,12 @@ class Spine(mpatches.Patch):
         radius: float,
         theta1: float,
         theta2: float,
-        **kwargs
+        **kwargs,
     ) -> Self: ...
     @classmethod
-    def circular_spine(cls, axes: Axes, center: tuple[float, float], radius: float, **kwargs) -> Self: ...
+    def circular_spine(
+        cls, axes: Axes, center: tuple[float, float], radius: float, **kwargs
+    ) -> Self: ...
     def set_color(self, c: ColorType | None) -> None: ...
 
 class SpinesProxy:

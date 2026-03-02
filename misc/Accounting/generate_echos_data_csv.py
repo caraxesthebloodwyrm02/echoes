@@ -540,7 +540,7 @@ def export_echos_csv():
         f"📊 Contains {len([r for r in data if r and isinstance(r, list) and len(r) > 1])} data rows"
     )
     print(
-        f"📋 Sections: Executive Summary, Financial Modeling, Scenarios, Risks, Implementation, Stakeholders"
+        "📋 Sections: Executive Summary, Financial Modeling, Scenarios, Risks, Implementation, Stakeholders"
     )
 
     return filename

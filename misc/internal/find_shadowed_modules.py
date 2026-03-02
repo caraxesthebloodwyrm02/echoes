@@ -1,7 +1,5 @@
 import os
 import sys
-import importlib.util
-import pkgutil
 
 
 def get_stdlib_modules():
@@ -73,7 +71,7 @@ def generate_report(shadowed_modules, output_file="shadowed_modules_report.txt")
 
             # Check if the file contains imports that might need updating
             try:
-                with open(file_path, "r", encoding="utf-8") as mod_file:
+                with open(file_path, encoding="utf-8") as mod_file:
                     content = mod_file.read()
                     if "import " in content or "from " in content:
                         f.write(

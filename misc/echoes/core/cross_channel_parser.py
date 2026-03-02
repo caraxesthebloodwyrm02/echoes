@@ -7,11 +7,11 @@ with smooth flow transitions and balanced sine wave processing for coherent
 multimodal signal integration.
 """
 
-import numpy as np
-from typing import Dict, Any, List, Optional, Tuple, Callable
-from dataclasses import dataclass
-from scipy import signal
 import logging
+from dataclasses import dataclass
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -37,7 +37,7 @@ class ChannelFlow:
     modality: str
     signal_data: np.ndarray
     parameters: SignalParameters
-    flow_state: Dict[str, Any]
+    flow_state: dict[str, Any]
 
 
 class BalancedSineProcessor:
@@ -133,9 +133,9 @@ class CrossChannelParser:
     """
 
     def __init__(self):
-        self.channels: Dict[str, ChannelFlow] = {}
+        self.channels: dict[str, ChannelFlow] = {}
         self.sine_processor = BalancedSineProcessor()
-        self.flow_history: List[Dict[str, Any]] = []
+        self.flow_history: list[dict[str, Any]] = []
 
     def add_channel(
         self, channel_id: str, modality: str, initial_data: np.ndarray = None
@@ -248,7 +248,7 @@ class CrossChannelParser:
         return combined_signal
 
     def cross_channel_fusion(
-        self, channel_ids: List[str], fusion_method: str = "balanced_sine"
+        self, channel_ids: list[str], fusion_method: str = "balanced_sine"
     ) -> np.ndarray:
         """
         Fuse signals from multiple channels using parameterized processing.
@@ -275,7 +275,7 @@ class CrossChannelParser:
             # Default to simple averaging
             return np.mean(signals, axis=0)
 
-    def _balanced_sine_fusion(self, signals: List[np.ndarray]) -> np.ndarray:
+    def _balanced_sine_fusion(self, signals: list[np.ndarray]) -> np.ndarray:
         """Fuse signals using balanced sine wave modulation."""
         if len(signals) == 1:
             return signals[0]
@@ -316,7 +316,7 @@ class CrossChannelParser:
 
         return fused_signal
 
-    def _phase_aligned_fusion(self, signals: List[np.ndarray]) -> np.ndarray:
+    def _phase_aligned_fusion(self, signals: list[np.ndarray]) -> np.ndarray:
         """Fuse signals with phase alignment for coherent integration."""
         if len(signals) == 1:
             return signals[0]
@@ -349,7 +349,7 @@ class CrossChannelParser:
         # Combine aligned signals
         return np.mean(aligned_signals, axis=0)
 
-    def _energy_weighted_fusion(self, signals: List[np.ndarray]) -> np.ndarray:
+    def _energy_weighted_fusion(self, signals: list[np.ndarray]) -> np.ndarray:
         """Fuse signals weighted by their energy levels."""
         if len(signals) == 1:
             return signals[0]
@@ -377,7 +377,7 @@ class CrossChannelParser:
 
         return np.sum(weighted_signals, axis=0)
 
-    def get_channel_status(self, channel_id: str) -> Optional[Dict[str, Any]]:
+    def get_channel_status(self, channel_id: str) -> dict[str, Any] | None:
         """Get status information for a channel."""
         if channel_id not in self.channels:
             return None
@@ -398,12 +398,12 @@ class CrossChannelParser:
             },
         }
 
-    def get_flow_history(self, limit: int = 10) -> List[Dict[str, Any]]:
+    def get_flow_history(self, limit: int = 10) -> list[dict[str, Any]]:
         """Get recent flow processing history."""
         return self.flow_history[-limit:] if self.flow_history else []
 
     def _record_flow_event(
-        self, channel_id: str, event_type: str, details: Dict[str, Any]
+        self, channel_id: str, event_type: str, details: dict[str, Any]
     ):
         """Record a flow processing event."""
         event = {

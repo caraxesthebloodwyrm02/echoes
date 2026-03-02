@@ -1,10 +1,10 @@
 import argparse
 import json
-from typing import Optional
+
 from .service import InventoryService
 
 
-def main(argv: Optional[list] = None):
+def main(argv: list | None = None):
     parser = argparse.ArgumentParser(prog="atlas", description="ATLAS Inventory CLI")
     sub = parser.add_subparsers(dest="cmd", required=True)
 

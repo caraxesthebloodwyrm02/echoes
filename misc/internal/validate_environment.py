@@ -4,10 +4,9 @@ Environment Validation Script for Echoes Project
 Ensures Python environment is properly configured and all dependencies are installed.
 """
 
-import sys
-import os
-import subprocess
 import importlib.util
+import os
+import sys
 
 
 def check_python_version():

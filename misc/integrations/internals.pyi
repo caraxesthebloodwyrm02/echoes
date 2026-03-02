@@ -1,20 +1,17 @@
+import weakref
+from collections.abc import Iterator, Sequence
 from typing import (
-    Iterator,
-    Sequence,
     final,
     overload,
 )
-import weakref
 
 import numpy as np
-
+from pandas import Index
 from pandas._typing import (
     ArrayLike,
     Self,
     npt,
 )
-
-from pandas import Index
 from pandas.core.internals.blocks import Block as B
 
 def slice_len(slc: slice, objlen: int = ...) -> int: ...
@@ -35,6 +32,7 @@ def update_blklocs_and_blknos(
     loc: int,
     nblocks: int,
 ) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]: ...
+
 @final
 class BlockPlacement:
     def __init__(self, val: int | slice | np.ndarray) -> None: ...

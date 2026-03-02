@@ -3,11 +3,9 @@ Echoes AI - Executive Board Presentation Demo
 Optimized for high-stakes investor/board presentations
 """
 
-import time
-import json
-from datetime import datetime
-from typing import Dict, List
 import sys
+import time
+from datetime import datetime
 
 
 class PresentationDemo:
@@ -43,7 +41,7 @@ class PresentationDemo:
         print(
             f"Live Demonstration | {self.start_time.strftime('%B %d, %Y at %I:%M %p')}"
         )
-        print(f"Duration: ~8 minutes\n")
+        print("Duration: ~8 minutes\n")
         self.pause(2)
 
         # ============ ACT 1: THE PROBLEM (60 seconds) ============
@@ -69,7 +67,7 @@ class PresentationDemo:
         )
 
         print(f"📊 Client: {self.company_name}")
-        print(f"🎯 Objective: Increase profitability 25% through AI-driven insights")
+        print("🎯 Objective: Increase profitability 25% through AI-driven insights")
         print(f"💰 Baseline Revenue: ${self.baseline_revenue:,}/month")
         print(f"⏱️  Analysis Start: {datetime.now().strftime('%I:%M:%S %p')}\n")
         self.pause(2)
@@ -254,7 +252,7 @@ class PresentationDemo:
         print(f"  Annualized Value:               ${annual_impact:>10,}")
         self.pause(2)
 
-        print(f"\n📈 RETURN ON INVESTMENT:\n")
+        print("\n📈 RETURN ON INVESTMENT:\n")
         print(f"  Expected ROI:                   {roi_percentage}%")
         print(f"  Payback Period:                 {payback_months} months")
 
@@ -301,7 +299,7 @@ class PresentationDemo:
         print(f"⏱️  Total Duration: {minutes}:{seconds:02d}")
         print(f"💼 Monthly Value Demonstrated: ${total_monthly_impact:,}")
         print(f"📊 Annual Impact: ${annual_impact:,}")
-        print(f"🚀 Status: Ready for enterprise deployment\n")
+        print("🚀 Status: Ready for enterprise deployment\n")
 
         self.pause(2)
 

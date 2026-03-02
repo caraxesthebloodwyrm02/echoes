@@ -2,8 +2,9 @@
 """
 Deep debug for Responses API to find root cause of empty responses
 """
+
 import os
-import json
+
 from openai import OpenAI
 
 # Set up OpenAI client

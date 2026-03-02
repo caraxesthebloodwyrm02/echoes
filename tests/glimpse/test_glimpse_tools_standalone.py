@@ -6,10 +6,9 @@ This script can be run directly to test Glimpse tool functionality
 without requiring pytest or complex module path setup.
 """
 
-import sys
-import os
 import json
-import time
+import os
+import sys
 from unittest.mock import Mock
 
 # Add the project root to Python path

@@ -1,8 +1,8 @@
 # run_rag_demo.py
 import argparse
 import logging
-from pathlib import Path
 import sys
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(

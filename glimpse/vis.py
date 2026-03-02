@@ -23,7 +23,7 @@ def plot_confirmation_points():
     ax.set_title("Confirmation Points")
 
     # Annotate with current status
-    for i, (point, status) in enumerate(zip(points, statuses)):
+    for i, (_point, status) in enumerate(zip(points, statuses, strict=True)):
         ax.text(
             0.5, i, status, va="center", ha="center", color="white", fontweight="bold"
         )

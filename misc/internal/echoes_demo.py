@@ -1,6 +1,6 @@
-import streamlit as st
-import pandas as pd
 import altair as alt
+import pandas as pd
+import streamlit as st
 
 st.title("echoes AI: Live Intelligence Demonstration")
 st.subheader("Core Value Proposition")

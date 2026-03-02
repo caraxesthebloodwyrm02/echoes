@@ -7,10 +7,10 @@ A lightweight, extensible inventory management system with:
 - Report generation
 """
 
-from .models import InventoryItem
-from .storage import InventoryStorage
-from .service import InventoryService
 from .api import ATLASDirectAPI
+from .models import InventoryItem
+from .service import InventoryService
+from .storage import InventoryStorage
 
 __all__ = [
     "InventoryItem",

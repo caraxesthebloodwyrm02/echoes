@@ -1,6 +1,6 @@
 [run]
-source = .
-omit = 
+source = app,api,glimpse,tools,core,src
+omit =
     */tests/*
     */__pycache__/*
     */venv/*

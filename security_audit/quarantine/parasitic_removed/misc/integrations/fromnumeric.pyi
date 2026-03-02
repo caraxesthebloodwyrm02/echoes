@@ -5,16 +5,13 @@ from typing import (
     Never,
     Protocol,
     SupportsIndex,
-    TypeAlias,
     TypeVar,
     overload,
     type_check_only,
 )
 
-from _typeshed import Incomplete
-from typing_extensions import deprecated
-
 import numpy as np
+from _typeshed import Incomplete
 from numpy import (
     _AnyShapeT,
     _CastingKind,
@@ -58,6 +55,7 @@ from numpy._typing import (
     _ScalarLike_co,
     _ShapeLike,
 )
+from typing_extensions import deprecated
 
 __all__ = [
     "all",
@@ -121,9 +119,9 @@ class _SupportsShape(Protocol[_ShapeT_co]):
 
 # a "sequence" that isn't a string, bytes, bytearray, or memoryview
 _T = TypeVar("_T")
-_PyArray: TypeAlias = list[_T] | tuple[_T, ...]
+type _PyArray[_T] = list[_T] | tuple[_T, ...]
 # `int` also covers `bool`
-_PyScalar: TypeAlias = complex | bytes | str
+type _PyScalar = complex | bytes | str
 
 @overload
 def take(
@@ -314,7 +312,9 @@ def swapaxes(
     axis2: SupportsIndex,
 ) -> NDArray[Any]: ...
 @overload
-def transpose(a: _ArrayLike[_ScalarT], axes: _ShapeLike | None = ...) -> NDArray[_ScalarT]: ...
+def transpose(
+    a: _ArrayLike[_ScalarT], axes: _ShapeLike | None = ...
+) -> NDArray[_ScalarT]: ...
 @overload
 def transpose(a: ArrayLike, axes: _ShapeLike | None = ...) -> NDArray[Any]: ...
 @overload
@@ -461,11 +461,15 @@ def resize(
     a: _ArrayLike[_ScalarT], new_shape: SupportsIndex | tuple[SupportsIndex]
 ) -> np.ndarray[tuple[int], np.dtype[_ScalarT]]: ...
 @overload
-def resize(a: _ArrayLike[_ScalarT], new_shape: _AnyShapeT) -> np.ndarray[_AnyShapeT, np.dtype[_ScalarT]]: ...
+def resize(
+    a: _ArrayLike[_ScalarT], new_shape: _AnyShapeT
+) -> np.ndarray[_AnyShapeT, np.dtype[_ScalarT]]: ...
 @overload
 def resize(a: _ArrayLike[_ScalarT], new_shape: _ShapeLike) -> NDArray[_ScalarT]: ...
 @overload
-def resize(a: ArrayLike, new_shape: SupportsIndex | tuple[SupportsIndex]) -> np.ndarray[tuple[int], np.dtype]: ...
+def resize(
+    a: ArrayLike, new_shape: SupportsIndex | tuple[SupportsIndex]
+) -> np.ndarray[tuple[int], np.dtype]: ...
 @overload
 def resize(a: ArrayLike, new_shape: _AnyShapeT) -> np.ndarray[_AnyShapeT, np.dtype]: ...
 @overload
@@ -528,27 +532,39 @@ def trace(
     out: _ArrayT,
 ) -> _ArrayT: ...
 
-_Array1D: TypeAlias = np.ndarray[tuple[int], np.dtype[_ScalarT]]
+type _Array1D[_ScalarT: generic] = np.ndarray[tuple[int], np.dtype[_ScalarT]]
 
 @overload
 def ravel(a: _ArrayLike[_ScalarT], order: _OrderKACF = "C") -> _Array1D[_ScalarT]: ...
 @overload
-def ravel(a: bytes | _NestedSequence[bytes], order: _OrderKACF = "C") -> _Array1D[np.bytes_]: ...
+def ravel(
+    a: bytes | _NestedSequence[bytes], order: _OrderKACF = "C"
+) -> _Array1D[np.bytes_]: ...
 @overload
-def ravel(a: str | _NestedSequence[str], order: _OrderKACF = "C") -> _Array1D[np.str_]: ...
+def ravel(
+    a: str | _NestedSequence[str], order: _OrderKACF = "C"
+) -> _Array1D[np.str_]: ...
 @overload
-def ravel(a: bool | _NestedSequence[bool], order: _OrderKACF = "C") -> _Array1D[np.bool]: ...
+def ravel(
+    a: bool | _NestedSequence[bool], order: _OrderKACF = "C"
+) -> _Array1D[np.bool]: ...
 @overload
-def ravel(a: int | _NestedSequence[int], order: _OrderKACF = "C") -> _Array1D[np.int_ | np.bool]: ...
+def ravel(
+    a: int | _NestedSequence[int], order: _OrderKACF = "C"
+) -> _Array1D[np.int_ | np.bool]: ...
 @overload
-def ravel(a: float | _NestedSequence[float], order: _OrderKACF = "C") -> _Array1D[np.float64 | np.int_ | np.bool]: ...
+def ravel(
+    a: float | _NestedSequence[float], order: _OrderKACF = "C"
+) -> _Array1D[np.float64 | np.int_ | np.bool]: ...
 @overload
 def ravel(
     a: complex | _NestedSequence[complex],
     order: _OrderKACF = "C",
 ) -> _Array1D[np.complex128 | np.float64 | np.int_ | np.bool]: ...
 @overload
-def ravel(a: ArrayLike, order: _OrderKACF = "C") -> np.ndarray[tuple[int], np.dtype]: ...
+def ravel(
+    a: ArrayLike, order: _OrderKACF = "C"
+) -> np.ndarray[tuple[int], np.dtype]: ...
 def nonzero(a: _ArrayLike[Any]) -> tuple[NDArray[intp], ...]: ...
 
 # this prevents `Any` from being returned with Pyright

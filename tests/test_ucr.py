@@ -6,16 +6,14 @@ This module provides comprehensive testing for the UCR functionality,
 including environment management, configuration, and tool integration.
 """
 
-import os
-import sys
-import unittest
-import tempfile
-import shutil
-from pathlib import Path
-from typing import Dict, Any, Optional
-
 # Configure logging
 import logging
+import os
+import shutil
+import sys
+import tempfile
+import unittest
+from pathlib import Path
 
 logging.basicConfig(
     level=logging.INFO,

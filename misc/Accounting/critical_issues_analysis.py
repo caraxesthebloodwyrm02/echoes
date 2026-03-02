@@ -3,10 +3,6 @@
 Echoes Platform Critical Issues Analysis
 """
 
-import json
-import os
-from pathlib import Path
-
 
 def main():
     print("=== ECHOES PLATFORM CRITICAL ISSUES ANALYSIS ===")
@@ -94,10 +90,10 @@ def main():
     ]
 
     for issue in issues:
-        print(f'{issue["id"]}. {issue["title"]} (Severity: {issue["severity"]})')
-        print(f'   Description: {issue["description"]}')
-        print(f'   Impact: {issue["impact"]}')
-        print(f'   Current State: {issue["current_state"]}')
+        print(f"{issue['id']}. {issue['title']} (Severity: {issue['severity']})")
+        print(f"   Description: {issue['description']}")
+        print(f"   Impact: {issue['impact']}")
+        print(f"   Current State: {issue['current_state']}")
         print()
 
     # Strategic Questions
@@ -143,10 +139,10 @@ def main():
     ]
 
     for q in questions:
-        print(f'{q["id"]}. {q["question"]}')
-        print(f'   Purpose: {q["purpose"]}')
-        print(f'   Trajectory Impact: {q["trajectory_impact"]}')
-        print(f'   Real-World Manifestation: {q["real_world_manifestation"]}')
+        print(f"{q['id']}. {q['question']}")
+        print(f"   Purpose: {q['purpose']}")
+        print(f"   Trajectory Impact: {q['trajectory_impact']}")
+        print(f"   Real-World Manifestation: {q['real_world_manifestation']}")
         print()
 
     print("=== ANALYSIS COMPLETE ===")

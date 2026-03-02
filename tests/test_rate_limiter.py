@@ -3,19 +3,16 @@ Tests for the adaptive rate limiter implementation.
 """
 
 import asyncio
-import time
 import unittest
-from unittest.mock import patch, MagicMock, AsyncMock
-import pytest
-from typing import List, Tuple
+from unittest.mock import AsyncMock, MagicMock, patch
 
-from glimpse.rate_limiter import AdaptiveRateLimiter, get_default_rate_limiter
 from glimpse.metrics import (
-    RATE_LIMIT_DELAYS,
-    RATE_LIMIT_REJECTED,
-    RATE_LIMIT_RATE,
     RATE_LIMIT_ADJUSTMENTS,
+    RATE_LIMIT_DELAYS,
+    RATE_LIMIT_RATE,
+    RATE_LIMIT_REJECTED,
 )
+from glimpse.rate_limiter import AdaptiveRateLimiter
 
 
 class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
@@ -61,7 +58,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         """Test rate limiting when tokens are exhausted."""
         # Use up all tokens (1.5 tokens available, so about 2 requests)
         acquired_count = 0
-        for i in range(5):  # Try more than enough
+        for _i in range(5):  # Try more than enough
             acquired, _ = await self.rate_limiter.acquire(endpoint="test", max_wait=0.0)
             if acquired:
                 acquired_count += 1
@@ -93,7 +90,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         self.assertIn(used_tokens, [1, 2])
 
         # Fast forward time by 2 seconds (should refill 2 tokens)
-        original_tokens = self.rate_limiter.tokens
+        _original_tokens = self.rate_limiter.tokens
         with patch("time.monotonic", return_value=self.rate_limiter.last_update + 2):
             acquired, wait_time = await self.rate_limiter.acquire(endpoint="test")
             self.assertTrue(acquired)
@@ -109,7 +106,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(endpoint_stats.get_success_rate(), 1.0)
 
         # Check that rate increases with high success rate
-        old_rate = self.rate_limiter.current_rpm
+        _old_rate = self.rate_limiter.current_rpm
         await self.rate_limiter._adjust_rate()
         # Rate should increase with high success rate
         # Note: The adjustment might not happen immediately due to timing
@@ -129,7 +126,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(endpoint_stats.total_requests, 10)
 
         # Check that rate decreases with errors
-        old_rate = self.rate_limiter.current_rpm
+        _old_rate = self.rate_limiter.current_rpm
         await self.rate_limiter._adjust_rate()
         # Rate should decrease with errors
         # Note: The adjustment might not happen immediately due to timing

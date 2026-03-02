@@ -1,7 +1,6 @@
 from typing import (
     Any,
     Protocol,
-    TypeAlias,
     TypeVar,
     overload,
     type_check_only,
@@ -33,7 +32,7 @@ class _ModeFunc(Protocol):
         /,
     ) -> None: ...
 
-_ModeKind: TypeAlias = L[
+type _ModeKind = L[
     "constant",
     "edge",
     "linear_ramp",

@@ -6,14 +6,14 @@ This script demonstrates how to use the RAGOrbit class to index and search
 through memory assets.
 """
 
+import logging
 import sys
 from pathlib import Path
-import logging
 
 # Add project root to path
 sys.path.append(str(Path(__file__).parent.parent))
 
-from core.rag_orbit import RAGOrbit, RAGConfig
+from core.rag_orbit import RAGConfig, RAGOrbit
 
 # Configure logging
 logging.basicConfig(

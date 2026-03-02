@@ -27,21 +27,21 @@ Example Queries:
     - "Show me the integration between Glimpse and the security middleware"
 """
 
-import sys
 import argparse
+import sys
 import time
 from pathlib import Path
-from typing import List, Dict, Any
+from typing import Any
 
 # Add project root to path for imports
 project_root = Path(__file__).parent.parent
 sys.path.insert(0, str(project_root))
 
-from core.realtime_preview import create_glimpse
-from core.context_aware_api import ContextAwareAPICall
+from core.context_aware_api import ContextAwareAPICall  # noqa: E402
+from core.realtime_preview import create_glimpse  # noqa: E402
 
 
-def simulate_realistic_trajectory(glimpse_system) -> Dict[str, Any]:
+def simulate_realistic_trajectory(glimpse_system) -> dict[str, Any]:
     """
     Simulate a realistic development trajectory that provides meaningful context
     for the AI agent to work with.
@@ -100,7 +100,7 @@ class SecurityProtocolParser:
     return trajectory_summary
 
 
-def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, Any]]:
+def run_comprehensive_demo(context_api: ContextAwareAPICall) -> list[dict[str, Any]]:
     """
     Run a comprehensive demonstration of the context-aware API capabilities
     with multiple queries that showcase different aspects of the system.
@@ -146,12 +146,12 @@ def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, A
     results = []
 
     for i, demo in enumerate(demo_queries, 1):
-        print(f"\n{'='*80}")
+        print(f"\n{'=' * 80}")
         print(f"🔍 DEMO {i}/3: {demo['title']}")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
         print(f"📋 Query: {demo['query'][:100]}...")
         print(f"🎯 Expected Capabilities: {', '.join(demo['expected_capabilities'])}")
-        print(f"{'='*80}")
+        print(f"{'=' * 80}")
 
         start_time = time.time()
 
@@ -195,7 +195,7 @@ def run_comprehensive_demo(context_api: ContextAwareAPICall) -> List[Dict[str, A
     return results
 
 
-def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]:
+def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]:
     """Generate a comprehensive performance and capability report."""
 
     successful_demos = [r for r in results if r["status"] == "success"]
@@ -243,12 +243,12 @@ def generate_performance_report(results: List[Dict[str, Any]]) -> Dict[str, Any]
     return report
 
 
-def print_final_report(report: Dict[str, Any]):
+def print_final_report(report: dict[str, Any]):
     """Print a comprehensive final report of the demonstration."""
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("📊 CONTEXT-AWARE API DEMONSTRATION REPORT")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
     summary = report["summary"]
     print(
@@ -274,9 +274,9 @@ def print_final_report(report: Dict[str, Any]):
             f"   {status_icon} Demo {result['demo_number']}: {result['title']} ({result['execution_time']:.2f}s)"
         )
 
-    print(f"\n{'='*80}")
+    print(f"\n{'=' * 80}")
     print("🎉 DEMONSTRATION COMPLETE - Context-Aware AI Agent is fully operational!")
-    print(f"{'='*80}")
+    print(f"{'=' * 80}")
 
 
 def main():
@@ -307,7 +307,7 @@ def main():
     glimpse_system.start()
 
     # Simulate realistic development trajectory
-    trajectory_context = simulate_realistic_trajectory(glimpse_system)
+    _trajectory_context = simulate_realistic_trajectory(glimpse_system)
 
     # Initialize the Context-Aware API handler
     print("\n🤖 Initializing Context-Aware API Handler...")
@@ -317,7 +317,7 @@ def main():
         # Run custom query
         print(f"\n🔍 Running custom query: {args.query}")
         start_time = time.time()
-        result = context_api.run(args.query)
+        _result = context_api.run(args.query)
         execution_time = time.time() - start_time
         print(f"\n✅ Query completed in {execution_time:.2f}s")
 
@@ -328,7 +328,7 @@ def main():
         based on documentation. Include key implementation details."""
 
         start_time = time.time()
-        result = context_api.run(quick_query)
+        _result = context_api.run(quick_query)
         execution_time = time.time() - start_time
         print(f"\n✅ Quick demo completed in {execution_time:.2f}s")
 

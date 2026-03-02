@@ -33,9 +33,9 @@ def test_environment_variable_parsing():
             "true",
             "yes",
         )
-        assert (
-            use_responses_api == True
-        ), f"Expected True for {true_value}, got {use_responses_api}"
+        assert use_responses_api == True, (
+            f"Expected True for {true_value}, got {use_responses_api}"
+        )
         print(f"✅ {true_value} -> True")
 
     # Test false values
@@ -46,9 +46,9 @@ def test_environment_variable_parsing():
             "true",
             "yes",
         )
-        assert (
-            use_responses_api == False
-        ), f"Expected False for {false_value}, got {use_responses_api}"
+        assert use_responses_api == False, (
+            f"Expected False for {false_value}, got {use_responses_api}"
+        )
         print(f"✅ {false_value} -> False")
 
     # Cleanup
@@ -87,7 +87,7 @@ def test_code_compilation_check():
 
     try:
         # Try to compile the fixed version
-        with open("assistant_v2_core_fixed.py", "r") as f:
+        with open("assistant_v2_core_fixed.py") as f:
             code = f.read()
 
         compile(code, "assistant_v2_core_fixed.py", "exec")
@@ -120,13 +120,13 @@ def test_api_parameter_mapping():
     }
 
     assert "input" in responses_params, "input parameter missing"
-    assert (
-        "max_output_tokens" in responses_params
-    ), "max_output_tokens parameter missing"
+    assert "max_output_tokens" in responses_params, (
+        "max_output_tokens parameter missing"
+    )
     assert responses_params["input"] == messages, "input mapping incorrect"
-    assert (
-        responses_params["max_output_tokens"] == max_tokens
-    ), "max_output_tokens mapping incorrect"
+    assert responses_params["max_output_tokens"] == max_tokens, (
+        "max_output_tokens mapping incorrect"
+    )
 
     print("✅ Responses API parameter mapping: PASSED")
 
@@ -163,9 +163,9 @@ def test_response_format_handling():
         if output_item["type"] == "text":
             assistant_response += output_item["content"]
 
-    assert (
-        assistant_response == "Hello world!"
-    ), f"Expected 'Hello world!', got '{assistant_response}'"
+    assert assistant_response == "Hello world!", (
+        f"Expected 'Hello world!', got '{assistant_response}'"
+    )
     print("✅ Responses API response extraction: PASSED")
 
     # Simulate Chat Completions API response format
@@ -174,9 +174,9 @@ def test_response_format_handling():
     }
 
     chat_content = chat_response["choices"][0]["message"]["content"]
-    assert (
-        chat_content == "Hello from chat completions!"
-    ), f"Unexpected content: {chat_content}"
+    assert chat_content == "Hello from chat completions!", (
+        f"Unexpected content: {chat_content}"
+    )
     print("✅ Chat Completions API response extraction: PASSED")
 
     return True

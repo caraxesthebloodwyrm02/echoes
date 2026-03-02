@@ -1,13 +1,12 @@
 #!/usr/bin/env python3
 import os
 import re
-import sys
 
 
 def update_imports_in_file(filepath):
     """Update core imports to echoes_core in a single file"""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         # Replace from echoes_core. with from echoes_core.

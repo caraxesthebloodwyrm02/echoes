@@ -7,15 +7,13 @@ from typing import (
     Any,
     ClassVar,
     Generic,
-    TypeAlias,
     TypeVar,
     overload,
 )
 from typing import Literal as L
 
-from _typeshed import StrOrBytesPath
-
 import numpy as np
+from _typeshed import StrOrBytesPath
 from numpy import (
     byte,
     double,
@@ -75,7 +73,7 @@ _DTypeT = TypeVar("_DTypeT", bound=dtype)
 _DTypeOptionalT = TypeVar("_DTypeOptionalT", bound=dtype | None)
 _ScalarT = TypeVar("_ScalarT", bound=generic)
 
-_FlagsKind: TypeAlias = L[
+type _FlagsKind = L[
     "C_CONTIGUOUS",
     "CONTIGUOUS",
     "C",

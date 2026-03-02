@@ -1,18 +1,20 @@
 """OpenAI integration utilities for AAE framework."""
 
-import os
-import json
 import asyncio
-from typing import List, Dict, Any, Optional, Callable
+import base64
+import json
+import os
+from collections.abc import Callable
 from dataclasses import dataclass
 from datetime import datetime
-import base64
+from typing import Any
+
+from langchain_community.chat_models import ChatOpenAI
+from langchain_core.output_parsers import JsonOutputParser
+from langchain_core.prompts import ChatPromptTemplate
 
 # OpenAI imports
 from openai import OpenAI
-from langchain_community.chat_models import ChatOpenAI
-from langchain_core.prompts import ChatPromptTemplate
-from langchain_core.output_parsers import JsonOutputParser
 
 
 @dataclass
@@ -22,19 +24,19 @@ class AuditPolicy:
     name: str
     description: str
     function: Callable
-    parameters: Dict[str, Any]
+    parameters: dict[str, Any]
 
 
 class OpenAIAuditOrchestrator:
     """OpenAI-powered audit orchestrator that integrates with AAE framework."""
 
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: str | None = None):
         self.client = OpenAI(api_key=api_key or os.getenv("OPENAI_API_KEY"))
         self.audit_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
         self.analysis_llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
         # Registry of audit policies
-        self.policies: Dict[str, AuditPolicy] = {}
+        self.policies: dict[str, AuditPolicy] = {}
         self._register_default_policies()
 
         # Audit prompts - OPTIMIZED for accuracy and efficiency
@@ -80,7 +82,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
     def _register_default_policies(self):
         """Register default audit policies with advanced statistical methods."""
 
-        def check_duplicate_transactions(transactions: List[Dict]) -> List[Dict]:
+        def check_duplicate_transactions(transactions: list[dict]) -> list[dict]:
             """Enhanced duplicate detection with fuzzy matching."""
             duplicates = []
             seen = {}
@@ -115,7 +117,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
             return duplicates
 
-        def check_rounding_errors(transactions: List[Dict]) -> List[Dict]:
+        def check_rounding_errors(transactions: list[dict]) -> list[dict]:
             """Detect rounding and mathematical errors."""
             errors = []
 
@@ -153,7 +155,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
             return errors
 
-        def check_amount_anomalies(transactions: List[Dict]) -> List[Dict]:
+        def check_amount_anomalies(transactions: list[dict]) -> list[dict]:
             """Advanced statistical anomaly detection."""
             amounts = [abs(tx["amount"]) for tx in transactions if tx["amount"] != 0]
             if not amounts:
@@ -199,7 +201,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
             return anomalies
 
-        def check_benfords_law(transactions: List[Dict]) -> List[Dict]:
+        def check_benfords_law(transactions: list[dict]) -> list[dict]:
             """Check for Benford's Law violations (digit frequency analysis)."""
             violations = []
 
@@ -233,9 +235,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
                         for tx in transactions
                         if abs(tx["amount"]) >= 1
                         and int(str(abs(tx["amount"]))[0]) == digit
-                    ][
-                        :3
-                    ]  # Limit to 3 examples
+                    ][:3]  # Limit to 3 examples
 
                     for tx in suspicious_txs:
                         violations.append(
@@ -253,7 +253,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
             return violations
 
-        def check_temporal_patterns(transactions: List[Dict]) -> List[Dict]:
+        def check_temporal_patterns(transactions: list[dict]) -> list[dict]:
             """Detect unusual timing patterns."""
             from datetime import datetime
 
@@ -300,7 +300,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
             return anomalies
 
-        def check_vendor_anomalies(transactions: List[Dict]) -> List[Dict]:
+        def check_vendor_anomalies(transactions: list[dict]) -> list[dict]:
             """Enhanced vendor analysis."""
             from collections import defaultdict
 
@@ -389,10 +389,10 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
     async def audit_with_openai(
         self,
-        transactions: List[Dict[str, Any]],
+        transactions: list[dict[str, Any]],
         enable_policies: bool = True,
         explain_findings: bool = True,
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Comprehensive audit using OpenAI and rule-based policies."""
         import time
 
@@ -463,7 +463,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 
     def extract_document_fields(
         self, image_bytes: bytes, document_type: str = "invoice"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Extract structured data from documents using GPT-4 Vision."""
         try:
             base64_image = base64.b64encode(image_bytes).decode()
@@ -510,7 +510,7 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
         """Register a custom audit policy."""
         self.policies[policy.name] = policy
 
-    def get_policies(self) -> Dict[str, AuditPolicy]:
+    def get_policies(self) -> dict[str, AuditPolicy]:
         """Get all registered policies."""
         return self.policies.copy()
 
@@ -518,9 +518,9 @@ Return ONLY valid JSON array. Be thorough but efficient.""",
 # Utility function for batch processing
 async def batch_audit_transactions(
     orchestrator: OpenAIAuditOrchestrator,
-    transactions: List[Dict[str, Any]],
+    transactions: list[dict[str, Any]],
     batch_size: int = 100,
-) -> List[Dict[str, Any]]:
+) -> list[dict[str, Any]]:
     """Process transactions in batches to handle large datasets."""
     results = []
 

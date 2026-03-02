@@ -1,4 +1,6 @@
 # test_logger.py
+import logging
+
 import pytest
 
 # Try to import c_o_r_e modules, skip if not available
@@ -27,6 +29,4 @@ def test_logger():
 
 
 if __name__ == "__main__":
-    import agent_logging
-
     test_logger()

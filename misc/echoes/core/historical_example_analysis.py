@@ -7,10 +7,9 @@ Examining how examples were used throughout history, particularly in the
 that cut through noise and make concepts memorable.
 """
 
-import re
-from typing import Dict, Any, List, Tuple, Set
-from collections import defaultdict
 import logging
+from collections import defaultdict
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -30,7 +29,7 @@ class HistoricalExampleAnalyzer:
 
         self.noise_cutting_signals = self._extract_noise_cutting_signals()
 
-    def _analyze_renaissance_examples(self) -> Dict[str, Any]:
+    def _analyze_renaissance_examples(self) -> dict[str, Any]:
         """Analyze example usage patterns from the Renaissance (1500s)."""
 
         renaissance_patterns = {
@@ -84,7 +83,7 @@ class HistoricalExampleAnalyzer:
 
         return renaissance_patterns
 
-    def _analyze_enlightenment_examples(self) -> Dict[str, Any]:
+    def _analyze_enlightenment_examples(self) -> dict[str, Any]:
         """Analyze example usage patterns from the Enlightenment (1700s)."""
 
         enlightenment_patterns = {
@@ -143,7 +142,7 @@ class HistoricalExampleAnalyzer:
 
         return enlightenment_patterns
 
-    def _analyze_classical_examples(self) -> Dict[str, Any]:
+    def _analyze_classical_examples(self) -> dict[str, Any]:
         """Analyze classical example patterns for comparison."""
 
         classical_patterns = {
@@ -178,7 +177,7 @@ class HistoricalExampleAnalyzer:
 
         return classical_patterns
 
-    def _extract_noise_cutting_signals(self) -> Dict[str, Any]:
+    def _extract_noise_cutting_signals(self) -> dict[str, Any]:
         """Extract the simplest, most effective signals that cut through noise."""
 
         # Core signals that consistently worked across eras
@@ -249,7 +248,7 @@ class HistoricalExampleAnalyzer:
 
     def identify_simplest_signals(
         self, period: str = "combined"
-    ) -> List[Tuple[str, float]]:
+    ) -> list[tuple[str, float]]:
         """
         Identify the simplest signals that cut through the most noise.
 
@@ -293,7 +292,7 @@ class HistoricalExampleAnalyzer:
 
         return sorted_signals
 
-    def extract_communication_principles(self) -> Dict[str, Any]:
+    def extract_communication_principles(self) -> dict[str, Any]:
         """Extract timeless communication principles from historical analysis."""
 
         principles = {
@@ -351,7 +350,7 @@ class HistoricalExampleAnalyzer:
 
         return principles
 
-    def apply_historical_insights_to_modern_system(self) -> Dict[str, Any]:
+    def apply_historical_insights_to_modern_system(self) -> dict[str, Any]:
         """Apply historical insights to improve modern AI communication systems."""
 
         insights = {

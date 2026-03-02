@@ -2,7 +2,9 @@
 Test script to verify RAG system setup and basic functionality.
 """
 
+import importlib
 import sys
+
 from agent_pathlib import Path
 
 # Add project root to path
@@ -15,8 +17,7 @@ def test_imports():
     print("\n=== Testing Imports ===")
 
     try:
-        from echoes_core.rag_orbit import RAGOrbit, RAGConfig
-
+        importlib.import_module("echoes_core.rag_orbit")
         print("✅ Successfully imported RAGOrbit and RAGConfig")
         return True
     except ImportError as e:
@@ -29,11 +30,11 @@ def test_rag_initialization():
     print("\n=== Testing RAG Initialization ===")
 
     try:
-        from echoes_core.rag_orbit import RAGOrbit, RAGConfig
+        from echoes_core.rag_orbit import RAGConfig, RAGOrbit
 
         # Test with default config
         print("Testing with default config...")
-        rag = RAGOrbit()
+        _rag = RAGOrbit()
         print("✅ Successfully created RAGOrbit with default config")
 
         # Test with custom config
@@ -43,7 +44,7 @@ def test_rag_initialization():
             chunk_size=500,
             chunk_overlap=50,
         )
-        rag = RAGOrbit(config)
+        _rag = RAGOrbit(config)
         print("✅ Successfully created RAGOrbit with custom config")
 
         return True

@@ -1,19 +1,19 @@
 import abc
+import contextlib
 from collections.abc import (
     Callable,
     Collection,
-    Iterable,
-    Sequence,
     Generator,
+    Iterable,
     Iterator,
+    Sequence,
 )
-import contextlib
 from pathlib import Path
+from typing import Any
+
 from matplotlib.artist import Artist
 from matplotlib.backend_bases import TimerBase
 from matplotlib.figure import Figure
-
-from typing import Any
 
 subprocess_creation_flags: int
 
@@ -60,7 +60,7 @@ class AbstractMovieWriter(abc.ABC, metaclass=abc.ABCMeta):
     @contextlib.contextmanager
     def saving(
         self, fig: Figure, outfile: str | Path, dpi: float | None, *args, **kwargs
-    ) -> Generator[AbstractMovieWriter, None, None]: ...
+    ) -> Generator[AbstractMovieWriter]: ...
 
 class MovieWriter(AbstractMovieWriter):
     supported_formats: list[str]

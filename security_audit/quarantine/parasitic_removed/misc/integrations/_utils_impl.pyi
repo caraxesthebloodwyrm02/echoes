@@ -1,5 +1,4 @@
 from _typeshed import SupportsWrite
-
 from numpy._typing import DTypeLike
 
 __all__ = ["get_include", "info", "show_runtime"]
@@ -7,6 +6,9 @@ __all__ = ["get_include", "info", "show_runtime"]
 def get_include() -> str: ...
 def show_runtime() -> None: ...
 def info(
-    object: object = ..., maxwidth: int = ..., output: SupportsWrite[str] | None = ..., toplevel: str = ...
+    object: object = ...,
+    maxwidth: int = ...,
+    output: SupportsWrite[str] | None = ...,
+    toplevel: str = ...,
 ) -> None: ...
 def drop_metadata(dtype: DTypeLike, /) -> DTypeLike: ...

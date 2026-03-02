@@ -8,10 +8,8 @@ This script updates terminology across the codebase based on the new naming conv
 - Other related terminology updates
 """
 
-import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # Define terminology mappings
 TERMINOLOGY_MAP = {
@@ -64,8 +62,8 @@ def should_process_file(filepath: Path) -> bool:
 
 
 def update_file_content(
-    content: str, patterns: Dict[str, str]
-) -> Tuple[str, List[Tuple[str, str]]]:
+    content: str, patterns: dict[str, str]
+) -> tuple[str, list[tuple[str, str]]]:
     """Update content with new terminology."""
     changes = []
     updated_content = content
@@ -82,11 +80,11 @@ def update_file_content(
 
 
 def process_file(
-    filepath: Path, patterns: Dict[str, str]
-) -> List[Tuple[str, str, int]]:
+    filepath: Path, patterns: dict[str, str]
+) -> list[tuple[str, str, int]]:
     """Process a single file and return changes made."""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         updated_content, changes = update_file_content(content, patterns)
@@ -101,7 +99,7 @@ def process_file(
         return []
 
 
-def find_and_rename_files(root_dir: Path, patterns: Dict[str, str]) -> None:
+def find_and_rename_files(root_dir: Path, patterns: dict[str, str]) -> None:
     """Find and rename files based on patterns."""
     for filepath in root_dir.rglob("*"):
         if not filepath.is_file() or not should_process_file(filepath):

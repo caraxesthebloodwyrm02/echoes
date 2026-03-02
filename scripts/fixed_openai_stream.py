@@ -1,7 +1,8 @@
 import os
+from collections.abc import AsyncGenerator
+from typing import Any
+
 from openai import OpenAI
-from typing import AsyncGenerator, Dict, Any
-import json
 
 # Initialize the OpenAI client with API key from environment variable
 api_key = os.getenv("OPENAI_API_KEY")
@@ -13,7 +14,7 @@ client = OpenAI(api_key=api_key)
 
 async def stream_openai_response(
     messages: list, model: str = "gpt-4"
-) -> AsyncGenerator[Dict[str, Any], None]:
+) -> AsyncGenerator[dict[str, Any], None]:
     """
     Stream responses from OpenAI's chat completion API.
 

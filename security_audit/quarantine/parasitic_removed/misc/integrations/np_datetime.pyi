@@ -1,5 +1,4 @@
 import numpy as np
-
 from pandas._typing import npt
 
 class OutOfBoundsDatetime(ValueError): ...
@@ -16,7 +15,9 @@ def astype_overflowsafe(
     is_coerce: bool = ...,
 ) -> np.ndarray: ...
 def is_unitless(dtype: np.dtype) -> bool: ...
-def compare_mismatched_resolutions(left: np.ndarray, right: np.ndarray, op) -> npt.NDArray[np.bool_]: ...
+def compare_mismatched_resolutions(
+    left: np.ndarray, right: np.ndarray, op
+) -> npt.NDArray[np.bool_]: ...
 def add_overflowsafe(
     left: npt.NDArray[np.int64],
     right: npt.NDArray[np.int64],

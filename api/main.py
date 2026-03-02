@@ -12,37 +12,33 @@ Key Features:
 - Rate limiting and authentication
 """
 
-import asyncio
 import json
 import logging
-import os
-from datetime import datetime
-from typing import Dict, List, Optional, Any
 from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any
 
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect, HTTPException, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import JSONResponse
-from pydantic import BaseModel, Field
 import uvicorn
-
-# Import existing engines - REMOVED: RAG middleware eliminated for authentic responses
-# from src.rag_orbit.retrieval import RetrievalEngine
-# from src.rag_orbit.embeddings import EmbeddingEngine
-# from src.rag_orbit.chunking import ChunkingEngine
-
-# Import pattern detection
-from api.pattern_detection import detect_patterns
-from api.self_rag import verify_truth
+from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, Response
+from pydantic import BaseModel, Field
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
 
 # Import configuration
 from api.config import get_config, setup_logging
 
 # Import middleware
 from api.middleware import setup_middleware
-from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.requests import Request as StarletteRequest
-from fastapi.responses import Response
+
+# Import existing engines - REMOVED: RAG middleware eliminated for authentic responses
+# from src.rag_orbit.retrieval import RetrievalEngine
+# from src.rag_orbit.embeddings import EmbeddingEngine
+# from src.rag_orbit.chunking import ChunkingEngine
+# Import pattern detection
+from api.pattern_detection import detect_patterns
+from api.self_rag import verify_truth
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -58,7 +54,7 @@ class ConnectionManager:
     """WebSocket connection manager for real-time streaming"""
 
     def __init__(self):
-        self.active_connections: List[WebSocket] = []
+        self.active_connections: list[WebSocket] = []
 
     async def connect(self, websocket: WebSocket):
         """Accept and register a new WebSocket connection"""
@@ -97,12 +93,12 @@ manager = ConnectionManager()
 # Pydantic models for API requests/responses
 class PatternDetectionRequest(BaseModel):
     text: str = Field(..., description="Text to analyze for patterns")
-    context: Optional[Dict[str, Any]] = Field(None, description="Additional context")
-    options: Optional[Dict[str, Any]] = Field(None, description="Detection options")
+    context: dict[str, Any] | None = Field(None, description="Additional context")
+    options: dict[str, Any] | None = Field(None, description="Detection options")
 
 
 class PatternDetectionResponse(BaseModel):
-    patterns: List[Dict[str, Any]] = Field(..., description="Detected patterns")
+    patterns: list[dict[str, Any]] = Field(..., description="Detected patterns")
     confidence: float = Field(..., description="Overall confidence score")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
@@ -121,15 +117,15 @@ class PatternDetectionResponse(BaseModel):
 
 class TruthVerificationRequest(BaseModel):
     claim: str = Field(..., description="Claim to verify")
-    evidence: Optional[List[str]] = Field(None, description="Supporting evidence")
-    context: Optional[Dict[str, Any]] = Field(None, description="Verification context")
+    evidence: list[str] | None = Field(None, description="Supporting evidence")
+    context: dict[str, Any] | None = Field(None, description="Verification context")
 
 
 class TruthVerificationResponse(BaseModel):
     verdict: str = Field(..., description="TRUE/FALSE/UNCERTAIN")
     confidence: float = Field(..., description="Confidence score 0-1")
     explanation: str = Field(..., description="Explanation of the verdict")
-    evidence_used: List[str] = Field(..., description="Evidence used in verification")
+    evidence_used: list[str] = Field(..., description="Evidence used in verification")
     timestamp: datetime = Field(default_factory=datetime.utcnow)
 
 
@@ -164,6 +160,7 @@ app.add_middleware(
     allow_methods=config.security.cors_allow_methods,
     allow_headers=config.security.cors_allow_headers,
 )
+
 
 class RequestBodyLimitMiddleware(BaseHTTPMiddleware):
     """Reject request bodies larger than max_bytes."""
@@ -274,7 +271,8 @@ async def handle_pattern_detection_websocket(message: dict, websocket: WebSocket
 
         # Send results
         response = PatternDetectionResponse(
-            patterns=patterns, confidence=0.85  # Placeholder confidence
+            patterns=patterns,
+            confidence=0.85,  # Placeholder confidence
         )
 
         await manager.send_personal_message(
@@ -284,7 +282,11 @@ async def handle_pattern_detection_websocket(message: dict, websocket: WebSocket
     except Exception as e:
         logger.error(f"Pattern detection failed: {e}", exc_info=True)
         await manager.send_personal_message(
-            {"type": "error", "operation": "pattern_detection", "message": "Pattern detection failed"},
+            {
+                "type": "error",
+                "operation": "pattern_detection",
+                "message": "Pattern detection failed",
+            },
             websocket,
         )
 
@@ -326,7 +328,11 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
     except Exception as e:
         logger.error(f"Truth verification failed: {e}", exc_info=True)
         await manager.send_personal_message(
-            {"type": "error", "operation": "truth_verification", "message": "Truth verification failed"},
+            {
+                "type": "error",
+                "operation": "truth_verification",
+                "message": "Truth verification failed",
+            },
             websocket,
         )
 

@@ -1,9 +1,6 @@
-from collections.abc import Callable
 import contextlib
-from typing import Any, Literal, ParamSpec, TypedDict, TypeVar, overload
-from typing_extensions import (
-    Unpack,  # < Py 3.11
-)
+from collections.abc import Callable
+from typing import Any, Literal, ParamSpec, TypedDict, TypeVar, Unpack, overload
 
 _P = ParamSpec("_P")
 _R = TypeVar("_R")
@@ -23,7 +20,9 @@ class NamedDeprecationKwargs(DeprecationKwargs, total=False):
     name: str
 
 def warn_deprecated(since: str, **kwargs: Unpack[NamedDeprecationKwargs]) -> None: ...
-def deprecated(since: str, **kwargs: Unpack[NamedDeprecationKwargs]) -> Callable[[_T], _T]: ...
+def deprecated(
+    since: str, **kwargs: Unpack[NamedDeprecationKwargs]
+) -> Callable[[_T], _T]: ...
 
 class deprecate_privatize_attribute(Any):
     def __init__(self, since: str, **kwargs: Unpack[NamedDeprecationKwargs]): ...
@@ -36,7 +35,9 @@ def rename_parameter(
     since: str, old: str, new: str, func: None = ...
 ) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]: ...
 @overload
-def rename_parameter(since: str, old: str, new: str, func: Callable[_P, _R]) -> Callable[_P, _R]: ...
+def rename_parameter(
+    since: str, old: str, new: str, func: Callable[_P, _R]
+) -> Callable[_P, _R]: ...
 
 class _deprecated_parameter_class: ...
 
@@ -51,15 +52,21 @@ def delete_parameter(
     since: str, name: str, func: Callable[_P, _R], **kwargs: Unpack[DeprecationKwargs]
 ) -> Callable[_P, _R]: ...
 @overload
-def make_keyword_only(since: str, name: str, func: None = ...) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]: ...
+def make_keyword_only(
+    since: str, name: str, func: None = ...
+) -> Callable[[Callable[_P, _R]], Callable[_P, _R]]: ...
 @overload
-def make_keyword_only(since: str, name: str, func: Callable[_P, _R]) -> Callable[_P, _R]: ...
+def make_keyword_only(
+    since: str, name: str, func: Callable[_P, _R]
+) -> Callable[_P, _R]: ...
 def deprecate_method_override(
     method: Callable[_P, _R],
     obj: object | type,
     *,
     allow_empty: bool = ...,
     since: str,
-    **kwargs: Unpack[NamedDeprecationKwargs]
+    **kwargs: Unpack[NamedDeprecationKwargs],
 ) -> Callable[_P, _R]: ...
-def suppress_matplotlib_deprecation_warning() -> contextlib.AbstractContextManager[None]: ...
+def suppress_matplotlib_deprecation_warning() -> contextlib.AbstractContextManager[
+    None
+]: ...

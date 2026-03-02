@@ -2,10 +2,9 @@
 Tests for IMPACT_ANALYTICS integration
 """
 
-import pytest
-from unittest.mock import Mock, patch, MagicMock
-from pathlib import Path
 import sys
+from pathlib import Path
+from unittest.mock import patch
 
 # Add the integrations directory to path for testing
 sys.path.insert(0, str(Path(__file__).parent.parent / "integrations"))
@@ -13,19 +12,16 @@ sys.path.insert(0, str(Path(__file__).parent.parent / "integrations"))
 from integrations.impact_analytics_connector import (
     ImpactAnalyticsConnector,
     ImpactMetrics,
-    impact_connector,
+    generate_impact_report,
+    get_impact_status,
     record_ai_evaluation,
     record_research_progress,
-    get_impact_status,
-    generate_impact_report,
 )
-
 from integrations.turbo_bridge import (
     TurboBridge,
-    turbo_bridge,
     create_bridge,
-    unified_analysis,
     get_bridge_health,
+    unified_analysis,
 )
 
 

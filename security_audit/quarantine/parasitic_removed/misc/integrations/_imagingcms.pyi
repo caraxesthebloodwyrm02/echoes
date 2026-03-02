@@ -1,14 +1,14 @@
 import datetime
 import sys
-from typing import Literal, SupportsFloat, TypeAlias, TypedDict
+from typing import Literal, SupportsFloat, TypedDict
 
 from ._typing import CapsuleType
 
 littlecms_version: str | None
 
-_Tuple3f: TypeAlias = tuple[float, float, float]
-_Tuple2x3f: TypeAlias = tuple[_Tuple3f, _Tuple3f]
-_Tuple3x3f: TypeAlias = tuple[_Tuple3f, _Tuple3f, _Tuple3f]
+type _Tuple3f = tuple[float, float, float]
+type _Tuple2x3f = tuple[_Tuple3f, _Tuple3f]
+type _Tuple3x3f = tuple[_Tuple3f, _Tuple3f, _Tuple3f]
 
 class _IccMeasurementCondition(TypedDict):
     observer: int
@@ -135,7 +135,9 @@ def buildProofTransform(
     cms_flags: int = 0,
     /,
 ) -> CmsTransform: ...
-def createProfile(color_space: Literal["LAB", "XYZ", "sRGB"], color_temp: SupportsFloat = 0.0, /) -> CmsProfile: ...
+def createProfile(
+    color_space: Literal["LAB", "XYZ", "sRGB"], color_temp: SupportsFloat = 0.0, /
+) -> CmsProfile: ...
 
 if sys.platform == "win32":
     def get_display_profile_win32(handle: int = 0, is_dc: int = 0, /) -> str | None: ...

@@ -6,13 +6,12 @@ Reconstruct each component using cleaned, authentic data following
 original specifications from authenticated sources.
 """
 
-import os
 import json
+import os
 import shutil
 import sys
-from pathlib import Path
-from datetime import datetime, timezone
-from typing import Dict, Any
+from datetime import UTC, datetime
+from typing import Any
 
 
 def reconstruct_components(
@@ -22,7 +21,7 @@ def reconstruct_components(
     """Step 5: Reconstruct components using cleaned authentic data."""
 
     reconstruction_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 5: Component Reconstruction",
         "extraction_source": extraction_dir,
@@ -157,7 +156,7 @@ def reconstruct_components(
                     reconstruction_result["status"] = "success"
                     successful_reconstructions += 1
                     print(
-                        f'   ✅ Validated: {component_name} ({reconstruction_result["validations_passed"]}/{reconstruction_result["total_validations"]} checks passed)'
+                        f"   ✅ Validated: {component_name} ({reconstruction_result['validations_passed']}/{reconstruction_result['total_validations']} checks passed)"
                     )
                 else:
                     reconstruction_result["status"] = "validation_failed"
@@ -170,7 +169,7 @@ def reconstruct_components(
                         f"Validation failed for {component_name}: {failed_checks}"
                     )
                     print(
-                        f'   ⚠️  Validation issues: {component_name} ({reconstruction_result["validations_passed"]}/{reconstruction_result["total_validations"]} checks passed)'
+                        f"   ⚠️  Validation issues: {component_name} ({reconstruction_result['validations_passed']}/{reconstruction_result['total_validations']} checks passed)"
                     )
 
             except Exception as e:
@@ -181,9 +180,9 @@ def reconstruct_components(
                 )
                 print(f"   ❌ Deployment failed: {component_name} - {str(e)}")
 
-        reconstruction_data["reconstructed_components"][
-            component_name
-        ] = reconstruction_result
+        reconstruction_data["reconstructed_components"][component_name] = (
+            reconstruction_result
+        )
 
     # Generate reconstruction summary
     reconstruction_success_rate = (
@@ -208,11 +207,11 @@ def reconstruct_components(
 
     print(f"\\n📄 Reconstruction report saved to: {output_file}")
 
-    print(f"\\n📊 Component Reconstruction Summary:")
+    print("\\n📊 Component Reconstruction Summary:")
     print(f"   Components processed: {total_components}")
     print(f"   Successful reconstructions: {successful_reconstructions}")
     print(f"   Success rate: {reconstruction_success_rate:.1f}%")
-    print(f'   Anomalies: {len(reconstruction_data["anomalies"])}')
+    print(f"   Anomalies: {len(reconstruction_data['anomalies'])}")
 
     if reconstruction_success_rate >= 80 and len(reconstruction_data["anomalies"]) == 0:
         print(
@@ -221,12 +220,12 @@ def reconstruct_components(
         return True
     else:
         print(
-            f'⚠️  STEP 5 ISSUES: Reconstruction rate at {reconstruction_success_rate:.1f}%, {len(reconstruction_data["anomalies"])} anomalies'
+            f"⚠️  STEP 5 ISSUES: Reconstruction rate at {reconstruction_success_rate:.1f}%, {len(reconstruction_data['anomalies'])} anomalies"
         )
         return False
 
 
-def run_validation_checks(target_path: str, checks: list) -> Dict[str, Any]:
+def run_validation_checks(target_path: str, checks: list) -> dict[str, Any]:
     """Run validation checks on reconstructed component."""
     results = {}
 
@@ -271,10 +270,10 @@ def run_validation_checks(target_path: str, checks: list) -> Dict[str, Any]:
     return results
 
 
-def validate_syntax(filepath: str) -> Dict[str, Any]:
+def validate_syntax(filepath: str) -> dict[str, Any]:
     """Validate Python syntax."""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
         compile(content, filepath, "exec")
         return {"passed": True, "details": "Syntax is valid"}
@@ -284,11 +283,11 @@ def validate_syntax(filepath: str) -> Dict[str, Any]:
         return {"passed": False, "details": f"Validation error: {str(e)}"}
 
 
-def validate_imports(filepath: str) -> Dict[str, Any]:
+def validate_imports(filepath: str) -> dict[str, Any]:
     """Validate that imports work."""
     try:
         # Basic import test - just check file can be read without obvious import errors
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         # Check for common import patterns
@@ -302,47 +301,47 @@ def validate_imports(filepath: str) -> Dict[str, Any]:
 
 
 # Placeholder validation functions for other checks
-def validate_pattern_detection(filepath: str) -> Dict[str, Any]:
+def validate_pattern_detection(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Pattern detection validation placeholder"}
 
 
-def validate_logic(filepath: str) -> Dict[str, Any]:
+def validate_logic(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Logic validation placeholder"}
 
 
-def validate_openai_integration(filepath: str) -> Dict[str, Any]:
+def validate_openai_integration(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "OpenAI integration validation placeholder"}
 
 
-def validate_caching(filepath: str) -> Dict[str, Any]:
+def validate_caching(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Caching validation placeholder"}
 
 
-def validate_batch_processing(filepath: str) -> Dict[str, Any]:
+def validate_batch_processing(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Batch processing validation placeholder"}
 
 
-def validate_agent_initialization(filepath: str) -> Dict[str, Any]:
+def validate_agent_initialization(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Agent initialization validation placeholder"}
 
 
-def validate_message_processing(filepath: str) -> Dict[str, Any]:
+def validate_message_processing(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Message processing validation placeholder"}
 
 
-def validate_models(filepath: str) -> Dict[str, Any]:
+def validate_models(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Model validation placeholder"}
 
 
-def validate_integration(filepath: str) -> Dict[str, Any]:
+def validate_integration(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Integration validation placeholder"}
 
 
-def validate_truth_verification(filepath: str) -> Dict[str, Any]:
+def validate_truth_verification(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Truth verification validation placeholder"}
 
 
-def validate_functionality(filepath: str) -> Dict[str, Any]:
+def validate_functionality(filepath: str) -> dict[str, Any]:
     return {"passed": True, "details": "Functionality validation placeholder"}
 
 

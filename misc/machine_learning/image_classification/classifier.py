@@ -11,17 +11,15 @@ This module provides comprehensive image classification capabilities including:
 Author: Echoes AI Assistant
 """
 
+import logging
+import time
+
+import matplotlib.pyplot as plt
 import torch
 import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader, random_split
-from torchvision import datasets, transforms, models
-import matplotlib.pyplot as plt
-import numpy as np
-from pathlib import Path
-import time
-from typing import Dict, List, Tuple, Optional, Union
-import logging
+from torchvision import datasets, models, transforms
 
 # Set up logging
 logging.basicConfig(level=logging.INFO)
@@ -44,7 +42,7 @@ class ImageClassifier:
         self,
         model_type: str = "custom_cnn",
         num_classes: int = 10,
-        device: Optional[str] = None,
+        device: str | None = None,
     ):
         """
         Initialize the image classifier.
@@ -122,7 +120,7 @@ class ImageClassifier:
         dataset_name: str = "cifar10",
         batch_size: int = 32,
         data_dir: str = "./data",
-    ) -> Tuple[DataLoader, DataLoader, DataLoader]:
+    ) -> tuple[DataLoader, DataLoader, DataLoader]:
         """
         Load and preprocess dataset.
 
@@ -244,7 +242,7 @@ class ImageClassifier:
 
         return epoch_loss, epoch_acc
 
-    def validate(self, val_loader: DataLoader) -> Tuple[float, float]:
+    def validate(self, val_loader: DataLoader) -> tuple[float, float]:
         """Validate the model."""
         self.model.eval()
         running_loss = 0.0
@@ -273,8 +271,8 @@ class ImageClassifier:
         train_loader: DataLoader,
         val_loader: DataLoader,
         num_epochs: int = 10,
-        save_path: Optional[str] = None,
-    ) -> Dict[str, List[float]]:
+        save_path: str | None = None,
+    ) -> dict[str, list[float]]:
         """
         Train the model.
 
@@ -320,7 +318,7 @@ class ImageClassifier:
             # Log progress
             epoch_time = time.time() - start_time
             logger.info(
-                f"Epoch {epoch+1}/{num_epochs} - "
+                f"Epoch {epoch + 1}/{num_epochs} - "
                 f"Train Loss: {train_loss:.4f}, Train Acc: {train_acc:.2f}% - "
                 f"Val Loss: {val_loss:.4f}, Val Acc: {val_acc:.2f}% - "
                 f"Time: {epoch_time:.2f}s"
@@ -337,7 +335,7 @@ class ImageClassifier:
         )
         return history
 
-    def evaluate(self, test_loader: DataLoader) -> Dict[str, float]:
+    def evaluate(self, test_loader: DataLoader) -> dict[str, float]:
         """
         Evaluate the model on test data.
 
@@ -382,7 +380,7 @@ class ImageClassifier:
         logger.info(f"Test Results - Loss: {test_loss:.4f}, Accuracy: {test_acc:.2f}%")
         return results
 
-    def predict(self, image: torch.Tensor) -> Tuple[int, float]:
+    def predict(self, image: torch.Tensor) -> tuple[int, float]:
         """
         Make prediction on a single image.
 
@@ -449,7 +447,7 @@ class CustomCNN(nn.Module):
     """Custom CNN architecture for image classification."""
 
     def __init__(self, num_classes: int = 10):
-        super(CustomCNN, self).__init__()
+        super().__init__()
         self.features = nn.Sequential(
             nn.Conv2d(3, 64, kernel_size=3, padding=1),
             nn.BatchNorm2d(64),
@@ -490,7 +488,7 @@ class CustomCNN(nn.Module):
 
 
 def plot_training_history(
-    history: Dict[str, List[float]], save_path: Optional[str] = None
+    history: dict[str, list[float]], save_path: str | None = None
 ):
     """Plot training history."""
     fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
@@ -520,7 +518,7 @@ def plot_training_history(
         plt.show()
 
 
-def get_class_names(dataset_name: str) -> List[str]:
+def get_class_names(dataset_name: str) -> list[str]:
     """Get class names for a dataset."""
     if dataset_name == "cifar10":
         return [

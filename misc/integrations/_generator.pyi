@@ -1,5 +1,5 @@
 from collections.abc import Callable
-from typing import Any, Literal, TypeAlias, TypeVar, overload
+from typing import Any, Literal, TypeVar, overload
 
 import numpy as np
 from numpy import dtype, float32, float64, int64
@@ -34,7 +34,7 @@ from numpy.random import BitGenerator, RandomState, SeedSequence
 
 _IntegerT = TypeVar("_IntegerT", bound=np.integer)
 
-_DTypeLikeFloat32: TypeAlias = (
+type _DTypeLikeFloat32 = (
     dtype[float32]
     | _SupportsDType[dtype[float32]]
     | type[float32]
@@ -42,7 +42,7 @@ _DTypeLikeFloat32: TypeAlias = (
     | _SingleCodes
 )
 
-_DTypeLikeFloat64: TypeAlias = (
+type _DTypeLikeFloat64 = (
     dtype[float64]
     | _SupportsDType[dtype[float64]]
     | type[float]
@@ -591,7 +591,9 @@ class Generator:
         size: _ShapeLike | None = ...,
     ) -> NDArray[float64]: ...
     @overload
-    def f(self, dfnum: _FloatLike_co, dfden: _FloatLike_co, size: None = ...) -> float: ...  # type: ignore[misc]
+    def f(
+        self, dfnum: _FloatLike_co, dfden: _FloatLike_co, size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def f(
         self,
@@ -643,7 +645,9 @@ class Generator:
         self, df: _ArrayLikeFloat_co, size: _ShapeLike = ...
     ) -> NDArray[float64]: ...
     @overload
-    def vonmises(self, mu: _FloatLike_co, kappa: _FloatLike_co, size: None = ...) -> float: ...  # type: ignore[misc]
+    def vonmises(
+        self, mu: _FloatLike_co, kappa: _FloatLike_co, size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def vonmises(
         self,
@@ -736,7 +740,9 @@ class Generator:
         self, scale: _ArrayLikeFloat_co = ..., size: _ShapeLike | None = ...
     ) -> NDArray[float64]: ...
     @overload
-    def wald(self, mean: _FloatLike_co, scale: _FloatLike_co, size: None = ...) -> float: ...  # type: ignore[misc]
+    def wald(
+        self, mean: _FloatLike_co, scale: _FloatLike_co, size: None = ...
+    ) -> float: ...  # type: ignore[misc]
     @overload
     def wald(
         self,
@@ -767,7 +773,9 @@ class Generator:
         self, n: _ArrayLikeInt_co, p: _ArrayLikeFloat_co, size: _ShapeLike | None = ...
     ) -> NDArray[int64]: ...
     @overload
-    def negative_binomial(self, n: _FloatLike_co, p: _FloatLike_co, size: None = ...) -> int: ...  # type: ignore[misc]
+    def negative_binomial(
+        self, n: _FloatLike_co, p: _FloatLike_co, size: None = ...
+    ) -> int: ...  # type: ignore[misc]
     @overload
     def negative_binomial(
         self,
@@ -794,7 +802,9 @@ class Generator:
         self, p: _ArrayLikeFloat_co, size: _ShapeLike | None = ...
     ) -> NDArray[int64]: ...
     @overload
-    def hypergeometric(self, ngood: int, nbad: int, nsample: int, size: None = ...) -> int: ...  # type: ignore[misc]
+    def hypergeometric(
+        self, ngood: int, nbad: int, nsample: int, size: None = ...
+    ) -> int: ...  # type: ignore[misc]
     @overload
     def hypergeometric(
         self,

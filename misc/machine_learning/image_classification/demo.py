@@ -15,9 +15,10 @@ Author: Echoes AI Assistant
 import argparse
 import sys
 from pathlib import Path
-import torch
+
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 from torchvision import datasets, transforms
 
 # Add the machine_learning directory to Python path

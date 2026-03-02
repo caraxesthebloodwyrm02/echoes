@@ -24,35 +24,35 @@ Authentication:
 - Rate limiting based on API key usage
 """
 
-import os
 import asyncio
-import logging
-from typing import Dict, List, Optional, Any
-from datetime import datetime
-import tempfile
 import base64
-import httpx
+import logging
+import os
+import tempfile
 from contextlib import asynccontextmanager
+from datetime import datetime
+from typing import Any
 
+import httpx
+import uvicorn
 from fastapi import (
-    FastAPI,
-    HTTPException,
-    Depends,
-    Request,
     BackgroundTasks,
-    UploadFile,
+    Depends,
+    FastAPI,
     File,
     Form,
+    HTTPException,
+    Request,
+    UploadFile,
 )
-from fastapi.security import APIKeyHeader
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.trustedhost import TrustedHostMiddleware
+from fastapi.security import APIKeyHeader
 from pydantic import BaseModel, Field, validator
-import uvicorn
 from slowapi import Limiter, _rate_limit_exceeded_handler
-from slowapi.util import get_remote_address
 from slowapi.errors import RateLimitExceeded
 from slowapi.middleware import SlowAPIMiddleware
+from slowapi.util import get_remote_address
 
 # Import Echoes components
 from assistant_v2_core import EchoesAssistantV2
@@ -69,9 +69,9 @@ API_KEY_NAME = "X-API-Key"
 api_key_header = APIKeyHeader(name=API_KEY_NAME, auto_error=False)
 
 # Global variables
-assistant: Optional[EchoesAssistantV2] = None
-api_keys: Dict[str, Dict[str, Any]] = {}
-webhooks: Dict[str, Dict[str, Any]] = {}
+assistant: EchoesAssistantV2 | None = None
+api_keys: dict[str, dict[str, Any]] = {}
+webhooks: dict[str, dict[str, Any]] = {}
 
 
 class APIConfig:
@@ -98,10 +98,10 @@ config = APIConfig()
 class ImageAnalysisRequest(BaseModel):
     """Request model for image analysis."""
 
-    image_url: Optional[str] = None
-    image_base64: Optional[str] = None
-    custom_prompt: Optional[str] = None
-    webhook_url: Optional[str] = None
+    image_url: str | None = None
+    image_base64: str | None = None
+    custom_prompt: str | None = None
+    webhook_url: str | None = None
 
     @validator("image_base64")
     def validate_base64(cls, v):
@@ -113,30 +113,30 @@ class ImageAnalysisRequest(BaseModel):
 class AudioTranscriptionRequest(BaseModel):
     """Request model for audio transcription."""
 
-    audio_url: Optional[str] = None
-    audio_base64: Optional[str] = None
-    webhook_url: Optional[str] = None
+    audio_url: str | None = None
+    audio_base64: str | None = None
+    webhook_url: str | None = None
 
 
 class MediaProcessingRequest(BaseModel):
     """Request model for general media processing."""
 
-    media_url: Optional[str] = None
-    media_base64: Optional[str] = None
-    analysis_type: Optional[str] = None  # 'image', 'audio', or auto-detect
-    custom_prompt: Optional[str] = None
-    webhook_url: Optional[str] = None
+    media_url: str | None = None
+    media_base64: str | None = None
+    analysis_type: str | None = None  # 'image', 'audio', or auto-detect
+    custom_prompt: str | None = None
+    webhook_url: str | None = None
 
 
 class WebhookRegistration(BaseModel):
     """Model for webhook registration."""
 
     url: str = Field(..., description="Webhook URL to receive notifications")
-    events: List[str] = Field(
+    events: list[str] = Field(
         ...,
         description="Events to trigger webhook: ['image_processed', 'audio_transcribed', 'media_processed']",
     )
-    secret: Optional[str] = Field(
+    secret: str | None = Field(
         None, description="Webhook secret for signature verification"
     )
     active: bool = Field(True, description="Whether webhook is active")
@@ -146,10 +146,10 @@ class APIResponse(BaseModel):
     """Standard API response model."""
 
     success: bool
-    data: Optional[Dict[str, Any]] = None
-    error: Optional[str] = None
-    request_id: Optional[str] = None
-    processing_time: Optional[float] = None
+    data: dict[str, Any] | None = None
+    error: str | None = None
+    request_id: str | None = None
+    processing_time: float | None = None
 
 
 class WebhookPayload(BaseModel):
@@ -158,8 +158,8 @@ class WebhookPayload(BaseModel):
     event: str
     request_id: str
     timestamp: datetime
-    data: Dict[str, Any]
-    signature: Optional[str] = None
+    data: dict[str, Any]
+    signature: str | None = None
 
 
 @asynccontextmanager
@@ -274,7 +274,7 @@ app.add_middleware(TrustedHostMiddleware, allowed_hosts=config.trusted_hosts)
 
 # Webhook management functions
 async def trigger_webhook(
-    webhook_url: str, payload: WebhookPayload, secret: Optional[str] = None
+    webhook_url: str, payload: WebhookPayload, secret: str | None = None
 ):
     """Trigger a webhook with the given payload."""
     try:
@@ -295,7 +295,7 @@ async def trigger_webhook(
 
 
 async def process_with_webhook(
-    request_func, webhook_url: Optional[str], event_type: str, request_id: str
+    request_func, webhook_url: str | None, event_type: str, request_id: str
 ):
     """Process a request and trigger webhook if provided."""
     try:
@@ -727,8 +727,8 @@ async def get_analytics(api_key_info: dict = Depends(verify_api_key)):
 @app.post("/api/v1/analyze/image/upload", response_model=APIResponse)
 async def analyze_image_upload(
     file: UploadFile = File(...),
-    custom_prompt: Optional[str] = Form(None),
-    webhook_url: Optional[str] = Form(None),
+    custom_prompt: str | None = Form(None),
+    webhook_url: str | None = Form(None),
     api_key_info: dict = Depends(verify_api_key),
 ):
     """Analyze an uploaded image file."""
@@ -794,7 +794,7 @@ async def analyze_image_upload(
 @app.post("/api/v1/transcribe/audio/upload", response_model=APIResponse)
 async def transcribe_audio_upload(
     file: UploadFile = File(...),
-    webhook_url: Optional[str] = Form(None),
+    webhook_url: str | None = Form(None),
     api_key_info: dict = Depends(verify_api_key),
 ):
     """Transcribe an uploaded audio file."""

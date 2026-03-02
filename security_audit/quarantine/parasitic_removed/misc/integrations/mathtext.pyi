@@ -1,5 +1,5 @@
 import os
-from typing import Generic, IO, Literal, TypeVar, overload
+from typing import IO, Generic, Literal, TypeVar, overload
 
 from matplotlib.font_manager import FontProperties
 from matplotlib.typing import ColorType
@@ -7,7 +7,11 @@ from matplotlib.typing import ColorType
 # Re-exported API from _mathtext.
 from ._mathtext import (
     RasterParse as RasterParse,
+)
+from ._mathtext import (
     VectorParse as VectorParse,
+)
+from ._mathtext import (
     get_unicode_index as get_unicode_index,
 )
 
@@ -15,11 +19,20 @@ _ParseType = TypeVar("_ParseType", RasterParse, VectorParse)
 
 class MathTextParser(Generic[_ParseType]):
     @overload
-    def __init__(self: MathTextParser[VectorParse], output: Literal["path"]) -> None: ...
+    def __init__(
+        self: MathTextParser[VectorParse], output: Literal["path"]
+    ) -> None: ...
     @overload
-    def __init__(self: MathTextParser[RasterParse], output: Literal["agg", "raster", "macosx"]) -> None: ...
+    def __init__(
+        self: MathTextParser[RasterParse], output: Literal["agg", "raster", "macosx"]
+    ) -> None: ...
     def parse(
-        self, s: str, dpi: float = ..., prop: FontProperties | None = ..., *, antialiased: bool | None = ...
+        self,
+        s: str,
+        dpi: float = ...,
+        prop: FontProperties | None = ...,
+        *,
+        antialiased: bool | None = ...,
     ) -> _ParseType: ...
 
 def math_to_image(
@@ -29,5 +42,5 @@ def math_to_image(
     dpi: float | None = ...,
     format: str | None = ...,
     *,
-    color: ColorType | None = ...
+    color: ColorType | None = ...,
 ) -> float: ...

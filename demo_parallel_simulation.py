@@ -7,18 +7,15 @@ Demonstrates concurrent simulation instances to understand possibilities and enh
 import os
 import sys
 import time
-import json
-import asyncio
-from datetime import datetime
 
 # Load environment variables
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from core_modules.parallel_simulation_engine import (
-        parallel_simulation,
-        SimulationType,
         SimulationStatus,
+        SimulationType,
+        parallel_simulation,
     )
 except ImportError as e:
     print(f"Import error: {e}")
@@ -73,7 +70,7 @@ def demo_basic_simulation():
         simulation_ids.append(sim_id)
         print(f"  ✅ Created {sim['description']}: {sim_id}")
 
-    print(f"\n⏳ Waiting for simulations to complete...")
+    print("\n⏳ Waiting for simulations to complete...")
 
     # Wait for all simulations to complete
     results = []
@@ -87,7 +84,7 @@ def demo_basic_simulation():
         else:
             print(f"  ✗ Failed to complete simulation: {sim_id}")
 
-    print(f"\n📊 Simulation Results:")
+    print("\n📊 Simulation Results:")
     for i, result in enumerate(results, 1):
         print(f"\n  {i}. {result.simulation_type.value.replace('_', ' ').title()}:")
         print(f"     Confidence: {result.confidence:.1%}")
@@ -162,10 +159,10 @@ def demo_concurrent_simulation():
         f"\n⏱️ Executed {len(simulation_configs)} simulations in {execution_time:.2f}s"
     )
     print(
-        f"   Average time per simulation: {execution_time/len(simulation_configs):.2f}s"
+        f"   Average time per simulation: {execution_time / len(simulation_configs):.2f}s"
     )
 
-    print(f"\n📊 Concurrent Results:")
+    print("\n📊 Concurrent Results:")
     for i, result in enumerate(results, 1):
         print(f"\n  {i}. {result.simulation_type.value.replace('_', ' ').title()}:")
         print(f"     Confidence: {result.confidence:.1%}")
@@ -185,7 +182,7 @@ def demo_possibility_space():
     topic = "Artificial Intelligence in Healthcare"
 
     print(f"  Topic: {topic}")
-    print(f"  Running possibility space simulation...")
+    print("  Running possibility space simulation...")
 
     # Create possibility space simulation
     sim_id = parallel_simulation.create_simulation(
@@ -203,7 +200,7 @@ def demo_possibility_space():
     if result and result.outcome:
         outcome = result.outcome
 
-        print(f"\n📊 Possibility Space Analysis:")
+        print("\n📊 Possibility Space Analysis:")
         print(f"  Total dimensions: {outcome.get('total_dimensions', 0)}")
         print(f"  Total combinations: {outcome.get('total_combinations', 0):,}")
         print(
@@ -212,7 +209,7 @@ def demo_possibility_space():
 
         space = outcome.get("possibility_space", [])
         if space:
-            print(f"\n  🌐 Dimension Analysis:")
+            print("\n  🌐 Dimension Analysis:")
             for dim in space:
                 print(f"\n    • {dim.get('name', 'unknown').title()}:")
                 print(f"      Complexity: {dim.get('complexity', 'unknown')}")
@@ -224,7 +221,7 @@ def demo_possibility_space():
                     print(f"        - {poss}")
 
         if result.insights:
-            print(f"\n  💡 Key Insights:")
+            print("\n  💡 Key Insights:")
             for insight in result.insights:
                 print(f"    • {insight}")
 
@@ -261,14 +258,14 @@ def demo_cross_reference_enhancement():
     if result and result.outcome:
         outcome = result.outcome
 
-        print(f"\n📊 Enhanced Cross-References:")
+        print("\n📊 Enhanced Cross-References:")
         print(f"  Original references: {outcome.get('original_count', 0)}")
         print(f"  Enhanced references: {outcome.get('enhanced_count', 0)}")
         print(f"  Improvement: +{outcome.get('improvement', 0)} references")
 
         enhanced_refs = outcome.get("enhanced_references", [])
         if enhanced_refs:
-            print(f"\n  🔗 Enhanced References:")
+            print("\n  🔗 Enhanced References:")
             for i, ref in enumerate(enhanced_refs[:3], 1):
                 print(f"\n    {i}. Type: {ref.get('type', 'unknown')}")
                 print(f"       Description: {ref.get('description', '')[:80]}...")
@@ -280,7 +277,7 @@ def demo_cross_reference_enhancement():
                     print(f"       Simulation insights: {', '.join(insights[:2])}")
 
         if result.insights:
-            print(f"\n  💡 Enhancement Insights:")
+            print("\n  💡 Enhancement Insights:")
             for insight in result.insights:
                 print(f"    • {insight}")
 
@@ -321,7 +318,7 @@ def demo_decision_support():
     if result and result.outcome:
         outcome = result.outcome
 
-        print(f"\n📊 Decision Support Analysis:")
+        print("\n📊 Decision Support Analysis:")
         print(f"  Decision framework: {outcome.get('decision_framework', '')}")
         print(
             f"  Confidence in recommendation: {outcome.get('confidence_in_recommendation', 0):.1%}"
@@ -329,7 +326,7 @@ def demo_decision_support():
 
         analyses = outcome.get("option_analyses", [])
         if analyses:
-            print(f"\n  📈 Option Analysis:")
+            print("\n  📈 Option Analysis:")
             for i, analysis in enumerate(analyses, 1):
                 print(f"\n    {i}. {analysis.get('option', 'Unknown')}:")
                 print(
@@ -346,7 +343,7 @@ def demo_decision_support():
 
         recommended = outcome.get("recommended_option", {})
         if recommended:
-            print(f"\n  🎯 Recommended Option:")
+            print("\n  🎯 Recommended Option:")
             print(f"    Choice: {recommended.get('option', 'unknown')}")
             print(
                 f"    Success probability: {recommended.get('success_probability', 0):.1%}"
@@ -354,7 +351,7 @@ def demo_decision_support():
             print(f"    Timeline: {recommended.get('timeline', 'unknown')}")
 
         if result.insights:
-            print(f"\n  💡 Decision Insights:")
+            print("\n  💡 Decision Insights:")
             for insight in result.insights:
                 print(f"    • {insight}")
 
@@ -373,20 +370,20 @@ def demo_performance_statistics():
     # Get comprehensive statistics
     stats = parallel_simulation.get_simulation_statistics()
 
-    print(f"\n  🧮 Overall Statistics:")
+    print("\n  🧮 Overall Statistics:")
     print(f"    Total simulations: {stats['total_simulations']}")
     print(f"    Active simulations: {stats['active_simulations']}")
     print(f"    Queue size: {stats['queue_size']}")
 
-    print(f"\n  📋 Status Breakdown:")
+    print("\n  📋 Status Breakdown:")
     for status, count in stats["status_breakdown"].items():
         print(f"    {status.replace('_', ' ').title()}: {count}")
 
-    print(f"\n  🏷️ Type Breakdown:")
+    print("\n  🏷️ Type Breakdown:")
     for sim_type, count in stats["type_breakdown"].items():
         print(f"    {sim_type.replace('_', ' ').title()}: {count}")
 
-    print(f"\n  ⚡ Performance Metrics:")
+    print("\n  ⚡ Performance Metrics:")
     perf = stats["performance"]
     print(f"    Success rate: {perf['success_rate']:.1%}")
     print(f"    Average execution time: {perf['average_execution_time']:.2f}s")
@@ -395,7 +392,7 @@ def demo_performance_statistics():
     print(f"    Completed simulations: {perf['completed']}")
     print(f"    Failed simulations: {perf['failed']}")
 
-    print(f"\n  ⚙️ Configuration:")
+    print("\n  ⚙️ Configuration:")
     print(f"    Max workers: {stats['max_workers']}")
     print(f"    Max concurrent: {stats['max_concurrent']}")
 
@@ -447,7 +444,7 @@ def demo_real_time_simulation():
         print(f"  📤 Started simulation: {sim_id}")
 
     # Monitor progress
-    print(f"\n⏳ Monitoring simulation progress...")
+    print("\n⏳ Monitoring simulation progress...")
 
     completed_count = 0
     start_time = time.time()
@@ -457,7 +454,7 @@ def demo_real_time_simulation():
         for sim_id in simulation_ids:
             status = parallel_simulation.get_simulation_status(sim_id)
             if status and status.status == SimulationStatus.COMPLETED:
-                if sim_id not in [s for s in simulation_ids[:completed_count]]:
+                if sim_id not in list(simulation_ids[:completed_count]):
                     completed_count += 1
                     result = parallel_simulation.get_simulation_result(sim_id)
                     if result:
@@ -470,7 +467,7 @@ def demo_real_time_simulation():
         time.sleep(1)
 
     # Get final results
-    print(f"\n📊 Final Results:")
+    print("\n📊 Final Results:")
     for sim_id in simulation_ids:
         result = parallel_simulation.get_simulation_result(sim_id)
         if result:
@@ -491,7 +488,7 @@ def demo_cross_reference_integration():
     topic = "Cloud Computing Architecture"
 
     print(f"  Topic: {topic}")
-    print(f"  Running context expansion and cross-reference enhancement...")
+    print("  Running context expansion and cross-reference enhancement...")
 
     # Context expansion simulation
     context_sim_id = parallel_simulation.create_simulation(
@@ -519,23 +516,23 @@ def demo_cross_reference_integration():
     )
     xref_result = parallel_simulation.wait_for_simulation(xref_sim_id, timeout=25.0)
 
-    print(f"\n📊 Enhanced Cross-Reference Results:")
+    print("\n📊 Enhanced Cross-Reference Results:")
 
     if context_result:
-        print(f"\n  🌐 Context Expansion:")
+        print("\n  🌐 Context Expansion:")
         print(f"    Confidence: {context_result.confidence:.1%}")
         print(f"    Breadth: {context_result.outcome.get('breadth', 0)} dimensions")
 
         expansions = context_result.outcome.get("expanded_context", [])
         if expansions:
-            print(f"    Enhanced contexts:")
+            print("    Enhanced contexts:")
             for exp in expansions[:3]:
                 print(
                     f"      • {exp.get('type', 'unknown')}: {exp.get('description', '')[:60]}..."
                 )
 
     if xref_result:
-        print(f"\n  🔗 Cross-Reference Enhancement:")
+        print("\n  🔗 Cross-Reference Enhancement:")
         print(f"    Confidence: {xref_result.confidence:.1%}")
         print(
             f"    Improvement: +{xref_result.outcome.get('improvement', 0)} references"
@@ -543,16 +540,16 @@ def demo_cross_reference_integration():
 
         enhanced_refs = xref_result.outcome.get("enhanced_references", [])
         if enhanced_refs:
-            print(f"    Enhanced with simulation insights:")
+            print("    Enhanced with simulation insights:")
             for ref in enhanced_refs[:2]:
                 print(f"      • {ref.get('description', '')[:60]}...")
                 print(f"        Strength: {ref.get('strength', 0):.1%}")
 
-    print(f"\n💡 Integration Benefits:")
-    print(f"  • Multi-dimensional context understanding")
-    print(f"  • Simulation-driven relationship discovery")
-    print(f"  • Enhanced relevance scoring")
-    print(f"  • Deeper cross-reference insights")
+    print("\n💡 Integration Benefits:")
+    print("  • Multi-dimensional context understanding")
+    print("  • Simulation-driven relationship discovery")
+    print("  • Enhanced relevance scoring")
+    print("  • Deeper cross-reference insights")
 
 
 def main():

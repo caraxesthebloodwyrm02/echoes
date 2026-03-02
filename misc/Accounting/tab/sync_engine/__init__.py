@@ -14,18 +14,19 @@ This creates a complete, automated system where users are fairly compensated
 for all their contributions without any complications.
 """
 
-import os
-import json
-import time
 import asyncio
-from datetime import datetime, timezone, timedelta
-from typing import Dict, Any, List, Optional
-from pathlib import Path
+import json
+import os
+import time
+from datetime import UTC, datetime, timedelta, timezone
 from decimal import Decimal
+from pathlib import Path
+from typing import Any, Dict, List, Optional
+
+from payout_engine import PayoutEngine, get_user_payment_history, process_user_payout
 
 # Import tab components
 from work_tracking import WorkTracker, log_assistant_interaction
-from payout_engine import PayoutEngine, process_user_payout, get_user_payment_history
 
 
 class SyncEngine:
@@ -59,8 +60,8 @@ class SyncEngine:
         print("✅ Sync Glimpse initialized - seamless work-to-payment pipeline")
 
     async def sync_assistant_interaction(
-        self, user_id: str, interaction_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, user_id: str, interaction_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Sync assistant interaction with work tracking system.
 
@@ -118,7 +119,7 @@ class SyncEngine:
 
         return result
 
-    def _classify_interaction(self, interaction_data: Dict[str, Any]) -> str:
+    def _classify_interaction(self, interaction_data: dict[str, Any]) -> str:
         """Classify the type of assistant interaction."""
         query = interaction_data.get("query", "").lower()
         response_length = len(interaction_data.get("response", ""))
@@ -140,8 +141,8 @@ class SyncEngine:
             return "query_processing"
 
     def _calculate_effort_metrics(
-        self, interaction_data: Dict[str, Any]
-    ) -> Dict[str, float]:
+        self, interaction_data: dict[str, Any]
+    ) -> dict[str, float]:
         """Calculate effort metrics from interaction data."""
         response_length = len(interaction_data.get("response", ""))
         query_complexity = len(interaction_data.get("query", "").split())
@@ -203,7 +204,7 @@ class SyncEngine:
         time_threshold = False
 
         if last_payout_date:
-            days_since_last = (datetime.now(timezone.utc) - last_payout_date).days
+            days_since_last = (datetime.now(UTC) - last_payout_date).days
             time_threshold = (
                 days_since_last >= self.payout_thresholds["max_accumulation_days"]
             )
@@ -227,7 +228,7 @@ class SyncEngine:
 
     async def _trigger_automatic_payout(
         self, user_id: str, reason: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Trigger automatic payout processing."""
         pending_amount = self._calculate_pending_payout(user_id)
 
@@ -288,7 +289,7 @@ class SyncEngine:
 
         return pending_amount
 
-    def _estimate_next_payout(self, user_id: str) -> Dict[str, Any]:
+    def _estimate_next_payout(self, user_id: str) -> dict[str, Any]:
         """Estimate when next payout will be triggered."""
         contribution_summary = self.work_tracker.get_user_contribution_summary(user_id)
         total_hours = contribution_summary["total_time_invested_hours"]
@@ -312,19 +313,17 @@ class SyncEngine:
             "hours_needed": hours_needed,
             "amount_needed": amount_needed,
             "estimated_weeks": weeks_to_hours,
-            "estimated_date": (
-                datetime.now(timezone.utc) + timedelta(weeks=weeks_to_hours)
-            )
+            "estimated_date": (datetime.now(UTC) + timedelta(weeks=weeks_to_hours))
             .date()
             .isoformat(),
         }
 
     def _log_sync_event(
-        self, user_id: str, event_type: str, event_data: Dict[str, Any]
+        self, user_id: str, event_type: str, event_data: dict[str, Any]
     ):
         """Log synchronization events for audit trail."""
         event = {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "user_id": user_id,
             "event_type": event_type,
             "event_data": event_data,
@@ -336,7 +335,7 @@ class SyncEngine:
         with open(sync_log_file, "a") as f:
             f.write(json.dumps(event) + "\n")
 
-    async def get_user_sync_status(self, user_id: str) -> Dict[str, Any]:
+    async def get_user_sync_status(self, user_id: str) -> dict[str, Any]:
         """Get complete synchronization status for a user."""
         contribution_summary = self.work_tracker.get_user_contribution_summary(user_id)
         payout_history = get_user_payment_history(user_id)
@@ -363,7 +362,7 @@ class SyncEngine:
                 "next_payout": next_payout,
             },
             "sync_health": {
-                "last_sync": datetime.now(timezone.utc).isoformat(),
+                "last_sync": datetime.now(UTC).isoformat(),
                 "auto_payout_enabled": True,
                 "transparency_enabled": True,
             },
@@ -387,8 +386,8 @@ def get_sync_engine() -> SyncEngine:
 
 
 async def sync_assistant_interaction(
-    user_id: str, interaction_data: Dict[str, Any]
-) -> Dict[str, Any]:
+    user_id: str, interaction_data: dict[str, Any]
+) -> dict[str, Any]:
     """
     Main integration point for assistant_v2_core.py
 
@@ -409,17 +408,16 @@ async def sync_assistant_interaction(
     return await Glimpse.sync_assistant_interaction(user_id, interaction_data)
 
 
-def get_user_sync_status(user_id: str) -> Dict[str, Any]:
+def get_user_sync_status(user_id: str) -> dict[str, Any]:
     """Get user's complete sync status (work + payouts)."""
     engine = get_sync_engine()
     # Run in new event loop since this is a sync function
-    import asyncio
 
     return asyncio.run(Glimpse.get_user_sync_status(user_id))
 
 
 # Legacy compatibility functions
-def log_work_for_assistant(user_id: str, interaction_data: Dict[str, Any]) -> str:
+def log_work_for_assistant(user_id: str, interaction_data: dict[str, Any]) -> str:
     """Legacy function for backward compatibility."""
     # This will be called synchronously, so we just log the intent
     # The actual sync happens through the async function
@@ -428,7 +426,7 @@ def log_work_for_assistant(user_id: str, interaction_data: Dict[str, Any]) -> st
 
 
 # Health check function
-def check_sync_glimpse_health() -> Dict[str, Any]:
+def check_sync_glimpse_health() -> dict[str, Any]:
     """Check if sync Glimpse is operational."""
     try:
         engine = get_sync_engine()
@@ -446,13 +444,13 @@ def check_sync_glimpse_health() -> Dict[str, Any]:
             "status": "healthy" if dirs_exist else "degraded",
             "directories_exist": dirs_exist,
             "components_initialized": True,
-            "last_check": datetime.now(timezone.utc).isoformat(),
+            "last_check": datetime.now(UTC).isoformat(),
         }
     except Exception as e:
         return {
             "status": "unhealthy",
             "error": str(e),
-            "last_check": datetime.now(timezone.utc).isoformat(),
+            "last_check": datetime.now(UTC).isoformat(),
         }
 
 

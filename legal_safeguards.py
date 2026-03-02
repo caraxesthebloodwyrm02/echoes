@@ -9,15 +9,15 @@ LIMITATIONS: Keyword-based consent/protection checks are not sufficient
 for production safety without classifier context.
 """
 
-from typing import Dict, List, Any, Optional, Union
-from dataclasses import dataclass
-from enum import Enum
-from datetime import datetime, timezone
 import hashlib
 import hmac
 import json
 import os
 import uuid
+from dataclasses import dataclass
+from datetime import UTC, datetime
+from enum import Enum
+from typing import Any
 
 
 class ConsentType(Enum):
@@ -55,10 +55,10 @@ class CognitiveAccountingSystem:
     """Simple cognitive accounting system."""
 
     def __init__(self):
-        self.metrics_history: List[CognitiveEffortMetrics] = []
-        self.consent_records: Dict[str, ConsentType] = {}
-        self.protection_settings: Dict[str, ProtectionLevel] = {}
-        self.provenance_chain: List[Dict[str, Any]] = []
+        self.metrics_history: list[CognitiveEffortMetrics] = []
+        self.consent_records: dict[str, ConsentType] = {}
+        self.protection_settings: dict[str, ProtectionLevel] = {}
+        self.provenance_chain: list[dict[str, Any]] = []
 
     def record_effort(self, metrics: CognitiveEffortMetrics):
         """Record cognitive effort metrics."""
@@ -115,7 +115,7 @@ class CognitiveAccountingSystem:
         )
         return allowed
 
-    def get_average_metrics(self) -> Dict[str, float]:
+    def get_average_metrics(self) -> dict[str, float]:
         """Get average cognitive effort metrics."""
         if not self.metrics_history:
             return {
@@ -136,10 +136,10 @@ class CognitiveAccountingSystem:
             / len(self.metrics_history),
         }
 
-    def export_report(self) -> Dict[str, Any]:
+    def export_report(self) -> dict[str, Any]:
         """Export accounting report."""
         return {
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
             "total_records": len(self.metrics_history),
             "consent_records": len(self.consent_records),
             "protection_settings": len(self.protection_settings),
@@ -158,11 +158,11 @@ class CognitiveAccountingSystem:
         authority: str = "system_policy",
         verdict: str = "pass",
         gate_id: str = "",
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Create and store a Decision Provenance Record (DPR)."""
         try:
             dpr_id = str(uuid.uuid4())
-            timestamp = datetime.now(timezone.utc).isoformat()
+            timestamp = datetime.now(UTC).isoformat()
             parent = self.provenance_chain[-1] if self.provenance_chain else None
             seq = (parent["sequence_number"] + 1) if parent else 0
 
@@ -176,24 +176,22 @@ class CognitiveAccountingSystem:
                 "reasoning_summary": reasoning,
                 "authority_type": authority,
                 "actor_id": actor_id,
-                "safety_verdicts": [
-                    {"gate_id": gate_id, "verdict": verdict}
-                ] if gate_id else [],
+                "safety_verdicts": [{"gate_id": gate_id, "verdict": verdict}]
+                if gate_id
+                else [],
                 "provenance_version": "1.0.0",
             }
 
             serialized = json.dumps(partial, sort_keys=True)
             parent_hash = parent["chain_hash"] if parent else "genesis"
-            chain_hash = hashlib.sha256(
-                (parent_hash + serialized).encode()
-            ).hexdigest()
+            chain_hash = hashlib.sha256((parent_hash + serialized).encode()).hexdigest()
 
             dpr = {**partial, "chain_hash": chain_hash}
             full_serialized = json.dumps(dpr, sort_keys=True)
 
             secret = os.environ.get("JWT_SECRET")
             if not secret:
-                raise EnvironmentError(
+                raise OSError(
                     "JWT_SECRET environment variable is required for provenance signing. "
                     "Refusing to sign with a default — set JWT_SECRET to a secure random value."
                 )
@@ -207,11 +205,11 @@ class CognitiveAccountingSystem:
         except Exception:
             return None
 
-    def get_provenance_chain(self) -> List[Dict[str, Any]]:
+    def get_provenance_chain(self) -> list[dict[str, Any]]:
         """Return the full provenance chain for audit."""
         return list(self.provenance_chain)
 
-    def verify_provenance_chain(self) -> Dict[str, Any]:
+    def verify_provenance_chain(self) -> dict[str, Any]:
         """Verify integrity of the provenance chain."""
         if not self.provenance_chain:
             return {"valid": True, "total": 0, "broken_at": None}
@@ -222,11 +220,13 @@ class CognitiveAccountingSystem:
             without_sig = {k: v for k, v in dpr.items() if k not in ("signature",)}
             without_chain = {k: v for k, v in without_sig.items() if k != "chain_hash"}
             serialized = json.dumps(without_chain, sort_keys=True)
-            expected = hashlib.sha256(
-                (parent_hash + serialized).encode()
-            ).hexdigest()
+            expected = hashlib.sha256((parent_hash + serialized).encode()).hexdigest()
             if dpr["chain_hash"] != expected:
-                return {"valid": False, "total": len(self.provenance_chain), "broken_at": i}
+                return {
+                    "valid": False,
+                    "total": len(self.provenance_chain),
+                    "broken_at": i,
+                }
         return {"valid": True, "total": len(self.provenance_chain), "broken_at": None}
 
 

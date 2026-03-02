@@ -7,11 +7,12 @@ and resource availability. Implements intelligent zooming in/out of processing
 depth to optimize performance while maintaining quality.
 """
 
-import numpy as np
-from typing import Dict, Any, Optional, List, Tuple
+import logging
 from dataclasses import dataclass
 from enum import Enum
-import logging
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -96,7 +97,7 @@ class AdaptiveFidelityController:
             },
         }
 
-    def assess_complexity(self, input_data: Dict[str, Any]) -> float:
+    def assess_complexity(self, input_data: dict[str, Any]) -> float:
         """
         Assess the complexity of input data on a 0-1 scale.
 
@@ -140,7 +141,7 @@ class AdaptiveFidelityController:
         return min(complexity, 1.0)
 
     def assess_time_pressure(
-        self, context: ProcessingContext, historical_response_times: List[float] = None
+        self, context: ProcessingContext, historical_response_times: list[float] = None
     ) -> float:
         """
         Assess time pressure based on context and historical patterns.
@@ -206,7 +207,7 @@ class AdaptiveFidelityController:
 
     def get_processing_parameters(
         self, fidelity_level: FidelityLevel, modality: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Get processing parameters based on fidelity level and modality.
         """
@@ -278,11 +279,11 @@ class AdaptiveFidelityController:
 
     def adapt_processing_plan(
         self,
-        input_data: Dict[str, Any],
+        input_data: dict[str, Any],
         context: ProcessingContext,
-        user_preferences: Dict[str, Any] = None,
-        historical_performance: List[Dict] = None,
-    ) -> Dict[str, Any]:
+        user_preferences: dict[str, Any] = None,
+        historical_performance: list[dict] = None,
+    ) -> dict[str, Any]:
         """
         Create an adaptive processing plan based on all contextual factors.
         """
@@ -341,7 +342,7 @@ class AdaptiveFidelityController:
             },
         }
 
-    def _detect_primary_modality(self, input_data: Dict[str, Any]) -> str:
+    def _detect_primary_modality(self, input_data: dict[str, Any]) -> str:
         """Detect the primary modality of the input data."""
         if "image" in input_data or "image_path" in input_data:
             return "image"

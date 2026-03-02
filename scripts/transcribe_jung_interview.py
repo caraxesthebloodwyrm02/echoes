@@ -8,17 +8,17 @@ preflight system's validation architecture.
 
 import sys
 import tempfile
-from pathlib import Path
 from datetime import datetime
+from pathlib import Path
 
 # Add core modules to path
 sys.path.insert(0, str(Path(__file__).parent / "c_o_r_e"))
 
 from youtube_transcriber import (
-    _download_audio,
-    _transcribe,
     _build_youtube_report,
+    _download_audio,
     _slugify,
+    _transcribe,
 )
 
 # Configuration

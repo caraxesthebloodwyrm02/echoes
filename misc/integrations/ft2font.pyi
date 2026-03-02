@@ -1,7 +1,7 @@
-from enum import Enum, Flag
 import sys
-from typing import BinaryIO, Literal, TypedDict, final, overload, cast
-from typing_extensions import Buffer  # < Py 3.12
+from collections.abc import Buffer  # < Py 3.12
+from enum import Enum, Flag
+from typing import BinaryIO, Literal, TypedDict, cast, final, overload
 
 import numpy as np
 from numpy.typing import NDArray

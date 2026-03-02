@@ -12,14 +12,14 @@ Integrates with assistant_v2_core.py to automatically track
 user contributions and ensure fair compensation.
 """
 
-import os
-import json
-import time
 import hashlib
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
-from dataclasses import dataclass, field, asdict
+import json
+import os
+import time
+from dataclasses import asdict, dataclass, field
+from datetime import UTC, datetime, timezone
 from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -35,8 +35,8 @@ class WorkEntry:
     intellectual_effort: float  # 0-10 scale
     motivation_level: float  # 0-10 scale
     quality_rating: float  # 0-10 scale
-    assistant_interaction: Dict[str, Any] = field(default_factory=dict)
-    tags: List[str] = field(default_factory=list)
+    assistant_interaction: dict[str, Any] = field(default_factory=dict)
+    tags: list[str] = field(default_factory=list)
     status: str = "completed"
 
 
@@ -50,8 +50,8 @@ class UserWorkProfile:
     average_intellectual_effort: float = 0.0
     average_motivation_level: float = 0.0
     average_quality_rating: float = 0.0
-    skill_tags: List[str] = field(default_factory=list)
-    work_categories: Dict[str, int] = field(default_factory=dict)
+    skill_tags: list[str] = field(default_factory=list)
+    work_categories: dict[str, int] = field(default_factory=dict)
     last_updated: str = ""
 
 
@@ -83,7 +83,7 @@ class WorkTracker:
         intellectual_effort: float,
         motivation_level: float,
         quality_rating: float,
-        assistant_data: Optional[Dict[str, Any]] = None,
+        assistant_data: dict[str, Any] | None = None,
     ) -> str:
         """
         Log a work entry with all contribution details.
@@ -110,7 +110,7 @@ class WorkTracker:
         entry = WorkEntry(
             work_id=work_id,
             user_id=user_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             task_type=task_type,
             description=description,
             time_invested_minutes=time_invested_minutes,
@@ -133,7 +133,7 @@ class WorkTracker:
         print(f"✅ Work logged: {work_id} for user {user_id}")
         return work_id
 
-    def get_user_work_history(self, user_id: str, limit: int = 50) -> List[WorkEntry]:
+    def get_user_work_history(self, user_id: str, limit: int = 50) -> list[WorkEntry]:
         """Get work history for a user."""
         profile_file = self.data_dir / f"user_{user_id}_profile.json"
 
@@ -141,7 +141,7 @@ class WorkTracker:
             return []
 
         try:
-            with open(profile_file, "r") as f:
+            with open(profile_file) as f:
                 profile_data = json.load(f)
 
             work_entries = []
@@ -154,7 +154,7 @@ class WorkTracker:
             print(f"Error loading work history for user {user_id}: {e}")
             return []
 
-    def get_user_contribution_summary(self, user_id: str) -> Dict[str, Any]:
+    def get_user_contribution_summary(self, user_id: str) -> dict[str, Any]:
         """Get comprehensive contribution summary for a user."""
         profile_file = self.data_dir / f"user_{user_id}_profile.json"
 
@@ -162,7 +162,7 @@ class WorkTracker:
             return self._create_empty_summary(user_id)
 
         try:
-            with open(profile_file, "r") as f:
+            with open(profile_file) as f:
                 profile_data = json.load(f)
 
             # Calculate contribution metrics
@@ -223,7 +223,7 @@ class WorkTracker:
         # Load existing profile or create new one
         if profile_file.exists():
             try:
-                with open(profile_file, "r") as f:
+                with open(profile_file) as f:
                     profile_data = json.load(f)
             except:
                 profile_data = self._create_empty_profile(user_id)
@@ -266,7 +266,7 @@ class WorkTracker:
         with open(profile_file, "w") as f:
             json.dump(profile_data, f, indent=2)
 
-    def _generate_tags(self, task_type: str, description: str) -> List[str]:
+    def _generate_tags(self, task_type: str, description: str) -> list[str]:
         """Generate skill tags based on task type and description."""
         tags = []
 
@@ -305,7 +305,7 @@ class WorkTracker:
 
     def _calculate_compensation_eligibility(
         self, contribution_score: float, total_time: float
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate compensation eligibility based on contributions."""
         # Compensation tiers based on contribution score and time invested
         if contribution_score >= 8.5 and total_time >= 480:  # High performer, 8+ hours
@@ -343,7 +343,7 @@ class WorkTracker:
             ),
         }
 
-    def _create_empty_profile(self, user_id: str) -> Dict[str, Any]:
+    def _create_empty_profile(self, user_id: str) -> dict[str, Any]:
         """Create empty user profile structure."""
         return {
             "user_id": user_id,
@@ -358,7 +358,7 @@ class WorkTracker:
             "last_updated": "",
         }
 
-    def _create_empty_summary(self, user_id: str) -> Dict[str, Any]:
+    def _create_empty_summary(self, user_id: str) -> dict[str, Any]:
         """Create empty contribution summary."""
         return {
             "user_id": user_id,
@@ -411,7 +411,7 @@ def clamp(value: float, min_val: float, max_val: float) -> float:
 
 
 # Integration hook for assistant_v2_core.py
-def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) -> str:
+def log_assistant_interaction(user_id: str, interaction_data: dict[str, Any]) -> str:
     """
     Import existing work hours for users who have contributed before system implementation.
 
@@ -488,7 +488,7 @@ def log_assistant_interaction(user_id: str, interaction_data: Dict[str, Any]) ->
 
 
 def log_assistant_interaction(
-    user_id: str, interaction_type: str, details: Dict[str, Any]
+    user_id: str, interaction_type: str, details: dict[str, Any]
 ):
     """
     Hook function that assistant_v2_core.py can call to log work automatically.
@@ -544,7 +544,7 @@ def import_existing_work(
     work_description: str,
     technical_level: str = "advanced",
     impact_level: str = "high",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Import existing work hours for users who have contributed before system implementation.
 

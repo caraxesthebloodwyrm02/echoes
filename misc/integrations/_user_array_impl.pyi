@@ -1,11 +1,9 @@
 from types import EllipsisType
-from typing import Any, Generic, Self, SupportsIndex, TypeAlias, overload
-
-from _typeshed import Incomplete
-from typing_extensions import TypeVar, override
+from typing import Any, Generic, Self, SupportsIndex, overload, override
 
 import numpy as np
 import numpy.typing as npt
+from _typeshed import Incomplete
 from numpy._typing import (
     _AnyShape,
     _ArrayLike,
@@ -13,6 +11,7 @@ from numpy._typing import (
     _ArrayLikeInt_co,
     _DTypeLike,
 )
+from typing_extensions import TypeVar
 
 ###
 
@@ -39,12 +38,12 @@ _NumericContainerT = TypeVar(
     bound=container[Any, np.dtype[np.number | np.timedelta64 | np.object_]],
 )
 
-_ArrayInt_co: TypeAlias = npt.NDArray[np.integer | np.bool]
+type _ArrayInt_co = npt.NDArray[np.integer | np.bool]
 
-_ToIndexSlice: TypeAlias = slice | EllipsisType | _ArrayInt_co | None
-_ToIndexSlices: TypeAlias = _ToIndexSlice | tuple[_ToIndexSlice, ...]
-_ToIndex: TypeAlias = SupportsIndex | _ToIndexSlice
-_ToIndices: TypeAlias = _ToIndex | tuple[_ToIndex, ...]
+type _ToIndexSlice = slice | EllipsisType | _ArrayInt_co | None
+type _ToIndexSlices = _ToIndexSlice | tuple[_ToIndexSlice, ...]
+type _ToIndex = SupportsIndex | _ToIndexSlice
+type _ToIndices = _ToIndex | tuple[_ToIndex, ...]
 
 ###
 
@@ -136,7 +135,9 @@ class container(Generic[_ShapeT_co, _DTypeT_co]):
 
     # keep in sync with np.ndarray
     @overload
-    def __abs__(self: container[_ShapeT, np.dtype[np.complex64]], /) -> container[_ShapeT, np.dtype[np.float32]]: ...  # type: ignore[overload-overlap]
+    def __abs__(
+        self: container[_ShapeT, np.dtype[np.complex64]], /
+    ) -> container[_ShapeT, np.dtype[np.float32]]: ...  # type: ignore[overload-overlap]
     @overload
     def __abs__(
         self: container[_ShapeT, np.dtype[np.complex128]], /

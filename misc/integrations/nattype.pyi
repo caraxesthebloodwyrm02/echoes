@@ -1,12 +1,12 @@
 from datetime import (
     datetime,
     timedelta,
+)
+from datetime import (
     tzinfo as _tzinfo,
 )
-import typing
 
 import numpy as np
-
 from pandas._libs.tslibs.period import Period
 from pandas._typing import Self
 
@@ -14,7 +14,7 @@ NaT: NaTType
 iNaT: int
 nat_strings: set[str]
 
-_NaTComparisonTypes: typing.TypeAlias = (
+type _NaTComparisonTypes = (
     datetime | timedelta | Period | np.datetime64 | np.timedelta64
 )
 

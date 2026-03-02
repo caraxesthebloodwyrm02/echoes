@@ -3,12 +3,10 @@ Script to clean and organize the root directory by moving non-essential files
 to appropriate subdirectories while keeping key files at the root.
 """
 
-import os
-import shutil
-from pathlib import Path
-from typing import List, Set, Dict, Tuple, Optional
 import logging
+import shutil
 from datetime import datetime
+from pathlib import Path
 
 # Configure logging
 logging.basicConfig(
@@ -130,7 +128,7 @@ class RootOrganizer:
 
         return False
 
-    def get_target_directory(self, path: Path) -> Optional[Path]:
+    def get_target_directory(self, path: Path) -> Path | None:
         """Determine the target directory for a file."""
         if self.should_keep_at_root(path):
             return None

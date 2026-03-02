@@ -4,11 +4,10 @@ Simplified Truth Verification Glimpse
 Basic claim verification without RAG middleware for authentic AI responses.
 """
 
-import asyncio
 import logging
-from typing import Dict, List, Optional, Any, Tuple
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 # REMOVED: RAG middleware imports - using direct AI responses
 # from src.rag_orbit.embeddings import EmbeddingEngine
@@ -25,9 +24,9 @@ class VerificationResult:
     verdict: str  # TRUE, FALSE, UNCERTAIN
     confidence: float  # 0-1
     explanation: str
-    evidence_used: List[str]
-    contradictions: List[str]
-    supporting_evidence: List[str]
+    evidence_used: list[str]
+    contradictions: list[str]
+    supporting_evidence: list[str]
     processing_time: float
     timestamp: datetime
 
@@ -39,7 +38,7 @@ class EvidenceChunk:
     text: str
     relevance_score: float
     source: str
-    metadata: Dict[str, Any]
+    metadata: dict[str, Any]
 
 
 class SelfRAGVerifier:
@@ -63,8 +62,8 @@ class SelfRAGVerifier:
     async def verify_claim(
         self,
         claim: str,
-        evidence: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
+        evidence: list[str] | None = None,
+        context: dict[str, Any] | None = None,
     ) -> VerificationResult:
         """
         Verify the truth of a claim using SELF-RAG methodology.
@@ -124,9 +123,9 @@ class SelfRAGVerifier:
     async def _gather_evidence(
         self,
         claim: str,
-        provided_evidence: Optional[List[str]] = None,
-        context: Optional[Dict[str, Any]] = None,
-    ) -> List[EvidenceChunk]:
+        provided_evidence: list[str] | None = None,
+        context: dict[str, Any] | None = None,
+    ) -> list[EvidenceChunk]:
         """
         Gather relevant evidence for claim verification.
 
@@ -185,8 +184,8 @@ class SelfRAGVerifier:
         return evidence_chunks
 
     async def _analyze_claim_against_evidence(
-        self, claim: str, evidence: List[EvidenceChunk]
-    ) -> Dict[str, Any]:
+        self, claim: str, evidence: list[EvidenceChunk]
+    ) -> dict[str, Any]:
         """
         Analyze claim against gathered evidence to identify support and contradictions.
         """
@@ -240,8 +239,8 @@ class SelfRAGVerifier:
         }
 
     async def _generate_verdict(
-        self, claim: str, analysis: Dict[str, Any], evidence: List[EvidenceChunk]
-    ) -> Tuple[str, float, str]:
+        self, claim: str, analysis: dict[str, Any], evidence: list[EvidenceChunk]
+    ) -> tuple[str, float, str]:
         """
         Generate final verdict based on evidence analysis.
         """
@@ -291,9 +290,9 @@ verifier = None
 
 async def verify_truth(
     claim: str,
-    evidence: Optional[List[str]] = None,
-    context: Optional[Dict[str, Any]] = None,
-) -> Dict[str, Any]:
+    evidence: list[str] | None = None,
+    context: dict[str, Any] | None = None,
+) -> dict[str, Any]:
     """
     Main entry point for truth verification.
 

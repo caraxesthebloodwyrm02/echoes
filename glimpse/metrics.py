@@ -2,19 +2,15 @@
 Prometheus metrics for Glimpse performance monitoring.
 """
 
-from typing import Optional, Dict, Any
-import time
+import logging
+
 from prometheus_client import (
     Counter,
-    Histogram,
     Gauge,
-    Summary,
+    Histogram,
     generate_latest,
-    CONTENT_TYPE_LATEST,
 )
 from prometheus_client.core import REGISTRY
-from prometheus_client.exposition import default_handler
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -138,7 +134,6 @@ def record_openai_request(
     endpoint: str, model: str, duration: float, status_code: int = 200
 ) -> None:
     """Record metrics for an OpenAI API request."""
-    status = "success" if 200 <= status_code < 300 else "error"
     OPENAI_REQUESTS.labels(
         endpoint=endpoint, status_code=status_code, model=model
     ).inc()

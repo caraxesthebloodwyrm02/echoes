@@ -14,9 +14,9 @@ Environment:
     - Multiple workers for performance
 """
 
+import multiprocessing
 import os
 import sys
-import multiprocessing
 from pathlib import Path
 
 # Add the project root to Python path
@@ -56,8 +56,8 @@ def main():
 
     # Import and run the server
     try:
-        from echoes.api.server import app
         import uvicorn
+        from echoes.api.server import app
 
         uvicorn.run(
             "echoes.api.server:app",

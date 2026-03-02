@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
-import re
 
 # Read the file
-with open("assistant_v2_core.py", "r", encoding="utf-8") as f:
+with open("assistant_v2_core.py", encoding="utf-8") as f:
     content = f.read()
 
 # Remove all triple-quoted docstrings

@@ -1,7 +1,7 @@
-import tkinter as tk
-import math
 import json
+import math
 import os
+import tkinter as tk
 from datetime import datetime
 
 
@@ -297,7 +297,7 @@ API Reference:
 
     def load_reviews(self):
         try:
-            with open(SmartWindow.reviews_file, "r") as f:
+            with open(SmartWindow.reviews_file) as f:
                 self.reviews = json.load(f)
         except:
             self.reviews = []
@@ -510,7 +510,7 @@ API Reference:
             return {}
 
         try:
-            with open(cls.memory_file, "r") as f:
+            with open(cls.memory_file) as f:
                 layout = json.load(f)
             print(f"📁 Loaded window layout from {cls.memory_file}")
             return layout

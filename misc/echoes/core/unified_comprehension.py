@@ -13,22 +13,22 @@ Provides unified processing pipeline for text, image, audio, and sensor data
 with intelligent fidelity management and robust semantic grounding.
 """
 
-import numpy as np
-from typing import Dict, Any, List, Optional, Tuple, Union
+import logging
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
 from enum import Enum
-import logging
-import asyncio
-from concurrent.futures import ThreadPoolExecutor
+from typing import Any
+
+import numpy as np
 
 from .adaptive_fidelity import (
     AdaptiveFidelityController,
     FidelityLevel,
     ProcessingContext,
 )
-from .cross_channel_parser import CrossChannelParser, BalancedSineProcessor
-from .multi_sensor_fusion import SensorFusionEngine, SensorData, SensorType
-from .archer_framework import ArcherFramework, SemanticNode, GroundingForce
+from .archer_framework import ArcherFramework, GroundingForce, SemanticNode
+from .cross_channel_parser import CrossChannelParser
+from .multi_sensor_fusion import SensorData, SensorFusionEngine, SensorType
 
 logger = logging.getLogger(__name__)
 
@@ -50,7 +50,7 @@ class UnifiedInput:
 
     modality: InputModality
     data: Any
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
     context: ProcessingContext = ProcessingContext.CONVERSATION
     timestamp: float = None
 
@@ -71,9 +71,9 @@ class ComprehensionResult:
     semantic_embedding: np.ndarray
     confidence: float
     fidelity_level: FidelityLevel
-    processing_metadata: Dict[str, Any]
-    cross_modal_alignments: List[Dict[str, Any]] = None
-    sensor_fusions: List[Dict[str, Any]] = None
+    processing_metadata: dict[str, Any]
+    cross_modal_alignments: list[dict[str, Any]] = None
+    sensor_fusions: list[dict[str, Any]] = None
 
     def __post_init__(self):
         if self.cross_modal_alignments is None:
@@ -98,8 +98,8 @@ class UnifiedComprehensionSystem:
         self.archer_framework = ArcherFramework()
 
         # Processing state
-        self.active_inputs: Dict[str, UnifiedInput] = {}
-        self.processing_history: List[ComprehensionResult] = []
+        self.active_inputs: dict[str, UnifiedInput] = {}
+        self.processing_history: list[ComprehensionResult] = []
         self.executor = ThreadPoolExecutor(max_workers=4)
 
         # Initialize modality bridges
@@ -135,7 +135,7 @@ class UnifiedComprehensionSystem:
         )
 
     async def process_unified_input(
-        self, input_data: UnifiedInput, user_preferences: Dict[str, Any] = None
+        self, input_data: UnifiedInput, user_preferences: dict[str, Any] = None
     ) -> ComprehensionResult:
         """
         Process unified input through the complete comprehension pipeline.
@@ -186,9 +186,10 @@ class UnifiedComprehensionSystem:
                     input_data, processing_params
                 )
             elif input_data.modality == InputModality.MULTIMODAL:
-                processed_data, semantic_embedding = (
-                    await self._process_multimodal_input(input_data, processing_params)
-                )
+                (
+                    processed_data,
+                    semantic_embedding,
+                ) = await self._process_multimodal_input(input_data, processing_params)
             else:
                 raise ValueError(f"Unsupported modality: {input_data.modality}")
 
@@ -248,8 +249,8 @@ class UnifiedComprehensionSystem:
             )
 
     async def _process_text_input(
-        self, input_data: UnifiedInput, processing_params: Dict[str, Any]
-    ) -> Tuple[Any, np.ndarray]:
+        self, input_data: UnifiedInput, processing_params: dict[str, Any]
+    ) -> tuple[Any, np.ndarray]:
         """Process text input with adaptive fidelity."""
         text = str(input_data.data)
 
@@ -267,8 +268,8 @@ class UnifiedComprehensionSystem:
         return processed_text, semantic_embedding
 
     async def _process_image_input(
-        self, input_data: UnifiedInput, processing_params: Dict[str, Any]
-    ) -> Tuple[Any, np.ndarray]:
+        self, input_data: UnifiedInput, processing_params: dict[str, Any]
+    ) -> tuple[Any, np.ndarray]:
         """Process image input with adaptive fidelity."""
         # Simplified image processing (would use actual vision model)
         image_analysis = {
@@ -283,8 +284,8 @@ class UnifiedComprehensionSystem:
         return image_analysis, semantic_embedding
 
     async def _process_audio_input(
-        self, input_data: UnifiedInput, processing_params: Dict[str, Any]
-    ) -> Tuple[Any, np.ndarray]:
+        self, input_data: UnifiedInput, processing_params: dict[str, Any]
+    ) -> tuple[Any, np.ndarray]:
         """Process audio input with adaptive fidelity."""
         # Simplified audio processing
         audio_analysis = {
@@ -299,8 +300,8 @@ class UnifiedComprehensionSystem:
         return audio_analysis, semantic_embedding
 
     async def _process_sensor_input(
-        self, input_data: UnifiedInput, processing_params: Dict[str, Any]
-    ) -> Tuple[Any, np.ndarray]:
+        self, input_data: UnifiedInput, processing_params: dict[str, Any]
+    ) -> tuple[Any, np.ndarray]:
         """Process sensor input with multi-sensor fusion."""
         sensor_data = input_data.data
 
@@ -322,8 +323,8 @@ class UnifiedComprehensionSystem:
         return processed_data, semantic_embedding
 
     async def _process_multimodal_input(
-        self, input_data: UnifiedInput, processing_params: Dict[str, Any]
-    ) -> Tuple[Any, np.ndarray]:
+        self, input_data: UnifiedInput, processing_params: dict[str, Any]
+    ) -> tuple[Any, np.ndarray]:
         """Process multimodal input by fusing multiple modalities."""
         multimodal_data = input_data.data
 
@@ -362,7 +363,7 @@ class UnifiedComprehensionSystem:
         self,
         processed_data: Any,
         modality: InputModality,
-        processing_params: Dict[str, Any],
+        processing_params: dict[str, Any],
     ) -> Any:
         """Apply cross-channel processing with balanced sine waves."""
         # Add channel for this modality if not exists
@@ -386,7 +387,7 @@ class UnifiedComprehensionSystem:
 
     async def _apply_sensor_fusion(
         self, input_data: UnifiedInput, processed_data: Any, modality: InputModality
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Apply multi-sensor fusion where applicable."""
         fusion_results = []
 
@@ -419,7 +420,7 @@ class UnifiedComprehensionSystem:
 
     async def _apply_semantic_alignment(
         self, semantic_embedding: np.ndarray, modality: InputModality, concept_id: str
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Apply Archer framework semantic alignment."""
         alignment_results = []
 
@@ -503,7 +504,7 @@ class UnifiedComprehensionSystem:
         else:
             return original_data
 
-    def _summarize_text(self, text: str, params: Dict[str, Any]) -> str:
+    def _summarize_text(self, text: str, params: dict[str, Any]) -> str:
         """Summarize text based on fidelity parameters."""
         max_length = params.get("max_tokens", 100)
         words = text.split()
@@ -511,13 +512,13 @@ class UnifiedComprehensionSystem:
             return text
         return " ".join(words[:max_length]) + "..."
 
-    def _analyze_text(self, text: str, params: Dict[str, Any]) -> str:
+    def _analyze_text(self, text: str, params: dict[str, Any]) -> str:
         """Analyze text with moderate detail."""
         word_count = len(text.split())
         char_count = len(text)
         return f"Text Analysis: {word_count} words, {char_count} characters. Content: {text[:200]}..."
 
-    def _comprehend_text(self, text: str, params: Dict[str, Any]) -> str:
+    def _comprehend_text(self, text: str, params: dict[str, Any]) -> str:
         """Comprehensive text understanding."""
         return f"Comprehensive Analysis: {text}"
 
@@ -533,7 +534,7 @@ class UnifiedComprehensionSystem:
             else embedding
         )
 
-    def get_system_status(self) -> Dict[str, Any]:
+    def get_system_status(self) -> dict[str, Any]:
         """Get comprehensive system status."""
         return {
             "fidelity_controller": {

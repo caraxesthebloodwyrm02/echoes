@@ -5,13 +5,12 @@ Provides web search capabilities using various search APIs.
 Implements OpenAI function calling compatible tools.
 """
 
-import os
-import json
 import logging
-from typing import List, Dict, Any, Optional
-from urllib.parse import quote, urlencode
-import requests
+import os
 from datetime import datetime
+from typing import Any
+
+import requests
 
 from .base import BaseTool, ToolResult
 
@@ -52,7 +51,7 @@ class WebSearchTool(BaseTool):
     def description(self) -> str:
         return "Search the web for real-time information. Supports general web search, news, and academic queries."
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Generate OpenAI function calling schema."""
         return {
             "type": "function",
@@ -155,7 +154,7 @@ class WebSearchTool(BaseTool):
                 success=False, data=None, error=f"Web search failed: {str(e)}"
             )
 
-    def _search_duckduckgo(self, query: str, max_results: int) -> List[Dict[str, Any]]:
+    def _search_duckduckgo(self, query: str, max_results: int) -> list[dict[str, Any]]:
         """Search using DuckDuckGo Instant Answer API."""
         try:
             url = "https://api.duckduckgo.com/"
@@ -196,7 +195,7 @@ class WebSearchTool(BaseTool):
             logger.error(f"DuckDuckGo search error: {str(e)}")
             return []
 
-    def _search_brave(self, query: str, max_results: int) -> List[Dict[str, Any]]:
+    def _search_brave(self, query: str, max_results: int) -> list[dict[str, Any]]:
         """Search using Brave Search API."""
         try:
             url = "https://api.search.brave.com/res/v1/web/search"
@@ -231,7 +230,7 @@ class WebSearchTool(BaseTool):
 
     def _search_google_custom(
         self, query: str, max_results: int
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Search using Google Custom Search API."""
         try:
             url = "https://www.googleapis.com/customsearch/v1"
@@ -277,7 +276,7 @@ class WebPageContentTool(BaseTool):
             description="Fetch and extract the main content from a web page URL",
         )
 
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Generate OpenAI function calling schema."""
         return {
             "type": "function",
@@ -384,7 +383,7 @@ class WebPageContentTool(BaseTool):
             )
 
 
-def create_web_search_tools() -> List[BaseTool]:
+def create_web_search_tools() -> list[BaseTool]:
     """
     Create and return web search tools.
 

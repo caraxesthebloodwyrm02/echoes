@@ -1,7 +1,7 @@
 # DIRECT SPACE COMMUNICATION TEST
-import time
-import numpy as np
 from datetime import datetime
+
+import numpy as np
 
 print("Space Communication Channel Established")
 print(f"Timestamp: {datetime.now().isoformat()}")

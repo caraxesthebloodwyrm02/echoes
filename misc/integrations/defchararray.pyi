@@ -1,7 +1,5 @@
-from typing import Any, Self, SupportsIndex, SupportsInt, TypeAlias, overload
+from typing import Any, Self, SupportsIndex, SupportsInt, overload
 from typing import Literal as L
-
-from typing_extensions import TypeVar
 
 import numpy as np
 from numpy import (
@@ -22,6 +20,7 @@ from numpy._typing import _ArrayLikeBytes_co as S_co
 from numpy._typing import _ArrayLikeInt_co as i_co
 from numpy._typing import _ArrayLikeStr_co as U_co
 from numpy._typing import _ArrayLikeString_co as T_co
+from typing_extensions import TypeVar
 
 __all__ = [
     "equal",
@@ -85,11 +84,11 @@ _CharDTypeT_co = TypeVar(
     "_CharDTypeT_co", bound=dtype[np.character], default=dtype, covariant=True
 )
 
-_CharArray: TypeAlias = chararray[_AnyShape, dtype[_CharacterT]]
+type _CharArray[_CharacterT: np.character] = chararray[_AnyShape, dtype[_CharacterT]]
 
-_StringDTypeArray: TypeAlias = np.ndarray[_AnyShape, np.dtypes.StringDType]
-_StringDTypeOrUnicodeArray: TypeAlias = _StringDTypeArray | NDArray[np.str_]
-_StringDTypeSupportsArray: TypeAlias = _SupportsArray[np.dtypes.StringDType]
+type _StringDTypeArray = np.ndarray[_AnyShape, np.dtypes.StringDType]
+type _StringDTypeOrUnicodeArray = _StringDTypeArray | NDArray[np.str_]
+type _StringDTypeSupportsArray = _SupportsArray[np.dtypes.StringDType]
 
 class chararray(ndarray[_ShapeT_co, _CharDTypeT_co]):
     @overload

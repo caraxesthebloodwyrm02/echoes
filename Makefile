@@ -1,10 +1,15 @@
 install:
-\tcd backend && poetry install
-\tcd frontend && npm install
+	uv sync
 
 dev:
-\t# run backend and frontend concurrently (example)
-\tcd backend && poetry run uvicorn app:app --reload
+	uv run uvicorn api.main:app --reload
 
 test:
-\tcd backend && poetry run pytest
+	uv run pytest tests/ -v --tb=short
+
+lint:
+	ruff check api/ app/ glimpse/ tools/
+	ruff format --check api/ app/
+
+format:
+	ruff format api/ app/ glimpse/ tools/

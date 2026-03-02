@@ -5,13 +5,13 @@ Art Nouveau Aesthetic: Flowing lines, organic shapes, floral motifs, soft elegan
 A beautiful travel planning interface for NYE 2025 (Dec 31) → Jan 2, 2026 roundtrip
 """
 
-from datetime import datetime, timedelta
-from typing import List, Dict, Optional
 from dataclasses import dataclass
-import json
-from core.config import TravelStyle, DEFAULTS
-from core.display_utils import PALETTE, safe_symbol
-from core.exporter import export_text, export_json
+from datetime import datetime
+
+from core.config import DEFAULTS, TravelStyle
+
+from core.display_utils import PALETTE
+from core.exporter import export_json, export_text
 
 
 @dataclass
@@ -24,7 +24,7 @@ class Destination:
     vibe: str  # Art Nouveau aesthetic descriptor
     estimated_cost_usd: float
     flight_hours: int
-    highlights: List[str]
+    highlights: list[str]
 
 
 class NYEJourneyPlanner:
@@ -37,8 +37,8 @@ class NYEJourneyPlanner:
         self,
         departure_city: str = DEFAULTS["origin"],
         travel_style: TravelStyle = DEFAULTS["travel_style"],
-        departure_date: Optional[datetime] = None,
-        return_date: Optional[datetime] = None,
+        departure_date: datetime | None = None,
+        return_date: datetime | None = None,
         use_unicode: bool = True,
     ):
         self.departure_city = departure_city
@@ -57,7 +57,7 @@ class NYEJourneyPlanner:
         """Return symbol or fallback '*' if Unicode disabled for this instance."""
         return symbol if self.use_unicode else "*"
 
-    def _initialize_destinations(self) -> List[Destination]:
+    def _initialize_destinations(self) -> list[Destination]:
         """Initialize curated destinations with Art Nouveau descriptions"""
         destinations = [
             Destination(
@@ -108,8 +108,8 @@ class NYEJourneyPlanner:
         return self._filter_by_travel_style(destinations)
 
     def _filter_by_travel_style(
-        self, destinations: List[Destination]
-    ) -> List[Destination]:
+        self, destinations: list[Destination]
+    ) -> list[Destination]:
         """Filter destinations based on travel style"""
         if self.travel_style == TravelStyle.BUDGET:
             # Sort by cost, prioritize cheaper options
@@ -128,15 +128,15 @@ class NYEJourneyPlanner:
         """Render Art Nouveau-style header with floral motifs"""
         palette = PALETTE
         header = f"""
-{palette['accent']}
+{palette["accent"]}
     ╔═══════════════════════════════════════════════════════════════╗
     ║                                                               ║
-    ║     {self._sym('✿')} ChatKit.World - NYE 2025 Journey Planner {self._sym('✿')}            ║
+    ║     {self._sym("✿")} ChatKit.World - NYE 2025 Journey Planner {self._sym("✿")}            ║
     ║                                                               ║
     ║     Flowing Lines • Organic Elegance • Decorative Beauty     ║
     ║                                                               ║
     ╚═══════════════════════════════════════════════════════════════╝
-{palette['reset']}
+{palette["reset"]}
         """
         return header
 
@@ -144,16 +144,16 @@ class NYEJourneyPlanner:
         """Render trip details with elegant formatting"""
         palette = PALETTE
         details = f"""
-{palette['title']}
+{palette["title"]}
     ⟡ JOURNEY DETAILS ⟡
-{palette['reset']}
-    Departure:  {self.departure_date.strftime('%A, %B %d, %Y')} (NYE)
-    Return:     {self.return_date.strftime('%A, %B %d, %Y')}
+{palette["reset"]}
+    Departure:  {self.departure_date.strftime("%A, %B %d, %Y")} (NYE)
+    Return:     {self.return_date.strftime("%A, %B %d, %Y")}
     Duration:   {self.trip_duration} days of elegant escape
     
-{palette['text']}
-    "Travel is the only thing you buy that makes you richer" {self._sym('✿')}
-{palette['reset']}
+{palette["text"]}
+    "Travel is the only thing you buy that makes you richer" {self._sym("✿")}
+{palette["reset"]}
         """
         return details
 
@@ -161,18 +161,18 @@ class NYEJourneyPlanner:
         """Render individual destination with Art Nouveau styling"""
         palette = PALETTE
         card = f"""
-{palette['accent']}
+{palette["accent"]}
     ╭─ Option {index + 1}: {dest.name.upper()} {dest.vibe} ─╮
-{palette['reset']}
-{palette['title']}
+{palette["reset"]}
+{palette["title"]}
     Country:        {dest.country}
     Flight Time:    {dest.flight_hours} hours from {self.departure_city}
     Est. Cost:      ${dest.estimated_cost_usd:,.0f} USD
     
-    {self._sym('✿')} Aesthetic: {dest.description}
+    {self._sym("✿")} Aesthetic: {dest.description}
     
-    {self._sym('✿')} Highlights:
-{palette['reset']}
+    {self._sym("✿")} Highlights:
+{palette["reset"]}
         """
         for highlight in dest.highlights:
             card += f"        • {highlight}\n"
@@ -192,7 +192,7 @@ class NYEJourneyPlanner:
 
         return output
 
-    def calculate_daily_itinerary(self, destination: Destination) -> Dict:
+    def calculate_daily_itinerary(self, destination: Destination) -> dict:
         """Generate a 3-day NYE itinerary"""
         itinerary = {
             "destination": destination.name,

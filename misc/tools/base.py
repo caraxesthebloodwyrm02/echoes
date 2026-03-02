@@ -8,13 +8,13 @@ Provides:
 """
 
 from abc import ABC, abstractmethod
-from typing import Any, Dict, Optional
+from typing import Any
 
 
 class ToolError(Exception):
     """Exception raised for tool-related errors."""
 
-    def __init__(self, message: str, tool_name: Optional[str] = None):
+    def __init__(self, message: str, tool_name: str | None = None):
         super().__init__(message)
         self.tool_name = tool_name
 
@@ -26,7 +26,7 @@ class ToolResult:
         self,
         success: bool,
         data: Any = None,
-        error: Optional[str] = None,
+        error: str | None = None,
     ):
         self.success = success
         self.data = data
@@ -50,11 +50,11 @@ class BaseTool(ABC):
         ...
 
     @abstractmethod
-    def to_openai_schema(self) -> Dict[str, Any]:
+    def to_openai_schema(self) -> dict[str, Any]:
         """Convert tool to OpenAI function calling schema."""
         ...
 
-    def get_stats(self) -> Dict[str, Any]:
+    def get_stats(self) -> dict[str, Any]:
         """Get tool statistics."""
         return {
             "name": self.name,

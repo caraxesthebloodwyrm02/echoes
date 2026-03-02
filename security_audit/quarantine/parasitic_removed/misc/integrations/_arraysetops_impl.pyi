@@ -1,7 +1,5 @@
-from typing import Any, Generic, NamedTuple, SupportsIndex, TypeAlias, overload
+from typing import Any, Generic, NamedTuple, SupportsIndex, overload
 from typing import Literal as L
-
-from typing_extensions import TypeVar, deprecated
 
 import numpy as np
 from numpy._typing import (
@@ -11,6 +9,7 @@ from numpy._typing import (
     _ArrayLikeBool_co,
     _ArrayLikeNumber_co,
 )
+from typing_extensions import TypeVar, deprecated
 
 __all__ = [
     "ediff1d",
@@ -47,8 +46,8 @@ _EitherSCT = TypeVar(
     np.integer, np.floating, np.complexfloating, np.character,
 )  # fmt: skip
 
-_AnyArray: TypeAlias = NDArray[Any]
-_IntArray: TypeAlias = NDArray[np.intp]
+type _AnyArray = NDArray[Any]
+type _IntArray = NDArray[np.intp]
 
 ###
 
@@ -416,20 +415,30 @@ def intersect1d(
 ) -> tuple[_AnyArray, _IntArray, _IntArray]: ...
 @overload
 def setxor1d(
-    ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False
+    ar1: _ArrayLike[_EitherSCT],
+    ar2: _ArrayLike[_EitherSCT],
+    assume_unique: bool = False,
 ) -> NDArray[_EitherSCT]: ...
 @overload
-def setxor1d(ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False) -> _AnyArray: ...
+def setxor1d(
+    ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False
+) -> _AnyArray: ...
 @overload
-def union1d(ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT]) -> NDArray[_EitherSCT]: ...
+def union1d(
+    ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT]
+) -> NDArray[_EitherSCT]: ...
 @overload
 def union1d(ar1: ArrayLike, ar2: ArrayLike) -> _AnyArray: ...
 @overload
 def setdiff1d(
-    ar1: _ArrayLike[_EitherSCT], ar2: _ArrayLike[_EitherSCT], assume_unique: bool = False
+    ar1: _ArrayLike[_EitherSCT],
+    ar2: _ArrayLike[_EitherSCT],
+    assume_unique: bool = False,
 ) -> NDArray[_EitherSCT]: ...
 @overload
-def setdiff1d(ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False) -> _AnyArray: ...
+def setdiff1d(
+    ar1: ArrayLike, ar2: ArrayLike, assume_unique: bool = False
+) -> _AnyArray: ...
 def isin(
     element: ArrayLike,
     test_elements: ArrayLike,

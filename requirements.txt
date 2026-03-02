@@ -3,8 +3,8 @@
 # Python 3.12+ compatible with security fixes applied
 
 # Core AI & API Layers
-openai==2.6.1
-fastapi==0.120.4
+openai>=1.40.0,<2.0.0
+fastapi==0.120.2
 uvicorn==0.38.0
 httpx==0.28.1
 requests==2.32.5
@@ -17,7 +17,7 @@ Pygments==2.19.2
 # LangChain Ecosystem - Unified versions
 langchain==0.3.21
 langchain-core>=0.3.45,<1.0.0
-langchain-community==0.4.1
+langchain-community==0.3.21
 langchain-openai==0.2.0
 langchain-text-splitters==0.3.11
 

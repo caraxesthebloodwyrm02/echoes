@@ -1,7 +1,7 @@
 """Package initialization for OpenAI prototype."""
 
-from .openai_utils import OpenAIAuditOrchestrator, AuditPolicy
 from .config import config
+from .openai_utils import AuditPolicy, OpenAIAuditOrchestrator
 
 __all__ = ["OpenAIAuditOrchestrator", "AuditPolicy", "config"]
 

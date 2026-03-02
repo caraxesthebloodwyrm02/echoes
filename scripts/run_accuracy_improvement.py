@@ -17,11 +17,11 @@ def main():
 
     result = execute_unified_accuracy_improvement()
 
-    print(f'Baseline Accuracy: {result["strategy_overview"]["baseline_accuracy"]:.1%}')
+    print(f"Baseline Accuracy: {result['strategy_overview']['baseline_accuracy']:.1%}")
     print(
-        f'Final Target Accuracy: {result["strategy_overview"]["expected_final_accuracy"]:.1%}'
+        f"Final Target Accuracy: {result['strategy_overview']['expected_final_accuracy']:.1%}"
     )
-    print(f'Total Improvement: +{result["strategy_overview"]["total_improvement"]:.1%}')
+    print(f"Total Improvement: +{result['strategy_overview']['total_improvement']:.1%}")
     print()
 
     print("KEY ACHIEVEMENTS:")
@@ -52,10 +52,10 @@ def main():
 
     print("SUCCESS METRICS:")
     metrics = result["success_metrics"]
-    print(f'- Accuracy Target: {metrics["accuracy_target"]:.0%}')
-    print(f'- Noise Reduction: {metrics["noise_reduction_target"]:.0%}')
-    print(f'- Timeline: {metrics["implementation_timeline"]}')
-    print(f'- Validation: {metrics["validation_method"]}')
+    print(f"- Accuracy Target: {metrics['accuracy_target']:.0%}")
+    print(f"- Noise Reduction: {metrics['noise_reduction_target']:.0%}")
+    print(f"- Timeline: {metrics['implementation_timeline']}")
+    print(f"- Validation: {metrics['validation_method']}")
     print()
 
     print("🎉 RESULT: Projected accuracy improvement from 57.37% to 85% (+27.63%)")

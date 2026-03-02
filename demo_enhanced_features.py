@@ -9,6 +9,7 @@ Demo script showcasing the enhanced Echoes Assistant with:
 
 import os
 import sys
+
 from dotenv import load_dotenv
 
 # Load environment variables
@@ -19,13 +20,9 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from assistant_v2_core import EchoesAssistantV2
-    from core_modules.personality_engine import (
-        personality_engine,
-        Mood,
-        PersonalityTrait,
-    )
-    from core_modules.dynamic_error_handler import error_handler
     from core_modules.cross_reference_system import cross_reference_system
+    from core_modules.dynamic_error_handler import error_handler
+    from core_modules.personality_engine import personality_engine
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running this from the Echoes project root")
@@ -100,7 +97,7 @@ def demo_error_handling():
 
     # Show error statistics
     stats = error_handler.get_fix_statistics()
-    print(f"\n📈 Error Handler Statistics:")
+    print("\n📈 Error Handler Statistics:")
     print(f"  Total Errors: {stats['total_errors']}")
     print(f"  Auto-fix Success Rate: {stats['auto_fix_success_rate']:.1%}")
 
@@ -132,7 +129,7 @@ def demo_cross_references():
         # Generate cross-references
         cross_refs = cross_reference_system.generate_cross_references(context)
         if cross_refs:
-            print(f"    🔗 Cross-references:")
+            print("    🔗 Cross-references:")
             for ref in cross_refs[:2]:
                 print(f"      • {ref['explanation']}")
 
@@ -187,7 +184,7 @@ def demo_friendly_correspondence():
 
     # Initialize assistant with all features
     try:
-        assistant = EchoesAssistantV2(
+        _assistant = EchoesAssistantV2(
             enable_rag=False,  # Disable for demo simplicity
             enable_tools=False,
             enable_streaming=False,

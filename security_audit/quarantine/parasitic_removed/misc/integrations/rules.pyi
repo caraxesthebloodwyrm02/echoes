@@ -11,7 +11,7 @@ from .auxfuncs import _Bool, _Var
 
 _VT = TypeVar("_VT", default=str)
 
-_Predicate: TypeAlias = Callable[[_Var], _Bool]
+type _Predicate = Callable[[_Var], _Bool]
 _RuleDict: TypeAlias = dict[str, _VT]
 _DefDict: TypeAlias = dict[_Predicate, _VT]
 
@@ -36,7 +36,9 @@ check_rules: Final[list[_RuleDict[str | Any]]] = ...
 
 stnd: Final[dict[L[1, 2, 3, 4, 5, 6, 7, 8, 9, 0], L["st", "nd", "rd", "th"]]] = ...
 
-def buildmodule(m: Mapping[str, str | Any], um: Iterable[Mapping[str, str | Any]]) -> _RuleDict: ...
+def buildmodule(
+    m: Mapping[str, str | Any], um: Iterable[Mapping[str, str | Any]]
+) -> _RuleDict: ...
 def buildapi(rout: Mapping[str, str]) -> tuple[_RuleDict, str]: ...
 
 # namespace pollution

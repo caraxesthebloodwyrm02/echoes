@@ -10,9 +10,7 @@ Demonstrates the complete ROI analysis generation capability including:
 - Action executor integration
 """
 
-import json
 from pathlib import Path
-from datetime import datetime
 
 from assistant_v2_core import EchoesAssistantV2
 
@@ -90,7 +88,8 @@ def demo_roi_analysis():
         print("\n3. Testing knowledge base integration...")
         # Test knowledge search
         roi_analyses = assistant.search_roi_analyses(
-            institution="Demo Bank Corp", limit=5  # Use exact name from stored content
+            institution="Demo Bank Corp",
+            limit=5,  # Use exact name from stored content
         )
         print(f"✓ Found {len(roi_analyses)} ROI analyses in knowledge base")
 

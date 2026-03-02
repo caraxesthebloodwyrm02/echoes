@@ -1,11 +1,16 @@
+from collections.abc import Iterable
+from typing import Any, Literal
+
 from .artist import Artist
 from .backend_bases import RendererBase
 from .font_manager import FontProperties
 from .offsetbox import DraggableAnnotation
-from .path import Path
 from .patches import FancyArrowPatch, FancyBboxPatch
+from .path import Path
 from .textpath import (  # , reexported API
     TextPath as TextPath,
+)
+from .textpath import (
     TextToPath as TextToPath,
 )
 from .transforms import (
@@ -13,9 +18,6 @@ from .transforms import (
     BboxBase,
     Transform,
 )
-
-from collections.abc import Iterable
-from typing import Any, Literal
 from .typing import ColorType, CoordsType
 
 class Text(Artist):

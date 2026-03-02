@@ -6,10 +6,9 @@ This script tests all 6 identified API call locations to establish performance
 and behavioral baselines before migrating to Responses API.
 """
 
-import time
 import json
-from typing import Dict, List, Any
-from pathlib import Path
+import time
+from typing import Any
 
 from assistant_v2_core import EchoesAssistantV2
 
@@ -36,7 +35,7 @@ class MigrationBaselineTester:
             enable_value_system=True,  # Test value guard
         )
 
-    def run_all_tests(self) -> Dict[str, Any]:
+    def run_all_tests(self) -> dict[str, Any]:
         """Run comprehensive test suite."""
         print("\n" + "=" * 60)
         print("🧪 MIGRATION BASELINE TEST SUITE")
@@ -72,7 +71,7 @@ class MigrationBaselineTester:
 
     def time_api_call(
         self, operation_name: str, func, *args, **kwargs
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Time an API call and record metrics."""
         print(f"\n⏱️  Testing: {operation_name}")
 
@@ -226,7 +225,7 @@ class MigrationBaselineTester:
         print(f"Total Tests: {total_tests}")
         print(f"Successful: {successful_tests}")
         print(f"Failed: {total_tests - successful_tests}")
-        print(f"Average Response Time: {total_time/total_tests:.2f}s")
+        print(f"Average Response Time: {total_time / total_tests:.2f}s")
         print(f"Total Test Time: {total_time:.2f}s")
         # Performance breakdown
         print("\n⏱️  Performance Breakdown:")
@@ -247,7 +246,7 @@ class MigrationBaselineTester:
             for error in self.results["errors"][:3]:  # Show first 3
                 print(f"  • {error[:100]}...")
 
-        print(f"\n📄 Full results saved to: migration_baseline_results.json")
+        print("\n📄 Full results saved to: migration_baseline_results.json")
 
         # Save results
         with open("migration_baseline_results.json", "w") as f:

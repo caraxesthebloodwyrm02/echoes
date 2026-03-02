@@ -4,16 +4,16 @@ DIRECT EXECUTION PROTOCOL - Bypass EchoesAssistantV2 Glimpse System
 This script runs directly without going through the assistant's preflight alignment
 """
 
-import sys
 import os
 import subprocess
+import sys
 
 
 def direct_execute_python(script_path, args=None):
     """Execute Python script directly, bypassing EchoesAssistantV2"""
-    print(f"🚀 DIRECT EXECUTION PROTOCOL ACTIVATED")
+    print("🚀 DIRECT EXECUTION PROTOCOL ACTIVATED")
     print(f"📁 Script: {script_path}")
-    print(f"🔧 Bypassing EchoesAssistantV2 Glimpse System...")
+    print("🔧 Bypassing EchoesAssistantV2 Glimpse System...")
 
     try:
         # Build command
@@ -32,10 +32,9 @@ def direct_execute_python(script_path, args=None):
             capture_output=False,
             text=True,
             bufsize=1,
-            universal_newlines=True,
         )
 
-        print(f"\n✅ Direct execution completed")
+        print("\n✅ Direct execution completed")
         print(f"   Exit code: {result.returncode}")
 
         return result.returncode == 0

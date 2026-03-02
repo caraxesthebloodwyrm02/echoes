@@ -40,6 +40,7 @@ dependencies = [
     # Security & Rate Limiting
     "slowapi==0.1.9",
     "pygments==2.19.2",
+    "PyJWT>=2.8.0",
 
     # LangChain Ecosystem
     "langchain==0.3.23",
@@ -69,6 +70,7 @@ dev = [
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
+    "jsonschema>=4.0.0",
 ]
 docs = [
     "mkdocs>=1.4.0",
@@ -155,10 +157,11 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
     "Glimpse: marks tests as Glimpse tests",
+    "requires_openai: mark test as requiring OPENAI_API_KEY (skipped when missing)",
 ]
 
 [tool.coverage.run]
-source = ["echoes", "app", "api"]
+source = ["app", "api", "glimpse", "tools", "core", "src"]
 omit = [
     "*/tests/*",
     "*/test_*.py",

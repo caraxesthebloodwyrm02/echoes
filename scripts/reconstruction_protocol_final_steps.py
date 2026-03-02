@@ -9,15 +9,14 @@ feedback loop, and comprehensive reporting.
 import json
 import os
 import sys
-from datetime import datetime, timezone
-from pathlib import Path
+from datetime import UTC, datetime
 
 
 def complete_final_steps():
     """Complete Steps 7-10 of the reconstruction protocol."""
 
     final_report = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "final_steps": [
             "Step 7: Audit Trail",
@@ -100,7 +99,7 @@ def create_audit_trail():
 
     audit_trail = {
         "protocol_version": "Echoes Reconstruction Protocol v1.0",
-        "execution_date": datetime.now(timezone.utc).isoformat(),
+        "execution_date": datetime.now(UTC).isoformat(),
         "executed_steps": [],
         "source_documents": audit_files,
         "key_decisions": [
@@ -117,7 +116,7 @@ def create_audit_trail():
     for audit_file in audit_files:
         if os.path.exists(audit_file):
             try:
-                with open(audit_file, "r") as f:
+                with open(audit_file) as f:
                     data = json.load(f)
                 audit_trail["executed_steps"].append(
                     {
@@ -161,14 +160,14 @@ def perform_final_integrity_check():
         if os.path.exists(full_path):
             # Quick syntax check
             try:
-                with open(full_path, "r", encoding="utf-8") as f:
+                with open(full_path, encoding="utf-8") as f:
                     content = f.read()
                 compile(content, full_path, "exec")
                 integrity_results["final_checksum_verification"][component] = "VALID"
             except Exception as e:
-                integrity_results["final_checksum_verification"][
-                    component
-                ] = f"INVALID: {str(e)}"
+                integrity_results["final_checksum_verification"][component] = (
+                    f"INVALID: {str(e)}"
+                )
         else:
             integrity_results["final_checksum_verification"][component] = "MISSING"
             integrity_results["no_data_loss_confirmed"] = False
@@ -207,7 +206,7 @@ def implement_feedback_loop():
     for step_file in step_files:
         if os.path.exists(step_file):
             try:
-                with open(step_file, "r") as f:
+                with open(step_file) as f:
                     data = json.load(f)
                 anomalies = data.get("anomalies", [])
                 total_anomalies += len(anomalies)
@@ -252,7 +251,7 @@ def generate_comprehensive_report(final_report):
         "protocol_title": "Echoes Reconstruction Protocol - Complete Execution Report",
         "execution_summary": {
             "start_date": "2025-10-31",
-            "completion_date": datetime.now(timezone.utc).strftime("%Y-%m-%d"),
+            "completion_date": datetime.now(UTC).strftime("%Y-%m-%d"),
             "total_steps": 10,
             "steps_completed": 10,
             "overall_success": True,

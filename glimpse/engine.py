@@ -3,9 +3,9 @@ from __future__ import annotations
 import asyncio
 import os
 import time
+from collections.abc import Awaitable, Callable
 from dataclasses import dataclass, field
-from typing import Callable, Optional, Literal, Awaitable, List, Any
-from enum import Enum
+from typing import Literal
 
 # Import optional performance and clarifier modules
 try:
@@ -47,15 +47,15 @@ class GlimpseResult:
 
     sample: str
     essence: str
-    delta: Optional[str] = None
+    delta: str | None = None
     status: Literal["aligned", "not_aligned", "redial", "stale", "error"] = "aligned"
     attempt: int = 1
-    status_history: List[str] = field(default_factory=list)
+    status_history: list[str] = field(default_factory=list)
     stale: bool = False
 
 
 # Sampler type alias
-Sampler = Callable[[Draft], Awaitable[tuple[str, str, Optional[str], bool]]]
+Sampler = Callable[[Draft], Awaitable[tuple[str, str, str | None, bool]]]
 
 # Default sampler: use OpenAI if available and enabled; otherwise fall back to local default
 USE_OPENAI_DEFAULT = os.getenv("GLIMPSE_USE_OPENAI", "true").lower() in {
@@ -69,86 +69,55 @@ PREEXEC_CLARIFIER_ENABLED = os.getenv("GLIMPSE_PREEXEC_CLARIFIER", "false").lowe
     "1",
     "yes",
 }
+
+
+async def local_default_sampler(draft: Draft) -> tuple[str, str, str | None, bool]:
+    """Built-in dependency-free sampler — no external API required.
+
+    Always available regardless of GLIMPSE_USE_OPENAI. Use this directly in
+    tests or anywhere an offline sampler is needed.
+
+    Returns (sample, essence, delta, aligned)
+    """
+    # Simulate lightweight processing latency (~120–250 ms)
+    await asyncio.sleep(0.15)
+    text = (draft.input_text or "").strip().replace("\n", " ")
+    sample = (text[:90] + ("…" if len(text) > 90 else "")) or "(no content)"
+    intent_text = (draft.goal or "").strip()
+    constraints_text = (draft.constraints or "").strip() or "none"
+    essence = f"Intent: {intent_text or '(unspecified)'}; constraints: {constraints_text}; tone: neutral."
+    delta: str | None = None
+
+    # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
+    lower = (
+        (draft.input_text or "")
+        + " "
+        + (draft.goal or "")
+        + " "
+        + (draft.constraints or "")
+    ).lower()
+    if "refactor" in lower and (
+        "no change" in lower or "don't change" in lower or "don\u2019t change" in lower
+    ):
+        delta = "Potential conflict: mentions refactor while requesting no change."
+
+    # Clarifier path (legacy): only if explicitly enabled via env flag
+    if PREEXEC_CLARIFIER_ENABLED and not intent_text:
+        delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
+
+    aligned = delta is None
+    return sample, essence, delta, aligned
+
+
+# Wire up the module-level default: prefer OpenAI when enabled and importable,
+# fall back to the built-in sampler transparently.
 if USE_OPENAI_DEFAULT:
     try:
         from .sampler_openai import openai_sampler as default_sampler
     except Exception:
-        # If OpenAI sampler fails to import, fall back to the built-in default
-        async def default_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
-            """A simple, dependency-free sampler.
-
-            Returns (sample, essence, delta, aligned)
-            """
-            # Simulate lightweight processing latency (~120–250 ms)
-            await asyncio.sleep(0.15)
-            text = draft.input_text.strip().replace("\n", " ")
-            sample = (text[:90] + ("…" if len(text) > 90 else "")) or "(no content)"
-            intent_text = draft.goal.strip()
-            constraints_text = draft.constraints.strip() or "none"
-            essence = f"Intent: {intent_text or '(unspecified)'}; constraints: {constraints_text}; tone: neutral."
-            delta: Optional[str] = None
-
-            # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
-            lower = (
-                draft.input_text + " " + draft.goal + " " + draft.constraints
-            ).lower()
-            if "refactor" in lower and (
-                "no change" in lower
-                or "don’t change" in lower
-                or "don't change" in lower
-            ):
-                delta = (
-                    "Potential conflict: mentions refactor while requesting no change."
-                )
-
-            # Clarifier path (legacy): only if explicitly enabled via env flag
-            if PREEXEC_CLARIFIER_ENABLED and not intent_text:
-                delta = (
-                    delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
-                )
-
-            aligned = delta is None
-            return sample, essence, delta, aligned
-
+        default_sampler = local_default_sampler  # type: ignore[assignment]
 else:
-
-    async def default_sampler(draft: Draft) -> tuple[str, str, Optional[str], bool]:
-        """A simple, dependency-free sampler.
-
-        Returns (sample, essence, delta, aligned)
-        """
-        # Simulate lightweight processing latency (~120–250 ms)
-        await asyncio.sleep(0.15)
-        text = draft.input_text.strip().replace("\n", " ")
-        sample = (text[:90] + ("…" if len(text) > 90 else "")) or "(no content)"
-        intent_text = draft.goal.strip()
-        constraints_text = draft.constraints.strip() or "none"
-        essence = f"Intent: {intent_text or '(unspecified)'}; constraints: {constraints_text}; tone: neutral."
-        delta: Optional[str] = None
-
-        # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
-        lower = (draft.input_text + " " + draft.goal + " " + draft.constraints).lower()
-        if "refactor" in lower and (
-            "no change" in lower or "don’t change" in lower or "don't change" in lower
-        ):
-            delta = "Potential conflict: mentions refactor while requesting no change."
-
-        # Clarifier path (legacy): only if explicitly enabled via env flag
-        if PREEXEC_CLARIFIER_ENABLED and not intent_text:
-            delta = delta or "Clarifier: Is the audience external (customers)? (Yes/No)"
-
-        aligned = delta is None
-        return sample, essence, delta, aligned
-
-
-# Status strings per UX contract
-STATUS_TRYING_1 = "Glimpse 1…"
-STATUS_TRYING_2 = "Glimpse 2…"
-STATUS_ALIGNED = "Aligned. Ready to commit."
-STATUS_NOT_ALIGNED = "Not aligned yet. One adjustment suggested."
-STATUS_REDIAL = "Clean reset. Same channel. Let’s try again."
-STATUS_STALE = "Stale result (won’t count). Re‑glimpse?"
-STATUS_DEGRADED = "Still trying… network appears slow."
+    default_sampler = local_default_sampler  # type: ignore[assignment]
 
 
 class LatencyMonitor:
@@ -165,7 +134,7 @@ class LatencyMonitor:
         self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000
     ) -> None:
         self.t1, self.t2, self.t3, self.t4 = t1, t2, t3, t4
-        self._start_ms: Optional[int] = None
+        self._start_ms: int | None = None
 
     def start(self) -> None:
         self._start_ms = self._now_ms()
@@ -175,10 +144,10 @@ class LatencyMonitor:
             return 0
         return self._now_ms() - self._start_ms
 
-    def statuses_for_elapsed(self, attempt: int) -> List[str]:
+    def statuses_for_elapsed(self, attempt: int) -> list[str]:
         """Return the list of statuses appropriate for the current elapsed time."""
         e = self.elapsed_ms()
-        out: List[str] = []
+        out: list[str] = []
         if e >= self.t1:
             out.append(STATUS_TRYING_2 if attempt == 2 else STATUS_TRYING_1)
         if e >= self.t2:
@@ -204,13 +173,14 @@ class PrivacyGuard:
     """Ensures ephemeral behavior: no logging or side effects until commit."""
 
     def __init__(
-        self, on_commit: Optional[Callable[[GlimpseResult], None]] = None
+        self, on_commit: Callable[[GlimpseResult], None] | None = None
     ) -> None:
-        # Use no-op if caller does not supply a callable
-        self._on_commit = on_commit if callable(on_commit) else lambda _draft: None
+        self.committed = False
+        self._on_commit = on_commit if callable(on_commit) else lambda _: None
 
     def commit(self, result: GlimpseResult) -> None:
         """Execute commit callback (if any) when a result is finalized."""
+        self.committed = True
         self._on_commit(result)
 
 
@@ -220,8 +190,8 @@ class GlimpseEngine:
     def __init__(
         self,
         sampler: Sampler = None,
-        latency_monitor: Optional[LatencyMonitor] = None,
-        privacy_guard: Optional[PrivacyGuard] = None,
+        latency_monitor: LatencyMonitor | None = None,
+        privacy_guard: PrivacyGuard | None = None,
         debounce_ms: int = 300,
         essence_only: bool = False,
         enable_performance: bool = True,
@@ -282,7 +252,7 @@ class GlimpseEngine:
         self._cancel_requested = False
 
         self._latency.start()
-        status_history: List[str] = []
+        status_history: list[str] = []
 
         # Kick off sampler concurrently
         sampler_task = asyncio.create_task(self._sampler(draft))
@@ -363,7 +333,7 @@ async def _demo() -> None:
         constraints="Don’t change the schema; no test updates in this commit.",
     )
 
-    r1 = await Glimpse.glimpse(draft)
+    r1 = await engine.glimpse(draft)
     print("Attempt:", r1.attempt)
     print("Status:", r1.status)
     print("History:", r1.status_history)
@@ -374,13 +344,13 @@ async def _demo() -> None:
     if r1.status != "aligned":
         # Adjust once (example)
         draft.goal += " (function only)"
-        r2 = await Glimpse.glimpse(draft)
+        r2 = await engine.glimpse(draft)
         print("Attempt:", r2.attempt)
         print("Status:", r2.status)
         print("History:", r2.status_history)
 
     # Commit (for demo)
-    Glimpse.commit(draft)
+    engine.commit(draft)
 
 
 if __name__ == "__main__":

@@ -6,14 +6,14 @@ Run specific queries through the enhanced RAG system and document the results.
 This tests the optimized RAG system with symbolic and philosophical queries.
 """
 
-import logging
-from pathlib import Path
-from typing import List, Dict, Any
 import json
+import logging
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
-from openai_rag.enhanced_rag_openai import create_enhanced_rag_system
 from integrations import record_ai_evaluation, record_research_progress
+from openai_rag.enhanced_rag_openai import create_enhanced_rag_system
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -136,7 +136,7 @@ def setup_knowledge_base(rag_system) -> None:
             knowledge.strip(),
             metadata={
                 "source": "symbolic_knowledge_base",
-                "chunk_id": f"knowledge_{i+1}",
+                "chunk_id": f"knowledge_{i + 1}",
                 "topic": (
                     "symbolism_numerology"
                     if i < len(numerology_knowledge)
@@ -148,7 +148,7 @@ def setup_knowledge_base(rag_system) -> None:
     logger.info("Knowledge base setup complete")
 
 
-def run_queries(rag_system, queries: List[str]) -> List[Dict[str, Any]]:
+def run_queries(rag_system, queries: list[str]) -> list[dict[str, Any]]:
     """Run queries through the RAG system and collect results."""
 
     results = []
@@ -258,7 +258,7 @@ def run_queries(rag_system, queries: List[str]) -> List[Dict[str, Any]]:
     return results
 
 
-def create_documentation(results: List[Dict[str, Any]]) -> str:
+def create_documentation(results: list[dict[str, Any]]) -> str:
     """Create a formatted document with Q&A pairs."""
 
     doc_content = f"""# RAG System Query Testing Results
@@ -280,16 +280,16 @@ This document contains the results of testing the enhanced RAG (Retrieval-Augmen
 """
 
     for result in results:
-        doc_content += f"""### Query {result['query_number']}
+        doc_content += f"""### Query {result["query_number"]}
 
-**Question:** {result['query']}
-**Answer:** {result['answer']}
+**Question:** {result["query"]}
+**Answer:** {result["answer"]}
 
 **Performance Metrics:**
-- Response Time: {result.get('response_time_ms', 0):.2f}ms
-- Results Found: {result.get('results_count', 0)}
-- Cached: {"Yes" if result.get('cached', False) else "No"}
-- Confidence Score: {result.get('confidence_score', 0):.2f}
+- Response Time: {result.get("response_time_ms", 0):.2f}ms
+- Results Found: {result.get("results_count", 0)}
+- Cached: {"Yes" if result.get("cached", False) else "No"}
+- Confidence Score: {result.get("confidence_score", 0):.2f}
 
 ---
 """
@@ -309,7 +309,7 @@ This document contains the results of testing the enhanced RAG (Retrieval-Augmen
 - **Successful Queries:** {successful_queries}
 - **Average Response Time:** {avg_response_time:.2f}ms
 - **Cached Queries:** {cached_queries}
-- **Cache Hit Rate:** {(cached_queries/total_queries)*100:.1f}%
+- **Cache Hit Rate:** {(cached_queries / total_queries) * 100:.1f}%
 
 ## System Performance
 
@@ -330,7 +330,7 @@ The enhanced RAG system demonstrated:
     return doc_content
 
 
-def save_results(results: List[Dict[str, Any]], doc_content: str) -> None:
+def save_results(results: list[dict[str, Any]], doc_content: str) -> None:
     """Save results to files."""
 
     # Save detailed JSON results

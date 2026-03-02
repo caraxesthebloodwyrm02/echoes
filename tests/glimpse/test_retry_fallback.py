@@ -254,7 +254,7 @@ class TestSafeExecution:
 
         # Cause a failure
         bad_draft = Draft("", "", "")
-        r1 = await engine.glimpse(bad_draft)
+        _r1 = await engine.glimpse(bad_draft)
 
         # Glimpse should still work for good drafts (same engine, may hit redial)
         good_draft = Draft(

@@ -5,14 +5,15 @@ Groups similar drafts and issues combined requests when possible.
 
 import asyncio
 import logging
-from typing import List, Tuple, Any
+
 import openai
+
 from glimpse.Glimpse import Draft
 
 logger = logging.getLogger(__name__)
 
 
-def can_batch(drafts: List[Draft]) -> bool:
+def can_batch(drafts: list[Draft]) -> bool:
     """
     Simple heuristic: allow batching if all drafts share the same goal
     and constraints, and the total input length is reasonable.
@@ -26,11 +27,11 @@ def can_batch(drafts: List[Draft]) -> bool:
 
 
 async def batch_chat_completion(
-    messages_batch: List[List[dict]],
+    messages_batch: list[list[dict]],
     model: str,
     temperature: float,
     max_tokens: int | None,
-) -> List[dict]:
+) -> list[dict]:
     """
     Naive batch implementation: run requests concurrently but limit concurrency.
     Returns responses in the same order as inputs.
@@ -58,7 +59,7 @@ async def batch_chat_completion(
     return await asyncio.gather(*tasks, return_exceptions=True)
 
 
-def construct_batch_prompt(drafts: List[Draft]) -> Tuple[List[List[dict]], List[int]]:
+def construct_batch_prompt(drafts: list[Draft]) -> tuple[list[list[dict]], list[int]]:
     """
     Convert a list of drafts into a list of message lists and return the slice indices.
     Each draft gets its own user message in a shared system context.
@@ -73,7 +74,7 @@ def construct_batch_prompt(drafts: List[Draft]) -> Tuple[List[List[dict]], List[
         ),
     }
     # Create a single combined prompt with numbered inputs
-    combined_user = "\n".join(f"{i+1}. {d.input_text}" for i, d in enumerate(drafts))
+    combined_user = "\n".join(f"{i + 1}. {d.input_text}" for i, d in enumerate(drafts))
     shared_goal = drafts[0].goal
     shared_constraints = drafts[0].constraints
     user_content = f"Goal: {shared_goal}\nConstraints: {shared_constraints}\n\nInputs:\n{combined_user}"

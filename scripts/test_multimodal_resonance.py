@@ -3,8 +3,10 @@
 Comprehensive test of Multimodal Resonance Glimpse in EchoesAssistantV2
 Demonstrates file extension-based grounding vectors and resonance processing
 """
+
 import asyncio
 from pathlib import Path
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -104,12 +106,12 @@ async def test_multimodal_resonance():
             insight_data = insights["insights"]
             print(f"   📁 File: {Path(test_file).name}")
             print(f"      🎯 Primary Modality: {insight_data['primary_modality']}")
-            print(f"      🌉 Cross-Modal Potential:")
+            print("      🌉 Cross-Modal Potential:")
 
             for bridge, potential in insight_data["cross_modal_potential"].items():
                 print(f"         • {bridge}: {potential:.2f}")
 
-            print(f"      ⭐ Recommended Transformations:")
+            print("      ⭐ Recommended Transformations:")
             for rec in insight_data["recommended_transformations"][:3]:
                 print(
                     f"         • {rec['transformation']} (resonance: {rec['resonance']:.2f}, quality: {rec['expected_quality']:.2f})"
@@ -154,7 +156,7 @@ async def test_multimodal_resonance():
                 print(
                     f"      🎯 Average Resonance: {dir_analysis['average_resonance']:.2f}"
                 )
-                print(f"      📈 Modality Distribution:")
+                print("      📈 Modality Distribution:")
 
                 for modality, count in dir_analysis["modality_distribution"].items():
                     print(f"         • {modality}: {count} files")
@@ -207,7 +209,7 @@ async def test_multimodal_resonance():
                 print(
                     f"      📈 Estimated Complexity: {strategy['estimated_complexity']:.1f}"
                 )
-                print(f"      💡 Recommendations:")
+                print("      💡 Recommendations:")
 
                 for rec in strategy.get("recommendations", [])[:2]:
                     print(f"         • {rec}")
@@ -218,11 +220,11 @@ async def test_multimodal_resonance():
     stats = assistant.get_multimodal_statistics()
     if stats["success"]:
         mm_stats = stats["multimodal_stats"]
-        print(f"   📊 Multimodal Resonance Statistics:")
+        print("   📊 Multimodal Resonance Statistics:")
         print(f"      💾 Total Memories: {mm_stats['total_memories']}")
         print(f"      🎯 Average Resonance: {mm_stats['average_resonance']:.2f}")
         print(f"      ⭐ Average Quality: {mm_stats['average_quality']:.2f}")
-        print(f"      📁 Modality Distribution:")
+        print("      📁 Modality Distribution:")
 
         for modality, count in mm_stats["modality_distribution"].items():
             print(f"         • {modality}: {count} files")
@@ -234,7 +236,7 @@ async def test_multimodal_resonance():
     print("\n9️⃣ Full System Integration Test...")
 
     full_stats = assistant.get_stats()
-    print(f"   ✅ EchoesAssistantV2 Full Integration:")
+    print("   ✅ EchoesAssistantV2 Full Integration:")
     print(
         f"      🧠 Knowledge Graph: {'Enabled' if full_stats.get('knowledge_graph_enabled') else 'Disabled'}"
     )
@@ -253,7 +255,7 @@ async def test_multimodal_resonance():
 
     if "multimodal_resonance_stats" in full_stats:
         mm_stats = full_stats["multimodal_resonance_stats"]
-        print(f"      📊 Multimodal Metrics:")
+        print("      📊 Multimodal Metrics:")
         print(f"         • Files processed: {mm_stats['total_memories']}")
         print(f"         • Average resonance: {mm_stats['average_resonance']:.2f}")
         print(

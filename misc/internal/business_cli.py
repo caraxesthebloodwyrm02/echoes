@@ -5,19 +5,17 @@ Echoes Business Analysis CLI
 A command-line interface for exploring business opportunities and revenue streams.
 """
 
-import sys
-import json
 import argparse
+import json
+import sys
 from pathlib import Path
-from typing import List, Dict, Any, Optional, Tuple
+from typing import Any
 
 # Add the app directory to the Python path
 sys.path.append(str(Path(__file__).parent))
 
 from app.tools.business_analysis import (
     BusinessAnalyzer,
-    MarketOpportunity,
-    RevenueStream,
 )
 
 
@@ -158,7 +156,7 @@ Examples:
             help="Average customer value (default: 500.0)",
         )
 
-    def parse_investment_range(self, investment_str: str) -> Tuple[float, float]:
+    def parse_investment_range(self, investment_str: str) -> tuple[float, float]:
         """Parse investment range string into min and max values."""
         try:
             min_val, max_val = map(float, investment_str.split("-"))
@@ -167,7 +165,7 @@ Examples:
             print("Invalid investment range format. Using default: 1000-5000")
             return 1000.0, 5000.0
 
-    def parse_skills(self, skills_str: str) -> List[str]:
+    def parse_skills(self, skills_str: str) -> list[str]:
         """Parse comma-separated skills string into a list."""
         return [s.strip() for s in skills_str.split(",") if s.strip()]
 

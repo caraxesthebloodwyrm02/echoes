@@ -1,6 +1,6 @@
 import json
-import os
-from core.exporter import export_text, export_json
+
+from core.exporter import export_json, export_text
 
 
 def test_export_text(tmp_path):

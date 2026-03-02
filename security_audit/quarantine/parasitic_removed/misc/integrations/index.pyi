@@ -1,8 +1,6 @@
 import numpy as np
-
-from pandas._typing import npt
-
 from pandas import MultiIndex
+from pandas._typing import npt
 from pandas.core.arrays import ExtensionArray
 
 multiindex_nulls_shift: int
@@ -33,7 +31,9 @@ class IndexEngine:
 
 class MaskedIndexEngine(IndexEngine):
     def __init__(self, values: object) -> None: ...
-    def get_indexer_non_unique(self, targets: object) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]: ...
+    def get_indexer_non_unique(
+        self, targets: object
+    ) -> tuple[npt.NDArray[np.intp], npt.NDArray[np.intp]]: ...
 
 class Float64Engine(IndexEngine): ...
 class Float32Engine(IndexEngine): ...

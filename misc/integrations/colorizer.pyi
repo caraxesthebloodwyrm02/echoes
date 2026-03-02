@@ -1,6 +1,5 @@
-from matplotlib import cbook, colorbar, colors, artist
-
 import numpy as np
+from matplotlib import artist, cbook, colorbar, colors
 from numpy.typing import ArrayLike
 
 class Colorizer:

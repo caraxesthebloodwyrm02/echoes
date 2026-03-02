@@ -7,12 +7,12 @@ across multiple modalities including inertial sensors, environmental sensors,
 biometric sensors, and contextual sensors for rich multimodal understanding.
 """
 
-import numpy as np
-from typing import Dict, Any, List, Optional, Tuple, Union
+import logging
 from dataclasses import dataclass, field
 from enum import Enum
-import logging
-from collections import defaultdict
+from typing import Any
+
+import numpy as np
 
 logger = logging.getLogger(__name__)
 
@@ -36,8 +36,8 @@ class SensorData:
     sensor_id: str
     sensor_type: SensorType
     timestamp: float
-    data: Union[np.ndarray, Dict[str, Any], str]
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    data: np.ndarray | dict[str, Any] | str
+    metadata: dict[str, Any] = field(default_factory=dict)
     confidence: float = 1.0
     calibration_status: str = "uncalibrated"
 
@@ -48,9 +48,9 @@ class FusionFeature:
 
     feature_name: str
     feature_type: str
-    value: Union[float, np.ndarray, str]
+    value: float | np.ndarray | str
     confidence: float
-    contributing_sensors: List[str]
+    contributing_sensors: list[str]
     fusion_method: str
     timestamp: float
 
@@ -63,8 +63,8 @@ class SensorFusionEngine:
     """
 
     def __init__(self):
-        self.active_sensors: Dict[str, SensorData] = {}
-        self.fusion_history: List[FusionFeature] = []
+        self.active_sensors: dict[str, SensorData] = {}
+        self.fusion_history: list[FusionFeature] = []
         self.fusion_strategies = {
             "early_fusion": self._early_fusion,
             "late_fusion": self._late_fusion,
@@ -116,10 +116,10 @@ class SensorFusionEngine:
 
     def fuse_sensor_features(
         self,
-        sensor_ids: List[str],
+        sensor_ids: list[str],
         fusion_strategy: str = "hybrid_fusion",
         target_feature: str = "multimodal_context",
-    ) -> Optional[FusionFeature]:
+    ) -> FusionFeature | None:
         """
         Fuse features from multiple sensors using specified strategy.
 
@@ -173,8 +173,8 @@ class SensorFusionEngine:
             return None
 
     def _early_fusion(
-        self, sensor_data: List[SensorData], target_feature: str
-    ) -> Tuple[Any, float]:
+        self, sensor_data: list[SensorData], target_feature: str
+    ) -> tuple[Any, float]:
         """
         Early fusion: Combine raw sensor data before feature extraction.
         Best for highly correlated sensors.
@@ -211,8 +211,8 @@ class SensorFusionEngine:
         return combined_data, confidence
 
     def _late_fusion(
-        self, sensor_data: List[SensorData], target_feature: str
-    ) -> Tuple[Any, float]:
+        self, sensor_data: list[SensorData], target_feature: str
+    ) -> tuple[Any, float]:
         """
         Late fusion: Extract features from each sensor, then combine.
         Best for independent sensor modalities.
@@ -253,8 +253,8 @@ class SensorFusionEngine:
         return combined, confidence
 
     def _hybrid_fusion(
-        self, sensor_data: List[SensorData], target_feature: str
-    ) -> Tuple[Any, float]:
+        self, sensor_data: list[SensorData], target_feature: str
+    ) -> tuple[Any, float]:
         """
         Hybrid fusion: Combine early and late fusion approaches.
         Best for complex multimodal scenarios.
@@ -297,8 +297,8 @@ class SensorFusionEngine:
         return combined, confidence
 
     def _attention_based_fusion(
-        self, sensor_data: List[SensorData], target_feature: str
-    ) -> Tuple[Any, float]:
+        self, sensor_data: list[SensorData], target_feature: str
+    ) -> tuple[Any, float]:
         """
         Attention-based fusion: Use attention mechanism to weigh sensor contributions.
         Best for scenarios with varying sensor reliability.
@@ -327,8 +327,8 @@ class SensorFusionEngine:
         return combined, confidence
 
     def _graph_based_fusion(
-        self, sensor_data: List[SensorData], target_feature: str
-    ) -> Tuple[Any, float]:
+        self, sensor_data: list[SensorData], target_feature: str
+    ) -> tuple[Any, float]:
         """
         Graph-based fusion: Model sensor relationships as a graph.
         Best for understanding sensor interdependencies.
@@ -391,7 +391,7 @@ class SensorFusionEngine:
                 )
             return np.array(features)
 
-    def _extract_environmental_features(self, data: Dict[str, Any]) -> np.ndarray:
+    def _extract_environmental_features(self, data: dict[str, Any]) -> np.ndarray:
         """Extract features from environmental sensor data."""
         features = []
         for key, value in data.items():
@@ -399,7 +399,7 @@ class SensorFusionEngine:
                 features.append(float(value))
         return np.array(features) if features else np.array([0.0])
 
-    def _extract_biometric_features(self, data: Dict[str, Any]) -> np.ndarray:
+    def _extract_biometric_features(self, data: dict[str, Any]) -> np.ndarray:
         """Extract features from biometric sensor data."""
         # Focus on physiological signals
         features = []
@@ -439,7 +439,7 @@ class SensorFusionEngine:
         else:
             return np.array([np.mean(data), np.std(data)])
 
-    def _extract_contextual_features(self, data: Dict[str, Any]) -> np.ndarray:
+    def _extract_contextual_features(self, data: dict[str, Any]) -> np.ndarray:
         """Extract features from contextual data."""
         features = []
         if "location" in data:
@@ -469,7 +469,7 @@ class SensorFusionEngine:
         return np.array([word_count, char_count, avg_word_length])
 
     def _compute_attention_weights(
-        self, sensors: List[SensorData], features: List[Any]
+        self, sensors: list[SensorData], features: list[Any]
     ) -> np.ndarray:
         """Compute attention weights for sensors based on their characteristics."""
         weights = []
@@ -497,7 +497,7 @@ class SensorFusionEngine:
         weights = np.array(weights)
         return weights / np.sum(weights)
 
-    def _build_sensor_graph(self, sensors: List[SensorData]) -> Dict[str, Any]:
+    def _build_sensor_graph(self, sensors: list[SensorData]) -> dict[str, Any]:
         """Build a graph representing sensor relationships."""
         graph = {"nodes": [], "edges": []}
 
@@ -528,7 +528,7 @@ class SensorFusionEngine:
 
         return graph
 
-    def _compute_graph_weights(self, sensor_graph: Dict[str, Any]) -> np.ndarray:
+    def _compute_graph_weights(self, sensor_graph: dict[str, Any]) -> np.ndarray:
         """Compute fusion weights based on graph structure."""
         # Simple centrality-based weighting
         node_weights = {}
@@ -552,7 +552,7 @@ class SensorFusionEngine:
             [node_weights[node["id"]] / total_weight for node in sensor_graph["nodes"]]
         )
 
-    def _build_compatibility_matrix(self) -> Dict[Tuple[SensorType, SensorType], float]:
+    def _build_compatibility_matrix(self) -> dict[tuple[SensorType, SensorType], float]:
         """Build matrix of sensor type compatibilities for fusion."""
         # Define how well different sensor types work together
         compatibilities = {
@@ -593,7 +593,7 @@ class SensorFusionEngine:
         }
         return weights.get(sensor.sensor_type, 1.0)
 
-    def _flatten_dict_to_array(self, data: Dict[str, Any]) -> np.ndarray:
+    def _flatten_dict_to_array(self, data: dict[str, Any]) -> np.ndarray:
         """Flatten dictionary to numerical array."""
         values = []
         for key, value in data.items():
@@ -618,7 +618,7 @@ class SensorFusionEngine:
         else:
             return 1.0  # Default score
 
-    def _infer_feature_type(self, sensors: List[SensorData]) -> str:
+    def _infer_feature_type(self, sensors: list[SensorData]) -> str:
         """Infer the type of fused feature."""
         types = [s.sensor_type.value for s in sensors]
         if len(set(types)) == 1:
@@ -626,11 +626,11 @@ class SensorFusionEngine:
         else:
             return "multimodal_fused"
 
-    def get_fusion_history(self, limit: int = 10) -> List[FusionFeature]:
+    def get_fusion_history(self, limit: int = 10) -> list[FusionFeature]:
         """Get recent fusion history."""
         return self.fusion_history[-limit:] if self.fusion_history else []
 
-    def get_sensor_status(self) -> Dict[str, Dict[str, Any]]:
+    def get_sensor_status(self) -> dict[str, dict[str, Any]]:
         """Get status of all registered sensors."""
         return {
             sensor_id: {

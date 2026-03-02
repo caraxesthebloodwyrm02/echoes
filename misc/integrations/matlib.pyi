@@ -1,4 +1,4 @@
-from typing import Any, Literal, TypeAlias, TypeVar, overload
+from typing import Any, Literal, TypeVar, overload
 
 import numpy as np
 import numpy.typing as npt
@@ -508,8 +508,8 @@ __all__ += np.__all__
 ###
 
 _T = TypeVar("_T", bound=np.generic)
-_Matrix: TypeAlias = np.matrix[tuple[int, int], np.dtype[_T]]
-_Order: TypeAlias = Literal["C", "F"]
+type _Matrix[_T: np.generic] = np.matrix[tuple[int, int], np.dtype[_T]]
+type _Order = Literal["C", "F"]
 
 ###
 

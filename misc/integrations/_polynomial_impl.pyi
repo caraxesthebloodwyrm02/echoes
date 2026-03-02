@@ -3,7 +3,6 @@ from typing import (
     NoReturn,
     SupportsIndex,
     SupportsInt,
-    TypeAlias,
     TypeVar,
     overload,
 )
@@ -37,8 +36,8 @@ from numpy._typing import (
 
 _T = TypeVar("_T")
 
-_2Tup: TypeAlias = tuple[_T, _T]
-_5Tup: TypeAlias = tuple[
+type _2Tup[_T] = tuple[_T, _T]
+type _5Tup[_T] = tuple[
     _T,
     NDArray[float64],
     NDArray[int32],

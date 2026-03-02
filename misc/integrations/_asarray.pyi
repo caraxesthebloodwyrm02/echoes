@@ -1,11 +1,11 @@
 from collections.abc import Iterable
-from typing import Any, Literal, TypeAlias, TypeVar, overload
+from typing import Any, Literal, TypeVar, overload
 
 from numpy._typing import DTypeLike, NDArray, _SupportsArrayFunc
 
 _ArrayT = TypeVar("_ArrayT", bound=NDArray[Any])
 
-_Requirements: TypeAlias = Literal[
+type _Requirements = Literal[
     "C",
     "C_CONTIGUOUS",
     "CONTIGUOUS",
@@ -19,8 +19,8 @@ _Requirements: TypeAlias = Literal[
     "O",
     "OWNDATA",
 ]
-_E: TypeAlias = Literal["E", "ENSUREARRAY"]
-_RequirementsWithE: TypeAlias = _Requirements | _E
+type _E = Literal["E", "ENSUREARRAY"]
+type _RequirementsWithE = _Requirements | _E
 
 @overload
 def require(

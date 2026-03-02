@@ -18,10 +18,11 @@ Tests verify:
 - Output validation
 """
 
-import agent_unittest
-import agent_json
-import time
+import json
 import sys
+import time
+import unittest
+
 from agent_pathlib import Path
 
 # Add project root to path
@@ -104,8 +105,6 @@ class TestECommerceDemoCredibility(unittest.TestCase):
 
         monthly_orders = 1200
         avg_order_value = 285
-        cart_abandonment_rate = 0.35
-
         # Test cart abandonment opportunity
         potential_recovery = monthly_orders * 0.10 * avg_order_value
         self.assertEqual(
@@ -177,14 +176,11 @@ class TestInvestmentAdvisorCredibility(unittest.TestCase):
 
         portfolio_value = 500_000_000
         ytd_return = 0.175
-        portfolio_beta = 0.89
-        sharpe_ratio = 1.58
-
         ytd_gain = portfolio_value * ytd_return
         self.assertEqual(ytd_gain, 87_500_000, "YTD gain should be $87.5M")
 
         print(f"  ✓ Portfolio value: ${portfolio_value:,}")
-        print(f"  ✓ YTD return: {ytd_return*100:.1f}%")
+        print(f"  ✓ YTD return: {ytd_return * 100:.1f}%")
         print(f"  ✓ YTD gain: ${ytd_gain:,}")
 
     def test_02_alpha_generation_calculation(self):
@@ -239,7 +235,7 @@ class TestInvestmentAdvisorCredibility(unittest.TestCase):
             msg="Expected portfolio value should be ~$625.6M",
         )
 
-        print(f"  ✓ Total expected return: {total_expected_return*100:.1f}%")
+        print(f"  ✓ Total expected return: {total_expected_return * 100:.1f}%")
         print(f"  ✓ Expected value: ${expected_portfolio_value:,}")
         print(f"  ✓ Value increase: ${value_increase:,}")
 
@@ -316,7 +312,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
 
         print(f"  ✓ Original fuel: {current_fuel:,} kg")
         print(f"  ✓ Optimized fuel: {optimized_fuel:,} kg")
-        print(f"  ✓ Reduction: {fuel_reduction*100:.0f}%")
+        print(f"  ✓ Reduction: {fuel_reduction * 100:.0f}%")
 
     def test_02_life_support_mass_reduction(self):
         """Test life support mass reduction calculations."""
@@ -335,7 +331,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
 
         print(f"  ✓ Original mass: {current_mass:,} kg")
         print(f"  ✓ Optimized mass: {optimized_mass:,} kg")
-        print(f"  ✓ Reduction: {reduction*100:.1f}%")
+        print(f"  ✓ Reduction: {reduction * 100:.1f}%")
 
     def test_03_propulsion_efficiency_gains(self):
         """Test propulsion efficiency calculations."""
@@ -447,11 +443,11 @@ class TestOverallSystemCredibility(unittest.TestCase):
         print("\n[Test 4.1] Knowledge Management Persistence...")
 
         # Add test knowledge
-        k_id1 = self.assistant.gather_knowledge(
+        _k_id1 = self.assistant.gather_knowledge(
             "Test knowledge entry 1", "test_source", "test_category", ["test"]
         )
 
-        k_id2 = self.assistant.gather_knowledge(
+        _k_id2 = self.assistant.gather_knowledge(
             "Test knowledge entry 2", "test_source", "test_category", ["test"]
         )
 

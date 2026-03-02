@@ -5,12 +5,11 @@ Simplified pattern detection without RAG middleware for authentic AI responses.
 Provides basic pattern recognition without external context enrichment.
 """
 
-import asyncio
-import re
 import logging
-from typing import Dict, List, Optional, Any, Tuple
+import re
 from dataclasses import dataclass
 from datetime import datetime
+from typing import Any
 
 # REMOVED: numpy import - not needed for simplified pattern detection
 # REMOVED: RAG middleware imports - pattern detection now works without retrieval
@@ -28,10 +27,10 @@ class DetectedPattern:
     pattern_type: str
     description: str
     confidence: float
-    span: Tuple[int, int]  # (start, end) character positions
-    evidence: List[str]
-    related_patterns: List[str] = None
-    metadata: Dict[str, Any] = None
+    span: tuple[int, int]  # (start, end) character positions
+    evidence: list[str]
+    related_patterns: list[str] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.related_patterns is None:
@@ -39,7 +38,7 @@ class DetectedPattern:
         if self.metadata is None:
             self.metadata = {}
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         return {
             "pattern_type": self.pattern_type,
             "description": self.description,
@@ -55,12 +54,12 @@ class DetectedPattern:
 class PatternDetectionResult:
     """Result of pattern detection analysis"""
 
-    patterns: List[DetectedPattern]
+    patterns: list[DetectedPattern]
     confidence: float
     processing_time: float
     text_length: int
     timestamp: datetime
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -112,8 +111,8 @@ class PatternDetector:
     async def detect_patterns(
         self,
         text: str,
-        context: Optional[Dict[str, Any]] = None,
-        options: Optional[Dict[str, Any]] = None,
+        context: dict[str, Any] | None = None,
+        options: dict[str, Any] | None = None,
     ) -> PatternDetectionResult:
         """
         Detect patterns in text using multiple analysis techniques.
@@ -177,7 +176,7 @@ class PatternDetector:
             },
         )
 
-    async def _detect_rule_based_patterns(self, text: str) -> List[DetectedPattern]:
+    async def _detect_rule_based_patterns(self, text: str) -> list[DetectedPattern]:
         """Rule-based pattern detection using regex patterns"""
         patterns = []
         text_lower = text.lower()
@@ -207,7 +206,7 @@ class PatternDetector:
 
         return patterns
 
-    async def _detect_statistical_patterns(self, text: str) -> List[DetectedPattern]:
+    async def _detect_statistical_patterns(self, text: str) -> list[DetectedPattern]:
         """Statistical pattern analysis"""
         patterns = []
 
@@ -269,8 +268,8 @@ class PatternDetector:
         return patterns
 
     async def analyze_relationships(
-        self, patterns: List[DetectedPattern]
-    ) -> List[DetectedPattern]:
+        self, patterns: list[DetectedPattern]
+    ) -> list[DetectedPattern]:
         """Analyze relationships between detected patterns"""
         # Group patterns by type and proximity
         for i, pattern in enumerate(patterns):
@@ -303,9 +302,9 @@ pattern_detector = None
 
 async def detect_patterns(
     text: str,
-    context: Optional[Dict[str, Any]] = None,
-    options: Optional[Dict[str, Any]] = None,
-) -> List[Dict[str, Any]]:
+    context: dict[str, Any] | None = None,
+    options: dict[str, Any] | None = None,
+) -> list[dict[str, Any]]:
     """
     Main entry point for pattern detection.
 

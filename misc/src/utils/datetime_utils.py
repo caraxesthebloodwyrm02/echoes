@@ -3,7 +3,7 @@
 Replaces deprecated datetime.utcnow() for Python 3.13+ compatibility.
 """
 
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def utc_now() -> datetime:
@@ -21,7 +21,7 @@ def utc_now() -> datetime:
         >>> print(now.tzinfo)
         UTC
     """
-    return datetime.now(timezone.utc)
+    return datetime.now(UTC)
 
 
 def utc_timestamp() -> str:
@@ -56,7 +56,7 @@ def utc_from_timestamp(timestamp: float) -> datetime:
         >>> print(dt.tzinfo)
         UTC
     """
-    return datetime.fromtimestamp(timestamp, tz=timezone.utc)
+    return datetime.fromtimestamp(timestamp, tz=UTC)
 
 
 __all__ = ["utc_now", "utc_timestamp", "utc_from_timestamp"]

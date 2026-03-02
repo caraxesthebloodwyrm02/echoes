@@ -8,21 +8,13 @@ thought tracking, personality engine, humor engine, cross-references, and intent
 import os
 import sys
 import time
-import json
-import asyncio
 from datetime import datetime
-from typing import List, Dict, Any
 
 # Load environment variables
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
     from assistant_v2_core import EchoesAssistantV2
-    from core_modules.parallel_simulation_engine import SimulationType
-    from core_modules.catch_release_system import CacheLevel, ContentType
-    from core_modules.intent_awareness_engine import IntentType
-    from core_modules.train_of_thought_tracker import ThoughtType
-    from core_modules.humor_engine import PressureLevel
     from core_modules.personality_engine import PersonalityTrait
 except ImportError as e:
     print(f"Import error: {e}")
@@ -117,7 +109,7 @@ class UnifiedDemoScenario:
 
         simulation_query = "Explore different implementation strategies for my AI healthcare diagnostic system, including technical approaches, business models, and deployment strategies"
 
-        print(f"\n🚀 Running comprehensive simulation analysis...")
+        print("\n🚀 Running comprehensive simulation analysis...")
         print(f"Query: {simulation_query}")
 
         start_time = time.time()
@@ -127,7 +119,7 @@ class UnifiedDemoScenario:
 
         response_time = time.time() - start_time
 
-        print(f"\n🧠 Simulation-Enhanced Response:")
+        print("\n🧠 Simulation-Enhanced Response:")
         print(f"{response}")
         print(f"⏱️ Total time (including simulations): {response_time:.2f}s")
 
@@ -147,7 +139,7 @@ class UnifiedDemoScenario:
 
         decision_query = "Based on our discussion, I need to choose between three approaches: (1) cloud-based AI service, (2) on-premise deployment, or (3) hybrid model. Help me evaluate these options considering security, scalability, cost, and regulatory compliance"
 
-        print(f"\n🤔 Running decision support analysis...")
+        print("\n🤔 Running decision support analysis...")
         print(f"Query: {decision_query}")
 
         start_time = time.time()
@@ -156,7 +148,7 @@ class UnifiedDemoScenario:
 
         response_time = time.time() - start_time
 
-        print(f"\n🎯 Decision Support Response:")
+        print("\n🎯 Decision Support Response:")
         print(f"{response}")
         print(f"⏱️ Analysis time: {response_time:.2f}s")
 
@@ -181,7 +173,7 @@ class UnifiedDemoScenario:
             "Based on everything we've discussed, what's your recommended implementation roadmap?",
         ]
 
-        print(f"\n🔗 Testing conversation continuity and context retention...")
+        print("\n🔗 Testing conversation continuity and context retention...")
 
         for i, query in enumerate(continuity_queries, 1):
             print(f"\n--- Continuity Query {i} ---")
@@ -213,7 +205,7 @@ class UnifiedDemoScenario:
 
         values_query = "As I move forward with this healthcare AI system, how can I ensure my work aligns with ethical principles of beneficence, non-maleficence, autonomy, and justice? How should these values guide my technical decisions and business model?"
 
-        print(f"\n💎 Grounding technical decisions in ethical values...")
+        print("\n💎 Grounding technical decisions in ethical values...")
         print(f"Query: {values_query}")
 
         start_time = time.time()
@@ -222,7 +214,7 @@ class UnifiedDemoScenario:
 
         response_time = time.time() - start_time
 
-        print(f"\n💎 Values-Grounded Response:")
+        print("\n💎 Values-Grounded Response:")
         print(f"{response}")
         print(f"⏱️ Response time: {response_time:.2f}s")
 
@@ -246,7 +238,7 @@ class UnifiedDemoScenario:
             "This seems like an impossible challenge. Can you give me some perspective on whether this is actually achievable?",
         ]
 
-        print(f"\n😄 Testing pressure handling and humor integration...")
+        print("\n😄 Testing pressure handling and humor integration...")
 
         for i, query in enumerate(pressure_queries, 1):
             print(f"\n--- Pressure Test {i} ---")
@@ -279,7 +271,7 @@ class UnifiedDemoScenario:
 
         synthesis_query = "Synthesize everything we've discussed into a comprehensive project plan that integrates technical considerations, ethical values, business strategy, and implementation roadmap. Show how all these elements work together as a cohesive system."
 
-        print(f"\n🌟 Synthesizing comprehensive intelligent output...")
+        print("\n🌟 Synthesizing comprehensive intelligent output...")
         print(f"Query: {synthesis_query}")
 
         start_time = time.time()
@@ -288,7 +280,7 @@ class UnifiedDemoScenario:
 
         response_time = time.time() - start_time
 
-        print(f"\n🌟 Comprehensive Synthesis:")
+        print("\n🌟 Comprehensive Synthesis:")
         print(f"{response}")
         print(f"⏱️ Synthesis time: {response_time:.2f}s")
 
@@ -324,7 +316,7 @@ class UnifiedDemoScenario:
         """Show simulation engine statistics"""
         if hasattr(self.assistant, "parallel_simulation"):
             stats = self.assistant.parallel_simulation.get_simulation_statistics()
-            print(f"\n🧠 Simulation Statistics:")
+            print("\n🧠 Simulation Statistics:")
             print(f"   Total simulations: {stats['total_simulations']}")
             print(f"   Active simulations: {stats['active_simulations']}")
             print(f"   Success rate: {stats['performance']['success_rate']:.1%}")
@@ -338,10 +330,10 @@ class UnifiedDemoScenario:
             connections = getattr(
                 self.assistant.cross_reference_system, "connection_graph", {}
             )
-            print(f"\n🔗 Cross-Reference Insights:")
+            print("\n🔗 Cross-Reference Insights:")
             print(f"   Active connections: {len(connections)}")
             print(
-                f"   Relationship strength: Strong"
+                "   Relationship strength: Strong"
                 if len(connections) > 5
                 else "Moderate"
             )
@@ -350,7 +342,7 @@ class UnifiedDemoScenario:
         """Show conversation continuity insights"""
         if hasattr(self.assistant, "catch_release"):
             continuity = self.assistant.catch_release.get_conversation_continuity()
-            print(f"\n🔄 Continuity Insights:")
+            print("\n🔄 Continuity Insights:")
             print(f"   Recent entries: {continuity['total_recent']}")
             print(f"   Continuity score: {continuity['continuity_score']:.1%}")
 
@@ -358,7 +350,7 @@ class UnifiedDemoScenario:
         """Show values grounding insights"""
         if hasattr(self.assistant, "personality_engine"):
             traits = self.assistant.personality_engine.traits
-            print(f"\n💎 Values Alignment:")
+            print("\n💎 Values Alignment:")
             print(f"   Curiosity: {traits.get(PersonalityTrait.CURIOSITY, 0):.1%}")
             print(f"   Enthusiasm: {traits.get(PersonalityTrait.ENTHUSIASM, 0):.1%}")
             print(f"   Empathy: {traits.get(PersonalityTrait.EMPATHY, 0):.1%}")
@@ -367,7 +359,7 @@ class UnifiedDemoScenario:
         """Show pressure management insights"""
         if hasattr(self.assistant, "humor_engine"):
             pressure = self.assistant.humor_engine.get_pressure_summary()
-            print(f"\n😄 Pressure Management:")
+            print("\n😄 Pressure Management:")
             print(f"   Current level: {pressure.get('current_level', 'medium')}")
             print(f"   Humor availability: {pressure.get('can_use_humor', False)}")
 
@@ -391,19 +383,19 @@ class UnifiedDemoScenario:
         print("📊 COMPREHENSIVE PERFORMANCE REPORT")
         print("=" * 80)
 
-        print(f"\n⏱️ Timing Metrics:")
+        print("\n⏱️ Timing Metrics:")
         print(f"   Total session time: {total_time:.2f}s")
         print(f"   Total queries: {self.performance_metrics['total_queries']}")
         print(f"   Average response time: {avg_response_time:.2f}s")
         print(
-            f"   Queries per minute: {self.performance_metrics['total_queries'] / max(total_time/60, 1):.1f}"
+            f"   Queries per minute: {self.performance_metrics['total_queries'] / max(total_time / 60, 1):.1f}"
         )
 
-        print(f"\n🧠 Simulation Performance:")
+        print("\n🧠 Simulation Performance:")
         print(f"   Simulations run: {self.performance_metrics['simulations_run']}")
-        print(f"   Simulation success rate: High (all completed)")
+        print("   Simulation success rate: High (all completed)")
 
-        print(f"\n💭 Cognitive Metrics:")
+        print("\n💭 Cognitive Metrics:")
         print(f"   Thoughts tracked: {self.performance_metrics['thoughts_tracked']}")
         print(
             f"   Cross-references: {self.performance_metrics['cross_references_generated']}"
@@ -412,13 +404,13 @@ class UnifiedDemoScenario:
             f"   Personality adaptations: {self.performance_metrics['personality_adaptations']}"
         )
 
-        print(f"\n😄 Engagement Metrics:")
+        print("\n😄 Engagement Metrics:")
         print(f"   Humor instances: {self.performance_metrics['humor_instances']}")
-        print(f"   Pressure handling: Effective")
+        print("   Pressure handling: Effective")
 
-        print(f"\n🔄 Continuity Performance:")
-        print(f"   Context retention: Strong")
-        print(f"   Conversation flow: Natural")
+        print("\n🔄 Continuity Performance:")
+        print("   Context retention: Strong")
+        print("   Conversation flow: Natural")
 
         # Calculate overall performance score
         performance_score = self._calculate_performance_score(
@@ -498,7 +490,7 @@ class UnifiedDemoScenario:
             # Generate final report
             performance_score = self.generate_performance_report()
 
-            print(f"\n🎉 UNIFIED DEMO COMPLETE!")
+            print("\n🎉 UNIFIED DEMO COMPLETE!")
             print("=" * 80)
             print("Key Demonstrations:")
             print("✅ Parallel simulation enhanced decision making")
@@ -537,14 +529,14 @@ def main():
             print(f"\n⚠️ Demo completed with performance score: {performance_score:.1%}")
             print("Some optimizations may be needed for peak performance.")
 
-        print(f"\n💡 To explore individual systems, try:")
-        print(f"   python demo_parallel_simulation.py")
-        print(f"   python demo_catch_release.py")
-        print(f"   python demo_humor_engine.py")
-        print(f"   python demo_intent_thought_tracking.py")
+        print("\n💡 To explore individual systems, try:")
+        print("   python demo_parallel_simulation.py")
+        print("   python demo_catch_release.py")
+        print("   python demo_humor_engine.py")
+        print("   python demo_intent_thought_tracking.py")
 
     except KeyboardInterrupt:
-        print(f"\n\n⏹️ Demo interrupted by user")
+        print("\n\n⏹️ Demo interrupted by user")
     except Exception as e:
         print(f"\n❌ Demo failed with error: {e}")
         sys.exit(1)

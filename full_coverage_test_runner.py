@@ -14,7 +14,6 @@ import multiprocessing
 import os
 import sys
 from concurrent.futures import ProcessPoolExecutor
-from typing import List, Optional
 
 import pytest
 import requests
@@ -45,10 +44,10 @@ DEFAULT_CONFIG = {
 }
 
 
-def load_config(config_file: Optional[str] = None) -> dict:
+def load_config(config_file: str | None = None) -> dict:
     """Load test configuration from file or use defaults."""
     if config_file and os.path.exists(config_file):
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             config = {**DEFAULT_CONFIG, **json.load(f)}
     else:
         config = DEFAULT_CONFIG
@@ -65,7 +64,7 @@ def verify_api_health(base_url: str = "http://localhost:8000") -> bool:
         return False
 
 
-def run_test_suite(test_path: str, pytest_args: List[str]) -> bool:
+def run_test_suite(test_path: str, pytest_args: list[str]) -> bool:
     """Run a test suite in a separate process."""
     result = pytest.main([test_path, *pytest_args])
     return result == 0

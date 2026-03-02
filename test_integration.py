@@ -3,6 +3,7 @@
 Quick Integration Test - Validates all systems are working together
 """
 
+import importlib
 import os
 import sys
 import time
@@ -16,43 +17,28 @@ def test_system_imports():
     print("🔍 Testing system imports...")
 
     try:
-        from assistant_v2_core import EchoesAssistantV2
-
+        importlib.import_module("assistant_v2_core")
         print("✅ EchoesAssistantV2 imported")
 
-        from core_modules.parallel_simulation_engine import (
-            parallel_simulation,
-            SimulationType,
-        )
-
+        importlib.import_module("core_modules.parallel_simulation_engine")
         print("✅ Parallel Simulation Engine imported")
 
-        from core_modules.catch_release_system import (
-            catch_release,
-            CacheLevel,
-            ContentType,
-        )
-
+        importlib.import_module("core_modules.catch_release_system")
         print("✅ Catch & Release System imported")
 
-        from core_modules.intent_awareness_engine import intent_engine, IntentType
-
+        importlib.import_module("core_modules.intent_awareness_engine")
         print("✅ Intent Awareness Engine imported")
 
-        from core_modules.train_of_thought_tracker import thought_tracker, ThoughtType
-
+        importlib.import_module("core_modules.train_of_thought_tracker")
         print("✅ Thought Tracker imported")
 
-        from core_modules.personality_engine import personality_engine
-
+        importlib.import_module("core_modules.personality_engine")
         print("✅ Personality Engine imported")
 
-        from core_modules.humor_engine import humor_engine
-
+        importlib.import_module("core_modules.humor_engine")
         print("✅ Humor Engine imported")
 
-        from core_modules.cross_reference_system import cross_reference_system
-
+        importlib.import_module("core_modules.cross_reference_system")
         print("✅ Cross-Reference System imported")
 
         return True
@@ -131,7 +117,7 @@ def test_basic_functionality(assistant):
 
         # Performance summary
         avg_response_time = (response_time1 + response_time2 + response_time3) / 3
-        print(f"\n📊 Performance Summary:")
+        print("\n📊 Performance Summary:")
         print(f"   Average response time: {avg_response_time:.2f}s")
         print(
             f"   Total characters generated: {len(response1) + len(response2) + len(response3)}"
@@ -149,18 +135,18 @@ def test_system_statistics():
     print("\n📈 Testing system statistics...")
 
     try:
-        from core_modules.parallel_simulation_engine import parallel_simulation
         from core_modules.catch_release_system import catch_release
+        from core_modules.parallel_simulation_engine import parallel_simulation
 
         # Simulation stats
         sim_stats = parallel_simulation.get_simulation_statistics()
-        print(f"🧠 Simulation Statistics:")
+        print("🧠 Simulation Statistics:")
         print(f"   Total simulations: {sim_stats['total_simulations']}")
         print(f"   Success rate: {sim_stats['performance']['success_rate']:.1%}")
 
         # Cache stats
         cache_stats = catch_release.get_cache_statistics()
-        print(f"\n💾 Cache Statistics:")
+        print("\n💾 Cache Statistics:")
         print(f"   Session cache: {cache_stats['session_cache']['entries']} entries")
         print(
             f"   Short-term cache: {cache_stats['short_term_cache']['entries']} entries"
@@ -168,7 +154,7 @@ def test_system_statistics():
 
         # Continuity check
         continuity = catch_release.get_conversation_continuity()
-        print(f"\n🔄 Conversation Continuity:")
+        print("\n🔄 Conversation Continuity:")
         print(f"   Continuity score: {continuity['continuity_score']:.1%}")
         print(f"   Recent entries: {continuity['total_recent']}")
 
@@ -272,22 +258,22 @@ def generate_integration_report(test_results):
     total_tests = len(test_results)
     success_rate = passed_tests / total_tests
 
-    print(f"\n📈 Test Results:")
+    print("\n📈 Test Results:")
     print(f"   Tests passed: {passed_tests}/{total_tests}")
     print(f"   Success rate: {success_rate:.1%}")
 
-    print(f"\n✅ Passed Tests:")
+    print("\n✅ Passed Tests:")
     for test_name, passed in test_results.items():
         if passed:
             print(f"   • {test_name}")
 
     if passed_tests < total_tests:
-        print(f"\n❌ Failed Tests:")
+        print("\n❌ Failed Tests:")
         for test_name, passed in test_results.items():
             if not passed:
                 print(f"   • {test_name}")
 
-    print(f"\n🌟 Integration Status:")
+    print("\n🌟 Integration Status:")
     if success_rate >= 0.9:
         print("   🏆 EXCELLENT: All systems integrated and working cohesively")
     elif success_rate >= 0.8:
@@ -328,14 +314,14 @@ def main():
     success_rate = generate_integration_report(test_results)
 
     if success_rate >= 0.8:
-        print(f"\n🎉 Integration test successful!")
+        print("\n🎉 Integration test successful!")
         print("All Echoes systems are working together effectively.")
         print("\n💡 Next steps:")
         print("   • Run the full unified demo: python demo_unified_scenario.py")
         print("   • Test individual systems with their demo scripts")
         print("   • Start interactive mode: python assistant_v2_core.py")
     else:
-        print(f"\n⚠️ Integration test completed with issues.")
+        print("\n⚠️ Integration test completed with issues.")
         print("Some systems may need attention before full deployment.")
 
     return success_rate

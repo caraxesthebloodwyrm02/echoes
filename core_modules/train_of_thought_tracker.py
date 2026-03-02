@@ -4,12 +4,11 @@ Tracks the flow of ideas, connections between concepts, and emergent patterns
 """
 
 import logging
-import json
-from typing import Dict, Any, List, Optional, Set, Tuple, NamedTuple
-from datetime import datetime, timedelta
-from collections import defaultdict, deque
-from dataclasses import dataclass, field, asdict
+from collections import deque
+from dataclasses import asdict, dataclass, field
+from datetime import datetime
 from enum import Enum
+from typing import Any
 
 try:
     import networkx as nx
@@ -62,8 +61,8 @@ class ThoughtLink:
     to_thought: str
     link_type: LinkType
     strength: float  # 0.0 to 1.0
-    evidence: List[str] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    evidence: list[str] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -71,13 +70,13 @@ class ThoughtChain:
     """A chain of connected thoughts"""
 
     id: str
-    thoughts: List[str]  # Thought IDs in order
+    thoughts: list[str]  # Thought IDs in order
     start_time: datetime
-    end_time: Optional[datetime] = None
+    end_time: datetime | None = None
     theme: str = ""
     confidence: float = 0.5
     resolved: bool = False
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    metadata: dict[str, Any] = field(default_factory=dict)
 
 
 class TrainOfThoughtTracker:
@@ -217,8 +216,8 @@ class TrainOfThoughtTracker:
         thought_id: str,
         content: str,
         thought_type: ThoughtType,
-        entities: List[str] = None,
-        parent_thoughts: List[str] = None,
+        entities: list[str] = None,
+        parent_thoughts: list[str] = None,
     ) -> str:
         """Add a new thought to the tracker"""
 
@@ -274,7 +273,7 @@ class TrainOfThoughtTracker:
         return thought_id
 
     def _calculate_thought_importance(
-        self, content: str, thought_type: ThoughtType, entities: List[str]
+        self, content: str, thought_type: ThoughtType, entities: list[str]
     ) -> float:
         """Calculate the importance score of a thought"""
         importance = 0.5  # Base importance
@@ -550,14 +549,14 @@ class TrainOfThoughtTracker:
                     self.thought_metadata[thought_id]["cross_links"].append(other_id)
                     self.thought_metadata[other_id]["cross_links"].append(thought_id)
 
-    def _get_thought_chain(self, thought_id: str) -> Optional[str]:
+    def _get_thought_chain(self, thought_id: str) -> str | None:
         """Get the chain that contains a thought"""
         for chain_id, chain in self.chains.items():
             if thought_id in chain.thoughts:
                 return chain_id
         return None
 
-    def detect_patterns(self) -> Dict[str, List[Dict[str, Any]]]:
+    def detect_patterns(self) -> dict[str, list[dict[str, Any]]]:
         """Detect various patterns in the train of thought"""
         patterns = {}
 
@@ -570,7 +569,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def _detect_problem_solution_pattern(self) -> List[Dict[str, Any]]:
+    def _detect_problem_solution_pattern(self) -> list[dict[str, Any]]:
         """Detect problem-solution patterns"""
         patterns = []
 
@@ -629,7 +628,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def _detect_hypothesis_testing_pattern(self) -> List[Dict[str, Any]]:
+    def _detect_hypothesis_testing_pattern(self) -> list[dict[str, Any]]:
         """Detect hypothesis-testing patterns"""
         patterns = []
 
@@ -666,7 +665,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def _detect_iterative_refinement_pattern(self) -> List[Dict[str, Any]]:
+    def _detect_iterative_refinement_pattern(self) -> list[dict[str, Any]]:
         """Detect iterative refinement patterns"""
         patterns = []
 
@@ -695,7 +694,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def _detect_concept_synthesis_pattern(self) -> List[Dict[str, Any]]:
+    def _detect_concept_synthesis_pattern(self) -> list[dict[str, Any]]:
         """Detect concept synthesis patterns"""
         patterns = []
 
@@ -721,7 +720,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def _detect_decision_making_pattern(self) -> List[Dict[str, Any]]:
+    def _detect_decision_making_pattern(self) -> list[dict[str, Any]]:
         """Detect decision-making patterns"""
         patterns = []
 
@@ -754,7 +753,7 @@ class TrainOfThoughtTracker:
 
         return patterns
 
-    def get_critical_insights(self) -> List[Dict[str, Any]]:
+    def get_critical_insights(self) -> list[dict[str, Any]]:
         """Extract critical insights from the thought network"""
         insights = []
 
@@ -801,7 +800,7 @@ class TrainOfThoughtTracker:
         # Sort by importance and return top insights
         return sorted(insights, key=lambda x: x.get("importance", 0), reverse=True)[:10]
 
-    def export_thought_network(self) -> Dict[str, Any]:
+    def export_thought_network(self) -> dict[str, Any]:
         """Export the entire thought network for analysis"""
         export_data = {
             "thoughts": self.thought_metadata,

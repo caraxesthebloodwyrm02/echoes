@@ -9,12 +9,12 @@ License: Consent-Based License v2.0
 """
 
 import asyncio
-import json
 import datetime
-import tempfile
+import json
 import os
+import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+
 import pandas as pd
 
 from assistant_v2_core import EchoesAssistantV2
@@ -977,7 +977,7 @@ class PersonalUseScenarios:
 
             print(f"   ✅ Total Value Created: ${total_value_created:.4f}")
             print(f"   ✅ Total Cognitive Joules: {total_cognitive_joules:.2f}")
-            print(f"   ✅ Fair Compensation: Verified across all users")
+            print("   ✅ Fair Compensation: Verified across all users")
 
             print("\n✅ End-to-End Integrity Validation Complete")
 
@@ -1066,7 +1066,7 @@ class PersonalUseScenarios:
 
             # Display key user-centric metrics
             metrics = user_centric_report["user_experience_metrics"]
-            print(f"\n🌟 User-Centric Impact Summary:")
+            print("\n🌟 User-Centric Impact Summary:")
             print(
                 f"   👥 Total Personas Validated: {metrics['total_personas_validated']}"
             )
@@ -1076,11 +1076,11 @@ class PersonalUseScenarios:
             print(f"   💰 Total Value Created: ${metrics['total_value_created']}")
             print(f"   ⚖️ Consent Compliance: {metrics['consent_compliance_rate']:.1f}%")
 
-            print(f"\n🎯 Personal Empowerment Achieved:")
+            print("\n🎯 Personal Empowerment Achieved:")
             for impact in user_centric_report["personal_impact_summary"].values():
                 print(f"   • {impact}")
 
-            print(f"\n🔒 Integrity Assurance:")
+            print("\n🔒 Integrity Assurance:")
             for assurance in user_centric_report["integrity_assurance"].values():
                 print(f"   • {assurance}")
 
@@ -1134,10 +1134,10 @@ class PersonalUseScenarios:
             else:
                 with open(temp_file, "w") as f:
                     f.write(f"Personal {content_type} content\n")
-                    f.write(f"Created for personal development and optimization\n")
+                    f.write("Created for personal development and optimization\n")
                     f.write(f"Content type: {content_type}\n")
-                    f.write(f"Purpose: Personal growth and improvement\n")
-                    f.write(f"Privacy: Personal and confidential\n")
+                    f.write("Purpose: Personal growth and improvement\n")
+                    f.write("Privacy: Personal and confidential\n")
 
             return temp_file
 

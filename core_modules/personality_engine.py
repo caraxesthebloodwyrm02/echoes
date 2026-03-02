@@ -4,11 +4,10 @@ Provides enthusiasm, curiosity, and adaptive behavior based on user interactions
 """
 
 import logging
-import time
 import random
-from typing import Dict, Any, List, Optional
-from datetime import datetime, timedelta
+from datetime import datetime
 from enum import Enum
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -176,7 +175,7 @@ class PersonalityEngine:
         }
 
     def update_from_interaction(
-        self, user_message: str, user_sentiment: Optional[str] = None
+        self, user_message: str, user_sentiment: str | None = None
     ):
         """Update personality based on user interaction"""
         self.interaction_count += 1
@@ -316,7 +315,7 @@ class PersonalityEngine:
 
         return base_response
 
-    def get_cross_reference_suggestions(self, topic: str) -> List[str]:
+    def get_cross_reference_suggestions(self, topic: str) -> list[str]:
         """Generate cross-reference suggestions based on personality traits"""
         suggestions = []
 
@@ -364,7 +363,7 @@ class PersonalityEngine:
 
         return base_example
 
-    def get_values_alignment(self, action: str) -> Dict[str, float]:
+    def get_values_alignment(self, action: str) -> dict[str, float]:
         """Check how an action aligns with core values"""
         alignment = {}
 
@@ -389,7 +388,7 @@ class PersonalityEngine:
 
         return alignment
 
-    def get_personality_summary(self) -> Dict[str, Any]:
+    def get_personality_summary(self) -> dict[str, Any]:
         """Get current personality state summary"""
         return {
             "current_mood": self.current_mood.value,

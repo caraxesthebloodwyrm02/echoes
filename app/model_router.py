@@ -8,13 +8,12 @@ Intelligently selects the most appropriate GPT-4o model based on:
 - Prompt characteristics
 """
 
-import re
-import hashlib
 import asyncio
-from typing import List, Dict, Any, Optional
-from collections import defaultdict
-import time
+import hashlib
 import logging
+import re
+import time
+from collections import defaultdict
 
 logger = logging.getLogger(__name__)
 
@@ -136,7 +135,7 @@ class ModelRouter:
             "Glimpse test",
         ]
 
-    def select_model(self, prompt: str, tools: List[dict] = None) -> str:
+    def select_model(self, prompt: str, tools: list[dict] = None) -> str:
         """
         Select the most appropriate model based on prompt and tools.
 
@@ -172,7 +171,7 @@ class ModelRouter:
         logger.debug("Simple task detected, selecting gpt-4o-mini")
         return self.default_model
 
-    def _needs_web_search(self, prompt: str, tools: List[dict] = None) -> bool:
+    def _needs_web_search(self, prompt: str, tools: list[dict] = None) -> bool:
         """
         Determine if the prompt requires web search capabilities.
 
@@ -257,7 +256,7 @@ class ModelRouter:
 
         return False
 
-    def _select_specialized_model(self, prompt: str) -> Optional[str]:
+    def _select_specialized_model(self, prompt: str) -> str | None:
         """Determine if prompt requires specialized reasoning models."""
         prompt_lower = prompt.lower()
         word_count = len(prompt.split())
@@ -322,7 +321,7 @@ class ModelResponseCache:
         self.ttl_seconds = ttl_seconds
         self.lock = asyncio.Lock()
 
-    async def get(self, prompt: str, model: str) -> Optional[dict]:
+    async def get(self, prompt: str, model: str) -> dict | None:
         """
         Get cached response if available and not expired.
 

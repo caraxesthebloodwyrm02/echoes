@@ -6,11 +6,13 @@ Combining cross-channel processing enhancements with historical communication pr
 to achieve significant accuracy improvements from 57.37% baseline.
 """
 
+import logging
+from typing import Any
+
 import numpy as np
-from typing import Dict, Any, List, Tuple
+
 from .cross_channel_accuracy_enhancer import CrossChannelAccuracyEnhancer
 from .historical_example_analysis import HISTORICAL_SIGNAL_ANALYSIS
-import logging
 
 logger = logging.getLogger(__name__)
 
@@ -26,7 +28,7 @@ class UnifiedAccuracyImprovementSystem:
         self.historical_insights = HISTORICAL_SIGNAL_ANALYSIS
         self.improvement_strategy = self._build_unified_strategy()
 
-    def _build_unified_strategy(self) -> Dict[str, Any]:
+    def _build_unified_strategy(self) -> dict[str, Any]:
         """Build unified improvement strategy combining all insights."""
 
         strategy = {
@@ -128,8 +130,8 @@ class UnifiedAccuracyImprovementSystem:
         return strategy
 
     def apply_unified_improvements(
-        self, input_data: Dict[str, Any], current_predictions: np.ndarray
-    ) -> Tuple[np.ndarray, Dict[str, Any]]:
+        self, input_data: dict[str, Any], current_predictions: np.ndarray
+    ) -> tuple[np.ndarray, dict[str, Any]]:
         """
         Apply the complete unified improvement strategy.
 
@@ -233,8 +235,8 @@ class UnifiedAccuracyImprovementSystem:
         return enhanced_predictions, improvement_metrics
 
     def _apply_visual_demonstration_phase(
-        self, input_data: Dict[str, Any], predictions: np.ndarray
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], predictions: np.ndarray
+    ) -> dict[str, Any]:
         """Phase 1: Apply Renaissance visual demonstration principles."""
 
         # Focus on frequency and spatial enhancements (visual channels)
@@ -258,8 +260,8 @@ class UnifiedAccuracyImprovementSystem:
         }
 
     def _apply_systematic_classification_phase(
-        self, input_data: Dict[str, Any], predictions: np.ndarray
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], predictions: np.ndarray
+    ) -> dict[str, Any]:
         """Phase 2: Apply Enlightenment systematic classification."""
 
         # Apply class-wise targeted improvements based on confusion matrix analysis
@@ -284,8 +286,8 @@ class UnifiedAccuracyImprovementSystem:
         }
 
     def _apply_experimental_verification_phase(
-        self, input_data: Dict[str, Any], predictions: np.ndarray
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], predictions: np.ndarray
+    ) -> dict[str, Any]:
         """Phase 3: Apply experimental verification patterns."""
 
         # Apply temporal enhancement (experimental repeatability)
@@ -307,8 +309,8 @@ class UnifiedAccuracyImprovementSystem:
         }
 
     def _apply_multisensory_integration_phase(
-        self, input_data: Dict[str, Any], predictions: np.ndarray
-    ) -> Dict[str, Any]:
+        self, input_data: dict[str, Any], predictions: np.ndarray
+    ) -> dict[str, Any]:
         """Phase 4: Apply multi-sensory integration with all historical principles."""
 
         # Apply full multimodal fusion
@@ -326,7 +328,7 @@ class UnifiedAccuracyImprovementSystem:
         }
 
     def _apply_categorical_correction(
-        self, prediction: int, input_data: Dict[str, Any], sample_index: int
+        self, prediction: int, input_data: dict[str, Any], sample_index: int
     ) -> int:
         """Apply categorical correction based on systematic classification principles."""
 
@@ -344,7 +346,7 @@ class UnifiedAccuracyImprovementSystem:
 
         return prediction
 
-    def get_improvement_analysis(self) -> Dict[str, Any]:
+    def get_improvement_analysis(self) -> dict[str, Any]:
         """Get comprehensive analysis of the improvement strategy."""
 
         analysis = self.improvement_strategy.copy()
@@ -375,7 +377,7 @@ class UnifiedAccuracyImprovementSystem:
 
         return analysis
 
-    def validate_improvement_potential(self) -> Dict[str, Any]:
+    def validate_improvement_potential(self) -> dict[str, Any]:
         """Validate the projected improvements against historical patterns."""
 
         validation = {
@@ -420,7 +422,7 @@ def execute_unified_accuracy_improvement():
         "validation_results": validation,
         "key_achievements": [
             f"Projected accuracy improvement: {analysis['baseline_accuracy']:.1%} → {analysis['expected_final_accuracy']:.1%}",
-            f"Total improvement: +{analysis['total_improvement']:.1%} ({analysis['total_improvement']/analysis['baseline_accuracy']*100:.1f}% relative increase)",
+            f"Total improvement: +{analysis['total_improvement']:.1%} ({analysis['total_improvement'] / analysis['baseline_accuracy'] * 100:.1f}% relative increase)",
             "Most impactful component: Multimodal fusion (22% improvement)",
             "Historical principle with highest impact: Visual demonstration (85% noise reduction)",
             "Implementation approach: Phased rollout with Renaissance → Enlightenment progression",

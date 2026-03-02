@@ -4,16 +4,16 @@ Tools examples module.
 This module provides example tools for the registry.
 """
 
-from typing import Dict, Any
+from typing import Any
 
 
-def reverse_text_tool(payload: dict) -> Dict[str, Any]:
+def reverse_text_tool(payload: dict) -> dict[str, Any]:
     """Example tool that reverses text."""
     txt = payload.get("text", "")
     return {"result": txt[::-1]}
 
 
-def echo_tool(payload: dict) -> Dict[str, Any]:
+def echo_tool(payload: dict) -> dict[str, Any]:
     """Example tool that echoes back the input."""
     return {"echo": payload}
 

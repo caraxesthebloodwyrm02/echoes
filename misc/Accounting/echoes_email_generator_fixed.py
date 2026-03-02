@@ -1,19 +1,15 @@
 #!/usr/bin/env python3
 # echoes_email_generator_fixed.py - Email ROI Analysis Generator (Production Ready)
 
-import json
-import sys
-import csv
-from dataclasses import dataclass, asdict
-from typing import Optional, Dict, Any, List
 import datetime
-import math
+import json
+from dataclasses import dataclass
 
 
 @dataclass
 class EmailConfig:
     email_subject: str = "Echoes AI ROI Analysis - Immediate 5-Day Payback Opportunity"
-    email_to: List[str] = None
+    email_to: list[str] = None
     email_from: str = "Sarah Chen, Echoes AI <sarah.chen@echoes.ai>"
     email_date: str = ""
     meeting_request: str = "30-minute decision meeting - This week preferred"
@@ -43,7 +39,7 @@ def load_email_config(yaml_path: str) -> EmailConfig:
     """Load configuration from email YAML file"""
     config = EmailConfig()
     try:
-        with open(yaml_path, "r", encoding="utf-8") as f:
+        with open(yaml_path, encoding="utf-8") as f:
             content = f.read()
 
         # Simple YAML parsing for email config
@@ -121,7 +117,7 @@ def format_currency(amount: float, currency: str = "USD") -> str:
     return f"${amount:,.0f}"
 
 
-def format_email_recipients(email_list: List[str]) -> str:
+def format_email_recipients(email_list: list[str]) -> str:
     """Format email recipients for display"""
     if len(email_list) == 1:
         return email_list[0]
@@ -224,7 +220,7 @@ def export_email_files(
     print(f"✅ Email exported: {base_filename}.txt")
 
     # Save JSON with UTC timestamp fix
-    timestamp = datetime.datetime.now(datetime.timezone.utc).isoformat()
+    timestamp = datetime.datetime.now(datetime.UTC).isoformat()
     email_data = {
         "subject": config.email_subject,
         "to": config.email_to,
@@ -338,7 +334,7 @@ def main():
     # Export files
     export_email_files(config, args.output)
 
-    print(f"\n🎯 Ready to send stakeholder email!")
+    print("\n🎯 Ready to send stakeholder email!")
     print(f"Files created: {args.output}.txt, {args.output}_data.json")
 
 

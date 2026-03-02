@@ -4,15 +4,14 @@ Tab System Payout Test - Import Existing Work and Process Payment for Echoes Dev
 """
 
 import sys
-import os
 
 sys.path.append(".")
 
 from __init__ import (
-    tab_get_user_status,
-    tab_process_manual_payout,
-    tab_import_existing_work,
     check_tab_system_health,
+    tab_get_user_status,
+    tab_import_existing_work,
+    tab_process_manual_payout,
 )
 
 
@@ -45,7 +44,7 @@ def main():
     print(f"  Compensation Tier: {import_result['compensation_tier']}")
     print(f"  Message: {import_result['message']}")
 
-    print(f"\n📊 Checking Updated User Compensation Status...")
+    print("\n📊 Checking Updated User Compensation Status...")
     status = tab_get_user_status(user_id)
     if "compensation_status" in status:
         comp_status = status["compensation_status"]
@@ -67,7 +66,7 @@ def main():
     else:
         print(f"Status Error: {status}")
 
-    print(f"\n📧 Contact Information for Questions:")
+    print("\n📧 Contact Information for Questions:")
     print("Email: [Your email address for payout questions]")
     print("Subject: Tab System Payout - Echoes Developer")
     print(

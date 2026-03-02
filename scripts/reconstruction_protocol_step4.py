@@ -11,8 +11,7 @@ import json
 import os
 import re
 import sys
-from pathlib import Path
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def deep_clean_extracted_data(
@@ -21,7 +20,7 @@ def deep_clean_extracted_data(
     """Step 4: Deep clean extracted data."""
 
     clean_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 4: Deep Clean",
         "extraction_directory": extraction_dir,
@@ -86,7 +85,7 @@ def deep_clean_extracted_data(
 
                 # Read file content
                 try:
-                    with open(file_path, "r", encoding="utf-8") as f:
+                    with open(file_path, encoding="utf-8") as f:
                         content = f.read()
                 except Exception as e:
                     clean_data["anomalies"].append(
@@ -194,7 +193,7 @@ def deep_clean_extracted_data(
 
         if os.path.exists(full_path):
             try:
-                with open(full_path, "r", encoding="utf-8") as f:
+                with open(full_path, encoding="utf-8") as f:
                     content = f.read()
 
                 # Apply basic sanitization (remove suspicious comments, etc.)
@@ -251,13 +250,13 @@ def deep_clean_extracted_data(
 
     # Final summary
     summary = clean_data["summary"]
-    print(f"\\n📊 Deep Clean Summary:")
-    print(f'   Files scanned: {summary["files_scanned"]}')
-    print(f'   Files clean: {summary["files_clean"]}')
-    print(f'   Files quarantined: {summary["files_quarantined"]}')
-    print(f'   Files sanitized: {summary["files_sanitized"]}')
-    print(f'   Clean percentage: {summary["clean_percentage"]:.1f}%')
-    print(f'   Anomalies: {summary["total_anomalies"]}')
+    print("\\n📊 Deep Clean Summary:")
+    print(f"   Files scanned: {summary['files_scanned']}")
+    print(f"   Files clean: {summary['files_clean']}")
+    print(f"   Files quarantined: {summary['files_quarantined']}")
+    print(f"   Files sanitized: {summary['files_sanitized']}")
+    print(f"   Clean percentage: {summary['clean_percentage']:.1f}%")
+    print(f"   Anomalies: {summary['total_anomalies']}")
 
     success_threshold = (
         summary["clean_percentage"] >= 90 and summary["files_quarantined"] == 0
@@ -268,7 +267,7 @@ def deep_clean_extracted_data(
         return True
     else:
         print(
-            f'⚠️  STEP 4 ISSUES: Clean rate below threshold ({summary["clean_percentage"]:.1f}%)'
+            f"⚠️  STEP 4 ISSUES: Clean rate below threshold ({summary['clean_percentage']:.1f}%)"
         )
         return False
 

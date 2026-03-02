@@ -2,7 +2,6 @@ from typing import (
     ClassVar,
     Literal,
     Never,
-    TypeAlias,
     TypedDict,
     TypeVar,
     final,
@@ -12,8 +11,8 @@ from typing import (
 
 import numpy as np
 
-_Device: TypeAlias = Literal["cpu"]
-_DeviceLike: TypeAlias = _Device | None
+type _Device = Literal["cpu"]
+type _DeviceLike = _Device | None
 
 _Capabilities = TypedDict(
     "_Capabilities",
@@ -33,21 +32,29 @@ _DefaultDTypes = TypedDict(
     },
 )
 
-_KindBool: TypeAlias = Literal["bool"]
-_KindInt: TypeAlias = Literal["signed integer"]
-_KindUInt: TypeAlias = Literal["unsigned integer"]
-_KindInteger: TypeAlias = Literal["integral"]
-_KindFloat: TypeAlias = Literal["real floating"]
-_KindComplex: TypeAlias = Literal["complex floating"]
-_KindNumber: TypeAlias = Literal["numeric"]
-_Kind: TypeAlias = _KindBool | _KindInt | _KindUInt | _KindInteger | _KindFloat | _KindComplex | _KindNumber
+type _KindBool = Literal["bool"]
+type _KindInt = Literal["signed integer"]
+type _KindUInt = Literal["unsigned integer"]
+type _KindInteger = Literal["integral"]
+type _KindFloat = Literal["real floating"]
+type _KindComplex = Literal["complex floating"]
+type _KindNumber = Literal["numeric"]
+type _Kind = (
+    _KindBool
+    | _KindInt
+    | _KindUInt
+    | _KindInteger
+    | _KindFloat
+    | _KindComplex
+    | _KindNumber
+)
 
 _T1 = TypeVar("_T1")
 _T2 = TypeVar("_T2")
 _T3 = TypeVar("_T3")
-_Permute1: TypeAlias = _T1 | tuple[_T1]
-_Permute2: TypeAlias = tuple[_T1, _T2] | tuple[_T2, _T1]
-_Permute3: TypeAlias = (
+type _Permute1[_T1] = _T1 | tuple[_T1]
+type _Permute2[_T1, _T2] = tuple[_T1, _T2] | tuple[_T2, _T1]
+type _Permute3[_T1, _T2, _T3] = (
     tuple[_T1, _T2, _T3]
     | tuple[_T1, _T3, _T2]
     | tuple[_T2, _T1, _T3]
@@ -109,7 +116,7 @@ class _DTypesUnion(TypedDict, total=False):
     complex64: np.dtype[np.complex64]
     complex128: np.dtype[np.complex128]
 
-_EmptyDict: TypeAlias = dict[Never, Never]
+type _EmptyDict = dict[Never, Never]
 
 @final
 class __array_namespace_info__:
@@ -177,7 +184,8 @@ class __array_namespace_info__:
         self,
         *,
         device: _DeviceLike = ...,
-        kind: _Permute1[_KindNumber] | _Permute3[_KindInteger, _KindFloat, _KindComplex],
+        kind: _Permute1[_KindNumber]
+        | _Permute3[_KindInteger, _KindFloat, _KindComplex],
     ) -> _DTypesNumber: ...
     @overload
     def dtypes(

@@ -5,10 +5,9 @@ Module Import Updater for Echoes Project
 This script updates import statements to reflect the new agent_* module names.
 It automatically detects renamed modules by scanning for agent_*.py files.
 """
-import os
+
 import re
 from pathlib import Path
-from typing import Dict, Set
 
 # Directories to scan for Python files
 SOURCE_DIRS = ["core", "echoes", "tests", "app", "scripts"]
@@ -18,7 +17,7 @@ SKIP_DIRS = {".git", ".venv", "venv", "__pycache__", ".pytest_cache", "build", "
 SKIP_FILES = {"__init__.py", "__main__.py"}
 
 
-def find_renamed_modules(root_dir: Path) -> Dict[str, str]:
+def find_renamed_modules(root_dir: Path) -> dict[str, str]:
     """
     Find all agent_*.py files and build a mapping of original to new module names.
     Returns a dictionary mapping original names to agent_* names.
@@ -43,7 +42,7 @@ def find_renamed_modules(root_dir: Path) -> Dict[str, str]:
     return rename_map
 
 
-def update_imports_in_file(filepath: Path, rename_map: Dict[str, str]) -> bool:
+def update_imports_in_file(filepath: Path, rename_map: dict[str, str]) -> bool:
     """
     Update imports in a single file.
     Returns True if changes were made, False otherwise.
@@ -117,7 +116,7 @@ def main():
     for source_dir in SOURCE_DIRS:
         source_path = root_dir / source_dir
         if not source_path.exists():
-            print(f"\⚠️  Directory not found: {source_path}")
+            print(rf"\⚠️  Directory not found: {source_path}")
             continue
 
         print(f"\n📂 Processing {source_path}...")

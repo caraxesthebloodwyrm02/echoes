@@ -11,16 +11,16 @@ Purpose: Transform system complexity into clarity through comprehensive analysis
 and intelligent optimization, with extensibility for future features.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import yaml
 import json
-from typing import Dict, Any, Optional, List
-from dataclasses import dataclass, field
-from pathlib import Path
 import logging
-from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from datetime import datetime
 from enum import Enum, auto
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import yaml
 
 # Configure logging for diagnostic reproducibility (UTF-8 compatible)
 logging.basicConfig(
@@ -53,18 +53,18 @@ class DiagnosticSignature:
     source_name: str
     duration: float
     timestamp: datetime = field(default_factory=datetime.utcnow)
-    impact_analysis: Dict[str, float] = field(default_factory=dict)
-    atmospheric_metrics: Dict[str, float] = field(default_factory=dict)
-    throughput_dynamics: Dict[str, float] = field(default_factory=dict)
-    observability_streams: Dict[str, float] = field(default_factory=dict)
-    validation_intelligence: Dict[str, float] = field(default_factory=dict)
-    glimpse_insights: Optional[Dict[str, Any]] = field(default=None)  # Future feature
-    cross_platform_metrics: Optional[Dict[str, Any]] = field(
+    impact_analysis: dict[str, float] = field(default_factory=dict)
+    atmospheric_metrics: dict[str, float] = field(default_factory=dict)
+    throughput_dynamics: dict[str, float] = field(default_factory=dict)
+    observability_streams: dict[str, float] = field(default_factory=dict)
+    validation_intelligence: dict[str, float] = field(default_factory=dict)
+    glimpse_insights: dict[str, Any] | None = field(default=None)  # Future feature
+    cross_platform_metrics: dict[str, Any] | None = field(
         default=None
     )  # Future feature
     unified_quality: float = 0.0
     coherence_score: float = 0.0
-    feature_flags: Dict[str, bool] = field(
+    feature_flags: dict[str, bool] = field(
         default_factory=lambda: {
             "glimpse_integration": False,
             "cross_platform_support": False,
@@ -97,10 +97,10 @@ class NexusProtocolDiagnostic:
             },
         )
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load configuration with default values"""
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f)
                 logger.info(f"Configuration loaded from {config_path}")
                 return self._apply_glimpse_settings(config)
@@ -110,7 +110,7 @@ class NexusProtocolDiagnostic:
             )
             return self._get_glimpse_defaults()
 
-    def _apply_glimpse_settings(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _apply_glimpse_settings(self, config: dict[str, Any]) -> dict[str, Any]:
         """Apply glimpse Protocol settings"""
         if "glimpse_protocol" not in config:
             config["glimpse_protocol"] = {}
@@ -137,7 +137,7 @@ class NexusProtocolDiagnostic:
 
         return config
 
-    def _get_glimpse_defaults(self) -> Dict[str, Any]:
+    def _get_glimpse_defaults(self) -> dict[str, Any]:
         """glimpse Protocol default configuration"""
         return {
             "glimpse_protocol": {
@@ -195,7 +195,7 @@ class NexusProtocolDiagnostic:
         return sig
 
     # Core analysis methods (implementation details omitted for brevity)
-    def _analyze_impact(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact(self, data: Any) -> dict[str, float]:
         """Core impact analysis"""
         return {
             "issues_density": min(data.get("issues", 0.74), 1.0),
@@ -205,7 +205,7 @@ class NexusProtocolDiagnostic:
             "diagnostic_clarity": max(0.0, 1.0 - data.get("complexity", 0.67)),
         }
 
-    def _analyze_atmospheric(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric(self, data: Any) -> dict[str, float]:
         """Core atmospheric metrics analysis"""
         return {
             "error_rate": min(data.get("error_rate", 0.77), 1.0),
@@ -215,7 +215,7 @@ class NexusProtocolDiagnostic:
             "harmonic_balance": max(0.0, 1.0 - data.get("error_rate", 0.77)),
         }
 
-    def _analyze_throughput(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput(self, data: Any) -> dict[str, float]:
         """Core throughput dynamics analysis"""
         return {
             "rps_observed": min(data.get("rps_normalized", 0.63), 1.0),
@@ -224,7 +224,7 @@ class NexusProtocolDiagnostic:
             "flow_resonance": max(0.0, data.get("throughput_stability", 0.53)),
         }
 
-    def _analyze_observability(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability(self, data: Any) -> dict[str, float]:
         """Core observability streams analysis"""
         return {
             "error_density": min(data.get("error_density", 0.77), 1.0),
@@ -233,7 +233,7 @@ class NexusProtocolDiagnostic:
             "signal_clarity": max(0.0, 1.0 - data.get("warning_noise", 0.67)),
         }
 
-    def _analyze_validation(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation(self, data: Any) -> dict[str, float]:
         """Core validation intelligence analysis"""
         return {
             "glimpse_coverage": max(0.0, data.get("glimpse_coverage", 0.63)),
@@ -243,12 +243,12 @@ class NexusProtocolDiagnostic:
         }
 
     # Future feature stubs
-    def _analyze_with_glimpse(self, data: Any) -> Dict[str, Any]:
+    def _analyze_with_glimpse(self, data: Any) -> dict[str, Any]:
         """Future: Integrate Glimpse insights for deeper analysis"""
         logger.warning("Glimpse integration is not yet implemented")
         return {"status": "glimpse_integration_pending"}
 
-    def _analyze_cross_platform(self, data: Any) -> Dict[str, Any]:
+    def _analyze_cross_platform(self, data: Any) -> dict[str, Any]:
         """Future: Cross-platform analysis capabilities"""
         logger.warning("Cross-platform analysis is not yet implemented")
         return {"status": "cross_platform_analysis_pending"}
@@ -448,7 +448,7 @@ class NexusProtocolDiagnostic:
 
     def generate_diagnostic_report(
         self, output_dir: str = "glimpse_diagnostic_outputs"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Generate comprehensive diagnostic report"""
         logger.info("Generating glimpse Protocol diagnostic report")
         out = Path(output_dir)
@@ -526,7 +526,7 @@ class NexusProtocolDiagnostic:
         logger.info(f"Diagnostic report saved to {json_file}")
         return report
 
-    def _get_feature_roadmap(self) -> Dict[str, Any]:
+    def _get_feature_roadmap(self) -> dict[str, Any]:
         """Get feature roadmap for future updates"""
         return {
             "upcoming_features": [
@@ -643,7 +643,7 @@ def main():
     print(
         f"Overall Coherence:       {diagnostic.analysis.get('unified_coherence', 0):.3f}"
     )
-    print(f"Threshold:               0.750")
+    print("Threshold:               0.750")
     print(f"Status:                  {'✅ ACTIVE' if activated else '⚠️  INACTIVE'}")
 
     if activated:

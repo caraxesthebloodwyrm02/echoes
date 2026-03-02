@@ -1,11 +1,12 @@
-from pathlib import Path
 import io
 import os
-from enum import Enum
 from collections.abc import Iterator
-
-from typing import NamedTuple
-from typing_extensions import Self  # < Py 3.11
+from enum import Enum
+from pathlib import Path
+from typing import (
+    NamedTuple,
+    Self,  # < Py 3.11
+)
 
 class _dvistate(Enum):
     pre = ...

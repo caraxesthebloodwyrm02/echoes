@@ -5,7 +5,6 @@ Comprehensive Filesystem Capabilities Demo
 Shows how EchoesAssistantV2 can interact with the filesystem using OpenAI function calling.
 """
 
-import os
 import sys
 from pathlib import Path
 
@@ -90,7 +89,7 @@ def demo_filesystem_capabilities():
             lines = response.split("\n")
             if len(lines) > 5:
                 print("\n".join(lines[:5]))
-                print(f"... ({len(lines)-5} more lines)")
+                print(f"... ({len(lines) - 5} more lines)")
             else:
                 print(response)
         except Exception as e:

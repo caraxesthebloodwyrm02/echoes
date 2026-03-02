@@ -4,12 +4,12 @@ Multimodal document processor for the Echoes AI Assistant.
 Handles processing of various file types including text, PDFs, images, and audio.
 """
 
-import mimetypes
-from typing import Dict, List, Any, Optional
-from pathlib import Path
-from datetime import datetime, timezone
 import json
 import logging
+import mimetypes
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -85,7 +85,7 @@ class MultimodalProcessor:
         """Check if a MIME type can be processed."""
         return mime_type in self.supported_types
 
-    def process_file(self, file_path: str) -> Optional[Dict[str, Any]]:
+    def process_file(self, file_path: str) -> dict[str, Any] | None:
         """
         Process a file based on its MIME type.
 
@@ -141,10 +141,10 @@ class MultimodalProcessor:
             logger.error(f"Error processing {file_path}: {str(e)}")
             return None
 
-    def _process_text_file(self, file_path: Path, mime_type: str) -> Dict[str, Any]:
+    def _process_text_file(self, file_path: Path, mime_type: str) -> dict[str, Any]:
         """Process text-based files."""
         try:
-            with open(file_path, "r", encoding="utf-8", errors="ignore") as f:
+            with open(file_path, encoding="utf-8", errors="ignore") as f:
                 content = f.read()
 
             return {
@@ -157,10 +157,10 @@ class MultimodalProcessor:
         except Exception as e:
             raise Exception(f"Failed to read text file: {str(e)}")
 
-    def _process_json_file(self, file_path: Path, mime_type: str) -> Dict[str, Any]:
+    def _process_json_file(self, file_path: Path, mime_type: str) -> dict[str, Any]:
         """Process JSON files."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 data = json.load(f)
 
             # Convert JSON to readable text
@@ -177,7 +177,7 @@ class MultimodalProcessor:
 
     def _process_pdf_file(
         self, file_path: Path, mime_type: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Process PDF files using PyMuPDF."""
         if not self.pdf_processor:
             raise Exception("PDF processing not available - install PyMuPDF")
@@ -213,7 +213,7 @@ class MultimodalProcessor:
 
     def _process_image_file(
         self, file_path: Path, mime_type: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Process image files using OpenAI GPT-4 Vision."""
         if not hasattr(self, "_openai_client"):
             try:
@@ -226,6 +226,7 @@ class MultimodalProcessor:
 
         try:
             import base64
+
             from PIL import Image
 
             # Open and validate image
@@ -302,7 +303,7 @@ class MultimodalProcessor:
 
     def _process_audio_file(
         self, file_path: Path, mime_type: str
-    ) -> Optional[Dict[str, Any]]:
+    ) -> dict[str, Any] | None:
         """Process audio files using OpenAI Whisper API."""
         if not hasattr(self, "_openai_client"):
             try:
@@ -382,7 +383,7 @@ class MultimodalProcessor:
             logger.error(f"Failed to process audio with Whisper API: {str(e)}")
             raise Exception(f"Failed to process audio: {str(e)}")
 
-    def _extract_file_metadata(self, file_path: Path, mime_type: str) -> Dict[str, Any]:
+    def _extract_file_metadata(self, file_path: Path, mime_type: str) -> dict[str, Any]:
         """Extract basic file metadata."""
         stat = file_path.stat()
 
@@ -393,14 +394,14 @@ class MultimodalProcessor:
             "mime_type": mime_type,
             "last_modified": stat.st_mtime,
             "file_extension": file_path.suffix.lower(),
-            "processed_at": datetime.now(timezone.utc).isoformat(),
+            "processed_at": datetime.now(UTC).isoformat(),
         }
 
-    def get_supported_types(self) -> List[str]:
+    def get_supported_types(self) -> list[str]:
         """Get list of supported MIME types."""
         return list(self.supported_types.keys())
 
-    def get_processor_status(self) -> Dict[str, bool]:
+    def get_processor_status(self) -> dict[str, bool]:
         """Get status of different processors."""
         return {
             "pdf": self.pdf_processor is not None,

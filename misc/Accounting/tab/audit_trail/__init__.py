@@ -13,13 +13,13 @@ Tracks:
 - Compliance and regulatory requirements
 """
 
-import os
-import json
 import hashlib
-from datetime import datetime, timezone
-from typing import Dict, Any, List, Optional
+import json
+import os
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime, timezone
 from pathlib import Path
-from dataclasses import dataclass, asdict
+from typing import Any, Dict, List, Optional
 
 
 @dataclass
@@ -31,9 +31,9 @@ class AuditEntry:
     user_id: str
     component: str  # work_tracking, payout_engine, payment_gateway, sync_engine
     action: str
-    details: Dict[str, Any]
+    details: dict[str, Any]
     checksum: str
-    compliance_flags: List[str] = None
+    compliance_flags: list[str] = None
 
     def __post_init__(self):
         if self.compliance_flags is None:
@@ -65,8 +65,8 @@ class AuditTrail:
         user_id: str,
         component: str,
         action: str,
-        details: Dict[str, Any],
-        compliance_flags: List[str] = None,
+        details: dict[str, Any],
+        compliance_flags: list[str] = None,
     ) -> str:
         """
         Log an auditable event.
@@ -83,14 +83,14 @@ class AuditTrail:
         """
         # Generate entry ID
         entry_content = (
-            f"{user_id}_{component}_{action}_{datetime.now(timezone.utc).isoformat()}"
+            f"{user_id}_{component}_{action}_{datetime.now(UTC).isoformat()}"
         )
         entry_id = hashlib.md5(entry_content.encode()).hexdigest()[:16]
 
         # Create audit entry
         entry = AuditEntry(
             entry_id=entry_id,
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             user_id=user_id,
             component=component,
             action=action,
@@ -110,7 +110,7 @@ class AuditTrail:
 
     def get_user_audit_trail(
         self, user_id: str, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get audit trail for a specific user."""
         user_entries = []
 
@@ -118,7 +118,7 @@ class AuditTrail:
             return user_entries
 
         try:
-            with open(self.main_audit_file, "r") as f:
+            with open(self.main_audit_file) as f:
                 for line in f:
                     if line.strip():
                         entry = json.loads(line)
@@ -134,7 +134,7 @@ class AuditTrail:
 
     def get_component_audit_trail(
         self, component: str, limit: int = 100
-    ) -> List[Dict[str, Any]]:
+    ) -> list[dict[str, Any]]:
         """Get audit trail for a specific component."""
         component_entries = []
 
@@ -142,7 +142,7 @@ class AuditTrail:
             return component_entries
 
         try:
-            with open(self.main_audit_file, "r") as f:
+            with open(self.main_audit_file) as f:
                 for line in f:
                     if line.strip():
                         entry = json.loads(line)
@@ -157,7 +157,7 @@ class AuditTrail:
 
     def generate_compliance_report(
         self, user_id: str, time_range: str = "all"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """
         Generate compliance report for a user.
 
@@ -180,7 +180,7 @@ class AuditTrail:
         report = {
             "user_id": user_id,
             "report_period": time_range,
-            "generated_at": datetime.now(timezone.utc).isoformat(),
+            "generated_at": datetime.now(UTC).isoformat(),
             "total_audit_entries": len(audit_entries),
             "compliance_analysis": compliance_analysis,
             "key_findings": self._extract_key_findings(audit_entries),
@@ -191,7 +191,7 @@ class AuditTrail:
 
         return report
 
-    def verify_audit_integrity(self) -> Dict[str, Any]:
+    def verify_audit_integrity(self) -> dict[str, Any]:
         """Verify the integrity of the audit trail."""
         integrity_status = {
             "audit_file_exists": self.main_audit_file.exists(),
@@ -199,7 +199,7 @@ class AuditTrail:
             "total_entries": 0,
             "corrupted_entries": 0,
             "integrity_violations": [],
-            "last_check": datetime.now(timezone.utc).isoformat(),
+            "last_check": datetime.now(UTC).isoformat(),
         }
 
         if not self.main_audit_file.exists():
@@ -207,7 +207,7 @@ class AuditTrail:
             return integrity_status
 
         try:
-            with open(self.main_audit_file, "r") as f:
+            with open(self.main_audit_file) as f:
                 for line_num, line in enumerate(f, 1):
                     if line.strip():
                         integrity_status["total_entries"] += 1
@@ -246,7 +246,7 @@ class AuditTrail:
         with open(self.main_audit_file, "a") as f:
             f.write(json.dumps(asdict(entry)) + "\n")
 
-    def _calculate_checksum(self, data: Dict[str, Any]) -> str:
+    def _calculate_checksum(self, data: dict[str, Any]) -> str:
         """Calculate SHA-256 checksum for data integrity."""
         data_str = json.dumps(data, sort_keys=True)
         return hashlib.sha256(data_str.encode()).hexdigest()
@@ -258,7 +258,7 @@ class AuditTrail:
                 file_hash = hashlib.sha256(f.read()).hexdigest()
 
             integrity_data = {
-                "last_updated": datetime.now(timezone.utc).isoformat(),
+                "last_updated": datetime.now(UTC).isoformat(),
                 "audit_file_hash": file_hash,
                 "total_entries": sum(
                     1 for line in open(self.main_audit_file) if line.strip()
@@ -269,10 +269,10 @@ class AuditTrail:
                 json.dump(integrity_data, f, indent=2)
 
     def _filter_by_time_range(
-        self, entries: List[Dict[str, Any]], time_range: str
-    ) -> List[Dict[str, Any]]:
+        self, entries: list[dict[str, Any]], time_range: str
+    ) -> list[dict[str, Any]]:
         """Filter audit entries by time range."""
-        now = datetime.now(timezone.utc)
+        now = datetime.now(UTC)
 
         if time_range == "month":
             cutoff = now.replace(day=1)
@@ -293,8 +293,8 @@ class AuditTrail:
         return filtered_entries
 
     def _analyze_compliance(
-        self, audit_entries: List[Dict[str, Any]]
-    ) -> Dict[str, Any]:
+        self, audit_entries: list[dict[str, Any]]
+    ) -> dict[str, Any]:
         """Analyze compliance status from audit entries."""
         compliance = {
             "payment_compliance": 0,
@@ -321,7 +321,7 @@ class AuditTrail:
 
         return compliance
 
-    def _extract_key_findings(self, audit_entries: List[Dict[str, Any]]) -> List[str]:
+    def _extract_key_findings(self, audit_entries: list[dict[str, Any]]) -> list[str]:
         """Extract key findings from audit entries."""
         findings = []
 
@@ -365,8 +365,8 @@ class AuditTrail:
         return findings
 
     def _generate_compliance_recommendations(
-        self, compliance_analysis: Dict[str, Any]
-    ) -> List[str]:
+        self, compliance_analysis: dict[str, Any]
+    ) -> list[str]:
         """Generate compliance recommendations based on analysis."""
         recommendations = []
         total_entries = compliance_analysis["total_entries"]
@@ -397,7 +397,7 @@ class AuditTrail:
 
 
 # Integration functions for other Tab components
-def audit_work_entry(user_id: str, work_details: Dict[str, Any]):
+def audit_work_entry(user_id: str, work_details: dict[str, Any]):
     """Audit a work entry from work tracking."""
     trail = AuditTrail()
     trail.log_event(
@@ -409,7 +409,7 @@ def audit_work_entry(user_id: str, work_details: Dict[str, Any]):
     )
 
 
-def audit_payout_processing(user_id: str, payout_details: Dict[str, Any]):
+def audit_payout_processing(user_id: str, payout_details: dict[str, Any]):
     """Audit payout processing from payout Glimpse."""
     trail = AuditTrail()
     trail.log_event(
@@ -425,7 +425,7 @@ def audit_payout_processing(user_id: str, payout_details: Dict[str, Any]):
     )
 
 
-def audit_payment_delivery(user_id: str, payment_details: Dict[str, Any]):
+def audit_payment_delivery(user_id: str, payment_details: dict[str, Any]):
     """Audit payment delivery from payment gateway."""
     trail = AuditTrail()
     trail.log_event(
@@ -437,7 +437,7 @@ def audit_payment_delivery(user_id: str, payment_details: Dict[str, Any]):
     )
 
 
-def audit_sync_operation(user_id: str, sync_details: Dict[str, Any]):
+def audit_sync_operation(user_id: str, sync_details: dict[str, Any]):
     """Audit sync operations from sync Glimpse."""
     trail = AuditTrail()
     trail.log_event(
@@ -449,7 +449,7 @@ def audit_sync_operation(user_id: str, sync_details: Dict[str, Any]):
     )
 
 
-def get_user_compliance_status(user_id: str) -> Dict[str, Any]:
+def get_user_compliance_status(user_id: str) -> dict[str, Any]:
     """Get user's compliance status from audit trail."""
     trail = AuditTrail()
     report = trail.generate_compliance_report(user_id, "month")

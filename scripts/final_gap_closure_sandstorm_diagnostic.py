@@ -9,15 +9,16 @@ Purpose: Transform high-density process noise into clear diagnostic visibility w
 genuine data quality enhancements and precision optimizations.
 """
 
-import numpy as np
-import matplotlib.pyplot as plt
-import yaml
 import json
-from typing import Dict, Any
-from dataclasses import dataclass, field
-from pathlib import Path
 import logging
-from datetime import datetime, timezone
+from dataclasses import dataclass, field
+from datetime import UTC, datetime
+from pathlib import Path
+from typing import Any
+
+import matplotlib.pyplot as plt
+import numpy as np
+import yaml
 
 # Configure logging for diagnostic reproducibility (UTF-8 compatible)
 logging.basicConfig(
@@ -37,12 +38,12 @@ class DiagnosticSignature:
 
     source_name: str
     duration: float
-    impact_analysis: Dict[str, float] = field(default_factory=dict)
-    atmospheric_metrics: Dict[str, float] = field(default_factory=dict)
-    throughput_dynamics: Dict[str, float] = field(default_factory=dict)
-    observability_streams: Dict[str, float] = field(default_factory=dict)
-    validation_intelligence: Dict[str, float] = field(default_factory=dict)
-    ai_anomaly_signature: Dict[str, float] = field(default_factory=dict)
+    impact_analysis: dict[str, float] = field(default_factory=dict)
+    atmospheric_metrics: dict[str, float] = field(default_factory=dict)
+    throughput_dynamics: dict[str, float] = field(default_factory=dict)
+    observability_streams: dict[str, float] = field(default_factory=dict)
+    validation_intelligence: dict[str, float] = field(default_factory=dict)
+    ai_anomaly_signature: dict[str, float] = field(default_factory=dict)
     unified_quality: float = 0.0
     coherence_score: float = 0.0
     data_quality_score: float = 0.0  # New: Data quality measurement
@@ -62,10 +63,10 @@ class FinalGapClosureSandstormDiagnostic:
         self.unified_alert_active = False
         self.performance_metrics = {}
 
-    def _load_config(self, config_path: str) -> Dict[str, Any]:
+    def _load_config(self, config_path: str) -> dict[str, Any]:
         """Load configuration with final gap closure settings"""
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = yaml.safe_load(f)
                 logger.info(f"Configuration loaded from {config_path}")
                 return self._apply_final_gap_closure_settings(config)
@@ -76,8 +77,8 @@ class FinalGapClosureSandstormDiagnostic:
             return self._get_final_gap_closure_defaults()
 
     def _apply_final_gap_closure_settings(
-        self, config: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, config: dict[str, Any]
+    ) -> dict[str, Any]:
         """Apply final gap closure settings"""
         if "sandstorm_dev_protocol" not in config:
             config["sandstorm_dev_protocol"] = {}
@@ -100,7 +101,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return config
 
-    def _get_final_gap_closure_defaults(self) -> Dict[str, Any]:
+    def _get_final_gap_closure_defaults(self) -> dict[str, Any]:
         """Final gap closure default configuration"""
         return {
             "sandstorm_dev_protocol": {
@@ -150,7 +151,7 @@ class FinalGapClosureSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_raw_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_raw_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced impact analysis with deeper repository analysis"""
         base_analysis = {
             "issues_density": min(data.get("issues", 0.78), 1.0),  # Improved from 0.80
@@ -196,7 +197,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return base_analysis
 
-    def _analyze_atmospheric_raw_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_raw_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced atmospheric metrics with precision monitoring"""
         base_metrics = {
             "error_rate": min(data.get("error_rate", 0.82), 1.0),  # Improved from 0.85
@@ -232,7 +233,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return base_metrics
 
-    def _analyze_throughput_raw_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_raw_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced throughput dynamics with real test integration"""
         base_throughput = {
             "rps_observed": min(
@@ -256,7 +257,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return base_throughput
 
-    def _analyze_observability_raw_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_observability_raw_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced observability streams with precise monitoring"""
         base_observability = {
             "error_density": min(
@@ -282,7 +283,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return base_observability
 
-    def _analyze_validation_raw_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_raw_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced validation intelligence with real test results"""
         base_validation = {
             "glimpse_coverage": max(
@@ -378,7 +379,7 @@ class FinalGapClosureSandstormDiagnostic:
         )
         return sig
 
-    def _analyze_impact_atmospheric_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_impact_atmospheric_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced impact analysis for atmospheric layer"""
         return {
             "issues_density": max(0.0, data.get("issues", 0.25)),
@@ -388,7 +389,7 @@ class FinalGapClosureSandstormDiagnostic:
             "diagnostic_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_atmospheric_processed_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_atmospheric_processed_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced atmospheric metrics with deployment correlation"""
         base_atmospheric = {
             "error_rate": max(0.0, data.get("error_rate", 0.15)),
@@ -409,7 +410,7 @@ class FinalGapClosureSandstormDiagnostic:
 
         return base_atmospheric
 
-    def _analyze_throughput_atmospheric_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_throughput_atmospheric_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced throughput metrics for atmospheric layer"""
         return {
             "rps_observed": min(data.get("rps_normalized", 0.9), 1.0),
@@ -420,7 +421,7 @@ class FinalGapClosureSandstormDiagnostic:
 
     def _analyze_observability_atmospheric_enhanced(
         self, data: Any
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Enhanced observability metrics for atmospheric layer"""
         return {
             "error_density": max(0.0, data.get("error_density", 0.2)),
@@ -429,7 +430,7 @@ class FinalGapClosureSandstormDiagnostic:
             "signal_clarity": min(data.get("coverage", 0.92), 1.0),
         }
 
-    def _analyze_validation_atmospheric_enhanced(self, data: Any) -> Dict[str, float]:
+    def _analyze_validation_atmospheric_enhanced(self, data: Any) -> dict[str, float]:
         """Enhanced validation metrics for atmospheric layer"""
         return {
             "glimpse_coverage": min(data.get("glimpse_coverage", 0.93), 1.0),
@@ -438,7 +439,7 @@ class FinalGapClosureSandstormDiagnostic:
             "validation_confidence": min(data.get("integration_stability", 0.86), 1.0),
         }
 
-    def _calculate_atmospheric_data_quality_score(self, data: Any) -> Dict[str, float]:
+    def _calculate_atmospheric_data_quality_score(self, data: Any) -> dict[str, float]:
         """Calculate atmospheric data quality score"""
         quality_factors = []
 
@@ -704,7 +705,7 @@ class FinalGapClosureSandstormDiagnostic:
 
     def _extract_ai_anomaly_signature_refined(
         self, total_coherence: float
-    ) -> Dict[str, float]:
+    ) -> dict[str, float]:
         """Refined AI anomaly detection signature"""
         return {
             "anomaly_confidence": total_coherence * 0.9,
@@ -1085,7 +1086,7 @@ class FinalGapClosureSandstormDiagnostic:
 
     def export_final_gap_closure_report(
         self, output_path: str = "final_gap_closure_outputs"
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Export final gap closure diagnostic report"""
         logger.info("Exporting final gap closure diagnostic report")
         out = Path(output_path)
@@ -1095,7 +1096,7 @@ class FinalGapClosureSandstormDiagnostic:
             "protocol_info": {
                 "name": "FINAL_GAP_CLOSURE_SANDSTORM_DIAGNOSTIC",
                 "version": "2.3.0",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "unified_alert_active": self.unified_alert_active,
                 "intent": "Close final 0.020 coherence gap with authentic data quality enhancements and precision optimizations",
             },
@@ -1289,30 +1290,30 @@ def main():
     logger.info(f"Atmospheric data quality: {atmospheric_sig.data_quality_score:.3f}")
 
     # Activate glimpse unified alert with final gap closure enhancements
-    print(f"\n🎯 Activating Final Gap Closure glimpse Alert...")
+    print("\n🎯 Activating Final Gap Closure glimpse Alert...")
     activated = protocol.activate_sandstorm_alert()
 
     if activated:
         gap_closed = protocol.analysis.get("gap_closure_achievement", 0)
         logger.info(f"🎉 Final gap closure successful! Gap closed: {gap_closed:.3f}")
-        print(f"\n🎯 glimpse ALERT ACTIVE - Final Gap Closure Achieved!")
+        print("\n🎯 glimpse ALERT ACTIVE - Final Gap Closure Achieved!")
         print(
             f"✅ Coherence: {protocol.analysis.get('unified_coherence', 0):.3f} >= Target: 0.750"
         )
-        print(f"🎊 Chaos successfully transformed into comprehension!")
-        print(f"🎵 Maintenance becomes music through authentic optimization!")
+        print("🎊 Chaos successfully transformed into comprehension!")
+        print("🎵 Maintenance becomes music through authentic optimization!")
     else:
         gap_remaining = protocol.analysis.get("gap_remaining", 0)
         logger.info(f"Gap remaining: {gap_remaining:.3f}")
         print(f"\n⚠️ glimpse ALERT INACTIVE - {gap_remaining:.3f} gap remaining")
-        print(f"🔧 Continue with targeted improvements for authentic achievement")
+        print("🔧 Continue with targeted improvements for authentic achievement")
 
     # Generate final gap closure visualizations and reports
     protocol.generate_final_gap_closure_visualization()
     report = protocol.export_final_gap_closure_report()
 
-    print(f"\n📁 Final gap closure outputs saved to final_gap_closure_outputs/")
-    print(f"\n🎯 Final Gap Closure Summary:")
+    print("\n📁 Final gap closure outputs saved to final_gap_closure_outputs/")
+    print("\n🎯 Final Gap Closure Summary:")
     print(f"   🌊 Impact Layer Quality: {impact_sig.unified_quality:.3f}")
     print(f"   🌤️ Atmospheric Quality: {atmospheric_sig.unified_quality:.3f}")
     print(
@@ -1332,12 +1333,12 @@ def main():
         f"   ⚖️ Standards Maintained: {protocol.config['sandstorm_dev_protocol']['unified_trigger']['activation_threshold'] == 0.750}"
     )
 
-    print(f"\n🌊 Final gap closure approach:")
-    print(f"   ✅ Authentic data quality enhancements")
-    print(f"   ✅ Precision atmospheric optimizations")
-    print(f"   ✅ Refined coherence calculations")
-    print(f"   ✅ Correlation weights and quality balance")
-    print(f"   ✅ No threshold manipulation - genuine achievement")
+    print("\n🌊 Final gap closure approach:")
+    print("   ✅ Authentic data quality enhancements")
+    print("   ✅ Precision atmospheric optimizations")
+    print("   ✅ Refined coherence calculations")
+    print("   ✅ Correlation weights and quality balance")
+    print("   ✅ No threshold manipulation - genuine achievement")
 
 
 if __name__ == "__main__":

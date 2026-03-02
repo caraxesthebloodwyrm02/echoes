@@ -5,13 +5,14 @@ Test Agentic Assistant Capabilities
 Tests knowledge management, filesystem interaction, and context building.
 """
 
-import sys
 import os
+import sys
 
 # Add parent directory to path to access assistant_v2_core
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
 import os as os_module
+
 from assistant_v2_core import EchoesAssistantV2
 
 

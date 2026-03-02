@@ -7,7 +7,6 @@ from typing import (
     Final,
     Protocol,
     SupportsIndex,
-    TypeAlias,
     TypedDict,
     TypeVar,
     Unpack,
@@ -19,10 +18,8 @@ from typing import (
     Literal as L,
 )
 
-from _typeshed import StrOrBytesPath, SupportsLenAndGetItem
-from typing_extensions import CapsuleType
-
 import numpy as np
+from _typeshed import StrOrBytesPath, SupportsLenAndGetItem
 from numpy import (  # type: ignore[attr-defined]
     _AnyShapeT,
     _CastingKind,
@@ -102,6 +99,7 @@ from numpy._typing._ufunc import (
     _PyFunc_Nin3P_Nout1,
 )
 from numpy.lib._array_utils_impl import normalize_axis_index
+from typing_extensions import CapsuleType
 
 __all__ = [
     "ALLOW_THREADS",
@@ -209,11 +207,11 @@ _Nin = TypeVar("_Nin", bound=int)
 _Nout = TypeVar("_Nout", bound=int)
 
 _ShapeT = TypeVar("_ShapeT", bound=_Shape)
-_Array: TypeAlias = ndarray[_ShapeT, dtype[_ScalarT]]
-_Array1D: TypeAlias = ndarray[tuple[int], dtype[_ScalarT]]
+type _Array[_ShapeT: _Shape, _ScalarT: generic] = ndarray[_ShapeT, dtype[_ScalarT]]
+type _Array1D[_ScalarT: generic] = ndarray[tuple[int], dtype[_ScalarT]]
 
 # Valid time units
-_UnitKind: TypeAlias = L[
+type _UnitKind = L[
     "Y",
     "M",
     "D",
@@ -228,7 +226,7 @@ _UnitKind: TypeAlias = L[
     "fs",
     "as",
 ]
-_RollKind: TypeAlias = L[  # `raise` is deliberately excluded
+type _RollKind = L[  # `raise` is deliberately excluded
     "nat",
     "forward",
     "following",
@@ -390,7 +388,9 @@ set_datetimeparse_function: Final[Callable[..., object]]
 def get_handler_name(a: NDArray[Any] = ..., /) -> str | None: ...
 def get_handler_version(a: NDArray[Any] = ..., /) -> int | None: ...
 def format_longfloat(x: np.longdouble, precision: int) -> str: ...
-def scalar(dtype: _DTypeT, object: bytes | object = ...) -> ndarray[tuple[()], _DTypeT]: ...
+def scalar(
+    dtype: _DTypeT, object: bytes | object = ...
+) -> ndarray[tuple[()], _DTypeT]: ...
 def set_typeDict(dict_: dict[str, np.dtype], /) -> None: ...
 
 typeinfo: Final[dict[str, np.dtype[np.generic]]]
@@ -518,9 +518,13 @@ def ravel_multi_index(
     order: _OrderCF = "C",
 ) -> NDArray[intp]: ...
 @overload
-def unravel_index(indices: _IntLike_co, shape: _ShapeLike, order: _OrderCF = "C") -> tuple[intp, ...]: ...
+def unravel_index(
+    indices: _IntLike_co, shape: _ShapeLike, order: _OrderCF = "C"
+) -> tuple[intp, ...]: ...
 @overload
-def unravel_index(indices: _ArrayLikeInt_co, shape: _ShapeLike, order: _OrderCF = "C") -> tuple[NDArray[intp], ...]: ...
+def unravel_index(
+    indices: _ArrayLikeInt_co, shape: _ShapeLike, order: _OrderCF = "C"
+) -> tuple[NDArray[intp], ...]: ...
 
 # NOTE: Allow any sequence of array-like objects
 @overload
@@ -1207,7 +1211,7 @@ def compare_chararrays(
 ) -> NDArray[np.bool]: ...
 def add_docstring(obj: Callable[..., Any], docstring: str, /) -> None: ...
 
-_GetItemKeys: TypeAlias = L[
+type _GetItemKeys = L[
     "C",
     "CONTIGUOUS",
     "C_CONTIGUOUS",
@@ -1231,7 +1235,7 @@ _GetItemKeys: TypeAlias = L[
     "FNC",
     "FORC",
 ]
-_SetItemKeys: TypeAlias = L[
+type _SetItemKeys = L[
     "A",
     "ALIGNED",
     "W",

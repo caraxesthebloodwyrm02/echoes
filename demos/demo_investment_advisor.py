@@ -23,6 +23,7 @@ Financial Impact: $75M+ portfolio value increase demonstrated
 
 import json
 from datetime import datetime
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -56,9 +57,9 @@ class InvestmentAdvisorDemo:
     def format_currency(self, amount):
         """Format currency with M/B suffixes."""
         if amount >= 1_000_000_000:
-            return f"${amount/1_000_000_000:.1f}B"
+            return f"${amount / 1_000_000_000:.1f}B"
         elif amount >= 1_000_000:
-            return f"${amount/1_000_000:.1f}M"
+            return f"${amount / 1_000_000:.1f}M"
         else:
             return f"${amount:,.0f}"
 
@@ -192,7 +193,7 @@ class InvestmentAdvisorDemo:
 
             for i, insight in enumerate(insights, 1):
                 print(f"\n  {i}. {insight['insight']}")
-                print(f"     Confidence: {insight['confidence']*100:.0f}%")
+                print(f"     Confidence: {insight['confidence'] * 100:.0f}%")
                 print(f"     Impact: {insight['impact']}")
                 self.insights.append(insight["insight"])
 
@@ -273,7 +274,7 @@ class InvestmentAdvisorDemo:
         print(
             f"\n  Current Portfolio Value: {self.format_currency(current_portfolio['total_value'])}"
         )
-        print(f"  YTD Return: {current_portfolio['ytd_return']*100:.1f}%")
+        print(f"  YTD Return: {current_portfolio['ytd_return'] * 100:.1f}%")
         print(f"  YTD Gain: {self.format_currency(total_return)}")
         print(f"  Portfolio Beta: {current_portfolio['portfolio_beta']:.2f}")
         print(f"  Sharpe Ratio: {current_portfolio['sharpe_ratio']:.2f}")
@@ -449,10 +450,10 @@ class InvestmentAdvisorDemo:
                 print(f"\n  {i}. {opp['name']} ({opp['ticker']})")
                 print(f"     Thesis: {opp['thesis']}")
                 print(
-                    f"     Entry: ${opp['entry_price']} → Target: ${opp['target_price']} ({opp['upside']*100:.0f}% upside)"
+                    f"     Entry: ${opp['entry_price']} → Target: ${opp['target_price']} ({opp['upside'] * 100:.0f}% upside)"
                 )
                 print(
-                    f"     Conviction: {opp['conviction']*100:.0f}% | Risk: {opp['risk_rating']}"
+                    f"     Conviction: {opp['conviction'] * 100:.0f}% | Risk: {opp['risk_rating']}"
                 )
                 print(
                     f"     Allocation: {self.format_currency(opp['allocation_size'])} | Expected Gain: {self.format_currency(expected_return)}"
@@ -460,7 +461,7 @@ class InvestmentAdvisorDemo:
                 print(f"     Timeframe: {opp['timeframe']}")
 
                 self.insights.append(
-                    f"{opp['name']}: {opp['upside']*100:.0f}% upside with {opp['conviction']*100:.0f}% conviction"
+                    f"{opp['name']}: {opp['upside'] * 100:.0f}% upside with {opp['conviction'] * 100:.0f}% conviction"
                 )
 
             self.alpha_generated += total_expected_return
@@ -471,7 +472,7 @@ class InvestmentAdvisorDemo:
                 f"  📊 Total Capital Deployed: {self.format_currency(total_allocation)}"
             )
             print(
-                f"  📈 Weighted Average Expected Return: {(total_expected_return/total_allocation)*100:.1f}%"
+                f"  📈 Weighted Average Expected Return: {(total_expected_return / total_allocation) * 100:.1f}%"
             )
 
     def _phase_4_sector_rotation(self):
@@ -574,7 +575,7 @@ class InvestmentAdvisorDemo:
             for sec in strategy["overweight"]:
                 change = (sec["target"] - sec["current"]) * self.portfolio_value
                 print(
-                    f"    • {sec['sector']}: {sec['current']*100:.0f}% → {sec['target']*100:.0f}% (+{self.format_currency(change)})"
+                    f"    • {sec['sector']}: {sec['current'] * 100:.0f}% → {sec['target'] * 100:.0f}% (+{self.format_currency(change)})"
                 )
                 print(f"      {sec['rationale']}")
 
@@ -582,7 +583,7 @@ class InvestmentAdvisorDemo:
             for sec in strategy["underweight"]:
                 change = (sec["current"] - sec["target"]) * self.portfolio_value
                 print(
-                    f"    • {sec['sector']}: {sec['current']*100:.0f}% → {sec['target']*100:.0f}% (-{self.format_currency(change)})"
+                    f"    • {sec['sector']}: {sec['current'] * 100:.0f}% → {sec['target'] * 100:.0f}% (-{self.format_currency(change)})"
                 )
                 print(f"      {sec['rationale']}")
 
@@ -608,7 +609,7 @@ class InvestmentAdvisorDemo:
         print("\n[Step 5.1] Compiling investment thesis and recommendations...")
 
         # Get comprehensive intelligence
-        context = self.assistant.get_context_summary()
+        _context = self.assistant.get_context_summary()
         stats = self.assistant.knowledge_manager.get_stats()
 
         print(f"\n✓ Intelligence gathered: {stats['total_entries']} data points")
@@ -660,13 +661,13 @@ class InvestmentAdvisorDemo:
             f"  • Assets Under Management:  {self.format_currency(memo['executive_summary']['current_aum'])}"
         )
         print(
-            f"  • YTD Return:                {memo['executive_summary']['ytd_return']*100:.1f}%"
+            f"  • YTD Return:                {memo['executive_summary']['ytd_return'] * 100:.1f}%"
         )
         print(
             f"  • Expected Additional Alpha: {self.format_currency(memo['executive_summary']['expected_alpha'])}"
         )
         print(
-            f"  • Total Expected Return:     {memo['executive_summary']['expected_total_return']*100:.1f}%"
+            f"  • Total Expected Return:     {memo['executive_summary']['expected_total_return'] * 100:.1f}%"
         )
         print(
             f"  • Risk Assessment:           {memo['executive_summary']['risk_assessment']}"
@@ -726,10 +727,10 @@ class InvestmentAdvisorDemo:
             f"  • Baseline Return:     {17.5:.1f}% ({self.format_currency(self.portfolio_value * 0.175)})"
         )
         print(
-            f"  • Additional Alpha:    {(self.alpha_generated/self.portfolio_value)*100:.1f}% ({self.format_currency(self.alpha_generated)})"
+            f"  • Additional Alpha:    {(self.alpha_generated / self.portfolio_value) * 100:.1f}% ({self.format_currency(self.alpha_generated)})"
         )
         print(
-            f"  • Total Expected:      {expected_return*100:.1f}% ({self.format_currency(value_increase)})"
+            f"  • Total Expected:      {expected_return * 100:.1f}% ({self.format_currency(value_increase)})"
         )
         print(f"  • Projected Value:     {self.format_currency(expected_value)}")
 
@@ -755,7 +756,7 @@ class InvestmentAdvisorDemo:
         print("✅ ECHOES AI: READY FOR INSTITUTIONAL INVESTMENT MANAGEMENT")
         print("=" * 80)
         print(
-            f"\n💡 Alpha Generated: {self.format_currency(self.alpha_generated)} ({(self.alpha_generated/self.portfolio_value)*100:.1f}%)"
+            f"\n💡 Alpha Generated: {self.format_currency(self.alpha_generated)} ({(self.alpha_generated / self.portfolio_value) * 100:.1f}%)"
         )
         print(
             f"🎯 Investment Impact: {self.format_currency(value_increase)} portfolio value increase"

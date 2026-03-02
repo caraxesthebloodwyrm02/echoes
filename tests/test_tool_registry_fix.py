@@ -5,8 +5,8 @@ Test ToolRegistry has_tool() method fix.
 Verifies that the missing has_tool() method is now available.
 """
 
+import importlib
 import sys
-import os
 from pathlib import Path
 
 # Add project root to path to ensure imports work
@@ -22,8 +22,7 @@ try:
 
     # Import examples to register some tools
     try:
-        import tools.examples
-
+        importlib.import_module("tools.examples")
         print("✓ Example tools imported and registered")
     except ImportError as e:
         print(f"⚠️ Could not import example tools: {e}")
@@ -40,9 +39,9 @@ except ImportError as e:
 def _test_decorator(name):
     def decorator(test_func):
         def wrapper(*args, **kwargs):
-            print(f"\n{'='*60}")
+            print(f"\n{'=' * 60}")
             print(f"TEST: {name}")
-            print(f"{'='*60}")
+            print(f"{'=' * 60}")
             try:
                 result = test_func(*args, **kwargs)
                 print(f"✅ {name} PASSED")
@@ -225,8 +224,6 @@ def test_has_tool_method():
         print("⚠️ ActionExecutor not available for testing")
     except Exception as e:
         print(f"⚠️ Error testing ActionExecutor: {e}")
-    except Exception as e:
-        print(f"  ✗ Error: {e}")
         raise
 
     print("\n" + "=" * 60)

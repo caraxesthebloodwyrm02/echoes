@@ -1,13 +1,11 @@
-from dataclasses import dataclass
 import os
-
-from matplotlib._afm import AFM
-from matplotlib import ft2font
-
-from pathlib import Path
-
 from collections.abc import Iterable
+from dataclasses import dataclass
+from pathlib import Path
 from typing import Any, Literal
+
+from matplotlib import ft2font
+from matplotlib._afm import AFM
 
 font_scalings: dict[str | None, float]
 stretch_dict: dict[str, int]
@@ -26,6 +24,7 @@ def _get_fontconfig_fonts() -> list[Path]: ...
 def findSystemFonts(
     fontpaths: Iterable[str | os.PathLike | Path] | None = ..., fontext: str = ...
 ) -> list[str]: ...
+
 @dataclass
 class FontEntry:
     fname: str = ...

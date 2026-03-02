@@ -20,22 +20,22 @@ __license__ = "Consent-Based"
 __description__ = "Automated Auditor Experiment: Accounting & Accountability Framework"
 
 # Core components (always available)
+from .core.config import AAEConfig
+from .core.experiment_orchestrator import ExperimentOrchestrator
 from .core.models import (
+    AccountabilityMetrics,
+    AccountingMetrics,
+    DatasetConfig,
     ExperimentConfig,
     ExperimentGroup,
     ExperimentResults,
-    DatasetConfig,
-    AccountingMetrics,
-    AccountabilityMetrics,
 )
-from .core.experiment_orchestrator import ExperimentOrchestrator
-from .core.config import AAEConfig
 
 # Dataset generation (placeholder until implemented)
 try:
-    from .dataset.innovate_inc_generator import InnovateIncGenerator
-    from .dataset.error_planting import ErrorPlanter
     from .dataset.document_generator import DocumentGenerator
+    from .dataset.error_planting import ErrorPlanter
+    from .dataset.innovate_inc_generator import InnovateIncGenerator
 except ImportError:
     # Placeholder classes
     class InnovateIncGenerator:
@@ -52,10 +52,10 @@ except ImportError:
 
 # AI Control platform (placeholder until implemented)
 try:
-    from .ai_platform.rule_engine import RuleEngine
     from .ai_platform.anomaly_detector import AnomalyDetector
     from .ai_platform.document_processor import DocumentProcessor
     from .ai_platform.process_miner import ProcessMiner
+    from .ai_platform.rule_engine import RuleEngine
 except ImportError:
     # Placeholder classes
     class RuleEngine:
@@ -73,7 +73,7 @@ except ImportError:
 
 # OpenAI Integration (new Phase 1 prototype)
 try:
-    from .openai_prototype import OpenAIAuditOrchestrator, AuditPolicy
+    from .openai_prototype import AuditPolicy, OpenAIAuditOrchestrator
     from .openai_prototype.config import config
 except ImportError:
     # Placeholder classes
@@ -92,9 +92,9 @@ except ImportError:
 
 # Metrics and scoring (placeholder until implemented)
 try:
-    from .metrics.scoring_engine import ScoringEngine
     from .metrics.accountability_metrics import AccountabilityMetrics
     from .metrics.performance_tracker import PerformanceTracker
+    from .metrics.scoring_engine import ScoringEngine
 except ImportError:
     # Placeholder classes
     class ScoringEngine:

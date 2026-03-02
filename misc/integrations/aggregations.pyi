@@ -1,11 +1,10 @@
+from collections.abc import Callable
 from typing import (
     Any,
-    Callable,
     Literal,
 )
 
 import numpy as np
-
 from pandas._typing import (
     WindowingRankType,
     npt,

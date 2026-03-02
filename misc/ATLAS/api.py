@@ -4,7 +4,8 @@ Direct ATLAS API for programmatic interaction.
 Provides a clean interface for inventory operations without CLI overhead.
 """
 
-from typing import Dict, Any, List, Optional
+from typing import Any
+
 from .service import InventoryService
 
 
@@ -26,8 +27,8 @@ class ATLASDirectAPI:
         location: str,
         min_stock: int = 0,
         max_stock: int = 0,
-        attributes: Optional[Dict[str, Any]] = None,
-    ) -> Dict[str, Any]:
+        attributes: dict[str, Any] | None = None,
+    ) -> dict[str, Any]:
         """Add a new inventory item."""
         try:
             item = self.service.add_item(
@@ -44,7 +45,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def get_item(self, sku: str) -> Dict[str, Any]:
+    def get_item(self, sku: str) -> dict[str, Any]:
         """Get a specific item by SKU."""
         try:
             item = self.service.get_item(sku)
@@ -57,9 +58,9 @@ class ATLASDirectAPI:
 
     def list_items(
         self,
-        category: Optional[str] = None,
-        location: Optional[str] = None,
-    ) -> Dict[str, Any]:
+        category: str | None = None,
+        location: str | None = None,
+    ) -> dict[str, Any]:
         """List inventory items with optional filters."""
         try:
             items = self.service.list_items(category=category, location=location)
@@ -73,7 +74,7 @@ class ATLASDirectAPI:
 
     # ========== Quantity Operations ==========
 
-    def adjust_quantity(self, sku: str, delta: int) -> Dict[str, Any]:
+    def adjust_quantity(self, sku: str, delta: int) -> dict[str, Any]:
         """Adjust item quantity by delta."""
         try:
             item = self.service.adjust_quantity(sku, delta)
@@ -81,7 +82,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def set_quantity(self, sku: str, quantity: int) -> Dict[str, Any]:
+    def set_quantity(self, sku: str, quantity: int) -> dict[str, Any]:
         """Set item quantity to exact value."""
         try:
             item = self.service.get_item(sku)
@@ -95,7 +96,7 @@ class ATLASDirectAPI:
 
     # ========== Location Operations ==========
 
-    def move_item(self, sku: str, new_location: str) -> Dict[str, Any]:
+    def move_item(self, sku: str, new_location: str) -> dict[str, Any]:
         """Move item to a new location."""
         try:
             item = self.service.move_item(sku, new_location)
@@ -105,7 +106,7 @@ class ATLASDirectAPI:
 
     # ========== Reporting ==========
 
-    def report_summary(self) -> Dict[str, Any]:
+    def report_summary(self) -> dict[str, Any]:
         """Get inventory summary report."""
         try:
             report = self.service.report("summary")
@@ -113,7 +114,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def report_low_stock(self) -> Dict[str, Any]:
+    def report_low_stock(self) -> dict[str, Any]:
         """Get low stock report."""
         try:
             report = self.service.report("low")
@@ -121,7 +122,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def report_overstock(self) -> Dict[str, Any]:
+    def report_overstock(self) -> dict[str, Any]:
         """Get overstock report."""
         try:
             report = self.service.report("over")
@@ -129,7 +130,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def report_by_category(self) -> Dict[str, Any]:
+    def report_by_category(self) -> dict[str, Any]:
         """Get inventory breakdown by category."""
         try:
             items = self.service.list_items()
@@ -142,7 +143,7 @@ class ATLASDirectAPI:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def report_by_location(self) -> Dict[str, Any]:
+    def report_by_location(self) -> dict[str, Any]:
         """Get inventory breakdown by location."""
         try:
             items = self.service.list_items()
@@ -157,7 +158,7 @@ class ATLASDirectAPI:
 
     # ========== Batch Operations ==========
 
-    def bulk_add_items(self, items: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def bulk_add_items(self, items: list[dict[str, Any]]) -> dict[str, Any]:
         """Add multiple items in batch."""
         results = []
         for item_data in items:
@@ -170,7 +171,7 @@ class ATLASDirectAPI:
             "successful": sum(1 for r in results if r["success"]),
         }
 
-    def bulk_adjust_quantities(self, adjustments: Dict[str, int]) -> Dict[str, Any]:
+    def bulk_adjust_quantities(self, adjustments: dict[str, int]) -> dict[str, Any]:
         """Adjust multiple items in batch."""
         results = {}
         for sku, delta in adjustments.items():
@@ -184,7 +185,7 @@ class ATLASDirectAPI:
 
     # ========== Statistics ==========
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get inventory statistics."""
         try:
             items = self.service.list_items()

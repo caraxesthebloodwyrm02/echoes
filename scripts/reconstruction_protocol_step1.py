@@ -7,11 +7,10 @@ components following the Echoes Reconstruction Protocol.
 """
 
 import hashlib
-import os
 import json
+import os
 import sys
-from pathlib import Path
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 
 def calculate_file_checksum(filepath, algorithm="sha256"):
@@ -29,7 +28,7 @@ def calculate_file_checksum(filepath, algorithm="sha256"):
 def verify_directory_integrity(base_path, output_file="integrity_check_step1.json"):
     """Verify integrity of critical files in the project."""
     integrity_data = {
-        "timestamp": datetime.now(timezone.utc).isoformat(),
+        "timestamp": datetime.now(UTC).isoformat(),
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 1: Data Integrity Verification",
         "files": {},
@@ -138,7 +137,7 @@ def verify_directory_integrity(base_path, output_file="integrity_check_step1.jso
     anomalies = len(integrity_data["anomalies"])
     integrity_percentage = (integrity_score / total_files) * 100
 
-    print(f"\n📊 Integrity Check Summary:")
+    print("\n📊 Integrity Check Summary:")
     print(f"   Files checked: {total_files}")
     print(f"   Files present: {existing_files}")
     print(

@@ -1,19 +1,15 @@
 # TODO(npdtypes): Many types specified here can be made more specific/accurate;
 #  the more specific versions are specified in comments
+from collections.abc import Callable, Generator, Hashable
 from decimal import Decimal
 from typing import (
     Any,
-    Callable,
     Final,
-    Generator,
-    Hashable,
     Literal,
-    TypeAlias,
     overload,
 )
 
 import numpy as np
-
 from pandas._libs.interval import Interval
 from pandas._libs.tslibs import Period
 from pandas._typing import (
@@ -32,7 +28,7 @@ class _NoDefault(Enum):
     no_default = ...
 
 no_default: Final = _NoDefault.no_default
-NoDefault: TypeAlias = Literal[_NoDefault.no_default]
+type NoDefault = Literal[_NoDefault.no_default]
 
 i8max: int
 u8max: int
@@ -182,7 +178,8 @@ def indices_fast(
     sorted_labels: list[npt.NDArray[np.int64]],
 ) -> dict[Hashable, npt.NDArray[np.intp]]: ...
 def generate_slices(
-    labels: np.ndarray, ngroups: int  # const intp_t[:]
+    labels: np.ndarray,
+    ngroups: int,  # const intp_t[:]
 ) -> tuple[npt.NDArray[np.int64], npt.NDArray[np.int64]]: ...
 def count_level_2d(
     mask: np.ndarray,  # ndarray[uint8_t, ndim=2, cast=True],

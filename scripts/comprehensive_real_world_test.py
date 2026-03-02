@@ -9,12 +9,12 @@ License: Consent-Based License v2.0
 """
 
 import asyncio
-import json
 import datetime
-import tempfile
+import json
 import os
+import tempfile
 from pathlib import Path
-from typing import Dict, List, Any, Optional
+
 import pandas as pd
 
 from assistant_v2_core import EchoesAssistantV2
@@ -44,7 +44,7 @@ class RealWorldTestSuite:
         # Verify all systems are ready
         stats = self.assistant.get_stats()
 
-        print(f"✅ Assistant Initialized Successfully:")
+        print("✅ Assistant Initialized Successfully:")
         print(f"   🧠 Knowledge Graph: {stats.get('knowledge_graph_enabled', False)}")
         print(
             f"   🎵 Multimodal Resonance: {stats.get('multimodal_resonance_enabled', False)}"
@@ -1224,7 +1224,7 @@ class RealWorldTestSuite:
 
             # Display key metrics
             metrics = comprehensive_report["performance_metrics"]
-            print(f"\n📈 Key Performance Metrics:")
+            print("\n📈 Key Performance Metrics:")
             print(f"   🎯 Total Scenarios Tested: {metrics['total_scenarios_tested']}")
             print(
                 f"   📁 Total Documents Processed: {metrics['total_documents_processed']}"
@@ -1279,7 +1279,7 @@ class RealWorldTestSuite:
             else:
                 with open(temp_file, "w") as f:
                     f.write(f"Sample {content_type} content for {filename}\n")
-                    f.write(f"Created for testing purposes\n")
+                    f.write("Created for testing purposes\n")
                     f.write(f"Content type: {content_type}\n")
 
             return temp_file
@@ -1343,7 +1343,7 @@ async def run_comprehensive_test_suite():
         print("• 💡 Innovation insights and pattern recognition")
         print("• 🌉 Cross-sector knowledge integration")
 
-        print(f"\n📈 Performance Summary:")
+        print("\n📈 Performance Summary:")
         if "performance_metrics" in report:
             metrics = report["performance_metrics"]
             print(f"   • Total Scenarios: {metrics['total_scenarios_tested']}")

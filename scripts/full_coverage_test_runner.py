@@ -4,15 +4,15 @@ Echoes Assistant V2 Core - Full Coverage Test Runner
 Tests the complete functionality of assistant_v2_core.py through the API
 """
 
-import os
-import sys
-import json
-import time
-import requests
 import concurrent.futures
+import json
+import sys
+import time
 from datetime import datetime
-from typing import List, Dict, Any, Optional
 from pathlib import Path
+from typing import Any
+
+import requests
 
 # Add the project root to Python path
 sys.path.insert(0, str(Path(__file__).parent))
@@ -31,7 +31,7 @@ class EchoesAPITester:
             {"Authorization": f"Bearer {api_key}", "Content-Type": "application/json"}
         )
 
-    def test_chat_completion(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def test_chat_completion(self, config: dict[str, Any]) -> dict[str, Any]:
         """Test chat completion endpoint"""
         start_time = time.time()
 
@@ -89,7 +89,7 @@ class EchoesAPITester:
                 "accuracy_score": 0.0,
             }
 
-    def test_agent_workflow(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def test_agent_workflow(self, config: dict[str, Any]) -> dict[str, Any]:
         """Test agent workflow endpoint"""
         start_time = time.time()
 
@@ -139,7 +139,7 @@ class EchoesAPITester:
                 "accuracy_score": 0.0,
             }
 
-    def test_validation_error(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def test_validation_error(self, config: dict[str, Any]) -> dict[str, Any]:
         """Test validation error handling"""
         start_time = time.time()
 
@@ -186,7 +186,7 @@ class EchoesAPITester:
                 "accuracy_score": 0.0,
             }
 
-    def run_test_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def run_test_config(self, config: dict[str, Any]) -> dict[str, Any]:
         """Run a single test configuration"""
         expected_outcome = config.get("expected_outcome", "success")
 
@@ -199,13 +199,13 @@ class EchoesAPITester:
 
     def run_full_test_suite(
         self, config_file: str, max_workers: int = 6
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Run the complete test suite"""
         print("🚀 Starting Echoes Assistant V2 Core - Full Coverage Test Suite")
         print("=" * 70)
 
         # Load test configuration
-        with open(config_file, "r") as f:
+        with open(config_file) as f:
             test_config = json.load(f)
 
         configs = test_config["tests"]
@@ -271,7 +271,7 @@ class EchoesAPITester:
         print(f"📊 Total Tests: {summary['total_tests']}")
         print(f"✅ Passed: {summary['passed_tests']}")
         print(f"❌ Failed: {summary['failed_tests']}")
-        print(f"📈 Success Rate: {summary['success_rate']*100:.1f}%")
+        print(f"📈 Success Rate: {summary['success_rate'] * 100:.1f}%")
         print(f"⏱️  Avg Response Time: {summary['avg_response_time']:.2f}s")
         print(f"🔢 Total Tokens: {summary['total_tokens']}")
         print(f"🕐 Total Time: {summary['total_time']:.2f}s")
@@ -298,7 +298,7 @@ class EchoesAPITester:
                         "✅" if cat_rate == 1.0 else "⚠️" if cat_rate > 0.5 else "❌"
                     )
                     print(
-                        f"   {status_icon} {category}: {cat_passed}/{cat_total} ({cat_rate*100:.1f}%)"
+                        f"   {status_icon} {category}: {cat_passed}/{cat_total} ({cat_rate * 100:.1f}%)"
                     )
 
         return summary

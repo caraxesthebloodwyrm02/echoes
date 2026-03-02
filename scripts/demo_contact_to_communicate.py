@@ -3,7 +3,9 @@
 Complete demonstration: EchoesAssistantV2 from !CONTACT to !COMMUNICATE
 Shows the transformation from basic external contact to meaningful communication
 """
+
 import asyncio
+
 from assistant_v2_core import EchoesAssistantV2
 
 
@@ -28,7 +30,7 @@ async def demonstrate_contact_to_communicate():
         enable_external_contact=True,
     )
 
-    print(f"\n🔧 Assistant Configuration:")
+    print("\n🔧 Assistant Configuration:")
     print(f"   • Knowledge Graph: {'✅' if assistant.enable_knowledge_graph else '❌'}")
     print(
         f"   • External Contact: {'✅' if assistant.enable_external_contact else '❌'}"
@@ -55,7 +57,7 @@ async def demonstrate_contact_to_communicate():
     )
 
     if basic_contact["success"]:
-        print(f"✅ Basic !CONTACT successful")
+        print("✅ Basic !CONTACT successful")
         print(f"   📊 Patterns detected: {len(basic_contact.get('patterns', []))}")
         print(f"   📈 Confidence: {basic_contact.get('confidence', 0):.2f}")
     else:
@@ -160,8 +162,8 @@ async def demonstrate_contact_to_communicate():
     )
 
     if enhanced_communication["success"]:
-        print(f"✅ Enhanced !COMMUNICATE successful")
-        print(f"   📊 Context utilized:")
+        print("✅ Enhanced !COMMUNICATE successful")
+        print("   📊 Context utilized:")
         print(
             f"      • Entities referenced: {enhanced_communication['context_used']['entities']}"
         )
@@ -171,7 +173,7 @@ async def demonstrate_contact_to_communicate():
         print(
             f"      • Related concepts: {enhanced_communication['context_used']['related_concepts']}"
         )
-        print(f"   💬 Response preview:")
+        print("   💬 Response preview:")
         response_preview = enhanced_communication["response"][:300]
         print(f"      {response_preview}...")
 
@@ -202,7 +204,7 @@ async def demonstrate_contact_to_communicate():
     kg_stats = assistant.get_knowledge_graph_stats()
     if kg_stats["success"]:
         stats = kg_stats["stats"]
-        print(f"\n📊 KNOWLEDGE GRAPH IMPACT:")
+        print("\n📊 KNOWLEDGE GRAPH IMPACT:")
         print(f"   • Total knowledge nodes: {stats['nodes']}")
         print(f"   • Semantic relationships: {stats['relations']}")
         print(f"   • Conversation memories: {stats['memories']}")
@@ -224,11 +226,11 @@ async def demonstrate_contact_to_communicate():
     )
 
     if learning_result["success"]:
-        print(f"✅ Learning from interaction completed")
+        print("✅ Learning from interaction completed")
         print(
             f"   📈 Total conversation turns: {learning_result['conversation_turns']}"
         )
-        print(f"   🧠 System now has more context about AI competitive landscape")
+        print("   🧠 System now has more context about AI competitive landscape")
 
     # Retrieve the learned memory
     learned_memories = assistant.retrieve_relevant_memories(

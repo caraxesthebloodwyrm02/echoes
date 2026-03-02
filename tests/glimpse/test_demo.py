@@ -2,9 +2,10 @@
 Tests for glimpse demo module
 """
 
+from unittest.mock import MagicMock, patch
+
 import pytest
-from unittest.mock import patch, MagicMock
-import asyncio
+
 from glimpse.demo_glimpse_engine import main
 
 

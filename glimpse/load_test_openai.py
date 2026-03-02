@@ -5,13 +5,13 @@ cache, retries, and error handling.
 """
 
 import asyncio
-import time
 import random
+import time
 from statistics import mean, median
-from typing import List
-from glimpse.Glimpse import GlimpseEngine, Draft
-from glimpse.sampler_openai import openai_sampler
+
 from glimpse.cache_helpers import get_default_cache
+from glimpse.Glimpse import Draft, GlimpseEngine
+from glimpse.sampler_openai import openai_sampler
 
 # A larger pool of prompts to simulate diverse workloads
 PROMPT_POOL = [
@@ -68,7 +68,7 @@ PROMPT_POOL = [
 ]
 
 
-async def simulate_user(user_id: int, requests_per_user: int) -> List[float]:
+async def simulate_user(user_id: int, requests_per_user: int) -> list[float]:
     """Simulate one user making sequential requests."""
     engine = GlimpseEngine(sampler=openai_sampler)
     latencies = []
@@ -83,7 +83,7 @@ async def simulate_user(user_id: int, requests_per_user: int) -> List[float]:
         draft = Draft(prompt, goal, constraints)
         start = time.perf_counter()
         try:
-            await Glimpse.glimpse(draft)
+            await engine.glimpse(draft)
             latencies.append(time.perf_counter() - start)
         except Exception as e:
             print(f"User {user_id} request {i} failed: {e}")

@@ -7,7 +7,7 @@ from pathlib import Path
 def is_custom_file(filepath):
     """Check if a file is a custom Echoes file vs installed package file"""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read(1000)  # Read first 1000 chars
 
         # Custom indicators

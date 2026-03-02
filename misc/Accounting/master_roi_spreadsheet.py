@@ -7,11 +7,9 @@
 # --------------------------------------------
 
 import csv
-import json
 import sys
-from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List, Tuple
+from typing import Any
 
 # ──────────────────────────────────────────────────────
 # 1️⃣  CONFIG (defaults or YAML)
@@ -22,10 +20,10 @@ except Exception:  # pragma: no cover
     yaml = None
 
 
-def load_config_from_yaml(yaml_path: str) -> Dict[str, Any]:
+def load_config_from_yaml(yaml_path: str) -> dict[str, Any]:
     """Parse a tiny YAML config."""
     raw = Path(yaml_path).read_text(encoding="utf-8")
-    data: Dict[str, Any] = {}
+    data: dict[str, Any] = {}
     for line in raw.splitlines():
         line = line.strip()
         if not line or line.startswith("#"):
@@ -48,7 +46,7 @@ def load_config_from_yaml(yaml_path: str) -> Dict[str, Any]:
     return data
 
 
-DEFAULTS: Dict[str, Any] = {
+DEFAULTS: dict[str, Any] = {
     # --- Basic ---
     "institution_name": "Pilot A Bank",
     "analysis_date": "October 29, 2025",
@@ -156,14 +154,14 @@ def fmt(num: Any) -> str:
 
 def to_rows(
     title: str,
-    header: List[Any],
-    rows: List[Tuple[Any, ...]],
-) -> List[List[str]]:
+    header: list[Any],
+    rows: list[tuple[Any, ...]],
+) -> list[list[str]]:
     """
     Build a block of rows for CSV/text.
     `header` may be any iterable of values – we convert each to string.
     """
-    out: List[List[str]] = [[f"{title}"], []]
+    out: list[list[str]] = [[f"{title}"], []]
     out.append([str(x) for x in header])  # <-- fix: normalise header
     for r in rows:
         out.append([str(x) for x in r])
@@ -171,7 +169,7 @@ def to_rows(
     return out
 
 
-def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[str]]]:
+def generate_master(config: dict[str, Any]) -> tuple[list[list[str]], list[list[str]]]:
     """
     Returns: (csv_rows, text_rows)
     """
@@ -182,7 +180,7 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
     config["annual_net_benefit"] = config["net_monthly_benefit"] * 12
     config["three_year_value"] = config["annual_net_benefit"] * 3
 
-    csv_rows: List[List[str]] = [
+    csv_rows: list[list[str]] = [
         ["ECHOES AI - COMPREHENSIVE ROI ANALYSIS"],
         ["Executive Financial Analysis for Compliance Automation"],
         [""],
@@ -195,7 +193,7 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
         [""],
     ]
 
-    text_rows: List[List[str]] = csv_rows.copy()
+    text_rows: list[list[str]] = csv_rows.copy()
 
     # ── EXECUTIVE SUMMARY ───────────────────────────────
     exec_summ = [
@@ -453,7 +451,7 @@ def generate_master(config: Dict[str, Any]) -> Tuple[List[List[str]], List[List[
     text_rows.append([""])
 
     # ── SUMMARY FOR DECISION MAKERS ───────────────────
-    summ_rows: List[List[str]] = [
+    summ_rows: list[list[str]] = [
         ["EXECUTIVE SUMMARY FOR DECISION MAKERS", "", ""],
         # CFO
         ["FOR THE CFO:"],
@@ -522,7 +520,7 @@ def main() -> None:
     args = parser.parse_args()
 
     # Load config
-    cfg: Dict[str, Any] = DEFAULTS.copy()
+    cfg: dict[str, Any] = DEFAULTS.copy()
     if args.config and Path(args.config).exists():
         try:
             cfg.update(load_config_from_yaml(args.config))

@@ -1,14 +1,23 @@
+import datetime
+from collections.abc import Callable, Iterable, Sequence
+from typing import Any, Literal, overload
+
+import matplotlib.stackplot as mstack
+import matplotlib.streamplot as mstream
+import matplotlib.table as mtable
+import matplotlib.tri as mtri
+import numpy as np
+import PIL.Image
+from matplotlib.artist import Artist
 from matplotlib.axes._base import _AxesBase
 from matplotlib.axes._secondary_axes import SecondaryAxis
-
-from matplotlib.artist import Artist
 from matplotlib.collections import (
     Collection,
+    EventCollection,
     FillBetweenPolyCollection,
     LineCollection,
     PathCollection,
     PolyCollection,
-    EventCollection,
     QuadMesh,
 )
 from matplotlib.colorizer import Colorizer
@@ -19,25 +28,14 @@ from matplotlib.image import AxesImage, PcolorImage
 from matplotlib.inset import InsetIndicator
 from matplotlib.legend import Legend
 from matplotlib.legend_handler import HandlerBase
-from matplotlib.lines import Line2D, AxLine
+from matplotlib.lines import AxLine, Line2D
 from matplotlib.mlab import GaussianKDE
-from matplotlib.patches import Rectangle, FancyArrow, Polygon, StepPatch, Wedge
-from matplotlib.quiver import Quiver, QuiverKey, Barbs
+from matplotlib.patches import FancyArrow, Polygon, Rectangle, StepPatch, Wedge
+from matplotlib.quiver import Barbs, Quiver, QuiverKey
 from matplotlib.text import Annotation, Text
 from matplotlib.transforms import Transform
-from matplotlib.typing import CoordsType
-import matplotlib.tri as mtri
-import matplotlib.table as mtable
-import matplotlib.stackplot as mstack
-import matplotlib.streamplot as mstream
-
-import datetime
-import PIL.Image
-from collections.abc import Callable, Iterable, Sequence
-from typing import Any, Literal, overload
-import numpy as np
+from matplotlib.typing import ColorType, CoordsType, LineStyleType, MarkerType
 from numpy.typing import ArrayLike
-from matplotlib.typing import ColorType, MarkerType, LineStyleType
 
 class Axes(_AxesBase):
     def get_title(self, loc: Literal["left", "center", "right"] = ...) -> str: ...

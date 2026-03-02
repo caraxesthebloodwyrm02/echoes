@@ -3,7 +3,6 @@ Models for the Echoes Agent System.
 """
 
 from dataclasses import dataclass, field
-from typing import List, Dict, Any
 from datetime import datetime
 
 
@@ -39,12 +38,12 @@ class ConversationHistory:
     """History of a conversation with an agent."""
 
     agent_name: str
-    messages: List[Message] = field(default_factory=list)
+    messages: list[Message] = field(default_factory=list)
 
     def add_message(self, role: str, content: str):
         """Add a message to the history."""
         self.messages.append(Message(role=role, content=content))
 
-    def get_messages_for_api(self) -> List[Dict[str, str]]:
+    def get_messages_for_api(self) -> list[dict[str, str]]:
         """Get messages in the format expected by the OpenAI API."""
         return [{"role": msg.role, "content": msg.content} for msg in self.messages]

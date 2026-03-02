@@ -10,11 +10,8 @@ from typing import (
     LiteralString,
     Self,
     SupportsIndex,
-    TypeAlias,
     overload,
 )
-
-from typing_extensions import TypeIs, TypeVar
 
 import numpy as np
 import numpy.typing as npt
@@ -24,6 +21,7 @@ from numpy._typing import (
     _FloatLike_co,
     _NumberLike_co,
 )
+from typing_extensions import TypeIs, TypeVar
 
 from ._polytypes import (
     _AnyInt,
@@ -45,8 +43,8 @@ _NameCo = TypeVar(
 )
 _Other = TypeVar("_Other", bound=ABCPolyBase)
 
-_AnyOther: TypeAlias = ABCPolyBase | _CoefLike_co | _SeriesLikeCoef_co
-_Hundred: TypeAlias = Literal[100]
+type _AnyOther = ABCPolyBase | _CoefLike_co | _SeriesLikeCoef_co
+type _Hundred = Literal[100]
 
 class ABCPolyBase(Generic[_NameCo], abc.ABC):
     __hash__: ClassVar[None]  # type: ignore[assignment]  # pyright: ignore[reportIncompatibleMethodOverride]

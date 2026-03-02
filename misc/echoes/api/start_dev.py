@@ -53,8 +53,8 @@ def main():
         print(f"Project root: {project_root}")
         print(f"Python path: {sys.path[:3]}")
 
-        from echoes.api.server import app
         import uvicorn
+        from echoes.api.server import app
 
         uvicorn.run(
             "echoes.api.server:app",

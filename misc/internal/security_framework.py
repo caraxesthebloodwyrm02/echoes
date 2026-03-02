@@ -3,19 +3,18 @@ Security Framework for Echoes AI System
 Implements multi-layer security with encryption, access control, audit logging, and threat detection.
 """
 
-import hashlib
-import hmac
 import json
 import logging
-import time
-from datetime import datetime, timezone
-from typing import Dict, List, Any, Optional, Callable
-from dataclasses import dataclass, asdict
-from enum import Enum
-from pathlib import Path
-import threading
-from functools import wraps
 import os
+import threading
+import time
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from enum import Enum
+from functools import wraps
+from pathlib import Path
+from typing import Any
 
 # Configure security logger
 security_logger = logging.getLogger("echoes.security")
@@ -42,14 +41,14 @@ class SecurityIncident:
     timestamp: str
     event_type: SecurityEvent
     severity: str  # "low", "medium", "high", "critical"
-    user_id: Optional[str]
+    user_id: str | None
     resource: str
     action: str
-    details: Dict[str, Any]
-    source_ip: Optional[str] = None
-    user_agent: Optional[str] = None
+    details: dict[str, Any]
+    source_ip: str | None = None
+    user_agent: str | None = None
 
-    def to_dict(self) -> Dict[str, Any]:
+    def to_dict(self) -> dict[str, Any]:
         result = asdict(self)
         result["event_type"] = str(self.event_type)
         return result
@@ -58,7 +57,7 @@ class SecurityIncident:
 class EncryptionLayer:
     """Handles encryption/decryption operations with multiple algorithms."""
 
-    def __init__(self, key: Optional[bytes] = None):
+    def __init__(self, key: bytes | None = None):
         try:
             from cryptography.fernet import Fernet
 
@@ -111,15 +110,15 @@ class AccessControl:
     """Manages user permissions and access control."""
 
     def __init__(self):
-        self.roles: Dict[str, List[str]] = {
+        self.roles: dict[str, list[str]] = {
             "admin": ["*"],  # All permissions
             "user": ["read", "write", "execute"],
             "viewer": ["read"],
             "auditor": ["read", "audit"],
         }
 
-        self.user_roles: Dict[str, str] = {}
-        self.permissions: Dict[str, Callable] = {}
+        self.user_roles: dict[str, str] = {}
+        self.permissions: dict[str, Callable] = {}
 
     def assign_role(self, user_id: str, role: str):
         """Assign a role to a user."""
@@ -198,14 +197,14 @@ class AuditLogger:
 
     def get_events(
         self,
-        user_id: Optional[str] = None,
-        event_type: Optional[SecurityEvent] = None,
-        since: Optional[float] = None,
-    ) -> List[SecurityIncident]:
+        user_id: str | None = None,
+        event_type: SecurityEvent | None = None,
+        since: float | None = None,
+    ) -> list[SecurityIncident]:
         """Retrieve audit events with optional filtering."""
         events = []
         try:
-            with open(self.log_path, "r", encoding="utf-8") as f:
+            with open(self.log_path, encoding="utf-8") as f:
                 for line in f:
                     try:
                         data = json.loads(line.strip())
@@ -275,7 +274,7 @@ class ThreatDetection:
                     return False
         return True
 
-    def detect_anomaly(self, user_activity: List[Dict]) -> Optional[str]:
+    def detect_anomaly(self, user_activity: list[dict]) -> str | None:
         """Detect anomalous user behavior."""
         if len(user_activity) < 10:
             return None
@@ -303,7 +302,7 @@ class RateLimiter:
     """Implements rate limiting for API endpoints."""
 
     def __init__(self):
-        self.requests: Dict[str, List[float]] = {}
+        self.requests: dict[str, list[float]] = {}
         self.limits = {
             "default": {"requests": 100, "window": 60},  # 100 req/minute
             "strict": {"requests": 10, "window": 60},  # 10 req/minute
@@ -411,12 +410,12 @@ class SecurityManager:
         user_id: str,
         resource: str,
         action: str,
-        details: Dict[str, Any],
+        details: dict[str, Any],
         source_ip: str = None,
     ):
         """Log a security incident."""
         incident = SecurityIncident(
-            timestamp=datetime.now(timezone.utc).isoformat(),
+            timestamp=datetime.now(UTC).isoformat(),
             event_type=event_type,
             severity=severity,
             user_id=user_id,
@@ -437,15 +436,15 @@ class SecurityManager:
 
     def get_audit_trail(
         self,
-        user_id: Optional[str] = None,
-        event_type: Optional[SecurityEvent] = None,
+        user_id: str | None = None,
+        event_type: SecurityEvent | None = None,
         hours: int = 24,
-    ) -> List[SecurityIncident]:
+    ) -> list[SecurityIncident]:
         """Get audit trail for specified criteria."""
         since = time.time() - (hours * 3600)
         return self.audit_logger.get_events(user_id, event_type, since)
 
-    def security_health_check(self) -> Dict[str, Any]:
+    def security_health_check(self) -> dict[str, Any]:
         """Perform security health check."""
         return {
             "encryption_status": "operational" if self.encryption else "degraded",

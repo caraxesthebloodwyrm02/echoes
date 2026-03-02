@@ -7,14 +7,12 @@ Author: Prince (Echoes AI Platform)
 License: Consent-Based License v2.0
 """
 
-import os
-import json
-import hashlib
 import datetime
-from typing import Dict, List, Any, Optional, Union
-from dataclasses import dataclass, field, asdict
-from pathlib import Path
+import json
+from dataclasses import asdict, dataclass, field
 from enum import Enum
+from pathlib import Path
+from typing import Any
 
 
 class ConsentType(Enum):
@@ -48,7 +46,7 @@ class CognitiveEffortMetrics:
     creativity_score: float  # 0.0-1.0
     innovation_potential: float  # 0.0-1.0
     joules_of_work: float  # Calculated cognitive energy
-    thought_processes: List[str]  # Tracked thought patterns
+    thought_processes: list[str]  # Tracked thought patterns
     insights_generated: int
     problems_solved: int
     value_created: float  # Monetary value estimation
@@ -80,12 +78,12 @@ class ConsentRecord:
     scope_of_use: str
     duration: str
     granted_at: str
-    expires_at: Optional[str]
+    expires_at: str | None
     terms_accepted: bool
     protection_level: ProtectionLevel
-    special_conditions: List[str] = field(default_factory=list)
-    revocation_rights: Dict[str, Any] = field(default_factory=dict)
-    compensation_terms: Dict[str, Any] = field(default_factory=dict)
+    special_conditions: list[str] = field(default_factory=list)
+    revocation_rights: dict[str, Any] = field(default_factory=dict)
+    compensation_terms: dict[str, Any] = field(default_factory=dict)
 
 
 @dataclass
@@ -96,11 +94,11 @@ class LegalSafeguard:
     name: str
     description: str
     protection_level: ProtectionLevel
-    applicable_consent_types: List[ConsentType]
+    applicable_consent_types: list[ConsentType]
     implementation_code: str
     monitoring_required: bool
-    violation_consequences: List[str]
-    user_rights: List[str]
+    violation_consequences: list[str]
+    user_rights: list[str]
 
 
 class CognitiveEffortAccounting:
@@ -120,13 +118,13 @@ class CognitiveEffortAccounting:
         }
 
         # Cognitive effort tracking
-        self.effort_records: Dict[str, CognitiveEffortMetrics] = {}
+        self.effort_records: dict[str, CognitiveEffortMetrics] = {}
 
         # Consent management
-        self.consent_records: Dict[str, ConsentRecord] = {}
+        self.consent_records: dict[str, ConsentRecord] = {}
 
         # Legal safeguards
-        self.legal_safeguards: Dict[str, LegalSafeguard] = {}
+        self.legal_safeguards: dict[str, LegalSafeguard] = {}
 
         # Initialize default safeguards
         self._initialize_default_safeguards()
@@ -232,7 +230,7 @@ class CognitiveEffortAccounting:
         cognitive_complexity_score: float,
         creativity_score: float,
         innovation_potential: float,
-        thought_processes: List[str],
+        thought_processes: list[str],
         insights_generated: int,
         problems_solved: int,
     ) -> CognitiveEffortMetrics:
@@ -286,7 +284,7 @@ class CognitiveEffortAccounting:
         scope_of_use: str,
         duration: str,
         protection_level: ProtectionLevel = ProtectionLevel.ENHANCED,
-        compensation_terms: Optional[Dict[str, Any]] = None,
+        compensation_terms: dict[str, Any] | None = None,
     ) -> ConsentRecord:
         """Create a comprehensive consent record"""
 
@@ -330,7 +328,7 @@ class CognitiveEffortAccounting:
 
     def verify_consent_compliance(
         self, user_id: str, action: str, scope: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Verify if an action complies with user's consent"""
 
         active_consents = [
@@ -373,7 +371,7 @@ class CognitiveEffortAccounting:
 
     def calculate_effort_compensation(
         self, user_id: str, period_start: str, period_end: str
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Calculate compensation for user's cognitive efforts"""
 
         user_efforts = [
@@ -426,7 +424,7 @@ class CognitiveEffortAccounting:
             "compensation_details": compensation_details,
         }
 
-    def generate_legal_compliance_report(self) -> Dict[str, Any]:
+    def generate_legal_compliance_report(self) -> dict[str, Any]:
         """Generate comprehensive legal compliance report"""
 
         # Consent compliance
@@ -508,7 +506,7 @@ class CognitiveEffortAccounting:
             # Load effort records
             efforts_file = self.storage_path / "cognitive_efforts.json"
             if efforts_file.exists():
-                with open(efforts_file, "r", encoding="utf-8") as f:
+                with open(efforts_file, encoding="utf-8") as f:
                     efforts_data = json.load(f)
                     for effort_id, effort_dict in efforts_data.items():
                         self.effort_records[effort_id] = CognitiveEffortMetrics(
@@ -518,7 +516,7 @@ class CognitiveEffortAccounting:
             # Load consent records
             consents_file = self.storage_path / "consent_records.json"
             if consents_file.exists():
-                with open(consents_file, "r", encoding="utf-8") as f:
+                with open(consents_file, encoding="utf-8") as f:
                     consents_data = json.load(f)
                     for consent_id, consent_dict in consents_data.items():
                         consent_dict["consent_type"] = ConsentType(

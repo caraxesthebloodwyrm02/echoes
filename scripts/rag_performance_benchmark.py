@@ -10,21 +10,20 @@ Implements and measures the impact of the top 3 RAG system patches:
 Automatically records all results in IMPACT_ANALYTICS for cross-project correlation.
 """
 
+import argparse
+import json
 import logging
 import time
-import json
-from pathlib import Path
-from typing import Dict, List, Any, Tuple
 from dataclasses import dataclass
-import argparse
+from pathlib import Path
+from typing import Any
 
-from openai_rag.rag_openai import create_rag_system_openai
-from openai_rag.enhanced_rag_openai import create_enhanced_rag_system
 from integrations import (
     record_ai_evaluation,
     record_research_progress,
-    get_impact_status,
 )
+from openai_rag.enhanced_rag_openai import create_enhanced_rag_system
+from openai_rag.rag_openai import create_rag_system_openai
 
 logger = logging.getLogger(__name__)
 
@@ -33,7 +32,7 @@ logger = logging.getLogger(__name__)
 class BenchmarkConfig:
     """Configuration for RAG performance benchmarking."""
 
-    test_queries: List[str]
+    test_queries: list[str]
     iterations_per_query: int = 5
     warmup_iterations: int = 2
     target_latency_ms: float = 500.0  # Target: <500ms
@@ -45,10 +44,10 @@ class BenchmarkConfig:
 class BenchmarkResults:
     """Comprehensive benchmark results."""
 
-    baseline_results: Dict[str, Any]
-    optimized_results: Dict[str, Any]
-    improvements: Dict[str, Any]
-    target_achievements: Dict[str, Any]
+    baseline_results: dict[str, Any]
+    optimized_results: dict[str, Any]
+    improvements: dict[str, Any]
+    target_achievements: dict[str, Any]
     timestamp: float
 
 
@@ -132,7 +131,7 @@ class RAGPerformanceBenchmark:
 
         return results
 
-    def _benchmark_system(self, rag_system, system_name: str) -> Dict[str, Any]:
+    def _benchmark_system(self, rag_system, system_name: str) -> dict[str, Any]:
         """Benchmark a single RAG system."""
         results = {
             "system": system_name,
@@ -245,8 +244,8 @@ class RAGPerformanceBenchmark:
         return results
 
     def _calculate_improvements(
-        self, baseline: Dict, optimized: Dict
-    ) -> Dict[str, Any]:
+        self, baseline: dict, optimized: dict
+    ) -> dict[str, Any]:
         """Calculate performance improvements."""
         improvements = {}
 
@@ -299,7 +298,7 @@ class RAGPerformanceBenchmark:
 
         return improvements
 
-    def _check_target_achievements(self, optimized: Dict) -> Dict[str, Any]:
+    def _check_target_achievements(self, optimized: dict) -> dict[str, Any]:
         """Check if optimized system meets targets."""
         achievements = {}
 
@@ -400,7 +399,7 @@ class RAGPerformanceBenchmark:
             logger.error(f"Failed to record benchmark results: {e}")
 
 
-def create_default_test_queries() -> List[str]:
+def create_default_test_queries() -> list[str]:
     """Create a set of diverse test queries for benchmarking."""
     return [
         "What is the capital of France?",
@@ -504,7 +503,7 @@ def main():
         print("RAG PERFORMANCE OPTIMIZATION BENCHMARK RESULTS")
         print("=" * 80)
 
-        print(f"\nTest Configuration:")
+        print("\nTest Configuration:")
         print(f"  - Queries tested: {len(test_queries)}")
         print(f"  - Iterations per query: {args.iterations}")
         print(f"  - Total searches: {len(test_queries) * args.iterations * 2}")

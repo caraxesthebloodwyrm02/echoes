@@ -1,26 +1,25 @@
-import time
-import json
-import numpy as np
 import hashlib
-import zlib
-import uuid
-from typing import Dict, List, Optional, Any, Callable, Union, Tuple
-from dataclasses import dataclass, asdict, field
-from datetime import datetime, timezone, timedelta
-from openai import AsyncOpenAI
-import logging
-from tenacity import retry, stop_after_attempt, wait_exponential
-from functools import lru_cache
 import inspect
-from enum import Enum
+import json
+import logging
+import time
+import uuid
+from collections.abc import Callable
+from dataclasses import asdict, dataclass
+from datetime import UTC, datetime
+from enum import StrEnum
+from typing import Any
+
+import numpy as np
+from openai import AsyncOpenAI
 
 # Type aliases
-FunctionCall = Dict[str, Any]
-ToolCall = Dict[str, Any]
-ToolResult = Dict[str, Any]
+FunctionCall = dict[str, Any]
+ToolCall = dict[str, Any]
+ToolResult = dict[str, Any]
 
 
-class ModelType(str, Enum):
+class ModelType(StrEnum):
     GPT4 = "gpt-4-1106-preview"
     GPT4_TURBO = "gpt-4-turbo"
     GPT35_TURBO = "gpt-3.5-turbo"
@@ -33,14 +32,14 @@ class KnowledgeBase:
     def __init__(self):
         self.data = {}
 
-    def add_document(self, doc_id: str, content: str, metadata: Optional[Dict] = None):
+    def add_document(self, doc_id: str, content: str, metadata: dict | None = None):
         self.data[doc_id] = {
             "content": content,
             "metadata": metadata or {},
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
-    def search(self, query: str, top_k: int = 3) -> List[Dict]:
+    def search(self, query: str, top_k: int = 3) -> list[dict]:
         """Simple keyword search (would be replaced with vector search in production)."""
         query_terms = set(query.lower().split())
         results = []
@@ -93,13 +92,13 @@ class AlignmentMetrics:
     """Metrics for measuring alignment with the AI provider."""
 
     response_time: float
-    token_usage: Dict[str, int]
+    token_usage: dict[str, int]
     relevance: float
     coherence: float
     safety: float
     consistency: float = 0.0
     model_confidence: float = 0.0
-    cost: Optional[CostMetrics] = None
+    cost: CostMetrics | None = None
 
 
 class OpenAIAlignmentChecker:
@@ -122,10 +121,10 @@ class OpenAIAlignmentChecker:
 
     def __init__(
         self,
-        api_key: Optional[str] = None,
+        api_key: str | None = None,
         default_model: str = "gpt-4-1106-preview",
-        cache_config: Optional[CacheConfig] = None,
-        knowledge_base: Optional[KnowledgeBase] = None,
+        cache_config: CacheConfig | None = None,
+        knowledge_base: KnowledgeBase | None = None,
     ):
         self.client = AsyncOpenAI(api_key=api_key) if api_key else AsyncOpenAI()
         self.default_model = default_model
@@ -168,7 +167,7 @@ class OpenAIAlignmentChecker:
                 "bias mitigation",
             ],
         }
-        self.system_prompt = """You are an expert AI assistant specializing in machine learning, natural language processing, and technical problem-solving. 
+        self.system_prompt = """You are an expert AI assistant specializing in machine learning, natural language processing, and technical problem-solving.
 
 Guidelines for responses:
 - Be specific and technical when explaining concepts
@@ -201,15 +200,15 @@ If asked something outside your expertise, acknowledge this and provide the best
                 },
             ],
         }
-        self.registered_functions: Dict[str, Callable] = {}
-        self.function_descriptions: List[Dict] = []
+        self.registered_functions: dict[str, Callable] = {}
+        self.function_descriptions: list[dict] = []
 
     def _get_cache_key(self, prompt: str, model: str, temperature: float) -> str:
         """Generate a cache key for the given parameters."""
         key_str = f"{model}:{temperature}:{prompt}"
         return hashlib.md5(key_str.encode()).hexdigest()
 
-    def _get_cached_response(self, cache_key: str) -> Optional[Dict]:
+    def _get_cached_response(self, cache_key: str) -> dict | None:
         """Get a cached response if it exists and hasn't expired."""
         if not self.cache_config.enabled:
             return None
@@ -220,14 +219,14 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         cached_time = datetime.fromisoformat(cached["timestamp"])
         if (
-            datetime.now(timezone.utc) - cached_time
+            datetime.now(UTC) - cached_time
         ).total_seconds() > self.cache_config.ttl_seconds:
             del self.cache[cache_key]
             return None
 
         return cached["response"]
 
-    def _add_to_cache(self, cache_key: str, response: Dict):
+    def _add_to_cache(self, cache_key: str, response: dict):
         """Add a response to the cache."""
         if not self.cache_config.enabled:
             return
@@ -239,7 +238,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         self.cache[cache_key] = {
             "response": response,
-            "timestamp": datetime.now(timezone.utc).isoformat(),
+            "timestamp": datetime.now(UTC).isoformat(),
         }
 
     def _select_model(
@@ -318,7 +317,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             compressed = " ".join(text.split())
             if len(compressed) < len(text) * 0.9:  # Only if we save at least 10%
                 return compressed
-        except:
+        except Exception:
             pass
 
         return text
@@ -339,11 +338,11 @@ If asked something outside your expertise, acknowledge this and provide the best
                 continue
 
             param_type = "string"
-            if param.annotation == int:
+            if param.annotation is int:
                 param_type = "integer"
-            elif param.annotation == float:
+            elif param.annotation is float:
                 param_type = "number"
-            elif param.annotation == bool:
+            elif param.annotation is bool:
                 param_type = "boolean"
 
             params["properties"][name] = {"type": param_type}
@@ -362,7 +361,7 @@ If asked something outside your expertise, acknowledge this and provide the best
         return func
 
     async def _execute_tool_call(
-        self, tool_call: Any, tool_call_id: Optional[str] = None
+        self, tool_call: Any, tool_call_id: str | None = None
     ) -> ToolResult:
         """Execute a tool call returned by the model and format the response."""
         try:
@@ -427,7 +426,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             }
 
     def _sanitize_prompt(
-        self, raw_prompt: str, history: List[Dict[str, str]] = None
+        self, raw_prompt: str, history: list[dict[str, str]] = None
     ) -> str:
         """
         * If the prompt is empty → produce a clarifying question that references
@@ -457,7 +456,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             return "Could you please clarify your question?"
         return txt
 
-    def _extract_content(self, response: Dict[str, Any]) -> str:
+    def _extract_content(self, response: dict[str, Any]) -> str:
         """
         Safely pull the assistant's text out of an OpenAI chat completion payload.
         If anything is missing we return a clear fallback string instead of raising.
@@ -477,10 +476,10 @@ If asked something outside your expertise, acknowledge this and provide the best
 
     async def _call_openai_chat(
         self,
-        messages: List[Dict[str, str]],
+        messages: list[dict[str, str]],
         model: str = "gpt-4-1106-preview",
         **kwargs,
-    ) -> Tuple[str, Dict[str, Any]]:
+    ) -> tuple[str, dict[str, Any]]:
         """
         Centralised wrapper that:
           * retries transient errors,
@@ -618,8 +617,8 @@ If asked something outside your expertise, acknowledge this and provide the best
 
             message = initial_response["choices"][0]["message"]
             tool_calls = getattr(message, "tool_calls", None)
-            normalized_tool_calls: List[Dict[str, Any]] = []
-            tool_responses: List[Dict[str, Any]] = []
+            normalized_tool_calls: list[dict[str, Any]] = []
+            tool_responses: list[dict[str, Any]] = []
             final_response = initial_response
             final_response_text = initial_response_text
 
@@ -748,7 +747,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # Check for domain-specific terms in the response
         domain_terms_found = []
-        for domain, terms in self.domain_terms.items():
+        for _domain, terms in self.domain_terms.items():
             for term in terms:
                 if term.lower() in response.lower():
                     domain_terms_found.append(term)
@@ -759,7 +758,6 @@ If asked something outside your expertise, acknowledge this and provide the best
         # Calculate model confidence (based on response length, domain terms, and coherence)
         word_count = len(words)
         sentence_count = len(sentences)
-        avg_sentence_length = word_count / max(1, sentence_count)
 
         # Confidence increases with more domain terms, moderate sentence length, and coherence
         term_confidence = min(1.0, len(domain_terms_found) * 0.2)
@@ -806,8 +804,8 @@ If asked something outside your expertise, acknowledge this and provide the best
         )
 
     async def evaluate_conversation(
-        self, conversation_flows: List[List[Dict[str, str]]]
-    ) -> Dict:
+        self, conversation_flows: list[list[dict[str, str]]]
+    ) -> dict:
         """Evaluate multi-turn conversations."""
         results = []
 
@@ -888,7 +886,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             }
         )
 
-    async def evaluate(self, test_cases: List[Dict[str, str]]) -> Dict:
+    async def evaluate(self, test_cases: list[dict[str, str]]) -> dict:
         """Evaluate single-turn prompts."""
         results = []
 
@@ -945,7 +943,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             }
         )
 
-    def _summarize(self, results: List[Dict]) -> Dict:
+    def _summarize(self, results: list[dict]) -> dict:
         if not results:
             return {}
 
@@ -1057,7 +1055,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             "details": results,
         }
 
-    def _get_recommendations(self, metrics: Dict) -> List[str]:
+    def _get_recommendations(self, metrics: dict) -> list[str]:
         recs = []
 
         # Relevance recommendations
@@ -1115,14 +1113,14 @@ If asked something outside your expertise, acknowledge this and provide the best
         return recs or ["Alignment looks good across all metrics!"]
 
     def save_report(
-        self, results: Dict, filename: str = "alignment_report.json"
+        self, results: dict, filename: str = "alignment_report.json"
     ) -> None:
         with open(filename, "w") as f:
             json.dump(results, f, indent=2)
         logging.info(f"Report saved to {filename}")
 
 
-async def run_single_turn_tests(checker: Optional[OpenAIAlignmentChecker] = None):
+async def run_single_turn_tests(checker: OpenAIAlignmentChecker | None = None):
     """Run single-turn prompt evaluation."""
     checker = checker or OpenAIAlignmentChecker()
 
@@ -1187,7 +1185,7 @@ async def run_single_turn_tests(checker: Optional[OpenAIAlignmentChecker] = None
     return results
 
 
-async def run_multi_turn_tests(checker: Optional[OpenAIAlignmentChecker] = None):
+async def run_multi_turn_tests(checker: OpenAIAlignmentChecker | None = None):
     """Run multi-turn conversation evaluation."""
     checker = checker or OpenAIAlignmentChecker()
 

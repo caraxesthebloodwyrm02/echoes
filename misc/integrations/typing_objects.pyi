@@ -8,13 +8,19 @@ variants, if they exists and are different.
 """
 
 import sys
-from typing import Any, Final, ForwardRef, NewType, TypeVar
-
-from typing_extensions import (
-    ParamSpec,
+from typing import (
+    Any,
+    Final,
+    ForwardRef,
+    NewType,
     ParamSpecArgs,
     ParamSpecKwargs,
     TypeAliasType,
+    TypeVar,
+)
+
+from typing_extensions import (
+    ParamSpec,
     TypeIs,
     TypeVarTuple,
     deprecated,

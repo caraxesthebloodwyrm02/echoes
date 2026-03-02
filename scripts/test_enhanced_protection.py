@@ -9,33 +9,21 @@ License: Consent-Based License v2.0
 """
 
 import asyncio
-import json
 import datetime
-import tempfile
-import os
-from pathlib import Path
-from typing import Dict, List, Any, Optional
-import pandas as pd
-
-from enhanced_legal_safeguards import (
-    EnhancedCognitiveEffortAccounting,
-    get_enhanced_cognitive_accounting,
-    CognitiveEffortMetrics,
-    ConsentRecord,
-    ConsentType,
-    ProtectionLevel,
-    DataRetention,
-    PrivacyControl,
-)
+import json
 
 from enhanced_accounting_system import (
-    EnhancedAccountingSystem,
-    get_enhanced_accounting,
-    TransactionRecord,
-    UserAccount,
-    ValueType,
     PayoutMethod,
     TaxJurisdiction,
+    ValueType,
+    get_enhanced_accounting,
+)
+from enhanced_legal_safeguards import (
+    ConsentType,
+    DataRetention,
+    PrivacyControl,
+    ProtectionLevel,
+    get_enhanced_cognitive_accounting,
 )
 
 
@@ -775,15 +763,15 @@ class EnhancedProtectionTestSuite:
                 if "security_features" in result:
                     total_security += len(result["security_features"])
 
-            protection_report["protection_summary"][
-                "protection_features_validated"
-            ] = total_features
-            protection_report["protection_summary"][
-                "user_rights_guaranteed"
-            ] = total_rights
-            protection_report["protection_summary"][
-                "security_enhancements_active"
-            ] = total_security
+            protection_report["protection_summary"]["protection_features_validated"] = (
+                total_features
+            )
+            protection_report["protection_summary"]["user_rights_guaranteed"] = (
+                total_rights
+            )
+            protection_report["protection_summary"]["security_enhancements_active"] = (
+                total_security
+            )
 
             # Save protection report
             report_file = "enhanced_end_user_protection_report.json"
@@ -798,7 +786,7 @@ class EnhancedProtectionTestSuite:
             summary = protection_report["protection_summary"]
             capabilities = protection_report["enhanced_capabilities"]
 
-            print(f"\n🌟 Enhanced Protection Summary:")
+            print("\n🌟 Enhanced Protection Summary:")
             print(f"   🛡️ Total Tests Run: {summary['total_tests_run']}")
             print(
                 f"   🔒 Protection Features Validated: {summary['protection_features_validated']}"
@@ -809,7 +797,7 @@ class EnhancedProtectionTestSuite:
             )
             print(f"   ⚖️ Compliance Rate: {summary['compliance_rate']:.1%}")
 
-            print(f"\n🎯 Enhanced Capabilities:")
+            print("\n🎯 Enhanced Capabilities:")
             print(
                 f"   🔬 Legal Safeguards: {capabilities['legal_safeguards']['enhanced_consent_types']} consent types, {capabilities['legal_safeguards']['protection_levels']} protection levels"
             )
@@ -820,7 +808,7 @@ class EnhancedProtectionTestSuite:
                 f"   👑 Data Sovereignty: {capabilities['data_sovereignty']['user_control_levels']} control levels, {capabilities['data_sovereignty']['ownership_rights']} ownership rights"
             )
 
-            print(f"\n🚀 Protection Impact:")
+            print("\n🚀 Protection Impact:")
             for impact, value in protection_report["protection_impact"].items():
                 if impact != "user_trust_score":
                     print(f"   • {impact.replace('_', ' ').title()}: {value}")

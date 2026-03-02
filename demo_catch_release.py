@@ -4,17 +4,17 @@ Demo script showcasing the Catch and Release System for intelligent caching
 Demonstrates quick cross-referencing, conversation continuity, and multi-level caching
 """
 
+import json
 import os
 import sys
 import time
-import json
 from datetime import datetime
 
 # Load environment variables
 os.environ.setdefault("PYTHONPATH", os.path.dirname(os.path.abspath(__file__)))
 
 try:
-    from core_modules.catch_release_system import catch_release, CacheLevel, ContentType
+    from core_modules.catch_release_system import CacheLevel, ContentType, catch_release
 except ImportError as e:
     print(f"Import error: {e}")
     print("Please ensure you're running from the Echoes project root")
@@ -51,9 +51,9 @@ def demo_basic_catch_release():
         print(f"  ✅ Caught {content_type.value}: {content}")
         print(f"     Key: {key}")
 
-    print(f"\n📤 Releasing cached content:")
+    print("\n📤 Releasing cached content:")
 
-    for key, original_content, content_type in cache_keys:
+    for key, original_content, _content_type in cache_keys:
         released = catch_release.release(key)
         if released:
             print(f"  ✅ Released: {released}")
@@ -63,7 +63,7 @@ def demo_basic_catch_release():
 
     # Show cache statistics
     stats = catch_release.get_cache_statistics()
-    print(f"\n📊 Cache Statistics:")
+    print("\n📊 Cache Statistics:")
     print(f"  Total entries: {stats['total_entries']}")
     print(f"  Overall hit rate: {stats['overall_hit_rate']:.1%}")
 
@@ -122,7 +122,7 @@ def demo_cross_reference():
         keys.append(key)
         print(f"  ✅ Cached: {content[:50]}...")
 
-    print(f"\n🔍 Performing cross-reference searches:")
+    print("\n🔍 Performing cross-reference searches:")
 
     queries = [
         "artificial intelligence",
@@ -212,7 +212,7 @@ def demo_conversation_continuity():
                 conv_keys[-2], conv_keys[-1], strength=0.9
             )
 
-    print(f"\n🔗 Analyzing conversation continuity:")
+    print("\n🔗 Analyzing conversation continuity:")
 
     continuity = catch_release.get_conversation_continuity(session_id)
 
@@ -221,7 +221,7 @@ def demo_conversation_continuity():
     print(f"  Continuity score: {continuity['continuity_score']:.1%}")
 
     if continuity["recent_entries"]:
-        print(f"\n  Recent conversation flow:")
+        print("\n  Recent conversation flow:")
         for i, entry in enumerate(continuity["recent_entries"], 1):
             created = datetime.fromisoformat(entry["created_at"])
             time_ago = datetime.now() - created
@@ -262,7 +262,7 @@ def demo_multi_level_caching():
         print(f"  ✅ Cached at {level_name}: {key}")
         print(f"     TTL: {ttl_hours} hours" if ttl_hours else "     TTL: Permanent")
 
-    print(f"\n📊 Cache breakdown by level:")
+    print("\n📊 Cache breakdown by level:")
 
     stats = catch_release.get_cache_statistics()
     for cache_name, cache_stats in stats["cache_breakdown"].items():
@@ -302,7 +302,7 @@ def demo_relationship_tracking():
         keys[concept] = key
         print(f"  ✅ {concept.title()}: {content}")
 
-    print(f"\n🔗 Creating relationships:")
+    print("\n🔗 Creating relationships:")
 
     # Create relationships
     relationships = [
@@ -319,13 +319,13 @@ def demo_relationship_tracking():
         )
         print(f"  🔗 {from_concept} → {to_concept} (strength: {strength})")
 
-    print(f"\n🔍 Finding related content:")
+    print("\n🔍 Finding related content:")
 
     # Find related content for Python
     python_key = keys["python"]
     related = catch_release.find_related(python_key, max_depth=2)
 
-    print(f"\n  Content related to Python:")
+    print("\n  Content related to Python:")
     for i, result in enumerate(related, 1):
         print(f"    {i}. Relevance: {result.relevance_score:.1%}")
         print(f"       Depth: {result.context_info.get('depth', 0)}")
@@ -346,7 +346,7 @@ def demo_performance_optimization():
     bulk_content = [f"Test message {i} for performance testing" for i in range(100)]
 
     keys = []
-    for i, content in enumerate(bulk_content):
+    for _i, content in enumerate(bulk_content):
         key = catch_release.catch(
             content=content,
             content_type=ContentType.CONCEPT,
@@ -359,7 +359,7 @@ def demo_performance_optimization():
     catch_time = time.time() - start_time
 
     print(f"  ✅ Cached {len(bulk_content)} items in {catch_time:.3f}s")
-    print(f"  Rate: {len(bulk_content)/catch_time:.0f} items/second")
+    print(f"  Rate: {len(bulk_content) / catch_time:.0f} items/second")
 
     # Bulk release operation
     start_time = time.time()
@@ -373,7 +373,7 @@ def demo_performance_optimization():
     release_time = time.time() - start_time
 
     print(f"  ✅ Released {successful_releases}/50 items in {release_time:.3f}s")
-    print(f"  Rate: {successful_releases/release_time:.0f} items/second")
+    print(f"  Rate: {successful_releases / release_time:.0f} items/second")
 
     # Cross-reference performance
     start_time = time.time()
@@ -386,7 +386,7 @@ def demo_performance_optimization():
 
     # Show final statistics
     stats = catch_release.get_cache_statistics()
-    print(f"\n📊 Final Performance Statistics:")
+    print("\n📊 Final Performance Statistics:")
     print(f"  Total catches: {stats['operations']['total_catches']}")
     print(f"  Total releases: {stats['operations']['total_releases']}")
     print(f"  Cross-references: {stats['operations']['cross_references']}")
@@ -431,13 +431,13 @@ def demo_export_import():
         print(f"  File size: {file_size:,} bytes")
 
         # Show sample content
-        with open(export_file, "r") as f:
+        with open(export_file) as f:
             data = json.load(f)
 
         print(f"  Exported entries: {len(data['entries'])}")
         print(f"  Export timestamp: {data['export_timestamp']}")
 
-        print(f"\n📄 Sample exported entry:")
+        print("\n📄 Sample exported entry:")
         if data["entries"]:
             sample = data["entries"][0]
             print(f"    Key: {sample['key']}")

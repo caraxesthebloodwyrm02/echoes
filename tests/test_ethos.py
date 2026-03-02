@@ -1,8 +1,5 @@
-import os
 import logging
-from importlib import reload
-
-import pytest
+import os
 
 
 def _clear_env(monkeypatch):

@@ -4,9 +4,9 @@ Manages conversation context and state transitions
 """
 
 import logging
-from typing import Dict, Any, Optional, List
 from dataclasses import dataclass, field
 from datetime import datetime
+from typing import Any
 
 logger = logging.getLogger(__name__)
 
@@ -18,8 +18,8 @@ class ConversationContext:
     session_id: str
     current_topic: str = ""
     context_depth: int = 0
-    entities: List[Dict[str, Any]] = field(default_factory=list)
-    metadata: Dict[str, Any] = field(default_factory=dict)
+    entities: list[dict[str, Any]] = field(default_factory=list)
+    metadata: dict[str, Any] = field(default_factory=dict)
     created_at: datetime = field(default_factory=datetime.now)
     updated_at: datetime = field(default_factory=datetime.now)
 
@@ -31,10 +31,10 @@ class ContextManager:
     """
 
     def __init__(self):
-        self.contexts: Dict[str, ConversationContext] = {}
+        self.contexts: dict[str, ConversationContext] = {}
         self.logger = logging.getLogger(__name__)
 
-    def get_context(self, session_id: str) -> Optional[ConversationContext]:
+    def get_context(self, session_id: str) -> ConversationContext | None:
         """
         Get the conversation context for a session
 
@@ -66,9 +66,7 @@ class ContextManager:
         self.logger.debug(f"Created context for session {session_id}")
         return context
 
-    def update_context(
-        self, session_id: str, **updates
-    ) -> Optional[ConversationContext]:
+    def update_context(self, session_id: str, **updates) -> ConversationContext | None:
         """
         Update conversation context
 
@@ -104,7 +102,7 @@ class ContextManager:
             return True
         return False
 
-    def add_entity(self, session_id: str, entity: Dict[str, Any]) -> bool:
+    def add_entity(self, session_id: str, entity: dict[str, Any]) -> bool:
         """
         Add an entity to the conversation context
 
@@ -123,7 +121,7 @@ class ContextManager:
             return True
         return False
 
-    def get_entities(self, session_id: str) -> List[Dict[str, Any]]:
+    def get_entities(self, session_id: str) -> list[dict[str, Any]]:
         """
         Get entities from conversation context
 
@@ -136,7 +134,7 @@ class ContextManager:
         context = self.get_context(session_id)
         return context.entities if context else []
 
-    def get_context_summary(self, session_id: str) -> Dict[str, Any]:
+    def get_context_summary(self, session_id: str) -> dict[str, Any]:
         """
         Get a summary of the conversation context
 

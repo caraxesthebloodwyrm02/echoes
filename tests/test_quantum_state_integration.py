@@ -6,16 +6,16 @@ Quantum State Management Integration Tests for Echoes Platform
 Tests the integration of quantum-inspired state management with EchoesAssistantV2.
 """
 
-import pytest
-import sys
 import os
-from datetime import datetime
-from unittest.mock import patch, MagicMock
+import sys
+from unittest.mock import MagicMock, patch
+
+import pytest
 
 # Add the Echoes project directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from quantum_state import QuantumStateManager, QuantumStateError
+from quantum_state import QuantumStateManager
 
 
 class TestQuantumStateIntegration:
@@ -126,8 +126,8 @@ class TestQuantumStateIntegration:
 
     def test_quantum_state_persistence(self):
         """Test state persistence and recovery"""
-        import tempfile
         import os
+        import tempfile
 
         # Create temporary file
         with tempfile.NamedTemporaryFile(mode="w", delete=False, suffix=".json") as f:
@@ -186,7 +186,6 @@ class TestQuantumStateIntegration:
         qsm.initialize_quantum_states()
 
         # Perform several transitions
-        initial_state = qsm.state_machine.current_state
         states = [qsm.transition_state() for _ in range(5)]
 
         # Rollback one step

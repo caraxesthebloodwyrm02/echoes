@@ -6,10 +6,8 @@ This script finds and replaces multiple terms with "Glimpse" across the codebase
 Terms to replace: "Glimpse", "Glimpse", "Glimpse", "Glimpse" (in specific contexts)
 """
 
-import os
 import re
 from pathlib import Path
-from typing import Dict, List, Tuple
 
 # Define comprehensive terminology mappings
 TERMINOLOGY_MAP = {
@@ -80,8 +78,8 @@ def should_process_file(filepath: Path) -> bool:
 
 
 def update_file_content(
-    content: str, patterns: Dict[str, str]
-) -> Tuple[str, List[Tuple[str, str, int]]]:
+    content: str, patterns: dict[str, str]
+) -> tuple[str, list[tuple[str, str, int]]]:
     """Update content with new terminology."""
     changes = []
     updated_content = content
@@ -102,11 +100,11 @@ def update_file_content(
 
 
 def process_file(
-    filepath: Path, patterns: Dict[str, str]
-) -> List[Tuple[str, str, int]]:
+    filepath: Path, patterns: dict[str, str]
+) -> list[tuple[str, str, int]]:
     """Process a single file and return changes made."""
     try:
-        with open(filepath, "r", encoding="utf-8") as f:
+        with open(filepath, encoding="utf-8") as f:
             content = f.read()
 
         updated_content, changes = update_file_content(content, patterns)
@@ -121,7 +119,7 @@ def process_file(
         return []
 
 
-def find_and_rename_files(root_dir: Path, patterns: Dict[str, str]) -> None:
+def find_and_rename_files(root_dir: Path, patterns: dict[str, str]) -> None:
     """Find and rename files based on patterns."""
     total_files = 0
     total_changes = 0
@@ -165,7 +163,7 @@ def find_and_rename_files(root_dir: Path, patterns: Dict[str, str]) -> None:
                 print(f"  - Replaced '{pattern}' with '{replacement}' ({count} times)")
                 total_changes += count
 
-    print(f"\n=== Summary ===")
+    print("\n=== Summary ===")
     print(f"Files processed: {total_files}")
     print(f"Total replacements: {total_changes}")
 

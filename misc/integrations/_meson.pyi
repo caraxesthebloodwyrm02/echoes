@@ -1,9 +1,7 @@
 from collections.abc import Callable
 from pathlib import Path
-from typing import Final
+from typing import Final, override
 from typing import Literal as L
-
-from typing_extensions import override
 
 from ._backend import Backend
 

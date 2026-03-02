@@ -1,34 +1,32 @@
-import matplotlib.artist as martist
-
 import datetime
 from collections.abc import Callable, Iterable, Iterator, Sequence
+from typing import Any, Literal, TypeVar, overload
+
+import matplotlib.artist as martist
+import numpy as np
+from cycler import Cycler
 from matplotlib import cbook
 from matplotlib.artist import Artist
 from matplotlib.axes import Axes
-from matplotlib.axis import XAxis, YAxis, Tick
-from matplotlib.backend_bases import RendererBase, MouseButton, MouseEvent
+from matplotlib.axis import Tick, XAxis, YAxis
+from matplotlib.backend_bases import MouseButton, MouseEvent, RendererBase
 from matplotlib.cbook import CallbackRegistry
-from matplotlib.container import Container
 from matplotlib.collections import Collection
 from matplotlib.colorizer import ColorizingArtist
+from matplotlib.container import Container
+from matplotlib.figure import Figure, SubFigure
+from matplotlib.gridspec import GridSpec, SubplotSpec
+from matplotlib.image import AxesImage
 from matplotlib.legend import Legend
 from matplotlib.lines import Line2D
-from matplotlib.gridspec import SubplotSpec, GridSpec
-from matplotlib.figure import Figure, SubFigure
-from matplotlib.image import AxesImage
 from matplotlib.patches import Patch
 from matplotlib.scale import ScaleBase
 from matplotlib.spines import Spines
 from matplotlib.table import Table
 from matplotlib.text import Text
-from matplotlib.transforms import Transform, Bbox
-
-from cycler import Cycler
-
-import numpy as np
-from numpy.typing import ArrayLike
-from typing import Any, Literal, TypeVar, overload
+from matplotlib.transforms import Bbox, Transform
 from matplotlib.typing import ColorType
+from numpy.typing import ArrayLike
 
 _T = TypeVar("_T", bound=Artist)
 
@@ -88,12 +86,16 @@ class _AxesBase(martist.Artist):
     def get_xaxis_transform(
         self, which: Literal["grid", "tick1", "tick2"] = ...
     ) -> Transform: ...
-    def get_xaxis_text1_transform(self, pad_points: float) -> tuple[
+    def get_xaxis_text1_transform(
+        self, pad_points: float
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_xaxis_text2_transform(self, pad_points) -> tuple[
+    def get_xaxis_text2_transform(
+        self, pad_points
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
@@ -101,12 +103,16 @@ class _AxesBase(martist.Artist):
     def get_yaxis_transform(
         self, which: Literal["grid", "tick1", "tick2"] = ...
     ) -> Transform: ...
-    def get_yaxis_text1_transform(self, pad_points) -> tuple[
+    def get_yaxis_text1_transform(
+        self, pad_points
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],
     ]: ...
-    def get_yaxis_text2_transform(self, pad_points) -> tuple[
+    def get_yaxis_text2_transform(
+        self, pad_points
+    ) -> tuple[
         Transform,
         Literal["center", "top", "bottom", "baseline", "center_baseline"],
         Literal["center", "left", "right"],

@@ -1,11 +1,10 @@
+from collections.abc import Hashable
 from typing import (
     Any,
-    Hashable,
     Literal,
 )
 
 import numpy as np
-
 from pandas._typing import npt
 
 def unique_label_indices(
@@ -234,7 +233,9 @@ def duplicated(
     keep: Literal["last", "first", False] = ...,
     mask: npt.NDArray[np.bool_] | None = ...,
 ) -> npt.NDArray[np.bool_]: ...
-def mode(values: np.ndarray, dropna: bool, mask: npt.NDArray[np.bool_] | None = ...) -> np.ndarray: ...
+def mode(
+    values: np.ndarray, dropna: bool, mask: npt.NDArray[np.bool_] | None = ...
+) -> np.ndarray: ...
 def value_count(
     values: np.ndarray,
     dropna: bool,

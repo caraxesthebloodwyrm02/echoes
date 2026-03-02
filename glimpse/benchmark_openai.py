@@ -6,7 +6,8 @@ Measures real API latency, retry behavior, and error handling.
 import asyncio
 import time
 from statistics import mean
-from glimpse.Glimpse import GlimpseEngine, Draft
+
+from glimpse.Glimpse import Draft, GlimpseEngine
 from glimpse.sampler_openai import openai_sampler
 
 
@@ -18,7 +19,7 @@ async def run_once():
         "keep it under 150 words",
     )
     start = time.perf_counter()
-    await Glimpse.glimpse(draft)
+    await engine.glimpse(draft)
     return time.perf_counter() - start
 
 

@@ -4,19 +4,18 @@ Multimodal Resonance module - Mock implementation for assistant functionality.
 Provides multimodal processing capabilities for the Echoes assistant.
 """
 
-from typing import Dict, List, Any, Optional, Union
 from dataclasses import dataclass
-import numpy as np
+from typing import Any
 
 
 @dataclass
 class ModalityVector:
     """Represents a vector in multimodal space."""
 
-    text: Optional[List[float]] = None
-    image: Optional[List[float]] = None
-    audio: Optional[List[float]] = None
-    video: Optional[List[float]] = None
+    text: list[float] | None = None
+    image: list[float] | None = None
+    audio: list[float] | None = None
+    video: list[float] | None = None
 
     def __post_init__(self):
         # Initialize with zero vectors if not provided
@@ -29,7 +28,7 @@ class ModalityVector:
         if self.video is None:
             self.video = []
 
-    def concatenate(self) -> List[float]:
+    def concatenate(self) -> list[float]:
         """Concatenate all modality vectors."""
         result = []
         if self.text:
@@ -51,7 +50,7 @@ class MultimodalMemory:
     content: str
     modalities: ModalityVector
     timestamp: str
-    metadata: Dict[str, Any] = None
+    metadata: dict[str, Any] = None
 
     def __post_init__(self):
         if self.metadata is None:
@@ -62,10 +61,10 @@ class MultimodalResonanceEngine:
     """Simple multimodal resonance engine."""
 
     def __init__(self):
-        self.memories: Dict[str, MultimodalMemory] = {}
+        self.memories: dict[str, MultimodalMemory] = {}
         self.vector_size = 512  # Default embedding size
 
-    def process_text(self, text: str) -> List[float]:
+    def process_text(self, text: str) -> list[float]:
         """Process text into vector representation."""
         # Simple mock embedding - in real implementation would use actual model
         # Create deterministic pseudo-random vector based on text hash
@@ -87,9 +86,7 @@ class MultimodalResonanceEngine:
             vector.append(0.0)
         return vector[: self.vector_size]
 
-    def add_memory(
-        self, content: str, modalities: Optional[ModalityVector] = None
-    ) -> str:
+    def add_memory(self, content: str, modalities: ModalityVector | None = None) -> str:
         """Add a multimodal memory."""
         import uuid
         from datetime import datetime
@@ -111,7 +108,7 @@ class MultimodalResonanceEngine:
         self.memories[memory_id] = memory
         return memory_id
 
-    def search(self, query: str, limit: int = 5) -> List[MultimodalMemory]:
+    def search(self, query: str, limit: int = 5) -> list[MultimodalMemory]:
         """Search memories by content similarity."""
         query_vector = self.process_text(query)
         results = []
@@ -128,7 +125,7 @@ class MultimodalResonanceEngine:
         results.sort(key=lambda x: x[1], reverse=True)
         return [memory for memory, _ in results[:limit]]
 
-    def _cosine_similarity(self, vec1: List[float], vec2: List[float]) -> float:
+    def _cosine_similarity(self, vec1: list[float], vec2: list[float]) -> float:
         """Calculate cosine similarity between two vectors."""
         if not vec1 or not vec2:
             return 0.0
@@ -138,7 +135,7 @@ class MultimodalResonanceEngine:
         v1 = vec1 + [0.0] * (max_len - len(vec1))
         v2 = vec2 + [0.0] * (max_len - len(vec2))
 
-        dot_product = sum(a * b for a, b in zip(v1, v2))
+        dot_product = sum(a * b for a, b in zip(v1, v2, strict=False))
         magnitude1 = sum(a * a for a in v1) ** 0.5
         magnitude2 = sum(b * b for b in v2) ** 0.5
 
@@ -147,7 +144,7 @@ class MultimodalResonanceEngine:
 
         return dot_product / (magnitude1 * magnitude2)
 
-    def get_statistics(self) -> Dict[str, Any]:
+    def get_statistics(self) -> dict[str, Any]:
         """Get engine statistics."""
         return {
             "total_memories": len(self.memories),

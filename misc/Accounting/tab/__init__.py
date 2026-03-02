@@ -15,20 +15,21 @@ The system guarantees that every user who invests their time, thoughts,
 and motivation in assistant interactions receives fair compensation.
 """
 
-import os
-import json
 import asyncio
-from typing import Dict, Any, Optional
-from pathlib import Path
+import json
+import os
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, Optional
+
+from audit_trail import audit_sync_operation
+from payment_gateway import deliver_user_payment
+from payout_engine import process_user_payout
+from sync_engine import get_sync_engine, sync_assistant_interaction
+from user_portal import get_user_portal_dashboard
 
 # Import all Tab components
-from work_tracking import log_assistant_interaction, import_existing_work
-from sync_engine import sync_assistant_interaction, get_sync_engine
-from payout_engine import process_user_payout
-from payment_gateway import deliver_user_payment
-from audit_trail import audit_sync_operation
-from user_portal import get_user_portal_dashboard
+from work_tracking import import_existing_work, log_assistant_interaction
 
 
 class TabIntegration:
@@ -46,8 +47,8 @@ class TabIntegration:
         print("🔗 Tab Integration initialized - seamless work-to-payment pipeline")
 
     async def process_assistant_interaction(
-        self, user_id: str, interaction_data: Dict[str, Any]
-    ) -> Dict[str, Any]:
+        self, user_id: str, interaction_data: dict[str, Any]
+    ) -> dict[str, Any]:
         """
         Process an assistant interaction through the complete Tab pipeline.
 
@@ -96,7 +97,7 @@ class TabIntegration:
 
         return result
 
-    def get_user_compensation_status(self, user_id: str) -> Dict[str, Any]:
+    def get_user_compensation_status(self, user_id: str) -> dict[str, Any]:
         """Get user's complete compensation status."""
         try:
             dashboard = get_user_portal_dashboard(user_id)
@@ -121,7 +122,7 @@ class TabIntegration:
                 "system_integrity": "verified",
             }
 
-        except Exception as e:
+        except Exception:
             # Provide default status for new users
             return {
                 "user_id": user_id,
@@ -140,7 +141,7 @@ class TabIntegration:
                 "message": "New user - start interacting to begin earning compensation",
             }
 
-    def _generate_user_message(self, result: Dict[str, Any]) -> str:
+    def _generate_user_message(self, result: dict[str, Any]) -> str:
         """Generate user-friendly message about the interaction processing."""
         messages = []
 
@@ -175,8 +176,8 @@ class TabIntegration:
 
 
 async def tab_log_interaction(
-    user_id: str, interaction_data: Dict[str, Any]
-) -> Dict[str, Any]:
+    user_id: str, interaction_data: dict[str, Any]
+) -> dict[str, Any]:
     """
     MAIN INTEGRATION POINT - Called by assistant_v2_core.py
 
@@ -210,7 +211,7 @@ def tab_import_existing_work(
     work_description: str,
     technical_level: str = "advanced",
     impact_level: str = "high",
-) -> Dict[str, Any]:
+) -> dict[str, Any]:
     """
     Import existing work hours for fair compensation recognition.
 
@@ -245,7 +246,7 @@ def tab_import_existing_work(
     return result
 
 
-def tab_get_user_status(user_id: str) -> Dict[str, Any]:
+def tab_get_user_status(user_id: str) -> dict[str, Any]:
     """
     Get user's current compensation and work status.
 
@@ -259,8 +260,8 @@ def tab_get_user_status(user_id: str) -> Dict[str, Any]:
 
 
 def tab_process_manual_payout(
-    user_id: str, amount: Optional[float] = None
-) -> Dict[str, Any]:
+    user_id: str, amount: float | None = None
+) -> dict[str, Any]:
     """
     Process manual payout request.
 
@@ -286,28 +287,28 @@ def tab_process_manual_payout(
 # Functions for users to access their Tab data directly
 
 
-def get_my_compensation_dashboard(user_id: str) -> Dict[str, Any]:
+def get_my_compensation_dashboard(user_id: str) -> dict[str, Any]:
     """Get user's complete compensation dashboard."""
     return get_user_portal_dashboard(user_id)
 
 
 def setup_my_payment_method(
-    user_id: str, method_type: str, method_details: Dict[str, Any]
-) -> Dict[str, Any]:
+    user_id: str, method_type: str, method_details: dict[str, Any]
+) -> dict[str, Any]:
     """Setup payment method for receiving payouts."""
     from user_portal import setup_user_payment_portal
 
     return setup_user_payment_portal(user_id, method_type, method_details)
 
 
-def request_my_payout(user_id: str) -> Dict[str, Any]:
+def request_my_payout(user_id: str) -> dict[str, Any]:
     """Request payout of pending earnings."""
     from user_portal import request_payout_portal
 
     return request_payout_portal(user_id)
 
 
-def get_my_transparency_report(user_id: str) -> Dict[str, Any]:
+def get_my_transparency_report(user_id: str) -> dict[str, Any]:
     """Get complete transparency report."""
     from user_portal import get_transparency_report_portal
 
@@ -319,7 +320,7 @@ def get_my_transparency_report(user_id: str) -> Dict[str, Any]:
 # =============================================================================
 
 
-def check_tab_system_health() -> Dict[str, Any]:
+def check_tab_system_health() -> dict[str, Any]:
     """Check overall health of Tab system."""
     from sync_engine import check_sync_glimpse_health
 
@@ -348,7 +349,7 @@ def check_tab_system_health() -> Dict[str, Any]:
     return health_status
 
 
-def get_system_statistics() -> Dict[str, Any]:
+def get_system_statistics() -> dict[str, Any]:
     """Get system-wide statistics."""
     # This would aggregate stats from all components
     return {
@@ -400,7 +401,7 @@ async def demo_tab_integration():
         print(f"Result: {result['user_message']}")
 
     # Check user status
-    print(f"\\n📊 User Status:")
+    print("\\n📊 User Status:")
     status = tab_get_user_status("demo_user_1")
     if "compensation_status" in status:
         comp_status = status["compensation_status"]
@@ -410,7 +411,7 @@ async def demo_tab_integration():
         print(f"Status: {status}")
 
     # Check system health
-    print(f"\\n🔍 System Health:")
+    print("\\n🔍 System Health:")
     health = check_tab_system_health()
     print(f"Overall Status: {health['overall_status']}")
 

@@ -4,21 +4,22 @@ Echoes Assistant V2 - Performance Benchmarking Script
 Tests and validates performance claims: < 2.5s average response time
 """
 
-import time
-import json
-import statistics
-from typing import List, Dict, Any
-from datetime import datetime
 import concurrent.futures
+import json
 import os
+import statistics
 import sys
+import time
+from datetime import datetime
 from pathlib import Path
+from typing import Any
 
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from assistant_v2_core import EchoesAssistantV2
 from openai import OpenAI
+
+from assistant_v2_core import EchoesAssistantV2
 
 
 class PerformanceBenchmark:
@@ -32,7 +33,7 @@ class PerformanceBenchmark:
             enable_streaming=False,
         )
 
-    def benchmark_api_latency(self, iterations: int = 50) -> Dict[str, Any]:
+    def benchmark_api_latency(self, iterations: int = 50) -> dict[str, Any]:
         """Benchmark raw OpenAI API latency"""
         print("🔬 Benchmarking OpenAI API Latency...")
 
@@ -43,14 +44,16 @@ class PerformanceBenchmark:
             try:
                 response = self.client.chat.completions.create(
                     model="gpt-4o-mini",
-                    messages=[{"role": "user", "content": f"Count to {i+1} in words"}],
+                    messages=[
+                        {"role": "user", "content": f"Count to {i + 1} in words"}
+                    ],
                     max_tokens=50,
                 )
                 latency = time.time() - start_time
                 latencies.append(latency)
-                print(f"  Request {i+1}/{iterations}: {latency:.3f}s")
+                print(f"  Request {i + 1}/{iterations}: {latency:.3f}s")
             except Exception as e:
-                print(f"  Request {i+1}/{iterations}: Failed - {e}")
+                print(f"  Request {i + 1}/{iterations}: Failed - {e}")
                 continue
 
         if latencies:
@@ -66,7 +69,7 @@ class PerformanceBenchmark:
             }
         return {"error": "No successful requests"}
 
-    def benchmark_assistant_responses(self, iterations: int = 20) -> Dict[str, Any]:
+    def benchmark_assistant_responses(self, iterations: int = 20) -> dict[str, Any]:
         """Benchmark full assistant response times"""
         print("🤖 Benchmarking Assistant Response Times...")
 
@@ -88,10 +91,10 @@ class PerformanceBenchmark:
                 latency = time.time() - start_time
                 latencies.append(latency)
                 print(
-                    f"  Response {i+1}/{iterations}: {latency:.3f}s (len: {len(response)} chars)"
+                    f"  Response {i + 1}/{iterations}: {latency:.3f}s (len: {len(response)} chars)"
                 )
             except Exception as e:
-                print(f"  Response {i+1}/{iterations}: Failed - {e}")
+                print(f"  Response {i + 1}/{iterations}: Failed - {e}")
                 continue
 
         if latencies:
@@ -112,7 +115,7 @@ class PerformanceBenchmark:
 
     def benchmark_concurrent_load(
         self, concurrent_users: int = 5, requests_per_user: int = 10
-    ) -> Dict[str, Any]:
+    ) -> dict[str, Any]:
         """Benchmark concurrent load handling"""
         print(
             f"⚡ Benchmarking Concurrent Load ({concurrent_users} users, {requests_per_user} reqs each)..."
@@ -124,12 +127,12 @@ class PerformanceBenchmark:
                 start_time = time.time()
                 try:
                     response = self.assistant.chat(
-                        f"User {user_id} request {req+1}", stream=False
+                        f"User {user_id} request {req + 1}", stream=False
                     )
                     latency = time.time() - start_time
                     latencies.append(latency)
                 except Exception as e:
-                    print(f"  User {user_id} req {req+1}: Failed - {e}")
+                    print(f"  User {user_id} req {req + 1}: Failed - {e}")
                     continue
             return latencies
 
@@ -161,7 +164,7 @@ class PerformanceBenchmark:
             }
         return {"error": "No successful concurrent requests"}
 
-    def run_comprehensive_benchmark(self) -> Dict[str, Any]:
+    def run_comprehensive_benchmark(self) -> dict[str, Any]:
         """Run all benchmarks and generate report"""
         print("🚀 Starting Comprehensive Performance Benchmark")
         print("=" * 60)
@@ -185,7 +188,7 @@ class PerformanceBenchmark:
 
         return results
 
-    def _generate_summary(self, benchmarks: List[Dict[str, Any]]) -> Dict[str, Any]:
+    def _generate_summary(self, benchmarks: list[dict[str, Any]]) -> dict[str, Any]:
         """Generate performance summary and claim validation"""
         summary = {
             "overall_status": "PASS",
@@ -225,7 +228,7 @@ class PerformanceBenchmark:
 
         return summary
 
-    def save_report(self, results: Dict[str, Any], filename: str = None) -> str:
+    def save_report(self, results: dict[str, Any], filename: str = None) -> str:
         """Save benchmark results to file"""
         if not filename:
             timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

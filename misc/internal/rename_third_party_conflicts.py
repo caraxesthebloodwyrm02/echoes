@@ -1,5 +1,4 @@
 import os
-import shutil
 
 # List of files to rename based on the conflicts found
 files_to_rename = [

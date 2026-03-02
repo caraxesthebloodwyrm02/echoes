@@ -9,29 +9,24 @@ License: Consent-Based License v2.0
 """
 
 import asyncio
-import json
 import datetime
+import json
 import tempfile
-import os
-from pathlib import Path
-from typing import Dict, List, Any, Optional
-
-# Import enhanced systems
-from enhanced_legal_safeguards import (
-    EnhancedCognitiveEffortAccounting,
-    get_enhanced_cognitive_accounting,
-    ConsentType,
-    ProtectionLevel,
-    DataRetention,
-    PrivacyControl,
-)
 
 from enhanced_accounting_system import (
     EnhancedAccountingSystem,
-    get_enhanced_accounting,
-    ValueType,
     PayoutMethod,
     TaxJurisdiction,
+    ValueType,
+)
+
+# Import enhanced systems
+from enhanced_legal_safeguards import (
+    ConsentType,
+    DataRetention,
+    EnhancedCognitiveEffortAccounting,
+    PrivacyControl,
+    ProtectionLevel,
 )
 
 
@@ -297,7 +292,7 @@ class SimpleEnhancedProtectionTest:
 
                         self.test_results.append(test_result)
                         print(
-                            f"   ✅ Data sovereignty test: Complete sovereignty achieved"
+                            "   ✅ Data sovereignty test: Complete sovereignty achieved"
                         )
                     else:
                         print(
@@ -472,9 +467,9 @@ class SimpleEnhancedProtectionTest:
             successful_tests = len([r for r in self.test_results if "error" not in r])
             total_tests = len(self.test_results)
 
-            protection_report["protection_summary"][
-                "successful_tests"
-            ] = successful_tests
+            protection_report["protection_summary"]["successful_tests"] = (
+                successful_tests
+            )
             protection_report["protection_summary"]["overall_success_rate"] = (
                 successful_tests / total_tests if total_tests > 0 else 0
             )
@@ -492,12 +487,12 @@ class SimpleEnhancedProtectionTest:
             summary = protection_report["protection_summary"]
             capabilities = protection_report["enhanced_capabilities"]
 
-            print(f"\n🌟 Enhanced Protection Summary:")
+            print("\n🌟 Enhanced Protection Summary:")
             print(f"   🛡️ Total Tests: {summary['total_tests_run']}")
             print(f"   ✅ Successful Tests: {summary['successful_tests']}")
             print(f"   ⚖️ Success Rate: {summary['overall_success_rate']:.1%}")
 
-            print(f"\n🎯 Enhanced Capabilities:")
+            print("\n🎯 Enhanced Capabilities:")
             print(
                 f"   🔬 Legal Safeguards: {capabilities['legal_safeguards']['enhanced_consent_types']} consent types"
             )
@@ -541,9 +536,9 @@ async def run_simple_enhanced_protection_test():
         successful_tests = len([r for r in test_suite.test_results if "error" not in r])
         total_tests = len(test_suite.test_results)
 
-        print(f"\n✅ Enhanced Protection Achievements:")
+        print("\n✅ Enhanced Protection Achievements:")
         print(
-            f"• 🔒 Test Success Rate: {successful_tests}/{total_tests} ({successful_tests/total_tests:.1%})"
+            f"• 🔒 Test Success Rate: {successful_tests}/{total_tests} ({successful_tests / total_tests:.1%})"
         )
         print(
             "• 💰 Privacy Control Bonuses: 4 privacy levels with 30-50% compensation enhancement"
