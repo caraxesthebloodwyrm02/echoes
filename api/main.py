@@ -40,6 +40,9 @@ from api.config import get_config, setup_logging
 
 # Import middleware
 from api.middleware import setup_middleware
+from starlette.middleware.base import BaseHTTPMiddleware
+from starlette.requests import Request as StarletteRequest
+from fastapi.responses import Response
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -162,6 +165,37 @@ app.add_middleware(
     allow_headers=config.security.cors_allow_headers,
 )
 
+class RequestBodyLimitMiddleware(BaseHTTPMiddleware):
+    """Reject request bodies larger than max_bytes."""
+
+    def __init__(self, app, max_bytes: int = 1_048_576):
+        super().__init__(app)
+        self.max_bytes = max_bytes
+
+    async def dispatch(self, request: StarletteRequest, call_next):
+        content_length = request.headers.get("content-length")
+        if content_length and int(content_length) > self.max_bytes:
+            return JSONResponse(
+                status_code=413,
+                content={"error": "Request body too large"},
+            )
+        return await call_next(request)
+
+
+class SecurityHeadersMiddleware(BaseHTTPMiddleware):
+    """Add standard security headers to every response."""
+
+    async def dispatch(self, request: StarletteRequest, call_next):
+        response: Response = await call_next(request)
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
+        return response
+
+
+app.add_middleware(RequestBodyLimitMiddleware, max_bytes=1_048_576)
+app.add_middleware(SecurityHeadersMiddleware)
+
 # Setup additional middleware
 setup_middleware(app, config)
 
@@ -184,18 +218,24 @@ async def websocket_endpoint(websocket: WebSocket):
 
     try:
         while True:
-            # Receive message from client
             data = await websocket.receive_text()
-            message = json.loads(data)
 
-            # Process based on message type
-            message_type = message.get("type", "unknown")
+            if len(data) > 65_536:
+                await websocket.close(code=1009, reason="Message too large")
+                break
+
+            message = json.loads(data)
+            message_type = message.get("type")
+
+            if not isinstance(message_type, str):
+                await manager.send_personal_message(
+                    {"type": "error", "message": "Missing or invalid message type"},
+                    websocket,
+                )
+                continue
 
             if message_type == "pattern_detection":
                 await handle_pattern_detection_websocket(message, websocket)
-            # REMOVED: Search functionality - RAG middleware eliminated for authentic responses
-            # elif message_type == "search":
-            #     await handle_search_websocket(message, websocket)
             elif message_type == "truth_verification":
                 await handle_truth_verification_websocket(message, websocket)
             else:
@@ -242,8 +282,9 @@ async def handle_pattern_detection_websocket(message: dict, websocket: WebSocket
         )
 
     except Exception as e:
+        logger.error(f"Pattern detection failed: {e}", exc_info=True)
         await manager.send_personal_message(
-            {"type": "error", "operation": "pattern_detection", "message": str(e)},
+            {"type": "error", "operation": "pattern_detection", "message": "Pattern detection failed"},
             websocket,
         )
 
@@ -283,8 +324,9 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
         )
 
     except Exception as e:
+        logger.error(f"Truth verification failed: {e}", exc_info=True)
         await manager.send_personal_message(
-            {"type": "error", "operation": "truth_verification", "message": str(e)},
+            {"type": "error", "operation": "truth_verification", "message": "Truth verification failed"},
             websocket,
         )
 

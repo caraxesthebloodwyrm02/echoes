@@ -6,6 +6,7 @@ Handles API key generation, validation, and storage
 import secrets
 import hashlib
 import json
+import stat
 from pathlib import Path
 from typing import Dict, List, Optional
 from src.utils.datetime_utils import utc_now
@@ -31,9 +32,10 @@ class APIKeyManager:
         return {}
 
     def _save_keys(self):
-        """Save API keys to storage"""
+        """Save API keys to storage with restricted file permissions"""
         with open(self.storage_path, "w") as f:
             json.dump(self.keys, f, indent=2)
+        self.storage_path.chmod(stat.S_IRUSR | stat.S_IWUSR)
 
     def _hash_key(self, key: str) -> str:
         """Hash an API key for secure storage"""

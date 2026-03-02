@@ -22,14 +22,15 @@ class FilesystemTools:
         self.allowed_patterns = allowed_patterns or ["*"]
 
     def _is_safe_path(self, path: Path) -> bool:
-        """Check if path is safe (within root and not sensitive)."""
+        """Check if path is safe (within root, not a symlink, and not sensitive)."""
         try:
+            if path.is_symlink():
+                return False
+
             resolved = path.resolve()
-            # Must be within root directory
             if not str(resolved).startswith(str(self.root_dir)):
                 return False
 
-            # Avoid sensitive paths
             sensitive = [".git", "__pycache__", ".env", "node_modules", ".venv", "venv"]
             path_parts = resolved.parts
             if any(s in path_parts for s in sensitive):

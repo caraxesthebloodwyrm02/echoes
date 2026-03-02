@@ -98,6 +98,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         # Extract API key
         api_key = self._extract_api_key(request)
         if not api_key:
+            logger.warning(f"Auth failure: missing API key from {request.client.host if request.client else 'unknown'}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "API key required"},
@@ -105,14 +106,16 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         # Validate API key
         if api_key not in self.config.security.allowed_api_keys:
+            logger.warning(f"Auth failure: invalid API key from {request.client.host if request.client else 'unknown'}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "Invalid API key"},
             )
 
         # Apply rate limiting
-        client_id = api_key  # Use API key as client identifier
+        client_id = api_key
         if not self.rate_limiter.is_allowed(client_id):
+            logger.warning(f"Rate limit exceeded for {request.client.host if request.client else 'unknown'}")
             return self._rate_limit_response(client_id)
 
         # Add client info to request state
@@ -134,11 +137,6 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         api_key_header = request.headers.get("X-API-Key")
         if api_key_header:
             return api_key_header
-
-        # Try query parameter
-        api_key_param = request.query_params.get("api_key")
-        if api_key_param:
-            return api_key_param
 
         return None
 

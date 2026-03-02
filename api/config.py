@@ -46,7 +46,7 @@ class SecurityConfig(BaseSettings):
 
     # API Keys
     openai_api_key: Optional[str] = Field(default=None, env="OPENAI_API_KEY")
-    api_key_required: bool = Field(default=False, env="API_KEY_REQUIRED")
+    api_key_required: bool = Field(default=True, env="API_KEY_REQUIRED")
     allowed_api_keys: list = Field(default_factory=list, env="ALLOWED_API_KEYS")
 
     # Rate limiting
@@ -55,9 +55,12 @@ class SecurityConfig(BaseSettings):
     )  # per minute
     rate_limit_window: int = Field(default=60, env="RATE_LIMIT_WINDOW")  # seconds
 
-    # CORS
-    cors_origins: list = Field(default=["*"], env="CORS_ORIGINS")
-    cors_allow_credentials: bool = Field(default=True, env="CORS_ALLOW_CREDENTIALS")
+    # CORS — restrict origins; wildcard + credentials violates the spec
+    cors_origins: list = Field(
+        default=["http://localhost:3000", "http://localhost:8001"],
+        env="CORS_ORIGINS",
+    )
+    cors_allow_credentials: bool = Field(default=False, env="CORS_ALLOW_CREDENTIALS")
     cors_allow_methods: list = Field(default=["*"], env="CORS_ALLOW_METHODS")
     cors_allow_headers: list = Field(default=["*"], env="CORS_ALLOW_HEADERS")
 
