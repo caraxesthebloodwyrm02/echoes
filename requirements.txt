@@ -33,7 +33,7 @@ python-docx==1.2.0
 python-pptx==1.0.2
 pandas==2.2.3
 openpyxl==3.1.5
-Pillow==10.4.0
+Pillow==12.1.1
 beautifulsoup4==4.12.3
 readability-lxml==0.8.1
 
@@ -50,7 +50,7 @@ readability-lxml==0.8.1
 # matplotlib>=3.7.0
 
 # YouTube & Audio (minimal versions)
-yt-dlp==2024.8.6
+yt-dlp==2026.2.21
 # openai-whisper and torch are heavy - install separately if needed
 
 # Development & Testing - Fixed versions
