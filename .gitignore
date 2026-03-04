@@ -450,6 +450,15 @@ env/
 .vscode/
 .idea/
 
+# Workspace baseline (telemetry & scratch)
+resonance_telemetry_events.jsonl
+test_results*.txt
+test_run*.txt
+.cascade_context.json
+codeq.txt
+codequality.txt
+pytest_out*.txt
+
 # OS generated files
 .DS_Store
 Thumbs.db
