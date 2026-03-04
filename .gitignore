@@ -458,6 +458,7 @@ test_run*.txt
 codeq.txt
 codequality.txt
 pytest_out*.txt
+debug-*.log
 
 # OS generated files
 .DS_Store
