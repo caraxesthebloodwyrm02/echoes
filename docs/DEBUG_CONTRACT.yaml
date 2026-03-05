@@ -1,0 +1,85 @@
+# Debug Contract — No-Regression Criteria for Delegation
+# Validate before and after delegated work; ensures no regression when task is handed off.
+# Schema: informal (human + script); for JSON-Schema audit style see schemas/ if added.
+
+schema_version: "1.0.0"
+last_updated: "2026-03-05"
+repository: caraxesthebloodwyrm02/echoes
+default_branch: main
+
+# --- Baseline (must hold after any delegated change) ---
+baseline:
+  lint:
+    scope: [api/, app/, glimpse/, tools/]
+    commands:
+      - id: ruff_check
+        command: "uv run ruff check api/ app/ glimpse/ tools/"
+        required_exit_code: 0
+      - id: ruff_format
+        command: "uv run ruff format --check api/ app/ glimpse/ tools/"
+        required_exit_code: 0
+    guarantee: "All lint commands exit 0."
+
+  test:
+    command: "uv run pytest tests/ -q --tb=line"
+    min_passed: 250
+    max_failures_allowed: 8
+    allowed_failure_patterns:
+      - "tests/test_rag_orbit.py::TestFAISSRetriever"
+      - "tests/test_rag_orbit.py::TestProvenanceTracker"
+    guarantee: "Pytest run: passed >= min_passed, failures <= max_failures_allowed and only in allowed_failure_patterns."
+
+# --- Verification commands (run in order for validation) ---
+verification_commands:
+  - id: lint_check
+    command: "uv run ruff check api/ app/ glimpse/ tools/"
+    expected_outcome: "exit 0"
+  - id: lint_format
+    command: "uv run ruff format --check api/ app/ glimpse/ tools/"
+    expected_outcome: "exit 0"
+  - id: test_suite
+    command: "uv run pytest tests/ -q --tb=line"
+    expected_outcome: "exit 1 with passed >= 250 and failures only in test_rag_orbit FAISSRetriever/ProvenanceTracker"
+
+# --- Protected areas (regression = contract breach) ---
+protected_areas:
+  - name: core_ethos
+    paths: [core/ethos.py]
+    tests: [tests/test_ethos.py]
+    description: "enforce() sets env defaults; test_ethos must pass."
+  - name: quantum_state
+    paths: [misc/quantum_state/]
+    tests: [tests/test_quantum_state_integration.py]
+    description: "QuantumStateManager load_state empty file; import misc.quantum_state."
+  - name: rag_orbit_embeddings
+    paths: [src/rag_orbit/embeddings.py]
+    tests: [tests/test_rag_orbit.py::TestEmbeddingGenerator]
+    description: "embed_text/embed_batch return np.ndarray; checksum 32, similarity tolerance."
+  - name: glimpse_engine_flags
+    paths: [glimpse/engine.py]
+    tests: [tests/glimpse/test_coverage_completions.py]
+    description: "PERFORMANCE_AVAILABLE/CLARIFIER_AVAILABLE on glimpse.engine; tests patch there."
+
+# --- Delegation contract clauses ---
+contract_clauses:
+  - id: no_lint_regression
+    description: "Lint (ruff check + format check on api/, app/, glimpse/, tools/) must pass (exit 0)."
+    validation: "Run verification_commands lint_check and lint_format; both exit 0."
+  - id: no_test_regression
+    description: "Test run must have at least min_passed (250) and at most max_failures_allowed (8) in allowed patterns only."
+    validation: "Run test_suite; parse pytest output; assert passed >= 250, failed <= 8, failures match allowed_failure_patterns."
+  - id: protected_tests_pass
+    description: "All tests in protected_areas for core_ethos, quantum_state, rag_orbit_embeddings, glimpse_engine_flags must pass."
+    validation: "Run pytest for each protected area test path; exit 0 for those subsets."
+
+# --- How to use (for delegated agent) ---
+delegation_instructions:
+  before_start:
+    - "Run all verification_commands; record output (e.g. test_baseline.txt)."
+    - "Confirm baseline holds (lint 0, passed >= 250, failures within allowed list)."
+  after_changes:
+    - "Re-run verification_commands."
+    - "Confirm no regression: lint still 0; passed >= baseline min_passed; no new failure outside allowed_failure_patterns."
+  on_regression:
+    - "Do not merge/push until regression is fixed or baseline/contract is explicitly updated."
+    - "Document new failure in DEBUG_REPORT.md and optionally add to allowed_failure_patterns with rationale."

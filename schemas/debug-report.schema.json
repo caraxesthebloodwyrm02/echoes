@@ -1,0 +1,49 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://echoes.dev/schemas/debug-report.schema.json",
+  "title": "Debug Report Contract",
+  "description": "JSON payload for debug/regression reports. Validates against DEBUG_CONTRACT baseline for delegation and no-regression checks.",
+  "type": "object",
+  "properties": {
+    "schema_version": { "type": "string", "const": "1.0.0" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "repository": { "type": "string" },
+    "branch": { "type": "string" },
+    "baseline": {
+      "type": "object",
+      "properties": {
+        "lint_exit_code": { "type": "integer", "minimum": 0 },
+        "tests_passed": { "type": "integer", "minimum": 0 },
+        "tests_failed": { "type": "integer", "minimum": 0 },
+        "tests_skipped": { "type": "integer", "minimum": 0 }
+      },
+      "required": ["lint_exit_code", "tests_passed", "tests_failed"]
+    },
+    "verification_commands": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": { "type": "string" },
+          "command": { "type": "string" },
+          "exit_code": { "type": "integer" },
+          "expected_outcome": { "type": "string" }
+        },
+        "required": ["id", "command"]
+      }
+    },
+    "contract_satisfied": { "type": "boolean", "description": "True iff baseline meets DEBUG_CONTRACT.yaml criteria." },
+    "failures": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "node_id": { "type": "string" },
+          "allowed": { "type": "boolean" }
+        }
+      }
+    }
+  },
+  "required": ["schema_version", "generated_at", "baseline", "contract_satisfied"],
+  "additionalProperties": true
+}
