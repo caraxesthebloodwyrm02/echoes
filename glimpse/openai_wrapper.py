@@ -126,7 +126,9 @@ async def call_with_backoff(
 
             except TimeoutError:
                 record_rate_limit_rejection(endpoint)
-                raise RuntimeError(f"Rate limit acquisition timed out for {endpoint}") from None
+                raise RuntimeError(
+                    f"Rate limit acquisition timed out for {endpoint}"
+                ) from None
 
         try:
             try:

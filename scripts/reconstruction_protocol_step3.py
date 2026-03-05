@@ -12,6 +12,12 @@ import os
 import shutil
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def calculate_file_checksum(filepath, algorithm="sha256"):
@@ -56,7 +62,7 @@ def extract_authentic_data(output_file="data_extraction_step3.json"):
     extraction_data["extraction_sources"] = {
         "echoes_core_codebase": {
             "source_type": "local_repository",
-            "path": "e:/Projects/Echoes",
+            "path": str(_REPO_ROOT),
             "components": core_components,
             "extraction_method": "direct_file_copy",
         }
@@ -70,7 +76,7 @@ def extract_authentic_data(output_file="data_extraction_step3.json"):
     successful_extractions = 0
 
     for component_path in core_components:
-        full_path = f"e:/Projects/Echoes/{component_path}"
+        full_path = str(_REPO_ROOT / component_path)
 
         if os.path.exists(full_path):
             # Create extraction directory structure

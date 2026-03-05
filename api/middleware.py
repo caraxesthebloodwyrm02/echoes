@@ -7,7 +7,6 @@ Provides authentication, rate limiting, and request processing middleware.
 import asyncio
 import logging
 import time
-from collections import defaultdict
 
 from fastapi import Request, status
 from fastapi.responses import JSONResponse
@@ -16,68 +15,12 @@ from starlette.middleware.base import BaseHTTPMiddleware
 logger = logging.getLogger(__name__)
 
 
-class RateLimiter:
-    """Simple in-memory rate limiter"""
-
-    def __init__(self, requests_per_window: int = 60, window_seconds: int = 60):
-        self.requests_per_window = requests_per_window
-        self.window_seconds = window_seconds
-        self.requests: dict[str, list] = defaultdict(list)
-
-    def is_allowed(self, client_id: str) -> bool:
-        """Check if request is allowed for the client"""
-        now = time.time()
-        client_requests = self.requests[client_id]
-
-        # Remove old requests outside the window
-        client_requests[:] = [
-            req_time
-            for req_time in client_requests
-            if now - req_time < self.window_seconds
-        ]
-
-        # Check if under limit
-        if len(client_requests) < self.requests_per_window:
-            client_requests.append(now)
-            return True
-
-        return False
-
-    def get_remaining_requests(self, client_id: str) -> int:
-        """Get remaining requests for the client"""
-        now = time.time()
-        client_requests = self.requests[client_id]
-
-        # Clean old requests
-        client_requests[:] = [
-            req_time
-            for req_time in client_requests
-            if now - req_time < self.window_seconds
-        ]
-
-        return max(0, self.requests_per_window - len(client_requests))
-
-    def get_reset_time(self, client_id: str) -> float:
-        """Get time until rate limit resets for the client"""
-        client_requests = self.requests[client_id]
-        if not client_requests:
-            return 0
-
-        now = time.time()
-        oldest_request = min(client_requests)
-        return max(0, self.window_seconds - (now - oldest_request))
-
-
 class AuthenticationMiddleware(BaseHTTPMiddleware):
     """Middleware for API key authentication"""
 
     def __init__(self, app, config):
         super().__init__(app)
         self.config = config
-        self.rate_limiter = RateLimiter(
-            requests_per_window=config.security.rate_limit_requests,
-            window_seconds=config.security.rate_limit_window,
-        )
 
     async def dispatch(self, request: Request, call_next):
         # Skip authentication for health check and docs
@@ -86,11 +29,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         # Check if authentication is required
         if not self.config.security.api_key_required:
-            # Still apply rate limiting if no auth required
-            client_id = self._get_client_id(request)
-            if not self.rate_limiter.is_allowed(client_id):
-                return self._rate_limit_response(client_id)
-
+            # Rate limiting handled by SlowApi
             return await call_next(request)
 
         # Extract API key
@@ -114,16 +53,8 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
                 content={"error": "Invalid API key"},
             )
 
-        # Apply rate limiting
-        client_id = api_key
-        if not self.rate_limiter.is_allowed(client_id):
-            logger.warning(
-                f"Rate limit exceeded for {request.client.host if request.client else 'unknown'}"
-            )
-            return self._rate_limit_response(client_id)
-
         # Add client info to request state
-        request.state.client_id = client_id
+        request.state.client_id = api_key
         request.state.api_key = api_key
 
         # Continue with request
@@ -154,26 +85,6 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         # Fall back to IP address
         client_ip = request.client.host if request.client else "unknown"
         return f"ip:{client_ip}"
-
-    def _rate_limit_response(self, client_id: str):
-        """Generate rate limit exceeded response"""
-        remaining = self.rate_limiter.get_remaining_requests(client_id)
-        reset_time = self.rate_limiter.get_reset_time(client_id)
-
-        return JSONResponse(
-            status_code=status.HTTP_429_TOO_MANY_REQUESTS,
-            content={
-                "error": "Rate limit exceeded",
-                "remaining_requests": remaining,
-                "reset_in_seconds": int(reset_time),
-                "retry_after": int(reset_time),
-            },
-            headers={
-                "X-RateLimit-Remaining": str(remaining),
-                "X-RateLimit-Reset": str(int(time.time() + reset_time)),
-                "Retry-After": str(int(reset_time)),
-            },
-        )
 
 
 class RequestLoggingMiddleware(BaseHTTPMiddleware):

@@ -80,6 +80,22 @@ docs = [
     "mkdocs-material>=9.0.0",
 ]
 
+# UV dependency groups (align with GRID-main: uv sync --group dev --group test)
+[dependency-groups]
+test = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-cov>=4.0.0",
+]
+dev = [
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+    "pre-commit>=3.0.0",
+    "jsonschema>=4.0.0",
+]
+
+
 [project.urls]
 Homepage = "https://github.com/caraxesthebloodwyrm02/echoes"
 Repository = "https://github.com/caraxesthebloodwyrm02/echoes"
@@ -130,7 +146,7 @@ ignore = [
 "tests/**/*" = ["B011"]
 
 [tool.mypy]
-python_version = "3.12"
+python_version = "3.13"
 warn_return_any = true
 warn_unused_configs = true
 disallow_untyped_defs = true
@@ -164,11 +180,15 @@ markers = [
 ]
 
 [tool.coverage.run]
+# Same as .coveragerc; used when running coverage via pytest-cov or coverage.py
 source = ["app", "api", "glimpse", "tools", "core", "src"]
 omit = [
     "*/tests/*",
     "*/test_*.py",
     "setup.py",
+    "*/misc/*",
+    "*/examples/*",
+    "*/demos/*",
 ]
 
 [tool.coverage.report]

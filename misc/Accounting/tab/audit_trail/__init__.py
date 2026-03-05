@@ -21,6 +21,12 @@ from datetime import UTC, datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Default base_dir: repo-relative (allow override via ECHOES_ROOT)
+_DEFAULT_BASE = str(
+    Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent.parent)))
+    / "misc" / "Accounting" / "tab"
+)
+
 
 @dataclass
 class AuditEntry:
@@ -48,8 +54,8 @@ class AuditTrail:
     ensuring users can verify their compensations and contributions.
     """
 
-    def __init__(self, base_dir: str = "e:/Projects/Echoes/Accounting/tab"):
-        self.base_dir = Path(base_dir)
+    def __init__(self, base_dir: str | None = None):
+        self.base_dir = Path(base_dir if base_dir is not None else _DEFAULT_BASE)
         self.audit_dir = self.base_dir / "audit_trail"
         self.data_dir = self.audit_dir / "data"
         self.data_dir.mkdir(parents=True, exist_ok=True)

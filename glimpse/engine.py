@@ -9,14 +9,17 @@ from typing import Literal
 
 # Import optional performance and clarifier modules
 try:
-    from .performance_optimizer import PerformanceOptimizer
+    from .performance_optimizer import PerformanceOptimizer  # noqa: F401
 
     PERFORMANCE_AVAILABLE = True
 except ImportError:
     PERFORMANCE_AVAILABLE = False
 
 try:
-    from .clarifier_engine import ClarifierEngine, enhanced_sampler_with_clarifiers
+    from .clarifier_engine import (  # noqa: F401
+        ClarifierEngine,
+        enhanced_sampler_with_clarifiers,
+    )
 
     CLARIFIER_AVAILABLE = True
 except ImportError:
@@ -189,7 +192,7 @@ class GlimpseEngine:
 
     def __init__(
         self,
-        sampler: Sampler = None,
+        sampler: Sampler | None = None,
         latency_monitor: LatencyMonitor | None = None,
         privacy_guard: PrivacyGuard | None = None,
         debounce_ms: int = 300,
@@ -207,16 +210,22 @@ class GlimpseEngine:
         # Initialize performance optimizer if available and enabled
         self._performance_optimizer = None
         if enable_performance and PERFORMANCE_AVAILABLE:
+            from .performance_optimizer import PerformanceOptimizer
+
             self._performance_optimizer = PerformanceOptimizer()
 
         # Initialize clarifier Glimpse if available and enabled
         self._clarifier_engine = None
         if enable_clarifiers and CLARIFIER_AVAILABLE:
+            from .clarifier_engine import ClarifierEngine
+
             self._clarifier_engine = ClarifierEngine()
 
         # Use enhanced sampler if clarifiers are enabled, otherwise use default
         if sampler is None:
             if enable_clarifiers and CLARIFIER_AVAILABLE:
+                from .clarifier_engine import enhanced_sampler_with_clarifiers
+
                 # Create a wrapper that uses this instance's clarifier engine
                 async def _wrapped_sampler(draft):
                     return await enhanced_sampler_with_clarifiers(

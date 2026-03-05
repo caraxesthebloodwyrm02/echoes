@@ -249,15 +249,15 @@ class TestGlimpseConnectPlatformsTool:
         self.mock_assistant.glimpse_connect_platforms.return_value = mock_response
 
         result = self.tool.execute(
-            source_path="E:/Projects/Echoes/c_o_r_e",
-            target_path="D:/Research",
+            source_path="E:/Seeds/echoes/c_o_r_e",
+            target_path="E:/Seeds/echoes/tests/glimpse/_test_output",
             integration_mode="reference_bridge",
         )
 
         assert result == mock_response
         self.mock_assistant.glimpse_connect_platforms.assert_called_once_with(
-            source_path="E:/Projects/Echoes/c_o_r_e",
-            target_path="D:/Research",
+            source_path="E:/Seeds/echoes/c_o_r_e",
+            target_path="E:/Seeds/echoes/tests/glimpse/_test_output",
             integration_mode="reference_bridge",
             sync_frequency="manual",
             conflict_resolution="source_priority",

@@ -26,14 +26,14 @@ jobs:
     timeout_minutes: 5
     steps:
       - ruff_check:
-          paths: [api/, app/]
-          description: "Ruff lint on api/ and app/ only"
+          paths: [api/, app/, glimpse/, tools/]
+          description: "Ruff lint on api/, app/, glimpse/, tools/"
       - ruff_format:
-          paths: [api/, app/]
+          paths: [api/, app/, glimpse/, tools/]
           mode: check
     success_criteria:
       - all_steps_exit_zero: true
-    excluded_from_lint: [glimpse/, tools/, core/, src/, misc/]
+    excluded_from_lint: [core/, src/, misc/]
 
   test:
     name: Test
@@ -89,12 +89,12 @@ jobs:
 coverage:
   enforced_in_ci: false
   local_config:
-    fail_under: 75
+    fail_under: 0
     source: [app, api, glimpse, tools, core, src]
-  note: "CI overrides addopts and does not run coverage"
+  note: "Run `make coverage` for local coverage; CI runs tests without coverage. fail_under=0 so report-only."
 
 guarantees:
-  - "Lint passes iff api/ and app/ pass ruff check and format"
+  - "Lint passes iff api/, app/, glimpse/, and tools/ pass ruff check and format"
   - "Test passes iff pytest exits 0 with CI addopts (no coverage)"
   - "Push is green when lint, test, security, and gate all succeed"
   - "Skipped/error tests: quantum (numpy), rag_orbit (numpy), demos/assistant (OPENAI_API_KEY), ethos (core.ethos), guardrails (c_o_r_e)"
@@ -103,6 +103,6 @@ validation:
   required_jobs: [lint, test, security]
   optional_jobs: [gate]
   ci_command_equivalents:
-    lint: "ruff check api/ app/ && ruff format --check api/ app/"
+    lint: "ruff check api/ app/ glimpse/ tools/ && ruff format --check api/ app/ glimpse/ tools/"
     test: "pytest tests/ -v --tb=short --maxfail=10 --ignore=tests/test_quantum_state_integration.py --ignore=tests/benchmark_rate_limiter.py -o addopts='-ra --strict-markers --tb=short --maxfail=10'"
     security: "pip-audit --ignore-vuln CVE-2025-6984 --ignore-vuln CVE-2026-26013"

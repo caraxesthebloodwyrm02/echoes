@@ -1,4 +1,11 @@
+import os
 import re
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent))
+)
 
 
 def parse_security_protocols(doc_path):
@@ -31,7 +38,9 @@ def parse_security_protocols(doc_path):
 
 
 if __name__ == "__main__":
-    doc_path = "e:\\Projects\\Development\\docs\\glimpse\\DEPLOYMENT_AND_OPERATIONS.md"
+    doc_path = str(_REPO_ROOT / "docs" / "glimpse" / "DEPLOYMENT_AND_OPERATIONS.md")
+    if not os.path.exists(doc_path):
+        doc_path = os.environ.get("INGEST_DOC_PATH", doc_path)
     security_protocols = parse_security_protocols(doc_path)
     import json
 

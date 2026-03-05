@@ -5,9 +5,15 @@ Demonstrates file extension-based grounding vectors and resonance processing
 """
 
 import asyncio
+import os
 from pathlib import Path
 
 from assistant_v2_core import EchoesAssistantV2
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 async def test_multimodal_resonance():
@@ -34,11 +40,11 @@ async def test_multimodal_resonance():
     print("\n1️⃣ Testing File Extension Modality Vectors...")
 
     test_files = [
-        "e:/Projects/Echoes/all_my_work/Notes/eveningketchup.txt",
-        "e:/Projects/Echoes/all_my_work/frameworks/Ted.xlsx",
-        "e:/Projects/Echoes/all_my_work/frameworks/stepbloom framework.xlsx",
-        "e:/Projects/Echoes/all_my_work/blackbook/IMG20250814004803.jpg",
-        "e:/Projects/Echoes/all_my_work/frameworks/Fine-Tuning -The Chamber of Secrets- with Advanced AI Training Strategies.pdf",
+        str(_REPO_ROOT / "all_my_work/Notes/eveningketchup.txt"),
+        str(_REPO_ROOT / "all_my_work/frameworks/Ted.xlsx"),
+        str(_REPO_ROOT / "all_my_work/frameworks/stepbloom framework.xlsx"),
+        str(_REPO_ROOT / "all_my_work/blackbook/IMG20250814004803.jpg"),
+        str(_REPO_ROOT / "all_my_work/frameworks/Fine-Tuning -The Chamber of Secrets- with Advanced AI Training Strategies.pdf"),
     ]
 
     for file_path in test_files:
@@ -99,7 +105,7 @@ async def test_multimodal_resonance():
     # Test 3: Cross-modal insights
     print("\n3️⃣ Getting Cross-Modal Insights...")
 
-    test_file = "e:/Projects/Echoes/all_my_work/frameworks/Ted.xlsx"
+    test_file = str(_REPO_ROOT / "all_my_work/frameworks/Ted.xlsx")
     if Path(test_file).exists():
         insights = assistant.get_cross_modal_insights(test_file)
         if insights["success"]:
@@ -138,9 +144,9 @@ async def test_multimodal_resonance():
     print("\n5️⃣ Analyzing Multimodal Directory...")
 
     test_directories = [
-        "e:/Projects/Echoes/all_my_work/Notes",
-        "e:/Projects/Echoes/all_my_work/frameworks",
-        "e:/Projects/Echoes/all_my_work/blackbook",
+        str(_REPO_ROOT / "all_my_work/Notes"),
+        str(_REPO_ROOT / "all_my_work/frameworks"),
+        str(_REPO_ROOT / "all_my_work/blackbook"),
     ]
 
     for directory_path in test_directories:

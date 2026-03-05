@@ -21,6 +21,12 @@ from datetime import UTC, datetime, timezone
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Default base_dir: repo-relative (allow override via ECHOES_ROOT)
+_DEFAULT_BASE = str(
+    Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent.parent))
+    / "misc" / "Accounting" / "tab"
+)
+
 
 @dataclass
 class WorkEntry:
@@ -63,8 +69,8 @@ class WorkTracker:
     for time, thoughts, and motivation invested in work.
     """
 
-    def __init__(self, base_dir: str = "e:/Projects/Echoes/Accounting/tab"):
-        self.base_dir = Path(base_dir)
+    def __init__(self, base_dir: str | None = None):
+        self.base_dir = Path(base_dir if base_dir is not None else _DEFAULT_BASE)
         self.work_dir = self.base_dir / "work_tracking"
         self.data_dir = self.work_dir / "data"
         self.data_dir.mkdir(parents=True, exist_ok=True)
@@ -389,7 +395,8 @@ class AssistantWorkIntegration:
     """
 
     def __init__(self):
-        self.assistant_path = "e:/Projects/Echoes/assistant_v2_core.py"
+        _repo = Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent.parent)))
+        self.assistant_path = str(_repo / "assistant_v2_core.py")
         self.work_tracker = None
 
     def sync_work_entry(self, work_entry: WorkEntry):

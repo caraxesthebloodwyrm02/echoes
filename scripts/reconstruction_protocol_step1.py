@@ -11,6 +11,12 @@ import json
 import os
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def calculate_file_checksum(filepath, algorithm="sha256"):
@@ -156,6 +162,6 @@ def verify_directory_integrity(base_path, output_file="integrity_check_step1.jso
 
 
 if __name__ == "__main__":
-    base_path = "e:/Projects/Echoes"
+    base_path = str(_REPO_ROOT)
     success = verify_directory_integrity(base_path)
     sys.exit(0 if success else 1)

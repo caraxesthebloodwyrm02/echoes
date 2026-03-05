@@ -1,15 +1,16 @@
 """
 Turbo Bridge - Unified Cross-Platform Integration
 
-Connects Echoes platform with multiple research platforms on D: drive:
+Connects Echoes platform with multiple research platforms:
 - IMPACT_ANALYTICS: Automated impact tracking and AI safety metrics
-- GlimpsePreview: Trajectory analysis and real-time visualization
-- TurboBookshelf: Bias detection and web interface
+- GlimpsePreview: Trajectory analysis and real-time visualization (path via GLIMPSE_PREVIEW_PATH)
+- TurboBookshelf: Bias detection and web interface (path via TURBO_BOOKSHELF_PATH)
 
 Provides unified API for cross-platform analysis and data exchange.
 """
 
 import logging
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -40,7 +41,7 @@ class TurboBridge:
     def _init_glimpse_preview(self):
         """Initialize GlimpsePreview connection."""
         try:
-            glimpse_path = Path("D:/GlimpsePreview")
+            glimpse_path = Path(os.environ.get("GLIMPSE_PREVIEW_PATH", "E:/Seeds/echoes/glimpse"))
             if glimpse_path.exists():
                 if str(glimpse_path) not in sys.path:
                     sys.path.insert(0, str(glimpse_path))
@@ -57,7 +58,7 @@ class TurboBridge:
     def _init_turbo_bookshelf(self):
         """Initialize TurboBookshelf connection."""
         try:
-            bookshelf_path = Path("D:/TurboBookshelf")
+            bookshelf_path = Path(os.environ.get("TURBO_BOOKSHELF_PATH", "E:/Seeds/echoes"))
             if bookshelf_path.exists():
                 if str(bookshelf_path) not in sys.path:
                     sys.path.insert(0, str(bookshelf_path))

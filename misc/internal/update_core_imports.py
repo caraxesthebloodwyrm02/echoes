@@ -1,6 +1,12 @@
 #!/usr/bin/env python3
 import os
 import re
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent))
+)
 
 
 def update_imports_in_file(filepath):
@@ -25,10 +31,10 @@ def update_imports_in_file(filepath):
 
 
 def main():
-    root_dir = r"e:\Projects\Echoes"
+    root_dir = _REPO_ROOT
     updated_files = 0
 
-    for root, dirs, files in os.walk(root_dir):
+    for root, dirs, files in os.walk(str(root_dir)):
         for file in files:
             if file.endswith(".py"):
                 filepath = os.path.join(root, file)

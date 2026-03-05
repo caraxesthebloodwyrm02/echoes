@@ -7,8 +7,15 @@ against baseline metrics from authenticated sources.
 """
 
 import json
+import os
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def run_verification_and_validation(output_file="verification_validation_step6.json"):
@@ -181,7 +188,7 @@ def validate_syntax_all_components(baseline_metrics):
     results = {}
 
     for component_path in baseline_metrics.keys():
-        full_path = f"e:/Projects/Echoes/{component_path}"
+        full_path = str(_REPO_ROOT / component_path)
 
         try:
             with open(full_path, encoding="utf-8") as f:
@@ -205,7 +212,7 @@ def validate_imports_all_components(baseline_metrics):
 
     for component_path, metrics in baseline_metrics.items():
         if "expected_imports" in metrics:
-            full_path = f"e:/Projects/Echoes/{component_path}"
+            full_path = str(_REPO_ROOT / component_path)
 
             try:
                 with open(full_path, encoding="utf-8") as f:
@@ -281,7 +288,7 @@ def validate_integration_all_components():
 
     # Test API can import its dependencies
     try:
-        sys.path.insert(0, "e:/Projects/Echoes")
+        sys.path.insert(0, str(_REPO_ROOT))
 
         results["api_integration"] = {
             "passed": True,

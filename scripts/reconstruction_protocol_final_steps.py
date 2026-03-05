@@ -10,6 +10,12 @@ import json
 import os
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def complete_final_steps():
@@ -156,7 +162,7 @@ def perform_final_integrity_check():
     ]
 
     for component in critical_components:
-        full_path = f"e:/Projects/Echoes/{component}"
+        full_path = str(_REPO_ROOT / component)
         if os.path.exists(full_path):
             # Quick syntax check
             try:

@@ -1223,14 +1223,9 @@ class EchoesAssistantV2:
             )
 
         try:
-            tool = self.tool_registry.get_tool(function_name)
-            if not tool:
-                error_msg = f"Tool '{function_name}' not found in registry"
-                if status:
-                    status.error(error_msg)
-                return f"Error: {error_msg}"
-
-            result = tool.execute(**function_args)
+            result = self.tool_registry.execute_tool(
+                function_name, function_args, actor=getattr(self, "_actor_id", None)
+            )
 
             if status:
                 status.complete_phase(f"{function_name} executed successfully")
@@ -1239,6 +1234,16 @@ class EchoesAssistantV2:
                 return json.dumps(result)
             return str(result)
 
+        except KeyError as e:
+            error_msg = str(e)
+            if status:
+                status.error(error_msg)
+            return f"Error: {error_msg}"
+        except ValueError as e:
+            error_msg = f"Invalid tool payload: {e}"
+            if status:
+                status.error(error_msg)
+            return f"Error: {error_msg}"
         except Exception as e:
             error_msg = f"Tool execution failed: {str(e)}"
             if status:

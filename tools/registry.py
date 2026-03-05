@@ -45,12 +45,12 @@ except ImportError:
             with self._lock:
                 return list(self._registry.keys())
 
-        def execute_tool(self, name: str, payload: dict):
-            """Execute a registered tool."""
-            tool = self.get_tool(name)
-            if not tool:
-                raise KeyError(f"Tool '{name}' not found")
-            return tool["func"](payload)
+        def execute_tool(self, name: str, payload: dict, actor: str | None = None):
+            """Execute a registered tool. Use tools/__init__.py for gated execution."""
+            raise RuntimeError(
+                "Tool execution requires the gated tools module (tools/__init__.py). "
+                "Import failed; use the main tools package for allowlist, validation, and audit."
+            )
 
         def get_openai_schemas(self):
             """Get OpenAI function schemas for all registered tools."""

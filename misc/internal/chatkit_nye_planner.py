@@ -5,10 +5,17 @@ Art Nouveau Aesthetic: Flowing lines, organic shapes, floral motifs, soft elegan
 A beautiful travel planning interface for NYE 2025 (Dec 31) → Jan 2, 2026 roundtrip
 """
 
+import os
 from dataclasses import dataclass
 from datetime import datetime
+from pathlib import Path
 
 from core.config import DEFAULTS, TravelStyle
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent))
+)
 
 from core.display_utils import PALETTE
 from core.exporter import export_json, export_text
@@ -586,10 +593,10 @@ def main():
     print(plan)
 
     # Save to multiple formats
-    export_text(plan, "E:/Projects/Echoes/nye_journey_plan.txt")
+    export_text(plan, str(_REPO_ROOT / "nye_journey_plan.txt"))
 
-    planner.export_to_json("E:/Projects/Echoes/nye_journey_plan.json")
-    planner.export_to_html("E:/Projects/Echoes/nye_journey_plan.html")
+    planner.export_to_json(str(_REPO_ROOT / "nye_journey_plan.json"))
+    planner.export_to_html(str(_REPO_ROOT / "nye_journey_plan.html"))
 
     print("\n✿ Plans saved to: nye_journey_plan.txt, .json, and .html ✿\n")
 

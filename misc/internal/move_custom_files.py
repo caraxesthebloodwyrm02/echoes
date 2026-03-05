@@ -3,6 +3,11 @@ import os
 import shutil
 from pathlib import Path
 
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent))
+)
+
 
 def is_custom_file(filepath):
     """Check if a file is a custom Echoes file vs installed package file"""
@@ -35,8 +40,8 @@ def is_custom_file(filepath):
 
 
 def move_custom_files():
-    source_dir = Path(r"e:\Projects\Echoes\echoes_core")
-    target_dir = Path(r"e:\Projects\Echoes\echoes_modules")
+    source_dir = _REPO_ROOT / "echoes_core"
+    target_dir = _REPO_ROOT / "echoes_modules"
 
     if not target_dir.exists():
         target_dir.mkdir()

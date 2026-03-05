@@ -22,6 +22,12 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any, Dict, Optional
 
+# Default base_dir: repo-relative (allow override via ECHOES_ROOT)
+_DEFAULT_BASE = str(
+    Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent)))
+    / "misc" / "Accounting" / "tab"
+)
+
 from audit_trail import audit_sync_operation
 from payment_gateway import deliver_user_payment
 from payout_engine import process_user_payout
@@ -40,8 +46,8 @@ class TabIntegration:
     and the complete compensation system.
     """
 
-    def __init__(self, base_dir: str = "e:/Projects/Echoes/Accounting/tab"):
-        self.base_dir = Path(base_dir)
+    def __init__(self, base_dir: str | None = None):
+        self.base_dir = Path(base_dir if base_dir is not None else _DEFAULT_BASE)
         self.sync_engine = get_sync_engine()
 
         print("🔗 Tab Integration initialized - seamless work-to-payment pipeline")

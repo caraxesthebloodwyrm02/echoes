@@ -19,15 +19,17 @@ from datetime import datetime
 from typing import Any
 
 import uvicorn
-from fastapi import FastAPI, WebSocket, WebSocketDisconnect
+from fastapi import Depends, FastAPI, WebSocket, WebSocketDisconnect
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, Response
+from prometheus_client import CONTENT_TYPE_LATEST, generate_latest
 from pydantic import BaseModel, Field
 from starlette.middleware.base import BaseHTTPMiddleware
 from starlette.requests import Request as StarletteRequest
 
 # Import configuration
 from api.config import get_config, setup_logging
+from api.dependencies import get_breakers
 
 # Import middleware
 from api.middleware import setup_middleware
@@ -39,6 +41,8 @@ from api.middleware import setup_middleware
 # Import pattern detection
 from api.pattern_detection import detect_patterns
 from api.self_rag import verify_truth
+from app.resilience.circuit_breakers import ExternalServiceBreakers, initialize_breakers
+from app.resilience.rate_limit import setup_rate_limiting
 
 # Configure logging
 logging.basicConfig(level=logging.INFO)
@@ -135,12 +139,27 @@ async def lifespan(app: FastAPI):
     config = get_config()
     setup_logging(config)
 
+    redis_client = None
+    if config.redis.url:
+        try:
+            from redis.asyncio import Redis
+
+            redis_client = Redis.from_url(config.redis.url)
+        except Exception as exc:  # pragma: no cover
+            logger.warning(
+                f"Redis unavailable, falling back to in-memory breakers: {exc}"
+            )
+
+    await initialize_breakers(redis_client)
+
     logger.info("Echoes API starting - Direct AI responses (no RAG middleware)")
 
     yield
 
     # Shutdown
     logger.info("Shutting down Echoes API...")
+    if redis_client:
+        await redis_client.aclose()
 
 
 # Create FastAPI application
@@ -160,6 +179,9 @@ app.add_middleware(
     allow_methods=config.security.cors_allow_methods,
     allow_headers=config.security.cors_allow_headers,
 )
+
+# Setup rate limiting (SlowApi)
+setup_rate_limiting(app)
 
 
 class RequestBodyLimitMiddleware(BaseHTTPMiddleware):
@@ -206,6 +228,23 @@ async def health_check():
         "middleware": "none",  # Direct AI responses only
         "connections": len(manager.active_connections),
     }
+
+
+@app.get("/health/resilience")
+async def resilience_health(breakers: ExternalServiceBreakers = Depends(get_breakers)):
+    """Health check including circuit breaker status."""
+    status = await breakers.get_status()
+    return {
+        "status": "healthy",
+        "timestamp": datetime.utcnow().isoformat(),
+        "circuit_breakers": status,
+    }
+
+
+@app.get("/metrics")
+async def metrics():
+    """Prometheus metrics endpoint."""
+    return Response(generate_latest(), media_type=CONTENT_TYPE_LATEST)
 
 
 @app.websocket("/ws/stream")
@@ -276,7 +315,8 @@ async def handle_pattern_detection_websocket(message: dict, websocket: WebSocket
         )
 
         await manager.send_personal_message(
-            {"type": "pattern_detection_result", "data": response.dict()}, websocket
+            {"type": "pattern_detection_result", "data": response.model_dump()},
+            websocket,
         )
 
     except Exception as e:
@@ -322,7 +362,8 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
         )
 
         await manager.send_personal_message(
-            {"type": "truth_verification_result", "data": response.dict()}, websocket
+            {"type": "truth_verification_result", "data": response.model_dump()},
+            websocket,
         )
 
     except Exception as e:

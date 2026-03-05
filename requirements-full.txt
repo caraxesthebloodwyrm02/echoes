@@ -28,7 +28,7 @@ mdurl==0.1.2
 msgpack==1.1.2
 mypy_extensions==1.1.0
 nodeenv==1.9.1
-openai==2.5.0
+openai==1.109.1
 packageurl-python==0.17.5
 packaging==25.0
 pathspec==0.12.1

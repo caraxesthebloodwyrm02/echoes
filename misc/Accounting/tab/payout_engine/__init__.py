@@ -261,8 +261,12 @@ class PayoutEngine:
     ensuring users receive clean, complication-free payments.
     """
 
-    def __init__(self, base_dir: str = "e:/Projects/Echoes/Accounting/tab"):
-        self.base_dir = Path(base_dir)
+    def __init__(self, base_dir: str | None = None):
+        _default = str(
+            Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent.parent)))
+            / "misc" / "Accounting" / "tab"
+        )
+        self.base_dir = Path(base_dir if base_dir is not None else _default)
         self.payout_dir = self.base_dir / "payout_engine"
         self.data_dir = self.payout_dir / "data"
         self.data_dir.mkdir(parents=True, exist_ok=True)

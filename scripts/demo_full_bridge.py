@@ -5,11 +5,18 @@ This shows the full bridge between internals and externals
 """
 
 import asyncio
+import os
 import subprocess
 import sys
 import time
+from pathlib import Path
 
 from assistant_v2_core import EchoesAssistantV2
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 async def start_api_server():
@@ -18,7 +25,7 @@ async def start_api_server():
         # Start the API server
         process = subprocess.Popen(
             [sys.executable, "-m", "api.main"],
-            cwd="e:\\Projects\\Echoes",
+            cwd=str(_REPO_ROOT),
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE,
         )

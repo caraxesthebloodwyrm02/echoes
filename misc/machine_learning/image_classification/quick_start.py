@@ -21,12 +21,16 @@ import sys
 from pathlib import Path
 
 
-def run_command(cmd, description):
-    """Run a command and check for success."""
+def run_command(cmd: list[str], description: str) -> bool:
+    """Run a command (list of args, no shell) and check for success."""
     print(f"\nRunning {description}...")
     try:
-        result = subprocess.run(
-            cmd, shell=True, check=True, capture_output=True, text=True
+        subprocess.run(
+            cmd,
+            shell=False,
+            check=True,
+            capture_output=True,
+            text=True,
         )
         print(f"✓ {description} completed successfully")
         return True
@@ -49,41 +53,44 @@ def main():
     print("Dependencies already installed, proceeding with training...")
 
     # Step 2: Train a quick model (2 epochs)
-    train_cmd = (
-        "python -m machine_learning.image_classification.train "
-        "--dataset cifar10 "
-        "--model custom_cnn "
-        "--epochs 2 "
-        "--batch_size 64 "
-        "--learning_rate 0.01 "
-        "--experiment_name quick_start "
-        "--data_dir ./data"
-    )
-
+    train_cmd = [
+        sys.executable,
+        "-m",
+        "machine_learning.image_classification.train",
+        "--dataset", "cifar10",
+        "--model", "custom_cnn",
+        "--epochs", "2",
+        "--batch_size", "64",
+        "--learning_rate", "0.01",
+        "--experiment_name", "quick_start",
+        "--data_dir", "./data",
+    ]
     if not run_command(train_cmd, "Training quick model (2 epochs)"):
         sys.exit(1)
 
     # Step 3: Evaluate the model
-    eval_cmd = (
-        "python -m machine_learning.image_classification.evaluate "
-        "--model_path models/quick_start/best_model.pth "
-        "--dataset cifar10 "
-        "--data_dir ./data"
-    )
-
+    eval_cmd = [
+        sys.executable,
+        "-m",
+        "machine_learning.image_classification.evaluate",
+        "--model_path", "models/quick_start/best_model.pth",
+        "--dataset", "cifar10",
+        "--data_dir", "./data",
+    ]
     if not run_command(eval_cmd, "Evaluating trained model"):
         sys.exit(1)
 
     # Step 4: Run demo
-    demo_cmd = (
-        "python -m machine_learning.image_classification.demo "
-        "--model_path models/quick_start/best_model.pth "
-        "--dataset cifar10 "
-        "--num_samples 3 "
-        "--data_dir ./data "
-        "--save_plot demo_results.png"
-    )
-
+    demo_cmd = [
+        sys.executable,
+        "-m",
+        "machine_learning.image_classification.demo",
+        "--model_path", "models/quick_start/best_model.pth",
+        "--dataset", "cifar10",
+        "--num_samples", "3",
+        "--data_dir", "./data",
+        "--save_plot", "demo_results.png",
+    ]
     if not run_command(demo_cmd, "Running demo with 3 samples"):
         sys.exit(1)
 

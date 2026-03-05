@@ -6,15 +6,16 @@ import sys
 from pathlib import Path
 
 
-def run_command(cmd, capture=True):
-    """Run a command and return result."""
+def run_command(cmd: list[str], capture: bool = True) -> tuple[bool, str, str]:
+    """Run a command (list of args, no shell) and return success, stdout, stderr."""
     try:
         if capture:
-            result = subprocess.run(cmd, shell=True, capture_output=True, text=True)
-            return result.returncode == 0, result.stdout, result.stderr
-        else:
-            result = subprocess.run(cmd, shell=True)
-            return result.returncode == 0, "", ""
+            result = subprocess.run(
+                cmd, shell=False, capture_output=True, text=True, timeout=30
+            )
+            return result.returncode == 0, result.stdout or "", result.stderr or ""
+        result = subprocess.run(cmd, shell=False, timeout=30)
+        return result.returncode == 0, "", ""
     except Exception as e:
         return False, "", str(e)
 
@@ -59,7 +60,7 @@ def check_python_version():
     """Check Python version compatibility."""
     print("\n🐍 Checking Python version...")
 
-    success, output, _ = run_command("python --version")
+    success, output, _ = run_command([sys.executable, "--version"])
     if success:
         version = output.strip()
         print(f"System Python: {version}")
@@ -79,15 +80,25 @@ def check_python_version():
         return False
 
 
+def _venv_python() -> Path | None:
+    """Return path to venv Python (Windows or Unix)."""
+    for subpath in [Path("Scripts", "python.exe"), Path("bin", "python")]:
+        p = Path(".venv") / subpath
+        if p.exists():
+            return p
+    return None
+
+
 def check_venv_python():
     """Check venv Python version."""
     print("\n🐍 Checking venv Python version...")
 
-    if not Path(".venv/Scripts/python.exe").exists():
+    venv_py = _venv_python()
+    if venv_py is None:
         print("❌ venv Python not found")
         return False
 
-    success, output, _ = run_command(r".\venv\Scripts\python.exe --version")
+    success, output, _ = run_command([str(venv_py.resolve()), "--version"])
     if success:
         print(f"Venv Python: {output.strip()}")
         return True
@@ -100,12 +111,18 @@ def check_dependencies():
     """Check key dependencies."""
     print("\n📦 Checking dependencies...")
 
+    venv_py = _venv_python()
+    if venv_py is None:
+        print("❌ venv Python not found, skipping dependency check")
+        return False
+
     deps = ["pydantic", "pydantic-settings", "fastapi", "openai", "uvicorn"]
     all_ok = True
 
     for dep in deps:
+        mod = dep.replace("-", "_")
         success, _, _ = run_command(
-            r".\venv\Scripts\python.exe -c \"import {dep.replace('-', '_')}\""
+            [str(venv_py.resolve()), "-c", f"import {mod}"]
         )
         if success:
             print(f"✅ {dep}")
@@ -120,8 +137,13 @@ def check_config():
     """Check configuration loading."""
     print("\n⚙️ Checking configuration...")
 
+    venv_py = _venv_python()
+    if venv_py is None:
+        print("❌ venv Python not found, skipping config check")
+        return False
+
     success, output, error = run_command(
-        r".\venv\Scripts\python.exe test_config_import.py"
+        [str(venv_py.resolve()), "test_config_import.py"]
     )
     if success:
         print("✅ Configuration loads successfully")

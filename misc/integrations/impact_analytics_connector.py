@@ -1,19 +1,26 @@
 """
 IMPACT Analytics Connector
 
-Connects Echoes platform with the IMPACT_ANALYTICS system on D: drive for
+Connects Echoes platform with the IMPACT_ANALYTICS system for
 automated impact tracking and AI safety metrics.
+Path configurable via IMPACT_ANALYTICS_PATH env (default: E:/Seeds/echoes/misc/integrations/impact_analytics).
 """
 
 import logging
+import os
 import sys
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-# Add IMPACT_ANALYTICS to Python path
-IMPACT_ANALYTICS_PATH = Path("D:/IMPACT_ANALYTICS")
-if str(IMPACT_ANALYTICS_PATH) not in sys.path:
+# Path to IMPACT_ANALYTICS: set IMPACT_ANALYTICS_PATH env or use default under repo
+_ECHOES_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent))
+)
+IMPACT_ANALYTICS_PATH = Path(
+    os.environ.get("IMPACT_ANALYTICS_PATH", str(_ECHOES_ROOT / "misc" / "integrations" / "impact_analytics"))
+)
+if IMPACT_ANALYTICS_PATH.exists() and str(IMPACT_ANALYTICS_PATH) not in sys.path:
     sys.path.insert(0, str(IMPACT_ANALYTICS_PATH))
 
 logger = logging.getLogger(__name__)

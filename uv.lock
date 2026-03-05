@@ -551,6 +551,20 @@ docs = [
     { name = "mkdocs-material" },
 ]
 
+[package.dev-dependencies]
+dev = [
+    { name = "black" },
+    { name = "jsonschema" },
+    { name = "mypy" },
+    { name = "pre-commit" },
+    { name = "ruff" },
+]
+test = [
+    { name = "pytest" },
+    { name = "pytest-asyncio" },
+    { name = "pytest-cov" },
+]
+
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", specifier = ">=0.23.0" },
@@ -589,6 +603,20 @@ requires-dist = [
     { name = "uvicorn", specifier = "==0.38.0" },
 ]
 provides-extras = ["dev", "docs"]
+
+[package.metadata.requires-dev]
+dev = [
+    { name = "black", specifier = ">=23.0.0" },
+    { name = "jsonschema", specifier = ">=4.0.0" },
+    { name = "mypy", specifier = ">=1.0.0" },
+    { name = "pre-commit", specifier = ">=3.0.0" },
+    { name = "ruff", specifier = ">=0.1.0" },
+]
+test = [
+    { name = "pytest", specifier = ">=7.0.0" },
+    { name = "pytest-asyncio", specifier = ">=0.21.0" },
+    { name = "pytest-cov", specifier = ">=4.0.0" },
+]
 
 [[package]]
 name = "fastapi"

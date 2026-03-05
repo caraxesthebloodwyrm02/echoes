@@ -11,7 +11,13 @@ import os
 import shutil
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
 from typing import Any
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def reconstruct_components(
@@ -25,7 +31,7 @@ def reconstruct_components(
         "protocol": "Echoes Reconstruction Protocol v1.0",
         "phase": "Step 5: Component Reconstruction",
         "extraction_source": extraction_dir,
-        "reconstruction_target": "e:/Projects/Echoes",
+        "reconstruction_target": str(_REPO_ROOT),
         "reconstructed_components": {},
         "reconstruction_methods": {},
         "validation_results": {},

@@ -116,6 +116,33 @@ class SelfRAGConfig(BaseSettings):
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
 
+class RedisConfig(BaseSettings):
+    """Redis configuration for distributed resilience patterns."""
+
+    url: str | None = Field(default=None, env="REDIS_URL")
+    host: str = Field(default="localhost", env="REDIS_HOST")
+    port: int = Field(default=6379, env="REDIS_PORT")
+    db: int = Field(default=0, env="REDIS_DB")
+    password: str | None = Field(default=None, env="REDIS_PASSWORD")
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+
+class ResilienceConfig(BaseSettings):
+    """Circuit breaker and retry configuration."""
+
+    llm_fail_max: int = Field(default=8, env="LLM_FAIL_MAX")
+    llm_reset_timeout: int = Field(default=30, env="LLM_RESET_TIMEOUT")
+    payment_fail_max: int = Field(default=3, env="PAYMENT_FAIL_MAX")
+    payment_reset_timeout: int = Field(default=60, env="PAYMENT_RESET_TIMEOUT")
+    data_fail_max: int = Field(default=5, env="DATA_FAIL_MAX")
+    data_reset_timeout: int = Field(default=45, env="DATA_RESET_TIMEOUT")
+    generic_fail_max: int = Field(default=5, env="GENERIC_FAIL_MAX")
+    generic_reset_timeout: int = Field(default=30, env="GENERIC_RESET_TIMEOUT")
+
+    model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
+
+
 class EchoesAPIConfig(BaseSettings):
     """Complete configuration for Echoes API"""
 
@@ -125,6 +152,8 @@ class EchoesAPIConfig(BaseSettings):
     security: SecurityConfig = SecurityConfig()
     patterns: PatternDetectionConfig = PatternDetectionConfig()
     rag: SelfRAGConfig = SelfRAGConfig()
+    redis: RedisConfig = RedisConfig()
+    resilience: ResilienceConfig = ResilienceConfig()
 
     # Data paths
     data_dir: str = Field(default="data", env="DATA_DIR")
@@ -160,7 +189,7 @@ def validate_config(config: EchoesAPIConfig) -> dict[str, Any]:
     """Validate configuration and return validation results"""
     issues = []
 
-    # Check required API keys
+    # Check required API keys (in production, set ALLOWED_API_KEYS when API_KEY_REQUIRED is true)
     if config.security.api_key_required and not config.security.allowed_api_keys:
         issues.append("API key authentication enabled but no allowed keys configured")
 

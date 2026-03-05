@@ -11,6 +11,12 @@ import os
 import subprocess
 import sys
 from datetime import UTC, datetime
+from pathlib import Path
+
+# Repo root: allow override via ECHOES_ROOT (e.g. E:/Seeds/echoes)
+_REPO_ROOT = Path(
+    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
+)
 
 
 def authenticate_sources(output_file="source_authentication_step2.json"):
@@ -162,7 +168,7 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
         git_check = subprocess.run(
             ["git", "rev-parse", "--git-dir"],
             capture_output=True,
-            cwd="e:/Projects/Echoes",
+            cwd=str(_REPO_ROOT),
             timeout=10,
         )
 
@@ -172,7 +178,7 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
                 ["git", "rev-parse", "HEAD"],
                 capture_output=True,
                 text=True,
-                cwd="e:/Projects/Echoes",
+                cwd=str(_REPO_ROOT),
                 timeout=10,
             )
 
@@ -185,7 +191,7 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
                 status_result = subprocess.run(
                     ["git", "status", "--porcelain"],
                     capture_output=True,
-                    cwd="e:/Projects/Echoes",
+                    cwd=str(_REPO_ROOT),
                     timeout=10,
                 )
 
@@ -229,7 +235,7 @@ def authenticate_sources(output_file="source_authentication_step2.json"):
     ]
 
     for file_path in critical_files:
-        full_path = f"e:/Projects/Echoes/{file_path}"
+        full_path = str(_REPO_ROOT / file_path)
         if os.path.exists(full_path) and os.access(full_path, os.R_OK):
             auth_data["cross_references"].append(f"File accessible: {file_path}")
             print(f"   ✅ {file_path} - accessible")

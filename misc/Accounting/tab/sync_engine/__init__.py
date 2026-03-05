@@ -23,6 +23,12 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Default base_dir: repo-relative (allow override via ECHOES_ROOT)
+_DEFAULT_BASE = str(
+    Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent.parent.parent.parent))
+    / "misc" / "Accounting" / "tab"
+)
+
 from payout_engine import PayoutEngine, get_user_payment_history, process_user_payout
 
 # Import tab components
@@ -40,8 +46,8 @@ class SyncEngine:
     - Audit trails and transparency reports
     """
 
-    def __init__(self, base_dir: str = "e:/Projects/Echoes/Accounting/tab"):
-        self.base_dir = Path(base_dir)
+    def __init__(self, base_dir: str | None = None):
+        self.base_dir = Path(base_dir if base_dir is not None else _DEFAULT_BASE)
         self.sync_dir = self.base_dir / "sync_engine"
         self.data_dir = self.sync_dir / "data"
         self.data_dir.mkdir(parents=True, exist_ok=True)
