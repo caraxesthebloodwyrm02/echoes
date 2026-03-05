@@ -1,5 +1,7 @@
+import json
 from collections.abc import Sequence
 from dataclasses import dataclass
+from pathlib import Path
 from math import sqrt
 from typing import Any
 
@@ -17,6 +19,13 @@ class RetrievalMetrics:
     num_results: int
 
 
+class _IndexCompat:
+    """Minimal index-like object for test compatibility (ntotal)."""
+
+    def __init__(self, ntotal: int):
+        self.ntotal = ntotal
+
+
 class FAISSRetriever:
     def __init__(self, embedding_dim: int = 384):
         self.embedding_dim = embedding_dim
@@ -24,6 +33,18 @@ class FAISSRetriever:
         self._texts: list[str] = []
         self._metadata: list[dict[str, Any]] = []
         self._chunk_ids: list[str] = []
+
+    @property
+    def index(self) -> _IndexCompat:
+        return _IndexCompat(ntotal=len(self._texts))
+
+    @property
+    def chunk_texts(self) -> list[str]:
+        return self._texts
+
+    @property
+    def chunk_ids(self) -> list[str]:
+        return self._chunk_ids
 
     def add_documents(
         self,
@@ -84,8 +105,34 @@ class FAISSRetriever:
         )
         return {
             "total_documents": len(self._texts),
+            "embedding_dim": self.embedding_dim,
             "categories": categories,
         }
+
+    def save(self, save_dir: Path | str) -> None:
+        path = Path(save_dir)
+        path.mkdir(parents=True, exist_ok=True)
+        state = {
+            "embedding_dim": self.embedding_dim,
+            "embeddings": self._embeddings,
+            "texts": self._texts,
+            "metadata": self._metadata,
+            "chunk_ids": self._chunk_ids,
+        }
+        with open(path / "index.json", "w", encoding="utf-8") as f:
+            json.dump(state, f, indent=2)
+
+    @classmethod
+    def load(cls, save_dir: Path | str) -> "FAISSRetriever":
+        path = Path(save_dir) / "index.json"
+        with open(path, encoding="utf-8") as f:
+            state = json.load(f)
+        r = cls(embedding_dim=state["embedding_dim"])
+        r._embeddings = state["embeddings"]
+        r._texts = state["texts"]
+        r._metadata = state["metadata"]
+        r._chunk_ids = state["chunk_ids"]
+        return r
 
 
 def create_standard_retriever(embedding_dim: int = 384) -> FAISSRetriever:

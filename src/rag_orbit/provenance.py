@@ -1,6 +1,9 @@
+import json
 from dataclasses import dataclass, field
 from hashlib import md5
+from pathlib import Path
 from typing import Any
+from uuid import uuid4
 
 
 @dataclass
@@ -10,10 +13,23 @@ class ProvenanceRecord:
     payload: dict[str, Any] = field(default_factory=dict)
     parent_record_id: str | None = None
 
+    @property
+    def outputs(self) -> dict[str, Any]:
+        return self.payload
+
+    @property
+    def inputs(self) -> dict[str, Any]:
+        return self.payload
+
 
 class ProvenanceTracker:
-    def __init__(self):
+    def __init__(self, storage_path: Path | str | None = None):
+        self.storage_path = Path(storage_path) if storage_path else None
+        self.session_id = str(uuid4())
         self.records: dict[str, ProvenanceRecord] = {}
+
+    def get_record(self, record_id: str) -> ProvenanceRecord | None:
+        return self.records.get(record_id)
 
     def _new_id(self, seed: str) -> str:
         return md5(seed.encode("utf-8")).hexdigest()
@@ -37,6 +53,28 @@ class ProvenanceTracker:
                 "chunker_config": chunker_config,
                 "text_checksum": text_checksum,
             },
+        )
+        return rid
+
+    def record_embedding(
+        self,
+        chunk_id: str,
+        text_checksum: str,
+        model_name: str,
+        embedding_checksum: str,
+        parent_record_id: str | None = None,
+    ) -> str:
+        rid = self._new_id(f"embed:{chunk_id}:{text_checksum}:{embedding_checksum}")
+        self.records[rid] = ProvenanceRecord(
+            record_id=rid,
+            operation_type="embed",
+            payload={
+                "chunk_id": chunk_id,
+                "text_checksum": text_checksum,
+                "model_name": model_name,
+                "embedding_checksum": embedding_checksum,
+            },
+            parent_record_id=parent_record_id,
         )
         return rid
 
@@ -78,3 +116,21 @@ class ProvenanceTracker:
                 break
             current = self.records.get(current.parent_record_id)
         return lineage
+
+    def export_session(self, export_path: Path | str) -> None:
+        path = Path(export_path)
+        data = {
+            "session_id": self.session_id,
+            "num_records": len(self.records),
+            "records": [
+                {
+                    "record_id": r.record_id,
+                    "operation_type": r.operation_type,
+                    "payload": r.payload,
+                    "parent_record_id": r.parent_record_id,
+                }
+                for r in self.records.values()
+            ],
+        }
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
