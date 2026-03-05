@@ -15,7 +15,7 @@ import pytest
 # Add the Echoes project directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 
-from quantum_state import QuantumStateManager
+from misc.quantum_state import QuantumStateManager
 
 
 class TestQuantumStateIntegration:
@@ -102,10 +102,10 @@ class TestQuantumStateIntegration:
         history = qsm.get_state_history("test_history")
         assert len(history) == 3
 
-        # Check history format (tuple of value, timestamp)
+        # Check history format (value, timestamp) per QuantumState.get_history
         for entry in history:
             assert isinstance(entry, tuple)
-            assert len(entry) == 3  # key, previous_value, new_value, timestamp
+            assert len(entry) == 2  # value, timestamp
 
     def test_quantum_metrics_collection(self):
         """Test performance metrics collection"""
@@ -118,9 +118,9 @@ class TestQuantumStateIntegration:
         qsm.measure_state("metric_test")
         qsm.measure_state("system_status")
 
-        # Get metrics
+        # Get metrics (total_updates only counts update_state calls, not initialize)
         metrics = qsm.get_metrics()
-        assert metrics.total_updates >= 3  # At least the initial states + our updates
+        assert metrics.total_updates >= 2
         assert metrics.total_measurements >= 2
         assert isinstance(metrics.average_transition_time, float)
 

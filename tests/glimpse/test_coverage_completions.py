@@ -253,12 +253,12 @@ class TestEngineUncoveredPaths:
                 import sys
 
                 # Remove the module from cache to force re-import
-                if "glimpse.Glimpse" in sys.modules:
-                    del sys.modules["glimpse.Glimpse"]
+                if "glimpse.engine" in sys.modules:
+                    del sys.modules["glimpse.engine"]
 
                 # This should handle the ImportError gracefully
                 try:
-                    from glimpse.Glimpse import PERFORMANCE_AVAILABLE
+                    from glimpse.engine import PERFORMANCE_AVAILABLE
 
                     # If we get here, check the flag
                     assert isinstance(PERFORMANCE_AVAILABLE, bool)
@@ -314,9 +314,9 @@ class TestEngineUncoveredPaths:
     @pytest.mark.asyncio
     async def test_glimpse_with_missing_dependencies(self):
         """Test Glimpse behavior when dependencies are missing"""
-        # Mock the import flags to simulate missing dependencies
-        with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
-            with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
+        # Mock the import flags where GlimpseEngine reads them (glimpse.engine)
+        with patch("glimpse.engine.PERFORMANCE_AVAILABLE", False):
+            with patch("glimpse.engine.CLARIFIER_AVAILABLE", False):
                 engine = GlimpseEngine()
 
                 # Glimpse should still work without optional dependencies
@@ -427,7 +427,7 @@ class TestIntegrationEdgeCases:
     @pytest.mark.asyncio
     async def test_glimpse_clarifier_integration_missing(self):
         """Test Glimpse behavior when clarifier is missing"""
-        with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
+        with patch("glimpse.engine.CLARIFIER_AVAILABLE", False):
             engine = GlimpseEngine()
 
             # Should work without clarifier
@@ -438,7 +438,7 @@ class TestIntegrationEdgeCases:
     @pytest.mark.asyncio
     async def test_glimpse_performance_integration_missing(self):
         """Test Glimpse behavior when performance optimizer is missing"""
-        with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
+        with patch("glimpse.engine.PERFORMANCE_AVAILABLE", False):
             engine = GlimpseEngine()
 
             # Should work without performance optimizer
@@ -449,8 +449,8 @@ class TestIntegrationEdgeCases:
     @pytest.mark.asyncio
     async def test_full_system_with_all_dependencies_missing(self):
         """Test complete system when all optional dependencies are missing"""
-        with patch("glimpse.Glimpse.PERFORMANCE_AVAILABLE", False):
-            with patch("glimpse.Glimpse.CLARIFIER_AVAILABLE", False):
+        with patch("glimpse.engine.PERFORMANCE_AVAILABLE", False):
+            with patch("glimpse.engine.CLARIFIER_AVAILABLE", False):
                 # System should still function
                 engine = GlimpseEngine()
 

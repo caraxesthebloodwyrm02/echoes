@@ -5,6 +5,8 @@ from math import sqrt
 from pathlib import Path
 from random import Random
 
+import numpy as np
+
 
 @dataclass
 class EmbeddingMetadata:
@@ -36,7 +38,7 @@ class EmbeddingGenerator:
 
     def embed_text(
         self, text: str, chunk_id: str | None = None
-    ) -> tuple[list[float], EmbeddingMetadata]:
+    ) -> tuple[np.ndarray, EmbeddingMetadata]:
         checksum = md5(text.encode("utf-8")).hexdigest()
         cache_key = f"{chunk_id}:{checksum}"
         if self.use_cache and cache_key in self._cache:
@@ -45,13 +47,14 @@ class EmbeddingGenerator:
             emb = self._embed(text)
             if self.use_cache:
                 self._cache[cache_key] = emb
-        return emb, EmbeddingMetadata(
+        arr = np.asarray(emb, dtype=np.float64)
+        return arr, EmbeddingMetadata(
             chunk_id=chunk_id or checksum, text_checksum=checksum
         )
 
     def embed_batch(
         self, texts: list[str], chunk_ids: Sequence[str] | None = None
-    ) -> tuple[list[list[float]], list[EmbeddingMetadata]]:
+    ) -> tuple[np.ndarray, list[EmbeddingMetadata]]:
         metas = []
         vectors = []
         ids_for_texts: Sequence[str | None] = (
@@ -61,7 +64,7 @@ class EmbeddingGenerator:
             emb, meta = self.embed_text(text, chunk_id=chunk_id)
             vectors.append(emb)
             metas.append(meta)
-        return vectors, metas
+        return np.stack(vectors), metas
 
     def compute_similarity(self, emb1: list[float], emb2: list[float]) -> float:
         dot = sum(left * right for left, right in zip(emb1, emb2, strict=False))

@@ -217,7 +217,10 @@ class QuantumStateManager:
             raise QuantumStateError("No persistence file available")
 
         with open(self.persistence_file) as f:
-            state_data = json.load(f)
+            raw = f.read().strip()
+        if not raw:
+            return
+        state_data = json.loads(raw)
 
         # Restore quantum state
         self.quantum_state.from_dict(state_data["quantum_state"])
