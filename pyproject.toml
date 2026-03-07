@@ -1,6 +1,6 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 name = "echoes"
@@ -69,7 +69,6 @@ dev = [
     "pytest>=7.0.0",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
-    "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
@@ -88,7 +87,6 @@ test = [
     "pytest-cov>=4.0.0",
 ]
 dev = [
-    "black>=23.0.0",
     "ruff>=0.1.0",
     "mypy>=1.0.0",
     "pre-commit>=3.0.0",
@@ -102,44 +100,36 @@ Repository = "https://github.com/caraxesthebloodwyrm02/echoes"
 Issues = "https://github.com/caraxesthebloodwyrm02/echoes/issues"
 Documentation = "https://echoes.readthedocs.io/"
 
-[tool.black]
-line-length = 88
-target-version = ['py313']
-include = '\.pyi?$'
-extend-exclude = '''
-/(
-  # directories
-  \.eggs
-  | \.git
-  | \.hg
-  | \.mypy_cache
-  | \.tox
-  | \.venv
-  | build
-  | dist
-)/
-'''
-
 [tool.ruff]
 target-version = "py313"
 line-length = 88
-extend-exclude = ["misc", "scripts", "config", "docs", "core_modules"]
+extend-exclude = ["misc", "scripts", "config", "docs", "core_modules", "logs", "tmp", "checkpoints", "migrations"]
 
 [tool.ruff.lint]
 select = [
-    "E",  # pycodestyle errors
-    "W",  # pycodestyle warnings
-    "F",  # pyflakes
-    "I",  # isort
-    "B",  # flake8-bugbear
-    "C4", # flake8-comprehensions
-    "UP", # pyupgrade
+    "E",    # pycodestyle errors
+    "W",    # pycodestyle warnings
+    "F",    # pyflakes
+    "I",    # isort
+    "B",    # flake8-bugbear
+    "C4",   # flake8-comprehensions
+    "UP",   # pyupgrade
+    "ASYNC", # flake8-async
+    "S",    # flake8-bandit (security)
+    "PERF", # perflint
 ]
 ignore = [
-    "E501", # line too long, handled by black
+    "E501", # line too long
     "B008", # do not perform function calls in argument defaults
     "C901", # too complex
+    "S101", # Use of assert detected
+    "S105", # Possible hardcoded password
+    "S106", # Possible hardcoded password
+    "S107", # Possible hardcoded password
 ]
+
+[tool.ruff.lint.isort]
+known-first-party = ["echoes", "app", "core", "core_modules"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
@@ -161,8 +151,24 @@ disallow_incomplete_defs = true
 no_implicit_reexport = true
 strict_equality = true
 strict_optional = true
+explicit_package_bases = true
+namespace_packages = true
+mypy_path = "src"
 
-# No overrides needed - all dependencies are properly typed
+[[tool.mypy.overrides]]
+module = [
+    "openai.*",
+    "fastapi.*",
+    "uvicorn.*",
+    "httpx.*",
+    "slowapi.*",
+    "pybreaker.*",
+    "tenacity.*",
+    "redis.*",
+    "langchain.*",
+    "langchain_core.*",
+]
+ignore_missing_imports = true
 
 [tool.pytest.ini_options]
 minversion = "7.0"
@@ -171,16 +177,20 @@ testpaths = ["tests"]
 python_files = "test_*.py *_test.py"
 python_classes = "Test*"
 python_functions = "test_*"
+asyncio_mode = "auto"
+timeout = 30
+timeout_method = "thread"
 norecursedirs = [".git", ".tox", "dist", "build", "*.egg", "__pycache__", ".venv", "venv"]
 markers = [
+    "unit: Unit tests",
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "integration: marks tests as integration tests",
+    "asyncio: Async tests",
     "Glimpse: marks tests as Glimpse tests",
     "requires_openai: mark test as requiring OPENAI_API_KEY (skipped when missing)",
 ]
 
 [tool.coverage.run]
-# Same as .coveragerc; used when running coverage via pytest-cov or coverage.py
 source = ["app", "api", "glimpse", "tools", "core", "src"]
 omit = [
     "*/tests/*",

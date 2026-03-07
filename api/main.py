@@ -136,6 +136,11 @@ class TruthVerificationResponse(BaseModel):
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     """Application lifespan manager - Simplified: No RAG middleware for authentic responses"""
+    # Enforce ethos defaults (env vars) at startup, not on import.
+    from core.ethos import enforce as _enforce_ethos
+
+    _enforce_ethos()
+
     config = get_config()
     setup_logging(config)
 
