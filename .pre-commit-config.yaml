@@ -1,12 +1,4 @@
 repos:
-  # Code formatting
-  - repo: https://github.com/psf/black
-    rev: 24.10.0
-    hooks:
-      - id: black
-        args: [--line-length=120, --diff]
-        language_version: python3.12
-
   # Linting and formatting
   - repo: https://github.com/charliermarsh/ruff-pre-commit
     rev: v0.7.0
@@ -14,6 +6,7 @@ repos:
       - id: ruff
         args: [--fix, --exit-non-zero-on-fix, --show-fixes]
         types_or: [python, pyi, jupyter]
+      - id: ruff-format
 
   # Basic Python checks
   - repo: https://github.com/pre-commit/pre-commit-hooks
@@ -74,7 +67,7 @@ default_language_version:
   python: python3.12
 
 fail_fast: false
-minimum_pre_commit_version: '3.0.0'
+minimum_pre_commit_version: "3.0.0"
 
 # CI configuration
 ci:
@@ -83,8 +76,8 @@ ci:
 
     for more information, see https://pre-commit.ci
   autofix_prs: true
-  autoupdate_branch: ''
-  autoupdate_commit_msg: '[pre-commit.ci] pre-commit autoupdate'
+  autoupdate_branch: ""
+  autoupdate_commit_msg: "[pre-commit.ci] pre-commit autoupdate"
   autoupdate_schedule: weekly
   skip: []
   submodules: false

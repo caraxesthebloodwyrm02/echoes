@@ -9,6 +9,8 @@ Follow the **Chronological Step-by-Step Routine** on every new service or major 
 Always reference the embedded **Architecture Decision Template** (Section 4).
 This document is derived from live 2026 community consensus (FastAPI Best Architecture repos, SlowApi dominance, layered/Clean patterns).
 
+**Workspace:** For .gitignore, env docs, and shared QA conventions, align with **E:\\Seeds\\ECOSYSTEM_BASELINE.md**.
+
 ## 1. Core Principles (Never Violate)
 - Async-first (Python 3.11+, FastAPI ≥0.115, httpx.AsyncClient)
 - Layered separation: Routers → Services → CRUD/Repository → Models/DB
