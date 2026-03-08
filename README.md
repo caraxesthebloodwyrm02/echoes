@@ -32,6 +32,7 @@ A production-ready, enterprise-grade AI assistant platform featuring **unified i
 
 ### 🛡️ Security-First Approach
 
+- **Security guardrails:** API and app attack-surface guardrails are tracked in **E:\\docs\\API_ATTACK_SURFACE_GUARDRAILS_AND_TODOS.md**. Endpoint inventory: **E:\\Seeds\\ENDPOINT_INVENTORY.md**; debug audit: **E:\\Seeds\\DEBUG_AUDIT.md**.
 - **🔐 Environment Variable API Keys**: Never store credentials in files
 - **🛡️ Runtime-Only Credentials**: Keys exist only in memory during execution
 - **🔒 Secure Verification**: Test connectivity without credential exposure
