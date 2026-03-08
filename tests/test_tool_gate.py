@@ -1,11 +1,12 @@
 """Unit tests for the tool gate: allowlist, payload validation, and audit."""
+
 import logging
 import unittest
 
 from tools import (
+    execute_tool,
     get_registry,
     register_tool,
-    execute_tool,
     safe_dispatch_tool,
 )
 
@@ -47,7 +48,9 @@ class TestToolGate(unittest.TestCase):
         with self.assertLogs("echoes.tools.gate", level=logging.INFO) as cm:
             execute_tool("_gate_test_tool", {"b": 2})
         self.assertTrue(any("tool_gate_dispatch" in m for m in cm.output))
-        self.assertTrue(any("tool_gate_outcome" in m and "success" in m for m in cm.output))
+        self.assertTrue(
+            any("tool_gate_outcome" in m and "success" in m for m in cm.output)
+        )
 
     def test_invalid_payload_non_dict_raises(self):
         with self.assertRaises(ValueError) as ctx:
@@ -74,7 +77,11 @@ class TestToolGateImplementationStatus(unittest.TestCase):
     def setUp(self):
         self.registry = get_registry()
         if not self.registry.has_tool("_gate_test_tool"):
-            register_tool("_gate_test_tool", "Test tool for gate", lambda p: {"ok": True, "payload": p})
+            register_tool(
+                "_gate_test_tool",
+                "Test tool for gate",
+                lambda p: {"ok": True, "payload": p},
+            )
 
     def test_implementation_status_unknown_tool_rejected_active(self):
         """Tool gate is ACTIVE: unknown tool names are rejected."""
@@ -94,4 +101,6 @@ class TestToolGateImplementationStatus(unittest.TestCase):
             result = execute_tool("_gate_test_tool", {"a": 1})
         self.assertEqual(result, {"ok": True, "payload": {"a": 1}})
         self.assertTrue(any("tool_gate_dispatch" in m for m in cm.output))
-        self.assertTrue(any("tool_gate_outcome" in m and "success" in m for m in cm.output))
+        self.assertTrue(
+            any("tool_gate_outcome" in m and "success" in m for m in cm.output)
+        )

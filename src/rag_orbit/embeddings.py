@@ -1,6 +1,6 @@
+import hashlib
 from collections.abc import Sequence
 from dataclasses import dataclass
-from hashlib import md5
 from math import sqrt
 from pathlib import Path
 from random import Random
@@ -30,7 +30,7 @@ class EmbeddingGenerator:
             self.cache_dir.mkdir(parents=True, exist_ok=True)
 
     def _embed(self, text: str) -> list[float]:
-        seed = int(md5(text.encode("utf-8")).hexdigest()[:8], 16)
+        seed = int(hashlib.sha256(text.encode("utf-8")).hexdigest()[:8], 16)
         rng = Random(seed)
         vec = [rng.random() for _ in range(self.embedding_dim)]
         norm = sqrt(sum(value * value for value in vec)) or 1.0
@@ -39,7 +39,7 @@ class EmbeddingGenerator:
     def embed_text(
         self, text: str, chunk_id: str | None = None
     ) -> tuple[np.ndarray, EmbeddingMetadata]:
-        checksum = md5(text.encode("utf-8")).hexdigest()
+        checksum = hashlib.sha256(text.encode("utf-8")).hexdigest()
         cache_key = f"{chunk_id}:{checksum}"
         if self.use_cache and cache_key in self._cache:
             emb = self._cache[cache_key]

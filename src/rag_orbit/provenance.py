@@ -1,6 +1,6 @@
+import hashlib
 import json
 from dataclasses import dataclass, field
-from hashlib import md5
 from pathlib import Path
 from typing import Any
 from uuid import uuid4
@@ -32,7 +32,7 @@ class ProvenanceTracker:
         return self.records.get(record_id)
 
     def _new_id(self, seed: str) -> str:
-        return md5(seed.encode("utf-8")).hexdigest()
+        return hashlib.sha256(seed.encode("utf-8")).hexdigest()
 
     def record_chunking(
         self,

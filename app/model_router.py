@@ -378,8 +378,8 @@ class ModelResponseCache:
         Returns:
             str: Unique cache key
         """
-        # Use first 100 chars of prompt + model for key
-        prompt_hash = hashlib.md5(prompt[:100].encode()).hexdigest()[:8]
+        # Use first 100 chars of prompt + model for key (sha256 for non-crypto)
+        prompt_hash = hashlib.sha256(prompt[:100].encode()).hexdigest()[:8]
         return f"{model}:{prompt_hash}"
 
 

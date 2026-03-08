@@ -121,9 +121,7 @@ def check_dependencies():
 
     for dep in deps:
         mod = dep.replace("-", "_")
-        success, _, _ = run_command(
-            [str(venv_py.resolve()), "-c", f"import {mod}"]
-        )
+        success, _, _ = run_command([str(venv_py.resolve()), "-c", f"import {mod}"])
         if success:
             print(f"✅ {dep}")
         else:

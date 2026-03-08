@@ -96,8 +96,8 @@ class KnowledgeManager:
         # Phase 1: Input Processing
         import hashlib
 
-        # Generate ID
-        entry_id = hashlib.md5(
+        # Generate ID (sha256 for non-crypto identifier)
+        entry_id = hashlib.sha256(
             f"{content}{source}{datetime.now(UTC).isoformat()}".encode()
         ).hexdigest()[:12]
 
@@ -171,8 +171,9 @@ class KnowledgeManager:
         recent = self.search_knowledge(limit=5)
         if recent:
             summary_parts.append("Recent Knowledge:")
-            for entry in recent:
-                summary_parts.append(f"- [{entry.category}] {entry.content[:100]}...")
+            summary_parts.extend(
+                f"- [{entry.category}] {entry.content[:100]}..." for entry in recent
+            )
 
         # Active context
         if self.context:
@@ -206,7 +207,7 @@ class KnowledgeManager:
             institution = roi_results.get("stakeholder_config", {}).get(
                 "institution_name", "unknown"
             )
-            analysis_id = hashlib.md5(
+            analysis_id = hashlib.sha256(
                 f"roi_{institution}_{timestamp}".encode()
             ).hexdigest()[:12]
 

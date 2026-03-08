@@ -5,6 +5,8 @@ Test script to verify RAG system setup and basic functionality.
 import importlib
 import sys
 
+import pytest
+
 from agent_pathlib import Path
 
 # Add project root to path
@@ -19,14 +21,14 @@ def test_imports():
     try:
         importlib.import_module("echoes_core.rag_orbit")
         print("✅ Successfully imported RAGOrbit and RAGConfig")
-        return True
     except ImportError as e:
         print(f"❌ Import failed: {e}")
-        return False
+        pytest.importorskip("echoes_core")
 
 
 def test_rag_initialization():
     """Test RAG system initialization."""
+    pytest.importorskip("echoes_core")
     print("\n=== Testing RAG Initialization ===")
 
     try:
@@ -46,11 +48,10 @@ def test_rag_initialization():
         )
         _rag = RAGOrbit(config)
         print("✅ Successfully created RAGOrbit with custom config")
-
-        return True
+        assert True  # pytest: no return value
     except Exception as e:
         print(f"❌ RAG initialization failed: {e}")
-        return False
+        raise
 
 
 def main():

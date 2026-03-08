@@ -1,8 +1,8 @@
 import json
 from collections.abc import Sequence
 from dataclasses import dataclass
-from pathlib import Path
 from math import sqrt
+from pathlib import Path
 from typing import Any
 
 
@@ -78,7 +78,8 @@ class FAISSRetriever:
                 continue
             en = sqrt(sum(value * value for value in emb)) or 1.0
             score = float(
-                sum(left * right for left, right in zip(query, emb, strict=False)) / (qn * en)
+                sum(left * right for left, right in zip(query, emb, strict=False))
+                / (qn * en)
             )
             rows.append((score, idx))
 

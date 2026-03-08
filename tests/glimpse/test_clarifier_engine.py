@@ -203,9 +203,7 @@ class TestClarifierEngine:
         clarifier = engine.clarifier_rules["customer"]
 
         # Test appending to existing constraints
-        result = engine.apply_clarifier_response(
-            clarifier, "y", "existing: constraint"
-        )
+        result = engine.apply_clarifier_response(clarifier, "y", "existing: constraint")
         assert "existing: constraint" in result
         assert "audience: customers" in result
         assert "|" in result  # separator added
@@ -287,4 +285,3 @@ class TestEnhancedSampler:
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
-

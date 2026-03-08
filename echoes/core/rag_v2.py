@@ -47,8 +47,8 @@ class SimpleRAGSystem:
 
     def _create_embedding(self, text: str) -> list[float]:
         """Create simple embedding using hash-based approach."""
-        # Use text hash to create deterministic pseudo-embedding
-        hash_obj = hashlib.md5(text.encode())
+        # Use text hash to create deterministic pseudo-embedding (sha256)
+        hash_obj = hashlib.sha256(text.encode())
         hash_hex = hash_obj.hexdigest()
 
         # Convert to float values
@@ -99,7 +99,7 @@ class SimpleRAGSystem:
                 metadata = doc.get("metadata", {})
 
             # Create document
-            doc_id = hashlib.md5(content.encode()).hexdigest()[:16]
+            doc_id = hashlib.sha256(content.encode()).hexdigest()[:16]
             embedding = self._create_embedding(content)
 
             document = Document(
