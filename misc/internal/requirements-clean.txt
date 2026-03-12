@@ -27,7 +27,7 @@ openpyxl>=3.1.0               # Excel processing
 Pillow>=10.0.0                # Image processing
 
 # LangChain (minimal core)
-langchain-core>=0.1.0,<1.0.0      # Core LangChain functionality
+langchain-core>=0.1.0,<2.0.0      # Core LangChain functionality
 langchain-community>=0.1.0,<1.0.0 # Community integrations
 
 # Configuration & Environment
