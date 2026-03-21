@@ -1,6 +1,3 @@
-# Echoes — CI: lint → test → build
-# Aligns with CLAUDE.md session protocol and AGENTS.md quality gate.
-
 name: Echoes CI
 
 on:
@@ -9,7 +6,6 @@ on:
     paths-ignore:
       - "**.md"
       - "docs/**"
-      - ".gitignore"
       - "LICENSE"
   pull_request:
     branches: [main, master]
@@ -17,6 +13,9 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+permissions:
+  contents: read
 
 jobs:
   lint:
@@ -26,22 +25,24 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
+      - name: Sync dependencies
+        run: uv sync --frozen --group dev --group test
 
       - name: Ruff check
-        run: ruff check .
+        run: uv run ruff check .
 
       - name: Ruff format check
-        run: ruff format --check .
+        run: uv run ruff format --check .
 
       - name: Mypy
-        run: mypy . --ignore-missing-imports || true
+        run: uv run mypy . --ignore-missing-imports || true
 
   test:
     name: Test
@@ -51,16 +52,18 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.12"
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
-      - name: Install dependencies
-        run: pip install -e ".[dev]"
+      - name: Sync dependencies
+        run: uv sync --frozen --group dev --group test
 
       - name: Run pytest
-        run: python -m pytest tests/ -q --tb=short --maxfail=5
+        run: uv run pytest tests/ -q --tb=short --maxfail=5
 
   build:
     name: Build
@@ -71,16 +74,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
         with:
-          python-version: "3.12"
-
-      - name: Install build
-        run: pip install build
+          python-version: "3.13"
+          enable-cache: true
+          cache-dependency-glob: "uv.lock"
 
       - name: Build package
-        run: python -m build
-
-      - name: Check artifacts
-        run: pip install twine && twine check dist/*
+        run: uvx --from build pyproject-build
