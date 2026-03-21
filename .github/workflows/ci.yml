@@ -23,10 +23,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.13"
           enable-cache: true
@@ -41,8 +41,8 @@ jobs:
       - name: Ruff format check
         run: uv run ruff format --check .
 
-      - name: Mypy
-        run: uv run mypy . --ignore-missing-imports || true
+      - name: Syntax check
+        run: python3 -m compileall api app automation echoes glimpse src tools tests assistant_v2_core.py check_api_key.py legal_safeguards.py verify_environment.py
 
   test:
     name: Test
@@ -50,10 +50,10 @@ jobs:
     timeout-minutes: 15
     needs: [lint]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.13"
           enable-cache: true
@@ -72,10 +72,10 @@ jobs:
     needs: [test]
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install uv
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
         with:
           python-version: "3.13"
           enable-cache: true
