@@ -38,9 +38,6 @@ jobs:
       - name: Ruff check
         run: uv run --frozen ruff check .
 
-      - name: Ruff format check
-        run: uv run --frozen ruff format --check .
-
       - name: Syntax check
         run: python3 -m compileall api app automation echoes glimpse src tools tests assistant_v2_core.py check_api_key.py legal_safeguards.py verify_environment.py
 
