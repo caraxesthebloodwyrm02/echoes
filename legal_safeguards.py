@@ -126,14 +126,10 @@ class CognitiveAccountingSystem:
             }
 
         return {
-            "avg_processing_time": sum(m.processing_time for m in self.metrics_history)
-            / len(self.metrics_history),
-            "avg_complexity": sum(m.complexity_score for m in self.metrics_history)
-            / len(self.metrics_history),
-            "avg_memory": sum(m.memory_usage for m in self.metrics_history)
-            / len(self.metrics_history),
-            "avg_confidence": sum(m.confidence_level for m in self.metrics_history)
-            / len(self.metrics_history),
+            "avg_processing_time": sum(m.processing_time for m in self.metrics_history) / len(self.metrics_history),
+            "avg_complexity": sum(m.complexity_score for m in self.metrics_history) / len(self.metrics_history),
+            "avg_memory": sum(m.memory_usage for m in self.metrics_history) / len(self.metrics_history),
+            "avg_confidence": sum(m.confidence_level for m in self.metrics_history) / len(self.metrics_history),
         }
 
     def export_report(self) -> dict[str, Any]:
@@ -176,9 +172,7 @@ class CognitiveAccountingSystem:
                 "reasoning_summary": reasoning,
                 "authority_type": authority,
                 "actor_id": actor_id,
-                "safety_verdicts": [{"gate_id": gate_id, "verdict": verdict}]
-                if gate_id
-                else [],
+                "safety_verdicts": [{"gate_id": gate_id, "verdict": verdict}] if gate_id else [],
                 "provenance_version": "1.0.0",
             }
 
@@ -195,9 +189,7 @@ class CognitiveAccountingSystem:
                     "JWT_SECRET environment variable is required for provenance signing. "
                     "Refusing to sign with a default — set JWT_SECRET to a secure random value."
                 )
-            signature = hmac.new(
-                secret.encode(), full_serialized.encode(), hashlib.sha256
-            ).hexdigest()
+            signature = hmac.new(secret.encode(), full_serialized.encode(), hashlib.sha256).hexdigest()
             dpr["signature"] = signature
 
             self.provenance_chain.append(dpr)
@@ -214,9 +206,7 @@ class CognitiveAccountingSystem:
         if not self.provenance_chain:
             return {"valid": True, "total": 0, "broken_at": None}
         for i, dpr in enumerate(self.provenance_chain):
-            parent_hash = (
-                self.provenance_chain[i - 1]["chain_hash"] if i > 0 else "genesis"
-            )
+            parent_hash = self.provenance_chain[i - 1]["chain_hash"] if i > 0 else "genesis"
             without_sig = {k: v for k, v in dpr.items() if k not in ("signature",)}
             without_chain = {k: v for k, v in without_sig.items() if k != "chain_hash"}
             serialized = json.dumps(without_chain, sort_keys=True)

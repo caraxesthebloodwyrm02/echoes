@@ -93,9 +93,7 @@ def strict_limit(limit: str) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         if _limiter is None:
-            raise RuntimeError(
-                "Limiter not initialized. Call setup_rate_limiting first."
-            )
+            raise RuntimeError("Limiter not initialized. Call setup_rate_limiting first.")
         return _limiter.limit(limit)(func)
 
     return decorator
@@ -110,9 +108,7 @@ def api_key_limit(limit: str) -> Callable:
 
     def decorator(func: Callable) -> Callable:
         if _limiter is None:
-            raise RuntimeError(
-                "Limiter not initialized. Call setup_rate_limiting first."
-            )
+            raise RuntimeError("Limiter not initialized. Call setup_rate_limiting first.")
         return _limiter.limit(limit, key_func=get_api_key_func)(func)
 
     return decorator

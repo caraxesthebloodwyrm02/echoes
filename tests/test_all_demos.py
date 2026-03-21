@@ -55,9 +55,7 @@ class TestECommerceDemoCredibility(unittest.TestCase):
         inventory_data = {"items": 4, "low_stock": 1, "overstock": 1}
 
         # Gather knowledge
-        self.assistant.gather_knowledge(
-            json.dumps(inventory_data), "inventory_test", "test_data"
-        )
+        self.assistant.gather_knowledge(json.dumps(inventory_data), "inventory_test", "test_data")
 
         # Run workflow
         result = self.assistant.run_workflow(
@@ -82,9 +80,7 @@ class TestECommerceDemoCredibility(unittest.TestCase):
         stockout_percentage = 0.30
         expected_loss = monthly_sales * (price - cost) * stockout_percentage
 
-        self.assertAlmostEqual(
-            expected_loss, 2304, delta=1, msg="Low stock calculation should be accurate"
-        )
+        self.assertAlmostEqual(expected_loss, 2304, delta=1, msg="Low stock calculation should be accurate")
 
         # Test overstock calculation
         excess_units = 50
@@ -92,9 +88,7 @@ class TestECommerceDemoCredibility(unittest.TestCase):
         glimpse_cost = 350
         expected_holding_cost = excess_units * glimpse_cost * holding_cost_rate
 
-        self.assertEqual(
-            expected_holding_cost, 350, msg="Overstock calculation should be accurate"
-        )
+        self.assertEqual(expected_holding_cost, 350, msg="Overstock calculation should be accurate")
 
         print(f"  ✓ Low stock loss calculation: ${expected_loss:,.0f}")
         print(f"  ✓ Overstock holding cost: ${expected_holding_cost:,.0f}")
@@ -116,9 +110,7 @@ class TestECommerceDemoCredibility(unittest.TestCase):
         # Test AOV increase opportunity
         aov_increase = 25
         aov_opportunity = monthly_orders * aov_increase
-        self.assertEqual(
-            aov_opportunity, 30000, msg="AOV increase opportunity calculation accurate"
-        )
+        self.assertEqual(aov_opportunity, 30000, msg="AOV increase opportunity calculation accurate")
 
         print(f"  ✓ Cart abandonment opportunity: ${potential_recovery:,.0f}")
         print(f"  ✓ AOV increase opportunity: ${aov_opportunity:,.0f}")
@@ -201,9 +193,7 @@ class TestInvestmentAdvisorCredibility(unittest.TestCase):
 
         portfolio_value = 500_000_000
         alpha_percentage = (total_alpha / portfolio_value) * 100
-        self.assertAlmostEqual(
-            alpha_percentage, 7.62, places=1, msg="Alpha percentage should be ~7.6%"
-        )
+        self.assertAlmostEqual(alpha_percentage, 7.62, places=1, msg="Alpha percentage should be ~7.6%")
 
         print(f"  ✓ Rebalancing alpha: ${rebalancing_alpha:,}")
         print(f"  ✓ Positions alpha: ${positions_alpha:,}")
@@ -245,9 +235,7 @@ class TestInvestmentAdvisorCredibility(unittest.TestCase):
 
         market_data = {"sp500": 4500, "vix": 16.5, "sectors": 5}
 
-        self.assistant.gather_knowledge(
-            json.dumps(market_data), "market_test", "test_data"
-        )
+        self.assistant.gather_knowledge(json.dumps(market_data), "market_test", "test_data")
 
         result = self.assistant.run_workflow(
             "data_enrichment", topic="Analyze market conditions", context={"test": True}
@@ -306,9 +294,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
         fuel_savings_cost = (current_fuel - optimized_fuel) * cost_per_kg
 
         # Claimed $1.8B savings is reasonable for Mars mission
-        self.assertGreater(
-            fuel_savings_cost, 700_000_000, "Fuel savings should be substantial"
-        )
+        self.assertGreater(fuel_savings_cost, 700_000_000, "Fuel savings should be substantial")
 
         print(f"  ✓ Original fuel: {current_fuel:,} kg")
         print(f"  ✓ Optimized fuel: {optimized_fuel:,} kg")
@@ -322,9 +308,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
         optimized_mass = 4200  # kg
         reduction = (current_mass - optimized_mass) / current_mass
 
-        self.assertAlmostEqual(
-            reduction, 0.506, places=2, msg="Mass reduction should be ~50%"
-        )
+        self.assertAlmostEqual(reduction, 0.506, places=2, msg="Mass reduction should be ~50%")
 
         mass_saved = current_mass - optimized_mass
         self.assertEqual(mass_saved, 4300, "Should save 4,300 kg")
@@ -348,9 +332,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
             delta=1,
             msg="Optimized propellant should be ~38,250 kg",
         )
-        self.assertAlmostEqual(
-            savings, 6750, delta=1, msg="Savings should be ~7,000 kg"
-        )
+        self.assertAlmostEqual(savings, 6750, delta=1, msg="Savings should be ~7,000 kg")
 
         print(f"  ✓ Original propellant: {current_propellant:,} kg")
         print(f"  ✓ Optimized propellant: {optimized_propellant:,} kg")
@@ -408,9 +390,7 @@ class TestSpaceResearchCredibility(unittest.TestCase):
 
         mission_data = {"missions": 5, "avg_fuel": 950, "timespan": "25 years"}
 
-        self.assistant.gather_knowledge(
-            json.dumps(mission_data), "mission_test", "test_data"
-        )
+        self.assistant.gather_knowledge(json.dumps(mission_data), "mission_test", "test_data")
 
         result = self.assistant.run_workflow(
             "data_enrichment",
@@ -443,13 +423,9 @@ class TestOverallSystemCredibility(unittest.TestCase):
         print("\n[Test 4.1] Knowledge Management Persistence...")
 
         # Add test knowledge
-        _k_id1 = self.assistant.gather_knowledge(
-            "Test knowledge entry 1", "test_source", "test_category", ["test"]
-        )
+        _k_id1 = self.assistant.gather_knowledge("Test knowledge entry 1", "test_source", "test_category", ["test"])
 
-        _k_id2 = self.assistant.gather_knowledge(
-            "Test knowledge entry 2", "test_source", "test_category", ["test"]
-        )
+        _k_id2 = self.assistant.gather_knowledge("Test knowledge entry 2", "test_source", "test_category", ["test"])
 
         # Search knowledge
         results = self.assistant.search_knowledge(query="Test", limit=10)

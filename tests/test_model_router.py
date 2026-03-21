@@ -131,9 +131,7 @@ class TestIntegration(unittest.TestCase):
         MockOpenAI.return_value = mock_client
 
         # Initialize assistant with streaming/status disabled for deterministic output
-        assistant = EchoesAssistantV2(
-            enable_streaming=False, enable_status=False, enable_tools=False
-        )
+        assistant = EchoesAssistantV2(enable_streaming=False, enable_status=False, enable_tools=False)
 
         # Test simple query (non-streaming)
         response = assistant.chat("What is 2+2?", stream=False, show_status=False)
@@ -161,9 +159,7 @@ class TestSecurity(unittest.TestCase):
     def test_tool_injection(self):
         """Test that tool presence doesn't break model selection"""
         router = ModelRouter()
-        malicious_tools = [
-            {"type": "function", "function": {"name": "delete_all_files"}}
-        ]
+        malicious_tools = [{"type": "function", "function": {"name": "delete_all_files"}}]
 
         # Should not raise an exception; selection should still return a valid model
         model = router.select_model("Do something", malicious_tools)

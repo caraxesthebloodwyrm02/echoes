@@ -31,15 +31,10 @@ def pytest_collection_modifyitems(config, items):
     if os.getenv("OPENAI_API_KEY"):
         return
 
-    skip_openai = pytest.mark.skip(
-        reason="OPENAI_API_KEY not set (API-key-dependent test)"
-    )
+    skip_openai = pytest.mark.skip(reason="OPENAI_API_KEY not set (API-key-dependent test)")
 
     for item in items:
         module_name = item.module.__name__
         # Match tests.test_agentic_assistant, tests.test_all_demos, etc.
-        if any(
-            module_name == m or module_name.endswith("." + m)
-            for m in API_KEY_DEPENDENT_MODULES
-        ):
+        if any(module_name == m or module_name.endswith("." + m) for m in API_KEY_DEPENDENT_MODULES):
             item.add_marker(skip_openai)

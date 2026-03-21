@@ -78,9 +78,7 @@ def demo_basic_simulation():
         result = parallel_simulation.wait_for_simulation(sim_id, timeout=30.0)
         if result:
             results.append(result)
-            print(
-                f"  ✅ Completed {result.simulation_type.value}: {result.confidence:.1%} confidence"
-            )
+            print(f"  ✅ Completed {result.simulation_type.value}: {result.confidence:.1%} confidence")
         else:
             print(f"  ✗ Failed to complete simulation: {sim_id}")
 
@@ -155,12 +153,8 @@ def demo_concurrent_simulation():
 
     execution_time = time.time() - start_time
 
-    print(
-        f"\n⏱️ Executed {len(simulation_configs)} simulations in {execution_time:.2f}s"
-    )
-    print(
-        f"   Average time per simulation: {execution_time / len(simulation_configs):.2f}s"
-    )
+    print(f"\n⏱️ Executed {len(simulation_configs)} simulations in {execution_time:.2f}s")
+    print(f"   Average time per simulation: {execution_time / len(simulation_configs):.2f}s")
 
     print("\n📊 Concurrent Results:")
     for i, result in enumerate(results, 1):
@@ -203,9 +197,7 @@ def demo_possibility_space():
         print("\n📊 Possibility Space Analysis:")
         print(f"  Total dimensions: {outcome.get('total_dimensions', 0)}")
         print(f"  Total combinations: {outcome.get('total_combinations', 0):,}")
-        print(
-            f"  Exploration recommendation: {outcome.get('exploration_recommendation', '')}"
-        )
+        print(f"  Exploration recommendation: {outcome.get('exploration_recommendation', '')}")
 
         space = outcome.get("possibility_space", [])
         if space:
@@ -320,18 +312,14 @@ def demo_decision_support():
 
         print("\n📊 Decision Support Analysis:")
         print(f"  Decision framework: {outcome.get('decision_framework', '')}")
-        print(
-            f"  Confidence in recommendation: {outcome.get('confidence_in_recommendation', 0):.1%}"
-        )
+        print(f"  Confidence in recommendation: {outcome.get('confidence_in_recommendation', 0):.1%}")
 
         analyses = outcome.get("option_analyses", [])
         if analyses:
             print("\n  📈 Option Analysis:")
             for i, analysis in enumerate(analyses, 1):
                 print(f"\n    {i}. {analysis.get('option', 'Unknown')}:")
-                print(
-                    f"       Success probability: {analysis.get('success_probability', 0):.1%}"
-                )
+                print(f"       Success probability: {analysis.get('success_probability', 0):.1%}")
                 print(f"       Timeline: {analysis.get('timeline', 'unknown')}")
                 print(f"       Effort: {analysis.get('effort', 'unknown')}")
 
@@ -345,9 +333,7 @@ def demo_decision_support():
         if recommended:
             print("\n  🎯 Recommended Option:")
             print(f"    Choice: {recommended.get('option', 'unknown')}")
-            print(
-                f"    Success probability: {recommended.get('success_probability', 0):.1%}"
-            )
+            print(f"    Success probability: {recommended.get('success_probability', 0):.1%}")
             print(f"    Timeline: {recommended.get('timeline', 'unknown')}")
 
         if result.insights:
@@ -471,9 +457,7 @@ def demo_real_time_simulation():
     for sim_id in simulation_ids:
         result = parallel_simulation.get_simulation_result(sim_id)
         if result:
-            print(
-                f"  • {result.simulation_type.value}: {result.confidence:.1%} confidence"
-            )
+            print(f"  • {result.simulation_type.value}: {result.confidence:.1%} confidence")
 
 
 def demo_cross_reference_integration():
@@ -511,9 +495,7 @@ def demo_cross_reference_integration():
     )
 
     # Wait for both simulations
-    context_result = parallel_simulation.wait_for_simulation(
-        context_sim_id, timeout=20.0
-    )
+    context_result = parallel_simulation.wait_for_simulation(context_sim_id, timeout=20.0)
     xref_result = parallel_simulation.wait_for_simulation(xref_sim_id, timeout=25.0)
 
     print("\n📊 Enhanced Cross-Reference Results:")
@@ -527,16 +509,12 @@ def demo_cross_reference_integration():
         if expansions:
             print("    Enhanced contexts:")
             for exp in expansions[:3]:
-                print(
-                    f"      • {exp.get('type', 'unknown')}: {exp.get('description', '')[:60]}..."
-                )
+                print(f"      • {exp.get('type', 'unknown')}: {exp.get('description', '')[:60]}...")
 
     if xref_result:
         print("\n  🔗 Cross-Reference Enhancement:")
         print(f"    Confidence: {xref_result.confidence:.1%}")
-        print(
-            f"    Improvement: +{xref_result.outcome.get('improvement', 0)} references"
-        )
+        print(f"    Improvement: +{xref_result.outcome.get('improvement', 0)} references")
 
         enhanced_refs = xref_result.outcome.get("enhanced_references", [])
         if enhanced_refs:
@@ -555,9 +533,7 @@ def demo_cross_reference_integration():
 def main():
     """Run all parallel simulation demos"""
     print("\n✨ Welcome to the Parallel Simulation Engine Demo!")
-    print(
-        "This showcases concurrent simulation instances for possibility exploration and cross-reference enhancement."
-    )
+    print("This showcases concurrent simulation instances for possibility exploration and cross-reference enhancement.")
 
     # Run all demos
     demo_basic_simulation()

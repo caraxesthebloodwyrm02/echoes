@@ -10,9 +10,7 @@ import sys
 from pathlib import Path
 
 # Repo root: ECHOES_ROOT env, or derived from this file (tools/path_setup.py -> repo root)
-REPO_ROOT: Path = Path(
-    os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent))
-)
+REPO_ROOT: Path = Path(os.environ.get("ECHOES_ROOT", str(Path(__file__).resolve().parent.parent)))
 
 
 def ensure_repo_on_path() -> None:

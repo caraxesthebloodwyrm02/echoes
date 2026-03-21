@@ -298,9 +298,7 @@ class UnifiedDemoScenario:
             recent_intents = getattr(self.assistant.intent_engine, "recent_intents", [])
             if recent_intents:
                 latest_intent = recent_intents[-1]
-                print(
-                    f"   🎯 Intent: {latest_intent.type.value} (confidence: {latest_intent.confidence:.1%})"
-                )
+                print(f"   🎯 Intent: {latest_intent.type.value} (confidence: {latest_intent.confidence:.1%})")
 
         # Thought tracking
         if hasattr(self.assistant, "thought_tracker"):
@@ -320,23 +318,15 @@ class UnifiedDemoScenario:
             print(f"   Total simulations: {stats['total_simulations']}")
             print(f"   Active simulations: {stats['active_simulations']}")
             print(f"   Success rate: {stats['performance']['success_rate']:.1%}")
-            print(
-                f"   Average confidence: {stats['performance']['average_confidence']:.1%}"
-            )
+            print(f"   Average confidence: {stats['performance']['average_confidence']:.1%}")
 
     def _show_cross_reference_insights(self):
         """Show cross-reference system insights"""
         if hasattr(self.assistant, "cross_reference_system"):
-            connections = getattr(
-                self.assistant.cross_reference_system, "connection_graph", {}
-            )
+            connections = getattr(self.assistant.cross_reference_system, "connection_graph", {})
             print("\n🔗 Cross-Reference Insights:")
             print(f"   Active connections: {len(connections)}")
-            print(
-                "   Relationship strength: Strong"
-                if len(connections) > 5
-                else "Moderate"
-            )
+            print("   Relationship strength: Strong" if len(connections) > 5 else "Moderate")
 
     def _show_continuity_insights(self):
         """Show conversation continuity insights"""
@@ -368,10 +358,7 @@ class UnifiedDemoScenario:
         self.performance_metrics["end_time"] = datetime.now()
 
         if self.performance_metrics["start_time"]:
-            total_time = (
-                self.performance_metrics["end_time"]
-                - self.performance_metrics["start_time"]
-            ).total_seconds()
+            total_time = (self.performance_metrics["end_time"] - self.performance_metrics["start_time"]).total_seconds()
         else:
             total_time = 0
 
@@ -387,9 +374,7 @@ class UnifiedDemoScenario:
         print(f"   Total session time: {total_time:.2f}s")
         print(f"   Total queries: {self.performance_metrics['total_queries']}")
         print(f"   Average response time: {avg_response_time:.2f}s")
-        print(
-            f"   Queries per minute: {self.performance_metrics['total_queries'] / max(total_time / 60, 1):.1f}"
-        )
+        print(f"   Queries per minute: {self.performance_metrics['total_queries'] / max(total_time / 60, 1):.1f}")
 
         print("\n🧠 Simulation Performance:")
         print(f"   Simulations run: {self.performance_metrics['simulations_run']}")
@@ -397,12 +382,8 @@ class UnifiedDemoScenario:
 
         print("\n💭 Cognitive Metrics:")
         print(f"   Thoughts tracked: {self.performance_metrics['thoughts_tracked']}")
-        print(
-            f"   Cross-references: {self.performance_metrics['cross_references_generated']}"
-        )
-        print(
-            f"   Personality adaptations: {self.performance_metrics['personality_adaptations']}"
-        )
+        print(f"   Cross-references: {self.performance_metrics['cross_references_generated']}")
+        print(f"   Personality adaptations: {self.performance_metrics['personality_adaptations']}")
 
         print("\n😄 Engagement Metrics:")
         print(f"   Humor instances: {self.performance_metrics['humor_instances']}")
@@ -413,18 +394,14 @@ class UnifiedDemoScenario:
         print("   Conversation flow: Natural")
 
         # Calculate overall performance score
-        performance_score = self._calculate_performance_score(
-            avg_response_time, total_time
-        )
+        performance_score = self._calculate_performance_score(avg_response_time, total_time)
 
         print(f"\n🌟 Overall Performance Score: {performance_score:.1%}")
 
         if performance_score >= 0.9:
             print("   🏆 EXCELLENT: All systems performing optimally")
         elif performance_score >= 0.8:
-            print(
-                "   ✅ GOOD: Systems performing well with minor optimizations possible"
-            )
+            print("   ✅ GOOD: Systems performing well with minor optimizations possible")
         elif performance_score >= 0.7:
             print("   ⚠️ ACCEPTABLE: Systems functional but need optimization")
         else:
@@ -453,9 +430,7 @@ class UnifiedDemoScenario:
         )
 
         # Overall score (weighted average)
-        overall_score = (
-            response_time_score * 0.3 + query_score * 0.2 + feature_score * 0.5
-        )
+        overall_score = response_time_score * 0.3 + query_score * 0.2 + feature_score * 0.5
 
         return overall_score
 
@@ -521,9 +496,7 @@ def main():
         performance_score = demo.run_complete_scenario()
 
         if performance_score >= 0.8:
-            print(
-                f"\n🏆 Demo successful with performance score: {performance_score:.1%}"
-            )
+            print(f"\n🏆 Demo successful with performance score: {performance_score:.1%}")
             print("Echoes systems are working cohesively and effectively!")
         else:
             print(f"\n⚠️ Demo completed with performance score: {performance_score:.1%}")

@@ -41,9 +41,7 @@ class FilesystemTools:
         except Exception:
             return False
 
-    def list_directory(
-        self, dirpath: str, pattern: str = "*", recursive: bool = False
-    ) -> dict[str, Any]:
+    def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> dict[str, Any]:
         """List directory contents safely."""
 
         # Phase 1: Path Validation
@@ -246,9 +244,7 @@ class FilesystemTools:
         except Exception as e:
             return {"success": False, "error": f"Error getting file info: {str(e)}"}
 
-    def get_directory_tree(
-        self, dirpath: str, max_depth: int = 3, include_files: bool = True
-    ) -> dict[str, Any]:
+    def get_directory_tree(self, dirpath: str, max_depth: int = 3, include_files: bool = True) -> dict[str, Any]:
         """Get directory tree structure."""
         try:
             path = Path(dirpath).resolve()
@@ -294,9 +290,7 @@ class FilesystemTools:
         except Exception as e:
             return {"success": False, "error": f"Error building tree: {str(e)}"}
 
-    def organize_roi_files(
-        self, roi_results: dict[str, Any], base_dir: str = "roi_analysis"
-    ) -> dict[str, Any]:
+    def organize_roi_files(self, roi_results: dict[str, Any], base_dir: str = "roi_analysis") -> dict[str, Any]:
         """
         Organize ROI analysis files into a structured directory.
 
@@ -314,10 +308,7 @@ class FilesystemTools:
 
             organized_files = {}
             institution_name = (
-                roi_results.get("stakeholder_config", {})
-                .get("institution_name", "unknown")
-                .lower()
-                .replace(" ", "_")
+                roi_results.get("stakeholder_config", {}).get("institution_name", "unknown").lower().replace(" ", "_")
             )
 
             # Create institution-specific directory

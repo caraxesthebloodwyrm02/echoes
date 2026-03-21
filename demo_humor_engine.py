@@ -80,9 +80,7 @@ def demo_humor_types():
         print(f"\n**{humor_type.value.title()}** - {description}:")
 
         # Test at medium pressure
-        response = humor_engine.generate_humor_response(
-            PressureLevel.MEDIUM, "", humor_type
-        )
+        response = humor_engine.generate_humor_response(PressureLevel.MEDIUM, "", humor_type)
 
         if response:
             print(f"  💬 {response.text}")
@@ -152,9 +150,7 @@ def demo_pressure_tracking():
         print(f"  📊 Trend: {summary['trend'].title()}")
 
         # Check if humor would be used
-        would_use_humor = humor_engine.should_use_humor(
-            level, "high_load" if requests > 5 else ""
-        )
+        would_use_humor = humor_engine.should_use_humor(level, "high_load" if requests > 5 else "")
         print(f"  😄 Humor Appropriate: {'Yes' if would_use_humor else 'No'}")
 
         if would_use_humor:
@@ -238,14 +234,10 @@ def demo_humor_integration():
         print(f"  Base: {scenario['base_response']}")
 
         # Check if humor would be added
-        would_use_humor = humor_engine.should_use_humor(
-            scenario["pressure"], scenario["context"]
-        )
+        would_use_humor = humor_engine.should_use_humor(scenario["pressure"], scenario["context"])
 
         if would_use_humor:
-            humor_response = humor_engine.generate_humor_response(
-                scenario["pressure"], scenario["context"]
-            )
+            humor_response = humor_engine.generate_humor_response(scenario["pressure"], scenario["context"])
             if humor_response:
                 # Format the humor
                 if humor_response.delivery_style == "playful":
@@ -288,9 +280,7 @@ def demo_pressure_management():
         )
 
         # Show humor probability
-        would_use_humor = humor_engine.should_use_humor(
-            level, "high_load" if i > 1 else ""
-        )
+        would_use_humor = humor_engine.should_use_humor(level, "high_load" if i > 1 else "")
         print(f"           Humor probability: {'High' if would_use_humor else 'Low'}")
 
     # Show recommendations
@@ -326,9 +316,7 @@ def demo_interactive_features():
         print(f"\n**Joke for {level} pressure:**")
 
         pressure_enum = PressureLevel(level)
-        joke_response = humor_engine.generate_humor_response(
-            pressure_enum, "user_requested"
-        )
+        joke_response = humor_engine.generate_humor_response(pressure_enum, "user_requested")
 
         if joke_response:
             print(f"  {joke_response.text}")
@@ -341,9 +329,7 @@ def demo_interactive_features():
 def main():
     """Run all humor demos"""
     print("\n✨ Welcome to the Sense of Humor Engine Demo!")
-    print(
-        "This showcases pressure-aware humor for stress management and user engagement."
-    )
+    print("This showcases pressure-aware humor for stress management and user engagement.")
 
     # Run all demos
     demo_pressure_levels()

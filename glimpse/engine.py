@@ -92,16 +92,8 @@ async def local_default_sampler(draft: Draft) -> tuple[str, str, str | None, boo
     delta: str | None = None
 
     # Naive mismatch heuristic: if constraints mention 'no change' but input suggests 'refactor'
-    lower = (
-        (draft.input_text or "")
-        + " "
-        + (draft.goal or "")
-        + " "
-        + (draft.constraints or "")
-    ).lower()
-    if "refactor" in lower and (
-        "no change" in lower or "don't change" in lower or "don\u2019t change" in lower
-    ):
+    lower = ((draft.input_text or "") + " " + (draft.goal or "") + " " + (draft.constraints or "")).lower()
+    if "refactor" in lower and ("no change" in lower or "don't change" in lower or "don\u2019t change" in lower):
         delta = "Potential conflict: mentions refactor while requesting no change."
 
     # Clarifier path (legacy): only if explicitly enabled via env flag
@@ -133,9 +125,7 @@ class LatencyMonitor:
       - 6000: degraded notice
     """
 
-    def __init__(
-        self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000
-    ) -> None:
+    def __init__(self, t1: int = 1500, t2: int = 2500, t3: int = 4000, t4: int = 6000) -> None:
         self.t1, self.t2, self.t3, self.t4 = t1, t2, t3, t4
         self._start_ms: int | None = None
 
@@ -156,9 +146,7 @@ class LatencyMonitor:
         if e >= self.t2:
             out.append("Making sure it matches your intent…")
         if e >= self.t3:
-            out.append(
-                "Options: Keep waiting • Redial (no try) • Essence‑only • Commit (confirm)"
-            )
+            out.append("Options: Keep waiting • Redial (no try) • Essence‑only • Commit (confirm)")
         if e >= self.t4:
             out.append(STATUS_DEGRADED)
         return out
@@ -175,9 +163,7 @@ class LatencyMonitor:
 class PrivacyGuard:
     """Ensures ephemeral behavior: no logging or side effects until commit."""
 
-    def __init__(
-        self, on_commit: Callable[[GlimpseResult], None] | None = None
-    ) -> None:
+    def __init__(self, on_commit: Callable[[GlimpseResult], None] | None = None) -> None:
         self.committed = False
         self._on_commit = on_commit if callable(on_commit) else lambda _: None
 
@@ -228,9 +214,7 @@ class GlimpseEngine:
 
                 # Create a wrapper that uses this instance's clarifier engine
                 async def _wrapped_sampler(draft):
-                    return await enhanced_sampler_with_clarifiers(
-                        draft, self._clarifier_engine
-                    )
+                    return await enhanced_sampler_with_clarifiers(draft, self._clarifier_engine)
 
                 self._sampler = _wrapped_sampler
             else:

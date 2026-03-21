@@ -59,9 +59,7 @@ def test_direct_atlas_interaction():
     assert result["success"], f"Failed to list items: {result['error']}"
     print(f"  ✓ Found {result['count']} items")
     for item in result["items"]:
-        print(
-            f"    • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})"
-        )
+        print(f"    • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})")
 
     # Test 3: Filter by category
     print("\n[Test 3] Filtering by category...")

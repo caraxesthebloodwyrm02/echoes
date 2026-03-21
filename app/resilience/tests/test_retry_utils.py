@@ -24,9 +24,7 @@ class TestShouldRetryException:
 
     def test_should_retry_429_error(self):
         """Test that 429 errors should be retried."""
-        exc = httpx.HTTPStatusError(
-            "429 Too Many Requests", request=Mock(), response=Mock(status_code=429)
-        )
+        exc = httpx.HTTPStatusError("429 Too Many Requests", request=Mock(), response=Mock(status_code=429))
         assert should_retry_exception(exc) is True
 
     def test_should_retry_5xx_errors(self):
@@ -138,9 +136,7 @@ class TestMakeResilientRequest:
         mock_client.request.side_effect = mock_request
         mock_client_class.return_value.__aenter__.return_value = mock_client
 
-        response = await make_resilient_request(
-            "GET", "https://api.example.com", max_retries=3
-        )
+        response = await make_resilient_request("GET", "https://api.example.com", max_retries=3)
 
         assert response.status_code == 200
         assert mock_client.request.call_count == 3
@@ -162,9 +158,7 @@ class TestMakeResilientRequest:
         mock_client_class.return_value.__aenter__.return_value = mock_client
 
         with pytest.raises(RetryError):
-            await make_resilient_request(
-                "GET", "https://api.example.com", max_retries=2
-            )
+            await make_resilient_request("GET", "https://api.example.com", max_retries=2)
 
         # Should have tried 2 times (initial + 1 retry)
         assert mock_client.request.call_count == 2

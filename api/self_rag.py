@@ -83,14 +83,10 @@ class SelfRAGVerifier:
             relevant_evidence = await self._gather_evidence(claim, evidence, context)
 
             # Step 2: Analyze claim against evidence
-            analysis = await self._analyze_claim_against_evidence(
-                claim, relevant_evidence
-            )
+            analysis = await self._analyze_claim_against_evidence(claim, relevant_evidence)
 
             # Step 3: Generate verdict with confidence
-            verdict, confidence, explanation = await self._generate_verdict(
-                claim, analysis, relevant_evidence
-            )
+            verdict, confidence, explanation = await self._generate_verdict(claim, analysis, relevant_evidence)
 
             processing_time = (datetime.utcnow() - start_time).total_seconds()
 
@@ -183,9 +179,7 @@ class SelfRAGVerifier:
 
         return evidence_chunks
 
-    async def _analyze_claim_against_evidence(
-        self, claim: str, evidence: list[EvidenceChunk]
-    ) -> dict[str, Any]:
+    async def _analyze_claim_against_evidence(self, claim: str, evidence: list[EvidenceChunk]) -> dict[str, Any]:
         """
         Analyze claim against gathered evidence to identify support and contradictions.
         """
@@ -210,18 +204,14 @@ class SelfRAGVerifier:
             ]
 
             support_score = sum(1 for word in support_keywords if word in text_lower)
-            contradiction_score = sum(
-                1 for word in contradiction_keywords if word in text_lower
-            )
+            contradiction_score = sum(1 for word in contradiction_keywords if word in text_lower)
 
             # Calculate semantic similarity (simple approach)
             claim_words = set(claim_lower.split())
             text_words = set(text_lower.split())
             overlap = len(claim_words.intersection(text_words))
             similarity = (
-                overlap / max(len(claim_words), len(text_words))
-                if max(len(claim_words), len(text_words)) > 0
-                else 0
+                overlap / max(len(claim_words), len(text_words)) if max(len(claim_words), len(text_words)) > 0 else 0
             )
 
             if contradiction_score > support_score and similarity > 0.3:
@@ -259,9 +249,7 @@ class SelfRAGVerifier:
             # Contradictions outweigh support
             confidence = min(0.9, contradiction_ratio)
             verdict = "FALSE"
-            explanation = (
-                f"Claim contradicted by {contradiction_count} evidence sources"
-            )
+            explanation = f"Claim contradicted by {contradiction_count} evidence sources"
         elif support_ratio > contradiction_ratio and supporting_count > 0:
             # Support outweighs contradictions
             confidence = min(0.9, support_ratio)
@@ -274,11 +262,7 @@ class SelfRAGVerifier:
             explanation = f"Insufficient evidence: {supporting_count} supporting, {contradiction_count} contradicting"
 
         # Adjust confidence based on evidence quality - simplified without numpy
-        avg_relevance = (
-            sum([e.relevance_score for e in evidence]) / len(evidence)
-            if evidence
-            else 0
-        )
+        avg_relevance = sum([e.relevance_score for e in evidence]) / len(evidence) if evidence else 0
         confidence *= avg_relevance
 
         return verdict, confidence, explanation

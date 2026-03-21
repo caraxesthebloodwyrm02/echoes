@@ -24,16 +24,10 @@ class JWTHandler:
                 "variable or pass secret_key to JWTHandler()."
             )
         self.algorithm = algorithm
-        self.access_token_expire_minutes = int(
-            os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30")
-        )
-        self.refresh_token_expire_days = int(
-            os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7")
-        )
+        self.access_token_expire_minutes = int(os.getenv("ACCESS_TOKEN_EXPIRE_MINUTES", "30"))
+        self.refresh_token_expire_days = int(os.getenv("REFRESH_TOKEN_EXPIRE_DAYS", "7"))
 
-    def create_access_token(
-        self, data: dict[str, Any], expires_delta: timedelta | None = None
-    ) -> str:
+    def create_access_token(self, data: dict[str, Any], expires_delta: timedelta | None = None) -> str:
         """
         Create a JWT access token
 
@@ -125,9 +119,7 @@ class JWTHandler:
 _jwt_handler = JWTHandler()
 
 
-def create_access_token(
-    data: dict[str, Any], expires_delta: timedelta | None = None
-) -> str:
+def create_access_token(data: dict[str, Any], expires_delta: timedelta | None = None) -> str:
     """Create an access token (convenience function)"""
     return _jwt_handler.create_access_token(data, expires_delta)
 

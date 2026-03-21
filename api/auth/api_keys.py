@@ -41,9 +41,7 @@ class APIKeyManager:
         """Hash an API key for secure storage"""
         return hashlib.sha256(key.encode()).hexdigest()
 
-    def generate_key(
-        self, name: str, role: str = "analyst", platforms: list[str] | None = None
-    ) -> str:
+    def generate_key(self, name: str, role: str = "analyst", platforms: list[str] | None = None) -> str:
         """
         Generate a new API key
 

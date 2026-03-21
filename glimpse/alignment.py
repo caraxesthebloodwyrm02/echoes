@@ -61,9 +61,7 @@ class KnowledgeBase:
 
 
 # Configure logging
-logging.basicConfig(
-    level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s"
-)
+logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
 
 
 @dataclass
@@ -218,9 +216,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             return None
 
         cached_time = datetime.fromisoformat(cached["timestamp"])
-        if (
-            datetime.now(UTC) - cached_time
-        ).total_seconds() > self.cache_config.ttl_seconds:
+        if (datetime.now(UTC) - cached_time).total_seconds() > self.cache_config.ttl_seconds:
             del self.cache[cache_key]
             return None
 
@@ -247,18 +243,11 @@ If asked something outside your expertise, acknowledge this and provide the best
         """Select appropriate model and parameters based on query complexity and confidence."""
         # Check for domain-specific terms
         domain_score = sum(
-            1
-            for terms in self.domain_terms.values()
-            for term in terms
-            if term.lower() in prompt.lower()
+            1 for terms in self.domain_terms.values() for term in terms if term.lower() in prompt.lower()
         )
 
         # Check conversation history for context
-        context_length = (
-            len(self.conversation_history.get(conversation_id, []))
-            if conversation_id
-            else 0
-        )
+        context_length = len(self.conversation_history.get(conversation_id, [])) if conversation_id else 0
 
         # Determine base model and parameters
         if domain_score > 3 or context_length > 3 or len(prompt.split()) > 200:
@@ -287,9 +276,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         return base_model, max_tokens, temperature
 
-    def _calculate_cost(
-        self, model: str, prompt_tokens: int, completion_tokens: int
-    ) -> CostMetrics:
+    def _calculate_cost(self, model: str, prompt_tokens: int, completion_tokens: int) -> CostMetrics:
         """Calculate cost based on token usage and model pricing."""
         if model not in self.MODEL_PRICING:
             model = "gpt-3.5-turbo"  # Default to a known model
@@ -360,9 +347,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         return func
 
-    async def _execute_tool_call(
-        self, tool_call: Any, tool_call_id: str | None = None
-    ) -> ToolResult:
+    async def _execute_tool_call(self, tool_call: Any, tool_call_id: str | None = None) -> ToolResult:
         """Execute a tool call returned by the model and format the response."""
         try:
             function_obj = tool_call.function
@@ -392,9 +377,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                 "content": f"Error: Invalid JSON arguments - {str(e)}",
             }
 
-        tool_call_id = (
-            tool_call_id or getattr(tool_call, "id", None) or f"call_{uuid.uuid4().hex}"
-        )
+        tool_call_id = tool_call_id or getattr(tool_call, "id", None) or f"call_{uuid.uuid4().hex}"
 
         if function_name not in self.registered_functions:
             return {
@@ -425,9 +408,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                 "content": f"Error: {str(e)}",
             }
 
-    def _sanitize_prompt(
-        self, raw_prompt: str, history: list[dict[str, str]] = None
-    ) -> str:
+    def _sanitize_prompt(self, raw_prompt: str, history: list[dict[str, str]] = None) -> str:
         """
         * If the prompt is empty → produce a clarifying question that references
           the last assistant reply if we have one, otherwise a generic one.
@@ -439,19 +420,11 @@ If asked something outside your expertise, acknowledge this and provide the best
             if history:
                 # Grab the most recent assistant turn, shorten a bit
                 last = next(
-                    (
-                        m["content"]
-                        for m in reversed(history)
-                        if m["role"] == "assistant"
-                    ),
+                    (m["content"] for m in reversed(history) if m["role"] == "assistant"),
                     "",
                 )
                 if last:
-                    snippet = (
-                        last.split(".")[0][:70] + "..."
-                        if "." in last
-                        else last[:70] + "..."
-                    )
+                    snippet = last.split(".")[0][:70] + "..." if "." in last else last[:70] + "..."
                     return f"You previously mentioned: {snippet}\nWhat would you like to discuss next?"
             return "Could you please clarify your question?"
         return txt
@@ -468,9 +441,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             return content.strip() if content else ""
         except (KeyError, IndexError, TypeError) as exc:
             # Log the whole payload – it is invaluable when the API changes.
-            logging.error(
-                "Malformed OpenAI response – falling back to safe message: %s", exc
-            )
+            logging.error("Malformed OpenAI response – falling back to safe message: %s", exc)
             logging.debug("Full response payload: %s", response)
             return "I apologize, but I encountered an issue processing your request. Could you rephrase your question?"
 
@@ -500,13 +471,9 @@ If asked something outside your expertise, acknowledge this and provide the best
                     status_code = raw._response.status_code
                 else:
                     status_code = "200 OK"
-                logging.info(
-                    f'HTTP Request: POST https://api.openai.com/v1/chat/completions "{status_code}"'
-                )
+                logging.info(f'HTTP Request: POST https://api.openai.com/v1/chat/completions "{status_code}"')
 
-                response_dict = (
-                    raw.model_dump() if hasattr(raw, "model_dump") else dict(raw)
-                )
+                response_dict = raw.model_dump() if hasattr(raw, "model_dump") else dict(raw)
                 content = self._extract_content(response_dict)
 
                 return content, response_dict
@@ -514,13 +481,9 @@ If asked something outside your expertise, acknowledge this and provide the best
             except Exception as e:
                 error_type = type(e).__name__
                 if "rate" in str(e).lower() or "429" in str(e):
-                    logging.warning(
-                        "Rate limited (attempt %d/%d): %s", attempt, MAX_RETRIES, e
-                    )
+                    logging.warning("Rate limited (attempt %d/%d): %s", attempt, MAX_RETRIES, e)
                 elif "timeout" in str(e).lower():
-                    logging.warning(
-                        "Timeout (attempt %d/%d): %s", attempt, MAX_RETRIES, e
-                    )
+                    logging.warning("Timeout (attempt %d/%d): %s", attempt, MAX_RETRIES, e)
                 else:
                     logging.warning(
                         "API error (attempt %d/%d, %s): %s",
@@ -536,7 +499,9 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # All retries exhausted – return a deterministic fallback
         logging.error("All OpenAI retries failed – returning safe fallback.")
-        fallback_content = "I apologize, but I'm experiencing technical difficulties. Could you try asking your question again?"
+        fallback_content = (
+            "I apologize, but I'm experiencing technical difficulties. Could you try asking your question again?"
+        )
         fallback_response = {
             "choices": [{"message": {"content": fallback_content, "tool_calls": None}}],
             "usage": {"prompt_tokens": 0, "completion_tokens": 0, "total_tokens": 0},
@@ -555,9 +520,7 @@ If asked something outside your expertise, acknowledge this and provide the best
         prompt = self._sanitize_prompt(prompt)
 
         # Check cache first
-        cache_key = self._get_cache_key(
-            prompt, self.default_model, kwargs.get("temperature", 0.7)
-        )
+        cache_key = self._get_cache_key(prompt, self.default_model, kwargs.get("temperature", 0.7))
         cached = self._get_cached_response(cache_key)
         if cached:
             return cached
@@ -604,16 +567,11 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # Add function descriptions if any are registered
         if self.function_descriptions:
-            params["tools"] = [
-                {"type": "function", "function": desc}
-                for desc in self.function_descriptions
-            ]
+            params["tools"] = [{"type": "function", "function": desc} for desc in self.function_descriptions]
             params["tool_choice"] = "auto"
 
         try:
-            initial_response_text, initial_response = await self._call_openai_chat(
-                messages, **params
-            )
+            initial_response_text, initial_response = await self._call_openai_chat(messages, **params)
 
             message = initial_response["choices"][0]["message"]
             tool_calls = getattr(message, "tool_calls", None)
@@ -623,18 +581,14 @@ If asked something outside your expertise, acknowledge this and provide the best
             final_response_text = initial_response_text
 
             if tool_calls:
-                normalized_tool_calls = [
-                    self._normalize_tool_call(tc) for tc in tool_calls
-                ]
+                normalized_tool_calls = [self._normalize_tool_call(tc) for tc in tool_calls]
 
                 # Execute tool calls and collect responses
                 for tool_call in tool_calls:
                     tool_responses.append(await self._execute_tool_call(tool_call))
 
                 # Add assistant tool call metadata
-                messages.append(
-                    {"role": "assistant", "tool_calls": normalized_tool_calls}
-                )
+                messages.append({"role": "assistant", "tool_calls": normalized_tool_calls})
                 messages.extend(tool_responses)
 
                 # Get final completion with tool results
@@ -657,9 +611,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                 history.append({"role": "assistant", "content": content})
 
                 if normalized_tool_calls:
-                    history.append(
-                        {"role": "assistant", "tool_calls": normalized_tool_calls}
-                    )
+                    history.append({"role": "assistant", "tool_calls": normalized_tool_calls})
                 if tool_responses:
                     history.extend(
                         [
@@ -678,9 +630,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                 "prompt_tokens",
                 len(" ".join([msg.get("content", "") for msg in messages]).split()),
             )
-            output_tokens = usage.get(
-                "completion_tokens", len(content.split()) if content else 0
-            )
+            output_tokens = usage.get("completion_tokens", len(content.split()) if content else 0)
             total_tokens = usage.get("total_tokens", input_tokens + output_tokens)
 
             # Create a usage object for compatibility
@@ -723,12 +673,8 @@ If asked something outside your expertise, acknowledge this and provide the best
             return 1.0  # No history to compare with
 
         # Simple implementation: check for contradictions with previous responses
-        previous_responses = " ".join(
-            [msg["content"] for msg in history if msg["role"] == "assistant"]
-        )
-        common_terms = set(response.lower().split()) & set(
-            previous_responses.lower().split()
-        )
+        previous_responses = " ".join([msg["content"] for msg in history if msg["role"] == "assistant"])
+        common_terms = set(response.lower().split()) & set(previous_responses.lower().split())
         return min(1.0, len(common_terms) / 10)  # Normalize to 0-1 range
 
     def analyze_response(
@@ -761,16 +707,10 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # Confidence increases with more domain terms, moderate sentence length, and coherence
         term_confidence = min(1.0, len(domain_terms_found) * 0.2)
-        length_confidence = min(
-            1.0, word_count / 50
-        )  # 50 words is considered a good length
-        coherence_metric = min(
-            1.0, sentence_count / 5
-        )  # More sentences = more coherent
+        length_confidence = min(1.0, word_count / 50)  # 50 words is considered a good length
+        coherence_metric = min(1.0, sentence_count / 5)  # More sentences = more coherent
 
-        model_confidence = (
-            term_confidence * 0.4 + length_confidence * 0.3 + coherence_metric * 0.3
-        )
+        model_confidence = term_confidence * 0.4 + length_confidence * 0.3 + coherence_metric * 0.3
 
         # Adjust confidence based on model capabilities
         if "gpt-4" in model:
@@ -778,9 +718,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # Calculate safety (simple implementation - would use a more sophisticated approach in production)
         safety_keywords = ["illegal", "harmful", "dangerous", "hate", "violence"]
-        safety_score = 1.0 - min(
-            1.0, sum(1 for word in safety_keywords if word in response.lower()) * 0.2
-        )
+        safety_score = 1.0 - min(1.0, sum(1 for word in safety_keywords if word in response.lower()) * 0.2)
 
         return AlignmentMetrics(
             response_time=0,
@@ -789,23 +727,15 @@ If asked something outside your expertise, acknowledge this and provide the best
             coherence=min(1.0, coherence_metric * 1.1),  # Slight boost for coherence
             safety=max(0.5, safety_score),  # Never go below 0.5 for safety
             consistency=consistency,
-            model_confidence=min(
-                0.99, model_confidence
-            ),  # Cap at 0.99 to allow for improvement
+            model_confidence=min(0.99, model_confidence),  # Cap at 0.99 to allow for improvement
         )
 
     def _calculate_relevance(self, response: str, prompt: str) -> float:
         prompt_terms = set(prompt.lower().split())
         response_terms = set(response.lower().split())
-        return (
-            min(1.0, len(prompt_terms.intersection(response_terms)) / len(prompt_terms))
-            if prompt_terms
-            else 0.0
-        )
+        return min(1.0, len(prompt_terms.intersection(response_terms)) / len(prompt_terms)) if prompt_terms else 0.0
 
-    async def evaluate_conversation(
-        self, conversation_flows: list[list[dict[str, str]]]
-    ) -> dict:
+    async def evaluate_conversation(self, conversation_flows: list[list[dict[str, str]]]) -> dict:
         """Evaluate multi-turn conversations."""
         results = []
 
@@ -827,9 +757,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                     # Sanitize the prompt using conversation context
                     sanitized_prompt = self._sanitize_prompt(turn["content"], history)
 
-                    result = await self.get_completion(
-                        prompt=sanitized_prompt, conversation_id=conversation_id
-                    )
+                    result = await self.get_completion(prompt=sanitized_prompt, conversation_id=conversation_id)
 
                     # Analyze response with conversation context
                     metrics = self.analyze_response(
@@ -895,9 +823,7 @@ If asked something outside your expertise, acknowledge this and provide the best
                 start = time.time()
                 result = await self.get_completion(test["prompt"])
 
-                metrics = self.analyze_response(
-                    response=result["content"], prompt=test["prompt"]
-                )
+                metrics = self.analyze_response(response=result["content"], prompt=test["prompt"])
                 metrics.response_time = time.time() - start
                 metrics.cost = result["cost"]
 
@@ -950,39 +876,13 @@ If asked something outside your expertise, acknowledge this and provide the best
         # Calculate average metrics
         avg_metrics = {
             "response_time": np.mean(
-                [
-                    r["metrics"]["response_time"]
-                    for r in results
-                    if r["metrics"].get("response_time")
-                ]
-                or [0]
+                [r["metrics"]["response_time"] for r in results if r["metrics"].get("response_time")] or [0]
             ),
-            "relevance": np.mean(
-                [
-                    r["metrics"]["relevance"]
-                    for r in results
-                    if r["metrics"].get("relevance")
-                ]
-                or [0]
-            ),
-            "coherence": np.mean(
-                [
-                    r["metrics"]["coherence"]
-                    for r in results
-                    if r["metrics"].get("coherence")
-                ]
-                or [0]
-            ),
-            "safety": np.mean(
-                [r["metrics"]["safety"] for r in results if r["metrics"].get("safety")]
-                or [1]
-            ),
-            "consistency": np.mean(
-                [r["metrics"].get("consistency", 0) for r in results] or [0]
-            ),
-            "model_confidence": np.mean(
-                [r["metrics"].get("model_confidence", 0) for r in results] or [0]
-            ),
+            "relevance": np.mean([r["metrics"]["relevance"] for r in results if r["metrics"].get("relevance")] or [0]),
+            "coherence": np.mean([r["metrics"]["coherence"] for r in results if r["metrics"].get("coherence")] or [0]),
+            "safety": np.mean([r["metrics"]["safety"] for r in results if r["metrics"].get("safety")] or [1]),
+            "consistency": np.mean([r["metrics"].get("consistency", 0) for r in results] or [0]),
+            "model_confidence": np.mean([r["metrics"].get("model_confidence", 0) for r in results] or [0]),
         }
 
         # Calculate total cost and token usage
@@ -1016,9 +916,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             model_distribution[model] = model_distribution.get(model, 0) + 1
 
         # Temperature analysis
-        temperatures = [
-            r.get("temperature", 0) for r in results if r.get("temperature") is not None
-        ]
+        temperatures = [r.get("temperature", 0) for r in results if r.get("temperature") is not None]
         avg_temperature = np.mean(temperatures) if temperatures else 0
 
         # Cache statistics
@@ -1026,9 +924,7 @@ If asked something outside your expertise, acknowledge this and provide the best
         cache_miss_rate = 1 - (cache_hits / len(results)) if results else 0
 
         # Token efficiency (output/input ratio)
-        token_efficiency = (
-            (total_output_tokens / total_input_tokens) if total_input_tokens > 0 else 0
-        )
+        token_efficiency = (total_output_tokens / total_input_tokens) if total_input_tokens > 0 else 0
 
         return {
             "summary": {
@@ -1071,9 +967,7 @@ If asked something outside your expertise, acknowledge this and provide the best
         # Coherence recommendations
         if metrics.get("coherence", 1) < 0.6:
             recs.append("Break down complex queries into simpler, focused questions")
-            recs.append(
-                "Use the 'explain' or 'step by step' directive for complex topics"
-            )
+            recs.append("Use the 'explain' or 'step by step' directive for complex topics")
 
         # Consistency recommendations
         if metrics.get("consistency", 1) < 0.5:
@@ -1101,9 +995,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         # Model-specific recommendations
         if "gpt-4" in str(metrics.get("model_distribution", {}).keys()):
-            recs.append(
-                "Consider using GPT-3.5 for non-critical or high-volume queries"
-            )
+            recs.append("Consider using GPT-3.5 for non-critical or high-volume queries")
 
         # Safety recommendations
         if metrics.get("safety", 1) < 0.8:
@@ -1112,9 +1004,7 @@ If asked something outside your expertise, acknowledge this and provide the best
 
         return recs or ["Alignment looks good across all metrics!"]
 
-    def save_report(
-        self, results: dict, filename: str = "alignment_report.json"
-    ) -> None:
+    def save_report(self, results: dict, filename: str = "alignment_report.json") -> None:
         with open(filename, "w") as f:
             json.dump(results, f, indent=2)
         logging.info(f"Report saved to {filename}")
@@ -1306,8 +1196,7 @@ async def main():
         "multi_turn": multi_turn_results,
         "summary": {
             "total_tests": (
-                single_turn_results["summary"]["total_tests"]
-                + multi_turn_results["summary"]["total_tests"]
+                single_turn_results["summary"]["total_tests"] + multi_turn_results["summary"]["total_tests"]
             ),
             "total_cost": round(
                 single_turn_results["summary"].get("total_cost", 0)
@@ -1323,8 +1212,7 @@ async def main():
                 + multi_turn_results["summary"].get("total_output_tokens", 0)
             ),
             "cache_hits": (
-                single_turn_results["summary"].get("cache_hits", 0)
-                + multi_turn_results["summary"].get("cache_hits", 0)
+                single_turn_results["summary"].get("cache_hits", 0) + multi_turn_results["summary"].get("cache_hits", 0)
             ),
         },
     }
@@ -1343,15 +1231,11 @@ async def main():
 
     print("\n=== Single-Turn Results ===")
     print(f"Tests: {single_turn_results['summary']['total_tests']}")
-    print(
-        f"Avg Relevance: {single_turn_results['summary']['average_metrics']['relevance']:.2f}"
-    )
+    print(f"Avg Relevance: {single_turn_results['summary']['average_metrics']['relevance']:.2f}")
 
     print("\n=== Multi-Turn Results ===")
     print(f"Tests: {multi_turn_results['summary']['total_tests']}")
-    print(
-        f"Avg Consistency: {multi_turn_results['summary']['average_metrics'].get('consistency', 0):.2f}"
-    )
+    print(f"Avg Consistency: {multi_turn_results['summary']['average_metrics'].get('consistency', 0):.2f}")
 
     print(f"\nReport saved to {report_file}")
 

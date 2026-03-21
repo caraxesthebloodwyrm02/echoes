@@ -64,9 +64,7 @@ class _TupleResponse(tuple):
         """Delegate to wrapped response if available."""
         if self._response is not None:
             return getattr(self._response, name)
-        raise AttributeError(
-            f"'{type(self).__name__}' object has no attribute '{name}'"
-        )
+        raise AttributeError(f"'{type(self).__name__}' object has no attribute '{name}'")
 
 
 class RateLimiter:
@@ -126,9 +124,7 @@ class GuardrailMiddleware:
             return {"success": False, "code": "invalid_token"}
         return {"success": True}
 
-    def _validate_against_schema(
-        self, schema: ToolValidationSchema, params: dict
-    ) -> dict:
+    def _validate_against_schema(self, schema: ToolValidationSchema, params: dict) -> dict:
         errors = []
         for rule in schema.parameters:
             name = rule.field
@@ -162,9 +158,7 @@ class GuardrailMiddleware:
                 errors.append({"field": name, "error": "invalid_value"})
         return {"valid": len(errors) == 0, "errors": errors}
 
-    def validate_request(
-        self, request_body, headers=None, tool_name: str | None = None
-    ):
+    def validate_request(self, request_body, headers=None, tool_name: str | None = None):
         """Validate request. Returns response supporting both tuple and attribute access.
 
         Legacy tests unpack as: result, error = guardrail.validate_request(...)
@@ -186,9 +180,7 @@ class GuardrailMiddleware:
             )
             return _TupleResponse(None, response.error, response)
 
-    def _validate_request_impl(
-        self, request_body, headers=None, tool_name: str | None = None
-    ):
+    def _validate_request_impl(self, request_body, headers=None, tool_name: str | None = None):
         """Implementation of validate_request."""
         headers = headers or {}
 
@@ -228,10 +220,7 @@ class GuardrailMiddleware:
 
         # Authentication check FIRST (before field validation)
         auth_result = self._validate_authentication(headers)
-        if (
-            not auth_result.get("success", False)
-            and self.auth_config.require_authentication
-        ):
+        if not auth_result.get("success", False) and self.auth_config.require_authentication:
             response = ToolCallResponse(
                 status=ToolCallStatus.AUTH_ERROR,
                 error=ErrorDetail(
@@ -272,9 +261,7 @@ class GuardrailMiddleware:
             else:
                 # No schema found, check for prompt/stage
                 errors = []
-                if "prompt" not in request_body or not isinstance(
-                    request_body.get("prompt"), str
-                ):
+                if "prompt" not in request_body or not isinstance(request_body.get("prompt"), str):
                     errors.append(
                         {
                             "field": "prompt",
@@ -282,9 +269,7 @@ class GuardrailMiddleware:
                             "message": "Missing or invalid 'prompt' field",
                         }
                     )
-                if "stage" not in request_body or not isinstance(
-                    request_body.get("stage"), str
-                ):
+                if "stage" not in request_body or not isinstance(request_body.get("stage"), str):
                     errors.append(
                         {
                             "field": "stage",
@@ -306,9 +291,7 @@ class GuardrailMiddleware:
         else:
             # No schema provided, require prompt and stage
             errors = []
-            if "prompt" not in request_body or not isinstance(
-                request_body.get("prompt"), str
-            ):
+            if "prompt" not in request_body or not isinstance(request_body.get("prompt"), str):
                 errors.append(
                     {
                         "field": "prompt",
@@ -316,9 +299,7 @@ class GuardrailMiddleware:
                         "message": "Missing or invalid 'prompt' field",
                     }
                 )
-            if "stage" not in request_body or not isinstance(
-                request_body.get("stage"), str
-            ):
+            if "stage" not in request_body or not isinstance(request_body.get("stage"), str):
                 errors.append(
                     {
                         "field": "stage",

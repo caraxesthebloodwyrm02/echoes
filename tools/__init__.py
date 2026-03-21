@@ -18,9 +18,7 @@ from typing import Any
 _TOOL_GATE_LOGGER = logging.getLogger("echoes.tools.gate")
 
 # Keys that must not appear in payload (injection risk)
-_DANGEROUS_PAYLOAD_KEYS = frozenset(
-    {"__import__", "eval", "exec", "compile", "open", "file", "input", "breakpoint"}
-)
+_DANGEROUS_PAYLOAD_KEYS = frozenset({"__import__", "eval", "exec", "compile", "open", "file", "input", "breakpoint"})
 
 
 def _validate_payload(payload: Any) -> None:
@@ -43,14 +41,10 @@ def safe_dispatch_tool(
     Use this for all tool execution so unknown tools and invalid payloads are rejected and audited.
     """
     if not registry.has_tool(name):
-        _TOOL_GATE_LOGGER.warning(
-            "tool_gate_rejected unknown_tool name=%s actor=%s", name, actor or "unknown"
-        )
+        _TOOL_GATE_LOGGER.warning("tool_gate_rejected unknown_tool name=%s actor=%s", name, actor or "unknown")
         raise KeyError(f"Tool '{name}' not found")
     _validate_payload(payload)
-    payload_hash = hashlib.sha256(
-        json.dumps(payload, sort_keys=True).encode()
-    ).hexdigest()
+    payload_hash = hashlib.sha256(json.dumps(payload, sort_keys=True).encode()).hexdigest()
     _TOOL_GATE_LOGGER.info(
         "tool_gate_dispatch actor=%s tool=%s payload_hash=%s",
         actor or "unknown",

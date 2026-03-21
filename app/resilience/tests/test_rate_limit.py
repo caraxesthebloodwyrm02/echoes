@@ -81,9 +81,7 @@ class TestApiKeyFunc:
         request.client.host = "192.168.1.100"
 
         # Mock get_remote_address
-        with patch(
-            "app.resilience.rate_limit.get_remote_address", return_value="192.168.1.100"
-        ):
+        with patch("app.resilience.rate_limit.get_remote_address", return_value="192.168.1.100"):
             key = get_api_key_func(request)
             assert key == "ip:192.168.1.100"
 

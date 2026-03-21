@@ -134,11 +134,7 @@ except ImportError as e:
 
         async def glimpse(self, draft: Draft) -> GlimpseResult:
             return GlimpseResult(
-                sample=(
-                    draft.input_text[:100] + "..."
-                    if len(draft.input_text) > 100
-                    else draft.input_text
-                ),
+                sample=(draft.input_text[:100] + "..." if len(draft.input_text) > 100 else draft.input_text),
                 essence=f"Intent: {draft.goal}; constraints: {draft.constraints or 'none'}",
             )
 
@@ -436,11 +432,7 @@ class EnhancedStatusIndicator:
         if completed:
             self.current_step += 1
             icon = STATUS_COMPLETE
-            elapsed = (
-                f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)"
-                if self.phase_start_time
-                else ""
-            )
+            elapsed = f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)" if self.phase_start_time else ""
             if self.total_steps > 0:
                 progress = f"[{self.current_step}/{self.total_steps}]"
                 print(f"\r{icon} {progress} {message} {elapsed}")
@@ -458,11 +450,7 @@ class EnhancedStatusIndicator:
     def complete_phase(self, message: str = "Done"):
         if not self.enabled:
             return
-        elapsed = (
-            f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)"
-            if self.phase_start_time
-            else ""
-        )
+        elapsed = f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)" if self.phase_start_time else ""
         print(f"\r{STATUS_COMPLETE} {message} {elapsed}")
 
     def error(self, message: str):
@@ -491,9 +479,7 @@ class ContextManager:
 
         # Keep only recent messages
         if len(self.conversations[session_id]) > self.max_history * 2:
-            self.conversations[session_id] = self.conversations[session_id][
-                -self.max_history * 2 :
-            ]
+            self.conversations[session_id] = self.conversations[session_id][-self.max_history * 2 :]
 
     def get_messages(self, session_id: str, limit: int | None = None) -> list[dict]:
         if session_id not in self.conversations:
@@ -733,9 +719,7 @@ class EchoesAssistantV2:
             print("⚠ Multimodal resonance not available")
 
         # Legal Safeguards & Enhanced Accounting
-        self.enable_legal_safeguards = (
-            LEGAL_SAFEGUARDS_AVAILABLE and ENHANCED_ACCOUNTING_AVAILABLE
-        )
+        self.enable_legal_safeguards = LEGAL_SAFEGUARDS_AVAILABLE and ENHANCED_ACCOUNTING_AVAILABLE
         if self.enable_legal_safeguards:
             self.legal_system = get_cognitive_accounting()
             self.accounting_system = get_enhanced_accounting()
@@ -796,22 +780,15 @@ class EchoesAssistantV2:
                     enable_clarifiers=True,
                 )
                 # Update the clarifier engine to use enhanced mode
-                if (
-                    hasattr(self.glimpse_engine, "_clarifier_engine")
-                    and self.glimpse_engine._clarifier_engine
-                ):
-                    self.glimpse_engine._clarifier_engine = ClarifierEngine(
-                        use_enhanced_mode=True
-                    )
+                if hasattr(self.glimpse_engine, "_clarifier_engine") and self.glimpse_engine._clarifier_engine:
+                    self.glimpse_engine._clarifier_engine = ClarifierEngine(use_enhanced_mode=True)
                 print("✓ Glimpse preflight system initialized")
             except Exception as e:
                 print(f"⚠ Glimpse initialization failed: {e}")
                 self.enable_glimpse = False
 
         # External API Contact System
-        self.enable_external_contact = (
-            enable_external_contact  # Enable by default if requested
-        )
+        self.enable_external_contact = enable_external_contact  # Enable by default if requested
         self.api_endpoints = {
             "echoes_api": os.getenv("ECHOES_API_URL", "http://localhost:8000"),
             "patterns_endpoint": "/api/patterns/detect",
@@ -840,9 +817,7 @@ class EchoesAssistantV2:
             f"✓ Echoes Assistant V2 ready (session: {self.session_id}, responses_api: {self.use_responses_api}, glimpse: {self.enable_glimpse}, external_contact: {self.enable_external_contact})"
         )
 
-    def add_knowledge(
-        self, documents: list[str | dict], metadata: dict | None = None
-    ) -> dict[str, Any]:
+    def add_knowledge(self, documents: list[str | dict], metadata: dict | None = None) -> dict[str, Any]:
         """Add documents to the knowledge base.
 
         Args:
@@ -893,13 +868,9 @@ class EchoesAssistantV2:
         for msg in messages:
             if msg["role"] == "system":
                 # System messages become developer messages in Responses API
-                responses_input.append(
-                    {"role": "developer", "type": "message", "content": msg["content"]}
-                )
+                responses_input.append({"role": "developer", "type": "message", "content": msg["content"]})
             elif msg["role"] == "user":
-                responses_input.append(
-                    {"role": "user", "type": "message", "content": msg["content"]}
-                )
+                responses_input.append({"role": "user", "type": "message", "content": msg["content"]})
             elif msg["role"] == "assistant":
                 # Check if it has tool calls
                 if "tool_calls" in msg and msg["tool_calls"]:
@@ -914,18 +885,14 @@ class EchoesAssistantV2:
                                 "arguments": tool_call.function.arguments,
                             }
                         )
-                    responses_input.append(
-                        {"role": "assistant", "type": "message", "content": content}
-                    )
+                    responses_input.append({"role": "assistant", "type": "message", "content": content})
                 else:
                     # Regular assistant message
                     responses_input.append(
                         {
                             "role": "assistant",
                             "type": "message",
-                            "content": [
-                                {"type": "output_text", "text": msg.get("content", "")}
-                            ],
+                            "content": [{"type": "output_text", "text": msg.get("content", "")}],
                         }
                     )
             elif msg["role"] == "tool":
@@ -988,9 +955,7 @@ class EchoesAssistantV2:
                 messages.append(
                     {
                         "role": "tool",
-                        "content": (
-                            item["content"][0]["result"] if item["content"] else ""
-                        ),
+                        "content": (item["content"][0]["result"] if item["content"] else ""),
                         "tool_call_id": item.get("tool_call_id", ""),
                         "name": item.get("name", ""),
                     }
@@ -1098,9 +1063,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def load_context(
-        self, filepath: str | None = None, session_id: str | None = None
-    ) -> dict[str, Any]:
+    def load_context(self, filepath: str | None = None, session_id: str | None = None) -> dict[str, Any]:
         """Load context from a JSON file.
 
         Args:
@@ -1194,9 +1157,7 @@ class EchoesAssistantV2:
                 status.error(f"RAG search failed: {str(e)}")
             return []
 
-    def _execute_tool_call(
-        self, tool_call, status: EnhancedStatusIndicator | None = None
-    ) -> str:
+    def _execute_tool_call(self, tool_call, status: EnhancedStatusIndicator | None = None) -> str:
         if not self.enable_tools or not self.tool_registry:
             error_msg = "Tool calling is disabled or registry not available"
             if status:
@@ -1213,14 +1174,10 @@ class EchoesAssistantV2:
             return f"Error: {error_msg}"
 
         if status:
-            args_str = ", ".join(
-                [f"{k}={v}" for k, v in list(function_args.items())[:2]]
-            )
+            args_str = ", ".join([f"{k}={v}" for k, v in list(function_args.items())[:2]])
             if len(function_args) > 2:
                 args_str += "..."
-            status.start_phase(
-                f"{STATUS_TOOL} Executing {function_name}({args_str})", 0
-            )
+            status.start_phase(f"{STATUS_TOOL} Executing {function_name}({args_str})", 0)
 
         try:
             result = self.tool_registry.execute_tool(
@@ -1337,9 +1294,7 @@ class EchoesAssistantV2:
             return {"success": False, "error": "Response not found in current session"}
 
         # Update value system with feedback
-        self.value_system.provide_feedback(
-            response=target_msg["content"], user_feedback=ratings
-        )
+        self.value_system.provide_feedback(response=target_msg["content"], user_feedback=ratings)
 
         # Log the feedback
         feedback_entry = {
@@ -1353,9 +1308,7 @@ class EchoesAssistantV2:
         feedback_dir = Path("data/feedback")
         feedback_dir.mkdir(exist_ok=True, parents=True)
 
-        feedback_file = (
-            feedback_dir / f"feedback_{datetime.now().strftime('%Y%m%d')}.jsonl"
-        )
+        feedback_file = feedback_dir / f"feedback_{datetime.now().strftime('%Y%m%d')}.jsonl"
         with open(feedback_file, "a", encoding="utf-8") as f:
             f.write(json.dumps(feedback_entry) + "\n")
 
@@ -1404,15 +1357,11 @@ class EchoesAssistantV2:
                 thought_id=f"user_{len(thought_tracker.thought_metadata) + 1}_{int(time.time())}",
                 content=message,
                 thought_type=(
-                    ThoughtType.QUESTION
-                    if user_intent.type == IntentType.QUESTION
-                    else ThoughtType.OBSERVATION
+                    ThoughtType.QUESTION if user_intent.type == IntentType.QUESTION else ThoughtType.OBSERVATION
                 ),
                 entities=[e.text for e in user_entities],
                 parent_thoughts=(
-                    list(thought_tracker.thought_metadata.keys())[-3:]
-                    if thought_tracker.thought_metadata
-                    else None
+                    list(thought_tracker.thought_metadata.keys())[-3:] if thought_tracker.thought_metadata else None
                 ),
             )
 
@@ -1538,9 +1487,7 @@ class EchoesAssistantV2:
             # Phase 1: Setup and Validation
             stream = stream if stream is not None else self.enable_streaming
             show_status = show_status if show_status is not None else self.enable_status
-            require_approval = (
-                require_approval if require_approval is not None else self.hitl_enabled
-            )
+            require_approval = require_approval if require_approval is not None else self.hitl_enabled
 
             # If streaming, delegate to streaming method
             if stream:
@@ -1593,9 +1540,7 @@ class EchoesAssistantV2:
         context = context or {}
 
         # Status indicator
-        status = EnhancedStatusIndicator(
-            enabled=show_status if show_status is not None else self.enable_status
-        )
+        status = EnhancedStatusIndicator(enabled=show_status if show_status is not None else self.enable_status)
 
         try:
             # Phase 2: Message Building
@@ -1606,12 +1551,8 @@ class EchoesAssistantV2:
                 messages.append({"role": "system", "content": system_prompt})
 
             # Add conversation history
-            history = self.context_manager.get_messages(
-                self.session_id, limit=context_limit
-            )
-            messages.extend(
-                [{"role": msg["role"], "content": msg["content"]} for msg in history]
-            )
+            history = self.context_manager.get_messages(self.session_id, limit=context_limit)
+            messages.extend([{"role": msg["role"], "content": msg["content"]} for msg in history])
 
             # Retrieve context from RAG
             rag_context = []
@@ -1620,10 +1561,7 @@ class EchoesAssistantV2:
 
                 if rag_context:
                     context_text = "\n\n".join(
-                        [
-                            f"[Source {i + 1}]: {ctx['text'][:200]}..."
-                            for i, ctx in enumerate(rag_context)
-                        ]
+                        [f"[Source {i + 1}]: {ctx['text'][:200]}..." for i, ctx in enumerate(rag_context)]
                     )
                     messages.append(
                         {
@@ -1668,9 +1606,7 @@ class EchoesAssistantV2:
                             model=selected_model,
                             input=api_input,
                             tools=api_tools if tool_calling_enabled else None,
-                            tool_choice=(
-                                "auto" if (api_tools and tool_calling_enabled) else None
-                            ),
+                            tool_choice=("auto" if (api_tools and tool_calling_enabled) else None),
                             temperature=self.temperature,
                             max_output_tokens=self.max_tokens,
                             stream=False,
@@ -1709,16 +1645,10 @@ class EchoesAssistantV2:
                             model=selected_model,
                             messages=api_input,
                             tools=tools if tool_calling_enabled else None,
-                            tool_choice=(
-                                "auto" if (tools and tool_calling_enabled) else None
-                            ),
+                            tool_choice=("auto" if (tools and tool_calling_enabled) else None),
                             temperature=self.temperature,
-                            max_completion_tokens=(
-                                self.max_tokens if "o3" in selected_model else None
-                            ),
-                            max_tokens=(
-                                self.max_tokens if "o3" not in selected_model else None
-                            ),
+                            max_completion_tokens=(self.max_tokens if "o3" in selected_model else None),
+                            max_tokens=(self.max_tokens if "o3" not in selected_model else None),
                             stream=False,
                         )
 
@@ -1734,9 +1664,7 @@ class EchoesAssistantV2:
                     # Validate tool calling is enabled before processing
                     if not tool_calling_enabled:
                         if status:
-                            status.error(
-                                "Tool calling disabled but model returned tool calls"
-                            )
+                            status.error("Tool calling disabled but model returned tool calls")
                         break
 
                     # Add assistant message to conversation
@@ -1746,9 +1674,7 @@ class EchoesAssistantV2:
                             {
                                 "role": "assistant",
                                 "type": "message",
-                                "content": [
-                                    {"type": "output_text", "text": response_text}
-                                ],
+                                "content": [{"type": "output_text", "text": response_text}],
                             }
                         )
                         # Add tool calls to the message
@@ -1792,9 +1718,7 @@ class EchoesAssistantV2:
                                 {
                                     "role": "tool",
                                     "type": "message",
-                                    "content": [
-                                        {"type": "result", "result": function_response}
-                                    ],
+                                    "content": [{"type": "result", "result": function_response}],
                                     "tool_call_id": tool_call.id,
                                     "name": tool_call.function.name,
                                 }
@@ -1814,18 +1738,14 @@ class EchoesAssistantV2:
                     iteration += 1
 
                 except APIError as e:
-                    error_msg = (
-                        f"API error during tool calling with {selected_model}: {str(e)}"
-                    )
+                    error_msg = f"API error during tool calling with {selected_model}: {str(e)}"
                     if status:
                         status.error(error_msg)
 
                     # Try fallback to default model
                     if selected_model != self.default_model:
                         if status:
-                            status.start_phase(
-                                f"{STATUS_RETRY} Retrying with {self.default_model}", 0
-                            )
+                            status.start_phase(f"{STATUS_RETRY} Retrying with {self.default_model}", 0)
                         try:
                             selected_model = self.default_model
                             # Retry the entire loop with default model
@@ -1870,9 +1790,7 @@ class EchoesAssistantV2:
                     tools=None,  # No tools for final response
                     tool_choice=None,
                     temperature=self.temperature,
-                    max_completion_tokens=(
-                        self.max_tokens if "o3" in selected_model else None
-                    ),
+                    max_completion_tokens=(self.max_tokens if "o3" in selected_model else None),
                     max_tokens=self.max_tokens if "o3" not in selected_model else None,
                     stream=False,
                 )
@@ -1882,23 +1800,17 @@ class EchoesAssistantV2:
 
             # Record metrics for successful completion
             response_time = time.time() - start_time
-            self.model_metrics.record_usage_sync(
-                selected_model, response_time, success=True
-            )
+            self.model_metrics.record_usage_sync(selected_model, response_time, success=True)
 
             if status:
                 status.complete_phase("Response generated")
 
             # Add final assistant response to conversation history
-            self.context_manager.add_message(
-                self.session_id, "assistant", assistant_response
-            )
+            self.context_manager.add_message(self.session_id, "assistant", assistant_response)
 
             # Create thought node for assistant response
             response_thought_type = (
-                ThoughtType.ANALYSIS
-                if user_intent.type == IntentType.QUESTION
-                else ThoughtType.SYNTHESIS
+                ThoughtType.ANALYSIS if user_intent.type == IntentType.QUESTION else ThoughtType.SYNTHESIS
             )
             response_entities = intent_engine.extract_entities(assistant_response)
 
@@ -1932,9 +1844,7 @@ class EchoesAssistantV2:
 
             # Create relationship between user message and assistant response
             if conv_cache_key is not None and "resp_cache_key" in locals():
-                catch_release.create_relationship(
-                    conv_cache_key, resp_cache_key, strength=0.9
-                )
+                catch_release.create_relationship(conv_cache_key, resp_cache_key, strength=0.9)
 
             # Track conversation flow for cross-reference system
             cross_reference_system.track_conversation_flow(message, assistant_response)
@@ -1942,15 +1852,15 @@ class EchoesAssistantV2:
             # Apply personality enhancements
             personality_prefix = personality_engine.generate_response_prefix("response")
             enhanced_response = personality_prefix + " " + assistant_response
-            enhanced_response = personality_engine.adapt_response_style(
-                enhanced_response
-            )
+            enhanced_response = personality_engine.adapt_response_style(enhanced_response)
 
             # Add intent-aware context
             if user_intent.confidence > 0.7:
                 intent_context = f"\n\n🧠 **Intent detected:** {user_intent.type.value.replace('_', ' ').title()}"
                 if user_intent.parameters:
-                    intent_context += f" (Parameters: {', '.join(f'{k}: {v}' for k, v in user_intent.parameters.items())})"
+                    intent_context += (
+                        f" (Parameters: {', '.join(f'{k}: {v}' for k, v in user_intent.parameters.items())})"
+                    )
                 enhanced_response += intent_context
 
             # Add entity insights
@@ -1961,13 +1871,7 @@ class EchoesAssistantV2:
 
             # Add cross-reference suggestions if relevant
             cross_refs = cross_reference_system.generate_cross_references(context)
-            if (
-                cross_refs
-                and personality_engine.traits[
-                    personality_engine.PersonalityTrait.CURIOSITY
-                ]
-                > 0.7
-            ):
+            if cross_refs and personality_engine.traits[personality_engine.PersonalityTrait.CURIOSITY] > 0.7:
                 suggestions = "\n\n💡 **Related connections to explore:**\n"
                 for ref in cross_refs[:2]:
                     suggestions += f"• {ref['explanation']}\n"
@@ -1977,18 +1881,12 @@ class EchoesAssistantV2:
             if context.get("cached_references"):
                 cached_refs = context["cached_references"]
                 if cached_refs and len(cached_refs) > 0:
-                    enhanced_response += (
-                        "\n\n🗂️ **Quick context from previous conversations:**"
-                    )
+                    enhanced_response += "\n\n🗂️ **Quick context from previous conversations:**"
                     for i, ref in enumerate(cached_refs[:2], 1):
                         if isinstance(ref, dict) and "message" in ref:
-                            enhanced_response += (
-                                f"\n{i}. Earlier discussed: {ref['message'][:100]}..."
-                            )
+                            enhanced_response += f"\n{i}. Earlier discussed: {ref['message'][:100]}..."
                         elif isinstance(ref, str):
-                            enhanced_response += (
-                                f"\n{i}. Related context: {ref[:100]}..."
-                            )
+                            enhanced_response += f"\n{i}. Related context: {ref[:100]}..."
 
             # Add parallel simulation insights
             if context.get("active_simulations"):
@@ -1997,9 +1895,7 @@ class EchoesAssistantV2:
 
                 # Wait for simulations to complete with timeout
                 for sim_id in active_sim_ids:
-                    result = parallel_simulation.wait_for_simulation(
-                        sim_id, timeout=5.0
-                    )
+                    result = parallel_simulation.wait_for_simulation(sim_id, timeout=5.0)
                     if result and result.confidence > 0.6:
                         simulation_insights.append(result)
 
@@ -2007,18 +1903,14 @@ class EchoesAssistantV2:
                     enhanced_response += "\n\n🧠 **Parallel simulation insights:**"
 
                     for insight in simulation_insights[:3]:  # Top 3 insights
-                        sim_type = insight.simulation_type.value.replace(
-                            "_", " "
-                        ).title()
+                        sim_type = insight.simulation_type.value.replace("_", " ").title()
                         enhanced_response += f"\n• **{sim_type}**: {insight.reasoning}"
 
                         # Add top possibility from simulation
                         if insight.possibilities:
                             top_possibility = insight.possibilities[0]
                             if isinstance(top_possibility, dict):
-                                desc = top_possibility.get(
-                                    "description", str(top_possibility)
-                                )
+                                desc = top_possibility.get("description", str(top_possibility))
                             else:
                                 desc = str(top_possibility)
                             enhanced_response += f"\n  → {desc[:80]}..."
@@ -2028,8 +1920,7 @@ class EchoesAssistantV2:
 
                     # Add cross-reference enhancement if available
                     if any(
-                        insight.simulation_type
-                        == SimulationType.CROSS_REFERENCE_ENHANCEMENT
+                        insight.simulation_type == SimulationType.CROSS_REFERENCE_ENHANCEMENT
                         for insight in simulation_insights
                     ):
                         enhanced_response += "\n🔗 **Cross-references enhanced with simulation insights**"
@@ -2040,14 +1931,10 @@ class EchoesAssistantV2:
                 IntentType.ANALYSIS,
                 IntentType.EXPLORATION,
             ]:
-                enhanced_response += (
-                    "\n\n🔗 **Critical connections detected in our conversation:**"
-                )
+                enhanced_response += "\n\n🔗 **Critical connections detected in our conversation:**"
                 for insight in critical_insights[:2]:
                     if insight.get("insight_type") == "cross_chain_connector":
-                        enhanced_response += (
-                            "\n• Linked concepts across different discussion threads"
-                        )
+                        enhanced_response += "\n• Linked concepts across different discussion threads"
 
             # Update pressure metrics and add humor if appropriate
             pressure_level = humor_engine.update_pressure_metrics(
@@ -2060,10 +1947,7 @@ class EchoesAssistantV2:
             humor_context = ""
             if "error" in assistant_response.lower():
                 humor_context = "error_occurred"
-            elif (
-                "completed" in assistant_response.lower()
-                or "success" in assistant_response.lower()
-            ):
+            elif "completed" in assistant_response.lower() or "success" in assistant_response.lower():
                 humor_context = "task_completed"
             elif pressure_level in [
                 PressureLevel.HIGH,
@@ -2074,9 +1958,7 @@ class EchoesAssistantV2:
 
             # Add humor if appropriate
             if humor_engine.should_use_humor(pressure_level, humor_context):
-                humor_response = humor_engine.generate_humor_response(
-                    pressure_level, humor_context
-                )
+                humor_response = humor_engine.generate_humor_response(pressure_level, humor_context)
                 if humor_response and humor_response.appropriateness > 0.7:
                     # Format humor based on delivery style
                     if humor_response.delivery_style == "playful":
@@ -2094,14 +1976,14 @@ class EchoesAssistantV2:
             if pressure_level == PressureLevel.CRITICAL:
                 enhanced_response += "\n\n⚡ **Running at maximum capacity!** I'm handling this like a boss! 💪"
             elif pressure_level == PressureLevel.OVERWHELMED:
-                enhanced_response += "\n\n🔥 **Things are heating up!** Thanks for your patience - we're crushing this together! 🤝"
+                enhanced_response += (
+                    "\n\n🔥 **Things are heating up!** Thanks for your patience - we're crushing this together! 🤝"
+                )
 
             return enhanced_response
 
         except AuthenticationError as e:
-            error_msg = (
-                f"Authentication Error: {str(e)}\nPlease check your OPENAI_API_KEY"
-            )
+            error_msg = f"Authentication Error: {str(e)}\nPlease check your OPENAI_API_KEY"
             if status:
                 status.error(error_msg)
             return error_msg
@@ -2133,9 +2015,7 @@ class EchoesAssistantV2:
 
             # Add pressure-relief humor for errors
             if humor_engine.should_use_humor(pressure_level, "error_occurred"):
-                humor_response = humor_engine.generate_humor_response(
-                    pressure_level, "error_occurred"
-                )
+                humor_response = humor_engine.generate_humor_response(pressure_level, "error_occurred")
                 if humor_response and humor_response.appropriateness > 0.6:
                     error_msg += f"\n\n😅 **{humor_response.text}**"
 
@@ -2143,9 +2023,7 @@ class EchoesAssistantV2:
             if error_result.get("fix_attempted") and error_result.get("fix_result"):
                 fix = error_result["fix_result"]
                 if fix.get("auto_applicable"):
-                    error_msg += (
-                        f"\n\n🔧 **Auto-fix available:** {fix.get('suggestion', '')}"
-                    )
+                    error_msg += f"\n\n🔧 **Auto-fix available:** {fix.get('suggestion', '')}"
                     if fix.get("code_fix"):
                         error_msg += f"\n```{fix.get('code_fix')}```"
 
@@ -2162,9 +2040,7 @@ class EchoesAssistantV2:
     ) -> Iterator[str]:
         """Streaming chat implementation."""
         # Status indicator
-        status = EnhancedStatusIndicator(
-            enabled=show_status if show_status is not None else self.enable_status
-        )
+        status = EnhancedStatusIndicator(enabled=show_status if show_status is not None else self.enable_status)
 
         try:
             # Phase 2: Message Building
@@ -2175,12 +2051,8 @@ class EchoesAssistantV2:
                 messages.append({"role": "system", "content": system_prompt})
 
             # Add conversation history
-            history = self.context_manager.get_messages(
-                self.session_id, limit=context_limit
-            )
-            messages.extend(
-                [{"role": msg["role"], "content": msg["content"]} for msg in history]
-            )
+            history = self.context_manager.get_messages(self.session_id, limit=context_limit)
+            messages.extend([{"role": msg["role"], "content": msg["content"]} for msg in history])
 
             # Retrieve context from RAG
             rag_context = []
@@ -2189,10 +2061,7 @@ class EchoesAssistantV2:
 
                 if rag_context:
                     context_text = "\n\n".join(
-                        [
-                            f"[Source {i + 1}]: {ctx['text'][:200]}..."
-                            for i, ctx in enumerate(rag_context)
-                        ]
+                        [f"[Source {i + 1}]: {ctx['text'][:200]}..." for i, ctx in enumerate(rag_context)]
                     )
                     messages.append(
                         {
@@ -2240,9 +2109,7 @@ class EchoesAssistantV2:
                             model=selected_model,
                             input=api_input,
                             tools=api_tools if tool_calling_enabled else None,
-                            tool_choice=(
-                                "auto" if (api_tools and tool_calling_enabled) else None
-                            ),
+                            tool_choice=("auto" if (api_tools and tool_calling_enabled) else None),
                             temperature=self.temperature,
                             max_output_tokens=self.max_tokens,
                             stream=True,
@@ -2259,9 +2126,7 @@ class EchoesAssistantV2:
                                         yield chunk.text
                                 elif chunk.type == "response.output_item.added":
                                     # New output item added
-                                    if hasattr(chunk, "item") and hasattr(
-                                        chunk.item, "content"
-                                    ):
+                                    if hasattr(chunk, "item") and hasattr(chunk.item, "content"):
                                         for content_item in chunk.item.content:
                                             if content_item.type == "output_text":
                                                 response_text += content_item.text
@@ -2316,16 +2181,10 @@ class EchoesAssistantV2:
                             model=selected_model,
                             messages=api_input,
                             tools=tools if tool_calling_enabled else None,
-                            tool_choice=(
-                                "auto" if (tools and tool_calling_enabled) else None
-                            ),
+                            tool_choice=("auto" if (tools and tool_calling_enabled) else None),
                             temperature=self.temperature,
-                            max_completion_tokens=(
-                                self.max_tokens if "o3" in selected_model else None
-                            ),
-                            max_tokens=(
-                                self.max_tokens if "o3" not in selected_model else None
-                            ),
+                            max_completion_tokens=(self.max_tokens if "o3" in selected_model else None),
+                            max_tokens=(self.max_tokens if "o3" not in selected_model else None),
                             stream=True,
                         )
 
@@ -2341,16 +2200,10 @@ class EchoesAssistantV2:
                         # Validate tool calling is enabled before processing
                         if not tool_calling_enabled:
                             if status:
-                                status.error(
-                                    "Tool calling disabled but model returned tool calls"
-                                )
+                                status.error("Tool calling disabled but model returned tool calls")
                             # Save response and return
-                            self.context_manager.add_message(
-                                self.session_id, "assistant", response_text
-                            )
-                            self.model_metrics.record_usage_sync(
-                                selected_model, time.time() - start_time, success=True
-                            )
+                            self.context_manager.add_message(self.session_id, "assistant", response_text)
+                            self.model_metrics.record_usage_sync(selected_model, time.time() - start_time, success=True)
                             return  # Already yielded content
 
                         # Initialize status for tool execution
@@ -2367,9 +2220,7 @@ class EchoesAssistantV2:
                                 {
                                     "role": "assistant",
                                     "type": "message",
-                                    "content": [
-                                        {"type": "output_text", "text": response_text}
-                                    ],
+                                    "content": [{"type": "output_text", "text": response_text}],
                                 }
                             )
                             # Add tool calls to the message
@@ -2398,16 +2249,12 @@ class EchoesAssistantV2:
 
                         # Execute all tool calls
                         for tool_call in tool_calls:
-                            function_response = self._execute_tool_call(
-                                tool_call, status
-                            )
+                            function_response = self._execute_tool_call(tool_call, status)
                             all_tool_results.append(
                                 {
                                     "function": tool_call.function.name,
                                     "result": function_response,
-                                    "success": not function_response.startswith(
-                                        "Error"
-                                    ),
+                                    "success": not function_response.startswith("Error"),
                                 }
                             )
 
@@ -2443,27 +2290,19 @@ class EchoesAssistantV2:
                         continue  # Continue the tool calling loop
                     else:
                         # No tool calls, save response and return
-                        self.context_manager.add_message(
-                            self.session_id, "assistant", response_text
-                        )
-                        self.model_metrics.record_usage_sync(
-                            selected_model, time.time() - start_time, success=True
-                        )
+                        self.context_manager.add_message(self.session_id, "assistant", response_text)
+                        self.model_metrics.record_usage_sync(selected_model, time.time() - start_time, success=True)
                         return  # Already yielded content
 
                 except APIError as e:
-                    error_msg = (
-                        f"API error during tool calling with {selected_model}: {str(e)}"
-                    )
+                    error_msg = f"API error during tool calling with {selected_model}: {str(e)}"
                     if status:
                         status.error(error_msg)
 
                     # Try fallback to default model
                     if selected_model != self.default_model:
                         if status:
-                            status.start_phase(
-                                f"{STATUS_RETRY} Retrying with {self.default_model}", 0
-                            )
+                            status.start_phase(f"{STATUS_RETRY} Retrying with {self.default_model}", 0)
                         try:
                             selected_model = self.default_model
                             # Retry the entire loop with default model
@@ -2504,9 +2343,7 @@ class EchoesAssistantV2:
                                 yield chunk.text
                         elif chunk.type == "response.output_item.added":
                             # New output item added
-                            if hasattr(chunk, "item") and hasattr(
-                                chunk.item, "content"
-                            ):
+                            if hasattr(chunk, "item") and hasattr(chunk.item, "content"):
                                 for content_item in chunk.item.content:
                                     if content_item.type == "output_text":
                                         yield content_item.text
@@ -2526,9 +2363,7 @@ class EchoesAssistantV2:
                     tools=None,  # No tools for final response
                     tool_choice=None,
                     temperature=self.temperature,
-                    max_completion_tokens=(
-                        self.max_tokens if "o3" in selected_model else None
-                    ),
+                    max_completion_tokens=(self.max_tokens if "o3" in selected_model else None),
                     max_tokens=self.max_tokens if "o3" not in selected_model else None,
                     stream=True,  # Stream the final response
                 )
@@ -2540,17 +2375,13 @@ class EchoesAssistantV2:
 
             # Record metrics for successful completion
             response_time = time.time() - start_time
-            self.model_metrics.record_usage_sync(
-                selected_model, response_time, success=True
-            )
+            self.model_metrics.record_usage_sync(selected_model, response_time, success=True)
 
             if status:
                 status.complete_phase("Response generated")
 
         except AuthenticationError as e:
-            error_msg = (
-                f"Authentication Error: {str(e)}\nPlease check your OPENAI_API_KEY"
-            )
+            error_msg = f"Authentication Error: {str(e)}\nPlease check your OPENAI_API_KEY"
             if status:
                 status.error(error_msg)
             yield error_msg
@@ -2593,9 +2424,7 @@ class EchoesAssistantV2:
         entries = self.knowledge_manager.search_knowledge(query, category, limit=limit)
         return [e.to_dict() for e in entries]
 
-    def store_roi_analysis(
-        self, roi_results: dict[str, Any], analysis_id: str | None = None
-    ) -> str:
+    def store_roi_analysis(self, roi_results: dict[str, Any], analysis_id: str | None = None) -> str:
         return self.knowledge_manager.store_roi_analysis(roi_results, analysis_id)
 
     def search_roi_analyses(
@@ -2604,22 +2433,16 @@ class EchoesAssistantV2:
         business_type: str | None = None,
         limit: int = 10,
     ) -> list[dict[str, Any]]:
-        entries = self.knowledge_manager.search_roi_analyses(
-            institution, business_type, limit
-        )
+        entries = self.knowledge_manager.search_roi_analyses(institution, business_type, limit)
         return [e.to_dict() for e in entries]
 
     def get_roi_summary(self) -> dict[str, Any]:
         return self.knowledge_manager.get_roi_summary()
 
-    def list_directory(
-        self, dirpath: str, pattern: str = "*", recursive: bool = False
-    ) -> dict[str, Any]:
+    def list_directory(self, dirpath: str, pattern: str = "*", recursive: bool = False) -> dict[str, Any]:
         return self.fs_tools.list_directory(dirpath, pattern, recursive)
 
-    def get_directory_tree(
-        self, dirpath: str, max_depth: int = 3, exclude_dirs: list[str] = None
-    ) -> dict[str, Any]:
+    def get_directory_tree(self, dirpath: str, max_depth: int = 3, exclude_dirs: list[str] = None) -> dict[str, Any]:
         """Get a tree structure of a directory.
 
         Args:
@@ -2663,14 +2486,10 @@ class EchoesAssistantV2:
     def write_file(self, filepath: str, content: str) -> dict[str, Any]:
         return self.fs_tools.write_file(filepath, content)
 
-    def search_files(
-        self, query: str, search_path: str | None = None
-    ) -> dict[str, Any]:
+    def search_files(self, query: str, search_path: str | None = None) -> dict[str, Any]:
         return self.fs_tools.search_files(query, search_path)
 
-    def organize_roi_files(
-        self, roi_results: dict[str, Any], base_dir: str = "roi_analysis"
-    ) -> dict[str, Any]:
+    def organize_roi_files(self, roi_results: dict[str, Any], base_dir: str = "roi_analysis") -> dict[str, Any]:
         return self.fs_tools.organize_roi_files(roi_results, base_dir)
 
     def run_workflow(self, workflow_type: str, **kwargs) -> dict[str, Any]:
@@ -2679,9 +2498,7 @@ class EchoesAssistantV2:
                 user_input=kwargs.get("user_input", ""), context=kwargs.get("context")
             )
         elif workflow_type == "comparison":
-            result = self.agent_workflow.run_comparison_workflow(
-                file1=kwargs.get("file1"), file2=kwargs.get("file2")
-            )
+            result = self.agent_workflow.run_comparison_workflow(file1=kwargs.get("file1"), file2=kwargs.get("file2"))
         elif workflow_type == "data_enrichment":
             result = self.agent_workflow.run_data_enrichment_workflow(
                 topic=kwargs.get("topic"), context=kwargs.get("context")
@@ -2709,16 +2526,13 @@ class EchoesAssistantV2:
             "knowledge": self.knowledge_manager.get_stats(),
             "knowledge_graph_stats": (
                 self.knowledge_graph.get_stats()
-                if hasattr(self, "knowledge_graph")
-                and hasattr(self.knowledge_graph, "get_stats")
+                if hasattr(self, "knowledge_graph") and hasattr(self.knowledge_graph, "get_stats")
                 else {}
             ),
         }
 
         # Add multimodal resonance stats if available
-        if self.enable_multimodal_resonance and hasattr(
-            self.multimodal_engine, "get_resonance_statistics"
-        ):
+        if self.enable_multimodal_resonance and hasattr(self.multimodal_engine, "get_resonance_statistics"):
             mm_stats = self.multimodal_engine.get_resonance_statistics()
             if mm_stats["success"]:
                 stats["multimodal_resonance_stats"] = mm_stats["statistics"]
@@ -2735,18 +2549,14 @@ class EchoesAssistantV2:
             stats["tool_stats"] = self.tool_registry.get_stats()
 
         if self.rag:
-            stats["rag_stats"] = (
-                self.rag.get_stats() if hasattr(self.rag, "get_stats") else {}
-            )
+            stats["rag_stats"] = self.rag.get_stats() if hasattr(self.rag, "get_stats") else {}
 
         if self.enable_value_system and self.value_system:
             stats["value_system"] = self.value_system.get_values_summary()
 
         return stats
 
-    def update_quantum_state(
-        self, key: str, value: Any, entangle_with: list[str] = None
-    ) -> dict[str, Any]:
+    def update_quantum_state(self, key: str, value: Any, entangle_with: list[str] = None) -> dict[str, Any]:
         """Update a quantum state with optional entanglement.
 
         Args:
@@ -2759,11 +2569,7 @@ class EchoesAssistantV2:
         """
         try:
             self.quantum_state_manager.update_state(key, value, entangle_with)
-            entangled = (
-                self.quantum_state_manager.get_entangled_states(key)
-                if entangle_with
-                else {}
-            )
+            entangled = self.quantum_state_manager.get_entangled_states(key) if entangle_with else {}
             return {"success": True, "key": key, "value": value, "entangled": entangled}
         except Exception as e:
             return {"success": False, "error": str(e)}
@@ -2855,11 +2661,7 @@ class EchoesAssistantV2:
                     "total_measurements": metrics.total_measurements,
                     "average_transition_time": metrics.average_transition_time,
                     "entangled_states_count": metrics.entangled_states_count,
-                    "last_updated": (
-                        metrics.last_updated.isoformat()
-                        if metrics.last_updated
-                        else None
-                    ),
+                    "last_updated": (metrics.last_updated.isoformat() if metrics.last_updated else None),
                 },
             }
         except Exception as e:
@@ -2871,9 +2673,7 @@ class EchoesAssistantV2:
             return self.tool_registry.list_tools()
         return []
 
-    def save_quantum_state(
-        self, filepath: str = "quantum_state_backup.json"
-    ) -> dict[str, Any]:
+    def save_quantum_state(self, filepath: str = "quantum_state_backup.json") -> dict[str, Any]:
         """Save the current quantum state to a file.
 
         Args:
@@ -2886,48 +2686,30 @@ class EchoesAssistantV2:
             # Create a temporary quantum state manager with persistence
             temp_qsm = QuantumStateManager(persistence_file=filepath)
             # Copy current state
-            temp_qsm.quantum_state._state = (
-                self.quantum_state_manager.quantum_state._state.copy()
-            )
-            temp_qsm.quantum_state._entangled = (
-                self.quantum_state_manager.quantum_state._entangled.copy()
-            )
-            temp_qsm.quantum_state._history = (
-                self.quantum_state_manager.quantum_state._history.copy()
-            )
+            temp_qsm.quantum_state._state = self.quantum_state_manager.quantum_state._state.copy()
+            temp_qsm.quantum_state._entangled = self.quantum_state_manager.quantum_state._entangled.copy()
+            temp_qsm.quantum_state._history = self.quantum_state_manager.quantum_state._history.copy()
             temp_qsm.state_machine = self.quantum_state_manager.state_machine
             temp_qsm.metrics = self.quantum_state_manager.metrics
-            temp_qsm.interference_patterns = (
-                self.quantum_state_manager.interference_patterns.copy()
-            )
+            temp_qsm.interference_patterns = self.quantum_state_manager.interference_patterns.copy()
 
             temp_qsm.save_state()
             return {"success": True, "filepath": filepath}
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def load_quantum_state(
-        self, filepath: str = "quantum_state_backup.json"
-    ) -> dict[str, Any]:
+    def load_quantum_state(self, filepath: str = "quantum_state_backup.json") -> dict[str, Any]:
         try:
             temp_qsm = QuantumStateManager(persistence_file=filepath)
             temp_qsm.load_state()
 
             # Copy loaded state to current manager
-            self.quantum_state_manager.quantum_state._state = (
-                temp_qsm.quantum_state._state.copy()
-            )
-            self.quantum_state_manager.quantum_state._entangled = (
-                temp_qsm.quantum_state._entangled.copy()
-            )
-            self.quantum_state_manager.quantum_state._history = (
-                temp_qsm.quantum_state._history.copy()
-            )
+            self.quantum_state_manager.quantum_state._state = temp_qsm.quantum_state._state.copy()
+            self.quantum_state_manager.quantum_state._entangled = temp_qsm.quantum_state._entangled.copy()
+            self.quantum_state_manager.quantum_state._history = temp_qsm.quantum_state._history.copy()
             self.quantum_state_manager.state_machine = temp_qsm.state_machine
             self.quantum_state_manager.metrics = temp_qsm.metrics
-            self.quantum_state_manager.interference_patterns = (
-                temp_qsm.interference_patterns.copy()
-            )
+            self.quantum_state_manager.interference_patterns = temp_qsm.interference_patterns.copy()
 
             return {"success": True, "filepath": filepath}
         except Exception as e:
@@ -2963,22 +2745,15 @@ class EchoesAssistantV2:
                 "5. Recommendations for better organization"
             )
 
-        structure = self._get_directory_structure(
-            directory_path, max_depth, exclude_dirs
-        )
+        structure = self._get_directory_structure(directory_path, max_depth, exclude_dirs)
         stats = self._collect_file_stats(structure)
 
-        file_types = sorted(
-            stats["file_types"].items(), key=lambda item: item[1], reverse=True
-        )
+        file_types = sorted(stats["file_types"].items(), key=lambda item: item[1], reverse=True)
         top_file_types = file_types[:20]
         if len(file_types) > 20:
             remaining = sum(count for _, count in file_types[20:])
             top_file_types.append(("other", remaining))
-        file_type_summary = (
-            ", ".join(f"{ext or 'no-ext'}: {count}" for ext, count in top_file_types)
-            or "None"
-        )
+        file_type_summary = ", ".join(f"{ext or 'no-ext'}: {count}" for ext, count in top_file_types) or "None"
 
         analysis = {
             "directory": str(directory_path),
@@ -2991,9 +2766,7 @@ class EchoesAssistantV2:
         }
 
         directory_summary = self._format_directory_structure(structure, max_lines=400)
-        top_directories_summary = self._summarize_top_directories(
-            structure, max_entries=20
-        )
+        top_directories_summary = self._summarize_top_directories(structure, max_entries=20)
         analysis_prompt = (
             f"Analyze this directory structure and provide a comprehensive report:\n\n"
             f"Directory: {directory_path}\n"
@@ -3040,9 +2813,7 @@ class EchoesAssistantV2:
             status.error(str(e))
             raise
 
-    def _get_directory_structure(
-        self, root_path: Path, max_depth: int, exclude_dirs: list[str]
-    ) -> dict[str, Any]:
+    def _get_directory_structure(self, root_path: Path, max_depth: int, exclude_dirs: list[str]) -> dict[str, Any]:
         root_path = root_path.resolve()
         structure = {
             "name": root_path.name,
@@ -3061,9 +2832,7 @@ class EchoesAssistantV2:
             for item in root_path.iterdir():
                 if item.is_symlink():
                     continue
-                if item.name in exclude_dirs or any(
-                    item.match(pattern) for pattern in exclude_dirs
-                ):
+                if item.name in exclude_dirs or any(item.match(pattern) for pattern in exclude_dirs):
                     continue
 
                 if item.is_file():
@@ -3083,9 +2852,7 @@ class EchoesAssistantV2:
                         }
                     )
                 elif item.is_dir():
-                    child_structure = self._get_directory_structure(
-                        item, max_depth - 1, exclude_dirs
-                    )
+                    child_structure = self._get_directory_structure(item, max_depth - 1, exclude_dirs)
                     structure["size"] += child_structure.get("size", 0)
                     structure["file_count"] += child_structure.get("file_count", 0)
                     structure["dir_count"] += 1 + child_structure.get("dir_count", 0)
@@ -3112,9 +2879,7 @@ class EchoesAssistantV2:
         _walk(structure)
         return stats
 
-    def _format_directory_structure(
-        self, structure: dict[str, Any], indent: int = 0, max_lines: int = 400
-    ) -> str:
+    def _format_directory_structure(self, structure: dict[str, Any], indent: int = 0, max_lines: int = 400) -> str:
         lines: list[str] = []
         truncated = False
 
@@ -3152,9 +2917,7 @@ class EchoesAssistantV2:
 
         return "\n".join(lines)
 
-    def _summarize_top_directories(
-        self, structure: dict[str, Any], max_entries: int = 20
-    ) -> str:
+    def _summarize_top_directories(self, structure: dict[str, Any], max_entries: int = 20) -> str:
         entries: list[dict[str, Any]] = []
 
         def _collect(node: dict[str, Any]) -> None:
@@ -3215,9 +2978,7 @@ class EchoesAssistantV2:
             print("\nAverage Response Times:")
             for model, stats in metrics["response_times"].items():
                 if stats["count"] > 0:
-                    print(
-                        f"  - {model}: {stats['avg']:.2f}s (min: {stats['min']:.2f}s, max: {stats['max']:.2f}s)"
-                    )
+                    print(f"  - {model}: {stats['avg']:.2f}s (min: {stats['min']:.2f}s, max: {stats['max']:.2f}s)")
 
             if metrics["errors"]:
                 print("\nErrors:")
@@ -3263,9 +3024,7 @@ class EchoesAssistantV2:
             "message": f"Glimpse preflight {'enabled' if enabled else 'disabled'}",
         }
 
-    def set_glimpse_anchors(
-        self, goal: str = "", constraints: str = ""
-    ) -> dict[str, Any]:
+    def set_glimpse_anchors(self, goal: str = "", constraints: str = "") -> dict[str, Any]:
         """Set goal and constraints for Glimpse preflight.
 
         Args:
@@ -3374,10 +3133,7 @@ class EchoesAssistantV2:
 
         try:
             async with aiohttp.ClientSession() as session:
-                url = (
-                    self.api_endpoints["echoes_api"]
-                    + self.api_endpoints["patterns_endpoint"]
-                )
+                url = self.api_endpoints["echoes_api"] + self.api_endpoints["patterns_endpoint"]
 
                 payload = {
                     "text": text,
@@ -3423,10 +3179,7 @@ class EchoesAssistantV2:
 
         try:
             async with aiohttp.ClientSession() as session:
-                url = (
-                    self.api_endpoints["echoes_api"]
-                    + self.api_endpoints["truth_endpoint"]
-                )
+                url = self.api_endpoints["echoes_api"] + self.api_endpoints["truth_endpoint"]
 
                 payload = {
                     "claim": claim,
@@ -3453,9 +3206,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    async def initiate_contact(
-        self, message_type: str, data: dict[str, Any]
-    ) -> dict[str, Any]:
+    async def initiate_contact(self, message_type: str, data: dict[str, Any]) -> dict[str, Any]:
         """Initiate contact with external API - BRIDGE FUNCTION.
 
         This is the main bridge between internal assistant and external APIs.
@@ -3491,13 +3242,9 @@ class EchoesAssistantV2:
 
                 # Run both analyses in parallel
                 patterns_task = self.detect_patterns_external(text, data.get("context"))
-                truth_task = self.verify_truth_external(
-                    text, data.get("evidence"), data.get("context")
-                )
+                truth_task = self.verify_truth_external(text, data.get("evidence"), data.get("context"))
 
-                patterns_result, truth_result = await asyncio.gather(
-                    patterns_task, truth_task, return_exceptions=True
-                )
+                patterns_result, truth_result = await asyncio.gather(patterns_task, truth_task, return_exceptions=True)
 
                 return {
                     "success": True,
@@ -3634,9 +3381,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def add_memory_fragment(
-        self, content: str, context: dict[str, Any], importance: float = 1.0
-    ) -> dict[str, Any]:
+    def add_memory_fragment(self, content: str, context: dict[str, Any], importance: float = 1.0) -> dict[str, Any]:
         """Add a memory fragment to the knowledge system.
 
         Args:
@@ -3652,9 +3397,7 @@ class EchoesAssistantV2:
 
         try:
             # Extract entities and concepts from content
-            entities, concepts = self.knowledge_graph.extract_entities_and_concepts(
-                content
-            )
+            entities, concepts = self.knowledge_graph.extract_entities_and_concepts(content)
 
             memory = MemoryFragment(
                 id=f"mem_{datetime.now(UTC).strftime('%Y%m%d_%H%M%S_%f')}",
@@ -3677,9 +3420,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def communicate_with_context(
-        self, message: str, system_prompt: str | None = None
-    ) -> dict[str, Any]:
+    def communicate_with_context(self, message: str, system_prompt: str | None = None) -> dict[str, Any]:
         """Enable meaningful communication using knowledge graph context.
 
         Args:
@@ -3703,9 +3444,7 @@ class EchoesAssistantV2:
             response = self.chat(message, system_prompt=enhanced_prompt, stream=False)
 
             # Learn from this conversation
-            self.knowledge_graph.learn_from_conversation(
-                message, response, confidence=0.8
-            )
+            self.knowledge_graph.learn_from_conversation(message, response, confidence=0.8)
 
             return {
                 "success": True,
@@ -3720,9 +3459,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def _build_contextual_prompt(
-        self, base_prompt: str | None, context: dict[str, Any]
-    ) -> str:
+    def _build_contextual_prompt(self, base_prompt: str | None, context: dict[str, Any]) -> str:
         """Build an enhanced prompt with knowledge graph context."""
         contextual_parts = []
 
@@ -3731,9 +3468,7 @@ class EchoesAssistantV2:
 
         # Add entity context
         if context["entities"]:
-            contextual_parts.append(
-                f"Relevant entities mentioned: {', '.join(context['entities'])}"
-            )
+            contextual_parts.append(f"Relevant entities mentioned: {', '.join(context['entities'])}")
 
         # Add memory context
         if context["memories"]:
@@ -3742,23 +3477,17 @@ class EchoesAssistantV2:
 
         # Add related concepts
         if context["related_concepts"]:
-            contextual_parts.append(
-                f"Related concepts: {', '.join(context['related_concepts'])}"
-            )
+            contextual_parts.append(f"Related concepts: {', '.join(context['related_concepts'])}")
 
         # Add conversation context
         if context["conversation_history"]:
             contextual_parts.append("Recent conversation context available")
 
-        contextual_parts.append(
-            "Use this context to provide more meaningful, personalized responses."
-        )
+        contextual_parts.append("Use this context to provide more meaningful, personalized responses.")
 
         return "\n\n".join(contextual_parts)
 
-    def search_knowledge_graph(
-        self, query: str, node_type: str | None = None, limit: int = 10
-    ) -> dict[str, Any]:
+    def search_knowledge_graph(self, query: str, node_type: str | None = None, limit: int = 10) -> dict[str, Any]:
         """Search the knowledge graph for relevant information.
 
         Args:
@@ -3787,10 +3516,7 @@ class EchoesAssistantV2:
                         "label": node.label,
                         "description": node.description,
                         "properties": node.properties,
-                        "related_nodes": [
-                            {"id": r.id, "label": r.label, "type": r.type}
-                            for r in related[:3]
-                        ],
+                        "related_nodes": [{"id": r.id, "label": r.label, "type": r.type} for r in related[:3]],
                     }
                 )
 
@@ -3820,9 +3546,7 @@ class EchoesAssistantV2:
             return {"success": False, "error": "Knowledge graph not enabled"}
 
         try:
-            related_nodes = self.knowledge_graph.get_related_nodes(
-                node_id, relation_type, max_depth
-            )
+            related_nodes = self.knowledge_graph.get_related_nodes(node_id, relation_type, max_depth)
 
             return {
                 "success": True,
@@ -3841,9 +3565,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def retrieve_relevant_memories(
-        self, query: str, context: dict | None = None, limit: int = 5
-    ) -> dict[str, Any]:
+    def retrieve_relevant_memories(self, query: str, context: dict | None = None, limit: int = 5) -> dict[str, Any]:
         """Retrieve memories relevant to a query.
 
         Args:
@@ -3896,9 +3618,7 @@ class EchoesAssistantV2:
             return {"success": False, "error": "Knowledge graph not enabled"}
 
         try:
-            self.knowledge_graph.learn_from_conversation(
-                user_message, assistant_response, confidence
-            )
+            self.knowledge_graph.learn_from_conversation(user_message, assistant_response, confidence)
 
             return {
                 "success": True,
@@ -3932,9 +3652,7 @@ class EchoesAssistantV2:
     # MULTIMODAL RESONANCE Glimpse METHODS
     # ============================================================================
 
-    def process_multimodal_file(
-        self, file_path: str, extraction_target: str = "text"
-    ) -> dict[str, Any]:
+    def process_multimodal_file(self, file_path: str, extraction_target: str = "text") -> dict[str, Any]:
         """Process a multimodal file with resonance-based understanding.
 
         Args:
@@ -3951,9 +3669,7 @@ class EchoesAssistantV2:
             }
 
         try:
-            result = self.multimodal_engine.process_multimodal_file(
-                file_path, extraction_target
-            )
+            result = self.multimodal_engine.process_multimodal_file(file_path, extraction_target)
 
             # Add knowledge graph integration
             if result["success"]:
@@ -3971,9 +3687,7 @@ class EchoesAssistantV2:
                     properties={
                         "file_path": file_path,
                         "modality": result["modality_vector"]["modality_type"],
-                        "resonance_strength": result["resonance_analysis"][
-                            "resonance_strength"
-                        ],
+                        "resonance_strength": result["resonance_analysis"]["resonance_strength"],
                         "extraction_target": extraction_target,
                         "quality_factor": result["modality_vector"]["quality_factor"],
                     },
@@ -4001,9 +3715,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def analyze_multimodal_directory(
-        self, directory_path: str, extraction_target: str = "text"
-    ) -> dict[str, Any]:
+    def analyze_multimodal_directory(self, directory_path: str, extraction_target: str = "text") -> dict[str, Any]:
         """Analyze all files in a directory with multimodal resonance.
 
         Args:
@@ -4040,9 +3752,7 @@ class EchoesAssistantV2:
 
             # Process files and optimize strategy
             file_paths = [str(f) for f in files]
-            optimization_strategy = self.multimodal_engine.optimize_processing_strategy(
-                file_paths, extraction_target
-            )
+            optimization_strategy = self.multimodal_engine.optimize_processing_strategy(file_paths, extraction_target)
 
             # Process high resonance files first
             processed_files = []
@@ -4064,12 +3774,8 @@ class EchoesAssistantV2:
 
                     # Track modality distribution
                     modality = result["modality_vector"]["modality_type"]
-                    modality_distribution[modality] = (
-                        modality_distribution.get(modality, 0) + 1
-                    )
-                    total_resonance += result["resonance_analysis"][
-                        "resonance_strength"
-                    ]
+                    modality_distribution[modality] = modality_distribution.get(modality, 0) + 1
+                    total_resonance += result["resonance_analysis"]["resonance_strength"]
 
             # Create summary memory
             self.add_memory_fragment(
@@ -4078,9 +3784,7 @@ class EchoesAssistantV2:
                     "directory": directory_path,
                     "files_processed": len(processed_files),
                     "modality_distribution": modality_distribution,
-                    "average_resonance": (
-                        total_resonance / len(processed_files) if processed_files else 0
-                    ),
+                    "average_resonance": (total_resonance / len(processed_files) if processed_files else 0),
                     "extraction_target": extraction_target,
                 },
                 importance=0.8,
@@ -4093,9 +3797,7 @@ class EchoesAssistantV2:
                     "total_files_found": len(files),
                     "files_processed": len(processed_files),
                     "modality_distribution": modality_distribution,
-                    "average_resonance": (
-                        total_resonance / len(processed_files) if processed_files else 0
-                    ),
+                    "average_resonance": (total_resonance / len(processed_files) if processed_files else 0),
                     "optimization_strategy": optimization_strategy["strategy"],
                     "processed_files": processed_files,
                 },
@@ -4132,9 +3834,7 @@ class EchoesAssistantV2:
                 # Get resonant files for each recommended transformation
                 for rec in insights["insights"]["recommended_transformations"]:
                     target_modality = rec["transformation"].split("_to_")[-1]
-                    resonant_files = self.multimodal_engine.find_resonant_files(
-                        target_modality, 0.6
-                    )
+                    resonant_files = self.multimodal_engine.find_resonant_files(target_modality, 0.6)
                     rec["similar_files"] = resonant_files[:3]  # Top 3 similar files
 
             return insights
@@ -4142,9 +3842,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def find_resonant_content(
-        self, target_modality: str, min_resonance: float = 0.5
-    ) -> dict[str, Any]:
+    def find_resonant_content(self, target_modality: str, min_resonance: float = 0.5) -> dict[str, Any]:
         """Find content that resonates with target modality.
 
         Args:
@@ -4161,9 +3859,7 @@ class EchoesAssistantV2:
             }
 
         try:
-            resonant_files = self.multimodal_engine.find_resonant_files(
-                target_modality, min_resonance
-            )
+            resonant_files = self.multimodal_engine.find_resonant_files(target_modality, min_resonance)
 
             # Enhance with knowledge graph information
             enhanced_results = []
@@ -4195,9 +3891,7 @@ class EchoesAssistantV2:
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def create_resonant_understanding(
-        self, query: str, modality_preference: str | None = None
-    ) -> dict[str, Any]:
+    def create_resonant_understanding(self, query: str, modality_preference: str | None = None) -> dict[str, Any]:
         """Create understanding by resonating across multiple modalities.
 
         Args:
@@ -4232,12 +3926,7 @@ class EchoesAssistantV2:
                 "resonant_files": resonant_content.get("resonant_files", []),
                 "relevant_memories": relevant_memories.get("memories", []),
                 "resonance_strength": (
-                    np.mean(
-                        [
-                            f["resonance_strength"]
-                            for f in resonant_content.get("resonant_files", [])
-                        ]
-                    )
+                    np.mean([f["resonance_strength"] for f in resonant_content.get("resonant_files", [])])
                     if resonant_content.get("resonant_files")
                     else 0
                 ),
@@ -4281,9 +3970,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                     "resonance_analysis": {
                         "overall_resonance": multimodal_context["resonance_strength"],
                         "modality_preference": target_modality,
-                        "cross_modal_insights": len(
-                            resonant_content.get("resonant_files", [])
-                        ),
+                        "cross_modal_insights": len(resonant_content.get("resonant_files", [])),
                     },
                 },
             }
@@ -4345,9 +4032,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
             target_modality = target_modality_map.get(objective, "text")
 
             # Get optimization strategy
-            strategy = self.multimodal_engine.optimize_processing_strategy(
-                files, target_modality
-            )
+            strategy = self.multimodal_engine.optimize_processing_strategy(files, target_modality)
 
             if strategy["success"]:
                 workflow_strategy = strategy["strategy"]
@@ -4373,16 +4058,10 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                     ]
 
                 # Add estimated processing time
-                total_complexity = sum(
-                    f["complexity"] for f in workflow_strategy["file_analyses"]
-                )
+                total_complexity = sum(f["complexity"] for f in workflow_strategy["file_analyses"])
                 workflow_strategy["estimated_complexity"] = total_complexity
                 workflow_strategy["processing_tier"] = (
-                    "fast"
-                    if total_complexity < 5
-                    else "medium"
-                    if total_complexity < 15
-                    else "complex"
+                    "fast" if total_complexity < 5 else "medium" if total_complexity < 15 else "complex"
                 )
 
             return {
@@ -4461,9 +4140,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                     "insights_generated": insights_generated,
                     "problems_solved": problems_solved,
                 },
-                importance=min(
-                    effort_metrics.value_created / 100, 1.0
-                ),  # Scale importance to 0-1
+                importance=min(effort_metrics.value_created / 100, 1.0),  # Scale importance to 0-1
             )
 
             return {
@@ -4482,9 +4159,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                     "gross_value": float(transaction.gross_value),
                     "net_value": float(transaction.net_value),
                     "tax_amount": float(transaction.gross_value * transaction.tax_rate),
-                    "platform_fee": float(
-                        transaction.gross_value * transaction.platform_cut
-                    ),
+                    "platform_fee": float(transaction.gross_value * transaction.platform_cut),
                 },
                 "values_alignment": {
                     "integrity": "Transparent tracking of cognitive efforts",
@@ -4539,9 +4214,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
             )
 
             # Create user account in accounting system
-            user_account = self.accounting_system.create_user_account(
-                user_id, consent_enum
-            )
+            user_account = self.accounting_system.create_user_account(user_id, consent_enum)
 
             # Add to knowledge graph
             self.add_knowledge_node(
@@ -4587,9 +4260,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def generate_user_financial_statement(
-        self, user_id: str, period_days: int = 30
-    ) -> dict[str, Any]:
+    def generate_user_financial_statement(self, user_id: str, period_days: int = 30) -> dict[str, Any]:
         """Generate comprehensive financial statement for user.
 
         Args:
@@ -4627,9 +4298,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 "payout_eligibility": payout_info,
                 "legal_compliance": {
                     "consent_status": "Active",
-                    "compliance_rate": legal_compliance["license_compliance"][
-                        "compliance_rate"
-                    ],
+                    "compliance_rate": legal_compliance["license_compliance"]["compliance_rate"],
                     "values_alignment": statement["values_alignment"],
                 },
                 "values_reflection": {
@@ -4644,9 +4313,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         except Exception as e:
             return {"success": False, "error": str(e)}
 
-    def verify_license_compliance(
-        self, operation_type: str, user_id: str, scope: str
-    ) -> dict[str, Any]:
+    def verify_license_compliance(self, operation_type: str, user_id: str, scope: str) -> dict[str, Any]:
         """Verify compliance with Consent-Based License.
 
         Args:
@@ -4668,13 +4335,9 @@ Provide a comprehensive response that leverages this multimodal understanding. C
 
             # Check responsible use principles compliance
             responsible_use_check = {
-                "ethical_consideration": self._check_ethical_compliance(
-                    operation_type, scope
-                ),
+                "ethical_consideration": self._check_ethical_compliance(operation_type, scope),
                 "transparency": self._check_transparency_compliance(operation_type),
-                "professional_standards": self._check_professional_compliance(
-                    operation_type
-                ),
+                "professional_standards": self._check_professional_compliance(operation_type),
                 "community_benefit": self._check_community_benefit(scope),
                 "continuous_learning": True,  # Always enabled
                 "collaboration": self._check_collaboration_compliance(scope),
@@ -4688,9 +4351,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 for principle in responsible_use_check
                 if isinstance(responsible_use_check[principle], bool)
             ]
-            overall_compliance = (
-                sum([consent_score] + principle_scores) / len(principle_scores) + 1
-            )
+            overall_compliance = sum([consent_score] + principle_scores) / len(principle_scores) + 1
 
             return {
                 "success": True,
@@ -4708,11 +4369,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                         else (
                             "Mostly Compliant"
                             if overall_compliance >= 80
-                            else (
-                                "Needs Attention"
-                                if overall_compliance >= 60
-                                else "Non-Compliant"
-                            )
+                            else ("Needs Attention" if overall_compliance >= 60 else "Non-Compliant")
                         )
                     ),
                 },
@@ -4731,10 +4388,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
         """Check ethical compliance for operation"""
         # Simplified ethical check
         harmful_operations = ["exploitation", "manipulation", "deception"]
-        return not any(
-            harmful in operation_type.lower() or harmful in scope.lower()
-            for harmful in harmful_operations
-        )
+        return not any(harmful in operation_type.lower() or harmful in scope.lower() for harmful in harmful_operations)
 
     def _check_transparency_compliance(self, operation_type: str) -> bool:
         """Check transparency compliance"""
@@ -4744,9 +4398,7 @@ Provide a comprehensive response that leverages this multimodal understanding. C
     def _check_professional_compliance(self, operation_type: str) -> bool:
         """Check professional standards compliance"""
         unprofessional_operations = ["spam", "harassment", "abuse"]
-        return not any(
-            unprof in operation_type.lower() for unprof in unprofessional_operations
-        )
+        return not any(unprof in operation_type.lower() for unprof in unprofessional_operations)
 
     def _check_community_benefit(self, scope: str) -> bool:
         """Check if operation benefits community"""
@@ -4786,23 +4438,15 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 "total_users": len(self.accounting_system.user_accounts),
                 "total_transactions": len(self.accounting_system.transactions),
                 "total_cognitive_joules": sum(
-                    tx.cognitive_joules
-                    for tx in self.accounting_system.transactions.values()
+                    tx.cognitive_joules for tx in self.accounting_system.transactions.values()
                 ),
-                "total_gross_value": sum(
-                    tx.gross_value
-                    for tx in self.accounting_system.transactions.values()
-                ),
-                "total_net_value": sum(
-                    tx.net_value for tx in self.accounting_system.transactions.values()
-                ),
+                "total_gross_value": sum(tx.gross_value for tx in self.accounting_system.transactions.values()),
+                "total_net_value": sum(tx.net_value for tx in self.accounting_system.transactions.values()),
                 "total_tax_collected": sum(
-                    tx.gross_value * tx.tax_rate
-                    for tx in self.accounting_system.transactions.values()
+                    tx.gross_value * tx.tax_rate for tx in self.accounting_system.transactions.values()
                 ),
                 "total_platform_fees": sum(
-                    tx.gross_value * tx.platform_cut
-                    for tx in self.accounting_system.transactions.values()
+                    tx.gross_value * tx.platform_cut for tx in self.accounting_system.transactions.values()
                 ),
             }
 
@@ -4812,14 +4456,11 @@ Provide a comprehensive response that leverages this multimodal understanding. C
                 "enhanced_accounting": accounting_stats,
                 "values_implementation": {
                     "integrity": {
-                        "consent_compliance_rate": legal_report["license_compliance"][
-                            "compliance_rate"
-                        ],
+                        "consent_compliance_rate": legal_report["license_compliance"]["compliance_rate"],
                         "transparent_operations": True,
                     },
                     "trust": {
-                        "reliable_compensation": accounting_stats["total_net_value"]
-                        > 0,
+                        "reliable_compensation": accounting_stats["total_net_value"] > 0,
                         "fair_deductions": True,
                     },
                     "creativity": {
@@ -4865,9 +4506,7 @@ def interactive_mode():
     print("  'catch <content>'    - Manually catch content in cache")
     print("  'release <key>'      - Release content from cache")
     print("  'clearcache <level>' - Clear cache (session/short/long/permanent/all)")
-    print(
-        "  'simulate <query>'   - Run parallel simulations for possibility exploration"
-    )
+    print("  'simulate <query>'   - Run parallel simulations for possibility exploration")
     print("  'sims'               - Show parallel simulation statistics")
     print("  'sim <id>'           - Get specific simulation result")
     print("  'clearsims'          - Clear completed simulations")
@@ -4923,14 +4562,9 @@ def interactive_mode():
                 # Silent best-effort; never block user flow
                 pass
 
-        glimpse_engine = GlimpseEngine(
-            privacy_guard=PrivacyGuard(on_commit=_commit_sink), enable_clarifiers=True
-        )
+        glimpse_engine = GlimpseEngine(privacy_guard=PrivacyGuard(on_commit=_commit_sink), enable_clarifiers=True)
         # Update to use enhanced clarifier engine
-        if (
-            hasattr(glimpse_engine, "_clarifier_engine")
-            and glimpse_engine._clarifier_engine
-        ):
+        if hasattr(glimpse_engine, "_clarifier_engine") and glimpse_engine._clarifier_engine:
             glimpse_engine._clarifier_engine = ClarifierEngine(use_enhanced_mode=True)
 
         while True:
@@ -5019,16 +4653,12 @@ def interactive_mode():
 
                     if action_cmd == "list":
                         category = parts[1] if len(parts) > 1 else None
-                        result = assistant.execute_action(
-                            "inventory", "list_items", category=category
-                        )
+                        result = assistant.execute_action("inventory", "list_items", category=category)
                         if result["success"]:
                             items = result["result"]
                             print(f"\n📦 Inventory Items ({len(items)} total):")
                             for item in items[:10]:
-                                print(
-                                    f"  • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})"
-                                )
+                                print(f"  • {item['sku']}: {item['name']} ({item['quantity']} @ {item['location']})")
                             if len(items) > 10:
                                 print(f"  ... and {len(items) - 10} more")
                         else:
@@ -5038,13 +4668,9 @@ def interactive_mode():
                     if action_cmd == "report":
                         try:
                             report_type = parts[1] if len(parts) > 1 else "summary"
-                            result = assistant.execute_action(
-                                "inventory", "report", report_type=report_type
-                            )
+                            result = assistant.execute_action("inventory", "report", report_type=report_type)
                             if result["success"]:
-                                print(
-                                    f"\n📊 Report:\n{json.dumps(result['result'], indent=2)}"
-                                )
+                                print(f"\n📊 Report:\n{json.dumps(result['result'], indent=2)}")
                             else:
                                 print(f"  Error: {result['error']}")
                         except Exception as e:
@@ -5123,9 +4749,7 @@ def interactive_mode():
 
                 if command.startswith("simulate "):
                     # Run parallel simulations
-                    query = (
-                        command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
-                    )
+                    query = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
                     if query:
                         # Create simulation configs
                         sim_configs = [
@@ -5153,32 +4777,22 @@ def interactive_mode():
                         print("  This may take a moment...")
 
                         # Run simulations
-                        results = parallel_simulation.run_parallel_simulations(
-                            sim_configs
-                        )
+                        results = parallel_simulation.run_parallel_simulations(sim_configs)
 
                         if results:
                             print("\n📊 **Simulation Results:**")
                             for i, result in enumerate(results, 1):
-                                sim_type = result.simulation_type.value.replace(
-                                    "_", " "
-                                ).title()
+                                sim_type = result.simulation_type.value.replace("_", " ").title()
                                 print(f"\n  {i}. {sim_type}:")
                                 print(f"     Confidence: {result.confidence:.1%}")
-                                print(
-                                    f"     Execution time: {result.execution_time:.2f}s"
-                                )
+                                print(f"     Execution time: {result.execution_time:.2f}s")
                                 print(f"     Reasoning: {result.reasoning}")
 
                                 if result.possibilities:
-                                    print(
-                                        f"     Top possibility: {result.possibilities[0]}"
-                                    )
+                                    print(f"     Top possibility: {result.possibilities[0]}")
 
                                 if result.insights:
-                                    print(
-                                        f"     Insights: {', '.join(result.insights[:2])}"
-                                    )
+                                    print(f"     Insights: {', '.join(result.insights[:2])}")
                         else:
                             print("  No simulation results available.")
                     else:
@@ -5205,9 +4819,7 @@ def interactive_mode():
                     print("\n  Performance:")
                     perf = sim_stats["performance"]
                     print(f"    Success rate: {perf['success_rate']:.1%}")
-                    print(
-                        f"    Average execution time: {perf['average_execution_time']:.2f}s"
-                    )
+                    print(f"    Average execution time: {perf['average_execution_time']:.2f}s")
                     print(f"    Average confidence: {perf['average_confidence']:.1%}")
                     print(f"    Average relevance: {perf['average_relevance']:.1%}")
 
@@ -5218,9 +4830,7 @@ def interactive_mode():
 
                 if command.startswith("sim "):
                     # Get specific simulation result
-                    sim_id = (
-                        command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
-                    )
+                    sim_id = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
                     if sim_id:
                         result = parallel_simulation.get_simulation_result(sim_id)
 
@@ -5247,9 +4857,7 @@ def interactive_mode():
                                     print(f"    • {insight}")
 
                             if result.cross_references:
-                                print(
-                                    f"\n  Cross-references: {len(result.cross_references)}"
-                                )
+                                print(f"\n  Cross-references: {len(result.cross_references)}")
 
                             if result.possibilities:
                                 print(f"\n  Possibilities: {len(result.possibilities)}")
@@ -5273,9 +4881,7 @@ def interactive_mode():
 
                 if command.startswith("possibilities "):
                     # Explore possibility space for a topic
-                    topic = (
-                        command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
-                    )
+                    topic = command.split(maxsplit=1)[1] if len(command.split()) > 1 else ""
                     if topic:
                         print(f"\n🌌 **Exploring possibility space for:** {topic}")
                         print("  Running comprehensive simulation...")
@@ -5286,22 +4892,14 @@ def interactive_mode():
                             parameters={"priority": 0.8, "timeout": 30},
                         )
 
-                        result = parallel_simulation.wait_for_simulation(
-                            sim_id, timeout=35.0
-                        )
+                        result = parallel_simulation.wait_for_simulation(sim_id, timeout=35.0)
 
                         if result and result.outcome:
                             outcome = result.outcome
                             print("\n📊 **Possibility Space Analysis:**")
-                            print(
-                                f"  Total dimensions: {outcome.get('total_dimensions', 0)}"
-                            )
-                            print(
-                                f"  Total combinations: {outcome.get('total_combinations', 0)}"
-                            )
-                            print(
-                                f"  Recommendation: {outcome.get('exploration_recommendation', '')}"
-                            )
+                            print(f"  Total dimensions: {outcome.get('total_dimensions', 0)}")
+                            print(f"  Total combinations: {outcome.get('total_combinations', 0)}")
+                            print(f"  Recommendation: {outcome.get('exploration_recommendation', '')}")
 
                             space = outcome.get("possibility_space", [])
                             if space:
@@ -5324,9 +4922,7 @@ def interactive_mode():
                         print("  Usage: possibilities <topic>")
                     continue
 
-                system_prompt_var = (
-                    system_prompt if "system_prompt" in locals() else None
-                )
+                system_prompt_var = system_prompt if "system_prompt" in locals() else None
 
                 # Optional Glimpse preflight before sending to model
                 final_message = user_input
@@ -5347,55 +4943,35 @@ def interactive_mode():
                         print("Essence:", res1.essence)
                     if res1.delta:
                         print("Delta:", res1.delta)
-                        if isinstance(res1.delta, str) and res1.delta.startswith(
-                            "Clarifier:"
-                        ):
+                        if isinstance(res1.delta, str) and res1.delta.startswith("Clarifier:"):
                             ans = input("Answer clarifier [Y/N]: ").strip().lower()
                             if ans == "y":
                                 # Add audience constraint to prevent repeated clarifiers
                                 if preflight_constraints:
-                                    preflight_constraints = (
-                                        preflight_constraints + " | audience: external"
-                                    )
+                                    preflight_constraints = preflight_constraints + " | audience: external"
                                 else:
                                     preflight_constraints = "audience: external"
                                 print("✓ Added audience: external constraint")
                             elif ans == "n":
                                 # Add audience constraint to prevent repeated clarifiers
                                 if preflight_constraints:
-                                    preflight_constraints = (
-                                        preflight_constraints + " | audience: internal"
-                                    )
+                                    preflight_constraints = preflight_constraints + " | audience: internal"
                                 else:
                                     preflight_constraints = "audience: internal"
                                 print("✓ Added audience: internal constraint")
 
                     # Offer essence-only toggle if latency options appeared (≥800 ms)
                     if any("Options:" in s for s in res1.status_history):
-                        eo = (
-                            input(
-                                "Latency is high. Enable essence-only for next attempt? [y/N]: "
-                            )
-                            .strip()
-                            .lower()
-                        )
+                        eo = input("Latency is high. Enable essence-only for next attempt? [y/N]: ").strip().lower()
                         if eo == "y":
                             glimpse_engine.set_essence_only(True)
                             print("✓ Essence-only glimpses enabled")
 
                     proceed = "n"
                     if res1.status == "aligned":
-                        proceed = (
-                            input("Proceed with commit? [y/N]: ").strip().lower() or "n"
-                        )
+                        proceed = input("Proceed with commit? [y/N]: ").strip().lower() or "n"
                     else:
-                        choice = (
-                            input(
-                                "Adjust once (a), Redial (r), or Proceed (y)? [a/r/y]: "
-                            )
-                            .strip()
-                            .lower()
-                        )
+                        choice = input("Adjust once (a), Redial (r), or Proceed (y)? [a/r/y]: ").strip().lower()
                         if choice == "r":
                             print("Clean reset. Same channel. Let’s try again.")
                             continue
@@ -5432,31 +5008,19 @@ def interactive_mode():
                                 print("Essence:", res2.essence)
                             if res2.delta:
                                 print("Delta:", res2.delta)
-                                if isinstance(
-                                    res2.delta, str
-                                ) and res2.delta.startswith("Clarifier:"):
-                                    ans2 = (
-                                        input("Answer clarifier [Y/N]: ")
-                                        .strip()
-                                        .lower()
-                                    )
+                                if isinstance(res2.delta, str) and res2.delta.startswith("Clarifier:"):
+                                    ans2 = input("Answer clarifier [Y/N]: ").strip().lower()
                                     if ans2 == "y":
                                         # Add audience constraint to prevent repeated clarifiers
                                         if preflight_constraints:
-                                            preflight_constraints = (
-                                                preflight_constraints
-                                                + " | audience: external"
-                                            )
+                                            preflight_constraints = preflight_constraints + " | audience: external"
                                         else:
                                             preflight_constraints = "audience: external"
                                         print("✓ Added audience: external constraint")
                                     elif ans2 == "n":
                                         # Add audience constraint to prevent repeated clarifiers
                                         if preflight_constraints:
-                                            preflight_constraints = (
-                                                preflight_constraints
-                                                + " | audience: internal"
-                                            )
+                                            preflight_constraints = preflight_constraints + " | audience: internal"
                                         else:
                                             preflight_constraints = "audience: internal"
                                         print("✓ Added audience: internal constraint")
@@ -5464,9 +5028,7 @@ def interactive_mode():
                             # Offer essence-only toggle if latency options appeared (≥800 ms)
                             if any("Options:" in s for s in res2.status_history):
                                 eo2 = (
-                                    input(
-                                        "Latency is high. Enable essence-only for next attempt? [y/N]: "
-                                    )
+                                    input("Latency is high. Enable essence-only for next attempt? [y/N]: ")
                                     .strip()
                                     .lower()
                                 )
@@ -5477,10 +5039,7 @@ def interactive_mode():
                             if res2.status != "aligned":
                                 print("Clean reset. Same channel. Let’s try again.")
                                 continue
-                            proceed = (
-                                input("Proceed with commit? [y/N]: ").strip().lower()
-                                or "n"
-                            )
+                            proceed = input("Proceed with commit? [y/N]: ").strip().lower() or "n"
 
                     if proceed != "y":
                         print("(Canceled before commit)")
@@ -5532,16 +5091,10 @@ if __name__ == "__main__":
     chat_parser = subparsers.add_parser("chat", help="Start interactive chat mode")
     chat_parser.add_argument("--prompt", "-p", help="Prompt file name (without .yaml)")
 
-    analyze_parser = subparsers.add_parser(
-        "analyze", help="Analyze a directory structure"
-    )
+    analyze_parser = subparsers.add_parser("analyze", help="Analyze a directory structure")
     analyze_parser.add_argument("directory", help="Directory to analyze")
-    analyze_parser.add_argument(
-        "--output", "-o", help="File to write the analysis JSON"
-    )
-    analyze_parser.add_argument(
-        "--depth", "-d", type=int, default=10, help="Maximum directory depth"
-    )
+    analyze_parser.add_argument("--output", "-o", help="File to write the analysis JSON")
+    analyze_parser.add_argument("--depth", "-d", type=int, default=10, help="Maximum directory depth")
     analyze_parser.add_argument(
         "--exclude",
         "-e",
@@ -5551,12 +5104,8 @@ if __name__ == "__main__":
     )
 
     default_parser = subparsers.add_parser("run", help="Run a single prompt")
-    default_parser.add_argument(
-        "message", nargs=argparse.REMAINDER, help="Message to send to the assistant"
-    )
-    default_parser.add_argument(
-        "--prompt", "-p", help="Prompt file name (without .yaml)"
-    )
+    default_parser.add_argument("message", nargs=argparse.REMAINDER, help="Message to send to the assistant")
+    default_parser.add_argument("--prompt", "-p", help="Prompt file name (without .yaml)")
 
     args = parser.parse_args()
 
@@ -5588,16 +5137,12 @@ if __name__ == "__main__":
             sys.exit(1)
     elif args.command == "run":
         if not args.message:
-            print(
-                "No message provided. Use: python assistant_v2_core.py run <your message>"
-            )
+            print("No message provided. Use: python assistant_v2_core.py run <your message>")
             sys.exit(1)
         try:
             assistant = EchoesAssistantV2()
             system_prompt = load_prompt(args.prompt) if args.prompt else None
-            response = assistant.chat(
-                " ".join(args.message), system_prompt=system_prompt, stream=False
-            )
+            response = assistant.chat(" ".join(args.message), system_prompt=system_prompt, stream=False)
             print(response)
         except Exception as exc:
             print(f"Error: {exc}")

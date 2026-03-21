@@ -40,9 +40,7 @@ class TestGlimpseInit:
 
     def test_create_draft(self):
         """Test Draft creation"""
-        draft = Draft(
-            input_text="test input", goal="test goal", constraints="test constraints"
-        )
+        draft = Draft(input_text="test input", goal="test goal", constraints="test constraints")
 
         assert draft.input_text == "test input"
         assert draft.goal == "test goal"
@@ -169,9 +167,7 @@ class TestDefaultSampler:
 
     async def test_default_sampler_basic(self):
         """Test local sampler with basic input"""
-        draft = Draft(
-            input_text="test input", goal="test goal", constraints="test constraints"
-        )
+        draft = Draft(input_text="test input", goal="test goal", constraints="test constraints")
 
         sample, essence, delta, aligned = await local_default_sampler(draft)
 

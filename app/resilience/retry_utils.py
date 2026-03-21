@@ -37,9 +37,7 @@ def retry_config(
     """
     return retry(
         stop=stop_after_attempt(max_attempts),
-        wait=wait_exponential_jitter(
-            initial=initial_wait, max=max_wait, exp_base=backoff_multiplier
-        ),
+        wait=wait_exponential_jitter(initial=initial_wait, max=max_wait, exp_base=backoff_multiplier),
         retry=retry_if_exception_type(httpx.HTTPStatusError),
         before_sleep=before_sleep_log(logger, logging.WARNING),
         after=after_log(logger, logging.INFO),
@@ -152,9 +150,7 @@ async def make_resilient_request(
                 if retry_after:
                     try:
                         wait_seconds = int(retry_after)
-                        logger.warning(
-                            f"Server requested wait of {wait_seconds}s via Retry-After"
-                        )
+                        logger.warning(f"Server requested wait of {wait_seconds}s via Retry-After")
                         # Note: tenacity will handle the wait via its wait strategy
                     except ValueError:
                         pass  # Invalid Retry-After value, ignore
@@ -173,8 +169,7 @@ def _log_retry_attempt(retry_state: RetryCallState) -> None:
 
     if exception:
         logger.warning(
-            f"Retry attempt {attempt} failed: {exception}. "
-            f"Next retry in {retry_state.next_action.sleep} seconds"
+            f"Retry attempt {attempt} failed: {exception}. Next retry in {retry_state.next_action.sleep} seconds"
         )
     else:
         logger.info(f"Retry attempt {attempt} completed successfully")

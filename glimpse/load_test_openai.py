@@ -94,9 +94,7 @@ async def simulate_user(user_id: int, requests_per_user: int) -> list[float]:
 
 
 async def main(concurrent_users: int = 10, requests_per_user: int = 5):
-    print(
-        f"=== Load Test: {concurrent_users} users × {requests_per_user} requests each ==="
-    )
+    print(f"=== Load Test: {concurrent_users} users × {requests_per_user} requests each ===")
     start = time.perf_counter()
     # Launch all users concurrently
     tasks = [simulate_user(uid, requests_per_user) for uid in range(concurrent_users)]
@@ -114,9 +112,7 @@ async def main(concurrent_users: int = 10, requests_per_user: int = 5):
     failure_count = total_requests - success_count
     if all_latencies:
         print(f"Total time: {total_elapsed:.2f}s")
-        print(
-            f"Requests: {success_count}/{total_requests} succeeded ({failure_count} failures)"
-        )
+        print(f"Requests: {success_count}/{total_requests} succeeded ({failure_count} failures)")
         print(f"Avg latency: {mean(all_latencies):.4f}s")
         print(f"Median latency: {median(all_latencies):.4f}s")
         print(f"Min/Max latency: {min(all_latencies):.4f}s / {max(all_latencies):.4f}s")
@@ -131,14 +127,8 @@ async def main(concurrent_users: int = 10, requests_per_user: int = 5):
 if __name__ == "__main__":
     import argparse
 
-    parser = argparse.ArgumentParser(
-        description="Load test for OpenAI-backed Glimpse sampler"
-    )
-    parser.add_argument(
-        "-u", "--users", type=int, default=12, help="Number of concurrent users"
-    )
-    parser.add_argument(
-        "-r", "--requests", type=int, default=8, help="Requests per user"
-    )
+    parser = argparse.ArgumentParser(description="Load test for OpenAI-backed Glimpse sampler")
+    parser.add_argument("-u", "--users", type=int, default=12, help="Number of concurrent users")
+    parser.add_argument("-r", "--requests", type=int, default=8, help="Requests per user")
     args = parser.parse_args()
     asyncio.run(main(concurrent_users=args.users, requests_per_user=args.requests))

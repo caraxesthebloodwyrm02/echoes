@@ -69,9 +69,7 @@ class PerformanceCache:
         async with self.lock:
             # Remove oldest if at capacity
             if len(self.cache) >= self.max_size:
-                oldest_key = min(
-                    self.access_times.keys(), key=lambda k: self.access_times[k]
-                )
+                oldest_key = min(self.access_times.keys(), key=lambda k: self.access_times[k])
                 del self.cache[oldest_key]
                 del self.access_times[oldest_key]
 
@@ -149,9 +147,7 @@ class AdaptiveTimeout:
         sorted_latencies = sorted(self.recent_latencies)
         percentile_idx = int(0.95 * len(sorted_latencies))
         if percentile_idx < len(sorted_latencies):
-            self.current_timeout = min(
-                sorted_latencies[percentile_idx] * 1.5, self.max_timeout
-            )
+            self.current_timeout = min(sorted_latencies[percentile_idx] * 1.5, self.max_timeout)
 
     def get_timeout(self) -> float:
         """Get current timeout value"""
@@ -173,9 +169,7 @@ class PerformanceOptimizer:
         """Enable or disable performance optimizations"""
         self.optimization_enabled = enabled
 
-    async def optimized_glimpse(
-        self, draft, sampler_func: Callable
-    ) -> tuple[Any, float]:
+    async def optimized_glimpse(self, draft, sampler_func: Callable) -> tuple[Any, float]:
         """
         Execute glimpse with performance optimizations
 
@@ -191,26 +185,20 @@ class PerformanceOptimizer:
         try:
             # Check cache first
             if self.optimization_enabled:
-                cached_result = await self.cache.get(
-                    draft.input_text, draft.goal, draft.constraints
-                )
+                cached_result = await self.cache.get(draft.input_text, draft.goal, draft.constraints)
                 if cached_result is not None:
                     execution_time = time.time() - start_time
                     self.timeout.record_latency(execution_time)
                     return cached_result, execution_time
 
             # Execute with timeout
-            result = await asyncio.wait_for(
-                sampler_func(draft), timeout=self.timeout.get_timeout()
-            )
+            result = await asyncio.wait_for(sampler_func(draft), timeout=self.timeout.get_timeout())
 
             execution_time = time.time() - start_time
 
             # Cache the result
             if self.optimization_enabled:
-                await self.cache.set(
-                    draft.input_text, draft.goal, draft.constraints, result
-                )
+                await self.cache.set(draft.input_text, draft.goal, draft.constraints, result)
 
             # Update metrics
             self.timeout.record_latency(execution_time)
@@ -239,9 +227,7 @@ class PerformanceOptimizer:
             status_history=["High latency detected", "Using fallback response"],
         )
 
-    async def batch_glimpses(
-        self, drafts: list[Any], sampler_func: Callable
-    ) -> list[tuple[Any, float]]:
+    async def batch_glimpses(self, drafts: list[Any], sampler_func: Callable) -> list[tuple[Any, float]]:
         """
         Process multiple glimpse requests in batch for efficiency
 
@@ -348,9 +334,7 @@ if __name__ == "__main__":
             constraints="",
         )
 
-        result, exec_time = await optimizer.optimized_glimpse(
-            draft, example_optimized_sampler
-        )
+        result, exec_time = await optimizer.optimized_glimpse(draft, example_optimized_sampler)
 
         print(f"Result: {result.status}")
         print(f"Execution time: {exec_time:.3f}s")
@@ -358,9 +342,7 @@ if __name__ == "__main__":
 
         # Test batch processing
         drafts = [draft for _ in range(5)]
-        batch_results = await optimizer.batch_glimpses(
-            drafts, example_optimized_sampler
-        )
+        batch_results = await optimizer.batch_glimpses(drafts, example_optimized_sampler)
 
         print(f"Batch processed {len(batch_results)} requests")
 

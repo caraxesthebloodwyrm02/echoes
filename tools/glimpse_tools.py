@@ -45,11 +45,7 @@ except ImportError as e:
 
         async def glimpse(self, draft: Draft) -> GlimpseResult:
             return GlimpseResult(
-                sample=(
-                    draft.input_text[:100] + "..."
-                    if len(draft.input_text) > 100
-                    else draft.input_text
-                ),
+                sample=(draft.input_text[:100] + "..." if len(draft.input_text) > 100 else draft.input_text),
                 essence=f"Intent: {draft.goal}; constraints: {draft.constraints or 'none'}",
             )
 
@@ -65,16 +61,12 @@ class GlimpseTools:
         self.available = GLIMPSE_AVAILABLE
         logger.info(f"GlimpseTools initialized (available: {self.available})")
 
-    async def process_draft(
-        self, input_text: str, goal: str, constraints: str = ""
-    ) -> dict[str, Any]:
+    async def process_draft(self, input_text: str, goal: str, constraints: str = "") -> dict[str, Any]:
         """Process a draft through Glimpse engine."""
         if not self.available:
             return {
                 "error": "Glimpse not available",
-                "sample": (
-                    input_text[:100] + "..." if len(input_text) > 100 else input_text
-                ),
+                "sample": (input_text[:100] + "..." if len(input_text) > 100 else input_text),
                 "essence": f"Intent: {goal}; constraints: {constraints or 'none'}",
                 "status": "fallback",
             }
@@ -95,9 +87,7 @@ class GlimpseTools:
             logger.error(f"Glimpse processing error: {e}")
             return {
                 "error": str(e),
-                "sample": (
-                    input_text[:100] + "..." if len(input_text) > 100 else input_text
-                ),
+                "sample": (input_text[:100] + "..." if len(input_text) > 100 else input_text),
                 "essence": f"Intent: {goal}; constraints: {constraints or 'none'}",
                 "status": "error",
             }
@@ -135,10 +125,7 @@ class GlimpseApiGetTool:
     """Tool for making GET requests to Glimpse API."""
 
     name = "glimpse_api_get"
-    description = (
-        "API tool for trajectory tracking, readability metrics, and data retrieval via GET "
-        "requests"
-    )
+    description = "API tool for trajectory tracking, readability metrics, and data retrieval via GET requests"
 
     def __init__(self, assistant=None, config: dict[str, Any] | None = None):
         self.assistant = assistant
@@ -183,9 +170,7 @@ class GlimpseApiGetTool:
             result = await self.glimpse_tools.process_draft(
                 input_text=f"GET {url}",
                 goal="Retrieve data",
-                constraints=json.dumps(
-                    {"params": params or {}, "headers": headers or {}}
-                ),
+                constraints=json.dumps({"params": params or {}, "headers": headers or {}}),
             )
             self._total_response_time += time.perf_counter() - start
             self._last_call_time = time.time()
@@ -215,9 +200,7 @@ class GlimpseApiGetTool:
         if self.assistant and hasattr(self.assistant, "glimpse_api_get"):
             self._total_calls += 1
             try:
-                return self.assistant.glimpse_api_get(
-                    url=url, params=params, headers=headers, timeout=timeout
-                )
+                return self.assistant.glimpse_api_get(url=url, params=params, headers=headers, timeout=timeout)
             except Exception as e:
                 self._error_count += 1
                 raise e
@@ -247,16 +230,8 @@ class GlimpseApiGetTool:
             "error_count": self._error_count,
             "success_rate": 1.0 if self._total_calls > 0 else 1.0,
             "last_call_time": self._last_call_time,
-            "average_response_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
-            "average_operation_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
+            "average_response_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
+            "average_operation_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
         }
 
     def to_openai_schema(self) -> dict[str, Any]:
@@ -275,10 +250,7 @@ class GlimpseApiPostTool:
     """Tool for making POST requests to Glimpse API."""
 
     name = "glimpse_api_post"
-    description = (
-        "API tool for data flow analysis, connectivity assessment, and submission via POST "
-        "requests"
-    )
+    description = "API tool for data flow analysis, connectivity assessment, and submission via POST requests"
 
     def __init__(self, assistant=None, config: dict[str, Any] | None = None):
         self.assistant = assistant
@@ -397,16 +369,8 @@ class GlimpseApiPostTool:
             "error_count": self._error_count,
             "success_rate": 1.0 if self._total_calls > 0 else 1.0,
             "last_call_time": self._last_call_time,
-            "average_response_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
-            "average_operation_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
+            "average_response_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
+            "average_operation_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
         }
 
     def to_openai_schema(self) -> dict[str, Any]:
@@ -559,16 +523,8 @@ class GlimpseConnectPlatformsTool:
             "error_count": self._error_count,
             "success_rate": 1.0 if self._total_calls > 0 else 1.0,
             "last_call_time": self._last_call_time,
-            "average_response_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
-            "average_operation_time": (
-                self._total_response_time / self._total_calls
-                if self._total_calls
-                else 0.0
-            ),
+            "average_response_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
+            "average_operation_time": (self._total_response_time / self._total_calls if self._total_calls else 0.0),
         }
 
     def to_openai_schema(self) -> dict[str, Any]:

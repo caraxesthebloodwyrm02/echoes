@@ -72,9 +72,7 @@ def demo_error_handling():
     test_errors = [
         ImportError("cannot import name 'MissingModule'"),
         AttributeError("'ToolRegistry' object has no attribute 'get_openai_schemas'"),
-        TypeError(
-            "SimpleRAGSystem.search() got an unexpected keyword argument 'top_k'"
-        ),
+        TypeError("SimpleRAGSystem.search() got an unexpected keyword argument 'top_k'"),
         ValueError("No module named 'nonexistent_package'"),
     ]
 
@@ -212,9 +210,7 @@ def demo_friendly_correspondence():
             # Show mood adaptation
             stats = personality_engine.get_personality_summary()
 
-            print(
-                f"  Assistant: {prefix} I'm here to help! (Mood: {stats['current_mood']})"
-            )
+            print(f"  Assistant: {prefix} I'm here to help! (Mood: {stats['current_mood']})")
 
     except Exception as e:
         print(f"  Note: Assistant initialization skipped for demo: {e}")
@@ -223,9 +219,7 @@ def demo_friendly_correspondence():
 def main():
     """Run all demos"""
     print("\n✨ Welcome to the Enhanced Echoes Assistant Demo!")
-    print(
-        "This showcases the new personality, error handling, and cross-reference features."
-    )
+    print("This showcases the new personality, error handling, and cross-reference features.")
 
     # Run all demos
     demo_personality()

@@ -193,32 +193,20 @@ class BusinessScenarioDemo:
             if low_stock:
                 print("\n  ⚠️  LOW STOCK ALERTS:")
                 for item in low_stock:
-                    stockout_cost = (
-                        item["monthly_sales"] * (item["price"] - item["cost"]) * 0.3
-                    )
+                    stockout_cost = item["monthly_sales"] * (item["price"] - item["cost"]) * 0.3
                     self.savings_identified += stockout_cost
-                    print(
-                        f"    • {item['name']}: {item['quantity']} units (min: {item['min_stock']})"
-                    )
+                    print(f"    • {item['name']}: {item['quantity']} units (min: {item['min_stock']})")
                     print(f"      Risk: ${stockout_cost:,.0f}/month lost revenue")
-                    self.insights.append(
-                        f"Restock {item['name']} to prevent ${stockout_cost:,.0f}/mo revenue loss"
-                    )
+                    self.insights.append(f"Restock {item['name']} to prevent ${stockout_cost:,.0f}/mo revenue loss")
 
             if overstock:
                 print("\n  📊 OVERSTOCK OPPORTUNITIES:")
                 for item in overstock:
-                    holding_cost = (
-                        (item["quantity"] - item["max_stock"]) * item["cost"] * 0.02
-                    )
+                    holding_cost = (item["quantity"] - item["max_stock"]) * item["cost"] * 0.02
                     self.savings_identified += holding_cost
-                    print(
-                        f"    • {item['name']}: {item['quantity']} units (max: {item['max_stock']})"
-                    )
+                    print(f"    • {item['name']}: {item['quantity']} units (max: {item['max_stock']})")
                     print(f"      Savings: ${holding_cost:,.0f}/month in holding costs")
-                    self.insights.append(
-                        f"Reduce {item['name']} inventory to save ${holding_cost:,.0f}/mo"
-                    )
+                    self.insights.append(f"Reduce {item['name']} inventory to save ${holding_cost:,.0f}/mo")
 
         print(f"\n💰 Phase 1 Savings Identified: ${self.savings_identified:,.0f}/month")
 
@@ -268,24 +256,19 @@ class BusinessScenarioDemo:
                     "current_loss": revenue_data["monthly_orders"]
                     * revenue_data["cart_abandonment_rate"]
                     * revenue_data["avg_order_value"],
-                    "potential_gain": revenue_data["monthly_orders"]
-                    * 0.10
-                    * revenue_data["avg_order_value"],
+                    "potential_gain": revenue_data["monthly_orders"] * 0.10 * revenue_data["avg_order_value"],
                     "action": "Implement exit-intent popups with 10% discount",
                 },
                 {
                     "name": "Increase Average Order Value",
                     "current_value": revenue_data["avg_order_value"],
-                    "potential_gain": revenue_data["monthly_orders"]
-                    * 25,  # $25 increase per order
+                    "potential_gain": revenue_data["monthly_orders"] * 25,  # $25 increase per order
                     "action": "Bundle products and offer free shipping over $300",
                 },
                 {
                     "name": "Optimize Product Mix",
                     "current_margin": revenue_data["avg_margin"],
-                    "potential_gain": revenue_data["monthly_orders"]
-                    * revenue_data["avg_order_value"]
-                    * 0.03,
+                    "potential_gain": revenue_data["monthly_orders"] * revenue_data["avg_order_value"] * 0.03,
                     "action": "Promote higher-margin peripherals",
                 },
             ]
@@ -300,9 +283,7 @@ class BusinessScenarioDemo:
                 self.insights.append(f"{opp['name']}: ${gain:,.0f}/mo opportunity")
 
             self.revenue_opportunities = total_opportunity
-            print(
-                f"\n💰 Phase 2 Revenue Opportunities: ${total_opportunity:,.0f}/month"
-            )
+            print(f"\n💰 Phase 2 Revenue Opportunities: ${total_opportunity:,.0f}/month")
 
     def _phase_3_strategic_planning(self):
         """Phase 3: Generate strategic plan for Q4 growth."""
@@ -314,9 +295,7 @@ class BusinessScenarioDemo:
         self.assistant.update_context("current_quarter", "Q4 2025")
         self.assistant.update_context("growth_target", "25%")
         self.assistant.update_context("identified_savings", self.savings_identified)
-        self.assistant.update_context(
-            "revenue_opportunities", self.revenue_opportunities
-        )
+        self.assistant.update_context("revenue_opportunities", self.revenue_opportunities)
 
         print("\n[Step 3.2] Running planning workflow...")
 
@@ -340,9 +319,7 @@ class BusinessScenarioDemo:
         )
 
         if result["success"]:
-            self.print_result(
-                "Strategic plan generated", f"{result['total_duration_ms']:.0f}ms"
-            )
+            self.print_result("Strategic plan generated", f"{result['total_duration_ms']:.0f}ms")
 
             print("\n[Step 3.3] Strategic Initiatives:")
 
@@ -430,9 +407,7 @@ class BusinessScenarioDemo:
         )
 
         if result["success"]:
-            self.print_result(
-                "Competitive analysis completed", "2 competitors analyzed"
-            )
+            self.print_result("Competitive analysis completed", "2 competitors analyzed")
 
             print("\n[Step 4.3] Competitive Positioning:")
 
@@ -489,9 +464,7 @@ class BusinessScenarioDemo:
         }
 
         # Store report
-        self.assistant.write_file(
-            "data/executive_report_q4_2025.json", json.dumps(report, indent=2)
-        )
+        self.assistant.write_file("data/executive_report_q4_2025.json", json.dumps(report, indent=2))
 
         print("\n✓ Executive report generated")
         print("✓ Report saved: data/executive_report_q4_2025.json")
@@ -502,23 +475,13 @@ class BusinessScenarioDemo:
         print("=" * 80)
 
         print("\n💰 FINANCIAL IMPACT:")
-        print(
-            f"  • Cost Savings:        ${report['executive_summary']['total_savings_identified']:>10,.0f}/month"
-        )
-        print(
-            f"  • Revenue Growth:      ${report['executive_summary']['revenue_opportunities']:>10,.0f}/month"
-        )
-        print(
-            f"  • Total Impact:        ${report['executive_summary']['total_impact']:>10,.0f}/month"
-        )
-        print(
-            f"  • Annual Impact:       ${report['executive_summary']['total_impact'] * 12:>10,.0f}/year"
-        )
+        print(f"  • Cost Savings:        ${report['executive_summary']['total_savings_identified']:>10,.0f}/month")
+        print(f"  • Revenue Growth:      ${report['executive_summary']['revenue_opportunities']:>10,.0f}/month")
+        print(f"  • Total Impact:        ${report['executive_summary']['total_impact']:>10,.0f}/month")
+        print(f"  • Annual Impact:       ${report['executive_summary']['total_impact'] * 12:>10,.0f}/year")
 
         print("\n📈 RETURN ON INVESTMENT:")
-        print(
-            f"  • Payback Period:      {report['executive_summary']['payback_period']}"
-        )
+        print(f"  • Payback Period:      {report['executive_summary']['payback_period']}")
         print(f"  • Expected ROI:        {report['executive_summary']['roi']}")
 
         print("\n🎯 TOP INSIGHTS:")
@@ -544,13 +507,9 @@ class BusinessScenarioDemo:
 
         print("\n💼 BUSINESS VALUE DELIVERED:")
         total_annual = (self.savings_identified + self.revenue_opportunities) * 12
-        print(
-            f"  • Monthly Impact:      ${self.savings_identified + self.revenue_opportunities:,.0f}"
-        )
+        print(f"  • Monthly Impact:      ${self.savings_identified + self.revenue_opportunities:,.0f}")
         print(f"  • Annual Impact:       ${total_annual:,.0f}")
-        print(
-            f"  • Profitability Gain:  {(total_annual / 2000000) * 100:.1f}% (assuming $2M base)"
-        )
+        print(f"  • Profitability Gain:  {(total_annual / 2000000) * 100:.1f}% (assuming $2M base)")
 
         print("\n🚀 CAPABILITIES DEMONSTRATED:")
         capabilities = [

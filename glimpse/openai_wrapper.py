@@ -96,9 +96,9 @@ async def call_with_backoff(
             try:
                 # Try to acquire a token with a reasonable timeout
                 # Estimate token usage for rate limiting (rough estimate)
-                estimated_tokens = getattr(
-                    kwargs.get("messages", [{}])[0], "get", lambda k, d=0: d
-                )("estimated_tokens", 0)
+                estimated_tokens = getattr(kwargs.get("messages", [{}])[0], "get", lambda k, d=0: d)(
+                    "estimated_tokens", 0
+                )
                 if not estimated_tokens and "messages" in kwargs:
                     # Rough estimate: ~4 tokens per message word
                     message_text = str(kwargs["messages"])
@@ -106,18 +106,14 @@ async def call_with_backoff(
 
                 acquired, wait_time = await rate_limiter.acquire(
                     endpoint=endpoint,
-                    token_count=min(
-                        estimated_tokens, rate_limiter.current_tpm // 60
-                    ),  # Cap at 1 second worth
+                    token_count=min(estimated_tokens, rate_limiter.current_tpm // 60),  # Cap at 1 second worth
                     max_wait=30.0,  # Allow up to 30 seconds for rate limiting
                 )
 
                 if not acquired:
                     # We couldn't get a token within the timeout
                     record_rate_limit_rejection(endpoint)
-                    raise RuntimeError(
-                        f"Rate limit exceeded for {endpoint} - max wait time reached"
-                    )
+                    raise RuntimeError(f"Rate limit exceeded for {endpoint} - max wait time reached")
 
                 # Record the time we spent waiting for rate limiting
                 if wait_time > 0.001:  # Only record if we actually waited
@@ -126,9 +122,7 @@ async def call_with_backoff(
 
             except TimeoutError:
                 record_rate_limit_rejection(endpoint)
-                raise RuntimeError(
-                    f"Rate limit acquisition timed out for {endpoint}"
-                ) from None
+                raise RuntimeError(f"Rate limit acquisition timed out for {endpoint}") from None
 
         try:
             try:
@@ -146,9 +140,7 @@ async def call_with_backoff(
 
                 # Extract token usage if available
                 usage = getattr(result, "usage", {})
-                if hasattr(usage, "prompt_tokens") and hasattr(
-                    usage, "completion_tokens"
-                ):
+                if hasattr(usage, "prompt_tokens") and hasattr(usage, "completion_tokens"):
                     record_openai_tokens(
                         prompt_tokens=usage.prompt_tokens,
                         completion_tokens=usage.completion_tokens,
@@ -156,11 +148,7 @@ async def call_with_backoff(
                     )
 
                 # Record successful request in rate limiter with actual token consumption
-                actual_tokens = (
-                    usage.total_tokens
-                    if hasattr(usage, "total_tokens")
-                    else estimated_tokens
-                )
+                actual_tokens = usage.total_tokens if hasattr(usage, "total_tokens") else estimated_tokens
                 await rate_limiter.record_success(endpoint, token_count=actual_tokens)
 
                 # Update rate limiter metrics
@@ -189,9 +177,7 @@ async def call_with_backoff(
 
             except Exception as e:
                 # Record failure in rate limiter
-                if isinstance(e, openai.RateLimitError) or (
-                    hasattr(e, "status_code") and e.status_code == 429
-                ):
+                if isinstance(e, openai.RateLimitError) or (hasattr(e, "status_code") and e.status_code == 429):
                     await rate_limiter.record_rate_limit(endpoint)
                     record_rate_limit_rejection(endpoint)
                 else:
@@ -293,9 +279,7 @@ async def call_with_backoff(
             "last_error": str(last_error) if last_error else "Unknown error",
         },
     )
-    raise RuntimeError(
-        f"Max retries ({max_attempts}) exceeded for OpenAI call to {endpoint}."
-    )
+    raise RuntimeError(f"Max retries ({max_attempts}) exceeded for OpenAI call to {endpoint}.")
 
 
 # Example async client wrapper
@@ -363,17 +347,9 @@ class AsyncOpenAIClient:
         """Async embeddings.create with latency and retry."""
 
         async def _call():
-            async with log_latency(
-                "embeddings", {"model": model, "input": input, **extra_kwargs}
-            ):
-                response = await self._client.embeddings.create(
-                    model=model, input=input, **extra_kwargs
-                )
-                return (
-                    response.model_dump()
-                    if hasattr(response, "model_dump")
-                    else response
-                )
+            async with log_latency("embeddings", {"model": model, "input": input, **extra_kwargs}):
+                response = await self._client.embeddings.create(model=model, input=input, **extra_kwargs)
+                return response.model_dump() if hasattr(response, "model_dump") else response
 
         return await call_with_backoff(_call, endpoint="embeddings")
 

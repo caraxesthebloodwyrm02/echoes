@@ -22,9 +22,7 @@ def demo_filesystem_capabilities():
     print("=" * 80)
 
     # Initialize assistant
-    assistant = EchoesAssistantV2(
-        enable_tools=True, enable_status=True, session_id="filesystem_capabilities_demo"
-    )
+    assistant = EchoesAssistantV2(enable_tools=True, enable_status=True, session_id="filesystem_capabilities_demo")
 
     print("\n✅ Filesystem tools successfully integrated with OpenAI function calling!")
     print(f"📦 Total tools available: {len(assistant.list_tools())}")

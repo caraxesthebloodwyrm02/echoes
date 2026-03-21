@@ -61,9 +61,7 @@ def rag_pipeline():
     # 2. Ingestion and Processing
     all_chunks = []
     for doc_name, doc_data in DOCUMENTS.items():
-        chunks = chunker.chunk_document(
-            doc_data["text"], doc_name, doc_data["category"]
-        )
+        chunks = chunker.chunk_document(doc_data["text"], doc_name, doc_data["category"])
         all_chunks.extend(chunks)
         tracker.record_chunking(
             source_document=doc_name,
@@ -134,9 +132,7 @@ def test_e2e_application_empirical_query(rag_pipeline):
 
     assert top_result.metadata["source_document"] == "neuroscience_paper.txt"
     assert top_result.metadata["category"] == "empirical"
-    assert "prediction machine" in top_result.text, (
-        "Top result text does not match expected content."
-    )
+    assert "prediction machine" in top_result.text, "Top result text does not match expected content."
     assert top_result.similarity_score > 0.5, "Similarity score is unexpectedly low."
 
 
@@ -153,9 +149,7 @@ def test_e2e_application_experiential_query(rag_pipeline):
     top_result = results[0]
 
     assert top_result.metadata["source_document"] == "meditation_experience.txt"
-    assert "unified field of awareness" in top_result.text, (
-        "Top result for experiential query is incorrect."
-    )
+    assert "unified field of awareness" in top_result.text, "Top result for experiential query is incorrect."
 
 
 def test_e2e_results_provenance(rag_pipeline):
@@ -165,9 +159,7 @@ def test_e2e_results_provenance(rag_pipeline):
     # Assert that operations were recorded
     record_types = [rec.operation_type for rec in tracker.records.values()]
     assert "chunk" in record_types, "Chunking operation was not recorded in provenance."
-    assert "retrieve" in record_types, (
-        "Retrieval operation was not recorded in provenance."
-    )
+    assert "retrieve" in record_types, "Retrieval operation was not recorded in provenance."
 
     # Find the retrieval record and validate its integrity
     retrieval_record = None
@@ -176,9 +168,7 @@ def test_e2e_results_provenance(rag_pipeline):
             retrieval_record = record
             break
 
-    assert retrieval_record is not None, (
-        "Could not find the retrieval record in provenance."
-    )
+    assert retrieval_record is not None, "Could not find the retrieval record in provenance."
 
     # Validate the record's internal checksum
     is_valid, error = tracker.validate_record(retrieval_record.record_id)
@@ -187,6 +177,4 @@ def test_e2e_results_provenance(rag_pipeline):
     # Check that the retrieval record has a parent (the chunking record)
     lineage = tracker.get_lineage(retrieval_record.record_id)
     assert len(lineage) > 1, "Lineage is too short; parent records are missing."
-    assert lineage[0].operation_type == "chunk", (
-        "The parent of the retrieval should be a chunk operation."
-    )
+    assert lineage[0].operation_type == "chunk", "The parent of the retrieval should be a chunk operation."

@@ -10,9 +10,7 @@ def run_command(cmd: list[str], capture: bool = True) -> tuple[bool, str, str]:
     """Run a command (list of args, no shell) and return success, stdout, stderr."""
     try:
         if capture:
-            result = subprocess.run(
-                cmd, shell=False, capture_output=True, text=True, timeout=30
-            )
+            result = subprocess.run(cmd, shell=False, capture_output=True, text=True, timeout=30)
             return result.returncode == 0, result.stdout or "", result.stderr or ""
         result = subprocess.run(cmd, shell=False, timeout=30)
         return result.returncode == 0, "", ""
@@ -140,9 +138,7 @@ def check_config():
         print("❌ venv Python not found, skipping config check")
         return False
 
-    success, output, error = run_command(
-        [str(venv_py.resolve()), "test_config_import.py"]
-    )
+    success, output, error = run_command([str(venv_py.resolve()), "test_config_import.py"])
     if success:
         print("✅ Configuration loads successfully")
         print(f"Output: {output.strip()}")

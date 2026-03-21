@@ -23,9 +23,7 @@ def test_boundary_values():
         # Create fresh Glimpse for long input test
         engine2 = GlimpseEngine()
         long_text = "x" * 10000
-        r2 = await engine2.glimpse(
-            Draft(input_text=long_text, goal="test", constraints="")
-        )
+        r2 = await engine2.glimpse(Draft(input_text=long_text, goal="test", constraints=""))
         assert r2.status in ["aligned", "not_aligned"]
 
         # Create fresh Glimpse for single character test
@@ -37,9 +35,7 @@ def test_boundary_values():
         engine4 = GlimpseEngine()
         for _i in range(2):
             await engine4.glimpse(Draft(input_text="test", goal="test", constraints=""))
-        r4 = await engine4.glimpse(
-            Draft(input_text="test", goal="test", constraints="")
-        )
+        r4 = await engine4.glimpse(Draft(input_text="test", goal="test", constraints=""))
         assert r4.status == "redial"
 
     asyncio.run(run())
@@ -52,9 +48,7 @@ def test_null_and_invalid_inputs():
         # Test with None values (should be handled gracefully)
         engine1 = GlimpseEngine()
         try:
-            r1 = await engine1.glimpse(
-                Draft(input_text=None, goal="test", constraints="")
-            )
+            r1 = await engine1.glimpse(Draft(input_text=None, goal="test", constraints=""))
             # If it doesn't raise an error, ensure reasonable behavior
             assert r1.status in ["not_aligned", "aligned"]
         except (TypeError, AttributeError):
@@ -64,9 +58,7 @@ def test_null_and_invalid_inputs():
         # Test with numeric input (invalid type)
         engine2 = GlimpseEngine()
         try:
-            r2 = await engine2.glimpse(
-                Draft(input_text=123, goal="test", constraints="")
-            )
+            r2 = await engine2.glimpse(Draft(input_text=123, goal="test", constraints=""))
             # Should handle type conversion gracefully
             assert r2.status in ["not_aligned", "aligned"]
         except (TypeError, AttributeError):
@@ -75,16 +67,12 @@ def test_null_and_invalid_inputs():
 
         # Test with special characters
         engine3 = GlimpseEngine()
-        r3 = await engine3.glimpse(
-            Draft(input_text="!@#$%^&*()", goal="test", constraints="")
-        )
+        r3 = await engine3.glimpse(Draft(input_text="!@#$%^&*()", goal="test", constraints=""))
         assert r3.status in ["aligned", "not_aligned"]
 
         # Test with unicode characters
         engine4 = GlimpseEngine()
-        r4 = await engine4.glimpse(
-            Draft(input_text="测试中文", goal="test", constraints="")
-        )
+        r4 = await engine4.glimpse(Draft(input_text="测试中文", goal="test", constraints=""))
         assert r4.status in ["aligned", "not_aligned"]
 
     asyncio.run(run())
@@ -99,11 +87,7 @@ def test_performance_limits():
         engine = GlimpseEngine()
 
         start_time = time.time()
-        r = await engine.glimpse(
-            Draft(
-                input_text="test input", goal="test goal", constraints=large_constraints
-            )
-        )
+        r = await engine.glimpse(Draft(input_text="test input", goal="test goal", constraints=large_constraints))
         elapsed = time.time() - start_time
 
         # Should complete within reasonable time (adjust threshold as needed)
@@ -122,9 +106,7 @@ def test_concurrent_access():
         engines = [GlimpseEngine() for _ in range(10)]
 
         async def make_glimpse(glimpse_engine: GlimpseEngine, text: str) -> object:
-            return await glimpse_engine.glimpse(
-                Draft(input_text=text, goal="test", constraints="")
-            )
+            return await glimpse_engine.glimpse(Draft(input_text=text, goal="test", constraints=""))
 
         # Fire all ten requests concurrently
         tasks = [make_glimpse(engines[i], f"test message {i}") for i in range(10)]
@@ -182,9 +164,7 @@ def test_privacy_guard_edge_cases():
         assert len(commit_called) == 1
 
         # Test with very large draft
-        large_draft = Draft(
-            input_text="x" * 10000, goal="y" * 1000, constraints="z" * 1000
-        )
+        large_draft = Draft(input_text="x" * 10000, goal="y" * 1000, constraints="z" * 1000)
         guard.commit(large_draft)
         assert len(commit_called) == 2
 
@@ -216,17 +196,13 @@ def test_essence_only_mode_edge_cases():
         # Test glimpse with essence-only on
         engine2 = GlimpseEngine()
         engine2.set_essence_only(True)
-        r1 = await engine2.glimpse(
-            Draft(input_text="test", goal="test", constraints="")
-        )
+        r1 = await engine2.glimpse(Draft(input_text="test", goal="test", constraints=""))
         assert r1.sample == ""
         assert r1.essence != ""
 
         # Test glimpse with essence-only off
         engine3 = GlimpseEngine()
-        r2 = await engine3.glimpse(
-            Draft(input_text="test", goal="test", constraints="")
-        )
+        r2 = await engine3.glimpse(Draft(input_text="test", goal="test", constraints=""))
         assert r2.sample != ""
         assert r2.essence != ""
 
@@ -253,9 +229,7 @@ def test_cancel_behavior_edge_cases():
 
         slow_engine = GlimpseEngine(sampler=slow_sampler)
 
-        task = asyncio.create_task(
-            slow_engine.glimpse(Draft(input_text="test", goal="test", constraints=""))
-        )
+        task = asyncio.create_task(slow_engine.glimpse(Draft(input_text="test", goal="test", constraints="")))
 
         # Cancel quickly
         await asyncio.sleep(0.01)
@@ -284,14 +258,10 @@ def test_status_history_edge_cases():
             return ("sample", "essence", None, True)
 
         slow_engine = GlimpseEngine(sampler=very_slow_sampler)
-        r2 = await slow_engine.glimpse(
-            Draft(input_text="test", goal="test", constraints="")
-        )
+        r2 = await slow_engine.glimpse(Draft(input_text="test", goal="test", constraints=""))
 
         assert isinstance(r2.status_history, list)
-        assert any(
-            "trying" in s.lower() or "glimpse" in s.lower() for s in r2.status_history
-        )
+        assert any("trying" in s.lower() or "glimpse" in s.lower() for s in r2.status_history)
         assert r2.stale is False
 
     asyncio.run(run())

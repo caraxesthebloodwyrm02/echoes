@@ -78,10 +78,7 @@ async def run_parallel_tests(config: dict) -> bool:
 
     with ProcessPoolExecutor(max_workers=max_workers) as executor:
         loop = asyncio.get_event_loop()
-        futures = [
-            loop.run_in_executor(executor, run_test_suite, path, pytest_args)
-            for path in test_paths
-        ]
+        futures = [loop.run_in_executor(executor, run_test_suite, path, pytest_args) for path in test_paths]
         results = await asyncio.gather(*futures)
         return all(results)
 
@@ -112,12 +109,8 @@ def generate_coverage_report(config: dict) -> float:
 
 def main():
     parser = argparse.ArgumentParser(description="Full Coverage Test Runner")
-    parser.add_argument(
-        "--config", help="Path to config file", default="full_coverage_test_config.json"
-    )
-    parser.add_argument(
-        "--check-api", action="store_true", help="Verify API health before testing"
-    )
+    parser.add_argument("--config", help="Path to config file", default="full_coverage_test_config.json")
+    parser.add_argument("--check-api", action="store_true", help="Verify API health before testing")
     parser.add_argument(
         "--workers",
         type=int,
@@ -146,9 +139,7 @@ def main():
     # Check minimum coverage
     min_coverage = config["min_coverage"]
     if coverage_total < min_coverage:
-        logger.error(
-            f"Coverage {coverage_total:.2f}% is below minimum required {min_coverage}%"
-        )
+        logger.error(f"Coverage {coverage_total:.2f}% is below minimum required {min_coverage}%")
         sys.exit(1)
 
     logger.info(f"Test suite completed successfully. Coverage: {coverage_total:.2f}%")

@@ -178,16 +178,12 @@ def demo_pattern_detection():
 
     for pattern_name, pattern_list in patterns.items():
         if pattern_list:
-            print(
-                f"\n  {pattern_name.replace('_', ' ').title()}: {len(pattern_list)} instances"
-            )
+            print(f"\n  {pattern_name.replace('_', ' ').title()}: {len(pattern_list)} instances")
 
             for i, pattern in enumerate(pattern_list[:2], 1):
                 print(f"    {i}. {pattern}")
         else:
-            print(
-                f"\n  {pattern_name.replace('_', ' ').title()}: No instances detected"
-            )
+            print(f"\n  {pattern_name.replace('_', ' ').title()}: No instances detected")
 
 
 def demo_critical_links():
@@ -209,23 +205,17 @@ def demo_critical_links():
             print(f"\n  {i}. Link Strength: {strength:.2f}")
 
             if from_thought:
-                print(
-                    f"     From: [{from_thought.get('type', '').title()}] {from_thought.get('content', '')[:60]}..."
-                )
+                print(f"     From: [{from_thought.get('type', '').title()}] {from_thought.get('content', '')[:60]}...")
 
             if to_thought:
-                print(
-                    f"     To: [{to_thought.get('type', '').title()}] {to_thought.get('content', '')[:60]}..."
-                )
+                print(f"     To: [{to_thought.get('type', '').title()}] {to_thought.get('content', '')[:60]}...")
 
             # Check if it's a cross-chain link
             from_chain = thought_tracker._get_thought_chain(from_id)
             to_chain = thought_tracker._get_thought_chain(to_id)
 
             if from_chain != to_chain:
-                print(
-                    f"     🔗 Cross-chain connection: Chain {from_chain} → Chain {to_chain}"
-                )
+                print(f"     🔗 Cross-chain connection: Chain {from_chain} → Chain {to_chain}")
     else:
         print("  No critical links detected yet.")
 
@@ -242,9 +232,7 @@ def demo_critical_insights():
 
     if insights:
         for i, insight in enumerate(insights[:5], 1):
-            print(
-                f"\n  {i}. {insight.get('insight_type', 'unknown').replace('_', ' ').title()}"
-            )
+            print(f"\n  {i}. {insight.get('insight_type', 'unknown').replace('_', ' ').title()}")
             print(f"     Content: {insight.get('content', '')[:80]}...")
             print(f"     Importance: {insight.get('importance', 0):.2f}")
 
@@ -269,9 +257,7 @@ def demo_conversation_state():
     print("\n🧠 Intent Engine State:")
     print(f"  Total thoughts: {intent_state.get('thought_count', 0)}")
     print(f"  Intent distribution: {intent_state.get('intent_distribution', {})}")
-    print(
-        f"  Current focus: {intent_state.get('intent_flow', {}).get('current_focus', 'None')}"
-    )
+    print(f"  Current focus: {intent_state.get('intent_flow', {}).get('current_focus', 'None')}")
 
     # Get thought network summary
     thought_summary = {
@@ -318,9 +304,7 @@ def demo_export_functionality():
         print(f'     "links": {len(export_data["links"])} items,')
         print(f'     "chains": {len(export_data["chains"])} items,')
         print(f'     "patterns": {list(export_data["patterns"].keys())},')
-        print(
-            f'     "critical_insights": {len(export_data["critical_insights"])} items'
-        )
+        print(f'     "critical_insights": {len(export_data["critical_insights"])} items')
         print("   }")
 
     except Exception as e:
@@ -381,18 +365,12 @@ def demo_advanced_features():
 
     # Generate insights
     insights = thought_tracker.get_critical_insights()
-    scenario_insights = [
-        i
-        for i in insights
-        if thought_id in [i.get("thought_id", ""), i.get("thought_id", "")]
-    ]
+    scenario_insights = [i for i in insights if thought_id in [i.get("thought_id", ""), i.get("thought_id", "")]]
 
     if scenario_insights:
         print("\n💡 Generated Insights:")
         for insight in scenario_insights[:2]:
-            print(
-                f"   • {insight.get('insight_type', 'unknown')}: High importance thought with multiple entities"
-            )
+            print(f"   • {insight.get('insight_type', 'unknown')}: High importance thought with multiple entities")
 
 
 def main():
@@ -419,9 +397,7 @@ def main():
     print("  ✅ Advanced intent detection with 12 intent types")
     print("  ✅ Comprehensive entity identification across 13 categories")
     print("  ✅ Train-of-thought tracking with 9 thought types")
-    print(
-        "  ✅ Automatic pattern detection (problem-solution, hypothesis testing, etc.)"
-    )
+    print("  ✅ Automatic pattern detection (problem-solution, hypothesis testing, etc.)")
     print("  ✅ Critical cross-link identification between thought chains")
     print("  ✅ Intelligent insight extraction from conversation flow")
     print("  ✅ Full conversation state analysis and export")

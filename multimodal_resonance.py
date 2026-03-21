@@ -116,9 +116,7 @@ class MultimodalResonanceEngine:
         for memory in self.memories.values():
             if memory.modalities.text:
                 # Simple cosine similarity
-                similarity = self._cosine_similarity(
-                    query_vector, memory.modalities.text
-                )
+                similarity = self._cosine_similarity(query_vector, memory.modalities.text)
                 results.append((memory, similarity))
 
         # Sort by similarity and return top results

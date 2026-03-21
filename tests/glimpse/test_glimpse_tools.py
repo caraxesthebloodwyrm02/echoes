@@ -194,9 +194,7 @@ class TestGlimpseApiPostTool:
         mock_response = {"status": "success"}
         self.mock_assistant.glimpse_api_post.return_value = mock_response
 
-        result = self.tool.execute(
-            url="https://api.example.com/raw", data="raw string data"
-        )
+        result = self.tool.execute(url="https://api.example.com/raw", data="raw string data")
 
         assert result == mock_response
         self.mock_assistant.glimpse_api_post.assert_called_once()
@@ -291,12 +289,8 @@ class TestGlimpseToolIntegration:
             assert callable(tool.get_stats), f"{tool.name} get_stats not callable"
 
             # All tools must have to_openai_schema method
-            assert hasattr(tool, "to_openai_schema"), (
-                f"{tool.name} missing to_openai_schema method"
-            )
-            assert callable(tool.to_openai_schema), (
-                f"{tool.name} to_openai_schema not callable"
-            )
+            assert hasattr(tool, "to_openai_schema"), f"{tool.name} missing to_openai_schema method"
+            assert callable(tool.to_openai_schema), f"{tool.name} to_openai_schema not callable"
 
     def test_tool_schemas_are_valid_json(self):
         """Test that all tool schemas are valid JSON."""

@@ -79,9 +79,7 @@ class SimpleRAGSystem:
 
         return dot_product / (magnitude1 * magnitude2)
 
-    def add_documents(
-        self, documents: str | list[str] | dict[str, Any]
-    ) -> dict[str, Any]:
+    def add_documents(self, documents: str | list[str] | dict[str, Any]) -> dict[str, Any]:
         """Add documents to the RAG system."""
         added_count = 0
 
@@ -102,9 +100,7 @@ class SimpleRAGSystem:
             doc_id = hashlib.sha256(content.encode()).hexdigest()[:16]
             embedding = self._create_embedding(content)
 
-            document = Document(
-                id=doc_id, content=content, metadata=metadata, embedding=embedding
-            )
+            document = Document(id=doc_id, content=content, metadata=metadata, embedding=embedding)
 
             self.documents[doc_id] = document
             added_count += 1

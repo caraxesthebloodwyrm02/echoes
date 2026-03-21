@@ -156,9 +156,7 @@ class PatternDetector:
 
         # Calculate overall confidence - simplified without numpy
         overall_confidence = (
-            sum([p.confidence for p in filtered_patterns]) / len(filtered_patterns)
-            if filtered_patterns
-            else 0.0
+            sum([p.confidence for p in filtered_patterns]) / len(filtered_patterns) if filtered_patterns else 0.0
         )
 
         processing_time = (datetime.utcnow() - start_time).total_seconds()
@@ -186,9 +184,7 @@ class PatternDetector:
                 matches = list(re.finditer(regex, text_lower, re.IGNORECASE))
                 for match in matches:
                     # Calculate confidence based on match quality
-                    confidence = min(
-                        0.9, len(match.group()) / 20
-                    )  # Longer matches = higher confidence
+                    confidence = min(0.9, len(match.group()) / 20)  # Longer matches = higher confidence
 
                     pattern = DetectedPattern(
                         pattern_type=pattern_type,
@@ -244,9 +240,7 @@ class PatternDetector:
             avg_length = sum(sentence_lengths) / len(sentence_lengths)
 
             # Simple variance calculation
-            variance = sum((x - avg_length) ** 2 for x in sentence_lengths) / len(
-                sentence_lengths
-            )
+            variance = sum((x - avg_length) ** 2 for x in sentence_lengths) / len(sentence_lengths)
             std_length = variance**0.5
 
             if std_length > avg_length * 0.5:  # High variation in sentence length
@@ -267,9 +261,7 @@ class PatternDetector:
 
         return patterns
 
-    async def analyze_relationships(
-        self, patterns: list[DetectedPattern]
-    ) -> list[DetectedPattern]:
+    async def analyze_relationships(self, patterns: list[DetectedPattern]) -> list[DetectedPattern]:
         """Analyze relationships between detected patterns"""
         # Group patterns by type and proximity
         for i, pattern in enumerate(patterns):

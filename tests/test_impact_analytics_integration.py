@@ -107,9 +107,7 @@ class TestTurboBridge:
     def test_unified_analysis_basic(self):
         """Test basic unified analysis functionality."""
         bridge = TurboBridge()
-        result = bridge.unified_analysis(
-            {"text": ["analysis text"], "query": "search query"}
-        )
+        result = bridge.unified_analysis({"text": ["analysis text"], "query": "search query"})
 
         # Check that result has expected structure
         assert isinstance(result, dict)
@@ -216,9 +214,7 @@ class TestConvenienceFunctions:
         result = record_research_progress("milestone", 75.0)
 
         assert result is True
-        mock_connector.record_milestone.assert_called_once_with(
-            "milestone", 75.0, "research", None
-        )
+        mock_connector.record_milestone.assert_called_once_with("milestone", 75.0, "research", None)
 
     @patch("integrations.impact_analytics_connector.impact_connector")
     def test_get_impact_status_function(self, mock_connector):

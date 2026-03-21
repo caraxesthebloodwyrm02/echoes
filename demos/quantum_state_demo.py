@@ -47,9 +47,7 @@ def demo_entanglement():
 
     print("\n   Creating entangled states...")
     # Create user session entangled with permissions and features
-    qsm.update_state(
-        "user_session", "active", entangle_with=["user_permissions", "user_features"]
-    )
+    qsm.update_state("user_session", "active", entangle_with=["user_permissions", "user_features"])
     qsm.update_state("user_permissions", "admin")
     qsm.update_state("user_features", "premium")
 
@@ -199,12 +197,8 @@ def demo_echoes_integration_concept():
     print("\n8. Echoes Integration Concept...")
 
     print("\n   Quantum State Management Benefits for Echoes:")
-    print(
-        "   • Superposition: Process multimodal inputs (text, image, audio) in parallel"
-    )
-    print(
-        "   • Entanglement: Coordinate authentication, rate limiting, and quotas automatically"
-    )
+    print("   • Superposition: Process multimodal inputs (text, image, audio) in parallel")
+    print("   • Entanglement: Coordinate authentication, rate limiting, and quotas automatically")
     print("   • Probabilistic Transitions: Dynamic model selection based on context")
     print("   • Performance Monitoring: Real-time optimization of response times")
     print("   • Persistence: Maintain conversation state across sessions")
@@ -236,9 +230,7 @@ def demo_echoes_integration_concept():
     entangled_states = qsm.get_entangled_states("request_type")
 
     print(f"   Request status: {request_status}")
-    print(
-        f"   Processing completion: {all(v == 'completed' for v in entangled_states.values())}"
-    )
+    print(f"   Processing completion: {all(v == 'completed' for v in entangled_states.values())}")
     print(f"   All modalities processed: {list(entangled_states.keys())}")
 
 

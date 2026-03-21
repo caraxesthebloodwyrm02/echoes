@@ -191,11 +191,7 @@ class ModelRouter:
 
         # Check if any tools require web search
         if tools:
-            search_tools = [
-                t
-                for t in tools
-                if t.get("name") in ["web_search", "get_web_page_content", "browser"]
-            ]
+            search_tools = [t for t in tools if t.get("name") in ["web_search", "get_web_page_content", "browser"]]
             if search_tools:
                 return True
 
@@ -268,9 +264,7 @@ class ModelRouter:
         science_score = sum(1 for kw in self.science_indicators if kw in prompt_lower)
         coding_score = sum(1 for kw in self.coding_indicators if kw in prompt_lower)
 
-        equation_pattern = re.search(
-            r"(=|∑|∫|√|π|≈|≥|≤|\^|\bprove\b|\bderive\b)", prompt_lower
-        )
+        equation_pattern = re.search(r"(=|∑|∫|√|π|≈|≥|≤|\^|\bprove\b|\bderive\b)", prompt_lower)
         scientific_pattern = re.search(
             r"\bmodel(?:ing)?\b|\bsimulate\b|\bhypothesis\b|\bexperiment\b",
             prompt_lower,
@@ -465,11 +459,7 @@ class ModelMetrics:
                         "avg": sum(times) / len(times),
                         "min": min(times),
                         "max": max(times),
-                        "p95": (
-                            sorted(times)[int(len(times) * 0.95)]
-                            if len(times) > 20
-                            else max(times)
-                        ),
+                        "p95": (sorted(times)[int(len(times) * 0.95)] if len(times) > 20 else max(times)),
                     }
 
             # Calculate cache hit rates

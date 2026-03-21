@@ -66,9 +66,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test customer mention
-        clarifiers = engine.detect_ambiguity(
-            "Write an email to customers", "inform users", ""
-        )
+        clarifiers = engine.detect_ambiguity("Write an email to customers", "inform users", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.AUDIENCE for c in clarifiers)
 
@@ -76,9 +74,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test email/presentation triggers tone clarifier
-        clarifiers = engine.detect_ambiguity(
-            "Create a presentation", "explain concept", ""
-        )
+        clarifiers = engine.detect_ambiguity("Create a presentation", "explain concept", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.TONE for c in clarifiers)
 
@@ -86,9 +82,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test explain/describe triggers length clarifier
-        clarifiers = engine.detect_ambiguity(
-            "Explain the process", "help user understand", ""
-        )
+        clarifiers = engine.detect_ambiguity("Explain the process", "help user understand", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.LENGTH for c in clarifiers)
 
@@ -96,9 +90,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test list/organize triggers format clarifier
-        clarifiers = engine.detect_ambiguity(
-            "List the benefits", "organize information", ""
-        )
+        clarifiers = engine.detect_ambiguity("List the benefits", "organize information", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.FORMAT for c in clarifiers)
 
@@ -106,9 +98,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test focus/scope triggers scope clarifier
-        clarifiers = engine.detect_ambiguity(
-            "Focus on technical aspects", "provide overview", ""
-        )
+        clarifiers = engine.detect_ambiguity("Focus on technical aspects", "provide overview", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.SCOPE for c in clarifiers)
 
@@ -116,9 +106,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test simplify/explain triggers language clarifier
-        clarifiers = engine.detect_ambiguity(
-            "Simplify the technical details", "make it understandable", ""
-        )
+        clarifiers = engine.detect_ambiguity("Simplify the technical details", "make it understandable", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.LANGUAGE for c in clarifiers)
 
@@ -126,9 +114,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test urgent/asap triggers urgency clarifier
-        clarifiers = engine.detect_ambiguity(
-            "urgent fix needed", "resolve immediately", ""
-        )
+        clarifiers = engine.detect_ambiguity("urgent fix needed", "resolve immediately", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.URGENCY for c in clarifiers)
 
@@ -136,9 +122,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Test detail/comprehensive triggers detail level clarifier
-        clarifiers = engine.detect_ambiguity(
-            "Provide comprehensive details", "thorough analysis", ""
-        )
+        clarifiers = engine.detect_ambiguity("Provide comprehensive details", "thorough analysis", "")
         assert len(clarifiers) > 0
         assert any(c.type == ClarifierType.DETAIL_LEVEL for c in clarifiers)
 
@@ -154,9 +138,7 @@ class TestClarifierEngine:
         engine = ClarifierEngine(use_enhanced_mode=False)
 
         # Clear input with goal should not trigger clarifiers
-        clarifiers = engine.detect_ambiguity(
-            "Simple task", "clear goal provided", "audience: internal"
-        )
+        clarifiers = engine.detect_ambiguity("Simple task", "clear goal provided", "audience: internal")
         assert len(clarifiers) == 0
 
     def test_max_three_clarifiers(self):

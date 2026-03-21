@@ -267,13 +267,9 @@ class InvestmentAdvisorDemo:
         }
 
         # Calculate risk metrics
-        total_return = sum(
-            p["value"] * p["ytd_return"] for p in current_portfolio["positions"]
-        )
+        total_return = sum(p["value"] * p["ytd_return"] for p in current_portfolio["positions"])
 
-        print(
-            f"\n  Current Portfolio Value: {self.format_currency(current_portfolio['total_value'])}"
-        )
+        print(f"\n  Current Portfolio Value: {self.format_currency(current_portfolio['total_value'])}")
         print(f"  YTD Return: {current_portfolio['ytd_return'] * 100:.1f}%")
         print(f"  YTD Gain: {self.format_currency(total_return)}")
         print(f"  Portfolio Beta: {current_portfolio['portfolio_beta']:.2f}")
@@ -300,9 +296,7 @@ class InvestmentAdvisorDemo:
         )
 
         if result["success"]:
-            self.print_result(
-                "Portfolio analysis completed", f"{len(result['steps'])} steps"
-            )
+            self.print_result("Portfolio analysis completed", f"{len(result['steps'])} steps")
 
             print("\n[Step 2.3] Rebalancing Recommendations:")
 
@@ -346,9 +340,7 @@ class InvestmentAdvisorDemo:
             potential_gain = self.portfolio_value * estimated_improvement
             self.alpha_generated += potential_gain
 
-            print(
-                f"\n  💰 Estimated Annual Alpha from Rebalancing: {self.format_currency(potential_gain)}"
-            )
+            print(f"\n  💰 Estimated Annual Alpha from Rebalancing: {self.format_currency(potential_gain)}")
 
     def _phase_3_investment_opportunities(self):
         """Phase 3: Identify high-conviction investment opportunities."""
@@ -428,16 +420,12 @@ class InvestmentAdvisorDemo:
         )
 
         if result["success"]:
-            self.print_result(
-                "Opportunity analysis completed", f"{result['total_duration_ms']:.0f}ms"
-            )
+            self.print_result("Opportunity analysis completed", f"{result['total_duration_ms']:.0f}ms")
 
             print("\n[Step 3.3] Top Investment Opportunities:")
 
             # Sort by conviction * upside
-            sorted_opps = sorted(
-                opportunities, key=lambda x: x["conviction"] * x["upside"], reverse=True
-            )
+            sorted_opps = sorted(opportunities, key=lambda x: x["conviction"] * x["upside"], reverse=True)
 
             total_allocation = 0
             total_expected_return = 0
@@ -452,9 +440,7 @@ class InvestmentAdvisorDemo:
                 print(
                     f"     Entry: ${opp['entry_price']} → Target: ${opp['target_price']} ({opp['upside'] * 100:.0f}% upside)"
                 )
-                print(
-                    f"     Conviction: {opp['conviction'] * 100:.0f}% | Risk: {opp['risk_rating']}"
-                )
+                print(f"     Conviction: {opp['conviction'] * 100:.0f}% | Risk: {opp['risk_rating']}")
                 print(
                     f"     Allocation: {self.format_currency(opp['allocation_size'])} | Expected Gain: {self.format_currency(expected_return)}"
                 )
@@ -465,15 +451,9 @@ class InvestmentAdvisorDemo:
                 )
 
             self.alpha_generated += total_expected_return
-            print(
-                f"\n  💰 Total Expected Return from New Positions: {self.format_currency(total_expected_return)}"
-            )
-            print(
-                f"  📊 Total Capital Deployed: {self.format_currency(total_allocation)}"
-            )
-            print(
-                f"  📈 Weighted Average Expected Return: {(total_expected_return / total_allocation) * 100:.1f}%"
-            )
+            print(f"\n  💰 Total Expected Return from New Positions: {self.format_currency(total_expected_return)}")
+            print(f"  📊 Total Capital Deployed: {self.format_currency(total_allocation)}")
+            print(f"  📈 Weighted Average Expected Return: {(total_expected_return / total_allocation) * 100:.1f}%")
 
     def _phase_4_sector_rotation(self):
         """Phase 4: Develop sector rotation strategy."""
@@ -513,9 +493,7 @@ class InvestmentAdvisorDemo:
         )
 
         if result["success"]:
-            self.print_result(
-                "Sector strategy developed", f"{len(result['steps'])} steps"
-            )
+            self.print_result("Sector strategy developed", f"{len(result['steps'])} steps")
 
             print("\n[Step 4.3] Sector Rotation Recommendations:")
 
@@ -598,9 +576,7 @@ class InvestmentAdvisorDemo:
             # Estimate rotation benefit
             rotation_alpha = self.portfolio_value * 0.02  # 2% from optimal rotation
             self.alpha_generated += rotation_alpha
-            print(
-                f"\n  💰 Estimated Alpha from Sector Rotation: {self.format_currency(rotation_alpha)}"
-            )
+            print(f"\n  💰 Estimated Alpha from Sector Rotation: {self.format_currency(rotation_alpha)}")
 
     def _phase_5_executive_memo(self):
         """Phase 5: Generate executive investment memo."""
@@ -628,8 +604,7 @@ class InvestmentAdvisorDemo:
                 "current_aum": self.portfolio_value,
                 "ytd_return": 0.175,
                 "expected_alpha": self.alpha_generated,
-                "expected_total_return": 0.175
-                + (self.alpha_generated / self.portfolio_value),
+                "expected_total_return": 0.175 + (self.alpha_generated / self.portfolio_value),
                 "risk_assessment": "Medium - Managed appropriately",
                 "recommendation": "Proceed with all recommendations",
             },
@@ -645,9 +620,7 @@ class InvestmentAdvisorDemo:
         }
 
         # Save memo
-        self.assistant.write_file(
-            "data/executive_investment_memo_q4_2025.json", json.dumps(memo, indent=2)
-        )
+        self.assistant.write_file("data/executive_investment_memo_q4_2025.json", json.dumps(memo, indent=2))
 
         print("\n✓ Executive memo generated")
         print("✓ Memo saved: data/executive_investment_memo_q4_2025.json")
@@ -657,34 +630,18 @@ class InvestmentAdvisorDemo:
         print("📋 EXECUTIVE INVESTMENT MEMO - Q4 2025")
         print("=" * 80)
         print("\n📊 PORTFOLIO METRICS:")
-        print(
-            f"  • Assets Under Management:  {self.format_currency(memo['executive_summary']['current_aum'])}"
-        )
-        print(
-            f"  • YTD Return:                {memo['executive_summary']['ytd_return'] * 100:.1f}%"
-        )
-        print(
-            f"  • Expected Additional Alpha: {self.format_currency(memo['executive_summary']['expected_alpha'])}"
-        )
-        print(
-            f"  • Total Expected Return:     {memo['executive_summary']['expected_total_return'] * 100:.1f}%"
-        )
-        print(
-            f"  • Risk Assessment:           {memo['executive_summary']['risk_assessment']}"
-        )
+        print(f"  • Assets Under Management:  {self.format_currency(memo['executive_summary']['current_aum'])}")
+        print(f"  • YTD Return:                {memo['executive_summary']['ytd_return'] * 100:.1f}%")
+        print(f"  • Expected Additional Alpha: {self.format_currency(memo['executive_summary']['expected_alpha'])}")
+        print(f"  • Total Expected Return:     {memo['executive_summary']['expected_total_return'] * 100:.1f}%")
+        print(f"  • Risk Assessment:           {memo['executive_summary']['risk_assessment']}")
 
-        expected_portfolio_value = self.portfolio_value * (
-            1 + memo["executive_summary"]["expected_total_return"]
-        )
+        expected_portfolio_value = self.portfolio_value * (1 + memo["executive_summary"]["expected_total_return"])
         value_increase = expected_portfolio_value - self.portfolio_value
 
         print("\n💰 PROJECTED IMPACT:")
-        print(
-            f"  • Current Portfolio Value:   {self.format_currency(self.portfolio_value)}"
-        )
-        print(
-            f"  • Projected Portfolio Value: {self.format_currency(expected_portfolio_value)}"
-        )
+        print(f"  • Current Portfolio Value:   {self.format_currency(self.portfolio_value)}")
+        print(f"  • Projected Portfolio Value: {self.format_currency(expected_portfolio_value)}")
         print(f"  • Value Increase:            {self.format_currency(value_increase)}")
 
         print("\n🎯 TOP RECOMMENDATIONS:")
@@ -723,15 +680,11 @@ class InvestmentAdvisorDemo:
 
         print("\n💼 INVESTMENT VALUE DELIVERED:")
         print(f"  • Current AUM:         {self.format_currency(self.portfolio_value)}")
-        print(
-            f"  • Baseline Return:     {17.5:.1f}% ({self.format_currency(self.portfolio_value * 0.175)})"
-        )
+        print(f"  • Baseline Return:     {17.5:.1f}% ({self.format_currency(self.portfolio_value * 0.175)})")
         print(
             f"  • Additional Alpha:    {(self.alpha_generated / self.portfolio_value) * 100:.1f}% ({self.format_currency(self.alpha_generated)})"
         )
-        print(
-            f"  • Total Expected:      {expected_return * 100:.1f}% ({self.format_currency(value_increase)})"
-        )
+        print(f"  • Total Expected:      {expected_return * 100:.1f}% ({self.format_currency(value_increase)})")
         print(f"  • Projected Value:     {self.format_currency(expected_value)}")
 
         print("\n🚀 CAPABILITIES DEMONSTRATED:")
@@ -758,9 +711,7 @@ class InvestmentAdvisorDemo:
         print(
             f"\n💡 Alpha Generated: {self.format_currency(self.alpha_generated)} ({(self.alpha_generated / self.portfolio_value) * 100:.1f}%)"
         )
-        print(
-            f"🎯 Investment Impact: {self.format_currency(value_increase)} portfolio value increase"
-        )
+        print(f"🎯 Investment Impact: {self.format_currency(value_increase)} portfolio value increase")
         print("🚀 Ready for: Hedge funds, institutional investors, wealth management")
         print("\n" + "=" * 80 + "\n")
 

@@ -16,21 +16,13 @@ class EngineConfig(BaseSettings):
     """Configuration for RAG Orbit engines"""
 
     # Embedding settings
-    embedding_model: str = Field(
-        default="sentence-transformers/all-MiniLM-L6-v2", env="EMBEDDING_MODEL"
-    )
-    embedding_cache_dir: str = Field(
-        default=".cache/embeddings", env="EMBEDDING_CACHE_DIR"
-    )
+    embedding_model: str = Field(default="sentence-transformers/all-MiniLM-L6-v2", env="EMBEDDING_MODEL")
+    embedding_cache_dir: str = Field(default=".cache/embeddings", env="EMBEDDING_CACHE_DIR")
     embedding_batch_size: int = Field(default=32, env="EMBEDDING_BATCH_SIZE")
 
     # Retrieval settings
-    retrieval_index_type: str = Field(
-        default="flat", env="RETRIEVAL_INDEX_TYPE"
-    )  # flat or ivf
-    retrieval_metric: str = Field(
-        default="cosine", env="RETRIEVAL_METRIC"
-    )  # cosine or l2
+    retrieval_index_type: str = Field(default="flat", env="RETRIEVAL_INDEX_TYPE")  # flat or ivf
+    retrieval_metric: str = Field(default="cosine", env="RETRIEVAL_METRIC")  # cosine or l2
     retrieval_top_k: int = Field(default=10, env="RETRIEVAL_TOP_K")
 
     # Chunking settings
@@ -50,9 +42,7 @@ class SecurityConfig(BaseSettings):
     allowed_api_keys: list = Field(default_factory=list, env="ALLOWED_API_KEYS")
 
     # Rate limiting
-    rate_limit_requests: int = Field(
-        default=60, env="RATE_LIMIT_REQUESTS"
-    )  # per minute
+    rate_limit_requests: int = Field(default=60, env="RATE_LIMIT_REQUESTS")  # per minute
     rate_limit_window: int = Field(default=60, env="RATE_LIMIT_WINDOW")  # seconds
 
     # CORS — restrict origins; wildcard + credentials violates the spec
@@ -96,9 +86,7 @@ class PatternDetectionConfig(BaseSettings):
     min_confidence: float = Field(default=0.6, env="PATTERN_MIN_CONFIDENCE")
     max_patterns: int = Field(default=10, env="PATTERN_MAX_PATTERNS")
     enable_semantic_analysis: bool = Field(default=True, env="PATTERN_SEMANTIC_ENABLED")
-    enable_statistical_analysis: bool = Field(
-        default=True, env="PATTERN_STATISTICAL_ENABLED"
-    )
+    enable_statistical_analysis: bool = Field(default=True, env="PATTERN_STATISTICAL_ENABLED")
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -107,9 +95,7 @@ class SelfRAGConfig(BaseSettings):
     """Configuration for SELF-RAG truth verification"""
 
     min_evidence_threshold: float = Field(default=0.7, env="RAG_MIN_EVIDENCE_THRESHOLD")
-    contradiction_threshold: float = Field(
-        default=0.8, env="RAG_CONTRADICTION_THRESHOLD"
-    )
+    contradiction_threshold: float = Field(default=0.8, env="RAG_CONTRADICTION_THRESHOLD")
     uncertainty_threshold: float = Field(default=0.4, env="RAG_UNCERTAINTY_THRESHOLD")
     max_evidence_chunks: int = Field(default=10, env="RAG_MAX_EVIDENCE_CHUNKS")
 
@@ -161,9 +147,7 @@ class EchoesAPIConfig(BaseSettings):
     logs_dir: str = Field(default="logs", env="LOGS_DIR")
 
     # Environment
-    environment: str = Field(
-        default="development", env="ENVIRONMENT"
-    )  # development, staging, production
+    environment: str = Field(default="development", env="ENVIRONMENT")  # development, staging, production
 
     model_config = SettingsConfigDict(env_file=".env", env_file_encoding="utf-8")
 
@@ -227,9 +211,7 @@ def validate_config(config: EchoesAPIConfig) -> dict[str, Any]:
         issues.append(f"Unsupported embedding model: {config.engines.embedding_model}")
 
     if config.engines.retrieval_index_type not in ["flat", "ivf"]:
-        issues.append(
-            f"Unsupported retrieval index type: {config.engines.retrieval_index_type}"
-        )
+        issues.append(f"Unsupported retrieval index type: {config.engines.retrieval_index_type}")
 
     return {
         "valid": len(issues) == 0,
@@ -257,9 +239,7 @@ def setup_logging(config: EchoesAPIConfig):
     log_level = getattr(logging, config.api.log_level.upper(), logging.INFO)
 
     # Create formatter
-    formatter = logging.Formatter(
-        "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
-    )
+    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
     # Console handler
     console_handler = logging.StreamHandler()

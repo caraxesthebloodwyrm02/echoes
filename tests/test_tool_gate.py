@@ -48,9 +48,7 @@ class TestToolGate(unittest.TestCase):
         with self.assertLogs("echoes.tools.gate", level=logging.INFO) as cm:
             execute_tool("_gate_test_tool", {"b": 2})
         self.assertTrue(any("tool_gate_dispatch" in m for m in cm.output))
-        self.assertTrue(
-            any("tool_gate_outcome" in m and "success" in m for m in cm.output)
-        )
+        self.assertTrue(any("tool_gate_outcome" in m and "success" in m for m in cm.output))
 
     def test_invalid_payload_non_dict_raises(self):
         with self.assertRaises(ValueError) as ctx:
@@ -64,9 +62,7 @@ class TestToolGate(unittest.TestCase):
 
     def test_safe_dispatch_tool_with_actor(self):
         with self.assertLogs("echoes.tools.gate", level=logging.INFO) as cm:
-            out = safe_dispatch_tool(
-                self.registry, "_gate_test_tool", {"x": 1}, actor="test-actor"
-            )
+            out = safe_dispatch_tool(self.registry, "_gate_test_tool", {"x": 1}, actor="test-actor")
         self.assertEqual(out, {"ok": True, "payload": {"x": 1}})
         self.assertTrue(any("actor=test-actor" in m for m in cm.output))
 
@@ -101,6 +97,4 @@ class TestToolGateImplementationStatus(unittest.TestCase):
             result = execute_tool("_gate_test_tool", {"a": 1})
         self.assertEqual(result, {"ok": True, "payload": {"a": 1}})
         self.assertTrue(any("tool_gate_dispatch" in m for m in cm.output))
-        self.assertTrue(
-            any("tool_gate_outcome" in m and "success" in m for m in cm.output)
-        )
+        self.assertTrue(any("tool_gate_outcome" in m and "success" in m for m in cm.output))

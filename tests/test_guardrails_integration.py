@@ -42,9 +42,7 @@ class TestGuardrailIntegration:
             "Authorization": "Bearer test-token",
             "Content-Type": "application/json",
         }
-        response = requests.post(
-            f"{base_url}/input", data=json.dumps(payload), headers=headers
-        )
+        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
         assert response.status_code == 200
 
     @pytest.mark.skipif(
@@ -57,9 +55,7 @@ class TestGuardrailIntegration:
         server, base_url = server_setup
         payload = {"prompt": "hello", "stage": "draft"}
         headers = {"Content-Type": "application/json"}
-        response = requests.post(
-            f"{base_url}/input", data=json.dumps(payload), headers=headers
-        )
+        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
         assert response.status_code == 401
 
     @pytest.mark.skipif(
@@ -75,9 +71,7 @@ class TestGuardrailIntegration:
             "Authorization": "Bearer test-token",
             "Content-Type": "application/json",
         }
-        response = requests.post(
-            f"{base_url}/input", data=json.dumps(payload), headers=headers
-        )
+        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
         assert response.status_code == 400
 
     @pytest.mark.skipif(
@@ -103,10 +97,6 @@ class TestGuardrailIntegration:
         # Let's simulate a burst of 3 requests. With a bucket of 60, this won't fail.
         # A more realistic test would configure the middleware with a lower limit for the test environment.
         # For now, we will just test that a valid request passes.
-        response = requests.post(
-            f"{base_url}/input", data=json.dumps(payload), headers=headers
-        )
+        response = requests.post(f"{base_url}/input", data=json.dumps(payload), headers=headers)
         assert response.status_code == 200
-        print(
-            "\nNOTE: Rate limit test is illustrative. A real test would require a configurable rate limit."
-        )
+        print("\nNOTE: Rate limit test is illustrative. A real test would require a configurable rate limit.")

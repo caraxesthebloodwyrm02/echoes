@@ -35,9 +35,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
         # Extract API key
         api_key = self._extract_api_key(request)
         if not api_key:
-            logger.warning(
-                f"Auth failure: missing API key from {request.client.host if request.client else 'unknown'}"
-            )
+            logger.warning(f"Auth failure: missing API key from {request.client.host if request.client else 'unknown'}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "API key required"},
@@ -45,9 +43,7 @@ class AuthenticationMiddleware(BaseHTTPMiddleware):
 
         # Validate API key
         if api_key not in self.config.security.allowed_api_keys:
-            logger.warning(
-                f"Auth failure: invalid API key from {request.client.host if request.client else 'unknown'}"
-            )
+            logger.warning(f"Auth failure: invalid API key from {request.client.host if request.client else 'unknown'}")
             return JSONResponse(
                 status_code=status.HTTP_401_UNAUTHORIZED,
                 content={"error": "Invalid API key"},
@@ -140,13 +136,9 @@ class TimeoutMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next):
         try:
             # Create timeout task
-            return await asyncio.wait_for(
-                call_next(request), timeout=self.timeout_seconds
-            )
+            return await asyncio.wait_for(call_next(request), timeout=self.timeout_seconds)
         except TimeoutError:
-            logger.warning(
-                f"Request timeout after {self.timeout_seconds}s: {request.method} {request.url.path}"
-            )
+            logger.warning(f"Request timeout after {self.timeout_seconds}s: {request.method} {request.url.path}")
             return JSONResponse(
                 status_code=status.HTTP_408_REQUEST_TIMEOUT,
                 content={"error": "Request timeout"},
@@ -166,10 +158,6 @@ def setup_middleware(app, config):
     app.add_middleware(AuthenticationMiddleware, config=config)
 
     logger.info("Middleware configured successfully")
-    logger.info(
-        f"Rate limiting: {config.security.rate_limit_requests} req/{config.security.rate_limit_window}s"
-    )
-    logger.info(
-        f"Authentication: {'Enabled' if config.security.api_key_required else 'Disabled'}"
-    )
+    logger.info(f"Rate limiting: {config.security.rate_limit_requests} req/{config.security.rate_limit_window}s")
+    logger.info(f"Authentication: {'Enabled' if config.security.api_key_required else 'Disabled'}")
     logger.info(f"Request timeout: {config.api.request_timeout}s")

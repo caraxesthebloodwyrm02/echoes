@@ -64,9 +64,7 @@ class ValueSystem:
             return 0.0
         return self.values[value_name].weight
 
-    def update_value_score(
-        self, value_name: str, new_score: float, feedback_weight: float = 0.1
-    ) -> None:
+    def update_value_score(self, value_name: str, new_score: float, feedback_weight: float = 0.1) -> None:
         """
         Update a value score based on feedback.
 
@@ -80,16 +78,12 @@ class ValueSystem:
 
         current_score = self.values[value_name].score
         # Weighted average between current score and new feedback
-        updated_score = (current_score * (1 - feedback_weight)) + (
-            new_score * feedback_weight
-        )
+        updated_score = (current_score * (1 - feedback_weight)) + (new_score * feedback_weight)
 
         self.values[value_name].score = max(0.0, min(1.0, updated_score))
         self.save_values()
 
-    def evaluate_response(
-        self, response: str, context: dict[str, Any] | None = None
-    ) -> dict[str, float]:
+    def evaluate_response(self, response: str, context: dict[str, Any] | None = None) -> dict[str, float]:
         """
         Evaluate a response against all three core values.
 
@@ -127,10 +121,7 @@ class ValueSystem:
         if total_weight == 0:
             return 0.0
 
-        weighted_sum = sum(
-            response_scores.get(name, 0.0) * self.get_value_weight(name)
-            for name in self.values.keys()
-        )
+        weighted_sum = sum(response_scores.get(name, 0.0) * self.get_value_weight(name) for name in self.values.keys())
 
         return weighted_sum / total_weight
 
@@ -157,18 +148,13 @@ class ValueSystem:
 
             # If user feedback differs significantly from auto-evaluation, adjust more
             difference = abs(user_score - auto_score)
-            feedback_weight = min(
-                0.3, difference + 0.1
-            )  # Base weight of 0.1, up to 0.3
+            feedback_weight = min(0.3, difference + 0.1)  # Base weight of 0.1, up to 0.3
 
             self.update_value_score(value_name, user_score, feedback_weight)
 
     def save_values(self) -> None:
         """Save current value scores to disk."""
-        data = {
-            name: {"score": value.score, "weight": value.weight}
-            for name, value in self.values.items()
-        }
+        data = {name: {"score": value.score, "weight": value.weight} for name, value in self.values.items()}
 
         file_path = self.storage_path / "values.json"
         with open(file_path, "w", encoding="utf-8") as f:
@@ -186,19 +172,13 @@ class ValueSystem:
 
             for name, value_data in data.items():
                 if name in self.values:
-                    self.values[name].score = value_data.get(
-                        "score", self.values[name].score
-                    )
-                    self.values[name].weight = value_data.get(
-                        "weight", self.values[name].weight
-                    )
+                    self.values[name].score = value_data.get("score", self.values[name].score)
+                    self.values[name].weight = value_data.get("weight", self.values[name].weight)
         except Exception:
             # If loading fails, keep default values
             pass
 
-    def _evaluate_respect(
-        self, response: str, context: dict[str, Any] | None = None
-    ) -> float:
+    def _evaluate_respect(self, response: str, context: dict[str, Any] | None = None) -> float:
         """Evaluate response for respect (avoiding harm, empathy, boundaries)."""
         response_lower = response.lower()
 
@@ -226,12 +206,8 @@ class ValueSystem:
             "sorry",
         ]
 
-        negative_count = sum(
-            1 for word in negative_indicators if word in response_lower
-        )
-        positive_count = sum(
-            1 for word in positive_indicators if word in response_lower
-        )
+        negative_count = sum(1 for word in negative_indicators if word in response_lower)
+        positive_count = sum(1 for word in positive_indicators if word in response_lower)
 
         # Base score of 0.7, adjusted by indicators
         score = 0.7
@@ -240,9 +216,7 @@ class ValueSystem:
 
         return max(0.0, min(1.0, score))
 
-    def _evaluate_accuracy(
-        self, response: str, context: dict[str, Any] | None = None
-    ) -> float:
+    def _evaluate_accuracy(self, response: str, context: dict[str, Any] | None = None) -> float:
         """Evaluate response for accuracy (factual correctness, avoiding uncertainty)."""
         response_lower = response.lower()
 
@@ -269,12 +243,8 @@ class ValueSystem:
             "verified",
         ]
 
-        uncertainty_count = sum(
-            1 for phrase in uncertainty_indicators if phrase in response_lower
-        )
-        confidence_count = sum(
-            1 for phrase in confidence_indicators if phrase in response_lower
-        )
+        uncertainty_count = sum(1 for phrase in uncertainty_indicators if phrase in response_lower)
+        confidence_count = sum(1 for phrase in confidence_indicators if phrase in response_lower)
 
         # Base score of 0.8, adjusted by indicators
         score = 0.8
@@ -283,9 +253,7 @@ class ValueSystem:
 
         return max(0.0, min(1.0, score))
 
-    def _evaluate_helpfulness(
-        self, response: str, context: dict[str, Any] | None = None
-    ) -> float:
+    def _evaluate_helpfulness(self, response: str, context: dict[str, Any] | None = None) -> float:
         """Evaluate response for helpfulness (solving problems, providing value)."""
         response_lower = response.lower()
 
@@ -314,12 +282,8 @@ class ValueSystem:
             "that's not possible",
         ]
 
-        helpful_count = sum(
-            1 for phrase in helpful_indicators if phrase in response_lower
-        )
-        unhelpful_count = sum(
-            1 for phrase in unhelpful_indicators if phrase in response_lower
-        )
+        helpful_count = sum(1 for phrase in helpful_indicators if phrase in response_lower)
+        unhelpful_count = sum(1 for phrase in unhelpful_indicators if phrase in response_lower)
 
         # Base score of 0.6, adjusted by indicators
         score = 0.6

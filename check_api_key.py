@@ -22,9 +22,7 @@ def check_api_key():
         print("\n  PowerShell (temporary session):")
         print("    $env:OPENAI_API_KEY='sk-your-key-here'")
         print("\n  PowerShell (permanent - User level):")
-        print(
-            "    [Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-your-key-here', 'User')"
-        )
+        print("    [Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-your-key-here', 'User')")
         print("\n  CMD (temporary session):")
         print("    set OPENAI_API_KEY=sk-your-key-here")
         print("\n  CMD (permanent - System level):")
@@ -105,9 +103,7 @@ if __name__ == "__main__":
     if success:
         print("\n🎉 API Key Verification Complete!")
         print("Your OpenAI API key is properly configured via environment variables.")
-        print(
-            "The Echoes system can now make secure API calls without storing credentials."
-        )
+        print("The Echoes system can now make secure API calls without storing credentials.")
 
         # Uncomment the line below if you want to test actual API connectivity
         # test_minimal_api_call()

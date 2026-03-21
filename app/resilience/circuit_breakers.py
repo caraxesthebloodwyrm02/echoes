@@ -29,9 +29,7 @@ class PrometheusListener(pybreaker.CircuitBreakerListener):
         # self.state_gauge = Gauge(f'circuit_breaker_state', 'Circuit breaker state', ['name'])
         # self.failure_counter = Counter(f'circuit_breaker_failures', 'Circuit breaker failures', ['name'])
 
-    def state_change(
-        self, cb: pybreaker.CircuitBreaker, old_state: int, new_state: int
-    ) -> None:
+    def state_change(self, cb: pybreaker.CircuitBreaker, old_state: int, new_state: int) -> None:
         """Called when circuit breaker state changes."""
         state_names = {
             pybreaker.STATE_CLOSED: "CLOSED",
@@ -62,10 +60,7 @@ class PrometheusListener(pybreaker.CircuitBreakerListener):
 
     def success(self, cb: pybreaker.CircuitBreaker) -> None:
         """Called when a call succeeds."""
-        logger.info(
-            f"Circuit breaker '{cb.name}' success "
-            f"(fail_counter reset to: {cb.fail_counter})"
-        )
+        logger.info(f"Circuit breaker '{cb.name}' success (fail_counter reset to: {cb.fail_counter})")
 
 
 class ExternalServiceBreakers:
@@ -87,15 +82,11 @@ class ExternalServiceBreakers:
 
         # Use Redis storage if available, otherwise in-memory
         if redis_client:
-            storage = pybreaker.CircuitRedisStorage(
-                pybreaker.STATE_CLOSED, redis_client
-            )
+            storage = pybreaker.CircuitRedisStorage(pybreaker.STATE_CLOSED, redis_client)
             logger.info("Circuit breakers using Redis storage for distributed state")
         else:
             storage = pybreaker.CircuitMemoryStorage(pybreaker.STATE_CLOSED)
-            logger.warning(
-                "Circuit breakers using in-memory storage - not suitable for production"
-            )
+            logger.warning("Circuit breakers using in-memory storage - not suitable for production")
 
         # LLM API breaker - higher tolerance for flaky AI services
         self.llm_api = pybreaker.CircuitBreaker(
@@ -137,15 +128,9 @@ class ExternalServiceBreakers:
         )
 
         logger.info("External service circuit breakers initialized")
-        logger.info(
-            f"LLM breaker: {self.llm_api.fail_max} fails, {self.llm_api.reset_timeout}s reset"
-        )
-        logger.info(
-            f"Payment breaker: {self.payment.fail_max} fails, {self.payment.reset_timeout}s reset"
-        )
-        logger.info(
-            f"Data breaker: {self.external_data.fail_max} fails, {self.external_data.reset_timeout}s reset"
-        )
+        logger.info(f"LLM breaker: {self.llm_api.fail_max} fails, {self.llm_api.reset_timeout}s reset")
+        logger.info(f"Payment breaker: {self.payment.fail_max} fails, {self.payment.reset_timeout}s reset")
+        logger.info(f"Data breaker: {self.external_data.fail_max} fails, {self.external_data.reset_timeout}s reset")
 
     def get_breaker_for_service(self, service_name: str) -> pybreaker.CircuitBreaker:
         """

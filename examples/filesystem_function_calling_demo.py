@@ -22,9 +22,7 @@ def demo_filesystem_operations():
     print("=" * 80)
 
     # Initialize the assistant with filesystem tools enabled
-    assistant = EchoesAssistantV2(
-        enable_tools=True, enable_status=True, session_id="filesystem_demo"
-    )
+    assistant = EchoesAssistantV2(enable_tools=True, enable_status=True, session_id="filesystem_demo")
 
     # List available filesystem tools
     print("\n📋 Available Filesystem Tools:")
@@ -133,9 +131,7 @@ def demo_tool_schemas():
             schema = tool.to_openai_schema()
             print(f"\n🔧 {schema['function']['name']}")
             print(f"   Description: {schema['function']['description']}")
-            print(
-                f"   Parameters: {list(schema['function']['parameters']['properties'].keys())}"
-            )
+            print(f"   Parameters: {list(schema['function']['parameters']['properties'].keys())}")
 
 
 if __name__ == "__main__":
@@ -144,11 +140,7 @@ if __name__ == "__main__":
     print()
 
     choice = input(
-        "Choose an option:\n"
-        "1. Interactive Demo\n"
-        "2. Show Tool Schemas\n"
-        "3. Both\n"
-        "Enter choice (1-3): "
+        "Choose an option:\n1. Interactive Demo\n2. Show Tool Schemas\n3. Both\nEnter choice (1-3): "
     ).strip()
 
     if choice in ["1", "3"]:

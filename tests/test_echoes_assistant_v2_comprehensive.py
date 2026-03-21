@@ -90,9 +90,7 @@ class TestEchoesAssistantV2Core(unittest.TestCase):
 
         for config in configs:
             try:
-                assistant = EchoesAssistantV2(
-                    **config, session_id=f"test_{int(time.time())}"
-                )
+                assistant = EchoesAssistantV2(**config, session_id=f"test_{int(time.time())}")
                 self.assertIsNotNone(assistant)
                 # Verify specific settings
                 if "model" in config:
@@ -137,9 +135,7 @@ class TestToolFramework(unittest.TestCase):
     def test_tool_execution(self):
         """Test tool execution functionality."""
         # Test reverse_text tool
-        result = self.assistant.tool_registry.execute_tool(
-            "reverse_text", {"text": "hello"}
-        )
+        result = self.assistant.tool_registry.execute_tool("reverse_text", {"text": "hello"})
         self.assertIn("result", result)
         self.assertEqual(result["result"], "olleh")
 
@@ -223,9 +219,7 @@ class TestRAGSystem(unittest.TestCase):
         presets = ["fast", "balanced", "accurate"]
         for preset in presets:
             try:
-                rag_assistant = EchoesAssistantV2(
-                    enable_rag=True, enable_tools=False, session_id=f"test_rag_{preset}"
-                )
+                rag_assistant = EchoesAssistantV2(enable_rag=True, enable_tools=False, session_id=f"test_rag_{preset}")
                 self.assertTrue(rag_assistant.enable_rag)
             except Exception as e:
                 self.fail(f"Failed to initialize RAG with preset {preset}: {e}")
@@ -355,10 +349,7 @@ class TestKnowledgeGraph(unittest.TestCase):
 
     def test_node_management(self):
         """Test knowledge graph node management."""
-        if (
-            not self.assistant.enable_knowledge_graph
-            or not self.assistant.knowledge_graph
-        ):
+        if not self.assistant.enable_knowledge_graph or not self.assistant.knowledge_graph:
             self.skipTest("Knowledge graph not available")
 
         kg = self.assistant.knowledge_graph
@@ -380,10 +371,7 @@ class TestKnowledgeGraph(unittest.TestCase):
 
     def test_graph_statistics(self):
         """Test knowledge graph statistics."""
-        if (
-            not self.assistant.enable_knowledge_graph
-            or not self.assistant.knowledge_graph
-        ):
+        if not self.assistant.enable_knowledge_graph or not self.assistant.knowledge_graph:
             self.skipTest("Knowledge graph not available")
 
         stats = self.assistant.knowledge_graph.get_statistics()
@@ -420,10 +408,7 @@ class TestMultimodalResonance(unittest.TestCase):
 
     def test_memory_management(self):
         """Test multimodal memory management."""
-        if (
-            not self.assistant.enable_multimodal_resonance
-            or not self.assistant.multimodal_engine
-        ):
+        if not self.assistant.enable_multimodal_resonance or not self.assistant.multimodal_engine:
             self.skipTest("Multimodal resonance not available")
 
         engine = self.assistant.multimodal_engine
@@ -439,10 +424,7 @@ class TestMultimodalResonance(unittest.TestCase):
 
     def test_modality_vectors(self):
         """Test modality vector creation."""
-        if (
-            not self.assistant.enable_multimodal_resonance
-            or not self.assistant.multimodal_engine
-        ):
+        if not self.assistant.enable_multimodal_resonance or not self.assistant.multimodal_engine:
             self.skipTest("Multimodal resonance not available")
 
         from multimodal_resonance import ModalityVector
@@ -483,10 +465,7 @@ class TestLegalSafeguards(unittest.TestCase):
 
     def test_consent_management(self):
         """Test consent management functionality."""
-        if (
-            not self.assistant.enable_legal_safeguards
-            or not self.assistant.legal_system
-        ):
+        if not self.assistant.enable_legal_safeguards or not self.assistant.legal_system:
             self.skipTest("Legal safeguards not available")
 
         legal = self.assistant.legal_system
@@ -502,10 +481,7 @@ class TestLegalSafeguards(unittest.TestCase):
 
     def test_cognitive_metrics(self):
         """Test cognitive effort metrics."""
-        if (
-            not self.assistant.enable_legal_safeguards
-            or not self.assistant.legal_system
-        ):
+        if not self.assistant.enable_legal_safeguards or not self.assistant.legal_system:
             self.skipTest("Legal safeguards not available")
 
         from legal_safeguards import CognitiveEffortMetrics

@@ -31,14 +31,10 @@ class MetricsServer:
             from .metrics import get_metrics
 
             metrics_data = get_metrics()
-            return web.Response(
-                body=metrics_data, content_type="text/plain; version=0.0.4"
-            )
+            return web.Response(body=metrics_data, content_type="text/plain; version=0.0.4")
         except Exception as e:
             logger.error("Failed to generate metrics", exc_info=True)
-            return web.Response(
-                status=500, text=f"Failed to generate metrics: {str(e)}"
-            )
+            return web.Response(status=500, text=f"Failed to generate metrics: {str(e)}")
 
     async def handle_health(self, request: web.Request) -> web.Response:
         """Handle /health endpoint."""
@@ -109,9 +105,7 @@ async def main():
     # Register signal handlers
     loop = asyncio.get_running_loop()
     for sig in (signal.SIGINT, signal.SIGTERM):
-        loop.add_signal_handler(
-            sig, lambda s=sig: asyncio.create_task(shutdown(s, loop))
-        )
+        loop.add_signal_handler(sig, lambda s=sig: asyncio.create_task(shutdown(s, loop)))
 
     # Keep the server running
     while True:

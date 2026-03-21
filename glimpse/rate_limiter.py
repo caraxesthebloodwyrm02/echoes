@@ -51,10 +51,7 @@ class RateLimitStats:
 
         now = time.time()
         # Remove timestamps outside the window
-        while (
-            self.request_timestamps
-            and self.request_timestamps[0] < now - window_seconds
-        ):
+        while self.request_timestamps and self.request_timestamps[0] < now - window_seconds:
             self.request_timestamps.popleft()
 
         if not self.request_timestamps:
@@ -62,9 +59,7 @@ class RateLimitStats:
 
         # Calculate success rate in the window
         total_in_window = len(self.request_timestamps)
-        successful_in_window = sum(
-            1 for _ in self.request_timestamps
-        )  # All in window are successful
+        successful_in_window = sum(1 for _ in self.request_timestamps)  # All in window are successful
         return successful_in_window / total_in_window if total_in_window > 0 else 1.0
 
 
@@ -149,9 +144,7 @@ class AdaptiveRateLimiter:
 
         # Add token capacity based on elapsed time and current TPM
         new_token_capacity = elapsed * self.tokens_per_second_tpm
-        self.token_bucket = min(
-            self.token_bucket_capacity, self.token_bucket + new_token_capacity
-        )
+        self.token_bucket = min(self.token_bucket_capacity, self.token_bucket + new_token_capacity)
 
         self.last_update = now
 
@@ -195,9 +188,7 @@ class AdaptiveRateLimiter:
         self.bucket_capacity = (self.current_rpm / 60.0) * self.burst_multiplier
 
         # Record the adjustment in metrics
-        record_rate_limit_adjustment(
-            old_rate=old_rpm, new_rate=new_rpm, success_rate=success_rate
-        )
+        record_rate_limit_adjustment(old_rate=old_rpm, new_rate=new_rpm, success_rate=success_rate)
 
     async def acquire(
         self,
@@ -229,9 +220,7 @@ class AdaptiveRateLimiter:
                 request_tokens_ok = self.tokens >= tokens
 
                 # Check if we have enough content tokens (if specified)
-                content_tokens_ok = (
-                    self.token_bucket >= token_count if token_count > 0 else True
-                )
+                content_tokens_ok = self.token_bucket >= token_count if token_count > 0 else True
 
                 # Check if we have enough tokens for both limits
                 if request_tokens_ok and content_tokens_ok:
@@ -245,18 +234,12 @@ class AdaptiveRateLimiter:
 
                 # Time for request tokens
                 request_tokens_needed = tokens - self.tokens
-                request_time_needed = (
-                    request_tokens_needed / self.tokens_per_second
-                    if request_tokens_needed > 0
-                    else 0
-                )
+                request_time_needed = request_tokens_needed / self.tokens_per_second if request_tokens_needed > 0 else 0
 
                 # Time for content tokens
                 content_tokens_needed = token_count - self.token_bucket
                 content_time_needed = (
-                    content_tokens_needed / self.tokens_per_second_tpm
-                    if content_tokens_needed > 0
-                    else 0
+                    content_tokens_needed / self.tokens_per_second_tpm if content_tokens_needed > 0 else 0
                 )
 
                 # Use the longer of the two wait times
@@ -282,22 +265,14 @@ class AdaptiveRateLimiter:
             self._get_endpoint_stats(endpoint).record_rate_limit()
 
             # Immediately reduce rate on rate limit
-            self.current_rpm = max(
-                self.min_rpm, min(self.current_rpm * 0.8, self.current_rpm - 100)
-            )
-            self.current_tpm = max(
-                self.min_tpm, min(self.current_tpm * 0.8, self.current_tpm - 10000)
-            )
+            self.current_rpm = max(self.min_rpm, min(self.current_rpm * 0.8, self.current_rpm - 100))
+            self.current_tpm = max(self.min_tpm, min(self.current_tpm * 0.8, self.current_tpm - 10000))
             self.tokens_per_second = self.current_rpm / 60.0
             self.bucket_capacity = (self.current_rpm / 60.0) * self.burst_multiplier
             self.tokens_per_second_tpm = self.current_tpm / 60.0
-            self.token_bucket_capacity = (
-                self.current_tpm / 60.0
-            ) * self.burst_multiplier
+            self.token_bucket_capacity = (self.current_tpm / 60.0) * self.burst_multiplier
 
-            logger.warning(
-                f"Rate limited! Reducing rates to {self.current_rpm:.1f} RPM and {self.current_tpm:.0f} TPM"
-            )
+            logger.warning(f"Rate limited! Reducing rates to {self.current_rpm:.1f} RPM and {self.current_tpm:.0f} TPM")
 
     async def record_error(self, endpoint: str = "default"):
         """Record a failed API call."""
@@ -325,16 +300,12 @@ class AdaptiveRateLimiter:
             "successful_requests": self.stats.successful_requests,
             "rate_limited_requests": self.stats.rate_limited_requests,
             "errors": self.stats.errors,
-            "requests_in_last_minute": len(
-                [t for t in self.stats.request_timestamps if t > now - 60]
-            ),
+            "requests_in_last_minute": len([t for t in self.stats.request_timestamps if t > now - 60]),
             "endpoints": {
                 endpoint: {
                     "total_requests": stats.total_requests,
                     "success_rate": stats.get_success_rate(),
-                    "requests_in_last_minute": len(
-                        [t for t in stats.request_timestamps if t > now - 60]
-                    ),
+                    "requests_in_last_minute": len([t for t in stats.request_timestamps if t > now - 60]),
                 }
                 for endpoint, stats in self.endpoint_stats.items()
             },

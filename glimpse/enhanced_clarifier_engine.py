@@ -59,22 +59,14 @@ class UserEngagementTracker:
         """Track an interaction and update engagement metrics"""
         self.interaction_count += 1
         if user_responded:
-            self.curiosity_response_rate = (self.curiosity_response_rate * 0.8) + (
-                1.0 * 0.2
-            )
+            self.curiosity_response_rate = (self.curiosity_response_rate * 0.8) + (1.0 * 0.2)
         else:
-            self.curiosity_response_rate = (self.curiosity_response_rate * 0.8) + (
-                0.0 * 0.2
-            )
+            self.curiosity_response_rate = (self.curiosity_response_rate * 0.8) + (0.0 * 0.2)
 
         # Update engagement score
         self.engagement_score = min(
             1.0,
-            (
-                self.engagement_score + 0.05
-                if user_responded
-                else self.engagement_score - 0.02
-            ),
+            (self.engagement_score + 0.05 if user_responded else self.engagement_score - 0.02),
         )
 
     def should_ask_curiosity(self) -> bool:
@@ -180,9 +172,7 @@ class EnhancedClarifierEngine:
             ),
         }
 
-    def detect_critical_ambiguity(
-        self, input_text: str, goal: str, constraints: str
-    ) -> list[Clarifier]:
+    def detect_critical_ambiguity(self, input_text: str, goal: str, constraints: str) -> list[Clarifier]:
         """
         Detect critical ambiguities that require pre-execution clarification
         Only used for high-stakes or potentially harmful scenarios
@@ -200,10 +190,7 @@ class EnhancedClarifierEngine:
 
         # Only detect critical issues that could cause harm
         if (
-            any(
-                word in text_lower
-                for word in ["delete", "remove", "cancel", "terminate"]
-            )
+            any(word in text_lower for word in ["delete", "remove", "cancel", "terminate"])
             and "critical_action" not in constraints.lower()
         ):
             clarifiers.append(self.critical_clarifiers["critical_audience"])
@@ -260,9 +247,7 @@ class EnhancedClarifierEngine:
 
         return selected
 
-    def apply_curiosity_response(
-        self, clarifier: Clarifier, response: str
-    ) -> dict[str, Any]:
+    def apply_curiosity_response(self, clarifier: Clarifier, response: str) -> dict[str, Any]:
         """
         Apply a curiosity response to update user profile
 
@@ -334,9 +319,7 @@ class EnhancedClarifierEngine:
 
 
 # Enhanced sampler with post-execution curiosity
-async def enhanced_sampler_with_curiosity(
-    draft, clarifier_engine: EnhancedClarifierEngine = None
-):
+async def enhanced_sampler_with_curiosity(draft, clarifier_engine: EnhancedClarifierEngine = None):
     """
     Enhanced sampler that includes critical pre-execution and post-execution curiosity
 
@@ -351,9 +334,7 @@ async def enhanced_sampler_with_curiosity(
         clarifier_engine = EnhancedClarifierEngine()
 
     # Check for critical pre-execution ambiguities (rare)
-    critical_clarifiers = clarifier_engine.detect_critical_ambiguity(
-        draft.input_text, draft.goal, draft.constraints
-    )
+    critical_clarifiers = clarifier_engine.detect_critical_ambiguity(draft.input_text, draft.goal, draft.constraints)
 
     if critical_clarifiers:
         # Return critical clarifier (blocking)
@@ -361,11 +342,7 @@ async def enhanced_sampler_with_curiosity(
         return ("", "", delta, False, None)
 
     # Generate preferred constraints from learned profile
-    context = {
-        "task_type": (
-            "communication" if "email" in draft.input_text.lower() else "general"
-        )
-    }
+    context = {"task_type": ("communication" if "email" in draft.input_text.lower() else "general")}
     preferred_constraints = clarifier_engine.generate_preferred_constraints(context)
 
     # Combine with existing constraints

@@ -222,9 +222,7 @@ class TestSafeExecution:
 
         # Edge cases that might break naive implementations
         edge_cases = [
-            (
-                Draft(None, None, None) if False else Draft("", "", "")
-            ),  # Avoid None for now
+            (Draft(None, None, None) if False else Draft("", "", "")),  # Avoid None for now
             Draft("a" * 10000, "b" * 5000, "c" * 3000),  # Very long
             Draft("\n\n\n", "\t\t\t", "   "),  # Whitespace
             Draft("🚀" * 100, "💯" * 50, "✨" * 30),  # Emojis
@@ -257,9 +255,7 @@ class TestSafeExecution:
         _r1 = await engine.glimpse(bad_draft)
 
         # Glimpse should still work for good drafts (same engine, may hit redial)
-        good_draft = Draft(
-            "clear task description", "well-defined goal", "specific constraints"
-        )
+        good_draft = Draft("clear task description", "well-defined goal", "specific constraints")
         r2 = await engine.glimpse(good_draft)
 
         # Should process normally (may not be fresh start due to Glimpse state)

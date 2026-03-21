@@ -29,9 +29,7 @@ try:
 
 except ImportError as e:
     print(f"❌ Error importing registry: {e}")
-    print(
-        "Make sure you're running from the project root and dependencies are installed"
-    )
+    print("Make sure you're running from the project root and dependencies are installed")
     REGISTRY_AVAILABLE = False
 
 
@@ -185,15 +183,11 @@ def test_has_tool_method():
         non_existent = "nonexistent_tool_xyz123"
         tool = registry.get(non_existent)
         if tool is not None:
-            print(
-                f"⚠️ get('{non_existent}') returned {tool} (expected None or exception)"
-            )
+            print(f"⚠️ get('{non_existent}') returned {tool} (expected None or exception)")
         else:
             print(f"✓ get('{non_existent}') returned None as expected")
     except Exception as e:
-        print(
-            f"✓ get() raised {e.__class__.__name__} for non-existent tool (expected behavior)"
-        )
+        print(f"✓ get() raised {e.__class__.__name__} for non-existent tool (expected behavior)")
 
     print("\n✅ All tests completed successfully!")
 

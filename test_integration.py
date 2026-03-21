@@ -90,9 +90,7 @@ def test_basic_functionality(assistant):
         print(f"   Response length: {len(response1)} characters")
 
         # Test 2: Query that triggers simulations
-        query2 = (
-            "Explore different approaches to implement machine learning in healthcare"
-        )
+        query2 = "Explore different approaches to implement machine learning in healthcare"
         print(f"\n🧠 Query 2 (with simulations): {query2}")
 
         start_time = time.time()
@@ -103,9 +101,7 @@ def test_basic_functionality(assistant):
         print(f"   Response length: {len(response2)} characters")
 
         # Test 3: Query testing conversation continuity
-        query3 = (
-            "Based on what we just discussed, what would be the most ethical approach?"
-        )
+        query3 = "Based on what we just discussed, what would be the most ethical approach?"
         print(f"\n🔄 Query 3 (continuity test): {query3}")
 
         start_time = time.time()
@@ -119,9 +115,7 @@ def test_basic_functionality(assistant):
         avg_response_time = (response_time1 + response_time2 + response_time3) / 3
         print("\n📊 Performance Summary:")
         print(f"   Average response time: {avg_response_time:.2f}s")
-        print(
-            f"   Total characters generated: {len(response1) + len(response2) + len(response3)}"
-        )
+        print(f"   Total characters generated: {len(response1) + len(response2) + len(response3)}")
 
         return True
 
@@ -148,9 +142,7 @@ def test_system_statistics():
         cache_stats = catch_release.get_cache_statistics()
         print("\n💾 Cache Statistics:")
         print(f"   Session cache: {cache_stats['session_cache']['entries']} entries")
-        print(
-            f"   Short-term cache: {cache_stats['short_term_cache']['entries']} entries"
-        )
+        print(f"   Short-term cache: {cache_stats['short_term_cache']['entries']} entries")
 
         # Continuity check
         continuity = catch_release.get_conversation_continuity()
@@ -191,14 +183,10 @@ def test_values_grounding(assistant):
             "autonomy",
             "respect",
         ]
-        ethical_content = sum(
-            1 for keyword in ethical_keywords if keyword.lower() in response.lower()
-        )
+        ethical_content = sum(1 for keyword in ethical_keywords if keyword.lower() in response.lower())
 
         print(f"   Ethical considerations found: {ethical_content}")
-        print(
-            f"   Response demonstrates values alignment: {'Yes' if ethical_content >= 3 else 'Partial'}"
-        )
+        print(f"   Response demonstrates values alignment: {'Yes' if ethical_content >= 3 else 'Partial'}")
 
         return True
 
@@ -213,7 +201,9 @@ def test_pressure_handling(assistant):
 
     try:
         # Pressure query
-        pressure_query = "I'm feeling overwhelmed by all these complex technical decisions. Can you help me see this more clearly?"
+        pressure_query = (
+            "I'm feeling overwhelmed by all these complex technical decisions. Can you help me see this more clearly?"
+        )
 
         print(f"😄 Pressure Query: {pressure_query}")
 
@@ -232,14 +222,10 @@ def test_pressure_handling(assistant):
             "clarity",
             "perspective",
         ]
-        supportive_content = sum(
-            1 for keyword in supportive_keywords if keyword.lower() in response.lower()
-        )
+        supportive_content = sum(1 for keyword in supportive_keywords if keyword.lower() in response.lower())
 
         print(f"   Supportive elements found: {supportive_content}")
-        print(
-            f"   Response shows empathy: {'Yes' if supportive_content >= 2 else 'Partial'}"
-        )
+        print(f"   Response shows empathy: {'Yes' if supportive_content >= 2 else 'Partial'}")
 
         return True
 

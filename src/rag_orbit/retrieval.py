@@ -77,10 +77,7 @@ class FAISSRetriever:
             if category_filter and md.get("category") != category_filter:
                 continue
             en = sqrt(sum(value * value for value in emb)) or 1.0
-            score = float(
-                sum(left * right for left, right in zip(query, emb, strict=False))
-                / (qn * en)
-            )
+            score = float(sum(left * right for left, right in zip(query, emb, strict=False)) / (qn * en))
             rows.append((score, idx))
 
         rows.sort(key=lambda x: x[0], reverse=True)
@@ -97,13 +94,7 @@ class FAISSRetriever:
         return results, RetrievalMetrics(num_results=len(results))
 
     def get_stats(self):
-        categories = sorted(
-            {
-                str(md.get("category"))
-                for md in self._metadata
-                if md.get("category") is not None
-            }
-        )
+        categories = sorted({str(md.get("category")) for md in self._metadata if md.get("category") is not None})
         return {
             "total_documents": len(self._texts),
             "embedding_dim": self.embedding_dim,

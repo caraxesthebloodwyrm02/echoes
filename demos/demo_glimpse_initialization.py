@@ -109,9 +109,7 @@ def main() -> None:
     print("✓ Document chunker initialized (500 tokens, 50 overlap)")
 
     generator = create_standard_generator(use_cache=True)
-    print(
-        f"✓ Embedding generator initialized (model: all-mpnet-base-v2, dim: {generator.embedding_dim})"
-    )
+    print(f"✓ Embedding generator initialized (model: all-mpnet-base-v2, dim: {generator.embedding_dim})")
 
     retriever = create_standard_retriever(embedding_dim=generator.embedding_dim)
     print("✓ FAISS retriever initialized (metric: cosine, index: flat)")
@@ -124,9 +122,7 @@ def main() -> None:
 
     all_chunks = []
     for doc_name, doc_data in DOCUMENTS.items():
-        chunks = chunker.chunk_document(
-            doc_data["text"], doc_name, doc_data["category"]
-        )
+        chunks = chunker.chunk_document(doc_data["text"], doc_name, doc_data["category"])
         all_chunks.extend(chunks)
 
         # Record provenance
@@ -204,9 +200,7 @@ def main() -> None:
         # Record provenance
         tracker.record_retrieval(
             query=query_text,
-            query_checksum=generator.model.encode(query_text, convert_to_numpy=True)
-            .tobytes()
-            .hex()[:16],
+            query_checksum=generator.model.encode(query_text, convert_to_numpy=True).tobytes().hex()[:16],
             num_results=len(results),
             result_chunk_ids=[r.chunk_id for r in results],
             retrieval_metrics={
@@ -216,9 +210,7 @@ def main() -> None:
         )
 
         print(f"   ⚡ Query time: {metrics.query_time_ms:.2f}ms")
-        print(
-            f"   📊 Results: {metrics.num_results} (avg similarity: {metrics.avg_similarity:.3f})"
-        )
+        print(f"   📊 Results: {metrics.num_results} (avg similarity: {metrics.avg_similarity:.3f})")
 
         for i, result in enumerate(results[:2], 1):
             print(f"\n   Result {i} (similarity: {result.similarity_score:.3f})")
@@ -235,9 +227,7 @@ def main() -> None:
     # Show record types
     record_types = {}
     for record in tracker.records.values():
-        record_types[record.operation_type] = (
-            record_types.get(record.operation_type, 0) + 1
-        )
+        record_types[record.operation_type] = record_types.get(record.operation_type, 0) + 1
 
     print("\n  Records by type:")
     for op_type, count in record_types.items():

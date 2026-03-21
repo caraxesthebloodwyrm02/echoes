@@ -19,9 +19,7 @@ except ImportError:
             self._registry = {}
             self._lock = threading.Lock()
 
-        def register_tool(
-            self, name: str, description: str, func: Callable[[dict], dict]
-        ):
+        def register_tool(self, name: str, description: str, func: Callable[[dict], dict]):
             """Register a tool with the registry."""
             with self._lock:
                 self._registry[name] = {"description": description, "func": func}

@@ -65,9 +65,7 @@ def main():
 
     # Run RAG initialization test
     if not test_rag_initialization():
-        print(
-            "\n❌ RAG initialization tests failed. Please check the error messages above."
-        )
+        print("\n❌ RAG initialization tests failed. Please check the error messages above.")
         return
 
     print("\n✅ All tests passed! Your RAG system is set up correctly.")

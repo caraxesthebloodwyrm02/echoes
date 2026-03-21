@@ -24,9 +24,7 @@ def test_agentic_capabilities():
 
     # Initialize assistant
     print("\n[Test 1] Initializing agentic assistant...")
-    assistant = EchoesAssistantV2(
-        enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False
-    )
+    assistant = EchoesAssistantV2(enable_tools=True, enable_rag=False, enable_streaming=False, enable_status=False)
     print("✓ Assistant initialized with knowledge, filesystem, and action capabilities")
 
     # Test knowledge gathering

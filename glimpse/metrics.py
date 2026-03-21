@@ -130,19 +130,13 @@ RATE_LIMIT_WAIT_TIME = Histogram(
 )
 
 
-def record_openai_request(
-    endpoint: str, model: str, duration: float, status_code: int = 200
-) -> None:
+def record_openai_request(endpoint: str, model: str, duration: float, status_code: int = 200) -> None:
     """Record metrics for an OpenAI API request."""
-    OPENAI_REQUESTS.labels(
-        endpoint=endpoint, status_code=status_code, model=model
-    ).inc()
+    OPENAI_REQUESTS.labels(endpoint=endpoint, status_code=status_code, model=model).inc()
     OPENAI_REQUEST_DURATION.labels(endpoint=endpoint, model=model).observe(duration)
 
 
-def record_openai_tokens(
-    prompt_tokens: int, completion_tokens: int, model: str
-) -> None:
+def record_openai_tokens(prompt_tokens: int, completion_tokens: int, model: str) -> None:
     """Record token usage for an OpenAI API request."""
     if prompt_tokens > 0:
         OPENAI_TOKENS.labels(type="input", model=model).inc(prompt_tokens)
@@ -165,9 +159,7 @@ def update_cache_size(size: int) -> None:
     CACHE_SIZE.set(size)
 
 
-def record_glimpse_attempt(
-    attempt_number: int, duration: float, status: str = "success"
-) -> None:
+def record_glimpse_attempt(attempt_number: int, duration: float, status: str = "success") -> None:
     """Record metrics for a glimpse attempt."""
     GLIMPSE_ATTEMPTS.labels(attempt_number=attempt_number, status=status).inc()
     GLIMPSE_ATTEMPT_DURATION.labels(attempt_number=attempt_number).observe(duration)
@@ -193,10 +185,7 @@ def record_rate_limit_adjustment(
     # Update current rate metrics
     RATE_LIMIT_RATE.labels(endpoint=endpoint).set(new_rate)
 
-    logger.debug(
-        f"Rate limit adjusted: {old_rate:.1f} -> {new_rate:.1f} RPM "
-        f"(success rate: {success_rate:.1%})"
-    )
+    logger.debug(f"Rate limit adjusted: {old_rate:.1f} -> {new_rate:.1f} RPM (success rate: {success_rate:.1%})")
 
 
 def record_rate_limit_metrics(

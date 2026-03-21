@@ -49,9 +49,7 @@ class TestQuantumStateIntegration:
         qsm.initialize_quantum_states()
 
         # Update states with entanglement
-        qsm.update_state(
-            "user_session", "active", entangle_with=["permissions", "features"]
-        )
+        qsm.update_state("user_session", "active", entangle_with=["permissions", "features"])
         qsm.update_state("permissions", "admin")
 
         # Check entanglement
@@ -213,9 +211,7 @@ class TestEchoesAssistantV2QuantumIntegration:
         # For now, we'll test the logic directly on the quantum state manager
         qsm = mock_assistant.quantum_state_manager
 
-        result = qsm.update_state(
-            "test_key", "test_value", entangle_with=["related_key"]
-        )
+        result = qsm.update_state("test_key", "test_value", entangle_with=["related_key"])
         assert result is None  # update_state doesn't return anything
 
         # Check the state was updated

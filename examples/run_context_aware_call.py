@@ -94,9 +94,7 @@ class SecurityProtocolParser:
         ],
     }
 
-    print(
-        f"✅ Trajectory simulation complete. Context: {len(str(trajectory_summary))} chars"
-    )
+    print(f"✅ Trajectory simulation complete. Context: {len(str(trajectory_summary))} chars")
     return trajectory_summary
 
 
@@ -209,9 +207,7 @@ def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]
             "total_demos": len(results),
             "successful": len(successful_demos),
             "failed": len(failed_demos),
-            "success_rate": (
-                len(successful_demos) / len(results) * 100 if results else 0
-            ),
+            "success_rate": (len(successful_demos) / len(results) * 100 if results else 0),
             "total_execution_time": total_time,
             "average_execution_time": avg_time,
         },
@@ -225,16 +221,8 @@ def generate_performance_report(results: list[dict[str, Any]]) -> dict[str, Any]
             "System integration analysis",
         ],
         "performance_metrics": {
-            "fastest_query": (
-                min(results, key=lambda x: x["execution_time"])["execution_time"]
-                if results
-                else 0
-            ),
-            "slowest_query": (
-                max(results, key=lambda x: x["execution_time"])["execution_time"]
-                if results
-                else 0
-            ),
+            "fastest_query": (min(results, key=lambda x: x["execution_time"])["execution_time"] if results else 0),
+            "slowest_query": (max(results, key=lambda x: x["execution_time"])["execution_time"] if results else 0),
             "queries_per_minute": 60 / avg_time if avg_time > 0 else 0,
         },
         "detailed_results": results,
@@ -251,17 +239,13 @@ def print_final_report(report: dict[str, Any]):
     print(f"{'=' * 80}")
 
     summary = report["summary"]
-    print(
-        f"🎯 Success Rate: {summary['success_rate']:.1f}% ({summary['successful']}/{summary['total_demos']} demos)"
-    )
+    print(f"🎯 Success Rate: {summary['success_rate']:.1f}% ({summary['successful']}/{summary['total_demos']} demos)")
     print(f"⏱️  Total Time: {summary['total_execution_time']:.2f}s")
     print(f"📈 Average Time: {summary['average_execution_time']:.2f}s per query")
 
     perf = report["performance_metrics"]
     print(f"🚀 Performance: {perf['queries_per_minute']:.1f} queries/minute")
-    print(
-        f"⚡ Fastest: {perf['fastest_query']:.2f}s | 🐌 Slowest: {perf['slowest_query']:.2f}s"
-    )
+    print(f"⚡ Fastest: {perf['fastest_query']:.2f}s | 🐌 Slowest: {perf['slowest_query']:.2f}s")
 
     print("\n✨ Capabilities Demonstrated:")
     for i, capability in enumerate(report["capabilities_demonstrated"], 1):
@@ -270,9 +254,7 @@ def print_final_report(report: dict[str, Any]):
     print("\n📋 Detailed Results:")
     for result in report["detailed_results"]:
         status_icon = "✅" if result["status"] == "success" else "❌"
-        print(
-            f"   {status_icon} Demo {result['demo_number']}: {result['title']} ({result['execution_time']:.2f}s)"
-        )
+        print(f"   {status_icon} Demo {result['demo_number']}: {result['title']} ({result['execution_time']:.2f}s)")
 
     print(f"\n{'=' * 80}")
     print("🎉 DEMONSTRATION COMPLETE - Context-Aware AI Agent is fully operational!")
@@ -289,9 +271,7 @@ def main():
         type=str,
         help="Custom query to run instead of the full demonstration",
     )
-    parser.add_argument(
-        "--quick", action="store_true", help="Run a quick single-query demo"
-    )
+    parser.add_argument("--quick", action="store_true", help="Run a quick single-query demo")
 
     args = parser.parse_args()
 

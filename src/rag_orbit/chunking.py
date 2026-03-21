@@ -32,9 +32,7 @@ class DocumentChunker:
         self.chunk_size = chunk_size
         self.overlap = overlap
 
-    def chunk_document(
-        self, text: str, source_document: str, category: str | None = None
-    ) -> list[Chunk]:
+    def chunk_document(self, text: str, source_document: str, category: str | None = None) -> list[Chunk]:
         if not text:
             return []
         words = text.split()

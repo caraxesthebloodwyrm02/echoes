@@ -86,9 +86,7 @@ class ActionExecutor:
                 ).to_dict()
 
             elif action_type == "report":
-                result_data = svc.report(
-                    report_type=kwargs.get("report_type", "summary")
-                )
+                result_data = svc.report(report_type=kwargs.get("report_type", "summary"))
 
             else:
                 raise ValueError(f"Unknown inventory action: {action_type}")
@@ -224,9 +222,7 @@ class ActionExecutor:
             if organization_result["success"]:
                 result.data["file_organization"] = organization_result
             else:
-                result.data["file_organization_error"] = organization_result.get(
-                    "error"
-                )
+                result.data["file_organization_error"] = organization_result.get("error")
 
             # Automatically store in knowledge base
             from app.knowledge import KnowledgeManager
@@ -239,9 +235,7 @@ class ActionExecutor:
         else:
             raise Exception(f"ROI generation failed: {result.error}")
 
-    def _save_roi_template(
-        self, template_name: str, template_data: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _save_roi_template(self, template_name: str, template_data: dict[str, Any]) -> dict[str, Any]:
         """Save an ROI analysis template."""
         # Implementation for saving templates
         return {"template_name": template_name, "saved": True}
@@ -268,9 +262,7 @@ class ActionExecutor:
         total = len(self.action_history)
         successful = sum(1 for a in self.action_history if a.status == "success")
         failed = sum(1 for a in self.action_history if a.status == "failed")
-        avg_duration = (
-            sum(a.duration_ms for a in self.action_history) / total if total > 0 else 0
-        )
+        avg_duration = sum(a.duration_ms for a in self.action_history) / total if total > 0 else 0
 
         return {
             "total_actions": total,

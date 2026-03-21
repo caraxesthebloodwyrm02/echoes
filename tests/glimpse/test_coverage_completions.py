@@ -118,12 +118,8 @@ class TestVisualizationModule:
         # This test ensures we can handle the vis module even when matplotlib is missing
         if not MATPLOTLIB_AVAILABLE:
             # We should be able to import the module structure
-            with patch.dict(
-                "sys.modules", {"matplotlib": None, "matplotlib.pyplot": None}
-            ):
-                with patch(
-                    "builtins.__import__", side_effect=ImportError("No matplotlib")
-                ):
+            with patch.dict("sys.modules", {"matplotlib": None, "matplotlib.pyplot": None}):
+                with patch("builtins.__import__", side_effect=ImportError("No matplotlib")):
                     # The vis module should handle missing matplotlib gracefully
                     try:
                         import glimpse.vis as vis
@@ -140,9 +136,7 @@ class TestInitModuleEdgeCases:
 
     def test_getattr_missing_attribute(self):
         """Test that accessing non-existent attribute raises AttributeError"""
-        with pytest.raises(
-            AttributeError, match=r"module 'glimpse' has no attribute 'nonexistent'"
-        ):
+        with pytest.raises(AttributeError, match=r"module 'glimpse' has no attribute 'nonexistent'"):
             _ = glimpse.nonexistent
 
     def test_getattr_valid_attributes(self):
@@ -185,9 +179,7 @@ class TestClarifierEngineUncoveredPaths:
         ]
 
         for clarifier_type, response in test_cases:
-            clarifier = Clarifier(
-                type=clarifier_type, question="Question?", options=["yes", "no"]
-            )
+            clarifier = Clarifier(type=clarifier_type, question="Question?", options=["yes", "no"])
 
             # Apply the response directly - just test it doesn't crash
             result = clarifier_engine.apply_clarifier_response(clarifier, response, "")
@@ -213,9 +205,7 @@ class TestClarifierEngineUncoveredPaths:
         ]
 
         for clarifier_type, response in test_cases:
-            clarifier = Clarifier(
-                type=clarifier_type, question="Question?", options=["yes", "no"]
-            )
+            clarifier = Clarifier(type=clarifier_type, question="Question?", options=["yes", "no"])
 
             # Apply the response directly - just test it doesn't crash
             result = clarifier_engine.apply_clarifier_response(clarifier, response, "")
@@ -235,9 +225,7 @@ class TestClarifierEngineUncoveredPaths:
         )
 
         # Test custom response
-        result = clarifier_engine.apply_clarifier_response(
-            clarifier, "professional", ""
-        )
+        result = clarifier_engine.apply_clarifier_response(clarifier, "professional", "")
         assert "professional" in result
 
 

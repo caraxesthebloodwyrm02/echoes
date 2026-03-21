@@ -24,9 +24,7 @@ def plot_confirmation_points():
 
     # Annotate with current status
     for i, (_point, status) in enumerate(zip(points, statuses, strict=True)):
-        ax.text(
-            0.5, i, status, va="center", ha="center", color="white", fontweight="bold"
-        )
+        ax.text(0.5, i, status, va="center", ha="center", color="white", fontweight="bold")
 
     plt.show()
 

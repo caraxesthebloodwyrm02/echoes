@@ -36,9 +36,7 @@ class EmbeddingGenerator:
         norm = sqrt(sum(value * value for value in vec)) or 1.0
         return [value / norm for value in vec]
 
-    def embed_text(
-        self, text: str, chunk_id: str | None = None
-    ) -> tuple[np.ndarray, EmbeddingMetadata]:
+    def embed_text(self, text: str, chunk_id: str | None = None) -> tuple[np.ndarray, EmbeddingMetadata]:
         checksum = hashlib.sha256(text.encode("utf-8")).hexdigest()
         cache_key = f"{chunk_id}:{checksum}"
         if self.use_cache and cache_key in self._cache:
@@ -48,18 +46,14 @@ class EmbeddingGenerator:
             if self.use_cache:
                 self._cache[cache_key] = emb
         arr = np.asarray(emb, dtype=np.float64)
-        return arr, EmbeddingMetadata(
-            chunk_id=chunk_id or checksum, text_checksum=checksum
-        )
+        return arr, EmbeddingMetadata(chunk_id=chunk_id or checksum, text_checksum=checksum)
 
     def embed_batch(
         self, texts: list[str], chunk_ids: Sequence[str] | None = None
     ) -> tuple[np.ndarray, list[EmbeddingMetadata]]:
         metas = []
         vectors = []
-        ids_for_texts: Sequence[str | None] = (
-            list(chunk_ids) if chunk_ids is not None else [None] * len(texts)
-        )
+        ids_for_texts: Sequence[str | None] = list(chunk_ids) if chunk_ids is not None else [None] * len(texts)
         for text, chunk_id in zip(texts, ids_for_texts, strict=False):
             emb, meta = self.embed_text(text, chunk_id=chunk_id)
             vectors.append(emb)

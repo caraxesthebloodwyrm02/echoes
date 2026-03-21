@@ -133,9 +133,7 @@ class ClarifierEngine:
                 ),
             }
 
-    def detect_ambiguity(
-        self, input_text: str, goal: str, constraints: str
-    ) -> list[Clarifier]:
+    def detect_ambiguity(self, input_text: str, goal: str, constraints: str) -> list[Clarifier]:
         """
         Detect ambiguities in the input and suggest clarifiers
 
@@ -149,16 +147,12 @@ class ClarifierEngine:
         """
         if self.enhanced_mode:
             # Use enhanced engine - only detect critical pre-execution issues
-            return self.enhanced_engine.detect_critical_ambiguity(
-                input_text, goal, constraints
-            )
+            return self.enhanced_engine.detect_critical_ambiguity(input_text, goal, constraints)
         else:
             # Legacy mode - detect all ambiguities (blocking)
             return self._legacy_detect_ambiguity(input_text, goal, constraints)
 
-    def _legacy_detect_ambiguity(
-        self, input_text: str, goal: str, constraints: str
-    ) -> list[Clarifier]:
+    def _legacy_detect_ambiguity(self, input_text: str, goal: str, constraints: str) -> list[Clarifier]:
         """Legacy ambiguity detection (blocking questions)"""
         clarifiers = []
         text_lower = input_text.lower()
@@ -168,83 +162,56 @@ class ClarifierEngine:
         if not goal.strip() and "audience" not in constraints_lower:
             clarifiers.append(self.clarifier_rules["customer"])
 
-        if (
-            any(word in text_lower for word in ["customer", "client", "user"])
-            and "audience" not in constraints_lower
-        ):
+        if any(word in text_lower for word in ["customer", "client", "user"]) and "audience" not in constraints_lower:
             clarifiers.append(self.clarifier_rules["customer"])
-        if (
-            any(word in text_lower for word in ["customer", "client", "user"])
-            and "audience" not in constraints_lower
-        ):
+        if any(word in text_lower for word in ["customer", "client", "user"]) and "audience" not in constraints_lower:
             clarifiers.append(self.clarifier_rules["customer"])
 
         # Check for tone ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["email", "report", "presentation", "document"]
-            )
+            any(word in text_lower for word in ["email", "report", "presentation", "document"])
             and "tone" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["formal"])
 
         # Check for length ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["explain", "describe", "detail", "overview"]
-            )
+            any(word in text_lower for word in ["explain", "describe", "detail", "overview"])
             and "length" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["brief"])
 
         # Check for format ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["list", "organize", "structure", "format"]
-            )
+            any(word in text_lower for word in ["list", "organize", "structure", "format"])
             and "format" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["list"])
 
         # Check for scope ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["focus", "scope", "aspect", "overview", "broad", "narrow"]
-            )
+            any(word in text_lower for word in ["focus", "scope", "aspect", "overview", "broad", "narrow"])
             and "scope" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["scope"])
 
         # Check for language ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["simplify", "understand", "plain", "technical", "complex"]
-            )
+            any(word in text_lower for word in ["simplify", "understand", "plain", "technical", "complex"])
             and "language" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["language"])
 
         # Check for urgency ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["urgent", "asap", "immediately", "right away"]
-            )
+            any(word in text_lower for word in ["urgent", "asap", "immediately", "right away"])
             and "urgency" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["urgency"])
 
         # Check for detail-level ambiguity
         if (
-            any(
-                word in text_lower
-                for word in ["detail", "detailed", "comprehensive", "deep", "in-depth"]
-            )
+            any(word in text_lower for word in ["detail", "detailed", "comprehensive", "deep", "in-depth"])
             and "detail_level" not in constraints_lower
         ):
             clarifiers.append(self.clarifier_rules["detail_level"])
@@ -269,9 +236,7 @@ class ClarifierEngine:
             # Legacy mode - no post-execution curiosity
             return None
 
-    def apply_curiosity_response(
-        self, response: str, context: dict[str, Any]
-    ) -> dict[str, Any]:
+    def apply_curiosity_response(self, response: str, context: dict[str, Any]) -> dict[str, Any]:
         """
         Apply a curiosity response to update user profile
 
@@ -286,9 +251,7 @@ class ClarifierEngine:
             # Find the last asked curiosity question
             curiosity = self.enhanced_engine.generate_curiosity_question(context)
             if curiosity:
-                return self.enhanced_engine.apply_curiosity_response(
-                    curiosity, response
-                )
+                return self.enhanced_engine.apply_curiosity_response(curiosity, response)
         return {"preference_updated": False}
 
     def get_learned_preferences(self) -> dict[str, Any]:
@@ -297,9 +260,7 @@ class ClarifierEngine:
             return self.enhanced_engine.get_user_preferences()
         return {"profile": {}, "engagement_score": 0.5}
 
-    def apply_clarifier_response(
-        self, clarifier: Clarifier, response: str, constraints: str
-    ) -> str:
+    def apply_clarifier_response(self, clarifier: Clarifier, response: str, constraints: str) -> str:
         """
         Apply a clarifier response to the constraints
 
@@ -317,11 +278,7 @@ class ClarifierEngine:
         # Map response to standard value
         if response in ["y", "yes", "true", "1"]:
             if clarifier.type == ClarifierType.AUDIENCE:
-                response = (
-                    "customers"
-                    if "customer" in clarifier.question.lower()
-                    else "external"
-                )
+                response = "customers" if "customer" in clarifier.question.lower() else "external"
             elif clarifier.type == ClarifierType.TONE:
                 response = "formal"
             elif clarifier.type == ClarifierType.LENGTH:
@@ -392,9 +349,7 @@ class ClarifierEngine:
 
 
 # Enhanced sampler with clarifier integration
-async def enhanced_sampler_with_clarifiers(
-    draft, clarifier_engine: ClarifierEngine = None
-):
+async def enhanced_sampler_with_clarifiers(draft, clarifier_engine: ClarifierEngine = None):
     """
     Enhanced sampler that includes clarifier logic
 
@@ -409,9 +364,7 @@ async def enhanced_sampler_with_clarifiers(
         clarifier_engine = ClarifierEngine()
 
     # Detect ambiguities
-    clarifiers = clarifier_engine.detect_ambiguity(
-        draft.input_text, draft.goal, draft.constraints
-    )
+    clarifiers = clarifier_engine.detect_ambiguity(draft.input_text, draft.goal, draft.constraints)
 
     if clarifiers:
         # Return clarifier question

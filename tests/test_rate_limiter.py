@@ -42,9 +42,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
     async def test_initial_state(self):
         """Test initial state of the rate limiter."""
         self.assertEqual(self.rate_limiter.current_rpm, 60)
-        self.assertEqual(
-            self.rate_limiter.tokens, 1.5
-        )  # 1 token/second * 1.5 burst = 1.5 tokens
+        self.assertEqual(self.rate_limiter.tokens, 1.5)  # 1 token/second * 1.5 burst = 1.5 tokens
         self.assertEqual(self.rate_limiter.bucket_capacity, 1.5)
 
     async def test_acquire_token_success(self):
@@ -69,9 +67,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         self.assertIn(acquired_count, [1, 2])
 
         # Next request should be rate limited and return immediately
-        acquired, wait_time = await self.rate_limiter.acquire(
-            endpoint="test", max_wait=0.0
-        )
+        acquired, wait_time = await self.rate_limiter.acquire(endpoint="test", max_wait=0.0)
         self.assertFalse(acquired)
         self.assertAlmostEqual(wait_time, 0.0, places=3)  # Should return immediately
 
@@ -159,9 +155,7 @@ class TestAdaptiveRateLimiter(unittest.IsolatedAsyncioTestCase):
         results = await asyncio.gather(*tasks, return_exceptions=True)
 
         # Should only allow up to the bucket capacity (1-2 requests)
-        successful = sum(
-            1 for r in results if r is True and not isinstance(r, Exception)
-        )
+        successful = sum(1 for r in results if r is True and not isinstance(r, Exception))
         self.assertIn(successful, [1, 2])  # Bucket holds ~1.5 tokens
 
     async def test_get_status(self):
@@ -193,9 +187,7 @@ class TestOpenAIWrapperIntegration(unittest.IsolatedAsyncioTestCase):
         """Test rate limiting integration with direct OpenAI API calls."""
         # Setup mock response
         mock_response = MagicMock()
-        mock_response.usage = MagicMock(
-            prompt_tokens=10, completion_tokens=20, total_tokens=30
-        )
+        mock_response.usage = MagicMock(prompt_tokens=10, completion_tokens=20, total_tokens=30)
         mock_response.model_dump.return_value = {
             "choices": [{"message": {"content": "Test response"}}],
             "usage": {"prompt_tokens": 10, "completion_tokens": 20, "total_tokens": 30},
@@ -246,9 +238,7 @@ class TestOpenAIWrapperIntegration(unittest.IsolatedAsyncioTestCase):
                 )
 
                 # Record success
-                await restrictive_limiter.record_success(
-                    "chat/completions", token_count=30
-                )
+                await restrictive_limiter.record_success("chat/completions", token_count=30)
                 return response
 
             task = asyncio.create_task(make_request())
@@ -264,9 +254,7 @@ class TestOpenAIWrapperIntegration(unittest.IsolatedAsyncioTestCase):
         # With restrictive limits, we should get some successes and some timeouts
         # The exact numbers depend on timing, but we should have rate limiting behavior
         total_requests = successful_requests + failed_requests
-        self.assertEqual(
-            total_requests, 10, "All requests should complete (success or failure)"
-        )
+        self.assertEqual(total_requests, 10, "All requests should complete (success or failure)")
 
         # We should have some delays recorded (from successful requests that waited)
         delays = RATE_LIMIT_DELAYS.labels(endpoint="chat/completions")._value.get()

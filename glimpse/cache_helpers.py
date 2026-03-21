@@ -30,9 +30,7 @@ class PromptCache:
         self._misses = 0
 
     @staticmethod
-    def _hash_prompt(
-        messages: list[dict], model: str, temperature: float, max_tokens: int | None
-    ) -> str:
+    def _hash_prompt(messages: list[dict], model: str, temperature: float, max_tokens: int | None) -> str:
         """Create a deterministic SHA-256 hash for the request."""
         payload = {
             "messages": messages,
@@ -149,9 +147,7 @@ def cached_openai_call(cache: PromptCache | None = None, skip_cache: bool = Fals
                 logger.debug(
                     "cache_bypass",
                     extra={
-                        "reason": (
-                            "skip_cache=True" if skip_cache else "temperature > 0"
-                        ),
+                        "reason": ("skip_cache=True" if skip_cache else "temperature > 0"),
                         "model": model,
                         "temperature": temperature,
                     },
@@ -180,9 +176,7 @@ def cached_openai_call(cache: PromptCache | None = None, skip_cache: bool = Fals
 
                 # Only cache successful responses
                 if result is not None:
-                    await cache_instance.set(
-                        messages, model, temperature, max_tokens, result
-                    )
+                    await cache_instance.set(messages, model, temperature, max_tokens, result)
 
                 return result
 

@@ -69,9 +69,7 @@ class ConnectionManager:
     def disconnect(self, websocket: WebSocket):
         """Remove a WebSocket connection"""
         self.active_connections.remove(websocket)
-        logger.info(
-            f"WebSocket disconnected. Remaining: {len(self.active_connections)}"
-        )
+        logger.info(f"WebSocket disconnected. Remaining: {len(self.active_connections)}")
 
     async def broadcast(self, message: dict):
         """Broadcast a message to all connected clients"""
@@ -151,9 +149,7 @@ async def lifespan(app: FastAPI):
 
             redis_client = Redis.from_url(config.redis.url)
         except Exception as exc:  # pragma: no cover
-            logger.warning(
-                f"Redis unavailable, falling back to in-memory breakers: {exc}"
-            )
+            logger.warning(f"Redis unavailable, falling back to in-memory breakers: {exc}")
 
     await initialize_breakers(redis_client)
 
@@ -346,11 +342,7 @@ async def handle_truth_verification_websocket(message: dict, websocket: WebSocke
             {
                 "type": "processing_start",
                 "operation": "truth_verification",
-                "claim": (
-                    request.claim[:100] + "..."
-                    if len(request.claim) > 100
-                    else request.claim
-                ),
+                "claim": (request.claim[:100] + "..." if len(request.claim) > 100 else request.claim),
             },
             websocket,
         )

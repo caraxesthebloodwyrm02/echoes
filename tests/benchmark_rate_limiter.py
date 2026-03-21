@@ -31,9 +31,7 @@ from glimpse.rate_limiter import (
 class RateLimiterBenchmark:
     """Benchmark class for testing rate limiter performance."""
 
-    def __init__(
-        self, initial_rpm: int = 60, num_workers: int = 10, duration: int = 60
-    ):
+    def __init__(self, initial_rpm: int = 60, num_workers: int = 10, duration: int = 60):
         """Initialize the benchmark."""
         self.rate_limiter = AdaptiveRateLimiter(
             initial_rpm=initial_rpm,
@@ -69,9 +67,7 @@ class RateLimiterBenchmark:
             token_count = random.randint(50, 150)
 
             # Try to acquire a token
-            acquired, wait_time = await self.rate_limiter.acquire(
-                endpoint="benchmark", token_count=token_count
-            )
+            acquired, wait_time = await self.rate_limiter.acquire(endpoint="benchmark", token_count=token_count)
 
             if acquired:
                 # Simulate API call with random latency (50-150ms)
@@ -82,9 +78,7 @@ class RateLimiterBenchmark:
                     await self.rate_limiter.record_error("benchmark")
                     _success = False
                 else:
-                    await self.rate_limiter.record_success(
-                        "benchmark", token_count=token_count
-                    )
+                    await self.rate_limiter.record_success("benchmark", token_count=token_count)
                     _success = True
 
                 # Record metrics
@@ -113,17 +107,12 @@ class RateLimiterBenchmark:
 
     async def run(self):
         """Run the benchmark."""
-        print(
-            f"Starting benchmark with {self.num_workers} workers for {self.duration} seconds..."
-        )
+        print(f"Starting benchmark with {self.num_workers} workers for {self.duration} seconds...")
         start_time = time.time()
         stop_event = asyncio.Event()
 
         # Start workers
-        workers = [
-            asyncio.create_task(self.worker(i, stop_event))
-            for i in range(self.num_workers)
-        ]
+        workers = [asyncio.create_task(self.worker(i, stop_event)) for i in range(self.num_workers)]
 
         # Run for specified duration
         try:
@@ -144,21 +133,12 @@ class RateLimiterBenchmark:
             "request_rate": self.metrics["total_requests"] / total_time,
             "success_rate": (
                 self.metrics["successful_requests"]
-                / (
-                    self.metrics["successful_requests"]
-                    + self.metrics["rate_limited_requests"]
-                )
-                if (
-                    self.metrics["successful_requests"]
-                    + self.metrics["rate_limited_requests"]
-                )
-                > 0
+                / (self.metrics["successful_requests"] + self.metrics["rate_limited_requests"])
+                if (self.metrics["successful_requests"] + self.metrics["rate_limited_requests"]) > 0
                 else 0
             ),
             "avg_response_time": (
-                statistics.mean(self.metrics["response_times"])
-                if self.metrics["response_times"]
-                else 0
+                statistics.mean(self.metrics["response_times"]) if self.metrics["response_times"] else 0
             ),
             "p95_response_time": (
                 statistics.quantiles(self.metrics["response_times"], n=20)[-1]
@@ -166,12 +146,8 @@ class RateLimiterBenchmark:
                 else 0
             ),
             "final_rpm": self.rate_limiter.current_rpm,
-            "max_rpm": (
-                max(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0
-            ),
-            "min_rpm": (
-                min(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0
-            ),
+            "max_rpm": (max(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0),
+            "min_rpm": (min(self.metrics["rpm_history"]) if self.metrics["rpm_history"] else 0),
         }
 
         return stats, self.metrics
@@ -212,9 +188,7 @@ class RateLimiterBenchmark:
         if len(metrics["response_times"]) > 10:
             window_size = max(5, len(metrics["response_times"]) // 20)
             moving_avg = [
-                statistics.mean(
-                    metrics["response_times"][max(0, i - window_size) : i + 1]
-                )
+                statistics.mean(metrics["response_times"][max(0, i - window_size) : i + 1])
                 for i in range(len(metrics["response_times"]))
             ]
             ax2.plot(moving_avg, "g-", label=f"Moving Avg (window={window_size})")
@@ -234,9 +208,7 @@ class RateLimiterBenchmark:
                 count = sum(1 for req_t in x if t - window_seconds <= req_t <= t)
                 request_rates.append(count / window_seconds)  # requests per second
 
-            ax3.plot(
-                x, request_rates, "m-", label=f"Requests/s (rolling {window_seconds}s)"
-            )
+            ax3.plot(x, request_rates, "m-", label=f"Requests/s (rolling {window_seconds}s)")
             ax3.set_xlabel("Time (s)")
             ax3.set_ylabel("Request Rate (req/s)")
             ax3.set_title("Request Rate Over Time")
@@ -266,9 +238,7 @@ async def main():
     print("\n=== Benchmark Results ===")
     print(f"Duration:           {benchmark.duration:.1f} seconds")
     print(f"Total Requests:     {stats['total_requests']}")
-    print(
-        f"Successful:         {stats['successful_requests']} ({stats['success_rate']:.1%})"
-    )
+    print(f"Successful:         {stats['successful_requests']} ({stats['success_rate']:.1%})")
     print(f"Rate Limited:       {stats['rate_limited_requests']}")
     print(f"Request Rate:       {stats['request_rate']:.1f} req/s")
     print(f"Avg Response Time:  {stats['avg_response_time'] * 1000:.1f} ms")

@@ -208,9 +208,7 @@ def demo_conversation_continuity():
 
         # Create relationships between consecutive messages
         if len(conv_keys) > 1:
-            catch_release.create_relationship(
-                conv_keys[-2], conv_keys[-1], strength=0.9
-            )
+            catch_release.create_relationship(conv_keys[-2], conv_keys[-1], strength=0.9)
 
     print("\n🔗 Analyzing conversation continuity:")
 
@@ -314,9 +312,7 @@ def demo_relationship_tracking():
     ]
 
     for from_concept, to_concept, strength in relationships:
-        catch_release.create_relationship(
-            keys[from_concept], keys[to_concept], strength
-        )
+        catch_release.create_relationship(keys[from_concept], keys[to_concept], strength)
         print(f"  🔗 {from_concept} → {to_concept} (strength: {strength})")
 
     print("\n🔍 Finding related content:")
@@ -450,9 +446,7 @@ def demo_export_import():
 def main():
     """Run all catch and release demos"""
     print("\n✨ Welcome to the Catch & Release System Demo!")
-    print(
-        "This showcases intelligent caching for quick cross-referencing and conversation continuity."
-    )
+    print("This showcases intelligent caching for quick cross-referencing and conversation continuity.")
 
     # Run all demos
     demo_basic_catch_release()

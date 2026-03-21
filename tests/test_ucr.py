@@ -104,9 +104,7 @@ class TestUCR(unittest.TestCase):
 
             # Get the ucr instance from the module
             ucr_instance = getattr(ucr_module, "ucr", None)
-            self.assertIsNotNone(
-                ucr_instance, "UCR instance should be available in module"
-            )
+            self.assertIsNotNone(ucr_instance, "UCR instance should be available in module")
 
             logger.info("✅ UCR module imported successfully")
             self._ucr_instance = ucr_instance
@@ -126,9 +124,7 @@ class TestUCR(unittest.TestCase):
 
             # Test environment variables
             env_vars = getattr(ucr, "get_env_vars", lambda: {})()
-            self.assertIsInstance(
-                env_vars, dict, "Environment variables should be a dictionary"
-            )
+            self.assertIsInstance(env_vars, dict, "Environment variables should be a dictionary")
 
             logger.info("✅ UCR initialization test passed")
             self._ucr_instance = ucr
@@ -145,9 +141,7 @@ class TestUCR(unittest.TestCase):
 
             # Skip if environment management is not available
             if not hasattr(ucr, "create_environment"):
-                self.skipTest(
-                    "Environment management not available in this UCR version"
-                )
+                self.skipTest("Environment management not available in this UCR version")
 
             # Test creating a new environment
             env_path = str(self.test_env_dir)
@@ -223,9 +217,7 @@ def main():
 
     # Run tests with verbosity
     test_loader = unittest.TestLoader()
-    test_suite = test_loader.discover(
-        start_dir=os.path.dirname(__file__), pattern="test_ucr.py"
-    )
+    test_suite = test_loader.discover(start_dir=os.path.dirname(__file__), pattern="test_ucr.py")
 
     print("\n" + "=" * 60)
     print("Running UCR Tests")

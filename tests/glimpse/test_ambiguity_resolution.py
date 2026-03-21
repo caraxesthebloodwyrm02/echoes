@@ -219,9 +219,7 @@ class TestEdgeCaseHandling:
 
         # Very long input
         long_input = "optimize " * 500  # 500 repetitions
-        long_draft = Draft(
-            input_text=long_input, goal="improve", constraints="production"
-        )
+        long_draft = Draft(input_text=long_input, goal="improve", constraints="production")
 
         result = await engine.glimpse(long_draft)
 

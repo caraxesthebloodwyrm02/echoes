@@ -35,9 +35,7 @@ def test_enforce_respects_existing_provider(monkeypatch, caplog):
     # Should not override an explicitly-set provider
     assert os.environ.get("ECHOES_EMBEDDINGS_PROVIDER") == "custom"
     # Should warn about non-canonical provider
-    assert any(
-        "Non-canonical embeddings provider" in r.getMessage() for r in caplog.records
-    )
+    assert any("Non-canonical embeddings provider" in r.getMessage() for r in caplog.records)
 
 
 def test_enforce_does_not_log_secrets(monkeypatch, caplog):
