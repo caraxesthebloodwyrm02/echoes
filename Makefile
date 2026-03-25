@@ -1,3 +1,5 @@
+.PHONY: install dev test coverage lint format docker-build docker-build-prod docker-up docker-down docker-logs
+
 # Align with GRID-main: uv as package manager, .venv, dev+test groups
 install:
 	uv sync --group dev --group test
@@ -14,8 +16,23 @@ coverage:
 	uv run pytest tests/ -v --tb=short --cov=app --cov=api --cov=glimpse --cov=tools --cov=core --cov=src --cov-report=term-missing --cov-report=xml:coverage.xml
 
 lint:
-	ruff check api/ app/ glimpse/ tools/
-	ruff format --check api/ app/ glimpse/ tools/
+	uv run ruff check api/ app/ glimpse/ tools/
+	uv run ruff format --check api/ app/ glimpse/ tools/
 
 format:
-	ruff format api/ app/ glimpse/ tools/
+	uv run ruff format api/ app/ glimpse/ tools/
+
+docker-build: ## Build Echoes Docker image (dev)
+	docker build -t echoes:dev --target dev .
+
+docker-build-prod: ## Build Echoes Docker image (prod)
+	docker build -t echoes:prod --target prod .
+
+docker-up: ## Start Echoes with Redis
+	docker compose up -d
+
+docker-down: ## Stop Echoes containers
+	docker compose down
+
+docker-logs: ## Tail Echoes logs
+	docker compose logs -f --tail=50
