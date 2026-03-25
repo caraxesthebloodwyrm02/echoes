@@ -539,7 +539,7 @@ requires-dist = [
     { name = "jsonschema", marker = "extra == 'dev'", specifier = ">=4.0.0" },
     { name = "langchain", specifier = "==0.3.23" },
     { name = "langchain-community", specifier = ">=0.3.21,<0.4.0" },
-    { name = "langchain-core", specifier = ">=0.3.45,<1.0.0" },
+    { name = "langchain-core", specifier = ">=0.3.45,<2.0.0" },
     { name = "langchain-openai", specifier = ">=0.2.0,<0.4.0" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.4.0" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.0.0" },
