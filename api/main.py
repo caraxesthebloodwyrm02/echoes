@@ -13,7 +13,6 @@ Key Features:
 """
 
 import json
-import logging
 from contextlib import asynccontextmanager
 from datetime import datetime
 from typing import Any
@@ -44,9 +43,11 @@ from api.self_rag import verify_truth
 from app.resilience.circuit_breakers import ExternalServiceBreakers, initialize_breakers
 from app.resilience.rate_limit import setup_rate_limiting
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
-logger = logging.getLogger(__name__)
+# Configure structured logging
+from api.logging_structured import ensure_configured, get_logger
+
+ensure_configured()
+logger = get_logger(__name__)
 
 # Global engines - REMOVED: No more RAG middleware for authentic responses
 # retrieval_engine = None
@@ -64,12 +65,12 @@ class ConnectionManager:
         """Accept and register a new WebSocket connection"""
         await websocket.accept()
         self.active_connections.append(websocket)
-        logger.info(f"New WebSocket connection. Total: {len(self.active_connections)}")
+        logger.info("websocket_connected", total=len(self.active_connections))
 
     def disconnect(self, websocket: WebSocket):
         """Remove a WebSocket connection"""
         self.active_connections.remove(websocket)
-        logger.info(f"WebSocket disconnected. Remaining: {len(self.active_connections)}")
+        logger.info("websocket_disconnected", remaining=len(self.active_connections))
 
     async def broadcast(self, message: dict):
         """Broadcast a message to all connected clients"""

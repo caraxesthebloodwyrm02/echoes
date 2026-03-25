@@ -227,38 +227,13 @@ def validate_config(config: EchoesAPIConfig) -> dict[str, Any]:
 
 
 def setup_logging(config: EchoesAPIConfig):
-    """Setup logging based on configuration"""
-    import logging
-    from pathlib import Path
+    """Setup structured logging based on configuration."""
+    from api.logging_structured import configure_structured_logging
 
-    # Create logs directory if it doesn't exist
-    logs_path = Path(config.logs_dir)
-    logs_path.mkdir(parents=True, exist_ok=True)
-
-    # Configure logging
-    log_level = getattr(logging, config.api.log_level.upper(), logging.INFO)
-
-    # Create formatter
-    formatter = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
-
-    # Console handler
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(log_level)
-    console_handler.setFormatter(formatter)
-
-    # File handler
-    log_file = logs_path / "api.log"
-    file_handler = logging.FileHandler(log_file)
-    file_handler.setLevel(log_level)
-    file_handler.setFormatter(formatter)
-
-    # Root logger
-    root_logger = logging.getLogger()
-    root_logger.setLevel(log_level)
-    root_logger.addHandler(console_handler)
-    root_logger.addHandler(file_handler)
-
-    return root_logger
+    configure_structured_logging(
+        environment=config.environment,
+        log_level=config.api.log_level,
+    )
 
 
 # Initialize configuration on import
