@@ -1,12 +1,9 @@
-version: '3.8'
-
 services:
   echoes-api:
     build:
-      context: .
+      context: ..
       dockerfile: Dockerfile
-      args:
-        - PYTHON_VERSION=3.11
+      target: prod
     image: echoes:latest
     container_name: echoes-production
     restart: unless-stopped
@@ -27,7 +24,7 @@ services:
       - RATE_LIMIT_WINDOW=60
 
       # Database (if needed)
-      - DATABASE_URL=${DATABASE_URL:-sqlite:///./echoes.db}
+      - DATABASE_URL=${DATABASE_URL:-sqlite:////app/data/echoes.db}
 
     ports:
       - "8000:8000"
