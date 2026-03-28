@@ -29,3 +29,7 @@
 **/misc/
 **/archives/
 **/research report/
+**/deploy/
+**/archive/
+**/.ruff_cache
+**/.venv
