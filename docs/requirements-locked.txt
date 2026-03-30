@@ -84,6 +84,6 @@ typing-inspection==0.4.2
 typing_extensions==4.15.0
 urllib3==2.6.3
 uvicorn==0.42.0
-yarl==1.22.0
+yarl==1.23.0
 yt-dlp==2026.2.21
 zstandard==0.25.0
