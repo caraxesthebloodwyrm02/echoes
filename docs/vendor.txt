@@ -15,4 +15,4 @@ rich==13.7.1
 resolvelib==1.0.1
 setuptools==82.0.1
 tomli==2.0.1
-truststore==0.10.0
+truststore==0.10.4
