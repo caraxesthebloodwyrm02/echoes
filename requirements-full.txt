@@ -29,7 +29,7 @@ msgpack==1.1.2
 mypy_extensions==1.1.0
 nodeenv==1.10.0
 openai==1.109.1
-packageurl-python==0.17.5
+packageurl-python==0.17.6
 packaging==25.0
 pathspec==1.0.4
 pip-api==0.0.34
