@@ -14,7 +14,7 @@ python-dotenv==1.2.1
 slowapi==0.1.9
 pybreaker>=1.0.0
 tenacity>=8.2.3
-Pygments==2.19.2
+Pygments==2.20.0
 
 # LangChain Ecosystem - Unified versions
 langchain==0.3.23

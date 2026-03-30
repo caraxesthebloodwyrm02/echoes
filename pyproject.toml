@@ -42,7 +42,7 @@ dependencies = [
     "pybreaker>=1.0.0",
     "tenacity>=8.2.3",
     "redis>=5.0.0",
-    "pygments==2.19.2",
+    "pygments==2.20.0",
     "PyJWT>=2.8.0",
 
     # LangChain Ecosystem (pinned to 0.3.x — 0.4.x requires langchain-classic migration)
