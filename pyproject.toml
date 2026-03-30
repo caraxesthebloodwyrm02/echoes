@@ -30,7 +30,7 @@ classifiers = [
 ]
 dependencies = [
     # Core AI & API Layers
-    "openai>=1.40.0,<2.0.0",
+    "openai>=1.40.0,<3.0.0",
     "fastapi==0.135.2",
     "uvicorn==0.42.0",
     "httpx==0.28.1",
