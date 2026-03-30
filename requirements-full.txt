@@ -44,7 +44,7 @@ pydantic_core==2.44.0
 Pygments==2.20.0
 pyparsing==3.2.5
 pytest==9.0.2
-pytest-cov==4.1.0
+pytest-cov==7.1.0
 python-dotenv==1.0.0
 PyYAML==6.0.3
 requests==2.33.0
