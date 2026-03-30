@@ -30,6 +30,9 @@ from starlette.requests import Request as StarletteRequest
 from api.config import get_config, setup_logging
 from api.dependencies import get_breakers
 
+# Configure structured logging
+from api.logging_structured import ensure_configured, get_logger
+
 # Import middleware
 from api.middleware import setup_middleware
 
@@ -42,9 +45,6 @@ from api.pattern_detection import detect_patterns
 from api.self_rag import verify_truth
 from app.resilience.circuit_breakers import ExternalServiceBreakers, initialize_breakers
 from app.resilience.rate_limit import setup_rate_limiting
-
-# Configure structured logging
-from api.logging_structured import ensure_configured, get_logger
 
 ensure_configured()
 logger = get_logger(__name__)
