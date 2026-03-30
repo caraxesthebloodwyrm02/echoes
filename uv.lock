@@ -413,12 +413,9 @@ version = "0.1.0"
 source = { editable = "." }
 dependencies = [
     { name = "aiofiles" },
+    { name = "aiohttp" },
     { name = "fastapi" },
     { name = "httpx" },
-    { name = "langchain" },
-    { name = "langchain-community" },
-    { name = "langchain-core" },
-    { name = "langchain-openai" },
     { name = "numpy" },
     { name = "openai" },
     { name = "pandas" },
@@ -453,6 +450,12 @@ docs = [
     { name = "mkdocs" },
     { name = "mkdocs-material" },
 ]
+langchain = [
+    { name = "langchain" },
+    { name = "langchain-community" },
+    { name = "langchain-core" },
+    { name = "langchain-openai" },
+]
 
 [package.dev-dependencies]
 dev = [
@@ -470,13 +473,14 @@ test = [
 [package.metadata]
 requires-dist = [
     { name = "aiofiles", specifier = ">=0.23.0" },
+    { name = "aiohttp", specifier = ">=3.9.0" },
     { name = "fastapi", specifier = "==0.135.2" },
     { name = "httpx", specifier = "==0.28.1" },
     { name = "jsonschema", marker = "extra == 'dev'", specifier = ">=4.0.0" },
-    { name = "langchain", specifier = ">=0.3.28,<0.4.0" },
-    { name = "langchain-community", specifier = ">=0.3.21,<0.4.0" },
-    { name = "langchain-core", specifier = ">=0.3.45,<2.0.0" },
-    { name = "langchain-openai", specifier = ">=0.2.0,<0.4.0" },
+    { name = "langchain", marker = "extra == 'langchain'", specifier = ">=0.3.28,<0.4.0" },
+    { name = "langchain-community", marker = "extra == 'langchain'", specifier = ">=0.3.21,<0.4.0" },
+    { name = "langchain-core", marker = "extra == 'langchain'", specifier = ">=0.3.45,<2.0.0" },
+    { name = "langchain-openai", marker = "extra == 'langchain'", specifier = ">=0.2.0,<0.4.0" },
     { name = "mkdocs", marker = "extra == 'docs'", specifier = ">=1.4.0" },
     { name = "mkdocs-material", marker = "extra == 'docs'", specifier = ">=9.0.0" },
     { name = "mypy", marker = "extra == 'dev'", specifier = ">=1.0.0" },
@@ -504,7 +508,7 @@ requires-dist = [
     { name = "tenacity", specifier = ">=8.2.3" },
     { name = "uvicorn", specifier = "==0.42.0" },
 ]
-provides-extras = ["dev", "docs"]
+provides-extras = ["dev", "docs", "langchain"]
 
 [package.metadata.requires-dev]
 dev = [
