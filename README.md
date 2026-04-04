@@ -32,7 +32,7 @@ A production-ready, enterprise-grade AI assistant platform featuring **unified i
 
 ### 🛡️ Security-First Approach
 
-- **Security guardrails:** API and app attack-surface guardrails are tracked in **E:\\docs\\API_ATTACK_SURFACE_GUARDRAILS_AND_TODOS.md**. Endpoint inventory: **E:\\Seeds\\ENDPOINT_INVENTORY.md**; debug audit: **E:\\Seeds\\DEBUG_AUDIT.md**.
+- **Security guardrails:** API and app attack-surface guardrails are tracked in project documentation.
 - **🔐 Environment Variable API Keys**: Never store credentials in files
 - **🛡️ Runtime-Only Credentials**: Keys exist only in memory during execution
 - **🔒 Secure Verification**: Test connectivity without credential exposure
@@ -58,24 +58,17 @@ A production-ready, enterprise-grade AI assistant platform featuring **unified i
 git clone https://github.com/caraxesthebloodwyrm02/echoes.git
 cd echoes
 
-# Create virtual environment
-python -m venv venv
-venv\Scripts\activate  # Windows
-# source venv/bin/activate  # Linux/Mac
+# Install with uv
+uv sync
 
-# Install dependencies
-pip install -r requirements.txt
-
-# Secure API key setup (environment variable)
-# PowerShell (permanent):
-[Environment]::SetEnvironmentVariable('OPENAI_API_KEY', 'sk-your-key-here', 'User')
-
-# PowerShell (session only):
-$env:OPENAI_API_KEY='sk-your-key-here'
+# Set API key
+export OPENAI_API_KEY='sk-your-key-here'
 
 # Verify setup
-python check_api_key.py
+uv run python check_api_key.py
 ```
+
+> **Note**: The `echoes` name on PyPI is taken by an unrelated package. This project is installed from source only.
 
 ### 🧪 Run Integration Tests
 
