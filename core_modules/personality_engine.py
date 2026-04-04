@@ -402,5 +402,25 @@ class PersonalityEngine:
         }
 
 
+def select_rule_pack(mood: Mood, consent) -> str:
+    """Determine which rule-pack governs the current session.
+
+    Args:
+        mood: Current Mood enum value.
+        consent: ConsentType enum value from legal_safeguards.
+
+    Returns:
+        One of: "base", "exploratory", "restricted".
+        Fail-closed: unknown or NONE consent always returns "restricted".
+    """
+    consent_value = getattr(consent, "value", str(consent)) if consent else "none"
+
+    if consent_value == "none":
+        return "restricted"
+    if consent_value == "explicit" and mood in {Mood.CREATIVE, Mood.CURIOUS}:
+        return "exploratory"
+    return "base"
+
+
 # Global personality engine instance
 personality_engine = PersonalityEngine()

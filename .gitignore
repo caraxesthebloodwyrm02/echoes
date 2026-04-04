@@ -219,6 +219,10 @@ c_o_r_e/
 docs/_build/
 docs/api/
 
+# Inventory hygiene
+misc/data/archive/
+misc/data/*pre_prune*.json
+
 # Backup files
 *.bak
 *.backup
@@ -406,6 +410,28 @@ autosave/
 # Generated Python files from templates
 *generated_*.py
 *_generated.py
+
+# =============================================================================
+# ATLAS SCAFFOLD — knowledge-graph runtime artifacts
+# =============================================================================
+# Build phase ledger and gap matrix are generated outputs, not source
+data/build_phase_ledger.json
+data/gap_taxonomy_matrix.json
+data/implementation_backlog.json
+
+# Atlas REPL session state (ephemeral per-run)
+data/atlas_sessions/
+.atlas-history.json
+.atlas-traces.jsonl
+
+# Glimpse bridge subprocess temp files
+.glimpse-bridge-*.json
+
+# Theme token cache (regenerated from source CSS)
+docs/atlas-theme-tokens.json
+
+# Values system persistent storage (runtime, not source)
+data/values/values.json
 
 # =============================================================================
 # ADDITIONAL TAILORED RULES

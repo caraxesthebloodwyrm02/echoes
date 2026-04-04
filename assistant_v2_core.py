@@ -1342,6 +1342,13 @@ class EchoesAssistantV2:
             Response string or iterator (if streaming)
         """
         try:
+            # Consent gate: check before any processing
+            if self.legal_system and hasattr(self.legal_system, "can_process"):
+                if not self.legal_system.can_process(
+                    self.session_id, "chat"
+                ):
+                    return "Request denied: consent requirements not met for this session."
+
             # Update personality from user message
             personality_engine.update_from_interaction(message)
 

@@ -1,10 +1,34 @@
 import logging
+import re
 
 import openai
 
 from app.agents.models import AgentConfig, ConversationHistory
 
 logger = logging.getLogger(__name__)
+
+_INJECTION_PATTERNS = [
+    re.compile(r"ignore\s+(all\s+)?previous\s+instructions", re.IGNORECASE),
+    re.compile(r"ignore\s+(all\s+)?above", re.IGNORECASE),
+    re.compile(r"you\s+are\s+now\s+(a|an)\b", re.IGNORECASE),
+    re.compile(r"system\s*:\s*", re.IGNORECASE),
+    re.compile(r"\bDAN\s+mode\b", re.IGNORECASE),
+    re.compile(r"pretend\s+you\s+(are|can)\b", re.IGNORECASE),
+    re.compile(r"act\s+as\s+if\s+you\b", re.IGNORECASE),
+    re.compile(r"override\s+(your\s+)?instructions", re.IGNORECASE),
+]
+
+
+def sanitize_prompt(text: str) -> str:
+    """Strip known prompt-injection patterns from user input.
+
+    Conservative blocklist approach: neutralizes role-override attempts
+    without breaking legitimate queries.
+    """
+    sanitized = text
+    for pattern in _INJECTION_PATTERNS:
+        sanitized = pattern.sub("[filtered]", sanitized)
+    return sanitized
 
 
 class Agent:
@@ -18,6 +42,8 @@ class Agent:
     async def process(self, user_input: str) -> str:
         """Process user input and return response"""
         try:
+            user_input = sanitize_prompt(user_input)
+
             # Add user message to history
             self.history.add_message("user", user_input)
 
