@@ -742,23 +742,27 @@ class EchoesAssistantV2:
         self.policy_model = "gpt-4o"
 
         # Glimpse Preflight System Integration
+        # glimpse_enabled is MANDATORY — preflight checks are always on.
+        # The rearview mirror cannot be switched off before merging to the highway.
         self.enable_glimpse = True  # Enable by default
         self.glimpse_engine = None
         self.glimpse_goal = ""
         self.glimpse_constraints = ""
-        self.glimpse_enabled = False
+        self.glimpse_enabled = True  # Mandatory: always on after init
 
         if self.enable_glimpse:
-            # Initialize Glimpse Glimpse with privacy guard
+            # Initialize Glimpse with privacy guard
             def _glimpse_commit_handler(draft: Draft) -> None:
-                # Store committed glimpses for analysis
+                # Store committed glimpses for analysis and emit audit event to
+                # ~/.echoes/audit.ndjson so graph_compiler can compile PREFLIGHT entities.
+                import json as _json
+                from datetime import datetime as _dt
+
+                ts = _dt.now(UTC).isoformat()
                 try:
                     os.makedirs("results", exist_ok=True)
-                    import json as _json
-                    from datetime import datetime as _dt
-
                     rec = {
-                        "ts": _dt.now(UTC).isoformat(),
+                        "ts": ts,
                         "input_text": draft.input_text,
                         "goal": draft.goal,
                         "constraints": draft.constraints,
@@ -772,6 +776,31 @@ class EchoesAssistantV2:
                         f.write(_json.dumps(rec, ensure_ascii=False) + "\n")
                 except Exception:
                     # Silent best-effort; never block user flow
+                    pass
+
+                # Emit to echoes audit log — feeds graph_compiler preflight path
+                try:
+                    import uuid as _uuid
+
+                    audit_path = os.path.expanduser("~/.echoes/audit.ndjson")
+                    os.makedirs(os.path.dirname(audit_path), exist_ok=True)
+                    audit_entry = {
+                        "id": f"aud-{_uuid.uuid4().hex[:16]}",
+                        "timestamp": ts,
+                        "source": "echoes-canopy",
+                        "tool": "glimpse_preflight",
+                        "status": "success",
+                        "metadata": {
+                            "session_id": self.session_id,
+                            "goal": draft.goal,
+                            "constraints": draft.constraints,
+                            "committed": True,
+                        },
+                    }
+                    with open(audit_path, "a", encoding="utf-8") as _af:
+                        _af.write(_json.dumps(audit_entry, ensure_ascii=False) + "\n")
+                except Exception:
+                    # Never block user flow on audit write failure
                     pass
 
             try:
@@ -1344,9 +1373,7 @@ class EchoesAssistantV2:
         try:
             # Consent gate: check before any processing
             if self.legal_system and hasattr(self.legal_system, "can_process"):
-                if not self.legal_system.can_process(
-                    self.session_id, "chat"
-                ):
+                if not self.legal_system.can_process(self.session_id, "chat"):
                     return "Request denied: consent requirements not met for this session."
 
             # Update personality from user message
@@ -3013,10 +3040,14 @@ class EchoesAssistantV2:
     # ============================================================================
 
     def enable_glimpse_preflight(self, enabled: bool = True) -> dict[str, Any]:
-        """Enable or disable Glimpse preflight system.
+        """Enable Glimpse preflight system.
+
+        Preflight checks are MANDATORY — this method always enforces enabled=True.
+        Passing enabled=False is a no-op: the safety check cannot be switched off.
+        The rearview mirror stays on before merging to the highway.
 
         Args:
-            enabled: Whether to enable preflight checks
+            enabled: Ignored — preflight is always on when the engine is initialized.
 
         Returns:
             Result with status
@@ -3024,11 +3055,15 @@ class EchoesAssistantV2:
         if not self.enable_glimpse:
             return {"success": False, "error": "Glimpse system not initialized"}
 
-        self.glimpse_enabled = enabled
+        # Enforce mandatory on — disabling is not permitted.
+        self.glimpse_enabled = True
         return {
             "success": True,
-            "glimpse_enabled": enabled,
-            "message": f"Glimpse preflight {'enabled' if enabled else 'disabled'}",
+            "glimpse_enabled": True,
+            "message": "Glimpse preflight enabled (mandatory — cannot be disabled)",
+            "note": ("Preflight checks are always enforced. enable_glimpse_preflight(False) is a no-op.")
+            if not enabled
+            else None,
         }
 
     def set_glimpse_anchors(self, goal: str = "", constraints: str = "") -> dict[str, Any]:
@@ -3074,6 +3109,37 @@ class EchoesAssistantV2:
             )
 
             result = await self.glimpse_engine.glimpse(draft)
+
+            # Audit every preflight run (not just commits)
+            audit_entry = {
+                "id": f"aud-{uuid.uuid4().hex[:16]}",
+                "timestamp": datetime.now(UTC).isoformat(),
+                "source": "echoes-canopy",
+                "tool": "glimpse_preflight",
+                "status": "success",
+                "metadata": {
+                    "session_id": self.session_id,
+                    "message": message,
+                    "goal": draft.goal,
+                    "constraints": draft.constraints,
+                    "aligned": result.status == "aligned",
+                    "status": result.status,
+                    "attempt": result.attempt,
+                    "sample": result.sample,
+                    "essence": result.essence,
+                    "delta": result.delta,
+                    "stale": result.stale,
+                },
+            }
+
+            try:
+                audit_path = os.path.expanduser("~/.echoes/audit.ndjson")
+                os.makedirs(os.path.dirname(audit_path), exist_ok=True)
+                with open(audit_path, "a", encoding="utf-8") as _af:
+                    _af.write(_json.dumps(audit_entry, ensure_ascii=False) + "\n")
+            except Exception:
+                # Never block user flow on audit write failure
+                pass
 
             return {
                 "success": True,
@@ -4710,8 +4776,8 @@ def interactive_mode():
                     continue
 
                 if command == "preflight off":
-                    preflight_enabled = False
-                    print("✓ Glimpse preflight disabled")
+                    print("⚠ Glimpse preflight cannot be disabled — it's always enabled (mandatory)")
+                    preflight_enabled = True
                     continue
 
                 if command == "anchors":

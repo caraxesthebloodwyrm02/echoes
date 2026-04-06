@@ -84,6 +84,64 @@
 
   /* ── Transition ── */
   --atlas-transition:       150ms ease-in-out;
+
+  /* ── Cool scale (dusty blue — state-mirror complement to warm) ── */
+  --atlas-cool-100:         #e8eef5;
+  --atlas-cool-200:         #c8d4e0;
+  --atlas-cool-300:         #a4b5c8;
+  --atlas-cool-400:         #8a9bb0;   /* anchors to --atlas-info */
+  --atlas-cool-500:         #6d7f96;
+  --atlas-cool-600:         #526073;
+  --atlas-cool-700:         #3d4b5a;
+  --atlas-cool-800:         #2a3540;
+  --atlas-cool-900:         #1a2430;
+
+  /* ── Mood tokens (Mood enum → color) ── */
+  --atlas-mood-enthusiastic: #c2956b;   /* warm gold — high energy */
+  --atlas-mood-curious:      #a4b5c8;   /* cool-300 — open, exploratory */
+  --atlas-mood-supportive:   #c9ad8e;   /* skin-300 — warm empathy */
+  --atlas-mood-playful:      #d4a87e;   /* accent-hover — lifted, bright */
+  --atlas-mood-focused:      #6d7f96;   /* cool-500 — analytical, inward */
+  --atlas-mood-calm:         #8a9bb0;   /* cool-400 — measured, still */
+  --atlas-mood-creative:     #a8886a;   /* skin-400 — bridge warm/cool */
+
+  /* ── State tokens (runtime execution state) ── */
+  --atlas-state-active:           #a4b5c8;
+  --atlas-state-active-bg:        rgba(164, 181, 200, 0.10);
+  --atlas-state-dormant:          #526073;
+  --atlas-state-dormant-bg:       rgba(82, 96, 115, 0.08);
+  --atlas-state-transitioning:    #8a9bb0;
+  --atlas-state-transitioning-bg: rgba(138, 155, 176, 0.12);
+  --atlas-state-sealed:           #3d4b5a;
+
+  /* ── Mirror tokens (memory/trace reflected surfaces) ── */
+  --atlas-mirror-surface: rgba(138, 155, 176, 0.06);
+  --atlas-mirror-trace:   rgba(138, 155, 176, 0.14);
+  --atlas-mirror-echo:    rgba(109, 127, 150, 0.20);
+  --atlas-mirror-border:  rgba(138, 155, 176, 0.25);
+
+  /* ── Trace depth (provenance confidence → opacity) ── */
+  --atlas-trace-opacity-0: 1;     /* confidence 0.8–1.0 */
+  --atlas-trace-opacity-1: 0.75;  /* confidence 0.6–0.8 */
+  --atlas-trace-opacity-2: 0.55;  /* confidence 0.4–0.6 */
+  --atlas-trace-opacity-3: 0.35;  /* confidence 0.2–0.4 */
+  --atlas-trace-opacity-4: 0.18;  /* confidence 0.0–0.2 */
+
+  /* ── Memory recency (session staleness → muting) ── */
+  --atlas-memory-fresh:           #c8d4e0;   /* current session */
+  --atlas-memory-recent:          #8a9bb0;   /* same day */
+  --atlas-memory-dated:           #526073;   /* multi-day */
+  --atlas-memory-aged:            #3d4b5a;   /* weeks old */
+  --atlas-memory-opacity-fresh:   1;
+  --atlas-memory-opacity-recent:  0.75;
+  --atlas-memory-opacity-dated:   0.55;
+  --atlas-memory-opacity-aged:    0.35;
+  --atlas-memory-opacity-archive: 0.20;
+
+  /* ── Reference scope — terminal context (cool, distinct from graph) ── */
+  --atlas-ref-terminal-domain:   #8a9bb0;   /* cool-400 */
+  --atlas-ref-terminal-concept:  #a4b5c8;   /* cool-300 */
+  --atlas-ref-terminal-relation: #526073;   /* cool-600 */
 }
 
 /* ── Base resets when theme is active ── */
@@ -193,3 +251,62 @@ body.atlas-theme {
 .atlas-edge--influence { stroke: var(--atlas-accent-muted); stroke-width: 1.5; opacity: 0.8; }
 .atlas-edge--temporal  { stroke: var(--atlas-skin-400); stroke-dasharray: 4 3; }
 .atlas-edge--spatial   { stroke: var(--atlas-info); stroke-dasharray: 2 2; }
+
+/* ── Terminal reference badges ── */
+
+.atlas-ref-terminal {
+  font-family: var(--atlas-font-mono);
+  font-size: 0.75rem;
+  padding: 1px var(--atlas-space-2);
+  border-radius: var(--atlas-radius-sm);
+  border: 1px solid var(--atlas-mirror-border);
+  background: var(--atlas-mirror-surface);
+}
+.atlas-ref-terminal--domain   { color: var(--atlas-ref-terminal-domain); }
+.atlas-ref-terminal--concept  { color: var(--atlas-ref-terminal-concept); }
+.atlas-ref-terminal--relation { color: var(--atlas-ref-terminal-relation); }
+
+/* ── State indicator primitives ── */
+
+.atlas-state {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--atlas-space-2);
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+.atlas-state--active       { color: var(--atlas-state-active);       background: var(--atlas-state-active-bg); }
+.atlas-state--dormant      { color: var(--atlas-state-dormant);      background: var(--atlas-state-dormant-bg); }
+.atlas-state--transitioning{ color: var(--atlas-state-transitioning); background: var(--atlas-state-transitioning-bg); }
+.atlas-state--sealed       { color: var(--atlas-cool-300);           background: var(--atlas-state-sealed); }
+
+/* ── Mirror surface (trace/memory overlays) ── */
+
+.atlas-mirror {
+  background: var(--atlas-mirror-surface);
+  border: 1px solid var(--atlas-mirror-border);
+  border-radius: var(--atlas-radius-md);
+}
+.atlas-mirror--trace { background: var(--atlas-mirror-trace); }
+.atlas-mirror--echo  { background: var(--atlas-mirror-echo); }
+
+/* ── Consent-pack presets (data-atlas-pack attribute) ── */
+/* base is the :root default — no selector needed */
+
+[data-atlas-pack="exploratory"] {
+  --atlas-bg:           #1a2430;   /* cool-900 — slightly shifted surface */
+  --atlas-accent:       #d4a87e;   /* accent-hover becomes primary */
+  --atlas-info:         #a4b5c8;   /* cool-300 — expanded info palette */
+  --atlas-info-bg:      rgba(164, 181, 200, 0.10);
+  --atlas-focus-ring:   0 0 0 2px var(--atlas-cool-400);
+}
+
+[data-atlas-pack="restricted"] {
+  --atlas-bg:           #14100d;   /* bg-sunken — darker, more closed */
+  --atlas-accent:       #9a7856;   /* accent-muted only */
+  --atlas-accent-hover: #9a7856;   /* no lift on hover */
+  --atlas-accent-subtle: rgba(154, 120, 86, 0.08);
+  --atlas-text:         #8b6f54;   /* skin-500 — muted primary text */
+  --atlas-text-secondary: #6b5340; /* brown-600 — further muted */
+  --atlas-focus-ring:   0 0 0 2px rgba(154, 120, 86, 0.4);
+}
