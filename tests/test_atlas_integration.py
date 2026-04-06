@@ -7,6 +7,7 @@ governance gate -> entity contract conformance -> provenance chain integrity.
 
 from __future__ import annotations
 
+import copy
 import sys
 import os
 import pytest
@@ -16,6 +17,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from core_modules.cross_reference_system import CrossReferenceSystem
 from core_modules.personality_engine import Mood, PersonalityEngine, select_rule_pack
 from core_modules.graph_compiler import compile_context_to_entities, validate_entities
+from core_modules.graph_compiler import detect_partition_conflicts
 from core_modules.governance_gates import check as governance_check, GateVerdict
 
 try:
@@ -81,6 +83,30 @@ class TestGraphCompiler:
         valid_types = {"domain", "concept", "relation_node"}
         for entity in entities:
             assert entity["type"] in valid_types
+
+    def test_partition_metadata_present(self):
+        cross_ref = CrossReferenceSystem()
+        context = cross_ref.analyze_context(SAMPLE_INPUTS[0])
+        entities = compile_context_to_entities(context)
+        for entity in entities:
+            assert entity["partition_key"]
+            assert entity["partition_id"].startswith("p-")
+            assert entity["payload_fingerprint"].startswith("fp-")
+            assert entity["conflict_state"] == "clear"
+
+    def test_detect_partition_conflicts_for_same_partition(self):
+        cross_ref = CrossReferenceSystem()
+        context = cross_ref.analyze_context(SAMPLE_INPUTS[0])
+        entities = compile_context_to_entities(context)
+        baseline = entities[0]
+        modified = copy.deepcopy(baseline)
+        modified["metrics"] = {"complexity": 0.99}
+        modified["payload_fingerprint"] = "fp-artificial-mismatch"
+        with_conflict = [baseline, modified]
+
+        conflicts = detect_partition_conflicts(with_conflict)
+        assert len(conflicts) == 1
+        assert conflicts[0]["partition_id"] == baseline["partition_id"]
 
 
 class TestRulePack:

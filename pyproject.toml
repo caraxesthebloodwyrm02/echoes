@@ -136,7 +136,7 @@ ignore = [
 ]
 
 [tool.ruff.lint.isort]
-known-first-party = ["echoes", "app", "core", "core_modules"]
+known-first-party = ["echoes", "app", "core", "core_modules", "integrations"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401"]
@@ -210,7 +210,7 @@ markers = [
 ]
 
 [tool.coverage.run]
-source = ["app", "api", "glimpse", "tools", "core", "src"]
+source = ["app", "api", "glimpse", "tools", "core", "src", "integrations"]
 omit = [
     "*/tests/*",
     "*/test_*.py",

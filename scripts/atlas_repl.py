@@ -6,9 +6,9 @@ Threads all Atlas axes together:
   rule-pack select -> (optional) Glimpse pipeline -> structured output
 
 Usage:
-    echo "quantum computing and neural networks" | python scripts/atlas_repl.py
-    python scripts/atlas_repl.py --mood CREATIVE --user-id researcher-1
-    python scripts/atlas_repl.py < journal.txt
+    echo "quantum computing and neural networks" | uv run python scripts/atlas_repl.py
+    uv run python scripts/atlas_repl.py --mood CREATIVE --user-id researcher-1
+    uv run python scripts/atlas_repl.py < journal.txt
 """
 
 from __future__ import annotations
@@ -23,8 +23,17 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core_modules.cross_reference_system import CrossReferenceSystem
 from core_modules.personality_engine import Mood, PersonalityEngine, select_rule_pack
-from core_modules.graph_compiler import compile_context_to_entities, validate_entities
+from core_modules.graph_compiler import (
+    compile_context_to_entities,
+    validate_entities,
+    detect_partition_conflicts,
+)
 from core_modules.governance_gates import check as governance_check, GateVerdict
+from core_modules.partition_conflict_pipeline import (
+    run_conflict_pipeline,
+    apply_resolution_states,
+    append_partition_registry,
+)
 
 try:
     from legal_safeguards import CognitiveAccountingSystem, ConsentType
@@ -96,6 +105,7 @@ def format_output(
     glimpse_result: dict | None,
     rule_pack: str,
     verdict: GateVerdict,
+    conflict_summaries: list[dict] | None = None,
 ) -> str:
     lines = []
 
@@ -113,6 +123,12 @@ def format_output(
     lines.append(f"  rule-pack: {rule_pack}")
     lines.append(f"  gate: {'pass' if verdict.allowed else 'BLOCKED'} ({verdict.reason})")
     lines.append(f"  entities: {len(entities)}")
+    summaries = conflict_summaries or []
+    if summaries:
+        blocked = sum(len(item.get("blocked_entity_ids", [])) for item in summaries)
+        lines.append(f"  conflicts: {len(summaries)} resolved, blocked={blocked}")
+    else:
+        lines.append("  conflicts: 0")
     return "\n".join(lines)
 
 
@@ -160,8 +176,26 @@ def main():
             for err in validation_errors:
                 print(f"  WARN: {err}", file=sys.stderr)
 
-        glimpse_result = try_glimpse_pipeline(entities)
-        print(format_output(context, entities, glimpse_result, rule_pack, verdict))
+        conflicts = detect_partition_conflicts(entities)
+        conflict_summaries = run_conflict_pipeline(conflicts) if conflicts else []
+        if conflict_summaries:
+            apply_resolution_states(entities, conflict_summaries)
+
+        # Keep an append-only registry of entity partition assignments.
+        append_partition_registry(entities)
+
+        active_entities = [e for e in entities if e.get("conflict_state") != "blocked"]
+        glimpse_result = try_glimpse_pipeline(active_entities)
+        print(
+            format_output(
+                context,
+                active_entities,
+                glimpse_result,
+                rule_pack,
+                verdict,
+                conflict_summaries,
+            )
+        )
 
 
 if __name__ == "__main__":
