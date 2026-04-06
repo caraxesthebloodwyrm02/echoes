@@ -55,7 +55,7 @@ readability-lxml==0.8.4.1
 # matplotlib>=3.7.0
 
 # YouTube & Audio (minimal versions)
-yt-dlp==2026.2.21
+yt-dlp==2026.3.17
 # openai-whisper and torch are heavy - install separately if needed
 
 # Development & Testing - Fixed versions
