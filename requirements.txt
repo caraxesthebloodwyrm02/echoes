@@ -76,7 +76,7 @@ pip-requirements-parser==32.0.1
 tqdm==4.67.3
 
 # Security scanning
-bandit==1.7.6
+bandit==1.9.4
 safety==3.2.7
 
 # Additional utilities
