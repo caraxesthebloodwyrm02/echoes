@@ -4,8 +4,8 @@
 
 # Core AI & API Layers
 openai>=1.40.0,<3.0.0
-fastapi==0.135.2
-uvicorn==0.42.0
+fastapi==0.135.3
+uvicorn==0.44.0
 httpx==0.28.1
 requests==2.33.0
 python-dotenv==1.2.1
