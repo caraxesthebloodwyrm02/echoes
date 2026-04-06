@@ -457,8 +457,8 @@ alternative: thin, composable, and governance-aware from the first line.
 """Atlas REPL: knowledge-graph exploration from the terminal.
 
 Usage:
-    echo "quantum computing" | python scripts/atlas_repl.py
-    python scripts/atlas_repl.py --mood CREATIVE --preset exploratory
+    echo "quantum computing" | uv run python scripts/atlas_repl.py
+    uv run python scripts/atlas_repl.py --mood CREATIVE --preset exploratory
 """
 
 import argparse

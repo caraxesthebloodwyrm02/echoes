@@ -8,7 +8,9 @@ required by Glimpse's createEvaluationContext / entity construction paths.
 
 from __future__ import annotations
 
+import json
 from datetime import UTC, datetime
+from hashlib import sha256
 
 
 def _stable_id(name: str) -> str:
@@ -16,7 +18,60 @@ def _stable_id(name: str) -> str:
     return f"e-{slug}"
 
 
+def _norm_text(value: object) -> str:
+    if value is None:
+        return ""
+    return str(value).strip().lower()
+
+
+def _partition_key(entity: dict) -> str:
+    """Canonical partition key for deterministic clash detection."""
+    dims = entity.get("dimensions") or {}
+    return "|".join(
+        [
+            _norm_text(entity.get("type")),
+            _norm_text(entity.get("name")),
+            _norm_text(dims.get("space")),
+            _norm_text(dims.get("domain")),
+            _norm_text(dims.get("catalyst")),
+        ]
+    )
+
+
+def _partition_id(key: str) -> str:
+    return f"p-{sha256(key.encode('utf-8')).hexdigest()[:16]}"
+
+
+def _payload_fingerprint(entity: dict) -> str:
+    payload = {
+        "id": entity.get("id"),
+        "name": entity.get("name"),
+        "type": entity.get("type"),
+        "dimensions": entity.get("dimensions") or {},
+        "metrics": entity.get("metrics") or {},
+        "domainKeywordHits": entity.get("domainKeywordHits") or {},
+        "tones": entity.get("tones") or {},
+    }
+    raw = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return f"fp-{sha256(raw.encode('utf-8')).hexdigest()[:16]}"
+
+
+def _attach_partition_metadata(entity: dict) -> None:
+    key = _partition_key(entity)
+    entity["partition_key"] = key
+    entity["partition_id"] = _partition_id(key)
+    entity["payload_fingerprint"] = _payload_fingerprint(entity)
+    entity.setdefault("conflict_state", "clear")
+
+
 _COMPLEXITY_SCORES = {"high": 1.0, "medium": 0.5, "low": 0.2}
+
+# Glimpse Entity contract requires both camelCase and snake_case variants.
+# This is the canonical dual-key schema — do not modify without updating Glimpse.
+ENTITY_DUAL_KEYS = (
+    ("domainKeywordHits", "domain_keyword_hits"),
+    ("tones", "tone_hits"),
+)
 
 
 def compile_context_to_entities(
@@ -43,7 +98,7 @@ def compile_context_to_entities(
 
     for domain_name in domains:
         domain_hits = {domain_name: 1}
-        entities.append({
+        entity = {
             "id": _stable_id(domain_name),
             "name": domain_name,
             "type": "domain",
@@ -53,13 +108,15 @@ def compile_context_to_entities(
             "domain_keyword_hits": domain_hits,
             "tones": {},
             "tone_hits": {},
-        })
+        }
+        _attach_partition_metadata(entity)
+        entities.append(entity)
 
     for concept in context_output.get("key_concepts", []):
         concept_lower = concept.lower()
         concept_hits = {d: (1 if d.lower() in concept_lower else 0) for d in domains}
         tone_data = {"sentiment": sentiment}
-        entities.append({
+        entity = {
             "id": _stable_id(concept),
             "name": concept,
             "type": "concept",
@@ -74,13 +131,15 @@ def compile_context_to_entities(
             "domain_keyword_hits": concept_hits,
             "tones": tone_data,
             "tone_hits": tone_data,
-        })
+        }
+        _attach_partition_metadata(entity)
+        entities.append(entity)
 
     for rel in context_output.get("relationships", []):
         rel_domains = rel.get("domains", [])
         rel_name = " + ".join(rel_domains) if rel_domains else rel.get("type", "relation")
         rel_hits = {d: 1 for d in rel_domains}
-        entities.append({
+        entity = {
             "id": _stable_id(f"rel-{rel_name}"),
             "name": rel_name,
             "type": "relation_node",
@@ -90,12 +149,18 @@ def compile_context_to_entities(
             "domain_keyword_hits": rel_hits,
             "tones": {},
             "tone_hits": {},
-        })
+        }
+        _attach_partition_metadata(entity)
+        entities.append(entity)
 
     return entities
 
 
-_ENTITY_REQUIRED_KEYS = {"id", "name", "type", "dimensions", "domainKeywordHits", "domain_keyword_hits", "tones", "tone_hits"}
+_ENTITY_REQUIRED_KEYS = {
+    "id", "name", "type", "dimensions", "metrics",
+    "partition_key", "partition_id", "payload_fingerprint", "conflict_state",
+    *(k for pair in ENTITY_DUAL_KEYS for k in pair),
+}
 
 
 def validate_entities(entities: list[dict]) -> list[str]:
@@ -105,8 +170,41 @@ def validate_entities(entities: list[dict]) -> list[str]:
         missing = _ENTITY_REQUIRED_KEYS - set(e.keys())
         if missing:
             errors.append(f"entity[{i}] missing keys: {missing}")
-        if e.get("domainKeywordHits") != e.get("domain_keyword_hits"):
-            errors.append(f"entity[{i}] dual-key mismatch: domainKeywordHits != domain_keyword_hits")
+        for camel, snake in ENTITY_DUAL_KEYS:
+            if e.get(camel) != e.get(snake):
+                errors.append(f"entity[{i}] dual-key mismatch: {camel} != {snake}")
         if not isinstance(e.get("id", ""), str) or not e.get("id", "").startswith("e-"):
             errors.append(f"entity[{i}] id must be a string starting with 'e-'")
+        if not isinstance(e.get("partition_id", ""), str) or not e.get("partition_id", "").startswith("p-"):
+            errors.append(f"entity[{i}] partition_id must be a string starting with 'p-'")
+        if e.get("conflict_state") not in {"clear", "blocked", "resolved_winner"}:
+            errors.append(f"entity[{i}] conflict_state invalid: {e.get('conflict_state')}")
     return errors
+
+
+def detect_partition_conflicts(entities: list[dict]) -> list[dict]:
+    """Return deterministic partition conflicts where same partition has mismatched payloads."""
+    by_partition: dict[str, list[dict]] = {}
+    for entity in entities:
+        pid = str(entity.get("partition_id", ""))
+        if not pid:
+            continue
+        by_partition.setdefault(pid, []).append(entity)
+
+    conflicts: list[dict] = []
+    for partition_id, grouped in by_partition.items():
+        if len(grouped) < 2:
+            continue
+        fingerprints = {str(e.get("payload_fingerprint", "")) for e in grouped}
+        if len(fingerprints) <= 1:
+            continue
+
+        partition_key = str(grouped[0].get("partition_key", ""))
+        conflicts.append(
+            {
+                "partition_id": partition_id,
+                "partition_key": partition_key,
+                "entities": sorted(grouped, key=lambda e: str(e.get("id", ""))),
+            }
+        )
+    return sorted(conflicts, key=lambda c: (c["partition_id"], c["partition_key"]))

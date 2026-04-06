@@ -29,35 +29,39 @@ Full schema: `docs/atlas_schema.md`
 
 # Run the REPL (stdin, one line at a time)
 echo "How do neural networks relate to biological systems?" | \
-  JWT_SECRET=dev-secret python scripts/atlas_repl.py --mood CREATIVE
+  JWT_SECRET=dev-secret uv run python scripts/atlas_repl.py --mood CREATIVE
 
 # Run verification suite (36 tests)
-JWT_SECRET=dev-secret python -m pytest tests/test_atlas_integration.py -v \
+JWT_SECRET=dev-secret uv run pytest tests/test_atlas_integration.py -v \
   --override-ini="addopts="
 
 # Run drift monitor
-python scripts/atlas_drift_check.py
+uv run python scripts/atlas_drift_check.py
 ```
 
 ## Modules
 
-| File | Role |
-|------|------|
-| `core_modules/graph_compiler.py` | Echoes context -> Glimpse Entity shape (dual-key emission) |
-| `core_modules/governance_gates.py` | Consent + value threshold -> `GateVerdict` with provenance |
-| `core_modules/personality_engine.py` | `select_rule_pack(mood, consent)` -- 21-case truth table |
-| `app/agents/agent.py` | `sanitize_prompt()` -- 8 injection-pattern blocklist |
-| `scripts/atlas_repl.py` | Terminal REPL with Glimpse subprocess bridge + fallback |
-| `scripts/atlas_drift_check.py` | Embeddedness regression monitor |
-| `tests/test_atlas_integration.py` | 36-test verification suite across all axes |
+
+| File                                 | Role                                                       |
+| ------------------------------------ | ---------------------------------------------------------- |
+| `core_modules/graph_compiler.py`     | Echoes context -> Glimpse Entity shape (dual-key emission) |
+| `core_modules/governance_gates.py`   | Consent + value threshold -> `GateVerdict` with provenance |
+| `core_modules/personality_engine.py` | `select_rule_pack(mood, consent)` -- 21-case truth table   |
+| `app/agents/agent.py`                | `sanitize_prompt()` -- 8 injection-pattern blocklist       |
+| `scripts/atlas_repl.py`              | Terminal REPL with Glimpse subprocess bridge + fallback    |
+| `scripts/atlas_drift_check.py`       | Embeddedness regression monitor                            |
+| `tests/test_atlas_integration.py`    | 36-test verification suite across all axes                 |
+
 
 ## Rule-Pack Selection
 
-| Consent | CREATIVE / CURIOUS | All other moods |
-|---------|-------------------|-----------------|
-| EXPLICIT | `exploratory` | `base` |
-| IMPLICIT | `base` | `base` |
-| NONE | `restricted` | `restricted` |
+
+| Consent  | CREATIVE / CURIOUS | All other moods |
+| -------- | ------------------ | --------------- |
+| EXPLICIT | `exploratory`      | `base`          |
+| IMPLICIT | `base`             | `base`          |
+| NONE     | `restricted`       | `restricted`    |
+
 
 `restricted` disables simulation, analogy, and humor paths.
 `exploratory` enables multi-pass inference and creative graph expansion.
@@ -129,14 +133,14 @@ Diverges from `master` by one commit.
 
 ```bash
 # All 36 tests
-JWT_SECRET=dev-secret python -m pytest tests/test_atlas_integration.py -v \
+JWT_SECRET=dev-secret uv run pytest tests/test_atlas_integration.py -v \
   --override-ini="addopts="
 
 # Drift monitor (embeddedness regression check)
-python scripts/atlas_drift_check.py
+uv run python scripts/atlas_drift_check.py
 
 # REPL smoke test
-echo "quantum computing" | JWT_SECRET=dev-secret python scripts/atlas_repl.py
+echo "quantum computing" | JWT_SECRET=dev-secret uv run python scripts/atlas_repl.py
 ```
 
 ## Dependencies
