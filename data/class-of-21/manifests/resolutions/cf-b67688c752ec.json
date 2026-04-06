@@ -1,0 +1,38 @@
+{
+  "conflict_id": "cf-b67688c752ec",
+  "losers": [
+    {
+      "candidate_id": "e-rp-d8b1da2eab9d-c002:path_space",
+      "claim_kind": "path_space",
+      "confidence": 0.8,
+      "entity_id": "e-rp-d8b1da2eab9d-c002"
+    },
+    {
+      "candidate_id": "e-rp-d8b1da2eab9d-c001:content_attraction",
+      "claim_kind": "content_attraction",
+      "confidence": 0.7,
+      "entity_id": "e-rp-d8b1da2eab9d-c001"
+    },
+    {
+      "candidate_id": "e-rp-d8b1da2eab9d-c002:content_attraction",
+      "claim_kind": "content_attraction",
+      "confidence": 0.7,
+      "entity_id": "e-rp-d8b1da2eab9d-c002"
+    }
+  ],
+  "partition_id": "p-ffa6d4ca535be22a",
+  "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction",
+  "policy": "confidence-first",
+  "resolution_id": "rs-7b8100fa835a",
+  "tie_breakers": [
+    "scope_weight",
+    "candidate_id_lexical"
+  ],
+  "timestamp": "2026-04-06T22:06:42.325902+00:00",
+  "winner": {
+    "candidate_id": "e-rp-d8b1da2eab9d-c001:path_space",
+    "claim_kind": "path_space",
+    "confidence": 0.8,
+    "entity_id": "e-rp-d8b1da2eab9d-c001"
+  }
+}

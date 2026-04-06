@@ -1,0 +1,15 @@
+{
+  "claim_count": 2,
+  "claims": [
+    {
+      "claim_id": "rp-d8b1da2eab9d-c001",
+      "text": "Route candidate to /plugins/atlas-echoes"
+    },
+    {
+      "claim_id": "rp-d8b1da2eab9d-c002",
+      "text": "Route candidate to /plugins/atlas-echoes"
+    }
+  ],
+  "staged_report_id": "rp-d8b1da2eab9d",
+  "timestamp": "2026-04-06T22:06:42.325259+00:00"
+}

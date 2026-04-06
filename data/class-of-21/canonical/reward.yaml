@@ -1,0 +1,14 @@
+reward:
+  base:
+    correctness: 0.30
+    groundedness: 0.20
+    conciseness: 0.15
+    structure: 0.15
+    uncertainty: 0.10
+  bonus:
+    direct_answer: 0.10
+    reusable_format: 0.07
+  penalty:
+    fluff: -0.10
+    hidden_assumptions: -0.12
+    verbosity: -0.08

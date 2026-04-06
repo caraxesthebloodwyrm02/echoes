@@ -1,0 +1,51 @@
+{
+  "Profile": {
+    "communication_style": {
+      "preferred": ["string"],
+      "avoid": ["string"]
+    },
+    "learning_style": {
+      "preferred": ["string"]
+    },
+    "interaction_style": {
+      "preferred": ["string"]
+    },
+    "tooling_expectation": {
+      "preferred": ["string"]
+    }
+  },
+  "Constraints": {
+    "length": "short|medium|long",
+    "tone": "string",
+    "format": "string",
+    "freshness_required": "boolean"
+  },
+  "Example": {
+    "example_id": "string",
+    "user_intent": "string",
+    "context_summary": "string",
+    "stable_preferences": ["string"],
+    "constraints": "Constraints",
+    "model_action": "string",
+    "output": "string",
+    "rationale": ["string"],
+    "reward_labels": {
+      "helpful": "0|1",
+      "grounded": "0|1",
+      "concise": "0|1",
+      "adaptive": "0|1"
+    },
+    "error_tags": ["string"]
+  },
+  "RewardSpec": {
+    "weights": {
+      "correctness": "float",
+      "groundedness": "float",
+      "conciseness": "float",
+      "structure": "float",
+      "uncertainty_handling": "float"
+    },
+    "bonuses": ["string"],
+    "penalties": ["string"]
+  }
+}

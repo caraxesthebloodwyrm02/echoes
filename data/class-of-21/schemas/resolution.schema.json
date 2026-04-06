@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echoes.local/schemas/class-of-21/resolution.schema.json",
+  "title": "Class-of-21 Conflict Resolution",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "resolution_id": {"type": "string"},
+    "conflict_id": {"type": "string"},
+    "partition_id": {"type": "string"},
+    "partition_key": {"type": "string"},
+    "winner": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "candidate_id": {"type": "string"},
+        "entity_id": {"type": "string"},
+        "claim_kind": {"type": "string", "enum": ["path_space", "content_attraction"]},
+        "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+      },
+      "required": ["candidate_id", "entity_id", "claim_kind", "confidence"]
+    },
+    "losers": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "candidate_id": {"type": "string"},
+          "entity_id": {"type": "string"},
+          "claim_kind": {"type": "string", "enum": ["path_space", "content_attraction"]},
+          "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+        },
+        "required": ["candidate_id", "entity_id", "claim_kind", "confidence"]
+      }
+    },
+    "policy": {"type": "string", "const": "confidence-first"},
+    "tie_breakers": {
+      "type": "array",
+      "items": {"type": "string"}
+    },
+    "timestamp": {"type": "string", "format": "date-time"}
+  },
+  "required": [
+    "resolution_id",
+    "conflict_id",
+    "partition_id",
+    "partition_key",
+    "winner",
+    "losers",
+    "policy",
+    "tie_breakers",
+    "timestamp"
+  ]
+}

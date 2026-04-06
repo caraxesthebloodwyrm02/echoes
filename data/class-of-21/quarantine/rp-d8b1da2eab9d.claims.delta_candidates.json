@@ -1,0 +1,61 @@
+{
+  "candidate_count": 2,
+  "candidates": [
+    {
+      "claim_id": "rp-d8b1da2eab9d-c001",
+      "claim_kind": "content_attraction",
+      "claim_text": "Route candidate to /plugins/atlas-echoes",
+      "conflict_state": "clear",
+      "dimensions": {
+        "catalyst": "content_attraction",
+        "domain": "report",
+        "space": "/reports/staged",
+        "time": "2026-04-06T22:06:42.325448+00:00"
+      },
+      "domainKeywordHits": {
+        "report": 1
+      },
+      "id": "e-rp-d8b1da2eab9d-c001",
+      "metrics": {
+        "complexity": 0.5
+      },
+      "name": "Route candidate to /plugins/atlas-echoes",
+      "partition_id": "p-ffa6d4ca535be22a",
+      "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction",
+      "payload_fingerprint": "fp-3fd98f0205740889",
+      "tones": {
+        "source": "report"
+      },
+      "type": "report_claim"
+    },
+    {
+      "claim_id": "rp-d8b1da2eab9d-c002",
+      "claim_kind": "content_attraction",
+      "claim_text": "Route candidate to /plugins/atlas-echoes",
+      "conflict_state": "clear",
+      "dimensions": {
+        "catalyst": "content_attraction",
+        "domain": "report",
+        "space": "/reports/staged",
+        "time": "2026-04-06T22:06:42.325478+00:00"
+      },
+      "domainKeywordHits": {
+        "report": 1
+      },
+      "id": "e-rp-d8b1da2eab9d-c002",
+      "metrics": {
+        "complexity": 0.5
+      },
+      "name": "Route candidate to /plugins/atlas-echoes",
+      "partition_id": "p-ffa6d4ca535be22a",
+      "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction",
+      "payload_fingerprint": "fp-2a53f8acc45be151",
+      "tones": {
+        "source": "report"
+      },
+      "type": "report_claim"
+    }
+  ],
+  "source_claims": "/home/caraxes/canopy/echoes/data/class-of-21/quarantine/rp-d8b1da2eab9d.claims.json",
+  "timestamp": "2026-04-06T22:06:42.325520+00:00"
+}

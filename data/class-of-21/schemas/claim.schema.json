@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://echoes.local/schemas/class-of-21/claim.schema.json",
+  "title": "Class-of-21 Conflict Claim",
+  "type": "object",
+  "additionalProperties": false,
+  "properties": {
+    "claim_id": {"type": "string"},
+    "claim_kind": {"type": "string", "enum": ["path_space", "content_attraction"]},
+    "partition_id": {"type": "string"},
+    "partition_key": {"type": "string"},
+    "entity_id": {"type": "string"},
+    "candidate_id": {"type": "string"},
+    "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+    "scope_weight": {"type": "integer", "minimum": 0},
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "source": {"type": "string"},
+        "timestamp": {"type": "string", "format": "date-time"},
+        "algorithm": {"type": "string"}
+      },
+      "required": ["source", "timestamp", "algorithm"]
+    }
+  },
+  "required": [
+    "claim_id",
+    "claim_kind",
+    "partition_id",
+    "partition_key",
+    "entity_id",
+    "candidate_id",
+    "confidence",
+    "scope_weight",
+    "provenance"
+  ]
+}
