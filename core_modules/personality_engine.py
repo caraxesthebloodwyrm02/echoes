@@ -174,9 +174,7 @@ class PersonalityEngine:
             "positivity": 0.7,
         }
 
-    def update_from_interaction(
-        self, user_message: str, user_sentiment: str | None = None
-    ):
+    def update_from_interaction(self, user_message: str, user_sentiment: str | None = None):
         """Update personality based on user interaction"""
         self.interaction_count += 1
         self.last_interaction = datetime.now()
@@ -185,29 +183,19 @@ class PersonalityEngine:
         message_lower = user_message.lower()
 
         # Detect user mood and adapt
-        if any(
-            word in message_lower for word in ["excited", "awesome", "great", "love"]
-        ):
+        if any(word in message_lower for word in ["excited", "awesome", "great", "love"]):
             self._adjust_mood_towards(Mood.ENTHUSIASTIC, 0.1)
-        elif any(
-            word in message_lower for word in ["why", "how", "what if", "curious"]
-        ):
+        elif any(word in message_lower for word in ["why", "how", "what if", "curious"]):
             self._adjust_mood_towards(Mood.CURIOUS, 0.1)
-        elif any(
-            word in message_lower for word in ["help", "stuck", "confused", "difficult"]
-        ):
+        elif any(word in message_lower for word in ["help", "stuck", "confused", "difficult"]):
             self._adjust_mood_towards(Mood.SUPPORTIVE, 0.15)
         elif any(word in message_lower for word in ["fun", "play", "game", "joke"]):
             self._adjust_mood_towards(Mood.PLAYFUL, 0.1)
-        elif any(
-            word in message_lower for word in ["focus", "serious", "work", "task"]
-        ):
+        elif any(word in message_lower for word in ["focus", "serious", "work", "task"]):
             self._adjust_mood_towards(Mood.FOCUSED, 0.1)
         elif any(word in message_lower for word in ["calm", "relax", "peace", "quiet"]):
             self._adjust_mood_towards(Mood.CALM, 0.1)
-        elif any(
-            word in message_lower for word in ["create", "design", "art", "creative"]
-        ):
+        elif any(word in message_lower for word in ["create", "design", "art", "creative"]):
             self._adjust_mood_towards(Mood.CREATIVE, 0.1)
 
         # Update user preferences
@@ -221,23 +209,16 @@ class PersonalityEngine:
             self.user_preferences["emoji_usage"] = True
 
         # Detect formality
-        if any(
-            word in message_lower
-            for word in ["please", "thank you", "would you", "could you"]
-        ):
-            self.user_preferences["formality_level"] = min(
-                1.0, self.user_preferences["formality_level"] + 0.05
-            )
+        if any(word in message_lower for word in ["please", "thank you", "would you", "could you"]):
+            self.user_preferences["formality_level"] = min(1.0, self.user_preferences["formality_level"] + 0.05)
         elif any(word in message_lower for word in ["hey", "yo", "sup", "what's up"]):
-            self.user_preferences["formality_level"] = max(
-                0.0, self.user_preferences["formality_level"] - 0.05
-            )
+            self.user_preferences["formality_level"] = max(0.0, self.user_preferences["formality_level"] - 0.05)
 
     def _adjust_mood_towards(self, target_mood: Mood, strength: float):
         """Gradually adjust mood towards target"""
         if self.current_mood != target_mood:
             # Probability of mood change based on adaptability trait
-            if random.random() < self.traits[PersonalityTrait.ADAPTABILITY] * strength:
+            if random.random() < self.traits[PersonalityTrait.ADAPTABILITY] * strength:  # noqa: S311
                 self.current_mood = target_mood
                 self.mood_history.append(
                     {
@@ -259,17 +240,17 @@ class PersonalityEngine:
         else:
             prefixes = mood_config.get("responses", ["I see!"])
 
-        base_prefix = random.choice(prefixes)
+        base_prefix = random.choice(prefixes)  # noqa: S311
 
         # Add emoji if enabled and appropriate
-        if self.user_preferences["emoji_usage"] and random.random() < 0.3:
+        if self.user_preferences["emoji_usage"] and random.random() < 0.3:  # noqa: S311
             emojis = mood_config.get("emojis", ["😊"])
-            base_prefix += f" {random.choice(emojis)}"
+            base_prefix += f" {random.choice(emojis)}"  # noqa: S311
 
         # Add punctuation based on enthusiasm level
         if self.traits[PersonalityTrait.ENTHUSIASM] > 0.7:
             punctuations = mood_config.get("punctuation", ["!"])
-            base_prefix += random.choice(punctuations)
+            base_prefix += random.choice(punctuations)  # noqa: S311
 
         return base_prefix
 
@@ -296,22 +277,16 @@ class PersonalityEngine:
         elif self.user_preferences["response_length"] == "long":
             # Add more detail
             if self.traits[PersonalityTrait.CURIOSITY] > 0.7:
-                base_response += (
-                    " By the way, have you considered exploring this further?"
-                )
+                base_response += " By the way, have you considered exploring this further?"
 
         # Add personality flourishes
-        if self.current_mood == Mood.CURIOUS and random.random() < 0.3:
-            questions = self.mood_responses[Mood.CURIOUS].get(
-                "questions", ["What do you think?"]
-            )
-            base_response += f" {random.choice(questions)}"
+        if self.current_mood == Mood.CURIOUS and random.random() < 0.3:  # noqa: S311
+            questions = self.mood_responses[Mood.CURIOUS].get("questions", ["What do you think?"])
+            base_response += f" {random.choice(questions)}"  # noqa: S311
 
-        if self.current_mood == Mood.SUPPORTIVE and random.random() < 0.2:
-            encouragement = self.mood_responses[Mood.SUPPORTIVE].get(
-                "encouragement", ["You're doing great!"]
-            )
-            base_response += f" {random.choice(encouragement)}"
+        if self.current_mood == Mood.SUPPORTIVE and random.random() < 0.2:  # noqa: S311
+            encouragement = self.mood_responses[Mood.SUPPORTIVE].get("encouragement", ["You're doing great!"])
+            base_response += f" {random.choice(encouragement)}"  # noqa: S311
 
         return base_response
 
@@ -320,30 +295,20 @@ class PersonalityEngine:
         suggestions = []
 
         if self.traits[PersonalityTrait.CURIOSITY] > 0.7:
-            suggestions.append(
-                f"Have you explored how {topic} relates to other fields?"
-            )
+            suggestions.append(f"Have you explored how {topic} relates to other fields?")
 
         if self.traits[PersonalityTrait.CREATIVITY] > 0.7:
-            suggestions.append(
-                f"Think of {topic} like a metaphor - what does it remind you of?"
-            )
+            suggestions.append(f"Think of {topic} like a metaphor - what does it remind you of?")
 
         if self.traits[PersonalityTrait.WISDOM] > 0.6:
-            suggestions.append(
-                f"Consider the historical context and evolution of {topic}"
-            )
+            suggestions.append(f"Consider the historical context and evolution of {topic}")
 
         if self.current_mood == Mood.CREATIVE:
-            suggestions.append(
-                f"How might {topic} be approached from an artistic perspective?"
-            )
+            suggestions.append(f"How might {topic} be approached from an artistic perspective?")
 
         return suggestions[:3]  # Return top 3 suggestions
 
-    def create_contextual_example(
-        self, topic: str, user_level: str = "beginner"
-    ) -> str:
+    def create_contextual_example(self, topic: str, user_level: str = "beginner") -> str:
         """Create a relevant example based on context and personality"""
         examples = {
             "beginner": f"Let me explain {topic} with a simple analogy: Imagine you're building with LEGO blocks...",
@@ -371,17 +336,11 @@ class PersonalityEngine:
             # Simple heuristic-based alignment
             if value == "helpfulness" and "help" in action.lower():
                 alignment[value] = importance
-            elif value == "creativity" and any(
-                word in action.lower() for word in ["create", "design", "innovate"]
-            ):
+            elif value == "creativity" and any(word in action.lower() for word in ["create", "design", "innovate"]):
                 alignment[value] = importance
-            elif value == "curiosity" and any(
-                word in action.lower() for word in ["explore", "learn", "discover"]
-            ):
+            elif value == "curiosity" and any(word in action.lower() for word in ["explore", "learn", "discover"]):
                 alignment[value] = importance
-            elif value == "honesty" and any(
-                word in action.lower() for word in ["truth", "honest", "transparent"]
-            ):
+            elif value == "honesty" and any(word in action.lower() for word in ["truth", "honest", "transparent"]):
                 alignment[value] = importance
             else:
                 alignment[value] = importance * 0.5  # Partial alignment
@@ -392,9 +351,7 @@ class PersonalityEngine:
         """Get current personality state summary"""
         return {
             "current_mood": self.current_mood.value,
-            "dominant_traits": sorted(
-                self.traits.items(), key=lambda x: x[1], reverse=True
-            )[:3],
+            "dominant_traits": sorted(self.traits.items(), key=lambda x: x[1], reverse=True)[:3],
             "user_preferences": self.user_preferences,
             "interaction_count": self.interaction_count,
             "session_duration": str(datetime.now() - self.session_start),

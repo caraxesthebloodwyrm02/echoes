@@ -19,29 +19,30 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from enum import Enum
+from enum import StrEnum
 from typing import Literal
 from uuid import uuid4
 
-
 # ── Aggression levels ──────────────────────────────────────────────────────────
 
-class AggressionLevel(str, Enum):
-    TRACE  = "trace"   # fire only at G = 1.0 (fully attested)
-    WATCH  = "watch"   # fire at G ≥ 0.618 (golden ratio cut)
+
+class AggressionLevel(StrEnum):
+    TRACE = "trace"  # fire only at G = 1.0 (fully attested)
+    WATCH = "watch"  # fire at G ≥ 0.618 (golden ratio cut)
     ACTIVE = "active"  # fire at G ≥ 0.42  (session gate threshold)
-    OPEN   = "open"    # fire on any G > 0
+    OPEN = "open"  # fire on any G > 0
 
 
 _AGGRESSION_FLOOR: dict[AggressionLevel, float] = {
-    AggressionLevel.TRACE:  1.0,
-    AggressionLevel.WATCH:  1.0 / 1.618,  # φ⁻¹ ≈ 0.618
+    AggressionLevel.TRACE: 1.0,
+    AggressionLevel.WATCH: 1.0 / 1.618,  # φ⁻¹ ≈ 0.618
     AggressionLevel.ACTIVE: 0.42,
-    AggressionLevel.OPEN:   0.0,
+    AggressionLevel.OPEN: 0.0,
 }
 
 
 # ── Preset ─────────────────────────────────────────────────────────────────────
+
 
 @dataclass(frozen=True)
 class TriggerPreset:
@@ -54,30 +55,47 @@ class TriggerPreset:
     angular_tolerance  — ± degrees; entities within this arc are co-clustered
     distance_radius    — Pythagorean radius in (G, score) space for grouping
     """
+
     name: str
     depth: int = 2
     aggression: AggressionLevel = AggressionLevel.WATCH
     snapshot_on_fire: bool = True
-    angular_tolerance: float = 15.0   # degrees
-    distance_radius: float = 0.20     # in normalised (0–1) G-space
+    angular_tolerance: float = 15.0  # degrees
+    distance_radius: float = 0.20  # in normalised (0–1) G-space
 
 
 PRESETS: dict[str, TriggerPreset] = {
     "sentinel": TriggerPreset(
-        "sentinel", depth=1, aggression=AggressionLevel.TRACE,
-        snapshot_on_fire=True, angular_tolerance=5.0, distance_radius=0.10,
+        "sentinel",
+        depth=1,
+        aggression=AggressionLevel.TRACE,
+        snapshot_on_fire=True,
+        angular_tolerance=5.0,
+        distance_radius=0.10,
     ),
     "watchman": TriggerPreset(
-        "watchman", depth=2, aggression=AggressionLevel.WATCH,
-        snapshot_on_fire=True, angular_tolerance=15.0, distance_radius=0.35,
+        "watchman",
+        depth=2,
+        aggression=AggressionLevel.WATCH,
+        snapshot_on_fire=True,
+        angular_tolerance=15.0,
+        distance_radius=0.35,
     ),
     "explorer": TriggerPreset(
-        "explorer", depth=3, aggression=AggressionLevel.ACTIVE,
-        snapshot_on_fire=False, angular_tolerance=30.0, distance_radius=0.60,
+        "explorer",
+        depth=3,
+        aggression=AggressionLevel.ACTIVE,
+        snapshot_on_fire=False,
+        angular_tolerance=30.0,
+        distance_radius=0.60,
     ),
     "open": TriggerPreset(
-        "open", depth=5, aggression=AggressionLevel.OPEN,
-        snapshot_on_fire=False, angular_tolerance=90.0, distance_radius=1.0,
+        "open",
+        depth=5,
+        aggression=AggressionLevel.OPEN,
+        snapshot_on_fire=False,
+        angular_tolerance=90.0,
+        distance_radius=1.0,
     ),
 }
 
@@ -85,10 +103,10 @@ PRESETS: dict[str, TriggerPreset] = {
 # ── Angular map ────────────────────────────────────────────────────────────────
 
 LAYER_LABELS: dict[int, str] = {
-    0: "collective",   # shared priors
-    1: "context",      # mood / consent / history
-    2: "agentic",      # intent / rule-pack / governance
-    3: "hierarchy",    # records → entities → relations → patterns
+    0: "collective",  # shared priors
+    1: "context",  # mood / consent / history
+    2: "agentic",  # intent / rule-pack / governance
+    3: "hierarchy",  # records → entities → relations → patterns
 }
 
 
@@ -107,6 +125,7 @@ class EntityPoint:
     Pythagorean radius r = √(G² + score²) measures distance from the origin.
     Polar angle θ = atan2(score, G) positions the entity on its layer's arc.
     """
+
     entity_id: str
     g: float
     score: float
@@ -199,16 +218,13 @@ def angular_sector(
     Return entities within ± tolerance degrees of a reference angle.
     Optionally filter to a single layer's arc.
     """
-    return [
-        p for p in points
-        if abs(p.theta - centre_theta) <= tolerance
-        and (layer is None or p.layer == layer)
-    ]
+    return [p for p in points if abs(p.theta - centre_theta) <= tolerance and (layer is None or p.layer == layer)]
 
 
 @dataclass(frozen=True)
 class ArcSlice:
     """One narrow arc — a single layer's angular window with a description tail."""
+
     layer: int
     label: str
     points: list[EntityPoint]
@@ -243,20 +259,20 @@ def arcs_per_layer(points: list[EntityPoint]) -> list[ArcSlice]:
         dominant = max(layer_points, key=lambda p: p.r)
         label = LAYER_LABELS.get(layer_idx, f"layer-{layer_idx}")
         desc = (
-            f"{len(layer_points)} entities, "
-            f"{arc_width:.1f}° arc, "
-            f"dominant: {dominant.entity_id} (r={dominant.r:.3f})"
+            f"{len(layer_points)} entities, {arc_width:.1f}° arc, dominant: {dominant.entity_id} (r={dominant.r:.3f})"
         )
 
-        arcs.append(ArcSlice(
-            layer=layer_idx,
-            label=label,
-            points=layer_points,
-            theta_min=theta_min,
-            theta_max=theta_max,
-            arc_width=arc_width,
-            description=desc,
-        ))
+        arcs.append(
+            ArcSlice(
+                layer=layer_idx,
+                label=label,
+                points=layer_points,
+                theta_min=theta_min,
+                theta_max=theta_max,
+                arc_width=arc_width,
+                description=desc,
+            )
+        )
 
     return arcs
 
@@ -269,14 +285,15 @@ DeliveryTarget = Literal["audit", "journal", "stdout"]
 @dataclass
 class Notification:
     """Delivery envelope produced when a Trigger fires."""
+
     trigger_id: str
     entity_id: str
     event: str
     g_at_fire: float
-    theta_at_fire: float        # polar angle of the entity at fire time
-    r_at_fire: float            # Pythagorean distance from origin at fire time
+    theta_at_fire: float  # polar angle of the entity at fire time
+    r_at_fire: float  # Pythagorean distance from origin at fire time
     cluster_size: int
-    snapshot: dict | None       # angular map snapshot (None if preset disables)
+    snapshot: dict | None  # angular map snapshot (None if preset disables)
     delivered_to: list[DeliveryTarget] = field(default_factory=list)
     fired_at: str = field(default_factory=lambda: datetime.now(UTC).isoformat())
 
@@ -291,6 +308,7 @@ class Notification:
             elif target == "audit":
                 try:
                     import structlog
+
                     structlog.get_logger().info(
                         "trigger_fired",
                         trigger_id=self.trigger_id,
@@ -308,6 +326,7 @@ class Notification:
 
 # ── Trigger ────────────────────────────────────────────────────────────────────
 
+
 @dataclass
 class Trigger:
     """
@@ -318,9 +337,10 @@ class Trigger:
     by angular position θ, clusters them by Pythagorean radius, and snapshots
     the map if the preset requests it.
     """
+
     entity_id: str
     g_threshold: float
-    score_axis: float                       # y-coordinate in angular space
+    score_axis: float  # y-coordinate in angular space
     preset: TriggerPreset = field(
         default_factory=lambda: PRESETS["watchman"],
     )
@@ -376,10 +396,7 @@ class Trigger:
                 ],
                 "my_cluster": [p.entity_id for p in my_cluster],
                 "preset": self.preset.name,
-                "boundary_valid": (
-                    validate_triangle_boundary(*my_cluster[:3])
-                    if len(my_cluster) >= 3 else None
-                ),
+                "boundary_valid": (validate_triangle_boundary(*my_cluster[:3]) if len(my_cluster) >= 3 else None),
             }
 
         notification = Notification(
@@ -398,6 +415,7 @@ class Trigger:
 
 # ── TriggerEngine ──────────────────────────────────────────────────────────────
 
+
 @dataclass
 class TriggerEngine:
     """
@@ -409,6 +427,7 @@ class TriggerEngine:
     so the sort order and clusters reflect the current entity landscape —
     not a cached view.
     """
+
     triggers: list[Trigger] = field(default_factory=list)
 
     def register(self, trigger: Trigger) -> None:
@@ -422,10 +441,7 @@ class TriggerEngine:
         Evaluate all registered triggers against a G map snapshot.
         Returns all notifications that fired.
         """
-        all_points = [
-            EntityPoint(eid, g, score)
-            for eid, (g, score) in g_map.items()
-        ]
+        all_points = [EntityPoint(eid, g, score) for eid, (g, score) in g_map.items()]
 
         fired: list[Notification] = []
         for trigger in self.triggers:
@@ -442,7 +458,4 @@ class TriggerEngine:
         g_map: dict[str, tuple[float, float]],
     ) -> list[EntityPoint]:
         """Return all entities sorted by θ — the current angular view of the map."""
-        return sort_by_angle([
-            EntityPoint(eid, g, score)
-            for eid, (g, score) in g_map.items()
-        ])
+        return sort_by_angle([EntityPoint(eid, g, score) for eid, (g, score) in g_map.items()])

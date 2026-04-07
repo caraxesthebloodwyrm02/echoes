@@ -8,17 +8,17 @@ governance gate -> entity contract conformance -> provenance chain integrity.
 from __future__ import annotations
 
 import copy
-import sys
 import os
+import sys
+
 import pytest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core_modules.cross_reference_system import CrossReferenceSystem
+from core_modules.governance_gates import check as governance_check
+from core_modules.graph_compiler import compile_context_to_entities, detect_partition_conflicts, validate_entities
 from core_modules.personality_engine import Mood, PersonalityEngine, select_rule_pack
-from core_modules.graph_compiler import compile_context_to_entities, validate_entities
-from core_modules.graph_compiler import detect_partition_conflicts
-from core_modules.governance_gates import check as governance_check, GateVerdict
 
 try:
     from legal_safeguards import CognitiveAccountingSystem, ConsentType
@@ -27,7 +27,6 @@ except ImportError:
     LEGAL_AVAILABLE = False
 
 from app.agents.agent import sanitize_prompt
-
 
 SAMPLE_INPUTS = [
     "How do neural networks relate to biological learning systems?",

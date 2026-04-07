@@ -6,24 +6,17 @@ Deterministic — all timestamps are fixed, no wall-clock dependency.
 
 from __future__ import annotations
 
-import pytest
-
 from core_modules.session_gate import (
-    THRESHOLD,
     ReadSignal,
     SearchSignal,
-    SessionMemo,
     session_gate,
 )
 
-
 # ── Fixtures ──
 
+
 def _reads(n: int, dim: str = "governance") -> list[ReadSignal]:
-    return [
-        ReadSignal(path=f"/path/{i}", dimension=dim, timestamp="2026-04-06T14:00:00+06:00")
-        for i in range(n)
-    ]
+    return [ReadSignal(path=f"/path/{i}", dimension=dim, timestamp="2026-04-06T14:00:00+06:00") for i in range(n)]
 
 
 def _searches(n: int, scope: str = "governance") -> list[SearchSignal]:
@@ -38,6 +31,7 @@ TZ = "Asia/Dhaka"
 
 
 # ── Threshold pass/halt ──
+
 
 class TestThresholdGate:
     def test_balanced_session_passes(self):
@@ -74,6 +68,7 @@ class TestThresholdGate:
 
 # ── Bidirectional (dual read) ──
 
+
 class TestBidirectionalCheck:
     def test_pure_observation_passes_with_advisory(self):
         """10 reads + 0 searches → ratio 1.0 > 0.58 → pass but advisory."""
@@ -91,6 +86,7 @@ class TestBidirectionalCheck:
 
 # ── Time awareness ──
 
+
 class TestTimeAwareness:
     def test_off_hours_tightens_threshold(self):
         """At 03:00 local, threshold tightens. A session that passes during day halts at night."""
@@ -103,15 +99,17 @@ class TestTimeAwareness:
         assert v_day.allowed is False  # already halts during day at 0.4
 
         # Use a ratio between 0.378 and 0.42: 38 reads + 62 searches = 0.38
-        reads_edge = _reads(38)
-        searches_edge = _searches(62)
+        _reads(38)  # edge ratio: 0.38
+        _searches(62)
         # ratio = 0.38, night threshold = 0.378 → just above → passes at night
         # But 37 reads + 63 searches = 0.37 < 0.378 → halts at night
         reads_tight = _reads(37)
         searches_tight = _searches(63)
         v_night, m_night = session_gate(
-            reads_tight, searches_tight,
-            timestamp="2026-04-06T03:00:00+06:00", timezone=TZ,
+            reads_tight,
+            searches_tight,
+            timestamp="2026-04-06T03:00:00+06:00",
+            timezone=TZ,
         )
         assert v_night.allowed is False
         assert "off-hours" in m_night.reason
@@ -120,8 +118,10 @@ class TestTimeAwareness:
         """During day hours, standard 0.42 threshold applies."""
         # 45 reads + 55 searches = 0.45 > 0.42 → pass
         verdict, memo = session_gate(
-            _reads(45), _searches(55),
-            timestamp="2026-04-06T14:00:00+06:00", timezone=TZ,
+            _reads(45),
+            _searches(55),
+            timestamp="2026-04-06T14:00:00+06:00",
+            timezone=TZ,
         )
         assert verdict.allowed is True
         assert memo.local_hour == 14
@@ -140,16 +140,20 @@ class TestTimeAwareness:
 
 # ── Staleness ──
 
+
 class TestStaleness:
     def test_stalest_signal_age_computed(self):
         """Stalest signal age is measured from oldest signal to reference time."""
         old_reads = [ReadSignal(path="/old", dimension="governance", timestamp="2026-04-06T10:00:00+06:00")]
-        new_searches = [SearchSignal(query="q", scope="governance", result_count=5, timestamp="2026-04-06T14:00:00+06:00")]
+        new_searches = [
+            SearchSignal(query="q", scope="governance", result_count=5, timestamp="2026-04-06T14:00:00+06:00")
+        ]
         _, memo = session_gate(old_reads, new_searches, timestamp="2026-04-06T14:30:00+06:00", timezone=TZ)
         assert memo.stalest_signal_age_hours == 4.5
 
 
 # ── Reproducibility ──
+
 
 class TestReproducibility:
     def test_same_inputs_same_output(self):
@@ -177,6 +181,7 @@ class TestReproducibility:
 
 
 # ── Verdict shape ──
+
 
 class TestVerdictShape:
     def test_verdict_carries_confidence_as_grounding_ratio(self):

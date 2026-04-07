@@ -16,9 +16,9 @@ from __future__ import annotations
 import json
 import os
 import tempfile
+from datetime import UTC
 from pathlib import Path
 from typing import Any
-from unittest.mock import MagicMock, patch
 
 
 class TestGlimpsePreflightMandatory:
@@ -66,14 +66,14 @@ class TestGlimpsePreflightMandatory:
 
         import json as _json
         import uuid as _uuid
-        from datetime import datetime, timezone
+        from datetime import datetime
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".ndjson", delete=False, encoding="utf-8") as tmp:
             tmp_path = tmp.name
 
         try:
             session_id = "test-session-abc123"
-            ts = datetime.now(timezone.utc).isoformat()
+            ts = datetime.now(UTC).isoformat()
 
             audit_entry = {
                 "id": f"aud-{_uuid.uuid4().hex[:16]}",
@@ -112,7 +112,7 @@ class TestGlimpsePreflightMandatory:
         """Misaligned preflight must emit status='failure' in the audit entry."""
         import json as _json
         import uuid as _uuid
-        from datetime import datetime, timezone
+        from datetime import datetime
 
         with tempfile.NamedTemporaryFile(mode="w", suffix=".ndjson", delete=False, encoding="utf-8") as tmp:
             tmp_path = tmp.name
@@ -120,7 +120,7 @@ class TestGlimpsePreflightMandatory:
         try:
             audit_entry = {
                 "id": f"aud-{_uuid.uuid4().hex[:16]}",
-                "timestamp": datetime.now(timezone.utc).isoformat(),
+                "timestamp": datetime.now(UTC).isoformat(),
                 "source": "echoes-canopy",
                 "tool": "glimpse_preflight",
                 "status": "failure",

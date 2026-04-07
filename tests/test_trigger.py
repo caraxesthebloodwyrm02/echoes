@@ -13,20 +13,15 @@ import pytest
 
 from core_modules.trigger import (
     PRESETS,
-    AggressionLevel,
-    ArcSlice,
     EntityPoint,
-    Notification,
     Trigger,
     TriggerEngine,
-    TriggerPreset,
     angular_sector,
     arcs_per_layer,
     cluster_by_radius,
     sort_by_angle,
     validate_triangle_boundary,
 )
-
 
 # ── Seed fixtures ──
 

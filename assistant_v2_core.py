@@ -3111,8 +3111,10 @@ class EchoesAssistantV2:
             result = await self.glimpse_engine.glimpse(draft)
 
             # Audit every preflight run (not just commits)
+            import uuid as _uuid
+
             audit_entry = {
-                "id": f"aud-{uuid.uuid4().hex[:16]}",
+                "id": f"aud-{_uuid.uuid4().hex[:16]}",
                 "timestamp": datetime.now(UTC).isoformat(),
                 "source": "echoes-canopy",
                 "tool": "glimpse_preflight",
@@ -3133,10 +3135,12 @@ class EchoesAssistantV2:
             }
 
             try:
-                audit_path = os.path.expanduser("~/.echoes/audit.ndjson")
+                import json as _json_local
+
+                audit_path = os.path.expanduser("~/.echoes/audit.ndjson")  # noqa: ASYNC240
                 os.makedirs(os.path.dirname(audit_path), exist_ok=True)
-                with open(audit_path, "a", encoding="utf-8") as _af:
-                    _af.write(_json.dumps(audit_entry, ensure_ascii=False) + "\n")
+                with open(audit_path, "a", encoding="utf-8") as _af:  # noqa: ASYNC230
+                    _af.write(_json_local.dumps(audit_entry, ensure_ascii=False) + "\n")
             except Exception:
                 # Never block user flow on audit write failure
                 pass

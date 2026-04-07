@@ -299,9 +299,7 @@ class HumorEngine:
 
         # Keep only last hour of history
         cutoff_hour = now - timedelta(hours=1)
-        self.pressure_history = [
-            p for p in self.pressure_history if p["timestamp"] > cutoff_hour
-        ]
+        self.pressure_history = [p for p in self.pressure_history if p["timestamp"] > cutoff_hour]
 
         return pressure_level
 
@@ -326,18 +324,12 @@ class HumorEngine:
             err_min, err_max = self.pressure_thresholds["error_rate"][level]
             rt_min, rt_max = self.pressure_thresholds["response_time"][level]
 
-            if (
-                rpm_min <= rpm < rpm_max
-                and err_min <= error_rate < err_max
-                and rt_min <= response_time < rt_max
-            ):
+            if rpm_min <= rpm < rpm_max and err_min <= error_rate < err_max and rt_min <= response_time < rt_max:
                 return level
 
         return PressureLevel.LOW
 
-    def should_use_humor(
-        self, pressure_level: PressureLevel, context: str = ""
-    ) -> bool:
+    def should_use_humor(self, pressure_level: PressureLevel, context: str = "") -> bool:
         """Determine if humor is appropriate right now"""
         # Check cooldown
         if self.last_humor_time:
@@ -364,7 +356,7 @@ class HumorEngine:
         if "help" in context.lower() or "confused" in context.lower():
             base_probability += 0.15
 
-        return random.random() < min(base_probability, 0.95)
+        return random.random() < min(base_probability, 0.95)  # noqa: S311
 
     def generate_humor_response(
         self,
@@ -385,9 +377,7 @@ class HumorEngine:
             return None
 
         # Determine appropriateness
-        appropriateness = self._calculate_appropriateness(
-            humor_type, pressure_level, context
-        )
+        appropriateness = self._calculate_appropriateness(humor_type, pressure_level, context)
 
         # Select delivery style
         delivery_style = self._select_delivery_style(humor_type, pressure_level)
@@ -407,9 +397,7 @@ class HumorEngine:
 
         return response
 
-    def _select_humor_type(
-        self, pressure_level: PressureLevel, context: str
-    ) -> HumorType:
+    def _select_humor_type(self, pressure_level: PressureLevel, context: str) -> HumorType:
         """Select the best humor type for the situation"""
 
         # Context-based selection
@@ -433,28 +421,24 @@ class HumorEngine:
                 ]
             else:
                 types = list(HumorType)
-            return random.choice(types)
+            return random.choice(types)  # noqa: S311
 
-    def _get_humor_content(
-        self, humor_type: HumorType, pressure_level: PressureLevel, context: str
-    ) -> str | None:
+    def _get_humor_content(self, humor_type: HumorType, pressure_level: PressureLevel, context: str) -> str | None:
         """Get humor content for the specific type and pressure level"""
 
         # Try contextual templates first
         for context_key, templates in self.contextual_templates.items():
             if context_key in context.lower():
-                return random.choice(templates)
+                return random.choice(templates)  # noqa: S311
 
         # Fall back to database
         if humor_type in self.humor_database:
             if pressure_level in self.humor_database[humor_type]:
-                return random.choice(self.humor_database[humor_type][pressure_level])
+                return random.choice(self.humor_database[humor_type][pressure_level])  # noqa: S311
 
         return None
 
-    def _calculate_appropriateness(
-        self, humor_type: HumorType, pressure_level: PressureLevel, context: str
-    ) -> float:
+    def _calculate_appropriateness(self, humor_type: HumorType, pressure_level: PressureLevel, context: str) -> float:
         """Calculate how appropriate the humor is for the situation"""
         base_score = 0.8
 
@@ -474,9 +458,7 @@ class HumorEngine:
 
         return min(base_score, 1.0)
 
-    def _select_delivery_style(
-        self, humor_type: HumorType, pressure_level: PressureLevel
-    ) -> str:
+    def _select_delivery_style(self, humor_type: HumorType, pressure_level: PressureLevel) -> str:
         """Select the delivery style for the humor"""
         if humor_type == HumorType.PRESSURE_RELIEF:
             return "playful"
@@ -547,14 +529,11 @@ class HumorEngine:
             "average_rpm": round(avg_rpm, 1),
             "average_errors": round(avg_errors, 1),
             "trend": trend,
-            "last_humor": (
-                self.last_humor_time.isoformat() if self.last_humor_time else None
-            ),
+            "last_humor": (self.last_humor_time.isoformat() if self.last_humor_time else None),
             "humor_cooldown_remaining": (
                 max(
                     0,
-                    self.humor_cooldown
-                    - (datetime.now() - self.last_humor_time).total_seconds(),
+                    self.humor_cooldown - (datetime.now() - self.last_humor_time).total_seconds(),
                 )
                 if self.last_humor_time
                 else 0

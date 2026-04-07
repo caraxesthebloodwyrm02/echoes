@@ -263,17 +263,13 @@ class CrossReferenceSystem:
 
         # Find domain-specific terms
         text_lower = text.lower()
-        for domain, info in self.domains.items():
-            for concept in info["concepts"]:
-                if concept in text_lower:
-                    concepts.append(concept)
+        for info in self.domains.values():
+            concepts.extend(concept for concept in info["concepts"] if concept in text_lower)
 
         # Remove duplicates and return
         return list(set(concepts))
 
-    def _identify_relationships(
-        self, text: str, domains: set[str]
-    ) -> list[dict[str, str]]:
+    def _identify_relationships(self, text: str, domains: set[str]) -> list[dict[str, str]]:
         """Identify relationships between concepts and domains"""
         relationships = []
         text_lower = text.lower()
@@ -281,51 +277,38 @@ class CrossReferenceSystem:
         # Check for domain connections
         for domain in domains:
             related_domains = self.domains[domain]["related"]
-            for related in related_domains:
-                if related in domains:
-                    relationships.append(
-                        {
-                            "type": "domain_connection",
-                            "from": domain,
-                            "to": related,
-                            "nature": "interdisciplinary",
-                        }
-                    )
+            relationships.extend(
+                {
+                    "type": "domain_connection",
+                    "from": domain,
+                    "to": related,
+                    "nature": "interdisciplinary",
+                }
+                for related in related_domains
+                if related in domains
+            )
 
         # Check for causal relationships
-        if any(
-            word in text_lower
-            for word in ["because", "causes", "leads to", "results in"]
-        ):
+        if any(word in text_lower for word in ["because", "causes", "leads to", "results in"]):
             relationships.append({"type": "causal", "nature": "cause_effect"})
 
         # Check for comparisons
-        if any(
-            word in text_lower for word in ["like", "similar", "unlike", "different"]
-        ):
-            relationships.append(
-                {"type": "comparison", "nature": "analogy_or_contrast"}
-            )
+        if any(word in text_lower for word in ["like", "similar", "unlike", "different"]):
+            relationships.append({"type": "comparison", "nature": "analogy_or_contrast"})
 
         return relationships
 
     def _assess_complexity(self, text: str) -> str:
         """Assess the complexity of the text"""
         sentences = text.split(".")
-        avg_sentence_length = (
-            sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
-        )
+        avg_sentence_length = sum(len(s.split()) for s in sentences) / len(sentences) if sentences else 0
 
         # Count technical terms
         tech_terms = 0
         text_lower = text.lower()
         for domain_info in self.domains.values():
-            tech_terms += sum(
-                1 for term in domain_info["keywords"] if term in text_lower
-            )
-            tech_terms += sum(
-                1 for concept in domain_info["concepts"] if concept in text_lower
-            )
+            tech_terms += sum(1 for term in domain_info["keywords"] if term in text_lower)
+            tech_terms += sum(1 for concept in domain_info["concepts"] if concept in text_lower)
 
         if avg_sentence_length > 20 or tech_terms > 5:
             return "high"
@@ -368,9 +351,7 @@ class CrossReferenceSystem:
         else:
             return "neutral"
 
-    def generate_cross_references(
-        self, context: dict[str, Any]
-    ) -> list[dict[str, Any]]:
+    def generate_cross_references(self, context: dict[str, Any]) -> list[dict[str, Any]]:
         """Generate relevant cross-references based on context"""
         cross_refs = []
 
@@ -380,31 +361,29 @@ class CrossReferenceSystem:
         # Cross-reference between domains
         for domain in domains:
             related_domains = self.domains[domain]["related"]
-            for related in related_domains:
-                if related in domains:
-                    cross_refs.append(
-                        {
-                            "type": "interdisciplinary",
-                            "connection": f"{domain} ↔ {related}",
-                            "explanation": f"The principles of {domain} often apply to {related}",
-                            "example": self._get_interdisciplinary_example(
-                                domain, related
-                            ),
-                        }
-                    )
+            cross_refs.extend(
+                {
+                    "type": "interdisciplinary",
+                    "connection": f"{domain} ↔ {related}",
+                    "explanation": f"The principles of {domain} often apply to {related}",
+                    "example": self._get_interdisciplinary_example(domain, related),
+                }
+                for related in related_domains
+                if related in domains
+            )
 
         # Concept-based cross-references
         for concept in key_concepts:
             related_concepts = self._find_related_concepts(concept)
-            for related in related_concepts:
-                cross_refs.append(
-                    {
-                        "type": "conceptual",
-                        "connection": f"{concept} → {related}",
-                        "explanation": f"{concept} is closely related to {related}",
-                        "insight": self._get_concept_insight(concept, related),
-                    }
-                )
+            cross_refs.extend(
+                {
+                    "type": "conceptual",
+                    "connection": f"{concept} → {related}",
+                    "explanation": f"{concept} is closely related to {related}",
+                    "insight": self._get_concept_insight(concept, related),
+                }
+                for related in related_concepts
+            )
 
         return cross_refs[:5]  # Return top 5
 
@@ -413,13 +392,13 @@ class CrossReferenceSystem:
         related = []
         concept_lower = concept.lower()
 
-        for domain, info in self.domains.items():
-            for domain_concept in info["concepts"]:
-                if domain_concept != concept and (
-                    concept_lower in domain_concept.lower()
-                    or domain_concept.lower() in concept_lower
-                ):
-                    related.append(domain_concept)
+        for info in self.domains.values():
+            related.extend(
+                domain_concept
+                for domain_concept in info["concepts"]
+                if domain_concept != concept
+                and (concept_lower in domain_concept.lower() or domain_concept.lower() in concept_lower)
+            )
 
         return related[:3]
 
@@ -448,12 +427,8 @@ class CrossReferenceSystem:
             ): "Understanding consumer behavior to improve business strategies",
         }
 
-        key = (
-            (domain1, domain2) if (domain1, domain2) in examples else (domain2, domain1)
-        )
-        return examples.get(
-            key, f"The intersection of {domain1} and {domain2} offers unique insights"
-        )
+        key = (domain1, domain2) if (domain1, domain2) in examples else (domain2, domain1)
+        return examples.get(key, f"The intersection of {domain1} and {domain2} offers unique insights")
 
     def _get_concept_insight(self, concept1: str, concept2: str) -> str:
         """Get an insight about the relationship between two concepts"""
@@ -463,12 +438,12 @@ class CrossReferenceSystem:
         """Create an analogy explaining a topic in terms of another domain"""
         if topic.lower() in self.analogies:
             analogies = self.analogies[topic.lower()]
-            return f"{topic} is {random.choice(analogies)}."
+            return f"{topic} is {random.choice(analogies)}."  # noqa: S311
 
         # Generate custom analogy
         if target_domain in self.domains:
             domain_info = self.domains[target_domain]
-            key_concept = random.choice(domain_info["concepts"])
+            key_concept = random.choice(domain_info["concepts"])  # noqa: S311
             return f"Think of {topic} like {key_concept} in {target_domain} - it follows similar principles."
 
         return f"{topic} can be understood through patterns and relationships that appear in many fields."
@@ -503,9 +478,7 @@ class CrossReferenceSystem:
 
         # Keep only recent interests
         if len(self.user_interests) > 10:
-            sorted_interests = sorted(
-                self.user_interests.items(), key=lambda x: x[1], reverse=True
-            )
+            sorted_interests = sorted(self.user_interests.items(), key=lambda x: x[1], reverse=True)
             self.user_interests = dict(sorted_interests[:8])
 
     def get_contextual_suggestions(self, current_topic: str) -> list[str]:
@@ -522,11 +495,11 @@ class CrossReferenceSystem:
         # Based on conversation flow
         if self.topic_flow:
             recent_domains = self.topic_flow[-1]["domains"]
-            for domain in recent_domains:
-                if domain != current_topic.lower():
-                    suggestions.append(
-                        f"Let's connect {current_topic} to what we discussed about {domain}"
-                    )
+            suggestions.extend(
+                f"Let's connect {current_topic} to what we discussed about {domain}"
+                for domain in recent_domains
+                if domain != current_topic.lower()
+            )
 
         # Based on patterns
         suggestions.append("Have you considered the broader implications of this?")
@@ -538,9 +511,7 @@ class CrossReferenceSystem:
         """Get a summary of the knowledge graph and connections"""
         return {
             "total_domains": len(self.domains),
-            "domain_connections": sum(
-                len(info["related"]) for info in self.domains.values()
-            ),
+            "domain_connections": sum(len(info["related"]) for info in self.domains.values()),
             "conversation_topics": list(self.user_interests.keys()),
             "topic_evolution": self.topic_flow[-5:] if self.topic_flow else [],
             "concept_depth": len(self.concept_map),

@@ -138,7 +138,7 @@ def compile_context_to_entities(
     for rel in context_output.get("relationships", []):
         rel_domains = rel.get("domains", [])
         rel_name = " + ".join(rel_domains) if rel_domains else rel.get("type", "relation")
-        rel_hits = {d: 1 for d in rel_domains}
+        rel_hits = dict.fromkeys(rel_domains, 1)
         entity = {
             "id": _stable_id(f"rel-{rel_name}"),
             "name": rel_name,

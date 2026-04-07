@@ -17,7 +17,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
-from uuid import uuid4
 from zoneinfo import ZoneInfo
 
 from core_modules.governance_gates import GateVerdict
