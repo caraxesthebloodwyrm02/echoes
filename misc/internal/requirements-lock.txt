@@ -1,5 +1,5 @@
 aiohappyeyeballs==2.6.1
-aiohttp==3.13.4
+aiohttp==3.13.3
 aiosignal==1.4.0
 annotated-doc==0.0.3
 annotated-types==0.7.0
@@ -15,7 +15,7 @@ cycler==0.12.1
 dataclasses-json==0.6.7
 distro==1.9.0
 fastapi==0.120.2
-filelock==3.25.2
+filelock==3.20.3
 fonttools==4.60.2
 frozenlist==1.8.0
 fsspec==2025.9.0
@@ -33,7 +33,7 @@ jsonpointer==3.0.0
 kiwisolver==1.4.9
 langchain-classic==1.0.0
 langchain-community==0.4.1
-langchain-core==1.2.24
+langchain-core==1.2.22
 langchain-text-splitters==1.0.0
 langsmith==0.6.3
 llvmlite==0.45.1

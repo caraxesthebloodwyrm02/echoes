@@ -296,9 +296,7 @@ class IntentAwarenessEngine:
                     "specify",
                     "detail",
                 ],
-                "patterns": [
-                    r".+ (clarify|explain more|what do you mean|elaborate|specify|detail)"
-                ],
+                "patterns": [r".+ (clarify|explain more|what do you mean|elaborate|specify|detail)"],
                 "weight": 0.7,
             },
             IntentType.SOCIAL: {
@@ -387,18 +385,12 @@ class IntentAwarenessEngine:
             score = 0.0
 
             # Check keywords
-            keyword_matches = sum(
-                1 for kw in pattern_info["keywords"] if kw in text_lower
-            )
+            keyword_matches = sum(1 for kw in pattern_info["keywords"] if kw in text_lower)
             if keyword_matches > 0:
                 score += (keyword_matches / len(pattern_info["keywords"])) * 0.6
 
             # Check regex patterns
-            pattern_matches = sum(
-                1
-                for pattern in pattern_info["patterns"]
-                if re.search(pattern, text, re.IGNORECASE)
-            )
+            pattern_matches = sum(1 for pattern in pattern_info["patterns"] if re.search(pattern, text, re.IGNORECASE))
             if pattern_matches > 0:
                 score += (pattern_matches / len(pattern_info["patterns"])) * 0.4
 
@@ -413,10 +405,7 @@ class IntentAwarenessEngine:
             best_intent = max(scores.items(), key=lambda x: x[1])
 
             # Extract relevant keywords
-            keywords = []
-            for kw in self.intent_patterns[best_intent[0]]["keywords"]:
-                if kw in text_lower:
-                    keywords.append(kw)
+            keywords = [kw for kw in self.intent_patterns[best_intent[0]]["keywords"] if kw in text_lower]
 
             return Intent(
                 type=best_intent[0],
@@ -435,9 +424,7 @@ class IntentAwarenessEngine:
             parameters={},
         )
 
-    def _extract_intent_parameters(
-        self, intent_type: IntentType, text: str
-    ) -> dict[str, Any]:
+    def _extract_intent_parameters(self, intent_type: IntentType, text: str) -> dict[str, Any]:
         """Extract parameters specific to the intent type"""
         params = {}
 
@@ -458,18 +445,14 @@ class IntentAwarenessEngine:
 
         elif intent_type == IntentType.COMPARISON:
             # Extract items being compared
-            vs_match = re.search(
-                r"(.+?)\s+(?:versus|vs|compared to|or)\s+(.+)", text, re.IGNORECASE
-            )
+            vs_match = re.search(r"(.+?)\s+(?:versus|vs|compared to|or)\s+(.+)", text, re.IGNORECASE)
             if vs_match:
                 params["item1"] = vs_match.group(1).strip()
                 params["item2"] = vs_match.group(2).strip()
 
         elif intent_type == IntentType.PROBLEM_SOLVING:
             # Extract problem description
-            error_match = re.search(
-                r"(error|issue|problem|bug)[^:]*:\s*(.+)", text, re.IGNORECASE
-            )
+            error_match = re.search(r"(error|issue|problem|bug)[^:]*:\s*(.+)", text, re.IGNORECASE)
             if error_match:
                 params["error_type"] = error_match.group(1)
                 params["error_description"] = error_match.group(2)
@@ -486,12 +469,7 @@ class IntentAwarenessEngine:
                     entity_text = match.group().strip()
 
                     # Calculate confidence based on pattern specificity
-                    confidence = (
-                        0.8
-                        if entity_type
-                        in [EntityType.TECHNOLOGY, EntityType.ORGANIZATION]
-                        else 0.6
-                    )
+                    confidence = 0.8 if entity_type in [EntityType.TECHNOLOGY, EntityType.ORGANIZATION] else 0.6
 
                     # Additional confidence boost for capitalized entities
                     if entity_text[0].isupper():
@@ -527,13 +505,9 @@ class IntentAwarenessEngine:
 
         return unique_entities
 
-    def create_thought_node(
-        self, text: str, parent_ids: list[str] = None
-    ) -> ThoughtNode:
+    def create_thought_node(self, text: str, parent_ids: list[str] = None) -> ThoughtNode:
         """Create a new thought node with intent and entities"""
-        node_id = (
-            f"thought_{len(self.thoughts) + 1}_{datetime.now().strftime('%H%M%S')}"
-        )
+        node_id = f"thought_{len(self.thoughts) + 1}_{datetime.now().strftime('%H%M%S')}"
 
         # Detect intent and extract entities
         intent = self.detect_intent(text)
@@ -598,23 +572,15 @@ class IntentAwarenessEngine:
                         shared_entities.add(entity_key)
 
             # Check for intent similarity
-            intent_similarity = (
-                1.0 if node.intent.type == other_node.intent.type else 0.0
-            )
+            intent_similarity = 1.0 if node.intent.type == other_node.intent.type else 0.0
 
             # Check for semantic similarity (simple keyword overlap)
             node_words = set(node.content.lower().split())
             other_words = set(other_node.content.lower().split())
-            word_overlap = len(node_words & other_words) / max(
-                len(node_words | other_words), 1
-            )
+            word_overlap = len(node_words & other_words) / max(len(node_words | other_words), 1)
 
             # Create cross-link if strong connection
-            link_strength = (
-                len(shared_entities) * 0.4
-                + intent_similarity * 0.3
-                + word_overlap * 0.3
-            )
+            link_strength = len(shared_entities) * 0.4 + intent_similarity * 0.3 + word_overlap * 0.3
             if link_strength > 0.5:
                 node.cross_links.append(other_id)
                 other_node.cross_links.append(node.id)
@@ -632,15 +598,11 @@ class IntentAwarenessEngine:
             for linked_id in node.cross_links:
                 if linked_id in self.thoughts:
                     # Calculate link importance
-                    importance = (
-                        node.importance + self.thoughts[linked_id].importance
-                    ) / 2
+                    importance = (node.importance + self.thoughts[linked_id].importance) / 2
 
                     # Count shared entities
                     node_entities = {e.text.lower() for e in node.entities}
-                    linked_entities = {
-                        e.text.lower() for e in self.thoughts[linked_id].entities
-                    }
+                    linked_entities = {e.text.lower() for e in self.thoughts[linked_id].entities}
                     shared_count = len(node_entities & linked_entities)
 
                     link_strength = importance * (1 + shared_count * 0.2)
@@ -676,9 +638,7 @@ class IntentAwarenessEngine:
         return {
             "total_intents": len(self.intent_history),
             "intent_distribution": dict(intent_counts),
-            "common_transitions": dict(
-                sorted(transitions.items(), key=lambda x: x[1], reverse=True)[:5]
-            ),
+            "common_transitions": dict(sorted(transitions.items(), key=lambda x: x[1], reverse=True)[:5]),
             "current_focus": self.intent_history[-1] if self.intent_history else None,
         }
 
@@ -702,19 +662,14 @@ class IntentAwarenessEngine:
             "recent_thoughts": [
                 {
                     "id": t.id,
-                    "content": (
-                        t.content[:100] + "..." if len(t.content) > 100 else t.content
-                    ),
+                    "content": (t.content[:100] + "..." if len(t.content) > 100 else t.content),
                     "intent": t.intent.type.value,
                     "importance": t.importance,
                     "entity_count": len(t.entities),
                 }
                 for t in recent_thoughts
             ],
-            "critical_links": [
-                {"from": link[0], "to": link[1], "strength": link[2]}
-                for link in critical_links[:5]
-            ],
+            "critical_links": [{"from": link[0], "to": link[1], "strength": link[2]} for link in critical_links[:5]],
             "intent_flow": intent_flow,
             "entity_distribution": dict(entity_counts),
             "most_connected_entities": [

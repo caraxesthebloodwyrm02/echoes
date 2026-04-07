@@ -1,0 +1,2 @@
+- Route candidate to /plugins/atlas-echoes
+- Route candidate to /plugins/atlas-echoes

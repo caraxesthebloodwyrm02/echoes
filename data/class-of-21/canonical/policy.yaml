@@ -1,0 +1,17 @@
+policy:
+  mode: enforced
+  priorities:
+    - correctness
+    - constraint_satisfaction
+    - clarity
+    - conciseness
+  hard_rules:
+    - no_fluff
+    - explicit_assumptions_if_needed
+    - structured_outputs
+    - separate_fact_and_inference
+  transformer_rules:
+    - context_is_state
+    - attention_on_intent
+    - utility_first
+    - compress_information

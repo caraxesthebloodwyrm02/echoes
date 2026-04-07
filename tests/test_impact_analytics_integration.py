@@ -6,8 +6,8 @@ import sys
 from pathlib import Path
 from unittest.mock import patch
 
-# Add the integrations directory to path for testing
-sys.path.insert(0, str(Path(__file__).parent.parent / "integrations"))
+# Repo root so package `integrations` resolves (was incorrectly `.../integrations`).
+sys.path.insert(0, str(Path(__file__).parent.parent))
 
 from integrations.impact_analytics_connector import (
     ImpactAnalyticsConnector,

@@ -108,9 +108,7 @@ class ParallelSimulationEngine:
 
         # Background processor
         self.running = True
-        self.processor_thread = threading.Thread(
-            target=self._process_simulation_queue, daemon=True
-        )
+        self.processor_thread = threading.Thread(target=self._process_simulation_queue, daemon=True)
         self.processor_thread.start()
 
     def _initialize_templates(self) -> dict[SimulationType, Callable]:
@@ -170,7 +168,7 @@ class ParallelSimulationEngine:
                 if simulation_id not in self.simulations:
                     continue
 
-                instance = self.simulations[simulation_id]
+                _instance = self.simulations[simulation_id]  # noqa: F841 — validates ID exists
 
                 # Check if we can run this simulation
                 if len(self.active_simulations) >= self.max_concurrent_simulations:
@@ -205,9 +203,7 @@ class ParallelSimulationEngine:
             # Get simulation function
             sim_function = self.simulation_templates.get(instance.simulation_type)
             if not sim_function:
-                raise ValueError(
-                    f"No simulation function for {instance.simulation_type}"
-                )
+                raise ValueError(f"No simulation function for {instance.simulation_type}")
 
             # Execute simulation
             start_time = time.time()
@@ -244,9 +240,7 @@ class ParallelSimulationEngine:
             # Trigger cross-reference callbacks
             self._trigger_cross_reference_callbacks(sim_result)
 
-            logger.debug(
-                f"Completed simulation {simulation_id} in {execution_time:.2f}s"
-            )
+            logger.debug(f"Completed simulation {simulation_id} in {execution_time:.2f}s")
 
             return sim_result
 
@@ -278,13 +272,11 @@ class ParallelSimulationEngine:
             if simulation_id in self.active_simulations:
                 del self.active_simulations[simulation_id]
 
-    def _simulate_scenario_exploration(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_scenario_exploration(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Simulate different scenarios based on input"""
 
         base_scenario = input_data.get("scenario", "")
-        context = input_data.get("context", {})
+        _context = input_data.get("context", {})  # noqa: F841 — reserved for future use
 
         # Generate alternative scenarios
         scenarios = []
@@ -329,13 +321,11 @@ class ParallelSimulationEngine:
             "relevance_score": 0.8,
         }
 
-    def _simulate_outcome_prediction(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_outcome_prediction(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Predict possible outcomes for a given situation"""
 
         action = input_data.get("action", "")
-        context = input_data.get("context", {})
+        _context = input_data.get("context", {})  # noqa: F841 — reserved for future use
 
         # Predict outcomes
         outcomes = []
@@ -377,9 +367,7 @@ class ParallelSimulationEngine:
             "outcome": {
                 "predicted_outcomes": outcomes,
                 "most_likely": max(outcomes, key=lambda x: x["probability"]),
-                "risk_assessment": (
-                    "medium" if outcomes[0]["probability"] > 0.5 else "high"
-                ),
+                "risk_assessment": ("medium" if outcomes[0]["probability"] > 0.5 else "high"),
             },
             "confidence": 0.75,
             "reasoning": f"Predicted outcomes for {action} based on context analysis",
@@ -396,13 +384,11 @@ class ParallelSimulationEngine:
             "relevance_score": 0.85,
         }
 
-    def _simulate_alternative_paths(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_alternative_paths(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Simulate alternative approaches to a problem"""
 
         problem = input_data.get("problem", "")
-        current_approach = input_data.get("current_approach", "")
+        _current_approach = input_data.get("current_approach", "")  # noqa: F841 — reserved for future use
 
         alternatives = []
 
@@ -448,9 +434,7 @@ class ParallelSimulationEngine:
         return {
             "outcome": {
                 "alternatives": alternatives,
-                "recommended": max(
-                    alternatives, key=lambda x: x["success_probability"]
-                ),
+                "recommended": max(alternatives, key=lambda x: x["success_probability"]),
                 "comparison": self._compare_alternatives(alternatives),
             },
             "confidence": 0.8,
@@ -468,28 +452,26 @@ class ParallelSimulationEngine:
             "relevance_score": 0.9,
         }
 
-    def _simulate_context_expansion(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_context_expansion(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Expand context with related information"""
 
         topic = input_data.get("topic", "")
-        current_context = input_data.get("context", {})
+        _current_context = input_data.get("context", {})  # noqa: F841 — reserved for future use
 
         # Expand context with related domains
         expansions = []
 
         # Domain expansion
         related_domains = self._find_related_domains(topic)
-        for domain in related_domains:
-            expansions.append(
-                {
-                    "type": "domain",
-                    "content": domain,
-                    "relevance": 0.8,
-                    "description": f"Related domain: {domain}",
-                }
-            )
+        expansions.extend(
+            {
+                "type": "domain",
+                "content": domain,
+                "relevance": 0.8,
+                "description": f"Related domain: {domain}",
+            }
+            for domain in related_domains
+        )
 
         # Historical context
         historical_context = self._generate_historical_context(topic)
@@ -516,7 +498,7 @@ class ParallelSimulationEngine:
         return {
             "outcome": {
                 "expanded_context": expansions,
-                "context_areas": list(set(exp["type"] for exp in expansions)),
+                "context_areas": list({exp["type"] for exp in expansions}),
                 "breadth": len(expansions),
                 "depth": "medium",
             },
@@ -571,15 +553,15 @@ class ParallelSimulationEngine:
         # Combine with existing references
         all_refs = existing_refs + deep_connections
 
-        for ref in all_refs:
-            enhanced_refs.append(
-                {
-                    **ref,
-                    "enhanced": True,
-                    "simulation_insights": self._generate_insights_for_reference(ref),
-                    "confidence_boost": 0.1,
-                }
-            )
+        enhanced_refs.extend(
+            {
+                **ref,
+                "enhanced": True,
+                "simulation_insights": self._generate_insights_for_reference(ref),
+                "confidence_boost": 0.1,
+            }
+            for ref in all_refs
+        )
 
         return {
             "outcome": {
@@ -600,13 +582,11 @@ class ParallelSimulationEngine:
             "relevance_score": 0.9,
         }
 
-    def _simulate_possibility_space(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_possibility_space(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Map out the entire possibility space for a topic"""
 
         topic = input_data.get("topic", "")
-        constraints = input_data.get("constraints", {})
+        _constraints = input_data.get("constraints", {})  # noqa: F841 — reserved for future use
 
         # Generate possibility space dimensions
         dimensions = []
@@ -700,14 +680,12 @@ class ParallelSimulationEngine:
             "relevance_score": 0.85,
         }
 
-    def _simulate_decision_support(
-        self, input_data: dict[str, Any], parameters: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _simulate_decision_support(self, input_data: dict[str, Any], parameters: dict[str, Any]) -> dict[str, Any]:
         """Provide decision support through simulation"""
 
         decision = input_data.get("decision", "")
         options = input_data.get("options", [])
-        criteria = input_data.get("criteria", {})
+        _criteria = input_data.get("criteria", {})  # noqa: F841 — reserved for future use
 
         # Simulate decision outcomes for each option
         option_analyses = []
@@ -767,9 +745,7 @@ class ParallelSimulationEngine:
         """Get status of a simulation"""
         return self.simulations.get(simulation_id)
 
-    def wait_for_simulation(
-        self, simulation_id: str, timeout: float = 30.0
-    ) -> SimulationResult | None:
+    def wait_for_simulation(self, simulation_id: str, timeout: float = 30.0) -> SimulationResult | None:
         """Wait for simulation to complete"""
 
         start_time = time.time()
@@ -788,9 +764,7 @@ class ParallelSimulationEngine:
 
         return None
 
-    def run_parallel_simulations(
-        self, simulation_configs: list[dict[str, Any]]
-    ) -> list[SimulationResult]:
+    def run_parallel_simulations(self, simulation_configs: list[dict[str, Any]]) -> list[SimulationResult]:
         """Run multiple simulations in parallel"""
 
         simulation_ids = []
@@ -813,9 +787,7 @@ class ParallelSimulationEngine:
 
         return results
 
-    def add_cross_reference_callback(
-        self, callback: Callable[[SimulationResult], None]
-    ):
+    def add_cross_reference_callback(self, callback: Callable[[SimulationResult], None]):
         """Add callback for cross-reference enhancement"""
         self.cross_reference_callbacks.append(callback)
 
@@ -841,23 +813,18 @@ class ParallelSimulationEngine:
             requirements.append("technology")
         return requirements
 
-    def _compare_alternatives(
-        self, alternatives: list[dict[str, Any]]
-    ) -> dict[str, Any]:
+    def _compare_alternatives(self, alternatives: list[dict[str, Any]]) -> dict[str, Any]:
         """Compare alternative approaches"""
         if not alternatives:
             return {}
 
         # Sort by success probability
-        sorted_alts = sorted(
-            alternatives, key=lambda x: x["success_probability"], reverse=True
-        )
+        sorted_alts = sorted(alternatives, key=lambda x: x["success_probability"], reverse=True)
 
         return {
             "best": sorted_alts[0],
             "worst": sorted_alts[-1],
-            "average_success": sum(alt["success_probability"] for alt in alternatives)
-            / len(alternatives),
+            "average_success": sum(alt["success_probability"] for alt in alternatives) / len(alternatives),
             "effort_range": {
                 "min": min(alt.get("effort", "medium") for alt in alternatives),
                 "max": max(alt.get("effort", "medium") for alt in alternatives),
@@ -883,7 +850,9 @@ class ParallelSimulationEngine:
 
     def _generate_historical_context(self, topic: str) -> str:
         """Generate historical context for topic"""
-        return f"Historical evolution of {topic} shows progressive development from early concepts to modern applications"
+        return (
+            f"Historical evolution of {topic} shows progressive development from early concepts to modern applications"
+        )
 
     def _generate_future_implications(self, topic: str) -> str:
         """Generate future implications for topic"""
@@ -909,33 +878,19 @@ class ParallelSimulationEngine:
         # Status breakdown
         status_counts = {}
         for status in SimulationStatus:
-            status_counts[status.value] = sum(
-                1 for sim in self.simulations.values() if sim.status == status
-            )
+            status_counts[status.value] = sum(1 for sim in self.simulations.values() if sim.status == status)
 
         # Type breakdown
         type_counts = {}
         for sim_type in SimulationType:
-            type_counts[sim_type.value] = sum(
-                1
-                for sim in self.simulations.values()
-                if sim.simulation_type == sim_type
-            )
+            type_counts[sim_type.value] = sum(1 for sim in self.simulations.values() if sim.simulation_type == sim_type)
 
         # Performance metrics
-        completed_sims = [
-            sim
-            for sim in self.simulations.values()
-            if sim.status == SimulationStatus.COMPLETED
-        ]
+        completed_sims = [sim for sim in self.simulations.values() if sim.status == SimulationStatus.COMPLETED]
 
         if completed_sims:
-            avg_confidence = sum(sim.confidence for sim in completed_sims) / len(
-                completed_sims
-            )
-            avg_relevance = sum(sim.relevance_score for sim in completed_sims) / len(
-                completed_sims
-            )
+            avg_confidence = sum(sim.confidence for sim in completed_sims) / len(completed_sims)
+            avg_relevance = sum(sim.relevance_score for sim in completed_sims) / len(completed_sims)
         else:
             avg_confidence = 0.0
             avg_relevance = 0.0
@@ -948,10 +903,7 @@ class ParallelSimulationEngine:
             "performance": {
                 "completed": self.stats["completed_simulations"],
                 "failed": self.stats["failed_simulations"],
-                "success_rate": (
-                    self.stats["completed_simulations"]
-                    / max(self.stats["total_simulations"], 1)
-                ),
+                "success_rate": (self.stats["completed_simulations"] / max(self.stats["total_simulations"], 1)),
                 "average_execution_time": self.stats["average_execution_time"],
                 "average_confidence": avg_confidence,
                 "average_relevance": avg_relevance,

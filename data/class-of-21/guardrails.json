@@ -1,0 +1,23 @@
+{
+  "scope_id": "class-of-21",
+  "version": "1.0.0",
+  "strict": true,
+  "checks": {
+    "schema_validation": true,
+    "checksum_verification": true,
+    "provenance_required": true,
+    "allowlist_enforced": true,
+    "illegal_transition_block": true
+  },
+  "state_transitions": {
+    "allowed": [
+      "incoming->curated",
+      "incoming->quarantine"
+    ],
+    "blocked": [
+      "incoming->incoming(overwrite)",
+      "curated->incoming",
+      "quarantine->curated"
+    ]
+  }
+}

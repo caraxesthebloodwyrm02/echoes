@@ -6,29 +6,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **EchoesAssistantV2** is a multimodal AI assistant platform with 8 interconnected core intelligence modules, parallel simulation, WebSocket streaming, and consent-based licensing.
 
-**Python**: 3.12+
+**Python**: 3.13+ (see `requires-python` in `pyproject.toml`)
 **Stack**: FastAPI, LangChain, OpenAI, Pydantic v2, structlog
-**Package Manager**: pip or uv (`pip install -e ".[dev]"` or `uv sync`)
+**Package Manager**: **uv** (canonical). Install deps: `uv sync --group dev --group test` or `make install`. Prefer `uv run …` for pytest, ruff, mypy, and scripts so the project venv and lockfile are always used.
 
 ## Commands
 
 ```bash
 # Session start protocol — run before writing any new code
-python -m pytest tests/ -q --tb=short && ruff check .
+uv run pytest tests/ -q --tb=short && uv run ruff check .
 
 # Testing
-python -m pytest tests/ -q --tb=short        # Full pytest suite
-python test_integration_quick.py              # Quick validation (~2 seconds, no API calls)
-python test_integration.py                    # Full integration (requires OpenAI key)
+make test                                     # uv run pytest tests/ -v --tb=short
+uv run pytest tests/ -q --tb=short            # Full pytest suite
+uv run python test_integration_quick.py       # Quick validation (~2 seconds, no API calls)
+uv run python test_integration.py             # Full integration (requires OpenAI key)
+
+# Atlas gates
+uv run pytest tests/test_atlas_integration.py -q
+uv run python scripts/atlas_drift_check.py
 
 # Code quality
-ruff check .                                  # Lint
-black .                                       # Format
-mypy .                                        # Type check
+uv run ruff check .                           # Lint
+uv run ruff format .                          # Format
+uv run mypy .                                  # Type check
 
 # Run
-python assistant_v2_core.py                   # Interactive CLI assistant
-python -m uvicorn api.main:app --host 0.0.0.0 --port 8000  # API server
+uv run python assistant_v2_core.py          # Interactive CLI assistant
+make dev                                      # uv run uvicorn api.main:app --reload
+uv run uvicorn api.main:app --host 0.0.0.0 --port 8000  # API server
 ```
 
 ## Architecture

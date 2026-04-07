@@ -13,7 +13,7 @@ test:
 
 # Coverage run: report only (fail_under=0 in .coveragerc)
 coverage:
-	uv run pytest tests/ -v --tb=short --cov=app --cov=api --cov=glimpse --cov=tools --cov=core --cov=src --cov-report=term-missing --cov-report=xml:coverage.xml
+	uv run pytest tests/ -v --tb=short --cov=app --cov=api --cov=glimpse --cov=tools --cov=core --cov=src --cov=integrations --cov-report=term-missing --cov-report=xml:coverage.xml
 
 lint:
 	uv run ruff check api/ app/ glimpse/ tools/

@@ -1,0 +1,11 @@
+{
+  "scope_id": "class-of-21-atlas-only",
+  "version": "1.0.0",
+  "mode": "allowlist",
+  "allowed_consumers": [
+    "scripts/atlas_repl.py",
+    "scripts/atlas_drift_check.py",
+    "tests/test_atlas_integration.py"
+  ],
+  "notes": "Only Atlas workflows may consume class-of-21 curated data in phase 1."
+}

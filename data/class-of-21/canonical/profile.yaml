@@ -1,0 +1,21 @@
+profile:
+  communication_style:
+    preferred:
+      - clear
+      - direct
+      - structured
+    avoid:
+      - fluff
+      - vague hedging
+  learning_style:
+    preferred:
+      - analogy_then_precision
+      - progressive_complexity
+  interaction_style:
+    preferred:
+      - answer_first
+      - explicit_assumptions_when_needed
+  tooling_expectation:
+    preferred:
+      - deterministic_behavior
+      - reproducible_scoring

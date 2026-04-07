@@ -187,13 +187,11 @@ class CatchAndReleaseSystem:
         self.cleanup_thread = threading.Thread(target=cleanup, daemon=True)
         self.cleanup_thread.start()
 
-    def _generate_cache_key(
-        self, content: Any, content_type: ContentType, context: dict[str, Any] = None
-    ) -> str:
+    def _generate_cache_key(self, content: Any, content_type: ContentType, context: dict[str, Any] = None) -> str:
         """Generate a unique cache key for content"""
         # Create a deterministic key based on content and context
         key_data = {
-            "content_hash": hashlib.md5(str(content).encode()).hexdigest()[:16],
+            "content_hash": hashlib.md5(str(content).encode()).hexdigest()[:16],  # noqa: S324
             "type": content_type.value,
             "timestamp": datetime.now().isoformat(),
             "context": context or {},
@@ -219,9 +217,7 @@ class CatchAndReleaseSystem:
 
         # Create cache entry
         now = datetime.now()
-        expiration = (
-            now + timedelta(hours=ttl_hours) if ttl_hours else (now + self.default_ttl)
-        )
+        expiration = now + timedelta(hours=ttl_hours) if ttl_hours else (now + self.default_ttl)
 
         entry = CacheEntry(
             key=cache_key,
@@ -296,9 +292,9 @@ class CatchAndReleaseSystem:
             self.long_term_cache,
             self.permanent_cache,
         ]:
-            for _key, entry in cache.cache.items():
-                if not content_types or entry.content_type in content_types:
-                    all_entries.append(entry)
+            all_entries.extend(
+                entry for entry in cache.cache.values() if not content_types or entry.content_type in content_types
+            )
 
         # Calculate relevance scores
         for entry in all_entries:
@@ -344,9 +340,7 @@ class CatchAndReleaseSystem:
             # Partial word matching
             query_words = query_lower.split()
             content_words = content_str.split()
-            matches = sum(
-                1 for qw in query_words if any(qw in cw for cw in content_words)
-            )
+            matches = sum(1 for qw in query_words if any(qw in cw for cw in content_words))
             text_score = matches / max(len(query_words), 1) * 0.5
 
         # Tag matching
@@ -369,9 +363,7 @@ class CatchAndReleaseSystem:
         # Frequency bonus
         frequency_bonus = min(entry.access_count / 10.0, 0.2)
 
-        total_score = (
-            text_score + tag_score + recency_bonus + importance_bonus + frequency_bonus
-        )
+        total_score = text_score + tag_score + recency_bonus + importance_bonus + frequency_bonus
         return min(total_score, 1.0)
 
     def _build_retrieval_path(self, cache_key: str) -> list[str]:
@@ -439,9 +431,7 @@ class CatchAndReleaseSystem:
         # Return unique concepts
         return list({c.lower() for c in concepts if len(c) > 2})
 
-    def find_related(
-        self, cache_key: str, max_depth: int = 2
-    ) -> list[CrossReferenceResult]:
+    def find_related(self, cache_key: str, max_depth: int = 2) -> list[CrossReferenceResult]:
         """Find related cached content"""
 
         visited = set()
@@ -469,8 +459,7 @@ class CatchAndReleaseSystem:
                 result = CrossReferenceResult(
                     content=entry.content,
                     source_key=key,
-                    relevance_score=1.0
-                    - (depth * 0.2),  # Decrease relevance with depth
+                    relevance_score=1.0 - (depth * 0.2),  # Decrease relevance with depth
                     context_info={
                         "type": entry.content_type.value,
                         "depth": depth,
@@ -552,15 +541,15 @@ class CatchAndReleaseSystem:
     def _remove_from_indexes(self, cache_key: str):
         """Remove a cache key from all indexes"""
         # Remove from entity index
-        for entity, keys in self.entity_index.items():
+        for keys in self.entity_index.values():
             keys.discard(cache_key)
 
         # Remove from concept index
-        for concept, keys in self.concept_index.items():
+        for keys in self.concept_index.values():
             keys.discard(cache_key)
 
         # Remove from tag index
-        for tag, keys in self.tag_index.items():
+        for keys in self.tag_index.values():
             keys.discard(cache_key)
 
         # Remove from relationship graph
@@ -657,7 +646,7 @@ class CatchAndReleaseSystem:
             ]
 
         for cache_name, cache in caches_to_export:
-            for key, entry in cache.cache.items():
+            for entry in cache.cache.values():
                 entry_data = asdict(entry)
                 entry_data["cache_name"] = cache_name
                 cache_data["entries"].append(entry_data)
