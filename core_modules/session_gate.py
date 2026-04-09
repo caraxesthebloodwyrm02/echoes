@@ -31,9 +31,11 @@ DAY_END = 22
 
 # ── Signal types ──
 
+
 @dataclass(frozen=True)
 class ReadSignal:
     """Observation event — passive data acquisition."""
+
     path: str
     dimension: str
     timestamp: str
@@ -42,6 +44,7 @@ class ReadSignal:
 @dataclass(frozen=True)
 class SearchSignal:
     """Exploration event — active pattern scan."""
+
     query: str
     scope: str
     result_count: int
@@ -50,9 +53,11 @@ class SearchSignal:
 
 # ── Session memo ──
 
+
 @dataclass
 class SessionMemo:
     """Reproducible session boundary summary. Same shape for intro and exit."""
+
     gate_result: bool
     grounding_ratio: float
     struggle_count: int
@@ -64,6 +69,7 @@ class SessionMemo:
 
 
 # ── Gate function ──
+
 
 def session_gate(
     reads: list[ReadSignal],
@@ -112,10 +118,7 @@ def session_gate(
     stalest_age_hours = (now - oldest).total_seconds() / 3600
 
     # ── Struggle count: signals near the threshold band ──
-    struggle_count = sum(
-        1 for r in reads
-        if r.dimension != "general" and _is_near_threshold(r, reads, searches)
-    )
+    struggle_count = sum(1 for r in reads if r.dimension != "general" and _is_near_threshold(r, reads, searches))
 
     # ── Dual read: bidirectional check ──
     if grounding_ratio < effective_threshold:
@@ -163,6 +166,7 @@ def session_gate(
 
 
 # ── Helpers ──
+
 
 def _parse_ts(ts: str) -> datetime:
     dt = datetime.fromisoformat(ts)

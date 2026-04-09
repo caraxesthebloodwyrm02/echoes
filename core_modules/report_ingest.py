@@ -182,7 +182,10 @@ def extract_claims(staged_report_id: str) -> str:
 
 
 def _claim_to_delta(claim: dict[str, Any]) -> dict[str, Any]:
-    claim_id = str(claim.get("claim_id", "")).strip() or f"cl-{sha256(json.dumps(claim, sort_keys=True).encode()).hexdigest()[:10]}"
+    claim_id = (
+        str(claim.get("claim_id", "")).strip()
+        or f"cl-{sha256(json.dumps(claim, sort_keys=True).encode()).hexdigest()[:10]}"
+    )
     text = str(claim.get("text", "")).strip() or "unspecified claim"
     kind = str(claim.get("kind", "content_attraction")).strip() or "content_attraction"
     if kind not in {"path_space", "content_attraction"}:

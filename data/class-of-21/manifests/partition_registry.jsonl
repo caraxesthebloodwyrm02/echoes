@@ -5,3 +5,6 @@
 {"conflict_state": "clear", "entity_id": "e-rel-domain-connection", "partition_id": "p-998f78e45bc49b71", "partition_key": "relation_node|domain_connection|||", "timestamp": "2026-04-06T11:41:09.146192+00:00"}
 {"conflict_state": "resolved_winner", "entity_id": "e-rp-d8b1da2eab9d-c001", "partition_id": "p-ffa6d4ca535be22a", "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction", "timestamp": "2026-04-06T11:41:10.665262+00:00"}
 {"conflict_state": "blocked", "entity_id": "e-rp-d8b1da2eab9d-c002", "partition_id": "p-ffa6d4ca535be22a", "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction", "timestamp": "2026-04-06T11:41:10.665288+00:00"}
+{"conflict_state": "clear", "entity_id": "e-glimpse", "partition_id": "p-31730fe2f550d7e9", "partition_key": "concept|glimpse|||", "timestamp": "2026-04-08T20:13:06.564038+00:00"}
+{"conflict_state": "clear", "entity_id": "e-map", "partition_id": "p-0b4d107c0c9c1187", "partition_key": "concept|map|||", "timestamp": "2026-04-08T20:13:06.564108+00:00"}
+{"conflict_state": "clear", "entity_id": "e-atlas", "partition_id": "p-90f7faa9da8b32a0", "partition_key": "concept|atlas|||", "timestamp": "2026-04-08T20:13:06.564138+00:00"}

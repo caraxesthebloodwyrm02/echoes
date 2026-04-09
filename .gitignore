@@ -333,6 +333,9 @@ local/
 .windsurf/
 !.windsurf/config.json
 
+# Claude local settings (per-machine, not source)
+.claude/settings.local.json
+
 # =============================================================================
 # EXCEPTIONS - Files that should NOT be ignored
 # =============================================================================

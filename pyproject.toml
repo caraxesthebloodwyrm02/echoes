@@ -100,6 +100,8 @@ dev = [
     "jsonschema>=4.0.0",
 ]
 
+[tool.uv]
+default-groups = ["test", "dev"]
 
 [project.urls]
 Homepage = "https://github.com/caraxesthebloodwyrm02/echoes"

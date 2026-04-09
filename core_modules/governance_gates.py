@@ -61,6 +61,7 @@ def check(
 
     try:
         from legal_safeguards import ProtectionLevel
+
         protection_map = {
             "personal": ProtectionLevel.MAXIMUM,
             "creative": ProtectionLevel.STANDARD,
@@ -81,6 +82,7 @@ def check(
 
     try:
         from app.values import get_value_system
+
         vs = get_value_system()
         scores = vs.evaluate_response(
             f"Operation: {operation_type} for scope: {scope}",

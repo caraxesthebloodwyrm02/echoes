@@ -38,9 +38,7 @@ class DynamicErrorHandler:
         self.fix_history = []
         self.auto_fix_enabled = True
 
-    def handle_error(
-        self, error: Exception, context: dict[str, Any] = None
-    ) -> dict[str, Any]:
+    def handle_error(self, error: Exception, context: dict[str, Any] = None) -> dict[str, Any]:
         """
         Handle an error with automated fix attempts
 
@@ -74,9 +72,7 @@ class DynamicErrorHandler:
             "timestamp": datetime.now().isoformat(),
         }
 
-    def _analyze_error(
-        self, error_msg: str, error_type: str, context: dict[str, Any]
-    ) -> dict[str, Any]:
+    def _analyze_error(self, error_msg: str, error_type: str, context: dict[str, Any]) -> dict[str, Any]:
         """Analyze the error to understand its nature and cause"""
         analysis = {
             "severity": "medium",
@@ -86,9 +82,7 @@ class DynamicErrorHandler:
         }
 
         # Determine severity
-        if any(
-            keyword in error_msg.lower() for keyword in ["critical", "fatal", "system"]
-        ):
+        if any(keyword in error_msg.lower() for keyword in ["critical", "fatal", "system"]):
             analysis["severity"] = "high"
         elif any(keyword in error_msg.lower() for keyword in ["warning", "deprecated"]):
             analysis["severity"] = "low"
@@ -153,9 +147,7 @@ class DynamicErrorHandler:
             "PrivacyGuard": "from glimpse import PrivacyGuard",
         }
 
-        suggestion = import_mappings.get(
-            missing_name, f"Check if '{missing_name}' exists in the module"
-        )
+        suggestion = import_mappings.get(missing_name, f"Check if '{missing_name}' exists in the module")
 
         return {
             "fix_type": "import_fix",
@@ -399,9 +391,7 @@ class DynamicErrorHandler:
             severities[sev] = severities.get(sev, 0) + 1
 
             # Count successful fixes
-            if entry.get("fix_result") and entry.get("fix_result", {}).get(
-                "auto_applicable"
-            ):
+            if entry.get("fix_result") and entry.get("fix_result", {}).get("auto_applicable"):
                 successful_fixes += 1
 
         return {

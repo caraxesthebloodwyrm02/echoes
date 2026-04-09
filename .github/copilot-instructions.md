@@ -2,7 +2,7 @@
 
 ## Review Guardrails
 
-- Python 3.12+, type hints required on all functions and methods.
+- Python 3.13+, type hints required on all functions and methods.
 - Package manager: `uv` only — never `pip`, `poetry`, or `conda`.
 - Logging: `structlog` — no `print()` in runtime paths.
 - Never commit secrets, keys, or `.env` files. Use `pydantic-settings` for config.

@@ -157,8 +157,15 @@ def compile_context_to_entities(
 
 
 _ENTITY_REQUIRED_KEYS = {
-    "id", "name", "type", "dimensions", "metrics",
-    "partition_key", "partition_id", "payload_fingerprint", "conflict_state",
+    "id",
+    "name",
+    "type",
+    "dimensions",
+    "metrics",
+    "partition_key",
+    "partition_id",
+    "payload_fingerprint",
+    "conflict_state",
     *(k for pair in ENTITY_DUAL_KEYS for k in pair),
 }
 

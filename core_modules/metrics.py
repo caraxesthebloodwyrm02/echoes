@@ -33,9 +33,7 @@ class ModelMetrics:
         self.snapshots: list[MetricSnapshot] = []
         self.logger = logging.getLogger(__name__)
 
-    def increment(
-        self, metric_name: str, value: int = 1, tags: dict[str, str] | None = None
-    ):
+    def increment(self, metric_name: str, value: int = 1, tags: dict[str, str] | None = None):
         """
         Increment a counter metric
 
@@ -59,9 +57,7 @@ class ModelMetrics:
         self.metrics[metric_name] = value
         self.logger.debug(f"Set gauge {metric_name} to {value}")
 
-    def timing(
-        self, metric_name: str, duration: float, tags: dict[str, str] | None = None
-    ):
+    def timing(self, metric_name: str, duration: float, tags: dict[str, str] | None = None):
         """
         Record a timing metric
 
@@ -90,9 +86,7 @@ class ModelMetrics:
         Returns:
             MetricSnapshot object
         """
-        snapshot = MetricSnapshot(
-            timestamp=datetime.now(), metrics=dict(self.metrics), tags=tags or {}
-        )
+        snapshot = MetricSnapshot(timestamp=datetime.now(), metrics=dict(self.metrics), tags=tags or {})
         self.snapshots.append(snapshot)
         self.logger.debug("Created metrics snapshot")
         return snapshot

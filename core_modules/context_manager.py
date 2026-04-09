@@ -46,9 +46,7 @@ class ContextManager:
         """
         return self.contexts.get(session_id)
 
-    def create_context(
-        self, session_id: str, initial_topic: str = ""
-    ) -> ConversationContext:
+    def create_context(self, session_id: str, initial_topic: str = "") -> ConversationContext:
         """
         Create a new conversation context
 
@@ -59,9 +57,7 @@ class ContextManager:
         Returns:
             The created ConversationContext
         """
-        context = ConversationContext(
-            session_id=session_id, current_topic=initial_topic
-        )
+        context = ConversationContext(session_id=session_id, current_topic=initial_topic)
         self.contexts[session_id] = context
         self.logger.debug(f"Created context for session {session_id}")
         return context
@@ -172,9 +168,7 @@ class ContextManager:
             context.current_topic = new_topic
             context.context_depth += 1
             context.updated_at = datetime.now()
-            self.logger.debug(
-                f"Transitioned session {session_id} to topic: {new_topic}"
-            )
+            self.logger.debug(f"Transitioned session {session_id} to topic: {new_topic}")
             return True
         return False
 

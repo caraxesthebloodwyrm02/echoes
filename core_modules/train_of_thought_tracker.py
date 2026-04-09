@@ -238,9 +238,7 @@ class TrainOfThoughtTracker:
             "parents": parent_thoughts or [],
             "children": [],
             "cross_links": [],
-            "importance": self._calculate_thought_importance(
-                content, thought_type, entities
-            ),
+            "importance": self._calculate_thought_importance(content, thought_type, entities),
         }
 
         # Link to parent thoughts
@@ -249,9 +247,7 @@ class TrainOfThoughtTracker:
                 if NETWORKX_AVAILABLE:
                     if parent_id in self.thought_network:
                         link_type = self._infer_link_type(content, parent_id)
-                        strength = self._calculate_link_strength(
-                            thought_id, parent_id, link_type
-                        )
+                        strength = self._calculate_link_strength(thought_id, parent_id, link_type)
 
                         self._create_link(parent_id, thought_id, link_type, strength)
 
@@ -272,9 +268,7 @@ class TrainOfThoughtTracker:
 
         return thought_id
 
-    def _calculate_thought_importance(
-        self, content: str, thought_type: ThoughtType, entities: list[str]
-    ) -> float:
+    def _calculate_thought_importance(self, content: str, thought_type: ThoughtType, entities: list[str]) -> float:
         """Calculate the importance score of a thought"""
         importance = 0.5  # Base importance
 
@@ -295,10 +289,7 @@ class TrainOfThoughtTracker:
         importance += type_importance.get(thought_type, 0.5) * 0.3
 
         # Content-based importance
-        if any(
-            indicator in content.lower()
-            for indicator in ["important", "critical", "key", "essential"]
-        ):
+        if any(indicator in content.lower() for indicator in ["important", "critical", "key", "essential"]):
             importance += 0.1
 
         # Entity-based importance
@@ -330,27 +321,16 @@ class TrainOfThoughtTracker:
 
         if parent_type == ThoughtType.QUESTION and current_type == ThoughtType.ANALYSIS:
             return LinkType.LOGICAL
-        elif (
-            parent_type == ThoughtType.HYPOTHESIS
-            and current_type == ThoughtType.CONCLUSION
-        ):
+        elif parent_type == ThoughtType.HYPOTHESIS and current_type == ThoughtType.CONCLUSION:
             return LinkType.LOGICAL
-        elif (
-            parent_type == ThoughtType.OBSERVATION
-            and current_type == ThoughtType.INSIGHT
-        ):
+        elif parent_type == ThoughtType.OBSERVATION and current_type == ThoughtType.INSIGHT:
             return LinkType.CAUSAL
-        elif (
-            parent_type == ThoughtType.ANALYSIS
-            and current_type == ThoughtType.SYNTHESIS
-        ):
+        elif parent_type == ThoughtType.ANALYSIS and current_type == ThoughtType.SYNTHESIS:
             return LinkType.SUPPORTING
 
         return LinkType.LOGICAL
 
-    def _calculate_link_strength(
-        self, from_id: str, to_id: str, link_type: LinkType
-    ) -> float:
+    def _calculate_link_strength(self, from_id: str, to_id: str, link_type: LinkType) -> float:
         """Calculate the strength of a link between two thoughts"""
         if from_id not in self.thought_metadata or to_id not in self.thought_metadata:
             return 0.5
@@ -378,9 +358,7 @@ class TrainOfThoughtTracker:
         from_entities = set(from_meta["entities"])
         to_entities = set(to_meta["entities"])
         if from_entities and to_entities:
-            overlap = len(from_entities & to_entities) / len(
-                from_entities | to_entities
-            )
+            overlap = len(from_entities & to_entities) / len(from_entities | to_entities)
             strength += overlap * 0.2
 
         # Temporal proximity bonus
@@ -396,9 +374,7 @@ class TrainOfThoughtTracker:
 
         return min(strength, 1.0)
 
-    def _create_link(
-        self, from_id: str, to_id: str, link_type: LinkType, strength: float
-    ):
+    def _create_link(self, from_id: str, to_id: str, link_type: LinkType, strength: float):
         """Create a link between two thoughts"""
         if self.thought_network.has_edge(from_id, to_id):
             # Update existing link if stronger
@@ -474,9 +450,7 @@ class TrainOfThoughtTracker:
         thought_words = set(thought_theme.split())
 
         if theme_words and thought_words:
-            overlap = len(theme_words & thought_words) / len(
-                theme_words | thought_words
-            )
+            overlap = len(theme_words & thought_words) / len(theme_words | thought_words)
             return overlap > 0.3
 
         return False
@@ -537,9 +511,7 @@ class TrainOfThoughtTracker:
             # Check for strong entity overlap
             other_entities = set(other_meta["entities"])
             if current_entities and other_entities:
-                overlap = len(current_entities & other_entities) / len(
-                    current_entities | other_entities
-                )
+                overlap = len(current_entities & other_entities) / len(current_entities | other_entities)
 
                 if overlap > self.critical_link_thresholds["entity_overlap"]:
                     # Create critical cross-link
@@ -619,10 +591,7 @@ class TrainOfThoughtTracker:
                         "pattern": "problem_solution",
                         "problems": problem_thoughts,
                         "solutions": solution_thoughts,
-                        "confidence": min(
-                            len(problem_thoughts) + len(solution_thoughts), 10
-                        )
-                        / 10,
+                        "confidence": min(len(problem_thoughts) + len(solution_thoughts), 10) / 10,
                     }
                 )
 
@@ -768,11 +737,7 @@ class TrainOfThoughtTracker:
                 insights.append(
                     {
                         "thought_id": thought_id,
-                        "content": (
-                            meta["content"][:200] + "..."
-                            if len(meta["content"]) > 200
-                            else meta["content"]
-                        ),
+                        "content": (meta["content"][:200] + "..." if len(meta["content"]) > 200 else meta["content"]),
                         "importance": importance,
                         "connections": connections,
                         "type": meta["type"],
@@ -787,11 +752,7 @@ class TrainOfThoughtTracker:
                 insights.append(
                     {
                         "thought_id": thought_id,
-                        "content": (
-                            meta["content"][:200] + "..."
-                            if len(meta["content"]) > 200
-                            else meta["content"]
-                        ),
+                        "content": (meta["content"][:200] + "..." if len(meta["content"]) > 200 else meta["content"]),
                         "cross_links": meta["cross_links"],
                         "insight_type": "cross_chain_connector",
                     }

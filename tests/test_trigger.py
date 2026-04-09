@@ -27,10 +27,10 @@ from core_modules.trigger import (
 
 # (G, score, layer)
 SEEDS: dict[str, tuple[float, float, int]] = {
-    "grounding-gate":    (1.0, 1.0, 2),   # agentic — governance predicate
-    "struggle-point":    (1.0, 0.8, 3),   # hierarchy — connective node
-    "token-bridge":      (0.8, 0.7, 3),   # hierarchy — signal mapping
-    "scaffold-boundary": (0.6, 0.6, 2),   # agentic — test boundary
+    "grounding-gate": (1.0, 1.0, 2),  # agentic — governance predicate
+    "struggle-point": (1.0, 0.8, 3),  # hierarchy — connective node
+    "token-bridge": (0.8, 0.7, 3),  # hierarchy — signal mapping
+    "scaffold-boundary": (0.6, 0.6, 2),  # agentic — test boundary
 }
 
 
@@ -61,6 +61,7 @@ def _seeds_g_map() -> dict[str, tuple[float, float]]:
 
 
 # ── EntityPoint geometry ──
+
 
 class TestEntityPointGeometry:
     def test_r_pythagorean(self):
@@ -99,13 +100,14 @@ class TestEntityPointGeometry:
 
 # ── Angular sort ──
 
+
 class TestAngularSort:
     def test_sort_order(self):
         """4 seeds sorted by θ: struggle-point < token-bridge < grounding-gate = scaffold-boundary."""
         sorted_pts = sort_by_angle(_seed_points())
         ids = [p.entity_id for p in sorted_pts]
-        assert ids[0] == "struggle-point"        # θ ≈ 38.66°
-        assert ids[1] == "token-bridge"           # θ ≈ 41.19°
+        assert ids[0] == "struggle-point"  # θ ≈ 38.66°
+        assert ids[1] == "token-bridge"  # θ ≈ 41.19°
         # grounding-gate and scaffold-boundary both at θ = 45°, order is stable
         assert set(ids[2:]) == {"grounding-gate", "scaffold-boundary"}
 
@@ -115,6 +117,7 @@ class TestAngularSort:
 
 
 # ── Cluster by radius ──
+
 
 class TestClusterByRadius:
     def test_tight_radius_isolates(self):
@@ -139,6 +142,7 @@ class TestClusterByRadius:
 
 
 # ── Triangle boundary ──
+
 
 class TestTriangleBoundary:
     def test_valid_triangle(self):
@@ -172,6 +176,7 @@ class TestTriangleBoundary:
 
 # ── Angular sector ──
 
+
 class TestAngularSector:
     def test_sector_captures_nearby(self):
         """centre=45°, tolerance=5° → captures grounding-gate (45°) and scaffold-boundary (45°)."""
@@ -193,6 +198,7 @@ class TestAngularSector:
 
 
 # ── Arcs per layer ──
+
 
 class TestArcsPerLayer:
     def test_two_arcs_from_seeds(self):
@@ -241,6 +247,7 @@ class TestArcsPerLayer:
 
 # ── Trigger firing ──
 
+
 class TestTriggerFiring:
     def test_fires_above_threshold(self):
         """G=1.0, threshold=0.9, watchman preset → fires."""
@@ -283,6 +290,7 @@ class TestTriggerFiring:
 
 # ── Trigger snapshot ──
 
+
 class TestTriggerSnapshot:
     def test_snapshot_present_when_enabled(self):
         """watchman preset → snapshot dict with sorted_angular, my_cluster, preset, boundary_valid."""
@@ -317,14 +325,23 @@ class TestTriggerSnapshot:
 
 # ── TriggerEngine ──
 
+
 class TestTriggerEngine:
     def test_evaluate_all_with_seeds(self):
         """4 registered triggers, G map = 4 seeds → all 4 fire."""
         engine = TriggerEngine()
-        engine.register(Trigger("grounding-gate",    g_threshold=0.9, score_axis=1.0, preset=PRESETS["watchman"], delivery=[]))
-        engine.register(Trigger("struggle-point",    g_threshold=0.9, score_axis=0.8, preset=PRESETS["watchman"], delivery=[]))
-        engine.register(Trigger("token-bridge",      g_threshold=0.7, score_axis=0.7, preset=PRESETS["watchman"], delivery=[]))
-        engine.register(Trigger("scaffold-boundary", g_threshold=0.5, score_axis=0.6, preset=PRESETS["explorer"], delivery=[]))
+        engine.register(
+            Trigger("grounding-gate", g_threshold=0.9, score_axis=1.0, preset=PRESETS["watchman"], delivery=[])
+        )
+        engine.register(
+            Trigger("struggle-point", g_threshold=0.9, score_axis=0.8, preset=PRESETS["watchman"], delivery=[])
+        )
+        engine.register(
+            Trigger("token-bridge", g_threshold=0.7, score_axis=0.7, preset=PRESETS["watchman"], delivery=[])
+        )
+        engine.register(
+            Trigger("scaffold-boundary", g_threshold=0.5, score_axis=0.6, preset=PRESETS["explorer"], delivery=[])
+        )
         fired = engine.evaluate_all(_seeds_g_map())
         assert len(fired) == 4
 

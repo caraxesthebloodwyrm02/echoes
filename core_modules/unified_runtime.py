@@ -142,10 +142,7 @@ def generate_candidate(context: dict[str, Any], bundle: RuntimeBundle) -> str:
     user_input = str(context["input"]).strip()
 
     if constraints["format"] == "explanation":
-        return (
-            f"{selected['output']} "
-            f"Applied to your prompt: '{user_input}'."
-        )
+        return f"{selected['output']} Applied to your prompt: '{user_input}'."
 
     if constraints["length"] == "short":
         return selected["output"]

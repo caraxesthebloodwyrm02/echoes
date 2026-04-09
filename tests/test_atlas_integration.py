@@ -22,6 +22,7 @@ from core_modules.personality_engine import Mood, PersonalityEngine, select_rule
 
 try:
     from legal_safeguards import CognitiveAccountingSystem, ConsentType
+
     LEGAL_AVAILABLE = True
 except ImportError:
     LEGAL_AVAILABLE = False
@@ -52,7 +53,16 @@ class TestGraphCompiler:
         context = cross_ref.analyze_context(SAMPLE_INPUTS[1])
         entities = compile_context_to_entities(context)
 
-        required_keys = {"id", "name", "type", "dimensions", "domainKeywordHits", "domain_keyword_hits", "tones", "tone_hits"}
+        required_keys = {
+            "id",
+            "name",
+            "type",
+            "dimensions",
+            "domainKeywordHits",
+            "domain_keyword_hits",
+            "tones",
+            "tone_hits",
+        }
         for entity in entities:
             missing = required_keys - set(entity.keys())
             assert missing == set(), f"Entity {entity.get('name')} missing: {missing}"
@@ -109,31 +119,35 @@ class TestGraphCompiler:
 
 
 class TestRulePack:
-    @pytest.mark.parametrize("mood,consent_val,expected", [
-        (Mood.CREATIVE, "explicit", "exploratory"),
-        (Mood.CURIOUS, "explicit", "exploratory"),
-        (Mood.FOCUSED, "explicit", "base"),
-        (Mood.ENTHUSIASTIC, "explicit", "base"),
-        (Mood.SUPPORTIVE, "explicit", "base"),
-        (Mood.PLAYFUL, "explicit", "base"),
-        (Mood.CALM, "explicit", "base"),
-        (Mood.CREATIVE, "implicit", "base"),
-        (Mood.CURIOUS, "implicit", "base"),
-        (Mood.FOCUSED, "implicit", "base"),
-        (Mood.ENTHUSIASTIC, "implicit", "base"),
-        (Mood.SUPPORTIVE, "implicit", "base"),
-        (Mood.PLAYFUL, "implicit", "base"),
-        (Mood.CALM, "implicit", "base"),
-        (Mood.CREATIVE, "none", "restricted"),
-        (Mood.CURIOUS, "none", "restricted"),
-        (Mood.FOCUSED, "none", "restricted"),
-        (Mood.ENTHUSIASTIC, "none", "restricted"),
-        (Mood.SUPPORTIVE, "none", "restricted"),
-        (Mood.PLAYFUL, "none", "restricted"),
-        (Mood.CALM, "none", "restricted"),
-    ])
+    @pytest.mark.parametrize(
+        "mood,consent_val,expected",
+        [
+            (Mood.CREATIVE, "explicit", "exploratory"),
+            (Mood.CURIOUS, "explicit", "exploratory"),
+            (Mood.FOCUSED, "explicit", "base"),
+            (Mood.ENTHUSIASTIC, "explicit", "base"),
+            (Mood.SUPPORTIVE, "explicit", "base"),
+            (Mood.PLAYFUL, "explicit", "base"),
+            (Mood.CALM, "explicit", "base"),
+            (Mood.CREATIVE, "implicit", "base"),
+            (Mood.CURIOUS, "implicit", "base"),
+            (Mood.FOCUSED, "implicit", "base"),
+            (Mood.ENTHUSIASTIC, "implicit", "base"),
+            (Mood.SUPPORTIVE, "implicit", "base"),
+            (Mood.PLAYFUL, "implicit", "base"),
+            (Mood.CALM, "implicit", "base"),
+            (Mood.CREATIVE, "none", "restricted"),
+            (Mood.CURIOUS, "none", "restricted"),
+            (Mood.FOCUSED, "none", "restricted"),
+            (Mood.ENTHUSIASTIC, "none", "restricted"),
+            (Mood.SUPPORTIVE, "none", "restricted"),
+            (Mood.PLAYFUL, "none", "restricted"),
+            (Mood.CALM, "none", "restricted"),
+        ],
+    )
     def test_all_21_cases(self, mood, consent_val, expected):
         from types import SimpleNamespace
+
         consent = SimpleNamespace(value=consent_val)
         assert select_rule_pack(mood, consent) == expected
 
