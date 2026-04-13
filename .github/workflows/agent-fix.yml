@@ -42,7 +42,11 @@ jobs:
 
       - name: Ensure Codex CLI is available
         if: steps.guard.outputs.eligible == 'true'
-        run: command -v codex >/dev/null
+        run: |
+          if ! command -v codex >/dev/null 2>&1; then
+            echo "Error: codex CLI not found in PATH" >&2
+            exit 1
+          fi
 
       - name: Run Codex fix pass
         if: steps.guard.outputs.eligible == 'true'
