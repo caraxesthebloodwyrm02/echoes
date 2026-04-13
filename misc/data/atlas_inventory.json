@@ -286,5 +286,53 @@
     "created_at": "2026-04-08T09:58:00.000707+00:00",
     "updated_at": "2026-04-08T09:58:00.000707+00:00",
     "attributes": null
+  },
+  "TEST-1775815801-001": {
+    "sku": "TEST-1775815801-001",
+    "name": "Test Item 1",
+    "category": "Testing",
+    "quantity": 90,
+    "location": "TEST-LOC-1775815801-1",
+    "min_stock": 10,
+    "max_stock": 500,
+    "created_at": "2026-04-10T10:10:01.478782+00:00",
+    "updated_at": "2026-04-10T10:10:01.480010+00:00",
+    "attributes": null
+  },
+  "TEST-1775815801-002": {
+    "sku": "TEST-1775815801-002",
+    "name": "Test Item 2",
+    "category": "Testing",
+    "quantity": 50,
+    "location": "TEST-LOC-1775815801-3",
+    "min_stock": 0,
+    "max_stock": 0,
+    "created_at": "2026-04-10T10:10:01.479321+00:00",
+    "updated_at": "2026-04-10T10:10:01.480379+00:00",
+    "attributes": null
+  },
+  "BATCH-1775815801-001": {
+    "sku": "BATCH-1775815801-001",
+    "name": "Batch Item 1",
+    "category": "Batch",
+    "quantity": 25,
+    "location": "BATCH-LOC-1775815801",
+    "min_stock": 0,
+    "max_stock": 0,
+    "created_at": "2026-04-10T10:10:01.480842+00:00",
+    "updated_at": "2026-04-10T10:10:01.480842+00:00",
+    "attributes": null
+  },
+  "BATCH-1775815801-002": {
+    "sku": "BATCH-1775815801-002",
+    "name": "Batch Item 2",
+    "category": "Batch",
+    "quantity": 30,
+    "location": "BATCH-LOC-1775815801",
+    "min_stock": 0,
+    "max_stock": 0,
+    "created_at": "2026-04-10T10:10:01.481140+00:00",
+    "updated_at": "2026-04-10T10:10:01.481140+00:00",
+    "attributes": null
   }
 }

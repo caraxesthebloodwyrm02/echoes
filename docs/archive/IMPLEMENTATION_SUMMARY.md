@@ -1,3 +1,5 @@
+> **Archived 2026-04-12:** Code described in this document (`src/vector_ops.py`, `run_experiment.py`, etc.) was removed or relocated. Moved to `docs/archive/` — no live backing code exists in `src/`.
+
 # Two-Track Scientific Computing Protocol - Implementation Summary
 
 **Date:** 2025-10-16
