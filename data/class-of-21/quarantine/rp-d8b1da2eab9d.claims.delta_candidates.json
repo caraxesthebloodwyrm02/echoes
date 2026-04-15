@@ -10,7 +10,7 @@
         "catalyst": "content_attraction",
         "domain": "report",
         "space": "/reports/staged",
-        "time": "2026-04-10T10:10:05.705838+00:00"
+        "time": "2026-04-14T13:27:38.442070+00:00"
       },
       "domainKeywordHits": {
         "report": 1
@@ -22,7 +22,7 @@
       "name": "Route candidate to /plugins/atlas-echoes",
       "partition_id": "p-ffa6d4ca535be22a",
       "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction",
-      "payload_fingerprint": "fp-32e6bb6770af5717",
+      "payload_fingerprint": "fp-30e56adde731d09b",
       "tones": {
         "source": "report"
       },
@@ -37,7 +37,7 @@
         "catalyst": "content_attraction",
         "domain": "report",
         "space": "/reports/staged",
-        "time": "2026-04-10T10:10:05.705865+00:00"
+        "time": "2026-04-14T13:27:38.442099+00:00"
       },
       "domainKeywordHits": {
         "report": 1
@@ -49,7 +49,7 @@
       "name": "Route candidate to /plugins/atlas-echoes",
       "partition_id": "p-ffa6d4ca535be22a",
       "partition_key": "report_claim|route candidate to /plugins/atlas-echoes|/reports/staged|report|content_attraction",
-      "payload_fingerprint": "fp-3cb266f5a8835d6c",
+      "payload_fingerprint": "fp-a5ba8b50067b1e81",
       "tones": {
         "source": "report"
       },
@@ -57,5 +57,5 @@
     }
   ],
   "source_claims": "/home/caraxes/canopy/echoes/data/class-of-21/quarantine/rp-d8b1da2eab9d.claims.json",
-  "timestamp": "2026-04-10T10:10:05.705899+00:00"
+  "timestamp": "2026-04-14T13:27:38.442140+00:00"
 }

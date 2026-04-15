@@ -7,7 +7,7 @@ name = "echoes"
 version = "0.1.0"
 description = "Enterprise multimodal AI assistant platform with consent-based licensing"
 readme = "README.md"
-license = {text = "Consent-Based License"}
+license = "NOASSERTION"
 requires-python = ">=3.13"
 authors = [
     {name = "Irfan Kabir", email = "irfankabir02@gmail.com"},
