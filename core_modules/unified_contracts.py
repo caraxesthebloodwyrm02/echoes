@@ -32,6 +32,12 @@ ALLOWED_POLICY_KEYS = {
     "priorities",
     "hard_rules",
     "transformer_rules",
+    "temporal_contract",
+    "output_scenario",
+    "illumination",
+    "cascade",
+    "behavioral_signals",
+    "adversarial_resilience",
 }
 ALLOWED_REWARD_KEYS = {"base", "bonus", "penalty"}
 ALLOWED_REWARD_BASE_KEYS = {
