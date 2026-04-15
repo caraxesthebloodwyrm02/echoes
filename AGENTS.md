@@ -376,4 +376,9 @@ EchoesAssistantV2 is a Python 3.13+ / FastAPI multimodal AI assistant platform. 
 - **`test_integration_quick.py`** (root-level script) requires `OPENAI_API_KEY` env var to be set even though it claims "no API calls required" — the `EchoesAssistantV2` constructor validates the key at init time.
 - **1 known pre-existing test failure:** `test_glimpse_preflight_mandatory.py::test_hooks_json_contains_preflight_events` fails with `IndexError: 3` because `Path(__file__).parents[3]` exceeds the filesystem depth. This is a repo bug, not an environment issue.
 - **`misc/` directory** contains archived/experimental code and is excluded from ruff linting via `extend-exclude` in `pyproject.toml`. Do not lint or type-check `misc/`.
+- **Consent gate blocks `assistant.chat()` by default.** The `EchoesAssistantV2.chat()` method checks `self.legal_system.can_process(session_id, "chat")` before any processing. New sessions have `ConsentType.NONE`, so chat is denied. Grant consent first:
+  ```python
+  from legal_safeguards import ConsentType
+  assistant.legal_system.set_consent(assistant.session_id, ConsentType.EXPLICIT)
+  ```
 
