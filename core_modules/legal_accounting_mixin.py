@@ -303,7 +303,8 @@ class LegalAccountingMixin:
                 for principle in responsible_use_check
                 if isinstance(responsible_use_check[principle], bool)
             ]
-            overall_compliance = sum([consent_score] + principle_scores) / len(principle_scores) + 1
+            all_scores = [consent_score] + principle_scores
+            overall_compliance = sum(all_scores) / len(all_scores) if all_scores else 0
 
             return {
                 "success": True,
