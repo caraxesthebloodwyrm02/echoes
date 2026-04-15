@@ -466,12 +466,7 @@ If asked something outside your expertise, acknowledge this and provide the best
             try:
                 raw = await self.client.chat.completions.create(**payload)
 
-                # Log the HTTP response status
-                if hasattr(raw, "_response") and hasattr(raw._response, "status_code"):
-                    status_code = raw._response.status_code
-                else:
-                    status_code = "200 OK"
-                logging.info(f'HTTP Request: POST https://api.openai.com/v1/chat/completions "{status_code}"')
+                logging.info("HTTP Request: POST https://api.openai.com/v1/chat/completions completed")
 
                 response_dict = raw.model_dump() if hasattr(raw, "model_dump") else dict(raw)
                 content = self._extract_content(response_dict)
