@@ -31,8 +31,7 @@ class DirectoryAnalysisMixin:
         exclude_dirs: list[str] | None = None,
     ) -> dict[str, Any]:
         """Analyse a directory tree and generate an LLM-driven report."""
-        # Lazy imports of module-level helpers defined in the host file
-        from assistant_v2_core import (
+        from core_modules.helpers import (
             STATUS_COMPLETE,
             STATUS_WORKING,
             EnhancedStatusIndicator,

@@ -41,6 +41,10 @@ from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from typing import Any
 
+# Core dependencies
+from dotenv import load_dotenv
+from openai import APIError, AuthenticationError, OpenAI
+
 from core_modules.caching import cached_method
 from core_modules.catch_release_system import CacheLevel, ContentType, catch_release
 from core_modules.cross_reference_system import cross_reference_system
@@ -59,19 +63,6 @@ from core_modules.parallel_simulation_engine import (
 from core_modules.personality_engine import personality_engine
 from core_modules.quantum_state_mixin import QuantumStateMixin
 from core_modules.train_of_thought_tracker import ThoughtType, thought_tracker
-
-try:
-    import yaml
-
-    YAML_AVAILABLE = True
-except ImportError:
-    print("⚠️  Missing: pyyaml. Install with: pip install pyyaml")
-    yaml = None
-    YAML_AVAILABLE = False
-
-# Core dependencies
-from dotenv import load_dotenv
-from openai import APIError, AuthenticationError, OpenAI
 
 # Tool Framework
 try:
@@ -371,97 +362,26 @@ def show_prompt_content(prompt_name: str) -> None:
         print(f"Error loading prompt {prompt_name}: {e}")
 
 
-def load_prompt(prompt_name: str) -> str:
-    if not YAML_AVAILABLE:
-        print(f"Warning: YAML not available, cannot load prompt {prompt_name}")
-        return ""
-
-    prompt_path = Path("prompts") / f"{prompt_name}.yaml"
-    try:
-        with open(prompt_path, encoding="utf-8") as f:
-            data = yaml.safe_load(f)
-            # Handle both direct string prompts and structured YAML
-            if isinstance(data, str):
-                return data
-            elif isinstance(data, dict) and "prompt" in data:
-                return data["prompt"]
-            elif isinstance(data, dict) and "directive" in data:
-                return data["directive"]
-            return str(data)  # Fallback to string representation
-    except Exception as e:
-        print(f"Warning: Could not load prompt {prompt_name}: {e}")
-        return ""
-
+# Re-export helpers from the canonical location so that existing call-sites
+# (scripts, tests, demos) that do ``from assistant_v2_core import load_prompt``
+# continue to work without changes.
+from core_modules.helpers import (  # noqa: E402
+    STATUS_COMPLETE,
+    STATUS_ERROR,
+    STATUS_RETRY,
+    STATUS_SEARCH,
+    STATUS_SPINNER,  # noqa: F401
+    STATUS_TOOL,
+    STATUS_WORKING,
+    EnhancedStatusIndicator,
+    load_prompt,
+)
 
 # Configuration
 MODEL = "gpt-4o"
 DEFAULT_TEMPERATURE = 0.7
 DEFAULT_MAX_TOKENS = 4000
 MAX_TOOL_ITERATIONS = 5
-
-# Status constants
-STATUS_SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"]
-STATUS_COMPLETE = "✅"
-STATUS_ERROR = "❌"
-STATUS_WORKING = "⚙️"
-STATUS_SEARCH = "🔍"
-STATUS_TOOL = "🔧"
-STATUS_RETRY = "↻"
-
-
-class EnhancedStatusIndicator:
-    def __init__(self, enabled: bool = True):
-        self.enabled = enabled
-        self.current_phase = None
-        self.current_step = 0
-        self.total_steps = 0
-        self.spinner_index = 0
-        self.phase_start_time = None
-
-    def start_phase(self, phase_name: str, total_steps: int = 0):
-        if not self.enabled:
-            return
-        self.current_phase = phase_name
-        self.total_steps = total_steps
-        self.current_step = 0
-        self.phase_start_time = time.time()
-        if total_steps > 0:
-            print(f"\n{STATUS_WORKING} {phase_name}")
-        else:
-            print(f"\n{STATUS_WORKING} {phase_name}...", end="", flush=True)
-
-    def update_step(self, message: str, completed: bool = False):
-        if not self.enabled:
-            return
-
-        if completed:
-            self.current_step += 1
-            icon = STATUS_COMPLETE
-            elapsed = f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)" if self.phase_start_time else ""
-            if self.total_steps > 0:
-                progress = f"[{self.current_step}/{self.total_steps}]"
-                print(f"\r{icon} {progress} {message} {elapsed}")
-            else:
-                print(f"\r{icon} {message} {elapsed}")
-        else:
-            icon = STATUS_SPINNER[self.spinner_index % len(STATUS_SPINNER)]
-            self.spinner_index += 1
-            if self.total_steps > 0:
-                progress = f"[{self.current_step}/{self.total_steps}]"
-                print(f"\r{icon} {progress} {message}", end="", flush=True)
-            else:
-                print(f"\r{icon} {message}...", end="", flush=True)
-
-    def complete_phase(self, message: str = "Done"):
-        if not self.enabled:
-            return
-        elapsed = f"({(time.time() - self.phase_start_time) * 1000:.0f}ms)" if self.phase_start_time else ""
-        print(f"\r{STATUS_COMPLETE} {message} {elapsed}")
-
-    def error(self, message: str):
-        if not self.enabled:
-            return
-        print(f"\r{STATUS_ERROR} Error: {message}")
 
 
 class ContextManager:
