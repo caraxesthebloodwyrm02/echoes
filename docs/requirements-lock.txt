@@ -35,7 +35,7 @@ langchain-classic==1.0.3
 langchain-community==0.4.1
 langchain-core==1.2.30
 langchain-text-splitters==1.0.0
-langsmith==0.7.31
+langsmith==0.7.32
 llvmlite==0.47.0
 MarkupSafe==3.0.3
 marshmallow==3.26.2
