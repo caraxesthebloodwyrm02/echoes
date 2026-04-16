@@ -35,7 +35,7 @@ python-dotenv>=1.0.1,<2.0.0   # Environment variable management
 pyyaml>=6.0.0,<7.0.0          # YAML parsing
 
 # Development & Testing
-pytest>=8.3.2,<9.0.0          # Testing framework
+pytest>=8.3.2,<10.0.0          # Testing framework
 pytest-cov>=4.1.0,<5.0.0      # Coverage reporting
 black>=24.8.0,<27.0.0         # Code formatting
 ruff>=0.5.0,<1.0.0           # Fast Python linter
