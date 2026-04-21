@@ -34,8 +34,8 @@ kiwisolver==1.4.9
 langchain-classic==1.0.0
 langchain-community==0.4.1
 langchain-core==1.2.28
-langchain-text-splitters==1.0.0
-langsmith==0.6.3
+langchain-text-splitters==1.1.2
+langsmith==0.7.31
 llvmlite==0.45.1
 MarkupSafe==3.0.3
 marshmallow==3.26.2
@@ -51,7 +51,7 @@ openai==2.6.1
 openai-whisper==20250625
 orjson==3.11.6
 packaging==25.0
-pillow==12.1.1
+pillow==12.2.0
 pluggy==1.6.0
 prometheus_client==0.23.1
 propcache==0.4.1
@@ -60,7 +60,7 @@ pydantic-settings==2.11.0
 pydantic_core==2.41.4
 Pygments==2.19.2
 pyparsing==3.2.5
-pytest==8.4.2
+pytest==9.0.3
 pytest-asyncio==1.2.0
 pytest-cov==7.0.0
 python-dateutil==2.9.0.post0
