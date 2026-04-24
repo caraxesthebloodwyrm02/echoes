@@ -346,3 +346,39 @@ def get_breakers(redis=Depends(get_redis)):
 - **Secrets:** Never commit API keys, tokens, or `.env` secrets. If something sensitive is tracked or staged, stop, flag it, add ignore rules, and involve the human for **`git rm --cached`** or history cleanup / rotation.
 - **Templates / audit:** `~/seed/templates/gitignore-*.template`, `~/scripts/gitignore-audit.sh`.
 
+## Cursor Cloud specific instructions
+
+### Overview
+
+EchoesAssistantV2 is a Python 3.13+ / FastAPI multimodal AI assistant platform. The canonical package manager is **uv**. See `CLAUDE.md` for the full command reference (lint, test, dev server, etc.).
+
+### Prerequisites (installed in VM snapshot)
+
+- **Python 3.13** via deadsnakes PPA (`python3.13`, `python3.13-venv`, `python3.13-dev`)
+- **uv** (`~/.local/bin/uv`) — make sure `$HOME/.local/bin` is on `PATH`
+
+### Key commands
+
+| Task | Command |
+|------|---------|
+| Install deps | `uv sync --group dev --group test` |
+| Lint | `uv run ruff check api/ app/ glimpse/ tools/` |
+| Format check | `uv run ruff format --check api/ app/ glimpse/ tools/` |
+| Tests | `uv run pytest tests/ -v --tb=short` |
+| Dev server | `API_KEY_REQUIRED=false uv run uvicorn api.main:app --reload --host 0.0.0.0 --port 8000` |
+| Type check | `uv run mypy .` |
+
+### Non-obvious caveats
+
+- **API key auth is on by default.** The config `api_key_required` defaults to `True` in `api/config.py`. For local dev/testing without auth, set `API_KEY_REQUIRED=false` as an env var when starting the server.
+- **Redis is optional.** The circuit breakers and rate limiting fall back to in-memory when Redis is unavailable. No need to start Redis for local dev.
+- **`OPENAI_API_KEY` is needed for full E2E** but not for the majority of unit tests. Without it, ~90 tests are skipped (marked `requires_openai` or similar) and 348+ tests still pass.
+- **`test_integration_quick.py`** (root-level script) requires `OPENAI_API_KEY` env var to be set even though it claims "no API calls required" — the `EchoesAssistantV2` constructor validates the key at init time.
+- **1 known pre-existing test failure:** `test_glimpse_preflight_mandatory.py::test_hooks_json_contains_preflight_events` fails with `IndexError: 3` because `Path(__file__).parents[3]` exceeds the filesystem depth. This is a repo bug, not an environment issue.
+- **`misc/` directory** contains archived/experimental code and is excluded from ruff linting via `extend-exclude` in `pyproject.toml`. Do not lint or type-check `misc/`.
+- **Consent gate blocks `assistant.chat()` by default.** The `EchoesAssistantV2.chat()` method checks `self.legal_system.can_process(session_id, "chat")` before any processing. New sessions have `ConsentType.NONE`, so chat is denied. Grant consent first:
+  ```python
+  from legal_safeguards import ConsentType
+  assistant.legal_system.set_consent(assistant.session_id, ConsentType.EXPLICIT)
+  ```
+
