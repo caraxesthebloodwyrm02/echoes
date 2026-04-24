@@ -31,7 +31,7 @@ langchain-core>=0.1.0,<2.0.0      # Core LangChain functionality
 langchain-community>=0.1.0,<1.0.0 # Community integrations
 
 # Configuration & Environment
-python-dotenv>=1.0.1,<2.0.0   # Environment variable management
+python-dotenv>=1.2.2,<2.0.0   # Environment variable management
 pyyaml>=6.0.0,<7.0.0          # YAML parsing
 
 # Development & Testing
