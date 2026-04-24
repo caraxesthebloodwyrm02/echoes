@@ -28,7 +28,7 @@ def _map_openai_error_to_status(exc: Exception) -> str:
         return "not_found"
     if isinstance(exc, openai.UnprocessableEntityError):
         return "unprocessable"
-    if isinstance(exc, openai.PermissionError):
+    if isinstance(exc, openai.PermissionDeniedError):
         return "permission_denied"
     if isinstance(exc, openai.InternalServerError):
         return "server_error"
