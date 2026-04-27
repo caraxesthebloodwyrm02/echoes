@@ -16,7 +16,7 @@ python-multipart>=0.0.6
 starlette>=0.27.0
 
 # Optional: Enhanced logging
-loguru>=0.7.0
+loguru>=0.7.3
 
 # Optional: Metrics
 prometheus-client>=0.18.0
