@@ -68,9 +68,9 @@ dev = [
     "pytest>=9.0.3",
     "pytest-asyncio>=0.21.0",
     "pytest-cov>=4.0.0",
-    "ruff>=0.15.10",
-    "mypy>=1.20.1",
-    "pre-commit>=3.0.0",
+    "ruff>=0.15.12",
+    "mypy>=1.20.2",
+    "pre-commit>=4.6.0",
     "jsonschema>=4.26.0",
 ]
 docs = [
@@ -94,9 +94,9 @@ test = [
     "pytest-cov>=4.0.0",
 ]
 dev = [
-    "ruff>=0.15.10",
-    "mypy>=1.20.1",
-    "pre-commit>=3.0.0",
+    "ruff>=0.15.12",
+    "mypy>=1.20.2",
+    "pre-commit>=4.6.0",
     "jsonschema>=4.26.0",
 ]
 
