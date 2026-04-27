@@ -74,7 +74,7 @@ dev = [
     "jsonschema>=4.26.0",
 ]
 docs = [
-    "mkdocs>=1.4.0",
+    "mkdocs>=1.6.1",
     "mkdocs-material>=9.0.0",
 ]
 langchain = [
