@@ -4,8 +4,8 @@
 
 # Core AI & API Layers
 openai>=2.32.0,<3.0.0
-fastapi==0.135.3
-uvicorn==0.44.0
+fastapi==0.136.1
+uvicorn==0.46.0
 httpx==0.28.1
 requests==2.33.0
 python-dotenv==1.2.2
@@ -24,8 +24,8 @@ langchain-openai>=1.2.1,<1.3.0
 langchain-text-splitters==0.3.11
 
 # Core Dependencies - Python 3.12 compatible
-pydantic==2.12.5
-pydantic-settings>=2.0.0
+pydantic==2.13.3
+pydantic-settings>=2.14.0
 prometheus-client>=0.20.0
 redis>=5.0.0
 numpy==2.4.4

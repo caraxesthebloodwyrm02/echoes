@@ -31,8 +31,8 @@ classifiers = [
 dependencies = [
     # Core AI & API Layers
     "openai>=2.32.0,<3.0.0",
-    "fastapi==0.135.3",
-    "uvicorn==0.44.0",
+    "fastapi==0.136.1",
+    "uvicorn==0.46.0",
     "httpx==0.28.1",
     "requests==2.33.1",
     "python-dotenv==1.2.2",
@@ -55,8 +55,8 @@ dependencies = [
     "aiohttp>=3.13.4",
 
     # Utilities
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
+    "pydantic>=2.13.3",
+    "pydantic-settings>=2.14.0",
     "python-multipart>=0.0.26",
     "aiofiles>=0.23.0",
     "prometheus-client>=0.20.0",
