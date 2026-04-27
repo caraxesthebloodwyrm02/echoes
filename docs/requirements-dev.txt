@@ -1,6 +1,6 @@
 -r requirements.txt
 black>=25.9.0
-isort>=6.1.0
+isort>=8.0.1
 mypy>=1.20.2
 pytest>=8.2.0
 pytest-cov>=4.1.0
