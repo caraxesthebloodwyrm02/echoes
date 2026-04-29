@@ -47,6 +47,24 @@ updates:
         update-types: ["version-update:semver-major"]
       - dependency-name: "fastapi"
         update-types: ["version-update:semver-major"]
+      # langchain ecosystem must move together across the 1.0 boundary.
+      # See docs/incidents/submit-pypi-2026-04-29.md for the full rationale.
+      # Dependabot treats 0.x bumps as "minor", which is how PR #200 (langchain-core
+      # 0.3.x -> 1.3.x) merged and broke the submit-pypi resolver. Block 1.x bumps
+      # for every package in the ecosystem until the langchain-classic migration is
+      # done; then bump them all in one coordinated PR.
+      - dependency-name: "langchain"
+        versions: [">=1.0.0"]
+      - dependency-name: "langchain-core"
+        versions: [">=1.0.0"]
+      - dependency-name: "langchain-community"
+        versions: [">=0.4.0"]
+      - dependency-name: "langchain-openai"
+        versions: [">=1.0.0"]
+      - dependency-name: "langchain-text-splitters"
+        versions: [">=1.0.0"]
+      - dependency-name: "langchain-classic"
+        versions: [">=1.0.0"]
 
   - package-ecosystem: "github-actions"
     directory: "/"
