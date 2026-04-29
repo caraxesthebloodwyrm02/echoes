@@ -39,16 +39,19 @@ The constraint `langchain-core>=1.3.2` ∩ `langchain-core<1.0.0` = ∅, making 
 
 The same conflict exists in `pyproject.toml` (optional `[project.optional-dependencies].langchain` group), though `uv.lock` resolves correctly because `uv` picks a compatible `langchain` version from the wider range `>=0.3.28,<1.3.0`.
 
-**Trigger:** Dependabot auto-merged PR #200 on 2026-04-27 without the `submit-pypi` validation catching the conflict (the dynamic workflow runs *after* merge).
+**Trigger:** Dependabot auto-merged PR #200 on 2026-04-27 without the `submit-pypi` validation catching the conflict (the dynamic workflow runs *after* merge). Additionally, PR #223 bumped `langchain-text-splitters` from `0.3.11` to `1.1.2`, which also requires `langchain-core>=1.x` and compounds the conflict.
 
 ## Fix Recommendation
 
-Revert `langchain-core` to a range compatible with the pinned `langchain==0.3.23`:
+Revert `langchain-core` to a range compatible with the pinned `langchain==0.3.23`, and revert `langchain-text-splitters` to the 0.3.x series:
 
 ```diff
-# requirements.txt (line 21)
+# requirements.txt
 -langchain-core>=1.3.2,<2.0.0
 +langchain-core>=0.3.51,<1.0.0
+
+-langchain-text-splitters==1.1.2
++langchain-text-splitters==0.3.11
 ```
 
 Also align `pyproject.toml` optional langchain group:
