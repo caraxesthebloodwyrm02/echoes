@@ -75,7 +75,7 @@ dev = [
 ]
 docs = [
     "mkdocs>=1.6.1",
-    "mkdocs-material>=9.0.0",
+    "mkdocs-material>=9.7.6",
 ]
 langchain = [
     # Only used by misc/Accounting scripts — not imported in production code.
