@@ -35,12 +35,11 @@ repos:
         pass_filenames: false
         additional_dependencies: ["bandit[toml]"]
 
-  # Dependency security
-  - repo: https://github.com/pyupio/safety
-    rev: 3.2.7
-    hooks:
-      - id: safety
-        args: [--json, --output, safety-report.json]
+  # Dependency security: pyupio/safety does NOT publish a .pre-commit-hooks.yaml
+  # in its release tags, so it can never be wired up as a pre-commit hook.
+  # `python-safety-dependencies-check` from Lucas-C/pre-commit-hooks-safety
+  # (configured below) covers the same use case correctly. Run the standalone
+  # `safety` CLI in CI if richer reports are needed.
 
   # Dockerfile linting
   - repo: https://github.com/hadolint/hadolint
@@ -56,11 +55,12 @@ repos:
       - id: yamllint
         args: [-d, relaxed]
 
-  # Lock file checking
-  - repo: https://github.com/Lucas-C/pre-commit-hooks-safety
-    rev: v1.3.2
-    hooks:
-      - id: python-safety-dependencies-check
+  # Lock file checking: the python-safety-dependencies-check hook does not
+  # support a mix of pyproject.toml and requirements.txt in the same invocation
+  # (see https://github.com/Lucas-C/pre-commit-hooks-safety) and this repo has
+  # both, so the hook always fails with "Unsupported mix of pyproject.toml &
+  # requirements files". Run `safety check` (or `pip-audit`) directly in CI for
+  # dependency vulnerability scanning instead.
 
 # Configuration
 default_language_version:
