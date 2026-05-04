@@ -39,7 +39,7 @@ dependencies = [
 
     # Security & Rate Limiting
     "slowapi==0.1.9",
-    "pybreaker>=1.0.0",
+    "pybreaker>=1.4.1",
     "tenacity>=8.2.3",
     "redis>=7.4.0",
     "pygments==2.20.0",
