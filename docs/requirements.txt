@@ -13,7 +13,7 @@ httpcore>=1.0.9
 
 # Security & Authentication
 python-dotenv>=1.0.0
-authlib>=1.6.5
+authlib>=1.7.1
 cryptography>=47.0.0
 
 # Data Processing & ML
