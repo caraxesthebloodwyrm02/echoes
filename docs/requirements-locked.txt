@@ -47,7 +47,7 @@ mypy_extensions==1.1.0
 networkx==3.6.1
 numba==0.64.0
 numpy==2.4.4
-openai==2.32.0
+openai==2.33.0
 openai-whisper==20250625
 orjson==3.11.8
 packaging==25.0
