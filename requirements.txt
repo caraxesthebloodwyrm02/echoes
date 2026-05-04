@@ -26,7 +26,7 @@ langchain-text-splitters==1.1.2
 # Core Dependencies - Python 3.12 compatible
 pydantic==2.13.3
 pydantic-settings>=2.14.0
-prometheus-client>=0.20.0
+prometheus-client>=0.25.0
 redis>=5.0.0
 numpy==2.4.4
 PyYAML==6.0.3

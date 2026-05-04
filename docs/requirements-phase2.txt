@@ -19,4 +19,4 @@ starlette>=0.27.0
 loguru>=0.7.3
 
 # Optional: Metrics
-prometheus-client>=0.18.0
+prometheus-client>=0.25.0

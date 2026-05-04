@@ -53,7 +53,7 @@ orjson==3.11.8
 packaging==25.0
 pillow==12.2.0
 pluggy==1.6.0
-prometheus_client==0.23.1
+prometheus_client==0.25.0
 propcache==0.4.1
 pydantic==2.13.3
 pydantic-settings==2.14.0
