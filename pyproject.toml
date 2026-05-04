@@ -52,7 +52,7 @@ dependencies = [
     "scikit-learn>=1.8.0",
 
     # Async HTTP
-    "aiohttp>=3.13.4",
+    "aiohttp>=3.13.5",
 
     # Utilities
     "pydantic>=2.13.3",
