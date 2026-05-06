@@ -1,7 +1,7 @@
 # Phase 2 Requirements - Authentication & Security
 
 # JWT token handling
-PyJWT>=2.8.0
+PyJWT>=2.12.1
 
 # Testing
 pytest>=7.4.0
