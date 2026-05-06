@@ -83,7 +83,7 @@ langchain = [
     "langchain>=0.3.28,<1.0.0",
     "langchain-core>=0.3.51,<1.0.0",
     "langchain-community>=0.3.21,<0.4.0",
-    "langchain-openai>=0.3.0,<0.4.0",
+    "langchain-openai>=0.3.35,<0.4.0",
 ]
 
 # UV dependency groups (align with GRID-main: uv sync --group dev --group test)
