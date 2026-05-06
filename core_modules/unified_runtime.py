@@ -150,7 +150,6 @@ def detect_adversarial(user_input: str, hooks: PolicyHooks, policy: dict[str, An
         adv.cooldown_remaining -= 1
         return None
 
-    anti_patterns = resilience.get("anti_patterns", {})
     text = user_input.strip().lower()
     adv.turn_history.append(text)
     tolerance = resilience.get("defense_posture", {}).get("false_positive_tolerance", 0.15)
