@@ -43,7 +43,7 @@ dependencies = [
     "tenacity>=8.2.3",
     "redis>=7.4.0",
     "pygments==2.20.0",
-    "PyJWT>=2.8.0",
+    "PyJWT>=2.12.1",
 
 
     # Data Science & ML
