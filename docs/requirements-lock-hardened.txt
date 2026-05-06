@@ -50,7 +50,7 @@ numpy==2.4.4
 openai==2.33.0
 openai-whisper==20250625
 orjson==3.11.8
-packaging==25.0
+packaging==26.2
 pillow==12.2.0
 pluggy==1.6.0
 prometheus_client==0.25.0
