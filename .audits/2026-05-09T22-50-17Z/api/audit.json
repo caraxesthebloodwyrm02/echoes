@@ -1,0 +1,53 @@
+{
+  "name": "api",
+  "root": "/home/irfankabir/productivity/echoes/api",
+  "markers": [
+    "python-script"
+  ],
+  "has_src": false,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": false,
+  "has_docs": false,
+  "src_packages": [],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [
+    {
+      "kind": "http",
+      "path": "/api/patterns/detect",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/search",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/truth/verify",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/health",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/health/resilience",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/metrics",
+      "file": ""
+    }
+  ],
+  "outbound_calls": [
+    "redis / upstash"
+  ],
+  "docs": {},
+  "audit_files": []
+}

@@ -1,0 +1,26 @@
+{
+  "name": "examples",
+  "root": "/home/irfankabir/productivity/echoes/examples",
+  "markers": [
+    "python-script"
+  ],
+  "has_src": false,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": false,
+  "has_docs": false,
+  "src_packages": [],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [
+    {
+      "kind": "cli",
+      "path": "--quick",
+      "file": "run_context_aware_call.py"
+    }
+  ],
+  "outbound_calls": [],
+  "docs": {},
+  "audit_files": []
+}

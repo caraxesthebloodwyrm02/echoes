@@ -1,0 +1,69 @@
+{
+  "name": "scripts",
+  "root": "/home/irfankabir/productivity/echoes/scripts",
+  "markers": [
+    "python-script"
+  ],
+  "has_src": false,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": false,
+  "has_docs": false,
+  "src_packages": [],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [
+    {
+      "kind": "http",
+      "path": "/v1/chat/completions",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/embeddings",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/responses",
+      "file": ""
+    },
+    {
+      "kind": "cli",
+      "path": "--output",
+      "file": "performance_benchmark.py"
+    },
+    {
+      "kind": "cli",
+      "path": "--debug",
+      "file": "organize_root.py"
+    },
+    {
+      "kind": "cli",
+      "path": "--verbose",
+      "file": "structural_health_check.py"
+    },
+    {
+      "kind": "cli",
+      "path": "--queries --quiet",
+      "file": "rag_performance_benchmark.py"
+    },
+    {
+      "kind": "cli",
+      "path": "--mood --preset --user-id",
+      "file": "atlas_repl.py"
+    },
+    {
+      "kind": "cli",
+      "path": "--root-dir",
+      "file": "allocation.py"
+    }
+  ],
+  "outbound_calls": [
+    "openai",
+    "redis / upstash"
+  ],
+  "docs": {},
+  "audit_files": []
+}

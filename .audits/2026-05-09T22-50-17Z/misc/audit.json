@@ -1,0 +1,170 @@
+{
+  "name": "misc",
+  "root": "/home/irfankabir/productivity/echoes/misc",
+  "markers": [
+    "src"
+  ],
+  "has_src": true,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": true,
+  "has_docs": false,
+  "src_packages": [
+    "utils"
+  ],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [
+    {
+      "kind": "http",
+      "path": "/",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/patterns/detect",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/search",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/truth/verify",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/analytics",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/analyze/image",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/analyze/image/upload",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/process/media",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/transcribe/audio",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/transcribe/audio/upload",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/webhooks/list",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/webhooks/register",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/api/v1/webhooks/{webhook_id}",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/audit",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/experiment/run",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/extract/invoice",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/generate/dataset",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/health",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/models/available",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/analytics",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/analyze/image",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/analyze/image/upload",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/process/media",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/transcribe/audio",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/transcribe/audio/upload",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/web/search",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/webhooks/",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/webhooks/list",
+      "file": ""
+    },
+    {
+      "kind": "http",
+      "path": "/v1/webhooks/register",
+      "file": ""
+    }
+  ],
+  "outbound_calls": [
+    "openai"
+  ],
+  "docs": {},
+  "audit_files": []
+}

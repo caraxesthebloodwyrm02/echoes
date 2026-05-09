@@ -1,0 +1,20 @@
+{
+  "name": "demos",
+  "root": "/home/irfankabir/productivity/echoes/demos",
+  "markers": [
+    "python-script"
+  ],
+  "has_src": false,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": false,
+  "has_docs": false,
+  "src_packages": [],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [],
+  "outbound_calls": [],
+  "docs": {},
+  "audit_files": []
+}
