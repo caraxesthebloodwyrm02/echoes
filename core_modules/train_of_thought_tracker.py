@@ -235,7 +235,8 @@ class TrainOfThoughtTracker:
             "type": thought_type.value,
             "entities": entities or [],
             "timestamp": datetime.now(),
-            "parents": parent_thoughts or [],
+            # Do not alias parent_thoughts: the linking loop appends into "parents" while iterating parent_thoughts.
+            "parents": [],
             "children": [],
             "cross_links": [],
             "importance": self._calculate_thought_importance(content, thought_type, entities),
@@ -376,6 +377,8 @@ class TrainOfThoughtTracker:
 
     def _create_link(self, from_id: str, to_id: str, link_type: LinkType, strength: float):
         """Create a link between two thoughts"""
+        if not NETWORKX_AVAILABLE:
+            return
         if self.thought_network.has_edge(from_id, to_id):
             # Update existing link if stronger
             existing = self.thought_network[from_id][to_id]
@@ -437,8 +440,8 @@ class TrainOfThoughtTracker:
         if last_thought_id not in self.thought_metadata:
             return False
 
-        # Check if directly linked
-        if self.thought_network.has_edge(last_thought_id, thought_id):
+        # Check if directly linked (graph mode only)
+        if NETWORKX_AVAILABLE and self.thought_network.has_edge(last_thought_id, thought_id):
             return True
 
         # Check thematic consistency
@@ -646,7 +649,7 @@ class TrainOfThoughtTracker:
                 from_id = chain.thoughts[i]
                 to_id = chain.thoughts[i + 1]
 
-                if self.thought_network.has_edge(from_id, to_id):
+                if NETWORKX_AVAILABLE and self.thought_network.has_edge(from_id, to_id):
                     edge_data = self.thought_network[from_id][to_id]
                     if edge_data.get("link_type") == LinkType.REFINING.value:
                         refinement_links += 1
@@ -729,9 +732,12 @@ class TrainOfThoughtTracker:
         # High-importance thoughts with many connections
         for thought_id, meta in self.thought_metadata.items():
             importance = meta["importance"]
-            connections = len(self.thought_network.in_edges(thought_id)) + len(
-                self.thought_network.out_edges(thought_id)
-            )
+            if NETWORKX_AVAILABLE:
+                connections = len(self.thought_network.in_edges(thought_id)) + len(
+                    self.thought_network.out_edges(thought_id)
+                )
+            else:
+                connections = len(meta["children"]) + len(meta["parents"])
 
             if importance > 0.7 and connections > 2:
                 insights.append(
@@ -773,16 +779,17 @@ class TrainOfThoughtTracker:
         }
 
         # Export links
-        for from_id, to_id, data in self.thought_network.edges(data=True):
-            export_data["links"].append(
-                {
-                    "from": from_id,
-                    "to": to_id,
-                    "type": data.get("link_type"),
-                    "strength": data.get("strength"),
-                    "created_at": data.get("created_at"),
-                }
-            )
+        if NETWORKX_AVAILABLE:
+            for from_id, to_id, data in self.thought_network.edges(data=True):
+                export_data["links"].append(
+                    {
+                        "from": from_id,
+                        "to": to_id,
+                        "type": data.get("link_type"),
+                        "strength": data.get("strength"),
+                        "created_at": data.get("created_at"),
+                    }
+                )
 
         return export_data
 

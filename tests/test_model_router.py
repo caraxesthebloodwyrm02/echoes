@@ -1,8 +1,20 @@
 import asyncio
+import os
 import unittest
 from unittest.mock import MagicMock, patch
 
 from app.model_router import ModelMetrics, ModelResponseCache, ModelRouter
+
+
+def _reset_global_thought_tracker() -> None:
+    """Isolate tests from the process-wide thought graph (avoids timeouts after heavy suites)."""
+    from core_modules.train_of_thought_tracker import thought_tracker as tt
+
+    tt.thought_metadata.clear()
+    tt.chains.clear()
+    tt.active_chains.clear()
+    tt.chain_history.clear()
+    tt.thought_network.clear()
 
 
 class TestModelRouter(unittest.TestCase):
@@ -108,6 +120,7 @@ class TestModelMetrics(unittest.TestCase):
 
 
 class TestIntegration(unittest.TestCase):
+    @patch.dict(os.environ, {"USE_RESPONSES_API": "false"}, clear=False)
     @patch("assistant_v2_core.OpenAI")
     def test_end_to_end_flow(self, MockOpenAI):
         """Test the full flow with mocked OpenAI API"""
@@ -122,6 +135,7 @@ class TestIntegration(unittest.TestCase):
 
         fake_message = MagicMock()
         fake_message.content = "Test response"
+        fake_message.tool_calls = None
         fake_choice = MagicMock()
         fake_choice.message = fake_message
         fake_response = MagicMock()
@@ -130,15 +144,21 @@ class TestIntegration(unittest.TestCase):
 
         MockOpenAI.return_value = mock_client
 
+        _reset_global_thought_tracker()
+
         # Initialize assistant with streaming/status disabled for deterministic output
         assistant = EchoesAssistantV2(enable_streaming=False, enable_status=False, enable_tools=False)
+        if getattr(assistant, "legal_system", None) is not None:
+            from legal_safeguards import ConsentType
 
-        # Test simple query (non-streaming)
+            assistant.legal_system.set_consent(assistant.session_id, ConsentType.EXPLICIT)
+
+        # Test simple query (non-streaming); response includes personality/simulation wrappers
         response = assistant.chat("What is 2+2?", stream=False, show_status=False)
-        self.assertEqual(response, "Test response")
+        self.assertIn("Test response", response)
 
-        # Verify model selection used mini
-        call_args = mock_completions.create.call_args[1]
+        # Verify model selection used mini (last completions call)
+        call_args = mock_completions.create.call_args_list[-1][1]
         self.assertIn("model", call_args)
         self.assertEqual(call_args["model"], "gpt-4o-mini")
 
