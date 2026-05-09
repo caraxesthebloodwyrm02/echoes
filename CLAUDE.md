@@ -51,6 +51,7 @@ uv run uvicorn api.main:app --host 0.0.0.0 --port 8000  # API server
 
 ### Key Layers
 - **`api/`** — FastAPI server: WebSocket streaming (`/ws/stream`), REST endpoints, JWT + API key auth, Prometheus metrics (`/metrics`)
+- **`app/echoes_agents_v1/`** — Serializable assistant runtime spec (`EchoesAssistantRuntimeSpec`), `snapshot_runtime_spec()`, Pydantic `EchoesAgentV1Envelope` + JSON Schema export (companion to mixin-composed `EchoesAssistantV2`)
 - **`app/agents/`** — AI agent orchestration
 - **`app/resilience/`** — circuit breakers (pybreaker), rate limiting (SlowApi), retry (tenacity)
 - **`app/knowledge/`** — context and memory management
