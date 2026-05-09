@@ -2383,9 +2383,7 @@ class EchoesAssistantV2(
             ar = self.action_executor.execute_roi_action(action_type, **kwargs)
         else:
             raise ValueError(f"Unknown action domain: {domain!r}")
-        out = ar.to_dict()
-        out["success"] = ar.status == "success"
-        return out
+        return ar.to_dict()
 
     def get_action_summary(self) -> dict[str, Any]:
         return self.action_executor.get_action_summary()
