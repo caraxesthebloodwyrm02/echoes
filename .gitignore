@@ -468,3 +468,6 @@ nul
 privacy_report.md
 .privacy.json
 .privacy-audit/
+
+# Pre-commit hook append-only audit trail (local noise; not source)
+audit.log
