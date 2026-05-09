@@ -23,6 +23,15 @@ from typing import Any
 import pytest
 
 
+def _repository_root() -> Path:
+    """Resolve the repo root via pyproject.toml (works regardless of tests/ nesting depth)."""
+    here = Path(__file__).resolve()
+    for parent in [here, *here.parents]:
+        if (parent / "pyproject.toml").is_file():
+            return parent
+    return here.parent
+
+
 class TestGlimpsePreflightMandatory:
     """Unit tests for the mandatory-on preflight enforcement contract."""
 
@@ -170,7 +179,7 @@ class TestGlimpsePreflightMandatory:
 
     def test_hooks_json_contains_preflight_events(self) -> None:
         """atlas-echoes hooks.json must declare the four glimpse preflight hooks."""
-        hooks_path = Path(__file__).parents[3] / "plugins" / "atlas-echoes" / "hooks.json"
+        hooks_path = _repository_root() / "plugins" / "atlas-echoes" / "hooks.json"
         if not hooks_path.exists():
             pytest.skip(f"hooks.json not found (CI environment): {hooks_path}")
 

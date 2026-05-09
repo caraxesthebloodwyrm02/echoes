@@ -27,7 +27,9 @@ class ActionResult:
     timestamp: str = ""
 
     def to_dict(self) -> dict[str, Any]:
-        return asdict(self)
+        d = asdict(self)
+        d["success"] = self.status == "success"
+        return d
 
 
 class ActionExecutor:

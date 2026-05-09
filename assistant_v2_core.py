@@ -2375,6 +2375,16 @@ class EchoesAssistantV2(
     def get_action_history(self, limit: int = 10) -> list[dict[str, Any]]:
         return self.action_executor.get_action_history(limit)
 
+    def execute_action(self, domain: str, action_type: str, **kwargs: Any) -> dict[str, Any]:
+        """Run a domain-scoped action (for example inventory ATLAS ops) and return a result dict."""
+        if domain == "inventory":
+            ar = self.action_executor.execute_inventory_action(action_type, **kwargs)
+        elif domain == "roi":
+            ar = self.action_executor.execute_roi_action(action_type, **kwargs)
+        else:
+            raise ValueError(f"Unknown action domain: {domain!r}")
+        return ar.to_dict()
+
     def get_action_summary(self) -> dict[str, Any]:
         return self.action_executor.get_action_summary()
 
@@ -2478,7 +2488,7 @@ class EchoesAssistantV2(
         else:
             raise ValueError(f"Unknown workflow type: {workflow_type}")
 
-        return result
+        return result.to_dict() if hasattr(result, "to_dict") else result
 
     @cached_method(max_size=10, ttl_seconds=300)  # Cache for 5 minutes
     def get_stats(self) -> dict[str, Any]:
