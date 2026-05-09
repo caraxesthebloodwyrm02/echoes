@@ -121,6 +121,18 @@ python assistant_v2_core.py
 # - 'quit' - Exit
 ```
 
+## Architecture & data flow
+
+**EchoesAssistantV2** is the main assistant type: a **composition of mixins** (knowledge graph, multimodal, legal/accounting, quantum state, directory analysis—not a single `@dataclass`). Entry points are the interactive CLI (`assistant_v2_core.py`) and the HTTP API (`api.main`). At a high level, a turn flows through session/consent and legal gates where enabled, intent and context assembly, optional retrieval-augmented context, the configured chat model (via the model router), and optional tools or Glimpse enrichment before the reply is returned.
+
+**Persistence:** The assistant layer does **not** rely on a relational schema for conversation state. Continuity and knowledge artifacts use **file-backed JSON** under `data/` (for example `data/knowledge/` via `KnowledgeManager`). There is no canonical SQLAlchemy/Alembic layer for `EchoesAssistantV2` itself.
+
+**Built-in RAG:** Retrieval is optional and implemented in-process by `echoes/core/rag_v2.py` as **`SimpleRAGSystem`**—an **in-memory** store with deterministic hash-derived pseudo-embeddings and cosine similarity.
+
+**Workspace personal-rag:** A separate **personal-rag** installation (for example under `~/intelligence/personal-rag`) is **not** wired into this repo by default. Bridging it would require a new retrieval adapter and runtime coupling—**above medium-effort**—so it stays **out of scope** until explicitly prioritized.
+
+**EchoesAgentsV1 scaffold (`app.echoes_agents_v1`):** Companion module—not a second assistant. It provides a frozen **`EchoesAssistantRuntimeSpec`** dataclass (effective feature toggles plus session/model overrides), **`snapshot_runtime_spec(assistant)`** for duck-typed extraction from `EchoesAssistantV2`, and a versioned Pydantic **`EchoesAgentV1Envelope`** with JSON Schema export for tooling and audits.
+
 ## 🧠 Unified Intelligence System
 
 EchoesAssistantV2 features a revolutionary **unified intelligence architecture** where 8 specialized AI modules work together seamlessly to provide the most sophisticated AI assistant ecosystem available.
