@@ -1,0 +1,35 @@
+{
+  "name": "glimpse",
+  "root": "/home/irfankabir/productivity/echoes/glimpse",
+  "markers": [
+    "python-script"
+  ],
+  "has_src": false,
+  "has_tests": false,
+  "has_scripts": false,
+  "has_data": false,
+  "has_docs": false,
+  "src_packages": [],
+  "test_framework": "none",
+  "test_count": 0,
+  "test_run_command": null,
+  "inbound_endpoints": [
+    {
+      "kind": "http",
+      "path": "/v1/chat/completions",
+      "file": ""
+    },
+    {
+      "kind": "cli",
+      "path": "-r -u",
+      "file": "load_test_openai.py"
+    }
+  ],
+  "outbound_calls": [
+    "openai"
+  ],
+  "docs": {
+    "README.md": "# Glimpse Preflight System\n\nA side-effect-free preview system for AI outputs that ensures alignment with user intent before execution.\n\n## Overview\n\nGlimpse provides real-time previews of AI outputs, allowing users to review and adjust their inputs before committing to any actions. This prevents misalignment between intent and results while maintaining privacy and user control.\n\n## Key Features\n\n### Two-Try Flow\n1. **First Preview**: Shows sample output and essence of the response\n2. **Adjustment Phase**: User can modify their input based on the preview\n3. **Second Preview**: Confirms the adju"
+  },
+  "audit_files": []
+}

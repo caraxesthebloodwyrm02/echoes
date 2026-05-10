@@ -7,6 +7,7 @@ and assistant_v2_core.  Both modules now import from here instead.
 from __future__ import annotations
 
 import time
+from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
 
@@ -29,6 +30,11 @@ STATUS_WORKING = "⚙️"
 STATUS_SEARCH = "🔍"
 STATUS_TOOL = "🔧"
 STATUS_RETRY = "↻"
+
+
+def utc_now_iso_ms() -> str:
+    """UTC timestamp with millisecond precision (ISO 8601)."""
+    return datetime.now(UTC).isoformat(timespec="milliseconds")
 
 
 # ---------------------------------------------------------------------------

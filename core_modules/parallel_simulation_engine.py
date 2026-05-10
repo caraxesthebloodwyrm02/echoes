@@ -13,7 +13,15 @@ from concurrent.futures import ThreadPoolExecutor
 from dataclasses import asdict, dataclass, field
 from datetime import datetime
 from enum import Enum
+from pathlib import Path
 from typing import Any
+
+from core_modules.outcome_prediction_store import (
+    DEFAULT_PRIOR,
+    OutcomePredictionStore,
+    canonical_outcome_label,
+    normalize_action_key,
+)
 
 logger = logging.getLogger(__name__)
 
@@ -79,9 +87,19 @@ class SimulationResult:
 class ParallelSimulationEngine:
     """Manages parallel simulation instances for possibility exploration"""
 
-    def __init__(self, max_workers: int = 8, max_concurrent_simulations: int = 16):
+    def __init__(
+        self,
+        max_workers: int = 8,
+        max_concurrent_simulations: int = 16,
+        *,
+        outcome_log_path: Path | str | None = None,
+        max_jsonl_lines: int | None = None,
+    ) -> None:
         self.max_workers = max_workers
         self.max_concurrent_simulations = max_concurrent_simulations
+
+        log_path = Path(outcome_log_path) if outcome_log_path is not None else None
+        self._outcome_store = OutcomePredictionStore(log_path, max_jsonl_lines=max_jsonl_lines)
 
         # Simulation storage
         self.simulations: dict[str, SimulationInstance] = {}
@@ -110,6 +128,12 @@ class ParallelSimulationEngine:
         self.running = True
         self.processor_thread = threading.Thread(target=self._process_simulation_queue, daemon=True)
         self.processor_thread.start()
+
+    def record_outcome_feedback(self, action: str, outcome: str) -> None:
+        """Append an observed outcome for ``action`` to the empirical outcome log."""
+        key = normalize_action_key(action)
+        label = canonical_outcome_label(outcome)
+        self._outcome_store.append_feedback(key, label)
 
     def _initialize_templates(self) -> dict[SimulationType, Callable]:
         """Initialize simulation templates"""
@@ -327,47 +351,47 @@ class ParallelSimulationEngine:
         action = input_data.get("action", "")
         _context = input_data.get("context", {})  # noqa: F841 — reserved for future use
 
-        # Predict outcomes
-        outcomes = []
+        emp = self._outcome_store.empirical_probabilities(action)
 
-        # Success outcome
-        outcomes.append(
-            {
-                "type": "success",
-                "probability": 0.65,
-                "description": f"{action} succeeds with expected results",
-                "timeline": "2-4 weeks",
-                "dependencies": ["resources", "timing", "expertise"],
-            }
-        )
+        descriptions = {
+            "success": f"{action} succeeds with expected results",
+            "partial_success": f"{action} partially succeeds, needs refinement",
+            "failure": f"{action} fails, requires restart",
+        }
+        timelines = {
+            "success": "2-4 weeks",
+            "partial_success": "4-6 weeks",
+            "failure": "6-8 weeks",
+        }
+        dependency_sets = {
+            "success": ["resources", "timing", "expertise"],
+            "partial_success": ["iteration", "feedback", "adjustment"],
+            "failure": ["recovery", "replanning", "additional_resources"],
+        }
 
-        # Partial success outcome
-        outcomes.append(
+        outcomes = [
             {
-                "type": "partial_success",
-                "probability": 0.25,
-                "description": f"{action} partially succeeds, needs refinement",
-                "timeline": "4-6 weeks",
-                "dependencies": ["iteration", "feedback", "adjustment"],
+                "type": outcome_type,
+                "probability": emp.probs[outcome_type],
+                "description": descriptions[outcome_type],
+                "timeline": timelines[outcome_type],
+                "dependencies": dependency_sets[outcome_type],
             }
-        )
+            for outcome_type in DEFAULT_PRIOR
+        ]
 
-        # Failure outcome
-        outcomes.append(
-            {
-                "type": "failure",
-                "probability": 0.10,
-                "description": f"{action} fails, requires restart",
-                "timeline": "6-8 weeks",
-                "dependencies": ["recovery", "replanning", "additional_resources"],
-            }
-        )
+        success_prob = emp.probs["success"]
 
         return {
             "outcome": {
                 "predicted_outcomes": outcomes,
                 "most_likely": max(outcomes, key=lambda x: x["probability"]),
-                "risk_assessment": ("medium" if outcomes[0]["probability"] > 0.5 else "high"),
+                "risk_assessment": ("medium" if success_prob > 0.5 else "high"),
+                "prediction_meta": {
+                    "source": emp.source,
+                    "action_samples": emp.action_samples,
+                    "global_samples": emp.global_samples,
+                },
             },
             "confidence": 0.75,
             "reasoning": f"Predicted outcomes for {action} based on context analysis",

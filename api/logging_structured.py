@@ -20,6 +20,26 @@ from typing import Any
 import structlog
 
 
+def redact_telemetry_processor(
+    logger: Any,
+    method_name: str,
+    event_dict: dict[str, Any],
+) -> dict[str, Any]:
+    """
+    Structlog processor: recursively scrub secrets/PII from event payloads.
+
+    Delegates to ``tools.security.advanced_routine.sanitize_mapping`` so telemetry
+    shares the same policy as CLI scans.
+    """
+
+    from tools.security.advanced_routine import RoutineMode, sanitize_mapping
+
+    out = sanitize_mapping(event_dict, RoutineMode.ADVANCED)
+    if isinstance(out, dict):
+        return out
+    return event_dict
+
+
 def configure_structured_logging(
     environment: str = "development",
     log_level: str = "INFO",
@@ -111,4 +131,5 @@ __all__ = [
     "bind_context",
     "clear_context",
     "ensure_configured",
+    "redact_telemetry_processor",
 ]
