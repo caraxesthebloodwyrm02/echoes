@@ -100,7 +100,7 @@ def legacy_gpt4_style_assistant_spec(session_id: str) -> EchoesAssistantRuntimeS
         enable_multimodal_resonance=False,
         enable_legal_safeguards=False,
         session_id=session_id,
-        model=os.getenv("EVOLUTION_MODEL_LEGACY", "gpt-4o"),
+        model=default_legacy_model(),
         temperature=0.7,
         max_tokens=1024,
     )
@@ -120,7 +120,7 @@ def gpt55_codex_agent_style_spec(session_id: str) -> EchoesAssistantRuntimeSpec:
         enable_multimodal_resonance=True,
         enable_legal_safeguards=True,
         session_id=session_id,
-        model=os.getenv("EVOLUTION_MODEL_AGENT", "gpt-5.5"),
+        model=default_agent_model(),
         temperature=0.3,
         max_tokens=8192,
     )
