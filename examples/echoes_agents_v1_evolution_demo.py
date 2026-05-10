@@ -60,30 +60,11 @@ if str(ROOT) not in sys.path:
 from app.echoes_agents_v1 import (  # noqa: E402
     EchoesAgentV1Envelope,
     EchoesAssistantRuntimeSpec,
+    default_agent_model,
+    default_legacy_model,
+    openai_chat_completion_models,
     runtime_spec_to_model,
 )
-
-MISTRAL_BASE_URL = "https://api.mistral.ai/v1"
-
-
-def _mistral_key() -> str | None:
-    return os.getenv("MISTRAL_API_KEY") or os.getenv("GRIDSTRAL_API_KEY")
-
-
-def _using_mistral() -> bool:
-    return bool(_mistral_key())
-
-
-def default_legacy_model() -> str:
-    if _using_mistral():
-        return os.getenv("EVOLUTION_MODEL_LEGACY", "mistral-small-latest")
-    return os.getenv("EVOLUTION_MODEL_LEGACY", "gpt-4o")
-
-
-def default_agent_model() -> str:
-    if _using_mistral():
-        return os.getenv("EVOLUTION_MODEL_AGENT", "mistral-medium-latest")
-    return os.getenv("EVOLUTION_MODEL_AGENT", "gpt-5.5")
 
 
 def legacy_gpt4_style_assistant_spec(session_id: str) -> EchoesAssistantRuntimeSpec:
@@ -184,8 +165,7 @@ def optional_openai_narration(agent_surplus: dict[str, bool]) -> None:
         + ". Mention GPT-5.5-level reasoning density and Codex-style tool loops "
         "without claiming proprietary details."
     )
-    model = os.getenv("EVOLUTION_MODEL_AGENT", "gpt-5.5")
-    fallback = os.getenv("EVOLUTION_MODEL_LEGACY", "gpt-4o")
+    model, fallback = openai_chat_completion_models()
     for attempt_model in (model, fallback):
         try:
             res = client.chat.completions.create(

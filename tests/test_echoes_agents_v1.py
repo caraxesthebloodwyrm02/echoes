@@ -10,8 +10,11 @@ from pydantic import ValidationError
 from app.echoes_agents_v1 import (
     EchoesAgentV1Envelope,
     EchoesAssistantRuntimeSpec,
+    default_agent_model,
+    default_legacy_model,
     envelope_json_schema,
     model_to_runtime_spec,
+    openai_chat_completion_models,
     runtime_spec_to_model,
     snapshot_runtime_spec,
 )
@@ -102,3 +105,31 @@ def test_forbid_extra_envelope() -> None:
                 "unknown": 1,
             }
         )
+
+
+def test_default_models_openai_when_no_mistral_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.delenv("MISTRAL_API_KEY", raising=False)
+    monkeypatch.delenv("GRIDSTRAL_API_KEY", raising=False)
+    monkeypatch.delenv("EVOLUTION_MODEL_LEGACY", raising=False)
+    monkeypatch.delenv("EVOLUTION_MODEL_AGENT", raising=False)
+    assert default_legacy_model() == "gpt-4o"
+    assert default_agent_model() == "gpt-5.5"
+
+
+def test_default_models_mistral_when_mistral_key(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv("MISTRAL_API_KEY", "test-key")
+    monkeypatch.delenv("GRIDSTRAL_API_KEY", raising=False)
+    monkeypatch.delenv("EVOLUTION_MODEL_LEGACY", raising=False)
+    monkeypatch.delenv("EVOLUTION_MODEL_AGENT", raising=False)
+    assert default_legacy_model() == "mistral-small-latest"
+    assert default_agent_model() == "mistral-medium-latest"
+
+
+def test_openai_chat_completion_models_ignores_mistral_backend(monkeypatch: pytest.MonkeyPatch) -> None:
+    """OpenAI SDK narration must keep OpenAI model IDs even if Mistral keys exist."""
+    monkeypatch.setenv("MISTRAL_API_KEY", "test-key")
+    monkeypatch.delenv("EVOLUTION_MODEL_LEGACY", raising=False)
+    monkeypatch.delenv("EVOLUTION_MODEL_AGENT", raising=False)
+    primary, fallback = openai_chat_completion_models()
+    assert primary == "gpt-5.5"
+    assert fallback == "gpt-4o"
