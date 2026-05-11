@@ -3,7 +3,7 @@
 # Python 3.12+ compatible with security fixes applied
 
 # Core AI & API Layers
-openai>=2.33.0,<3.0.0
+openai>=2.36.0,<3.0.0
 fastapi==0.136.1
 uvicorn==0.46.0
 httpx==0.28.1
