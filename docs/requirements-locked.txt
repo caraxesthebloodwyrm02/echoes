@@ -55,9 +55,9 @@ pillow==12.2.0
 pluggy==1.6.0
 prometheus_client==0.25.0
 propcache==0.4.1
-pydantic==2.13.3
-pydantic-settings==2.14.0
-pydantic_core==2.46.3
+pydantic==2.13.4
+pydantic-settings==2.14.1
+pydantic_core==2.46.4
 Pygments==2.20.0
 pyparsing==3.2.5
 pytest==9.0.3

@@ -39,8 +39,8 @@ platformdirs==4.9.6
 pluggy==1.6.0
 pre_commit==4.6.0
 py-serializable==2.1.0
-pydantic==2.13.3
-pydantic_core==2.46.3
+pydantic==2.13.4
+pydantic_core==2.46.4
 Pygments==2.20.0
 pyparsing==3.2.5
 pytest==9.0.3
