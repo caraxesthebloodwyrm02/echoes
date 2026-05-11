@@ -13,7 +13,7 @@ biopython>=1.81  # PubMed API, bioinformatics
 # rdkit>=2023.9.1  # Chemistry toolkit (requires conda)
 # Physics/Math
 numpy>=1.26.0
-scipy>=1.11.0
+scipy>=1.17.1
 sympy>=1.12  # Symbolic mathematics
 
 # Commerce Domain
