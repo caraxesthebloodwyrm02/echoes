@@ -24,8 +24,8 @@ langchain-openai>=0.3.35,<0.4.0
 langchain-text-splitters==0.3.11
 
 # Core Dependencies - Python 3.12 compatible
-pydantic==2.13.3
-pydantic-settings>=2.14.0
+pydantic==2.13.4
+pydantic-settings>=2.14.1
 prometheus-client>=0.25.0
 redis>=5.0.0
 numpy==2.4.4
