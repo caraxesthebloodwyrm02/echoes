@@ -32,7 +32,7 @@ dependencies = [
     # Core AI & API Layers
     "openai>=2.36.0,<3.0.0",
     "fastapi==0.136.1",
-    "uvicorn==0.46.0",
+    "uvicorn==0.47.0",
     "httpx==0.28.1",
     "requests==2.33.1",
     "python-dotenv==1.2.2",
