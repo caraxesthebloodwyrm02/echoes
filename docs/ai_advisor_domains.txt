@@ -8,7 +8,7 @@
 
 # Science Domain
 # Biomedical research
-biopython>=1.81  # PubMed API, bioinformatics
+biopython>=1.87  # PubMed API, bioinformatics
 # Chemistry
 # rdkit>=2023.9.1  # Chemistry toolkit (requires conda)
 # Physics/Math
