@@ -5,7 +5,7 @@ PyJWT>=2.12.1
 
 # Testing
 pytest>=7.4.0
-pytest-asyncio>=0.21.0
+pytest-asyncio>=1.4.0
 
 # API framework (for unified gateway)
 fastapi>=0.136.3
