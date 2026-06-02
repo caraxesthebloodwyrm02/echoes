@@ -28,7 +28,7 @@ Pillow>=11.3.0,<13.0.0
 opencv-python>=4.13.0.92
 
 # Database
-sqlalchemy>=2.0.0
+sqlalchemy>=2.0.50
 alembic>=1.18.4
 psycopg2-binary>=2.9.12
 
