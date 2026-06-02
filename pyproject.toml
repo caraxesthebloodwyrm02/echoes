@@ -66,9 +66,9 @@ dependencies = [
 [project.optional-dependencies]
 dev = [
     "pytest>=9.0.3",
-    "pytest-asyncio>=0.21.0",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=4.0.0",
-    "ruff>=0.15.14",
+    "ruff>=0.15.15",
     "mypy>=1.20.2",
     "pre-commit>=4.6.0",
     "jsonschema>=4.26.0",
@@ -90,12 +90,12 @@ langchain = [
 [dependency-groups]
 test = [
     "pytest>=9.0.3",
-    "pytest-asyncio>=0.21.0",
+    "pytest-asyncio>=1.4.0",
     "pytest-cov>=4.0.0",
     "pytest-timeout>=2.4.0",
 ]
 dev = [
-    "ruff>=0.15.14",
+    "ruff>=0.15.15",
     "mypy>=1.20.2",
     "pre-commit>=4.6.0",
     "jsonschema>=4.26.0",
