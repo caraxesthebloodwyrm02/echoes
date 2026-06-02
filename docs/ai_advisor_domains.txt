@@ -36,4 +36,4 @@ alembic>=1.12.0  # Database migrations
 
 # External API clients
 requests>=2.34.2
-aiohttp>=3.9.0  # Async HTTP client
+aiohttp>=3.14.0  # Async HTTP client
