@@ -77,7 +77,7 @@ tqdm==4.67.3
 
 # Security scanning
 bandit==1.7.6
-safety==3.2.7
+safety==3.8.1
 
 # Additional utilities
 click==8.3.3
