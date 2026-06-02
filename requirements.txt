@@ -27,7 +27,7 @@ langchain-text-splitters==0.3.11
 pydantic==2.13.4
 pydantic-settings>=2.14.1
 prometheus-client>=0.25.0
-redis>=5.0.0
+redis>=8.0.0
 numpy==2.4.4
 PyYAML==6.0.3
 networkx==3.6.1
