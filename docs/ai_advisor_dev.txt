@@ -20,7 +20,7 @@ mypy>=1.7.0
 bandit>=1.7.5
 
 # Security scanning
-safety>=2.3.0
+safety>=3.8.1
 
 # Pre-commit hooks
 pre-commit>=3.5.0
