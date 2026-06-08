@@ -9,7 +9,7 @@ pytest-asyncio>=1.4.0
 
 # API framework (for unified gateway)
 fastapi>=0.136.3
-uvicorn>=0.48.0
+uvicorn>=0.49.0
 python-multipart>=0.0.29
 
 # Rate limiting and middleware
