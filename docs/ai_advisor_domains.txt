@@ -24,7 +24,7 @@ statsmodels>=0.14.6  # Statistical modeling
 
 # Arts Domain
 # Natural language processing
-transformers>=4.35.0  # Hugging Face transformers
+transformers>=5.10.2  # Hugging Face transformers
 nltk>=3.8.1  # Natural Language Toolkit
 # Creative generation
 pillow>=10.1.0  # Image processing
