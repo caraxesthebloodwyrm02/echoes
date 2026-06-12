@@ -85,4 +85,4 @@ click==8.3.3
 packaging>=23.2,<26.0.0
 rich==15.0.0
 CacheControl==0.14.4
-cyclonedx-python-lib==9.1.0
+cyclonedx-python-lib==11.9.0
