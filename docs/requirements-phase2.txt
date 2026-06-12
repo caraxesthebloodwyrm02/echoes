@@ -13,7 +13,7 @@ uvicorn>=0.49.0
 python-multipart>=0.0.29
 
 # Rate limiting and middleware
-starlette>=1.2.1
+starlette>=1.3.0
 
 # Optional: Enhanced logging
 loguru>=0.7.3
